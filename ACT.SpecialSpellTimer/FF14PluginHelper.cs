@@ -177,34 +177,67 @@
             return partyList;
         }
 
-        public static List<Zone> GetZoneList()
+        public static Zone[] GetZoneList()
         {
             if (zoneList != null)
             {
-                return zoneList;
+                return zoneList.OrderBy(x => x.ID).ToArray();
             }
 
             Initialize();
 
             if (plugin == null)
             {
-                return zoneList;
+                return zoneList.OrderBy(x => x.ID).ToArray();
             }
+
+            zoneList = new List<Zone>();
 
             var asm = plugin.GetType().Assembly;
-            using (var stream = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.zones.xml"))
+
+            using (var st = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.ZoneList_EN.txt"))
+            using (var sr = new StreamReader(st))
             {
-                var doc = XDocument.Load(stream);
-                zoneList = new List<Zone>((
-                    from XElement x in doc.Element("ZoneList").Elements("zone")
-                    select new Zone
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
-                        ID = x.Attribute("id") != null ? Convert.ToInt32(x.Attribute("id").Value, 16) : 0,
-                        Name = x.Attribute("name1") != null ? x.Attribute("name1").Value : string.Empty,
-                    }));
+                        var values = line.Split('|');
+                        if (values.Length >= 2)
+                        {
+                            zoneList.Add(new Zone()
+                            {
+                                ID = int.Parse(values[0]),
+                                Name = values[1].Trim()
+                            });
+                        }
+                    }
+                }
             }
 
-            return zoneList;
+            using (var st = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.ZoneList_Custom.txt"))
+            using (var sr = new StreamReader(st))
+            {
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        var values = line.Split('|');
+                        if (values.Length >= 2)
+                        {
+                            zoneList.Add(new Zone()
+                            {
+                                ID = int.Parse(values[0]),
+                                Name = values[1].Trim()
+                            });
+                        }
+                    }
+                }
+            }
+
+            return zoneList.OrderBy(x => x.ID).ToArray();
         }
 
         public static int GetCurrentZoneID()
@@ -212,7 +245,7 @@
             var zoneList = GetZoneList();
 
             if (zoneList == null ||
-                zoneList.Count < 1)
+                zoneList.Length < 1)
             {
                 return 0;
             }
