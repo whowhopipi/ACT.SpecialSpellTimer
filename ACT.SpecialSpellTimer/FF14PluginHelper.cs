@@ -188,7 +188,7 @@
 
             if (plugin == null)
             {
-                return zoneList.OrderBy(x => x.ID).ToArray();
+                return null;
             }
 
             zoneList = new List<Zone>();
