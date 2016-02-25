@@ -184,14 +184,14 @@
                 return zoneList.OrderBy(x => x.ID).ToArray();
             }
 
+            zoneList = new List<Zone>();
+
             Initialize();
 
             if (plugin == null)
             {
-                return null;
+                return zoneList.OrderBy(x => x.ID).ToArray();
             }
-
-            zoneList = new List<Zone>();
 
             var asm = plugin.GetType().Assembly;
 
