@@ -1273,7 +1273,12 @@
                     var actFileName = Path.GetFileName(
                         Process.GetCurrentProcess().MainModule.FileName);
 
+                    Debug.WriteLine(
+                        DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
+                        "●WatchActive " + fileName);
+
                     if (fileName.ToLower() == "ffxiv.exe" ||
+                        fileName.ToLower() == "ffxiv_dx11.exe" ||
                         fileName.ToLower() == actFileName.ToLower())
                     {
                         r = true;
