@@ -146,9 +146,9 @@
             // CloseButton
             // 
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(894, 505);
+            this.CloseButton.Location = new System.Drawing.Point(878, 510);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(102, 26);
+            this.CloseButton.Size = new System.Drawing.Size(118, 25);
             this.CloseButton.TabIndex = 2;
             this.CloseButton.Text = "CancelButton";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -156,7 +156,7 @@
             // OKButton
             // 
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(770, 505);
+            this.OKButton.Location = new System.Drawing.Point(754, 510);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(118, 25);
             this.OKButton.TabIndex = 3;
@@ -166,7 +166,7 @@
             // 
             // AllOFFButton
             // 
-            this.AllOFFButton.Location = new System.Drawing.Point(12, 505);
+            this.AllOFFButton.Location = new System.Drawing.Point(12, 510);
             this.AllOFFButton.Name = "AllOFFButton";
             this.AllOFFButton.Size = new System.Drawing.Size(118, 25);
             this.AllOFFButton.TabIndex = 4;
@@ -178,15 +178,21 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 535);
+            this.ClientSize = new System.Drawing.Size(1008, 547);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "SetConditionForm";
+            this.ShowIcon = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SetConditionTitle";
             this.Load += new System.EventHandler(this.SelectConditionForm_Load);
+            this.Shown += new System.EventHandler(this.SetConditionForm_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

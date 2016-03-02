@@ -178,7 +178,8 @@
 
         public static Zone[] GetZoneList()
         {
-            if (zoneList != null)
+            if (zoneList != null &&
+                zoneList.Count() > 0)
             {
                 return zoneList.OrderBy(x => x.ID).ToArray();
             }

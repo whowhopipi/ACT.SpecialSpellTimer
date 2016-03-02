@@ -38,7 +38,6 @@
             };
         }
 
-
         /// <summary>
         /// ゾーンフィルタ
         /// </summary>
@@ -59,6 +58,19 @@
                 this.ZonesCheckedListBox.Items.Add(
                     item,
                     items.Any(x => x == item.ID.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// Shown
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void SelectZoneForm_Shown(object sender, EventArgs e)
+        {
+            if (this.Owner != null)
+            {
+                this.Font = this.Owner.Font;
             }
         }
 

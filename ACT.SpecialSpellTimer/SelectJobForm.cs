@@ -38,7 +38,6 @@
             };
         }
 
-
         /// <summary>
         /// ジョブフィルタ
         /// </summary>
@@ -59,6 +58,19 @@
                 this.JobsCheckedListBox.Items.Add(
                     job,
                     jobs.Any(x => x == job.JobId.ToString()));
+            }
+        }
+
+        /// <summary>
+        /// Shown
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void SelectJobForm_Shown(object sender, EventArgs e)
+        {
+            if (this.Owner != null)
+            {
+                this.Font = this.Owner.Font;
             }
         }
 

@@ -46,11 +46,10 @@
             this.JobsCheckedListBox.CheckOnClick = true;
             this.JobsCheckedListBox.FormattingEnabled = true;
             this.JobsCheckedListBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.JobsCheckedListBox.Location = new System.Drawing.Point(16, 47);
-            this.JobsCheckedListBox.Margin = new System.Windows.Forms.Padding(4);
+            this.JobsCheckedListBox.Location = new System.Drawing.Point(12, 35);
             this.JobsCheckedListBox.MultiColumn = true;
             this.JobsCheckedListBox.Name = "JobsCheckedListBox";
-            this.JobsCheckedListBox.Size = new System.Drawing.Size(637, 289);
+            this.JobsCheckedListBox.Size = new System.Drawing.Size(478, 210);
             this.JobsCheckedListBox.TabIndex = 0;
             this.JobsCheckedListBox.ThreeDCheckBoxes = true;
             // 
@@ -58,10 +57,9 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(387, 371);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(4);
+            this.OKButton.Location = new System.Drawing.Point(290, 278);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(129, 37);
+            this.OKButton.Size = new System.Drawing.Size(97, 28);
             this.OKButton.TabIndex = 1;
             this.OKButton.Text = "OKButton";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -70,10 +68,9 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(524, 371);
-            this.CloseButton.Margin = new System.Windows.Forms.Padding(4);
+            this.CloseButton.Location = new System.Drawing.Point(393, 278);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(129, 37);
+            this.CloseButton.Size = new System.Drawing.Size(97, 28);
             this.CloseButton.TabIndex = 2;
             this.CloseButton.Text = "CancelButton";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -81,10 +78,9 @@
             // AllONButton
             // 
             this.AllONButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AllONButton.Location = new System.Drawing.Point(16, 371);
-            this.AllONButton.Margin = new System.Windows.Forms.Padding(4);
+            this.AllONButton.Location = new System.Drawing.Point(12, 278);
             this.AllONButton.Name = "AllONButton";
-            this.AllONButton.Size = new System.Drawing.Size(100, 37);
+            this.AllONButton.Size = new System.Drawing.Size(75, 28);
             this.AllONButton.TabIndex = 3;
             this.AllONButton.Text = "AllOnButton";
             this.AllONButton.UseVisualStyleBackColor = true;
@@ -92,10 +88,9 @@
             // AllOFFButton
             // 
             this.AllOFFButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AllOFFButton.Location = new System.Drawing.Point(124, 371);
-            this.AllOFFButton.Margin = new System.Windows.Forms.Padding(4);
+            this.AllOFFButton.Location = new System.Drawing.Point(93, 278);
             this.AllOFFButton.Name = "AllOFFButton";
-            this.AllOFFButton.Size = new System.Drawing.Size(100, 37);
+            this.AllOFFButton.Size = new System.Drawing.Size(75, 28);
             this.AllOFFButton.TabIndex = 4;
             this.AllOFFButton.Text = "AllOffButton";
             this.AllOFFButton.UseVisualStyleBackColor = true;
@@ -103,20 +98,19 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 12);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(10, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(363, 17);
+            this.label1.Size = new System.Drawing.Size(95, 12);
             this.label1.TabIndex = 5;
             this.label1.Text = "SelectJobSubtitle";
             // 
             // SelectJobForm
             // 
             this.AcceptButton = this.OKButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(669, 425);
+            this.ClientSize = new System.Drawing.Size(502, 319);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.AllONButton);
@@ -124,12 +118,12 @@
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.JobsCheckedListBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SelectJobForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "SelectJobTitle";
+            this.Shown += new System.EventHandler(this.SelectJobForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

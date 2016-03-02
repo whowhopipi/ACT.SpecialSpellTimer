@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using System.Windows.Forms;
+
     public partial class SetConditionForm : Form
     {
         public SetConditionForm()
@@ -28,6 +24,19 @@ namespace ACT.SpecialSpellTimer
             this.LoadSpells(this.SpellMustStoppingTreeView, this.TimersMustStopping);
             this.LoadTelops(this.TelopMustRunningTreeView, this.TimersMustRunning);
             this.LoadTelops(this.TelopMustStoppingTreeView, this.TimersMustStopping);
+        }
+
+        /// <summary>
+        /// Shown
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void SetConditionForm_Shown(object sender, EventArgs e)
+        {
+            if (this.Owner != null)
+            {
+                this.Font = this.Owner.Font;
+            }
         }
 
         /// <summary>
@@ -120,6 +129,7 @@ namespace ACT.SpecialSpellTimer
                     }
                 }
             }
+
             return spells.ToArray();
         }
 
@@ -139,6 +149,7 @@ namespace ACT.SpecialSpellTimer
                     telops.Add(telop.guid);
                 }
             }
+
             return telops.ToArray();
         }
 
@@ -152,6 +163,7 @@ namespace ACT.SpecialSpellTimer
                     child.Checked = false;
                 }
             }
+
             foreach (TreeNode node in this.SpellMustStoppingTreeView.Nodes)
             {
                 node.Checked = false;
@@ -160,10 +172,12 @@ namespace ACT.SpecialSpellTimer
                     child.Checked = false;
                 }
             }
+
             foreach (TreeNode node in this.TelopMustRunningTreeView.Nodes)
             {
                 node.Checked = false;
             }
+
             foreach (TreeNode node in this.TelopMustStoppingTreeView.Nodes)
             {
                 node.Checked = false;

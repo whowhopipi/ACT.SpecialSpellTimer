@@ -180,7 +180,7 @@
                     using (var f = new SelectJobForm())
                     {
                         f.JobFilter = src.JobFilter;
-                        if (f.ShowDialog(this) == DialogResult.OK)
+                        if (f.ShowDialog(this.ParentForm) == DialogResult.OK)
                         {
                             src.JobFilter = f.JobFilter;
 
@@ -199,7 +199,7 @@
                     using (var f = new SelectZoneForm())
                     {
                         f.ZoneFilter = src.ZoneFilter;
-                        if (f.ShowDialog(this) == DialogResult.OK)
+                        if (f.ShowDialog(this.ParentForm) == DialogResult.OK)
                         {
                             src.ZoneFilter = f.ZoneFilter;
 
@@ -220,7 +220,7 @@
                         f.TimersMustRunning = src.TimersMustRunningForStart;
                         f.TimersMustStopping = src.TimersMustStoppingForStart;
 
-                        if (f.ShowDialog(this) == DialogResult.OK)
+                        if (f.ShowDialog(this.ParentForm) == DialogResult.OK)
                         {
                             src.TimersMustRunningForStart = f.TimersMustRunning;
                             src.TimersMustStoppingForStart = f.TimersMustStopping;
