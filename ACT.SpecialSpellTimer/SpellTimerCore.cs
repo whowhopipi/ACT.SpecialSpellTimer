@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Text.RegularExpressions;
     using System.Threading;
 
@@ -66,6 +68,16 @@
         /// 最後にFF14プロセスをチェックした時間
         /// </summary>
         private DateTime LastFFXIVProcessDateTime;
+
+        /// <summary>
+        /// 最後にアクティブWindowをチェックした時間
+        /// </summary>
+        private DateTime TimeOfLastWatchedActieWindow;
+
+        /// <summary>
+        /// 最後のアクティブWindowの状態
+        /// </summary>
+        private bool LastStateOfActiveWindow;
 
         /// <summary>
         /// SpellTimerのPanelリスト
@@ -241,6 +253,17 @@
                         this.HidePanels();
                         OnePointTelopController.HideTelops();
                         return;
+                    }
+
+                    // 非アクティブのとき非表示にする？
+                    if (Settings.Default.HideWhenNotActive)
+                    {
+                        if (!this.IsActive())
+                        {
+                            this.HidePanels();
+                            OnePointTelopController.HideTelops();
+                            return;
+                        }
                     }
 
                     // テロップWindowを表示する
@@ -1215,5 +1238,88 @@
         {
             ACT.SpecialSpellTimer.Sound.SoundController.Default.Play(source);
         }
+
+        /// <summary>
+        /// FFXIVまたはACTがアクティブか？
+        /// </summary>
+        /// <returns>
+        /// FFXIVまたはACTがアクティブか？</returns>
+        private bool IsActive()
+        {
+            var r = true;
+
+            try
+            {
+                // 最後にチェックしてから1秒以内ならば最後の状態を返す
+                if ((DateTime.Now - this.TimeOfLastWatchedActieWindow).TotalSeconds <= 1.0d)
+                {
+                    return this.LastStateOfActiveWindow;
+                }
+
+                // フォアグラウンドWindowのハンドルを取得する
+                var hWnd = GetForegroundWindow();
+
+                // プロセスIDに変換する
+                int pid;
+                GetWindowThreadProcessId(hWnd, out pid);
+
+                // メインモジュールのファイル名を取得する
+                var p = Process.GetProcessById(pid);
+                if (p != null)
+                {
+                    var fileName = Path.GetFileName(
+                        p.MainModule.FileName);
+
+                    var actFileName = Path.GetFileName(
+                        Process.GetCurrentProcess().MainModule.FileName);
+
+                    if (fileName.ToLower() == "ffxiv.exe" ||
+                        fileName.ToLower() == actFileName.ToLower())
+                    {
+                        r = true;
+                    }
+                    else
+                    {
+                        r = false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ActGlobals.oFormActMain.WriteExceptionLog(
+                    ex,
+                    Translate.Get("WatchActiveError"));
+            }
+
+            // 最後の状態を保存する
+            this.LastStateOfActiveWindow = r;
+            this.TimeOfLastWatchedActieWindow = DateTime.Now;
+
+            return r;
+        }
+
+        #region NativeMethods
+
+        /// <summary>
+        /// フォアグラウンドWindowのハンドルを取得する
+        /// </summary>
+        /// <returns>
+        /// フォアグラウンドWindowのハンドル</returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+
+        /// <summary>
+        /// WindowハンドルからそのプロセスIDを取得する
+        /// </summary>
+        /// <param name="hWnd">
+        /// プロセスIDを取得するWindowハンドル</param>
+        /// <param name="lpdwProcessId">
+        /// プロセスID</param>
+        /// <returns>
+        /// Windowを作成したスレッドのID</returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+        #endregion
     }
 }

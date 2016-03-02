@@ -1,12 +1,11 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Xml.Linq;
+
     using Advanced_Combat_Tracker;
 
     public static partial class FF14PluginHelper

@@ -709,6 +709,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   非アクティブのときオーバーレイを隠す に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HideWhenNotActiceCheckBox {
+            get {
+                return ResourceManager.GetString("HideWhenNotActiceCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   水平レイアウト に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HorizontalLayout {
@@ -1857,6 +1866,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string WAR {
             get {
                 return ResourceManager.GetString("WAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ACT.SpecialSpellTimer フォアグラウンドWindowの監視で例外が発生しました。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string WatchActiveError {
+            get {
+                return ResourceManager.GetString("WatchActiveError", resourceCulture);
             }
         }
         

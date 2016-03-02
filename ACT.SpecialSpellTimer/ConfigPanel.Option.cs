@@ -150,6 +150,7 @@
             }
 
             this.OverlayForceVisibleCheckBox.Checked = Settings.Default.OverlayForceVisible;
+            this.HideWhenNotActiceCheckBox.Checked = Settings.Default.HideWhenNotActive;
 
             if (Settings.Default.OverlayVisible)
             {
@@ -205,6 +206,7 @@
         {
             Settings.Default.Language = ((Utility.Language)this.LanguageComboBox.SelectedItem).Value;
             Settings.Default.OverlayForceVisible = this.OverlayForceVisibleCheckBox.Checked;
+            Settings.Default.HideWhenNotActive = this.HideWhenNotActiceCheckBox.Checked;
             Settings.Default.ProgressBarSize = this.DefaultVisualSetting.BarSize;
             Settings.Default.ProgressBarColor = this.DefaultVisualSetting.BarColor;
             Settings.Default.ProgressBarOutlineColor = this.DefaultVisualSetting.BarOutlineColor;

@@ -68,6 +68,7 @@
             this.ExpandSecounds1NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.KeywordToExpand1TextBox = new System.Windows.Forms.TextBox();
             this.label50 = new System.Windows.Forms.Label();
+            this.SpellVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.RegexEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.DontHideCheckBox = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -129,6 +130,7 @@
             this.TelopDetailGroupBox = new System.Windows.Forms.GroupBox();
             this.TelopSetConditionButton = new System.Windows.Forms.Button();
             this.TelopSelectZoneButton = new System.Windows.Forms.Button();
+            this.TelopVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.TelopSelectJobButton = new System.Windows.Forms.Button();
             this.TelopProgressBarEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.EnabledAddMessageCheckBox = new System.Windows.Forms.CheckBox();
@@ -200,6 +202,7 @@
             this.CombatAnalyzingLabel = new System.Windows.Forms.Label();
             this.AnalyzeCombatButton = new System.Windows.Forms.Button();
             this.OptionTabPage = new System.Windows.Forms.TabPage();
+            this.HideWhenNotActiceCheckBox = new System.Windows.Forms.CheckBox();
             this.SaveLogButton = new System.Windows.Forms.Button();
             this.SaveLogCheckBox = new System.Windows.Forms.CheckBox();
             this.SaveLogTextBox = new System.Windows.Forms.TextBox();
@@ -242,15 +245,13 @@
             this.label18 = new System.Windows.Forms.Label();
             this.SwitchOverlayButton = new System.Windows.Forms.Button();
             this.ShokikaButton = new System.Windows.Forms.Button();
+            this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
             this.SaveLogFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.SpellVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
-            this.TelopVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
-            this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
             this.DetailPanelGroupBox.SuspendLayout();
@@ -793,6 +794,24 @@
             this.label50.Size = new System.Drawing.Size(171, 12);
             this.label50.TabIndex = 52;
             this.label50.Text = "MatchingLogWordToExpandLabel";
+            // 
+            // SpellVisualSetting
+            // 
+            this.SpellVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
+            this.SpellVisualSetting.BarColor = System.Drawing.Color.White;
+            this.SpellVisualSetting.BarEnabled = true;
+            this.SpellVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.SpellVisualSetting.BarSize = new System.Drawing.Size(190, 8);
+            this.SpellVisualSetting.FontColor = System.Drawing.Color.White;
+            this.SpellVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.SpellVisualSetting.HideSpellName = false;
+            this.SpellVisualSetting.Location = new System.Drawing.Point(195, 262);
+            this.SpellVisualSetting.Name = "SpellVisualSetting";
+            this.SpellVisualSetting.OverlapRecastTime = false;
+            this.SpellVisualSetting.Size = new System.Drawing.Size(306, 109);
+            this.SpellVisualSetting.SpellIcon = "";
+            this.SpellVisualSetting.SpellIconSize = 0;
+            this.SpellVisualSetting.TabIndex = 51;
             // 
             // RegexEnabledCheckBox
             // 
@@ -1463,6 +1482,24 @@
             this.TelopSelectZoneButton.TabIndex = 46;
             this.TelopSelectZoneButton.Text = "SelectZoneButton";
             this.TelopSelectZoneButton.UseVisualStyleBackColor = true;
+            // 
+            // TelopVisualSetting
+            // 
+            this.TelopVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
+            this.TelopVisualSetting.BarColor = System.Drawing.Color.White;
+            this.TelopVisualSetting.BarEnabled = false;
+            this.TelopVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.TelopVisualSetting.BarSize = new System.Drawing.Size(190, 8);
+            this.TelopVisualSetting.FontColor = System.Drawing.Color.White;
+            this.TelopVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.TelopVisualSetting.HideSpellName = false;
+            this.TelopVisualSetting.Location = new System.Drawing.Point(187, 143);
+            this.TelopVisualSetting.Name = "TelopVisualSetting";
+            this.TelopVisualSetting.OverlapRecastTime = false;
+            this.TelopVisualSetting.Size = new System.Drawing.Size(306, 71);
+            this.TelopVisualSetting.SpellIcon = "";
+            this.TelopVisualSetting.SpellIconSize = 0;
+            this.TelopVisualSetting.TabIndex = 6;
             // 
             // TelopSelectJobButton
             // 
@@ -2161,6 +2198,7 @@
             // OptionTabPage
             // 
             this.OptionTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.OptionTabPage.Controls.Add(this.HideWhenNotActiceCheckBox);
             this.OptionTabPage.Controls.Add(this.SaveLogButton);
             this.OptionTabPage.Controls.Add(this.SaveLogCheckBox);
             this.OptionTabPage.Controls.Add(this.SaveLogTextBox);
@@ -2211,10 +2249,20 @@
             this.OptionTabPage.TabIndex = 1;
             this.OptionTabPage.Text = "OptionTabPageTitle";
             // 
+            // HideWhenNotActiceCheckBox
+            // 
+            this.HideWhenNotActiceCheckBox.AutoSize = true;
+            this.HideWhenNotActiceCheckBox.Location = new System.Drawing.Point(8, 99);
+            this.HideWhenNotActiceCheckBox.Name = "HideWhenNotActiceCheckBox";
+            this.HideWhenNotActiceCheckBox.Size = new System.Drawing.Size(177, 16);
+            this.HideWhenNotActiceCheckBox.TabIndex = 56;
+            this.HideWhenNotActiceCheckBox.Text = "HideWhenNotActiceCheckBox";
+            this.HideWhenNotActiceCheckBox.UseVisualStyleBackColor = true;
+            // 
             // SaveLogButton
             // 
             this.SaveLogButton.Enabled = false;
-            this.SaveLogButton.Location = new System.Drawing.Point(605, 448);
+            this.SaveLogButton.Location = new System.Drawing.Point(605, 466);
             this.SaveLogButton.Name = "SaveLogButton";
             this.SaveLogButton.Size = new System.Drawing.Size(37, 25);
             this.SaveLogButton.TabIndex = 55;
@@ -2224,7 +2272,7 @@
             // SaveLogCheckBox
             // 
             this.SaveLogCheckBox.AutoSize = true;
-            this.SaveLogCheckBox.Location = new System.Drawing.Point(293, 429);
+            this.SaveLogCheckBox.Location = new System.Drawing.Point(293, 447);
             this.SaveLogCheckBox.Name = "SaveLogCheckBox";
             this.SaveLogCheckBox.Size = new System.Drawing.Size(64, 16);
             this.SaveLogCheckBox.TabIndex = 54;
@@ -2234,7 +2282,7 @@
             // SaveLogTextBox
             // 
             this.SaveLogTextBox.Enabled = false;
-            this.SaveLogTextBox.Location = new System.Drawing.Point(293, 451);
+            this.SaveLogTextBox.Location = new System.Drawing.Point(293, 469);
             this.SaveLogTextBox.Name = "SaveLogTextBox";
             this.SaveLogTextBox.Size = new System.Drawing.Size(306, 19);
             this.SaveLogTextBox.TabIndex = 53;
@@ -2242,7 +2290,7 @@
             // label67
             // 
             this.label67.AutoSize = true;
-            this.label67.Location = new System.Drawing.Point(6, 430);
+            this.label67.Location = new System.Drawing.Point(6, 448);
             this.label67.Name = "label67";
             this.label67.Size = new System.Drawing.Size(75, 12);
             this.label67.TabIndex = 52;
@@ -2250,7 +2298,7 @@
             // 
             // OverTextBox
             // 
-            this.OverTextBox.Location = new System.Drawing.Point(293, 404);
+            this.OverTextBox.Location = new System.Drawing.Point(293, 422);
             this.OverTextBox.Name = "OverTextBox";
             this.OverTextBox.Size = new System.Drawing.Size(100, 19);
             this.OverTextBox.TabIndex = 51;
@@ -2258,7 +2306,7 @@
             // label66
             // 
             this.label66.AutoSize = true;
-            this.label66.Location = new System.Drawing.Point(6, 407);
+            this.label66.Location = new System.Drawing.Point(6, 425);
             this.label66.Name = "label66";
             this.label66.Size = new System.Drawing.Size(79, 12);
             this.label66.TabIndex = 50;
@@ -2266,7 +2314,7 @@
             // 
             // ReadyTextBox
             // 
-            this.ReadyTextBox.Location = new System.Drawing.Point(293, 379);
+            this.ReadyTextBox.Location = new System.Drawing.Point(293, 397);
             this.ReadyTextBox.Name = "ReadyTextBox";
             this.ReadyTextBox.Size = new System.Drawing.Size(100, 19);
             this.ReadyTextBox.TabIndex = 49;
@@ -2274,7 +2322,7 @@
             // label65
             // 
             this.label65.AutoSize = true;
-            this.label65.Location = new System.Drawing.Point(6, 382);
+            this.label65.Location = new System.Drawing.Point(6, 400);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(87, 12);
             this.label65.TabIndex = 48;
@@ -2283,7 +2331,7 @@
             // label64
             // 
             this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(357, 358);
+            this.label64.Location = new System.Drawing.Point(357, 376);
             this.label64.Name = "label64";
             this.label64.Size = new System.Drawing.Size(190, 12);
             this.label64.TabIndex = 47;
@@ -2292,7 +2340,7 @@
             // EnabledNotifyNormalSpellTimerCheckBox
             // 
             this.EnabledNotifyNormalSpellTimerCheckBox.AutoSize = true;
-            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(293, 357);
+            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(293, 375);
             this.EnabledNotifyNormalSpellTimerCheckBox.Name = "EnabledNotifyNormalSpellTimerCheckBox";
             this.EnabledNotifyNormalSpellTimerCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledNotifyNormalSpellTimerCheckBox.TabIndex = 46;
@@ -2302,7 +2350,7 @@
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(6, 358);
+            this.label63.Location = new System.Drawing.Point(6, 376);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(153, 12);
             this.label63.TabIndex = 45;
@@ -2311,7 +2359,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(357, 336);
+            this.label49.Location = new System.Drawing.Point(357, 354);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(159, 12);
             this.label49.TabIndex = 44;
@@ -2320,7 +2368,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 336);
+            this.label31.Location = new System.Drawing.Point(6, 354);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(122, 12);
             this.label31.TabIndex = 43;
@@ -2329,7 +2377,7 @@
             // EnabledSpellTimerNoDecimalCheckBox
             // 
             this.EnabledSpellTimerNoDecimalCheckBox.AutoSize = true;
-            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(293, 335);
+            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(293, 353);
             this.EnabledSpellTimerNoDecimalCheckBox.Name = "EnabledSpellTimerNoDecimalCheckBox";
             this.EnabledSpellTimerNoDecimalCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledSpellTimerNoDecimalCheckBox.TabIndex = 42;
@@ -2379,7 +2427,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(357, 314);
+            this.label48.Location = new System.Drawing.Point(357, 332);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(175, 12);
             this.label48.TabIndex = 32;
@@ -2388,7 +2436,7 @@
             // EnabledPTPlaceholderCheckBox
             // 
             this.EnabledPTPlaceholderCheckBox.AutoSize = true;
-            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(293, 313);
+            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(293, 331);
             this.EnabledPTPlaceholderCheckBox.Name = "EnabledPTPlaceholderCheckBox";
             this.EnabledPTPlaceholderCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledPTPlaceholderCheckBox.TabIndex = 31;
@@ -2398,7 +2446,7 @@
             // label43
             // 
             this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(6, 314);
+            this.label43.Location = new System.Drawing.Point(6, 332);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(100, 12);
             this.label43.TabIndex = 30;
@@ -2416,7 +2464,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(405, 288);
+            this.label30.Location = new System.Drawing.Point(405, 306);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(63, 12);
             this.label30.TabIndex = 28;
@@ -2425,7 +2473,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(358, 288);
+            this.label29.Location = new System.Drawing.Point(358, 306);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(62, 12);
             this.label29.TabIndex = 27;
@@ -2434,7 +2482,7 @@
             // RefreshIntervalNumericUpDown
             // 
             this.RefreshIntervalNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(293, 286);
+            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(293, 304);
             this.RefreshIntervalNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -2458,7 +2506,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(6, 288);
+            this.label28.Location = new System.Drawing.Point(6, 306);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(128, 12);
             this.label28.TabIndex = 25;
@@ -2467,7 +2515,7 @@
             // AutoSortReverseCheckBox
             // 
             this.AutoSortReverseCheckBox.AutoSize = true;
-            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(373, 239);
+            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(373, 257);
             this.AutoSortReverseCheckBox.Name = "AutoSortReverseCheckBox";
             this.AutoSortReverseCheckBox.Size = new System.Drawing.Size(161, 16);
             this.AutoSortReverseCheckBox.TabIndex = 9;
@@ -2488,7 +2536,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(403, 263);
+            this.label26.Location = new System.Drawing.Point(403, 281);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(97, 12);
             this.label26.TabIndex = 11;
@@ -2497,7 +2545,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 263);
+            this.label25.Location = new System.Drawing.Point(6, 281);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(96, 12);
             this.label25.TabIndex = 24;
@@ -2506,7 +2554,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(358, 263);
+            this.label24.Location = new System.Drawing.Point(358, 281);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(74, 12);
             this.label24.TabIndex = 23;
@@ -2515,7 +2563,7 @@
             // TimeOfHideNumericUpDown
             // 
             this.TimeOfHideNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(293, 261);
+            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(293, 279);
             this.TimeOfHideNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -2529,7 +2577,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 240);
+            this.label23.Location = new System.Drawing.Point(6, 258);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(104, 12);
             this.label23.TabIndex = 21;
@@ -2538,7 +2586,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(6, 218);
+            this.label22.Location = new System.Drawing.Point(6, 232);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(72, 12);
             this.label22.TabIndex = 20;
@@ -2547,7 +2595,7 @@
             // AutoSortCheckBox
             // 
             this.AutoSortCheckBox.AutoSize = true;
-            this.AutoSortCheckBox.Location = new System.Drawing.Point(293, 239);
+            this.AutoSortCheckBox.Location = new System.Drawing.Point(293, 257);
             this.AutoSortCheckBox.Name = "AutoSortCheckBox";
             this.AutoSortCheckBox.Size = new System.Drawing.Size(64, 16);
             this.AutoSortCheckBox.TabIndex = 8;
@@ -2557,7 +2605,7 @@
             // ClickThroughCheckBox
             // 
             this.ClickThroughCheckBox.AutoSize = true;
-            this.ClickThroughCheckBox.Location = new System.Drawing.Point(293, 217);
+            this.ClickThroughCheckBox.Location = new System.Drawing.Point(293, 235);
             this.ClickThroughCheckBox.Name = "ClickThroughCheckBox";
             this.ClickThroughCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ClickThroughCheckBox.TabIndex = 7;
@@ -2567,7 +2615,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 194);
+            this.label21.Location = new System.Drawing.Point(6, 212);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(89, 12);
             this.label21.TabIndex = 17;
@@ -2576,7 +2624,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(359, 194);
+            this.label20.Location = new System.Drawing.Point(359, 212);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(19, 12);
             this.label20.TabIndex = 16;
@@ -2585,7 +2633,7 @@
             // OpacityNumericUpDown
             // 
             this.OpacityNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.OpacityNumericUpDown.Location = new System.Drawing.Point(293, 192);
+            this.OpacityNumericUpDown.Location = new System.Drawing.Point(293, 210);
             this.OpacityNumericUpDown.Name = "OpacityNumericUpDown";
             this.OpacityNumericUpDown.Size = new System.Drawing.Size(59, 19);
             this.OpacityNumericUpDown.TabIndex = 6;
@@ -2594,7 +2642,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 114);
+            this.label18.Location = new System.Drawing.Point(6, 132);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(128, 12);
             this.label18.TabIndex = 10;
@@ -2619,6 +2667,24 @@
             this.ShokikaButton.Text = "InitializationButton";
             this.ShokikaButton.UseVisualStyleBackColor = true;
             this.ShokikaButton.Click += new System.EventHandler(this.ShokikaButton_Click);
+            // 
+            // DefaultVisualSetting
+            // 
+            this.DefaultVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
+            this.DefaultVisualSetting.BarColor = System.Drawing.Color.White;
+            this.DefaultVisualSetting.BarEnabled = true;
+            this.DefaultVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.DefaultVisualSetting.BarSize = new System.Drawing.Size(190, 8);
+            this.DefaultVisualSetting.FontColor = System.Drawing.Color.White;
+            this.DefaultVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.DefaultVisualSetting.HideSpellName = false;
+            this.DefaultVisualSetting.Location = new System.Drawing.Point(293, 126);
+            this.DefaultVisualSetting.Name = "DefaultVisualSetting";
+            this.DefaultVisualSetting.OverlapRecastTime = false;
+            this.DefaultVisualSetting.Size = new System.Drawing.Size(306, 71);
+            this.DefaultVisualSetting.SpellIcon = "";
+            this.DefaultVisualSetting.SpellIconSize = 0;
+            this.DefaultVisualSetting.TabIndex = 37;
             // 
             // OpenFileDialog
             // 
@@ -2657,60 +2723,6 @@
             this.SaveLogFileDialog.DefaultExt = "log";
             this.SaveLogFileDialog.Filter = "Log files (*.log)|*.log|Text files (*.txt)|*.txt|All files (*.*)|*.*";
             this.SaveLogFileDialog.RestoreDirectory = true;
-            // 
-            // SpellVisualSetting
-            // 
-            this.SpellVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
-            this.SpellVisualSetting.BarColor = System.Drawing.Color.White;
-            this.SpellVisualSetting.BarEnabled = true;
-            this.SpellVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.SpellVisualSetting.BarSize = new System.Drawing.Size(190, 8);
-            this.SpellVisualSetting.FontColor = System.Drawing.Color.White;
-            this.SpellVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.SpellVisualSetting.HideSpellName = false;
-            this.SpellVisualSetting.Location = new System.Drawing.Point(195, 262);
-            this.SpellVisualSetting.Name = "SpellVisualSetting";
-            this.SpellVisualSetting.OverlapRecastTime = false;
-            this.SpellVisualSetting.Size = new System.Drawing.Size(306, 109);
-            this.SpellVisualSetting.SpellIcon = "";
-            this.SpellVisualSetting.SpellIconSize = 0;
-            this.SpellVisualSetting.TabIndex = 51;
-            // 
-            // TelopVisualSetting
-            // 
-            this.TelopVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
-            this.TelopVisualSetting.BarColor = System.Drawing.Color.White;
-            this.TelopVisualSetting.BarEnabled = false;
-            this.TelopVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.TelopVisualSetting.BarSize = new System.Drawing.Size(190, 8);
-            this.TelopVisualSetting.FontColor = System.Drawing.Color.White;
-            this.TelopVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.TelopVisualSetting.HideSpellName = false;
-            this.TelopVisualSetting.Location = new System.Drawing.Point(187, 143);
-            this.TelopVisualSetting.Name = "TelopVisualSetting";
-            this.TelopVisualSetting.OverlapRecastTime = false;
-            this.TelopVisualSetting.Size = new System.Drawing.Size(306, 71);
-            this.TelopVisualSetting.SpellIcon = "";
-            this.TelopVisualSetting.SpellIconSize = 0;
-            this.TelopVisualSetting.TabIndex = 6;
-            // 
-            // DefaultVisualSetting
-            // 
-            this.DefaultVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
-            this.DefaultVisualSetting.BarColor = System.Drawing.Color.White;
-            this.DefaultVisualSetting.BarEnabled = true;
-            this.DefaultVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.DefaultVisualSetting.BarSize = new System.Drawing.Size(190, 8);
-            this.DefaultVisualSetting.FontColor = System.Drawing.Color.White;
-            this.DefaultVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.DefaultVisualSetting.HideSpellName = false;
-            this.DefaultVisualSetting.Location = new System.Drawing.Point(293, 108);
-            this.DefaultVisualSetting.Name = "DefaultVisualSetting";
-            this.DefaultVisualSetting.OverlapRecastTime = false;
-            this.DefaultVisualSetting.Size = new System.Drawing.Size(306, 71);
-            this.DefaultVisualSetting.SpellIcon = "";
-            this.DefaultVisualSetting.SpellIconSize = 0;
-            this.DefaultVisualSetting.TabIndex = 37;
             // 
             // ConfigPanel
             // 
@@ -2995,5 +3007,6 @@
         private System.Windows.Forms.TextBox SaveLogTextBox;
         private System.Windows.Forms.Label label67;
         private System.Windows.Forms.SaveFileDialog SaveLogFileDialog;
+        private System.Windows.Forms.CheckBox HideWhenNotActiceCheckBox;
     }
 }

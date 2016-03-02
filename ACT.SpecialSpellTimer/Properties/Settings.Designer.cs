@@ -382,5 +382,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["SaveLogFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HideWhenNotActive {
+            get {
+                return ((bool)(this["HideWhenNotActive"]));
+            }
+            set {
+                this["HideWhenNotActive"] = value;
+            }
+        }
     }
 }

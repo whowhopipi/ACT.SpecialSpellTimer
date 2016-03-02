@@ -941,4 +941,12 @@
     <value>...</value>
     <comment>...</comment>
   </data>
+  <data name="WatchActiveError" xml:space="preserve">
+    <value>ACT.SpecialSpellTimer フォアグラウンドWindowの監視で例外が発生しました。</value>
+    <comment>An exception occurred in the Watch foreground window.</comment>
+  </data>
+  <data name="HideWhenNotActiceCheckBox" xml:space="preserve">
+    <value>非アクティブのときオーバーレイを隠す</value>
+    <comment>Hide  overlays when inactive.</comment>
+  </data>
 </root>
