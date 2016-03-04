@@ -1,4 +1,4 @@
-ACT.SpecialSpellTimer [![Analytics](https://ga-beacon.appspot.com/UA-58705151-1/ACT.SpecialSpellTimer/readme?pixel)](https://github.com/igrigorik/ga-beacon)
+ACT.SpecialSpellTimer
 =====================
 
 概要
