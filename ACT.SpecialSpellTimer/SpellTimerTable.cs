@@ -530,9 +530,7 @@
                     }
                     catch (Exception ex)
                     {
-                        ActGlobals.oFormActMain.WriteExceptionLog(
-                            ex,
-                            Translate.Get("LoadXMLError"));
+                        Logger.Write(Translate.Get("LoadXMLError"), ex);
                     }
                 }
 

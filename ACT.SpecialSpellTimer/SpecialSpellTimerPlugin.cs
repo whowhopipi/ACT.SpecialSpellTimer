@@ -119,9 +119,7 @@
                 }
                 catch (Exception ex)
                 {
-                    ActGlobals.oFormActMain.WriteExceptionLog(
-                        ex,
-                        Utility.Translate.Get("ACTAssemblyError"));
+                    Logger.Write(Utility.Translate.Get("ACTAssemblyError"), ex);
                 }
 
                 return null;
@@ -139,6 +137,8 @@
         {
             try
             {
+                Logger.Write("Plugin Start.");
+
                 pluginScreenSpace.Text = "SpecialSpellTimer(スペスペ)";
                 this.PluginStatusLabel = pluginStatusText;
 
@@ -171,12 +171,12 @@
 
                 this.SetSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Started";
+
+                Logger.Write("Plugin Started.");
             }
             catch (Exception ex)
             {
-                ActGlobals.oFormActMain.WriteExceptionLog(
-                    ex,
-                    Utility.Translate.Get("ACTPluginStartError"));
+                Logger.Write(Utility.Translate.Get("ACTPluginStartError"), ex);
 
                 this.PluginStatusLabel.Text = "Plugin Initialize Error";
             }
@@ -192,9 +192,13 @@
                 SpellTimerCore.Default.End();
                 this.RemoveSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Exited";
+
+                Logger.Write("Plugin Exited.");
             }
             catch (Exception ex)
             {
+                Logger.Write(Utility.Translate.Get("ACTPluginStopError"), ex);
+
                 ActGlobals.oFormActMain.WriteExceptionLog(
                     ex,
                     Utility.Translate.Get("ACTPluginStopError"));
@@ -297,9 +301,7 @@
                     var message = UpdateChecker.Update();
                     if (!string.IsNullOrWhiteSpace(message))
                     {
-                        ActGlobals.oFormActMain.WriteExceptionLog(
-                            new Exception(),
-                            message);
+                        Logger.Write(message);
                     }
 
                     Settings.Default.LastUpdateDateTime = DateTime.Now;

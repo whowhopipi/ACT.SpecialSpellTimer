@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Advanced_Combat_Tracker;
-
-namespace ACT.SpecialSpellTimer.Utility
+﻿namespace ACT.SpecialSpellTimer.Utility
 {
+    using System;
+
     class Translate
     {
         static System.Resources.ResourceManager Language;
@@ -21,9 +15,9 @@ namespace ACT.SpecialSpellTimer.Utility
                 case "JP":
                     return resources.strings.Strings_JP.ResourceManager;
             }
-            ActGlobals.oFormActMain.WriteExceptionLog(
-                new Exception(),
-                "Unknown language: " + Properties.Settings.Default.Language);
+
+            Logger.Write("Unknown language: " + Properties.Settings.Default.Language + " -> " + name);
+
             return resources.strings.Strings_JP.ResourceManager;
         }
 

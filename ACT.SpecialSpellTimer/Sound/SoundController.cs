@@ -173,9 +173,7 @@
             }
             catch (Exception ex)
             {
-                ActGlobals.oFormActMain.WriteExceptionLog(
-                    ex,
-                    Translate.Get("SoundError"));
+                Logger.Write(Translate.Get("SoundError"), ex);
             }
         }
 

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Configパネル モニター
@@ -12,6 +13,7 @@
         private string playerName;
         private List<string> partyMemberNames;
         private List<KeyValuePair<string, string>> jobPlaceholders;
+        private StringBuilder logBuffer = new StringBuilder();
 
         /// <summary>
         /// モニタタブ用のロード
@@ -22,6 +24,12 @@
                 this.playerName,
                 this.partyMemberNames,
                 this.jobPlaceholders);
+
+            if (string.IsNullOrWhiteSpace(this.LogTextBox.Text) &&
+                this.logBuffer.Length > 0)
+            {
+                this.LogTextBox.AppendText(this.logBuffer.ToString());
+            }
         }
 
         /// <summary>
@@ -31,6 +39,7 @@
         public void AppendLog(
             string text)
         {
+            this.logBuffer.AppendLine(text);
             this.LogTextBox.AppendText(text + Environment.NewLine);
         }
 

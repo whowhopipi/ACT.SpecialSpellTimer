@@ -133,9 +133,7 @@
                 }
                 catch (Exception ex)
                 {
-                    ActGlobals.oFormActMain.WriteExceptionLog(
-                        ex,
-                        Translate.Get("SpellTimerRefreshError"));
+                    Logger.Write(Translate.Get("SpellTimerRefreshError"), ex);
                 }
                 finally
                 {
@@ -275,9 +273,7 @@
             }
             catch (Exception ex)
             {
-                ActGlobals.oFormActMain.WriteExceptionLog(
-                    ex,
-                    Translate.Get("SpellTimerRefreshError"));
+                Logger.Write(Translate.Get("SpellTimerRefreshError"), ex);
             }
             finally
             {
@@ -1293,9 +1289,7 @@
             }
             catch (Exception ex)
             {
-                ActGlobals.oFormActMain.WriteExceptionLog(
-                    ex,
-                    Translate.Get("WatchActiveError"));
+                Logger.Write(Translate.Get("WatchActiveError"), ex);
             }
 
             // 最後の状態を保存する
