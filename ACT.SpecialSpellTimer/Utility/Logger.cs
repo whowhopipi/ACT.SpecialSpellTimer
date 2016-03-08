@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Text;
 
     /// <summary>
     /// ログ
@@ -30,7 +31,10 @@
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     @"anoyetta\ACT\ACT.SpecialSpellTimer.log");
 
-                File.AppendText(textToWrite + Environment.NewLine);
+                File.AppendAllText(
+                    logFile, 
+                    textToWrite + Environment.NewLine, 
+                    new UTF8Encoding(false));
             }
             catch (Exception)
             {
