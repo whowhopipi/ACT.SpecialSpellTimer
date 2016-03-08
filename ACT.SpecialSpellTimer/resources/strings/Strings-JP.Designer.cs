@@ -790,6 +790,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   行 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string LinesLabel {
+            get {
+                return ResourceManager.GetString("LinesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   槍術士 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string LNC {

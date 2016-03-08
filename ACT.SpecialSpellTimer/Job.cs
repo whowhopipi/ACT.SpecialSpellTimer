@@ -1,7 +1,6 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// ジョブ
@@ -47,9 +46,9 @@
                 list.Add(new Job() { JobId = 2, JobName = "PUG", Role = JobRoles.MeleeDPS });
                 list.Add(new Job() { JobId = 3, JobName = "MRD", Role = JobRoles.Tank });
                 list.Add(new Job() { JobId = 4, JobName = "LNC", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 5, JobName = "ARC", Role = JobRoles.RangeDPS });
+                list.Add(new Job() { JobId = 5, JobName = "ARC", Role = JobRoles.RangerDPS });
                 list.Add(new Job() { JobId = 6, JobName = "CNJ", Role = JobRoles.Healer });
-                list.Add(new Job() { JobId = 7, JobName = "THM", Role = JobRoles.RangeDPS });
+                list.Add(new Job() { JobId = 7, JobName = "THM", Role = JobRoles.CasterDPS });
                 list.Add(new Job() { JobId = 8, JobName = "CRP", Role = JobRoles.Crafter });
                 list.Add(new Job() { JobId = 9, JobName = "BSM", Role = JobRoles.Crafter });
                 list.Add(new Job() { JobId = 10, JobName = "ARM", Role = JobRoles.Crafter });
@@ -65,15 +64,15 @@
                 list.Add(new Job() { JobId = 20, JobName = "MNK", Role = JobRoles.MeleeDPS });
                 list.Add(new Job() { JobId = 21, JobName = "WAR", Role = JobRoles.Tank });
                 list.Add(new Job() { JobId = 22, JobName = "DRG", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 23, JobName = "BRD", Role = JobRoles.RangeDPS });
+                list.Add(new Job() { JobId = 23, JobName = "BRD", Role = JobRoles.RangerDPS });
                 list.Add(new Job() { JobId = 24, JobName = "WHM", Role = JobRoles.Healer });
-                list.Add(new Job() { JobId = 25, JobName = "BLM", Role = JobRoles.RangeDPS });
-                list.Add(new Job() { JobId = 26, JobName = "ACN", Role = JobRoles.RangeDPS });
-                list.Add(new Job() { JobId = 27, JobName = "SMN", Role = JobRoles.RangeDPS });
+                list.Add(new Job() { JobId = 25, JobName = "BLM", Role = JobRoles.CasterDPS });
+                list.Add(new Job() { JobId = 26, JobName = "ACN", Role = JobRoles.CasterDPS });
+                list.Add(new Job() { JobId = 27, JobName = "SMN", Role = JobRoles.CasterDPS });
                 list.Add(new Job() { JobId = 28, JobName = "SCH", Role = JobRoles.Healer });
                 list.Add(new Job() { JobId = 29, JobName = "ROG", Role = JobRoles.MeleeDPS });
                 list.Add(new Job() { JobId = 30, JobName = "NIN", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 31, JobName = "MCH", Role = JobRoles.RangeDPS });
+                list.Add(new Job() { JobId = 31, JobName = "MCH", Role = JobRoles.RangerDPS });
                 list.Add(new Job() { JobId = 32, JobName = "DRK", Role = JobRoles.Tank });
                 list.Add(new Job() { JobId = 33, JobName = "AST", Role = JobRoles.Healer });
 
@@ -126,7 +125,8 @@
         Healer = 20,
         DPS = 30,
         MeleeDPS = 31,
-        RangeDPS = 32,
+        RangerDPS = 32,
+        CasterDPS = 33,
         Crafter = 40,
         Gatherer = 50,
     }

@@ -790,6 +790,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   lines に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string LinesLabel {
+            get {
+                return ResourceManager.GetString("LinesLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Lancer に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string LNC {

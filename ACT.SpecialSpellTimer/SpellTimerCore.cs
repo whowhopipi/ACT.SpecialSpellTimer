@@ -1019,7 +1019,8 @@
             timerData.Panel1Display = false;
             timerData.Panel2Display = false;
 
-            timerData.WarningSoundData = "none"; // disable warning sound
+            // disable warning sound
+            timerData.WarningSoundData = "none";
 
             // initialize other parameters
             timerData.RestrictToMe = false;
@@ -1055,7 +1056,8 @@
             timerData.Panel1Display = false;
             timerData.Panel2Display = false;
 
-            timerData.WarningSoundData = "none"; // disable warning sound
+            // disable warning sound
+            timerData.WarningSoundData = "none";
 
             // initialize other parameters
             timerData.RestrictToMe = false;

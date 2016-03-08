@@ -949,4 +949,8 @@
     <value>Hide  overlays when inactive.</value>
     <comment>非アクティブのときオーバーレイを隠す</comment>
   </data>
+  <data name="LinesLabel" xml:space="preserve">
+    <value>lines</value>
+    <comment>行</comment>
+  </data>
 </root>
