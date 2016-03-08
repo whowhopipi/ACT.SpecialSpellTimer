@@ -95,47 +95,47 @@
             {
                 this.PLDTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("PLD")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("PLD")).ToArray());
                 this.WARTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("WAR")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("WAR")).ToArray());
                 this.DRKTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("DRK")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("DRK")).ToArray());
 
                 this.WHMTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("WHM")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("WHM")).ToArray());
                 this.SCHTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("SCH")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("SCH")).ToArray());
                 this.ASTTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("AST")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("AST")).ToArray());
 
                 this.MNKTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("MNK")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("MNK")).ToArray());
                 this.DRGTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("DRG")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("DRG")).ToArray());
                 this.NINTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("NIN")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("NIN")).ToArray());
 
                 this.BRDTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("BRD")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("BRD")).ToArray());
                 this.MCHTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("MCH")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("MCH")).ToArray());
 
                 this.BLMTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("BLM")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("BLM")).ToArray());
                 this.SMNTextBox.Text = string.Join(
                     Environment.NewLine,
-                    jobPlaceholders.Where(x => x.Key.StartsWith("SMN")).ToArray());
+                    jobPlaceholders.Where(x => x.Key.Contains("SMN")).ToArray());
             }
 
             this.playerName = playerName;
