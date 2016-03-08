@@ -289,18 +289,22 @@
         /// </summary>
         private void Update()
         {
-            if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours >= 12d)
+            if (Settings.Default.UpdateCheckInterval >= 0.0d)
             {
-                var message = UpdateChecker.Update();
-                if (!string.IsNullOrWhiteSpace(message))
+                if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours >=
+                    Settings.Default.UpdateCheckInterval)
                 {
-                    ActGlobals.oFormActMain.WriteExceptionLog(
-                        new Exception(),
-                        message);
-                }
+                    var message = UpdateChecker.Update();
+                    if (!string.IsNullOrWhiteSpace(message))
+                    {
+                        ActGlobals.oFormActMain.WriteExceptionLog(
+                            new Exception(),
+                            message);
+                    }
 
-                Settings.Default.LastUpdateDateTime = DateTime.Now;
-                Settings.Default.Save();
+                    Settings.Default.LastUpdateDateTime = DateTime.Now;
+                    Settings.Default.Save();
+                }
             }
         }
     }

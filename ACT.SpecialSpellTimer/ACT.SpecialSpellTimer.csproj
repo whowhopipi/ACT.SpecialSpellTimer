@@ -67,6 +67,9 @@
     <Compile Include="ConfigPanel.Designer.cs">
       <DependentUpon>ConfigPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConfigPanel.Monitor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="ConfigPanel.OnePointTelop.cs">
       <SubType>UserControl</SubType>
     </Compile>

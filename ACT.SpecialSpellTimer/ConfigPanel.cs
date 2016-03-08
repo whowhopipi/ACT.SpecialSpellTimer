@@ -267,6 +267,9 @@
 
             // 戦闘アナライザのロードメソッドを呼ぶ
             this.LoadCombatAnalyzer();
+
+            // モニタタブのロードを呼ぶ
+            this.LoadMonitorTab();
         }
 
         /// <summary>

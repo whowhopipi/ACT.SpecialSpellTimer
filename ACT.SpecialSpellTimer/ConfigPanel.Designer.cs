@@ -201,6 +201,51 @@
             this.CombatLogEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzingLabel = new System.Windows.Forms.Label();
             this.AnalyzeCombatButton = new System.Windows.Forms.Button();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label89 = new System.Windows.Forms.Label();
+            this.LogTextBox = new System.Windows.Forms.TextBox();
+            this.label88 = new System.Windows.Forms.Label();
+            this.SMNTextBox = new System.Windows.Forms.TextBox();
+            this.label87 = new System.Windows.Forms.Label();
+            this.label86 = new System.Windows.Forms.Label();
+            this.label85 = new System.Windows.Forms.Label();
+            this.label84 = new System.Windows.Forms.Label();
+            this.label83 = new System.Windows.Forms.Label();
+            this.BLMTextBox = new System.Windows.Forms.TextBox();
+            this.MCHTextBox = new System.Windows.Forms.TextBox();
+            this.BRDTextBox = new System.Windows.Forms.TextBox();
+            this.NINTextBox = new System.Windows.Forms.TextBox();
+            this.DRGTextBox = new System.Windows.Forms.TextBox();
+            this.label82 = new System.Windows.Forms.Label();
+            this.MNKTextBox = new System.Windows.Forms.TextBox();
+            this.label81 = new System.Windows.Forms.Label();
+            this.ASTTextBox = new System.Windows.Forms.TextBox();
+            this.label80 = new System.Windows.Forms.Label();
+            this.label79 = new System.Windows.Forms.Label();
+            this.label78 = new System.Windows.Forms.Label();
+            this.label77 = new System.Windows.Forms.Label();
+            this.SCHTextBox = new System.Windows.Forms.TextBox();
+            this.WHMTextBox = new System.Windows.Forms.TextBox();
+            this.DRKTextBox = new System.Windows.Forms.TextBox();
+            this.WARTextBox = new System.Windows.Forms.TextBox();
+            this.label76 = new System.Windows.Forms.Label();
+            this.PLDTextBox = new System.Windows.Forms.TextBox();
+            this.Member8TextBox = new System.Windows.Forms.TextBox();
+            this.Member7TextBox = new System.Windows.Forms.TextBox();
+            this.Member6TextBox = new System.Windows.Forms.TextBox();
+            this.Member5TextBox = new System.Windows.Forms.TextBox();
+            this.Member4TextBox = new System.Windows.Forms.TextBox();
+            this.Member3TextBox = new System.Windows.Forms.TextBox();
+            this.Member2TextBox = new System.Windows.Forms.TextBox();
+            this.MeTextBox = new System.Windows.Forms.TextBox();
+            this.label75 = new System.Windows.Forms.Label();
+            this.label74 = new System.Windows.Forms.Label();
+            this.label73 = new System.Windows.Forms.Label();
+            this.label72 = new System.Windows.Forms.Label();
+            this.label71 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.label69 = new System.Windows.Forms.Label();
+            this.label68 = new System.Windows.Forms.Label();
             this.OptionTabPage = new System.Windows.Forms.TabPage();
             this.HideWhenNotActiceCheckBox = new System.Windows.Forms.CheckBox();
             this.SaveLogButton = new System.Windows.Forms.Button();
@@ -285,6 +330,7 @@
             this.CombatAnalyzerTabPage.SuspendLayout();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.OptionTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimeOfHideNumericUpDown)).BeginInit();
@@ -299,6 +345,7 @@
             this.TabControl.Controls.Add(this.SpecialSpellTabPage);
             this.TabControl.Controls.Add(this.OnPointTelopTabPage);
             this.TabControl.Controls.Add(this.CombatAnalyzerTabPage);
+            this.TabControl.Controls.Add(this.tabPage3);
             this.TabControl.Controls.Add(this.OptionTabPage);
             this.TabControl.Location = new System.Drawing.Point(3, 3);
             this.TabControl.Name = "TabControl";
@@ -2195,6 +2242,451 @@
             this.AnalyzeCombatButton.Text = "AnalyzeCombat";
             this.AnalyzeCombatButton.UseVisualStyleBackColor = true;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.label89);
+            this.tabPage3.Controls.Add(this.LogTextBox);
+            this.tabPage3.Controls.Add(this.label88);
+            this.tabPage3.Controls.Add(this.SMNTextBox);
+            this.tabPage3.Controls.Add(this.label87);
+            this.tabPage3.Controls.Add(this.label86);
+            this.tabPage3.Controls.Add(this.label85);
+            this.tabPage3.Controls.Add(this.label84);
+            this.tabPage3.Controls.Add(this.label83);
+            this.tabPage3.Controls.Add(this.BLMTextBox);
+            this.tabPage3.Controls.Add(this.MCHTextBox);
+            this.tabPage3.Controls.Add(this.BRDTextBox);
+            this.tabPage3.Controls.Add(this.NINTextBox);
+            this.tabPage3.Controls.Add(this.DRGTextBox);
+            this.tabPage3.Controls.Add(this.label82);
+            this.tabPage3.Controls.Add(this.MNKTextBox);
+            this.tabPage3.Controls.Add(this.label81);
+            this.tabPage3.Controls.Add(this.ASTTextBox);
+            this.tabPage3.Controls.Add(this.label80);
+            this.tabPage3.Controls.Add(this.label79);
+            this.tabPage3.Controls.Add(this.label78);
+            this.tabPage3.Controls.Add(this.label77);
+            this.tabPage3.Controls.Add(this.SCHTextBox);
+            this.tabPage3.Controls.Add(this.WHMTextBox);
+            this.tabPage3.Controls.Add(this.DRKTextBox);
+            this.tabPage3.Controls.Add(this.WARTextBox);
+            this.tabPage3.Controls.Add(this.label76);
+            this.tabPage3.Controls.Add(this.PLDTextBox);
+            this.tabPage3.Controls.Add(this.Member8TextBox);
+            this.tabPage3.Controls.Add(this.Member7TextBox);
+            this.tabPage3.Controls.Add(this.Member6TextBox);
+            this.tabPage3.Controls.Add(this.Member5TextBox);
+            this.tabPage3.Controls.Add(this.Member4TextBox);
+            this.tabPage3.Controls.Add(this.Member3TextBox);
+            this.tabPage3.Controls.Add(this.Member2TextBox);
+            this.tabPage3.Controls.Add(this.MeTextBox);
+            this.tabPage3.Controls.Add(this.label75);
+            this.tabPage3.Controls.Add(this.label74);
+            this.tabPage3.Controls.Add(this.label73);
+            this.tabPage3.Controls.Add(this.label72);
+            this.tabPage3.Controls.Add(this.label71);
+            this.tabPage3.Controls.Add(this.label70);
+            this.tabPage3.Controls.Add(this.label69);
+            this.tabPage3.Controls.Add(this.label68);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(1186, 668);
+            this.tabPage3.TabIndex = 4;
+            this.tabPage3.Text = "MonitorTabPage";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label89
+            // 
+            this.label89.AutoSize = true;
+            this.label89.Location = new System.Drawing.Point(3, 299);
+            this.label89.Name = "label89";
+            this.label89.Size = new System.Drawing.Size(50, 12);
+            this.label89.TabIndex = 43;
+            this.label89.Text = "LogLabel";
+            // 
+            // LogTextBox
+            // 
+            this.LogTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LogTextBox.Location = new System.Drawing.Point(5, 318);
+            this.LogTextBox.Multiline = true;
+            this.LogTextBox.Name = "LogTextBox";
+            this.LogTextBox.ReadOnly = true;
+            this.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.LogTextBox.Size = new System.Drawing.Size(1174, 347);
+            this.LogTextBox.TabIndex = 42;
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(915, 66);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(56, 12);
+            this.label88.TabIndex = 41;
+            this.label88.Text = "SMNLabel";
+            // 
+            // SMNTextBox
+            // 
+            this.SMNTextBox.Location = new System.Drawing.Point(972, 63);
+            this.SMNTextBox.Multiline = true;
+            this.SMNTextBox.Name = "SMNTextBox";
+            this.SMNTextBox.ReadOnly = true;
+            this.SMNTextBox.Size = new System.Drawing.Size(207, 40);
+            this.SMNTextBox.TabIndex = 40;
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(915, 20);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(55, 12);
+            this.label87.TabIndex = 39;
+            this.label87.Text = "BLMLabel";
+            // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(625, 204);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(57, 12);
+            this.label86.TabIndex = 38;
+            this.label86.Text = "MCHLabel";
+            // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(625, 158);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(56, 12);
+            this.label85.TabIndex = 37;
+            this.label85.Text = "BRDLabel";
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(625, 112);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(51, 12);
+            this.label84.TabIndex = 36;
+            this.label84.Text = "NINLabel";
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(625, 66);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(56, 12);
+            this.label83.TabIndex = 35;
+            this.label83.Text = "DRGLabel";
+            // 
+            // BLMTextBox
+            // 
+            this.BLMTextBox.Location = new System.Drawing.Point(972, 17);
+            this.BLMTextBox.Multiline = true;
+            this.BLMTextBox.Name = "BLMTextBox";
+            this.BLMTextBox.ReadOnly = true;
+            this.BLMTextBox.Size = new System.Drawing.Size(207, 40);
+            this.BLMTextBox.TabIndex = 34;
+            // 
+            // MCHTextBox
+            // 
+            this.MCHTextBox.Location = new System.Drawing.Point(684, 201);
+            this.MCHTextBox.Multiline = true;
+            this.MCHTextBox.Name = "MCHTextBox";
+            this.MCHTextBox.ReadOnly = true;
+            this.MCHTextBox.Size = new System.Drawing.Size(207, 40);
+            this.MCHTextBox.TabIndex = 33;
+            // 
+            // BRDTextBox
+            // 
+            this.BRDTextBox.Location = new System.Drawing.Point(684, 155);
+            this.BRDTextBox.Multiline = true;
+            this.BRDTextBox.Name = "BRDTextBox";
+            this.BRDTextBox.ReadOnly = true;
+            this.BRDTextBox.Size = new System.Drawing.Size(207, 40);
+            this.BRDTextBox.TabIndex = 32;
+            // 
+            // NINTextBox
+            // 
+            this.NINTextBox.Location = new System.Drawing.Point(684, 109);
+            this.NINTextBox.Multiline = true;
+            this.NINTextBox.Name = "NINTextBox";
+            this.NINTextBox.ReadOnly = true;
+            this.NINTextBox.Size = new System.Drawing.Size(207, 40);
+            this.NINTextBox.TabIndex = 31;
+            // 
+            // DRGTextBox
+            // 
+            this.DRGTextBox.Location = new System.Drawing.Point(684, 63);
+            this.DRGTextBox.Multiline = true;
+            this.DRGTextBox.Name = "DRGTextBox";
+            this.DRGTextBox.ReadOnly = true;
+            this.DRGTextBox.Size = new System.Drawing.Size(207, 40);
+            this.DRGTextBox.TabIndex = 30;
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Location = new System.Drawing.Point(625, 20);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(56, 12);
+            this.label82.TabIndex = 29;
+            this.label82.Text = "MNKLabel";
+            // 
+            // MNKTextBox
+            // 
+            this.MNKTextBox.Location = new System.Drawing.Point(684, 17);
+            this.MNKTextBox.Multiline = true;
+            this.MNKTextBox.Name = "MNKTextBox";
+            this.MNKTextBox.ReadOnly = true;
+            this.MNKTextBox.Size = new System.Drawing.Size(207, 40);
+            this.MNKTextBox.TabIndex = 28;
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(331, 250);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(54, 12);
+            this.label81.TabIndex = 27;
+            this.label81.Text = "ASTLabel";
+            // 
+            // ASTTextBox
+            // 
+            this.ASTTextBox.Location = new System.Drawing.Point(392, 247);
+            this.ASTTextBox.Multiline = true;
+            this.ASTTextBox.Name = "ASTTextBox";
+            this.ASTTextBox.ReadOnly = true;
+            this.ASTTextBox.Size = new System.Drawing.Size(207, 40);
+            this.ASTTextBox.TabIndex = 26;
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Location = new System.Drawing.Point(333, 204);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(55, 12);
+            this.label80.TabIndex = 25;
+            this.label80.Text = "SCHLabel";
+            // 
+            // label79
+            // 
+            this.label79.AutoSize = true;
+            this.label79.Location = new System.Drawing.Point(333, 158);
+            this.label79.Name = "label79";
+            this.label79.Size = new System.Drawing.Size(58, 12);
+            this.label79.TabIndex = 24;
+            this.label79.Text = "WHMLabel";
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Location = new System.Drawing.Point(333, 112);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(55, 12);
+            this.label78.TabIndex = 23;
+            this.label78.Text = "DRKLabel";
+            // 
+            // label77
+            // 
+            this.label77.AutoSize = true;
+            this.label77.Location = new System.Drawing.Point(333, 66);
+            this.label77.Name = "label77";
+            this.label77.Size = new System.Drawing.Size(57, 12);
+            this.label77.TabIndex = 22;
+            this.label77.Text = "WARLabel";
+            // 
+            // SCHTextBox
+            // 
+            this.SCHTextBox.Location = new System.Drawing.Point(392, 201);
+            this.SCHTextBox.Multiline = true;
+            this.SCHTextBox.Name = "SCHTextBox";
+            this.SCHTextBox.ReadOnly = true;
+            this.SCHTextBox.Size = new System.Drawing.Size(207, 40);
+            this.SCHTextBox.TabIndex = 21;
+            // 
+            // WHMTextBox
+            // 
+            this.WHMTextBox.Location = new System.Drawing.Point(392, 155);
+            this.WHMTextBox.Multiline = true;
+            this.WHMTextBox.Name = "WHMTextBox";
+            this.WHMTextBox.ReadOnly = true;
+            this.WHMTextBox.Size = new System.Drawing.Size(207, 40);
+            this.WHMTextBox.TabIndex = 20;
+            // 
+            // DRKTextBox
+            // 
+            this.DRKTextBox.Location = new System.Drawing.Point(392, 109);
+            this.DRKTextBox.Multiline = true;
+            this.DRKTextBox.Name = "DRKTextBox";
+            this.DRKTextBox.ReadOnly = true;
+            this.DRKTextBox.Size = new System.Drawing.Size(207, 40);
+            this.DRKTextBox.TabIndex = 19;
+            // 
+            // WARTextBox
+            // 
+            this.WARTextBox.Location = new System.Drawing.Point(392, 63);
+            this.WARTextBox.Multiline = true;
+            this.WARTextBox.Name = "WARTextBox";
+            this.WARTextBox.ReadOnly = true;
+            this.WARTextBox.Size = new System.Drawing.Size(207, 40);
+            this.WARTextBox.TabIndex = 18;
+            // 
+            // label76
+            // 
+            this.label76.AutoSize = true;
+            this.label76.Location = new System.Drawing.Point(333, 20);
+            this.label76.Name = "label76";
+            this.label76.Size = new System.Drawing.Size(53, 12);
+            this.label76.TabIndex = 17;
+            this.label76.Text = "PLDLabel";
+            // 
+            // PLDTextBox
+            // 
+            this.PLDTextBox.Location = new System.Drawing.Point(392, 17);
+            this.PLDTextBox.Multiline = true;
+            this.PLDTextBox.Name = "PLDTextBox";
+            this.PLDTextBox.ReadOnly = true;
+            this.PLDTextBox.Size = new System.Drawing.Size(207, 40);
+            this.PLDTextBox.TabIndex = 16;
+            // 
+            // Member8TextBox
+            // 
+            this.Member8TextBox.Location = new System.Drawing.Point(86, 192);
+            this.Member8TextBox.Name = "Member8TextBox";
+            this.Member8TextBox.ReadOnly = true;
+            this.Member8TextBox.Size = new System.Drawing.Size(207, 19);
+            this.Member8TextBox.TabIndex = 15;
+            // 
+            // Member7TextBox
+            // 
+            this.Member7TextBox.Location = new System.Drawing.Point(86, 167);
+            this.Member7TextBox.Name = "Member7TextBox";
+            this.Member7TextBox.ReadOnly = true;
+            this.Member7TextBox.Size = new System.Drawing.Size(207, 19);
+            this.Member7TextBox.TabIndex = 14;
+            // 
+            // Member6TextBox
+            // 
+            this.Member6TextBox.Location = new System.Drawing.Point(86, 142);
+            this.Member6TextBox.Name = "Member6TextBox";
+            this.Member6TextBox.ReadOnly = true;
+            this.Member6TextBox.Size = new System.Drawing.Size(207, 19);
+            this.Member6TextBox.TabIndex = 13;
+            // 
+            // Member5TextBox
+            // 
+            this.Member5TextBox.Location = new System.Drawing.Point(86, 117);
+            this.Member5TextBox.Name = "Member5TextBox";
+            this.Member5TextBox.ReadOnly = true;
+            this.Member5TextBox.Size = new System.Drawing.Size(207, 19);
+            this.Member5TextBox.TabIndex = 12;
+            // 
+            // Member4TextBox
+            // 
+            this.Member4TextBox.Location = new System.Drawing.Point(86, 92);
+            this.Member4TextBox.Name = "Member4TextBox";
+            this.Member4TextBox.ReadOnly = true;
+            this.Member4TextBox.Size = new System.Drawing.Size(207, 19);
+            this.Member4TextBox.TabIndex = 11;
+            // 
+            // Member3TextBox
+            // 
+            this.Member3TextBox.Location = new System.Drawing.Point(86, 67);
+            this.Member3TextBox.Name = "Member3TextBox";
+            this.Member3TextBox.ReadOnly = true;
+            this.Member3TextBox.Size = new System.Drawing.Size(207, 19);
+            this.Member3TextBox.TabIndex = 10;
+            // 
+            // Member2TextBox
+            // 
+            this.Member2TextBox.Location = new System.Drawing.Point(86, 42);
+            this.Member2TextBox.Name = "Member2TextBox";
+            this.Member2TextBox.ReadOnly = true;
+            this.Member2TextBox.Size = new System.Drawing.Size(207, 19);
+            this.Member2TextBox.TabIndex = 9;
+            // 
+            // MeTextBox
+            // 
+            this.MeTextBox.Location = new System.Drawing.Point(86, 17);
+            this.MeTextBox.Name = "MeTextBox";
+            this.MeTextBox.ReadOnly = true;
+            this.MeTextBox.Size = new System.Drawing.Size(207, 19);
+            this.MeTextBox.TabIndex = 8;
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Location = new System.Drawing.Point(3, 195);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(78, 12);
+            this.label75.TabIndex = 7;
+            this.label75.Text = "Member8Label";
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Location = new System.Drawing.Point(3, 170);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(78, 12);
+            this.label74.TabIndex = 6;
+            this.label74.Text = "Member7Label";
+            // 
+            // label73
+            // 
+            this.label73.AutoSize = true;
+            this.label73.Location = new System.Drawing.Point(3, 145);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(78, 12);
+            this.label73.TabIndex = 5;
+            this.label73.Text = "Member6Label";
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Location = new System.Drawing.Point(3, 120);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(78, 12);
+            this.label72.TabIndex = 4;
+            this.label72.Text = "Member5Label";
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Location = new System.Drawing.Point(3, 95);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(78, 12);
+            this.label71.TabIndex = 3;
+            this.label71.Text = "Member4Label";
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(3, 70);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(78, 12);
+            this.label70.TabIndex = 2;
+            this.label70.Text = "Member3Label";
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(3, 45);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(78, 12);
+            this.label69.TabIndex = 1;
+            this.label69.Text = "Member2Label";
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(3, 20);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(47, 12);
+            this.label68.TabIndex = 0;
+            this.label68.Text = "MeLabel";
+            // 
             // OptionTabPage
             // 
             this.OptionTabPage.BackColor = System.Drawing.SystemColors.Control;
@@ -2774,6 +3266,8 @@
             this.CombatAnalyzerTabPage.PerformLayout();
             this.CombatAnalyzerContextMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.OptionTabPage.ResumeLayout(false);
             this.OptionTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).EndInit();
@@ -3008,5 +3502,50 @@
         private System.Windows.Forms.Label label67;
         private System.Windows.Forms.SaveFileDialog SaveLogFileDialog;
         private System.Windows.Forms.CheckBox HideWhenNotActiceCheckBox;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox Member8TextBox;
+        private System.Windows.Forms.TextBox Member7TextBox;
+        private System.Windows.Forms.TextBox Member6TextBox;
+        private System.Windows.Forms.TextBox Member5TextBox;
+        private System.Windows.Forms.TextBox Member4TextBox;
+        private System.Windows.Forms.TextBox Member3TextBox;
+        private System.Windows.Forms.TextBox Member2TextBox;
+        private System.Windows.Forms.TextBox MeTextBox;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.Label label73;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.Label label80;
+        private System.Windows.Forms.Label label79;
+        private System.Windows.Forms.Label label78;
+        private System.Windows.Forms.Label label77;
+        private System.Windows.Forms.TextBox SCHTextBox;
+        private System.Windows.Forms.TextBox WHMTextBox;
+        private System.Windows.Forms.TextBox DRKTextBox;
+        private System.Windows.Forms.TextBox WARTextBox;
+        private System.Windows.Forms.Label label76;
+        private System.Windows.Forms.TextBox PLDTextBox;
+        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.TextBox ASTTextBox;
+        private System.Windows.Forms.TextBox BLMTextBox;
+        private System.Windows.Forms.TextBox MCHTextBox;
+        private System.Windows.Forms.TextBox BRDTextBox;
+        private System.Windows.Forms.TextBox NINTextBox;
+        private System.Windows.Forms.TextBox DRGTextBox;
+        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.TextBox MNKTextBox;
+        private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.Label label86;
+        private System.Windows.Forms.Label label85;
+        private System.Windows.Forms.Label label84;
+        private System.Windows.Forms.Label label83;
+        private System.Windows.Forms.Label label88;
+        private System.Windows.Forms.TextBox SMNTextBox;
+        private System.Windows.Forms.TextBox LogTextBox;
+        private System.Windows.Forms.Label label89;
     }
 }

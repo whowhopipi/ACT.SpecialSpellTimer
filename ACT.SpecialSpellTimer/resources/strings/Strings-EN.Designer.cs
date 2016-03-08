@@ -223,6 +223,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   &lt;AST&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ASTLabel {
+            get {
+                return ResourceManager.GetString("ASTLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Reverse sorting に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string AutoSortReverseCheckbox {
@@ -259,6 +268,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   &lt;BLM&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string BLMLabel {
+            get {
+                return ResourceManager.GetString("BLMLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Botanist に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string BOT {
@@ -273,6 +291,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string BRD {
             get {
                 return ResourceManager.GetString("BRD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;BRD&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string BRDLabel {
+            get {
+                return ResourceManager.GetString("BRDLabel", resourceCulture);
             }
         }
         
@@ -565,11 +592,29 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   &lt;DRG&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DRGLabel {
+            get {
+                return ResourceManager.GetString("DRGLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Dark Knight に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string DRK {
             get {
                 return ResourceManager.GetString("DRK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;DRK&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DRKLabel {
+            get {
+                return ResourceManager.GetString("DRKLabel", resourceCulture);
             }
         }
         
@@ -844,6 +889,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Log に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string LogLabel {
+            get {
+                return ResourceManager.GetString("LogLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Type に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string LogTypeHeader {
@@ -925,6 +979,87 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   &lt;MCH&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MCHLabel {
+            get {
+                return ResourceManager.GetString("MCHLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;me&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MeLabel {
+            get {
+                return ResourceManager.GetString("MeLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;2&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Member2Label {
+            get {
+                return ResourceManager.GetString("Member2Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;3&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Member3Label {
+            get {
+                return ResourceManager.GetString("Member3Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;4&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Member4Label {
+            get {
+                return ResourceManager.GetString("Member4Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;5&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Member5Label {
+            get {
+                return ResourceManager.GetString("Member5Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;6&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Member6Label {
+            get {
+                return ResourceManager.GetString("Member6Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;7&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Member7Label {
+            get {
+                return ResourceManager.GetString("Member7Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;8&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Member8Label {
+            get {
+                return ResourceManager.GetString("Member8Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Message to display on ticker に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string MessageOnTickerLabel {
@@ -957,6 +1092,24 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string MNK {
             get {
                 return ResourceManager.GetString("MNK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;MNK&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MNKLabel {
+            get {
+                return ResourceManager.GetString("MNKLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Monitor に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MonitorTabPage {
+            get {
+                return ResourceManager.GetString("MonitorTabPage", resourceCulture);
             }
         }
         
@@ -1002,6 +1155,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string NIN {
             get {
                 return ResourceManager.GetString("NIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;NIN&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string NINLabel {
+            get {
+                return ResourceManager.GetString("NINLabel", resourceCulture);
             }
         }
         
@@ -1164,6 +1326,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string PLD {
             get {
                 return ResourceManager.GetString("PLD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;PLD&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string PLDLabel {
+            get {
+                return ResourceManager.GetString("PLDLabel", resourceCulture);
             }
         }
         
@@ -1429,6 +1600,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   &lt;SCH&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SCHLabel {
+            get {
+                return ResourceManager.GetString("SCHLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Screen update interval に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ScreenUpdateTimeLabel {
@@ -1551,6 +1731,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string SMN {
             get {
                 return ResourceManager.GetString("SMN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;SMN&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SMNLabel {
+            get {
+                return ResourceManager.GetString("SMNLabel", resourceCulture);
             }
         }
         
@@ -1879,6 +2068,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   &lt;WAR&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string WARLabel {
+            get {
+                return ResourceManager.GetString("WARLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   An exception occurred in the Watch foreground window. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string WatchActiveError {
@@ -1902,6 +2100,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string WHM {
             get {
                 return ResourceManager.GetString("WHM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;WHM&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string WHMLabel {
+            get {
+                return ResourceManager.GetString("WHMLabel", resourceCulture);
             }
         }
         

@@ -953,4 +953,96 @@
     <value>lines</value>
     <comment>行</comment>
   </data>
+  <data name="ASTLabel" xml:space="preserve">
+    <value>&lt;AST&gt;</value>
+    <comment>&lt;AST&gt;</comment>
+  </data>
+  <data name="BLMLabel" xml:space="preserve">
+    <value>&lt;BLM&gt;</value>
+    <comment>&lt;BLM&gt;</comment>
+  </data>
+  <data name="BRDLabel" xml:space="preserve">
+    <value>&lt;BRD&gt;</value>
+    <comment>&lt;BRD&gt;</comment>
+  </data>
+  <data name="DRGLabel" xml:space="preserve">
+    <value>&lt;DRG&gt;</value>
+    <comment>&lt;DRG&gt;</comment>
+  </data>
+  <data name="DRKLabel" xml:space="preserve">
+    <value>&lt;DRK&gt;</value>
+    <comment>&lt;DRK&gt;</comment>
+  </data>
+  <data name="LogLabel" xml:space="preserve">
+    <value>Log</value>
+    <comment>Log</comment>
+  </data>
+  <data name="MCHLabel" xml:space="preserve">
+    <value>&lt;MCH&gt;</value>
+    <comment>&lt;MCH&gt;</comment>
+  </data>
+  <data name="MeLabel" xml:space="preserve">
+    <value>&lt;me&gt;</value>
+    <comment>&lt;me&gt;</comment>
+  </data>
+  <data name="Member2Label" xml:space="preserve">
+    <value>&lt;2&gt;</value>
+    <comment>&lt;2&gt;</comment>
+  </data>
+  <data name="Member3Label" xml:space="preserve">
+    <value>&lt;3&gt;</value>
+    <comment>&lt;3&gt;</comment>
+  </data>
+  <data name="Member4Label" xml:space="preserve">
+    <value>&lt;4&gt;</value>
+    <comment>&lt;4&gt;</comment>
+  </data>
+  <data name="Member5Label" xml:space="preserve">
+    <value>&lt;5&gt;</value>
+    <comment>&lt;5&gt;</comment>
+  </data>
+  <data name="Member6Label" xml:space="preserve">
+    <value>&lt;6&gt;</value>
+    <comment>&lt;6&gt;</comment>
+  </data>
+  <data name="Member7Label" xml:space="preserve">
+    <value>&lt;7&gt;</value>
+    <comment>&lt;7&gt;</comment>
+  </data>
+  <data name="Member8Label" xml:space="preserve">
+    <value>&lt;8&gt;</value>
+    <comment>&lt;8&gt;</comment>
+  </data>
+  <data name="MNKLabel" xml:space="preserve">
+    <value>&lt;MNK&gt;</value>
+    <comment>&lt;MNK&gt;</comment>
+  </data>
+  <data name="NINLabel" xml:space="preserve">
+    <value>&lt;NIN&gt;</value>
+    <comment>&lt;NIN&gt;</comment>
+  </data>
+  <data name="PLDLabel" xml:space="preserve">
+    <value>&lt;PLD&gt;</value>
+    <comment>&lt;PLD&gt;</comment>
+  </data>
+  <data name="SCHLabel" xml:space="preserve">
+    <value>&lt;SCH&gt;</value>
+    <comment>&lt;SCH&gt;</comment>
+  </data>
+  <data name="SMNLabel" xml:space="preserve">
+    <value>&lt;SMN&gt;</value>
+    <comment>&lt;SMN&gt;</comment>
+  </data>
+  <data name="WARLabel" xml:space="preserve">
+    <value>&lt;WAR&gt;</value>
+    <comment>&lt;WAR&gt;</comment>
+  </data>
+  <data name="WHMLabel" xml:space="preserve">
+    <value>&lt;WHM&gt;</value>
+    <comment>&lt;WHM&gt;</comment>
+  </data>
+  <data name="MonitorTabPage" xml:space="preserve">
+    <value>Monitor</value>
+    <comment>モニター</comment>
+  </data>
 </root>

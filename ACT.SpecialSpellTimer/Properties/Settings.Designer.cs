@@ -394,5 +394,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["HideWhenNotActive"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public double UpdateCheckInterval {
+            get {
+                return ((double)(this["UpdateCheckInterval"]));
+            }
+            set {
+                this["UpdateCheckInterval"] = value;
+            }
+        }
     }
 }

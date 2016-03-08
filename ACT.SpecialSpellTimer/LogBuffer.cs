@@ -389,18 +389,18 @@
                 replacementsByJobs.Clear();
             }
 
+            // プレイヤー情報を取得する
+            var player = FF14PluginHelper.GetPlayer();
+            if (player == null)
+            {
+                return;
+            }
+
             if (enabledPartyMemberPlaceHolder)
             {
 #if DEBUG
                 Debug.WriteLine("PT: Refresh");
 #endif
-                // プレイヤー情報を取得する
-                var player = FF14PluginHelper.GetPlayer();
-                if (player == null)
-                {
-                    return;
-                }
-
                 // PTメンバの名前を記録しておく
                 var combatants = FF14PluginHelper.GetCombatantListParty();
 
@@ -485,6 +485,12 @@
 
             // スペルタイマーの再描画を行う
             SpellTimerTable.ClearUpdateFlags();
+
+            // モニタタブに出力する
+            SpecialSpellTimerPlugin.ConfigPanel.RefreshPlaceholders(
+                player.Name,
+                ptmember,
+                replacementsByJobs);
         }
 
         /// <summary>
