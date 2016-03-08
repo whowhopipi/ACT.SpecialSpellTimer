@@ -42,6 +42,7 @@
             if (jobList == null)
             {
                 var list = new List<Job>();
+
                 list.Add(new Job() { JobId = 1, JobName = "GLD", Role = JobRoles.Tank });
                 list.Add(new Job() { JobId = 2, JobName = "PUG", Role = JobRoles.MeleeDPS });
                 list.Add(new Job() { JobId = 3, JobName = "MRD", Role = JobRoles.Tank });

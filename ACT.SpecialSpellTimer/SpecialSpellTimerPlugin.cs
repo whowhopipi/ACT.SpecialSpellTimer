@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.IO;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
 
     using ACT.SpecialSpellTimer.Properties;
@@ -142,7 +143,10 @@
                 this.PluginStatusLabel = pluginStatusText;
 
                 // アップデートを確認する
-                this.Update();
+                Task.Run(() =>
+                {
+                    this.Update();
+                });
 
                 // 自身の場所を格納しておく
                 var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this);
@@ -285,7 +289,7 @@
         /// </summary>
         private void Update()
         {
-            if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours >= 6d)
+            if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours >= 12d)
             {
                 var message = UpdateChecker.Update();
                 if (!string.IsNullOrWhiteSpace(message))
