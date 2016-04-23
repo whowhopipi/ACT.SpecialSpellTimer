@@ -251,8 +251,8 @@
                 this.RecastTimePanel.SetValue(Grid.ColumnProperty, 0);
                 this.RecastTimePanel.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
                 this.RecastTimePanel.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-                this.RecastTimePanel.Width = this.SpellIconSize - 6;
-                this.RecastTimePanel.Height = this.SpellIconSize - 6;
+                this.RecastTimePanel.Width = this.SpellIconSize >= 6 ? this.SpellIconSize - 6 : double.NaN;
+                this.RecastTimePanel.Height = this.RecastTimePanel.Width;
             }
             else
             {
