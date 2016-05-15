@@ -27,7 +27,7 @@
             {
                 return Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                        @"anoyetta\ACT\ACT.SpecialSpellTimer.log");
+                        @"anoyetta\ACT\ACT.SpecialSpellTimer." + DateTime.Now.ToString("yyyy-MM") + ".log");
             }
         }
 
@@ -59,6 +59,8 @@
         {
             buffer.Enqueue(new LogItem(null, format, args));
         }
+
+        #region Controll metods
 
         public static void Begin()
         {
@@ -141,6 +143,10 @@
             }
         }
 
+        #endregion
+
+        #region LogItem
+
         private class LogItem
         {
             DateTime logTime;
@@ -163,6 +169,8 @@
                 return cause == null ? log : log + Environment.NewLine + cause.ToString();
             }
         }
+
+        #endregion
 
     }
 }
