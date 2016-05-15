@@ -223,6 +223,8 @@
                 if (this.RefreshWindowTimer != null &&
                     this.RefreshWindowTimer.IsEnabled)
                 {
+                    Logger.Update();
+
                     // 有効なスペルとテロップのリストを取得する
                     var spellArray = SpellTimerTable.EnabledTable;
                     var telopArray = OnePointTelopTable.Default.EnabledTable;

@@ -135,6 +135,8 @@
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
+            Logger.Begin();
+
             try
             {
                 Logger.Write("Plugin Start.");
@@ -205,6 +207,7 @@
 
                 this.PluginStatusLabel.Text = "Plugin Exited Error";
             }
+            Logger.End();
         }
 
         /// <summary>
