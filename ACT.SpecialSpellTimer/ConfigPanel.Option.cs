@@ -185,6 +185,7 @@
             this.AutoSortReverseCheckBox.Checked = Settings.Default.AutoSortReverse;
             this.TimeOfHideNumericUpDown.Value = (decimal)Settings.Default.TimeOfHideSpell;
             this.RefreshIntervalNumericUpDown.Value = Settings.Default.RefreshInterval;
+            this.LogPollSleepNumericUpDown.Value = Settings.Default.LogPollSleepInterval;
             this.EnabledPTPlaceholderCheckBox.Checked = Settings.Default.EnabledPartyMemberPlaceholder;
             this.EnabledSpellTimerNoDecimalCheckBox.Checked = Settings.Default.EnabledSpellTimerNoDecimal;
             this.EnabledNotifyNormalSpellTimerCheckBox.Checked = Settings.Default.EnabledNotifyNormalSpellTimer;
@@ -221,6 +222,7 @@
             Settings.Default.AutoSortReverse = this.AutoSortReverseCheckBox.Checked;
             Settings.Default.TimeOfHideSpell = (double)this.TimeOfHideNumericUpDown.Value;
             Settings.Default.RefreshInterval = (long)this.RefreshIntervalNumericUpDown.Value;
+            Settings.Default.LogPollSleepInterval = (long)this.LogPollSleepNumericUpDown.Value;
             Settings.Default.EnabledPartyMemberPlaceholder = this.EnabledPTPlaceholderCheckBox.Checked;
             Settings.Default.EnabledSpellTimerNoDecimal = this.EnabledSpellTimerNoDecimalCheckBox.Checked;
 
@@ -229,6 +231,8 @@
 
             Settings.Default.SaveLogEnabled = this.SaveLogCheckBox.Checked;
             Settings.Default.SaveLogFile = this.SaveLogTextBox.Text;
+
+            SpellTimerCore.Default.InvalidateSettings();
 
             // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&

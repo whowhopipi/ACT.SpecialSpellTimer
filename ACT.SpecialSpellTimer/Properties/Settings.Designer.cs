@@ -406,5 +406,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["UpdateCheckInterval"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public long LogPollSleepInterval {
+            get {
+                return ((long)(this["LogPollSleepInterval"]));
+            }
+            set {
+                this["LogPollSleepInterval"] = value;
+            }
+        }
     }
 }
