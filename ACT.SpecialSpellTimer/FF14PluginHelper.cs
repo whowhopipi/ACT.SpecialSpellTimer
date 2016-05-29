@@ -279,6 +279,11 @@
         public int CurrentMP;
         public int MaxMP;
         public int CurrentTP;
+
+        public SpecialSpellTimer.Job AsJob()
+        {
+            return SpecialSpellTimer.Job.FromId(Job);
+        }
     }
 
     public class Zone

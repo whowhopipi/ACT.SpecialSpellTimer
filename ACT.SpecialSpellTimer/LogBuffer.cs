@@ -234,9 +234,7 @@
 #if DEBUG
                 Debug.WriteLine("JOB NAME!! " + jobName);
 #endif
-                if (jobName == "巴術士" || jobName == "ARC" ||
-                    jobName == "学者" || jobName == "SCH" ||
-                    jobName == "召喚士" || jobName == "SMN")
+                if (player.AsJob().IsSummoner())
                 {
                     if (logLine.Contains(player.Name + "の「サモン") ||
                         logLine.Contains("You cast Summon"))
@@ -407,7 +405,7 @@
                 // FF14内部のPTメンバ自動ソート順で並び替える
                 var sorted =
                     from x in combatants
-                    join y in Job.GetJobList() on
+                    join y in Job.JobList on
                         x.Job equals y.JobId
                     where
                     x.ID != player.ID
@@ -433,7 +431,7 @@
                 }
 
                 // ジョブ名によるプレースホルダを登録する
-                foreach (var job in Job.GetJobList())
+                foreach (var job in Job.JobList)
                 {
                     // このジョブに該当するパーティメンバを抽出する
                     var combatantsByJob = (

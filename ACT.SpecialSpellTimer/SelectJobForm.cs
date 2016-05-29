@@ -53,7 +53,7 @@
             var jobs = this.JobFilter.Split(',');
 
             this.JobsCheckedListBox.Items.Clear();
-            foreach (var job in Job.GetJobList())
+            foreach (var job in Job.JobList)
             {
                 this.JobsCheckedListBox.Items.Add(
                     job,
