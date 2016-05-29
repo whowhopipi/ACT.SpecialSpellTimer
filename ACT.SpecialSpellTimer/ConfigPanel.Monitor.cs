@@ -11,8 +11,8 @@
     public partial class ConfigPanel
     {
         private string playerName;
-        private List<string> partyMemberNames;
-        private List<KeyValuePair<string, string>> jobPlaceholders;
+        private IReadOnlyList<string> partyMemberNames;
+        private IReadOnlyDictionary<string, string> jobPlaceholders;
         private StringBuilder logBuffer = new StringBuilder();
 
         /// <summary>
@@ -51,8 +51,8 @@
         /// <param name="jobPlaceholders">ジョブ名プレースホルダのリスト</param>
         public void RefreshPlaceholders(
             string playerName,
-            List<string> partyMemberNames,
-            List< KeyValuePair<string, string>> jobPlaceholders)
+            IReadOnlyList<string> partyMemberNames,
+            IReadOnlyDictionary<string, string> jobPlaceholders)
         {
             // 一旦クリアする
             this.MeTextBox.Clear();

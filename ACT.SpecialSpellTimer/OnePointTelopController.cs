@@ -191,7 +191,7 @@
         /// <param name="logLines">ログ行</param>
         public static void Match(
             OnePointTelop[] telops,
-            string[] logLines)
+            IReadOnlyList<string> logLines)
         {
             foreach (var log in logLines)
             {

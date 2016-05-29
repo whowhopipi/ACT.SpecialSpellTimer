@@ -59,7 +59,7 @@
             OnePointTelopController.CloseTelops();
 
             FF14PluginHelper.RefreshPlayer();
-            LogBuffer.RefreshPTList();
+            LogBuffer.RefreshPartyList();
             LogBuffer.RefreshPetID();
 
             if (Settings.Default.OverlayVisible)
@@ -246,7 +246,7 @@
                 OnePointTelopController.CloseTelops();
 
                 FF14PluginHelper.RefreshPlayer();
-                LogBuffer.RefreshPTList();
+                LogBuffer.RefreshPartyList();
                 LogBuffer.RefreshPetID();
 
                 if (Settings.Default.OverlayVisible)

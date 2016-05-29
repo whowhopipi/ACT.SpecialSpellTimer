@@ -394,7 +394,7 @@
         /// <param name="logLines">ログ</param>
         private void MatchSpells(
             SpellTimer[] spells,
-            string[] logLines)
+            IReadOnlyList<string> logLines)
         {
             foreach (var logLine in logLines)
             {

@@ -1,6 +1,7 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -20,42 +21,94 @@
         /// <summary>
         /// ペットID更新ロックオブジェクト
         /// </summary>
-        private static object lockPetidObject = new object();
+        private static readonly object lockPetidObject = new object();
+
+        private static readonly IReadOnlyList<string> EMPTY_STRING_LIST;
+        private static readonly IReadOnlyDictionary<string, string> EMPTY_STRING_PAIR_MAP;
+        private static readonly IReadOnlyList<string> PARTY_PLACEHOLDERS;
+        private static readonly IReadOnlyCollection<IReadOnlyCollection<string>> PARTY_CHANGED_WORDS;
+
+        static LogBuffer()
+        {
+            EMPTY_STRING_LIST = new List<string>();
+            EMPTY_STRING_PAIR_MAP = new Dictionary<string, string>();
+
+            PARTY_PLACEHOLDERS = Enumerable.Range(2, 7)
+                .Select(ordinal => "<" + ordinal + ">").ToList();
+
+            PARTY_CHANGED_WORDS = Array.AsReadOnly(new IReadOnlyCollection<string>[]
+            {
+                   Array.AsReadOnly(new string[]{ "パーティを解散しました。" }),
+                   Array.AsReadOnly(new string[]{ "がパーティに参加しました。" }),
+                   Array.AsReadOnly(new string[]{ "がパーティから離脱しました。" }),
+                   Array.AsReadOnly(new string[]{ "をパーティから離脱させました。" }),
+                   Array.AsReadOnly(new string[]{ "の攻略を開始した。" }),
+                   Array.AsReadOnly(new string[]{ "の攻略を終了した。" }),
+                   Array.AsReadOnly(new string[]{ "You join ", "'s party." }),
+                   Array.AsReadOnly(new string[]{ "You left the party." }),
+                   Array.AsReadOnly(new string[]{ "You dissolve the party." }),
+                   Array.AsReadOnly(new string[]{ "The party has been disbanded." }),
+                   Array.AsReadOnly(new string[]{ "joins the party." }),
+                   Array.AsReadOnly(new string[]{ "has left the party." }),
+                   Array.AsReadOnly(new string[]{ "was removed from the party." }),
+            });
+        }
+
+        /// <summary>
+        /// 現在走っているゾーン/ペットID情報更新タスクのキャンセルトークンソース
+        /// </summary>
+        private volatile CancellationTokenSource petIdRefreshTaskCancelTokenSource;
 
         /// <summary>
         /// パーティメンバの代名詞が有効か？
         /// </summary>
-        private static bool enabledPartyMemberPlaceHolder = Settings.Default.EnabledPartyMemberPlaceholder;
+        private static readonly bool enabledPartyMemberPlaceHolder = Settings.Default.EnabledPartyMemberPlaceholder;
+
+        private static volatile IReadOnlyList<string> _PartyList = EMPTY_STRING_LIST;
 
         /// <summary>
         /// パーティメンバ
         /// </summary>
-        private static List<string> ptmember;
+        public static IReadOnlyList<string> PartyList
+        {
+            get
+            {
+                return _PartyList;
+            }
+        }
+
+        private static volatile IReadOnlyDictionary<string, string> _PlaceholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
 
         /// <summary>
         /// ジョブ代名詞による置換文字列セットのリスト
         /// </summary>
-        private static List<KeyValuePair<string, string>> replacementsByJobs;
+        public static IReadOnlyDictionary<string, string> PlaceholderToJobNameDictionaly
+        {
+            get
+            {
+                return _PlaceholderToJobNameDictionaly;
+            }
+        }
 
         /// <summary>
         /// カスタム代名詞による置換文字列のセット
         /// </summary>
-        private static Dictionary<string, string> customPlaceholders = new Dictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> customPlaceholders = new ConcurrentDictionary<string, string>();
 
         /// <summary>
         /// ペットのID
         /// </summary>
-        private static string petid;
+        private static volatile string currentPetId;
 
         /// <summary>
         /// ペットのIDを取得したゾーン
         /// </summary>
-        private static string petidZone;
+        private static volatile string petIdCheckedZone;
 
         /// <summary>
         /// 内部バッファ
         /// </summary>
-        private List<string> buffer = new List<string>();
+        private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
 
         /// <summary>
         /// 最後のログのタイムスタンプ
@@ -65,7 +118,16 @@
         /// <summary>
         /// ログファイル出力用のバッファ
         /// </summary>
-        private StringBuilder logBuffer = new StringBuilder();
+        private StringBuilder fileOutputLogBuffer = new StringBuilder();
+
+        private bool SaveLogEnabled
+        {
+            get
+            {
+                return Settings.Default.SaveLogEnabled &&
+                    !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
+            }
+        }
 
         /// <summary>
         /// コンストラクタ
@@ -76,10 +138,27 @@
         }
 
         /// <summary>
+        /// デストラクター
+        /// </summary>
+        ~LogBuffer()
+        {
+            Dispose();
+        }
+
+        private const int FALSE = 0;
+        private const int TRUE = 1;
+        private int disposed = FALSE;
+
+        /// <summary>
         /// Dispose
         /// </summary>
         public void Dispose()
         {
+            if (Interlocked.CompareExchange(ref disposed, TRUE, FALSE) != FALSE)
+            {
+                return;
+            }
+
             ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
             this.Clear();
 
@@ -91,13 +170,11 @@
         /// </summary>
         /// <returns>
         /// ログ行の配列</returns>
-        public string[] GetLogLines()
+        public IReadOnlyList<string> GetLogLines()
         {
-            lock (this.buffer)
+            lock (this.logInfoQueue)
             {
-                var logLines = this.buffer.ToArray();
-                this.buffer.Clear();
-                return logLines;
+                return OnLogLineRead();
             }
         }
 
@@ -106,14 +183,13 @@
         /// </summary>
         public void Clear()
         {
-            lock (this.buffer)
+            lock (this.logInfoQueue)
             {
-                this.buffer.Clear();
+                LogLineEventArgs ignore;
+                while (logInfoQueue.TryDequeue(out ignore)) ;
 
-                if (ptmember != null)
-                {
-                    ptmember.Clear();
-                }
+                _PartyList = EMPTY_STRING_LIST;
+                _PlaceholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
 
                 // ログファイルをフラッシュする
                 this.FlushLogFile();
@@ -128,17 +204,15 @@
         /// ログを追記する
         /// </summary>
         /// <param name="logLine">追記するログ</param>
-        public void AppendLogFile(
-            string logLine)
+        public void AppendLogFile(string logLine)
         {
-            if (Settings.Default.SaveLogEnabled &&
-                !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile))
+            if (SaveLogEnabled)
             {
-                lock (this.logBuffer)
+                lock (this.fileOutputLogBuffer)
                 {
-                    this.logBuffer.AppendLine(logLine);
+                    this.fileOutputLogBuffer.AppendLine(logLine);
 
-                    if (this.logBuffer.Length >= (5 * 1024))
+                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
                     {
                         this.FlushLogFile();
                     }
@@ -151,17 +225,19 @@
         /// </summary>
         public void FlushLogFile()
         {
-            if (Settings.Default.SaveLogEnabled &&
-                !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile))
+            if (SaveLogEnabled)
             {
-                lock (this.logBuffer)
+                lock (this.fileOutputLogBuffer)
                 {
-                    File.AppendAllText(
-                        Settings.Default.SaveLogFile,
-                        this.logBuffer.ToString(),
-                        new UTF8Encoding(false));
+                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
+                    {
+                        File.AppendAllText(
+                            Settings.Default.SaveLogFile,
+                            this.fileOutputLogBuffer.ToString(),
+                            new UTF8Encoding(false));
 
-                    this.logBuffer.Clear();
+                        this.fileOutputLogBuffer.Clear();
+                    }
                 }
             }
         }
@@ -178,109 +254,180 @@
                 return;
             }
 
-#if false
-            Debug.WriteLine(logInfo.logLine);
-#endif
+            logInfoQueue.Enqueue(logInfo);
+        }
 
-            var logLine = logInfo.logLine.Trim();
+        /// <summary>
+        /// ためたログを集めて返す
+        /// </summary>
+        /// <returns>ためていたログ</returns>
+        private IReadOnlyList<string> OnLogLineRead()
+        {
+
+            var playerRefreshed = false;
+            var partyRefreshed = false;
 
             // 最後のログから1min間が空いた？
             if ((DateTime.Now - this.lastLogineTimestamp).TotalMinutes >= 1.0d)
             {
                 FF14PluginHelper.RefreshPlayer();
-                RefreshPTList();
+                playerRefreshed = true;
+
+                RefreshPartyList();
+                partyRefreshed = true;
             }
 
-            // ジョブに変化あり？
-            if (logLine.Contains("にチェンジした。") ||
-                logLine.Contains("You change to "))
+            if (logInfoQueue.IsEmpty)
             {
-                FF14PluginHelper.RefreshPlayer();
-                RefreshPTList();
+                return EMPTY_STRING_LIST;
             }
 
-            // パーティに変化あり？
-            if (enabledPartyMemberPlaceHolder)
-            {
-                if (ptmember == null ||
-                    replacementsByJobs == null ||
-                    logLine.Contains("パーティを解散しました。") ||
-                    logLine.Contains("がパーティに参加しました。") ||
-                    logLine.Contains("がパーティから離脱しました。") ||
-                    logLine.Contains("をパーティから離脱させました。") ||
-                    logLine.Contains("の攻略を開始した。") ||
-                    logLine.Contains("の攻略を終了した。") ||
-                    (logLine.Contains("You join ") && logLine.Contains("'s party.")) ||
-                    logLine.Contains("You left the party.") ||
-                    logLine.Contains("You dissolve the party.") ||
-                    logLine.Contains("The party has been disbanded.") ||
-                    logLine.Contains("joins the party.") ||
-                    logLine.Contains("has left the party.") ||
-                    logLine.Contains("was removed from the party."))
-                {
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(5 * 1000);
-                        RefreshPTList();
-                    });
-                }
-            }
+            var list = new List<string>(logInfoQueue.Count);
+            var partyChanged = false;
+            var jobChanged = false;
+            var summoned = false;
+            var zoneChanged = false;
 
-            // ペットIDのCacheを更新する
-            var player = FF14PluginHelper.GetPlayer();
-            if (player != null)
+            LogLineEventArgs logInfo;
+            while (logInfoQueue.TryDequeue(out logInfo))
             {
-                var jobName = Job.GetJobName(player.Job);
-#if DEBUG
-                Debug.WriteLine("JOB NAME!! " + jobName);
+                string logLine = logInfo.logLine.Trim();
+#if false
+                Debug.WriteLine(logInfo.logLine);
 #endif
-                if (player.AsJob().IsSummoner())
+                // ジョブに変化あり？
+                if (!jobChanged)
                 {
-                    if (logLine.Contains(player.Name + "の「サモン") ||
-                        logLine.Contains("You cast Summon"))
+                    if (IsJobChanged(logLine))
                     {
-                        Task.Run(() =>
+                        jobChanged = true;
+                        if (!playerRefreshed)
                         {
-                            Thread.Sleep(5 * 1000);
-                            RefreshPetID();
-                        });
-                    }
+                            FF14PluginHelper.RefreshPlayer();
+                            playerRefreshed = true;
+                        }
 
-                    if (petidZone != ActGlobals.oFormActMain.CurrentZone)
-                    {
-                        Task.Run(() =>
+                        if (!partyRefreshed)
                         {
-                            lock (lockPetidObject)
-                            {
-                                var count = 0;
-                                while (petidZone != ActGlobals.oFormActMain.CurrentZone)
-                                {
-                                    Thread.Sleep(15 * 1000);
-                                    RefreshPetID();
-                                    count++;
-
-                                    if (count >= 6)
-                                    {
-                                        petidZone = ActGlobals.oFormActMain.CurrentZone;
-                                        break;
-                                    }
-                                }
-                            }
-                        });
+                            RefreshPartyList();
+                            partyRefreshed = true;
+                        }
                     }
                 }
+
+                // パーティに変化あり
+                if (!partyChanged)
+                {
+                    if (enabledPartyMemberPlaceHolder && IsPartyChanged(logLine))
+                    {
+                        partyChanged = true;
+                    }
+                }
+
+                if (!(summoned && zoneChanged))
+                {
+                    // ペットIDのCacheを更新する
+                    var player = FF14PluginHelper.GetPlayer();
+                    if (player != null)
+                    {
+                        var jobName = Job.GetJobName(player.Job);
+#if DEBUG
+                        Debug.WriteLine("JOB NAME!! " + jobName);
+#endif
+                        if (player.AsJob().IsSummoner())
+                        {
+                            if (logLine.Contains(player.Name + "の「サモン") ||
+                                logLine.Contains("You cast Summon"))
+                            {
+                                summoned = true;
+                            }
+
+                            if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
+                            {
+                                zoneChanged = true;
+                            }
+                        }
+                    }
+                }
+
+                list.Add(logLine);
+                // ログファイルに出力する
+                this.AppendLogFile(logLine);
             }
 
-            lock (this.buffer)
+            if (partyChanged)
             {
-                this.buffer.Add(logLine);
-
-                // ログのタイムスタンプを記録する
-                this.lastLogineTimestamp = DateTime.Now;
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    RefreshPartyList();
+                });
             }
 
-            // ログファイルに出力する
-            this.AppendLogFile(logLine);
+            if (summoned)
+            {
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    RefreshPetID();
+                });
+            }
+
+            if (zoneChanged)
+            {
+                var oldSource = petIdRefreshTaskCancelTokenSource;
+                if (oldSource != null)
+                {
+                    lock (oldSource)
+                    {
+                        if (!oldSource.IsCancellationRequested)
+                        {
+                            try
+                            {
+                                oldSource.Cancel();
+                            }
+                            catch { }
+                        }
+                    }
+                }
+
+                var newSource = petIdRefreshTaskCancelTokenSource = new CancellationTokenSource();
+                var token = newSource.Token;
+                var count = 0;
+
+                Task.Run(async () =>
+                {
+                    while (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(15));
+
+                        RefreshPetID();
+                        count++;
+
+                        if (count >= 6)
+                        {
+                            return;
+                        }
+                    }
+                }, token);
+            }
+
+            // ログのタイムスタンプを記録する
+            this.lastLogineTimestamp = DateTime.Now;
+
+            return list;
+        }
+
+        private bool IsJobChanged(string logLine)
+        {
+            return logLine.Contains("にチェンジした。") ||
+                logLine.Contains("You change to ");
+        }
+
+        private bool IsPartyChanged(string logLine)
+        {
+            return PARTY_CHANGED_WORDS.AsParallel()
+                .Any(words => words.Any(word => logLine.Contains(word)));
         }
 
         /// <summary>
@@ -288,21 +435,19 @@
         /// </summary>
         /// <param name="keyword">元のキーワード</param>
         /// <returns>生成したキーワード</returns>
-        public static string MakeKeyword(
-            string keyword)
+        public static string MakeKeyword(string keyword)
         {
-            if (string.IsNullOrWhiteSpace(keyword))
+            if (keyword == null)
             {
-                return keyword.Trim();
-            }
-
-            if (!keyword.Contains("<") ||
-                !keyword.Contains(">"))
-            {
-                return keyword.Trim();
+                return "";
             }
 
             keyword = keyword.Trim();
+
+            if (!keyword.Any() || !keyword.Contains("<") || !keyword.Contains(">"))
+            {
+                return keyword;
+            }
 
             var player = FF14PluginHelper.GetPlayer();
             if (player != null)
@@ -310,32 +455,25 @@
                 keyword = keyword.Replace("<me>", player.Name.Trim());
             }
 
-            if (enabledPartyMemberPlaceHolder)
+            if (enabledPartyMemberPlaceHolder && PartyList.Any())
             {
-                if (ptmember != null)
+                foreach (var t in PartyList.Zip(PARTY_PLACEHOLDERS,
+                    (name, placeholder) => Tuple.Create(placeholder, name)))
                 {
-                    for (int i = 0; i < ptmember.Count; i++)
-                    {
-                        keyword = keyword.Replace(
-                            "<" + (i + 2).ToString() + ">",
-                            ptmember[i].Trim());
-                    }
+                    keyword = keyword.Replace(t.Item1, t.Item2);
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(petid))
+            if (!string.IsNullOrWhiteSpace(currentPetId))
             {
-                keyword = keyword.Replace("<petid>", petid);
+                keyword = keyword.Replace("<petid>", currentPetId);
             }
 
             // ジョブ名プレースホルダを置換する
             // ex. <PLD>, <PLD1> ...
-            if (replacementsByJobs != null)
+            foreach (var replacement in PlaceholderToJobNameDictionaly)
             {
-                foreach (var replacement in replacementsByJobs)
-                {
-                    keyword = keyword.Replace(replacement.Key, replacement.Value);
-                }
+                keyword = keyword.Replace(replacement.Key, replacement.Value);
             }
 
             // カスタムプレースホルダを置換する
@@ -349,44 +487,10 @@
         }
 
         /// <summary>
-        /// PTメンバーリストを返す
-        /// </summary>
-        /// <returns>PTメンバーリスト</returns>
-        public static string[] GetPTMember()
-        {
-            if (ptmember != null)
-            {
-                return ptmember.ToArray();
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// パーティリストを更新する
         /// </summary>
-        public static void RefreshPTList()
+        public static void RefreshPartyList()
         {
-            if (ptmember == null)
-            {
-                ptmember = new List<string>();
-            }
-            else
-            {
-                ptmember.Clear();
-            }
-
-            if (replacementsByJobs == null)
-            {
-                replacementsByJobs = new List<KeyValuePair<string, string>>();
-            }
-            else
-            {
-                replacementsByJobs.Clear();
-            }
-
             // プレイヤー情報を取得する
             var player = FF14PluginHelper.GetPlayer();
             if (player == null)
@@ -416,19 +520,15 @@
                     select
                     x.Name.Trim();
 
-                foreach (var name in sorted)
-                {
-                    ptmember.Add(name);
-#if DEBUG
-                    Debug.WriteLine("<-  " + name);
-#endif
-                }
+                _PartyList = new List<string>(sorted);
 
                 // パーティメンバが空だったら自分を補完しておく
                 if (!combatants.Any())
                 {
                     combatants.Add(player);
                 }
+
+                var newList = new Dictionary<string, string>();
 
                 // ジョブ名によるプレースホルダを登録する
                 foreach (var job in Job.JobList)
@@ -459,7 +559,7 @@
                             job.JobName,
                             i + 1);
 
-                        replacementsByJobs.Add(new KeyValuePair<string, string>(placeholder.ToUpper(), combatantsByJob[i].Name));
+                        newList.Add(placeholder.ToUpper(), combatantsByJob[i].Name);
                     }
 
                     // <JOB>形式を置換する
@@ -473,8 +573,10 @@
                         job.JobName.ToUpper(),
                         names);
 
-                    replacementsByJobs.Add(new KeyValuePair<string, string>(oldValue.ToUpper(), newValue));
+                    newList.Add(oldValue.ToUpper(), newValue);
                 }
+
+                _PlaceholderToJobNameDictionaly = newList;
             }
 
             // 置換後のマッチングキーワードを消去する
@@ -487,8 +589,8 @@
             // モニタタブに出力する
             SpecialSpellTimerPlugin.ConfigPanel.RefreshPlaceholders(
                 player.Name,
-                ptmember,
-                replacementsByJobs);
+                PartyList,
+                PlaceholderToJobNameDictionaly);
         }
 
         /// <summary>
@@ -496,32 +598,39 @@
         /// </summary>
         public static void RefreshPetID()
         {
-            // Combatantリストを取得する
-            var combatant = FF14PluginHelper.GetCombatantList();
-
-            if (combatant != null &&
-                combatant.Count > 0)
+            lock (lockPetidObject)
             {
-                var pet = (
-                    from x in combatant
-                    where
-                    x.OwnerID == combatant[0].ID &&
-                    (
-                        x.Name.Contains("フェアリー・") ||
-                        x.Name.Contains("・エギ") ||
-                        x.Name.Contains("カーバンクル・")
-                    )
-                    select
-                    x).FirstOrDefault();
-
-                if (pet != null)
+                if (petIdCheckedZone == ActGlobals.oFormActMain.CurrentZone)
                 {
-                    petid = Convert.ToString((long)((ulong)pet.ID), 16).ToUpper();
-                    petidZone = ActGlobals.oFormActMain.CurrentZone;
+                    return;
+                }
 
-                    // 置換後のマッチングキーワードを消去する
-                    SpellTimerTable.ClearReplacedKeywords();
-                    OnePointTelopTable.Default.ClearReplacedKeywords();
+                // Combatantリストを取得する
+                var combatants = FF14PluginHelper.GetCombatantList();
+
+                if (combatants != null && combatants.Count > 0)
+                {
+                    var pet = (
+                        from x in combatants
+                        where
+                        x.OwnerID == combatants[0].ID &&
+                        (
+                            x.Name.Contains("フェアリー・") ||
+                            x.Name.Contains("・エギ") ||
+                            x.Name.Contains("カーバンクル・")
+                        )
+                        select
+                        x).FirstOrDefault();
+
+                    if (pet != null)
+                    {
+                        currentPetId = Convert.ToString((long)((ulong)pet.ID), 16).ToUpper();
+                        petIdCheckedZone = ActGlobals.oFormActMain.CurrentZone;
+
+                        // 置換後のマッチングキーワードを消去する
+                        SpellTimerTable.ClearReplacedKeywords();
+                        OnePointTelopTable.Default.ClearReplacedKeywords();
+                    }
                 }
             }
         }
@@ -533,7 +642,7 @@
         /// </summary>
         public static void SetCustomPlaceholder(string name, string value)
         {
-            customPlaceholders[name] = value;
+            customPlaceholders.AddOrUpdate(name, value, (key, oldValue) => value);
 
             // 置換後のマッチングキーワードを消去する
             SpellTimerTable.ClearReplacedKeywords();
@@ -546,7 +655,8 @@
         /// </summary>
         public static void ClearCustomPlaceholder(string name)
         {
-            customPlaceholders.Remove(name);
+            string beforeValue;
+            customPlaceholders.TryRemove(name, out beforeValue);
 
             // 置換後のマッチングキーワードを消去する
             SpellTimerTable.ClearReplacedKeywords();
