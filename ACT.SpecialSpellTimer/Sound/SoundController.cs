@@ -149,7 +149,7 @@
 
                 if (this.EnabledYukkuri)
                 {
-                    ActGlobals.oFormActMain.TTS(source);
+                    Task.Run(() => ActGlobals.oFormActMain.TTS(source));
                 }
                 else
                 {
