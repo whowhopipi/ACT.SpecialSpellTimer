@@ -554,6 +554,11 @@
         public static void Save(
             string file)
         {
+            if (table == null)
+            {
+                return;
+            }
+
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))
             {
