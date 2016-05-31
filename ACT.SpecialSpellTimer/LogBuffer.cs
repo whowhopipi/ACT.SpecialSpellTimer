@@ -165,6 +165,11 @@
             GC.SuppressFinalize(this);
         }
 
+        public bool nonEmpty()
+        {
+            return !logInfoQueue.IsEmpty;
+        }
+
         /// <summary>
         /// ログ行を返す
         /// </summary>
@@ -172,10 +177,7 @@
         /// ログ行の配列</returns>
         public IReadOnlyList<string> GetLogLines()
         {
-            lock (this.logInfoQueue)
-            {
-                return OnLogLineRead();
-            }
+            return OnLogLineRead();
         }
 
         /// <summary>

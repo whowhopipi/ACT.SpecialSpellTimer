@@ -195,7 +195,7 @@
         {
             foreach (var log in logLines)
             {
-                foreach (var telop in telops)
+                telops.AsParallel().ForAll(telop =>
                 {
                     var matched = false;
 
@@ -240,7 +240,7 @@
                         }
 
                         // 正規表現マッチ
-                        if (regex != null)
+                        else
                         {
                             var match = regex.Match(log);
                             if (match.Success)
@@ -278,7 +278,7 @@
                     {
                         SpellTimerCore.Default.updateNormalSpellTimerForTelop(telop, telop.ForceHide);
                         SpellTimerCore.Default.notifyNormalSpellTimerForTelop(telop.Title);
-                        continue;
+                        return;
                     }
 
                     // 通常マッチ(強制非表示)
@@ -297,7 +297,7 @@
                     }
 
                     // 正規表現マッチ(強制非表示)
-                    if (regexToHide != null)
+                    else
                     {
                         if (regexToHide.IsMatch(log))
                         {
@@ -311,7 +311,8 @@
                         SpellTimerCore.Default.updateNormalSpellTimerForTelop(telop, telop.ForceHide);
                         SpellTimerCore.Default.notifyNormalSpellTimerForTelop(telop.Title);
                     }
-                }   // end loop telops
+
+                });   // end loop telops
             }
 
             // スペルの更新とサウンド処理を行う
