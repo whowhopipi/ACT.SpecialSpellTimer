@@ -251,6 +251,11 @@
             }
 
             var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
+            if (currentZoneName == null)
+            {
+                return 0;
+            }
+
             return (
                 from x in zoneList
                 where
