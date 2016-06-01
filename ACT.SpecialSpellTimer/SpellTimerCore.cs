@@ -1287,6 +1287,10 @@
                     }
                 }
             }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                // ignore
+            }
             catch (Exception ex)
             {
                 Logger.Write(Translate.Get("WatchActiveError"), ex);
