@@ -1045,4 +1045,8 @@
     <value>Monitor</value>
     <comment>モニター</comment>
   </data>
+  <data name="LogPollSleepIntervalLabel" xml:space="preserve">
+    <value>Log poll sleep interval</value>
+    <comment>ログ処理の最短間隔</comment>
+  </data>
 </root>

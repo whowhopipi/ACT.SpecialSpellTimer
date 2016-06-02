@@ -898,6 +898,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   ログ処理の最短間隔 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string LogPollSleepIntervalLabel {
+            get {
+                return ResourceManager.GetString("LogPollSleepIntervalLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   種類 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string LogTypeHeader {

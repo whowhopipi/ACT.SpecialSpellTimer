@@ -105,7 +105,7 @@
             // RefreshWindowタイマを開始する
             this.RefreshWindowTimer = new System.Windows.Threading.DispatcherTimer()
             {
-                Interval = new TimeSpan(0, 0, 0, 0, 100),
+                Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval)
             };
 
             this.RefreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
@@ -114,7 +114,7 @@
             // ログ監視タイマを開始する
             this.WatchLogTimer = new System.Timers.Timer()
             {
-                Interval = Settings.Default.RefreshInterval,
+                Interval = Settings.Default.LogPollSleepInterval,
                 AutoReset = true,
             };
 
@@ -191,6 +191,15 @@
             instance = null;
         }
 
+        private const int VALID = 0;
+        private const int INVALID = 1;
+        private int settingsIsValid = VALID;
+
+        public void InvalidateSettings()
+        {
+            settingsIsValid = INVALID;
+        }
+
         /// <summary>
         /// RefreshWindowTimerOnTick
         /// </summary>
@@ -205,6 +214,12 @@
 #endif
             try
             {
+                if (Interlocked.CompareExchange(ref settingsIsValid, VALID, INVALID) == INVALID)
+                {
+                    RefreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
+                    WatchLogTimer.Interval = Settings.Default.LogPollSleepInterval;
+                }
+
                 if (this.RefreshWindowTimer != null &&
                     this.RefreshWindowTimer.IsEnabled)
                 {
