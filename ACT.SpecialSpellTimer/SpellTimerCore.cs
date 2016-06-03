@@ -234,8 +234,7 @@
                         this.GarbageSpellPanelWindows(spellArray);
                     }
 
-                    if (ActGlobals.oFormActMain == null ||
-                        !ActGlobals.oFormActMain.Visible)
+                    if (ActGlobals.oFormActMain == null)
                     {
                         this.HidePanels();
 
@@ -307,8 +306,7 @@
         private void WatchLog()
         {
             // ACTが起動していない？
-            if (ActGlobals.oFormActMain == null ||
-                !ActGlobals.oFormActMain.Visible)
+            if (ActGlobals.oFormActMain == null)
             {
                 Thread.Sleep(1000);
                 return;
