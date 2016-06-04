@@ -1303,7 +1303,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※ &lt;2&gt; - &lt;8&gt; can be used, however the order may be incorrect. (Requires restart) に類似しているローカライズされた文字列を検索します。
+        ///   ※ &lt;2&gt; - &lt;8&gt; can be used, however the order may be incorrect. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string PartyMemberNumberExplainLabel {
             get {
