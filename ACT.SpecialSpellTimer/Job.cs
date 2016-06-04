@@ -1,6 +1,7 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// ジョブ
@@ -10,95 +11,72 @@
         /// <summary>
         /// ジョブリスト
         /// </summary>
-        private static readonly IReadOnlyList<Job> _jobList;
+        private static readonly IReadOnlyList<Job> _jobList = new List<Job> {
+            new Job(JobIds.GLD, JobRoles.Tank),
+            new Job(JobIds.PUG, JobRoles.MeleeDPS),
+            new Job(JobIds.MRD, JobRoles.Tank),
+            new Job(JobIds.LNC, JobRoles.MeleeDPS),
+            new Job(JobIds.ARC, JobRoles.RangerDPS),
+            new Job(JobIds.CNJ, JobRoles.Healer),
+            new Job(JobIds.THM, JobRoles.CasterDPS),
+            new Job(JobIds.CRP, JobRoles.Crafter),
+            new Job(JobIds.BSM, JobRoles.Crafter),
+            new Job(JobIds.ARM, JobRoles.Crafter),
+            new Job(JobIds.GSM, JobRoles.Crafter),
+            new Job(JobIds.LTW, JobRoles.Crafter),
+            new Job(JobIds.WVR, JobRoles.Crafter),
+            new Job(JobIds.ALC, JobRoles.Crafter),
+            new Job(JobIds.CUL, JobRoles.Crafter),
+            new Job(JobIds.MIN, JobRoles.Gatherer),
+            new Job(JobIds.BOT, JobRoles.Gatherer),
+            new Job(JobIds.FSH, JobRoles.Gatherer),
+            new Job(JobIds.PLD, JobRoles.Tank),
+            new Job(JobIds.MNK, JobRoles.MeleeDPS),
+            new Job(JobIds.WAR, JobRoles.Tank),
+            new Job(JobIds.DRG, JobRoles.MeleeDPS),
+            new Job(JobIds.BRD, JobRoles.RangerDPS),
+            new Job(JobIds.WHM, JobRoles.Healer),
+            new Job(JobIds.BLM, JobRoles.CasterDPS),
+            new Job(JobIds.ACN, JobRoles.CasterDPS),
+            new Job(JobIds.SMN, JobRoles.CasterDPS),
+            new Job(JobIds.SCH, JobRoles.Healer),
+            new Job(JobIds.ROG, JobRoles.MeleeDPS),
+            new Job(JobIds.NIN, JobRoles.MeleeDPS),
+            new Job(JobIds.MCH, JobRoles.RangerDPS),
+            new Job(JobIds.DRK, JobRoles.Tank),
+            new Job(JobIds.AST, JobRoles.Healer),
+        };
 
         /// <summary>
         /// ジョブ辞書
         /// </summary>
-        private static readonly IReadOnlyDictionary<int, Job> _jobDictionary;
-
-        /// <summary>
-        /// JobId
-        /// </summary>
-        public int JobId { get; private set; }
-
-        /// <summary>
-        /// JobName
-        /// </summary>
-        public string JobName { get; private set; }
-
-        /// <summary>
-        /// ロール
-        /// </summary>
-        public JobRoles Role { get; private set; }
-
-        static Job()
-        {
-            var list = new List<Job>();
-            list.Add(new Job(JobIds.GLD, JobRoles.Tank));
-            list.Add(new Job(JobIds.PUG, JobRoles.MeleeDPS));
-            list.Add(new Job(JobIds.MRD, JobRoles.Tank));
-            list.Add(new Job(JobIds.LNC, JobRoles.MeleeDPS));
-            list.Add(new Job(JobIds.ARC, JobRoles.RangerDPS));
-            list.Add(new Job(JobIds.CNJ, JobRoles.Healer));
-            list.Add(new Job(JobIds.THM, JobRoles.CasterDPS));
-            list.Add(new Job(JobIds.CRP, JobRoles.Crafter));
-            list.Add(new Job(JobIds.BSM, JobRoles.Crafter));
-            list.Add(new Job(JobIds.ARM, JobRoles.Crafter));
-            list.Add(new Job(JobIds.GSM, JobRoles.Crafter));
-            list.Add(new Job(JobIds.LTW, JobRoles.Crafter));
-            list.Add(new Job(JobIds.WVR, JobRoles.Crafter));
-            list.Add(new Job(JobIds.ALC, JobRoles.Crafter));
-            list.Add(new Job(JobIds.CUL, JobRoles.Crafter));
-            list.Add(new Job(JobIds.MIN, JobRoles.Gatherer));
-            list.Add(new Job(JobIds.BOT, JobRoles.Gatherer));
-            list.Add(new Job(JobIds.FSH, JobRoles.Gatherer));
-            list.Add(new Job(JobIds.PLD, JobRoles.Tank));
-            list.Add(new Job(JobIds.MNK, JobRoles.MeleeDPS));
-            list.Add(new Job(JobIds.WAR, JobRoles.Tank));
-            list.Add(new Job(JobIds.DRG, JobRoles.MeleeDPS));
-            list.Add(new Job(JobIds.BRD, JobRoles.RangerDPS));
-            list.Add(new Job(JobIds.WHM, JobRoles.Healer));
-            list.Add(new Job(JobIds.BLM, JobRoles.CasterDPS));
-            list.Add(new Job(JobIds.ACN, JobRoles.CasterDPS));
-            list.Add(new Job(JobIds.SMN, JobRoles.CasterDPS));
-            list.Add(new Job(JobIds.SCH, JobRoles.Healer));
-            list.Add(new Job(JobIds.ROG, JobRoles.MeleeDPS));
-            list.Add(new Job(JobIds.NIN, JobRoles.MeleeDPS));
-            list.Add(new Job(JobIds.MCH, JobRoles.RangerDPS));
-            list.Add(new Job(JobIds.DRK, JobRoles.Tank));
-            list.Add(new Job(JobIds.AST, JobRoles.Healer));
-            _jobList = list;
-
-            var dict = new Dictionary<int, Job>();
-            foreach (var job in JobList)
-            {
-                dict.Add(job.JobId, job);
-            }
-            _jobDictionary = dict;
-        }
+        private static readonly IReadOnlyDictionary<int, Job> _jobDictionary =
+            _jobList.ToDictionary(job => job.JobId, job => job);
 
         /// <summary>
         /// ジョブの一覧
         /// </summary>
-        public static IReadOnlyList<Job> JobList
-        {
-            get
-            {
-                return _jobList;
-            }
-        }
+        public static IReadOnlyList<Job> JobList => _jobList;
 
         /// <summary>
         /// ジョブIDをキーに持つ辞書
         /// </summary>
-        public static IReadOnlyDictionary<int, Job> JobDictionary
-        {
-            get
-            {
-                return _jobDictionary;
-            }
-        }
+        public static IReadOnlyDictionary<int, Job> JobDictionary => _jobDictionary;
+
+        /// <summary>
+        /// JobId
+        /// </summary>
+        public int JobId { get; }
+
+        /// <summary>
+        /// JobName
+        /// </summary>
+        public string JobName { get; }
+
+        /// <summary>
+        /// ロール
+        /// </summary>
+        public JobRoles Role { get; }
 
         public static Job FromId(int jobId)
         {
@@ -110,8 +88,7 @@
         /// </summary>
         /// <param name="jobID">ジョブID</param>
         /// <returns>ジョブ名</returns>
-        public static string GetJobName(
-            int jobID)
+        public static string GetJobName(int jobID)
         {
             if (JobDictionary.ContainsKey(jobID))
             {

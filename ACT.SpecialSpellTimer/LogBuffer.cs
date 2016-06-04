@@ -18,92 +18,93 @@
     /// </summary>
     public class LogBuffer : IDisposable
     {
+        #region private static fields
+
         /// <summary>
         /// ペットID更新ロックオブジェクト
         /// </summary>
         private static readonly object lockPetidObject = new object();
 
-        private static readonly IReadOnlyList<string> EMPTY_STRING_LIST;
-        private static readonly IReadOnlyDictionary<string, string> EMPTY_STRING_PAIR_MAP;
-        private static readonly IReadOnlyList<string> PARTY_PLACEHOLDERS;
-        private static readonly IReadOnlyCollection<IReadOnlyCollection<string>> PARTY_CHANGED_WORDS;
-
-        static LogBuffer()
-        {
-            EMPTY_STRING_LIST = new List<string>();
-            EMPTY_STRING_PAIR_MAP = new Dictionary<string, string>();
-
-            PARTY_PLACEHOLDERS = Enumerable.Range(2, 7)
-                .Select(ordinal => "<" + ordinal + ">").ToList();
-
-            PARTY_CHANGED_WORDS = Array.AsReadOnly(new IReadOnlyCollection<string>[]
-            {
-                   Array.AsReadOnly(new string[]{ "パーティを解散しました。" }),
-                   Array.AsReadOnly(new string[]{ "がパーティに参加しました。" }),
-                   Array.AsReadOnly(new string[]{ "がパーティから離脱しました。" }),
-                   Array.AsReadOnly(new string[]{ "をパーティから離脱させました。" }),
-                   Array.AsReadOnly(new string[]{ "の攻略を開始した。" }),
-                   Array.AsReadOnly(new string[]{ "の攻略を終了した。" }),
-                   Array.AsReadOnly(new string[]{ "You join ", "'s party." }),
-                   Array.AsReadOnly(new string[]{ "You left the party." }),
-                   Array.AsReadOnly(new string[]{ "You dissolve the party." }),
-                   Array.AsReadOnly(new string[]{ "The party has been disbanded." }),
-                   Array.AsReadOnly(new string[]{ "joins the party." }),
-                   Array.AsReadOnly(new string[]{ "has left the party." }),
-                   Array.AsReadOnly(new string[]{ "was removed from the party." }),
-            });
-        }
+        /// <summary>
+        /// 空の文字列リスト
+        /// </summary>
+        private static readonly IReadOnlyList<string> EMPTY_STRING_LIST =
+            new List<string>();
 
         /// <summary>
-        /// 現在走っているゾーン/ペットID情報更新タスクのキャンセルトークンソース
+        /// 空の(文字列 -> 文字列)マップ
         /// </summary>
-        private volatile CancellationTokenSource petIdRefreshTaskCancelTokenSource;
+        private static readonly IReadOnlyDictionary<string, string> EMPTY_STRING_PAIR_MAP =
+            new Dictionary<string, string>();
 
         /// <summary>
-        /// パーティメンバの代名詞が有効か？
+        /// パーティ名プレースホルダーのキャッシュ "<2>" ～ "<8>"
         /// </summary>
-        private static readonly bool enabledPartyMemberPlaceHolder = Settings.Default.EnabledPartyMemberPlaceholder;
-
-        private static volatile IReadOnlyList<string> _PartyList = EMPTY_STRING_LIST;
+        private static readonly IReadOnlyList<string> PARTY_PLACEHOLDERS =
+            Enumerable.Range(2, 7).Select(ordinal => "<" + ordinal + ">").ToList();
 
         /// <summary>
-        /// パーティメンバ
+        /// パーティ変更をチェックするワードパターン
         /// </summary>
-        public static IReadOnlyList<string> PartyList
-        {
-            get
-            {
-                return _PartyList;
-            }
-        }
-
-        private static volatile IReadOnlyDictionary<string, string> _PlaceholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
-
-        /// <summary>
-        /// ジョブ代名詞による置換文字列セットのリスト
-        /// </summary>
-        public static IReadOnlyDictionary<string, string> PlaceholderToJobNameDictionaly
-        {
-            get
-            {
-                return _PlaceholderToJobNameDictionaly;
-            }
-        }
+        private static readonly IReadOnlyCollection<IReadOnlyCollection<string>> PARTY_CHANGED_WORDS =
+            new List<IReadOnlyCollection<string>> {
+                    new List<string> { "パーティを解散しました。" },
+                    new List<string> { "がパーティに参加しました。" },
+                    new List<string> { "がパーティから離脱しました。" },
+                    new List<string> { "をパーティから離脱させました。" },
+                    new List<string> { "の攻略を開始した。" },
+                    new List<string> { "の攻略を終了した。" },
+                    new List<string> { "You join ", "'s party." },
+                    new List<string> { "You left the party." },
+                    new List<string> { "You dissolve the party." },
+                    new List<string> { "The party has been disbanded." },
+                    new List<string> { "joins the party." },
+                    new List<string> { "has left the party." },
+                    new List<string> { "was removed from the party." },
+                };
 
         /// <summary>
-        /// カスタム代名詞による置換文字列のセット
+        /// 現在のパーティメンバー名リストのキャッシュ
         /// </summary>
-        private static readonly ConcurrentDictionary<string, string> customPlaceholders = new ConcurrentDictionary<string, string>();
+        private static volatile IReadOnlyList<string> partyList = EMPTY_STRING_LIST;
+
+        /// <summary>
+        /// ジョブ名プレースホルダー -> プレイヤー名
+        /// </summary>
+        private static volatile IReadOnlyDictionary<string, string> placeholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
 
         /// <summary>
         /// ペットのID
         /// </summary>
-        private static volatile string currentPetId;
+        private static volatile string currentPetId = string.Empty;
 
         /// <summary>
         /// ペットのIDを取得したゾーン
         /// </summary>
-        private static volatile string petIdCheckedZone;
+        private static volatile string petIdCheckedZone = string.Empty;
+
+        /// <summary>
+        /// パーティメンバの代名詞が有効か？
+        /// </summary>
+        private static bool enabledPartyMemberPlaceHolder = Settings.Default.EnabledPartyMemberPlaceholder;
+
+        #endregion
+
+        #region public static properties
+
+        /// <summary>
+        /// パーティメンバー名
+        /// </summary>
+        public static IReadOnlyList<string> PartyList => partyList;
+
+        /// <summary>
+        /// ジョブ代名詞による置換文字列セットのリスト
+        /// </summary>
+        public static IReadOnlyDictionary<string, string> PlaceholderToJobNameDictionaly => placeholderToJobNameDictionaly;
+
+        #endregion
+
+        #region private fields
 
         /// <summary>
         /// 内部バッファ
@@ -111,23 +112,23 @@
         private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
 
         /// <summary>
+        /// ログファイル出力用のバッファ
+        /// </summary>
+        private readonly StringBuilder fileOutputLogBuffer = new StringBuilder();
+
+        /// <summary>
+        /// 現在走っているゾーン/ペットID情報更新タスクのキャンセルトークンソース
+        /// </summary>
+        private volatile CancellationTokenSource petIdRefreshTaskCancelTokenSource;
+
+        /// <summary>
         /// 最後のログのタイムスタンプ
         /// </summary>
         private DateTime lastLogineTimestamp;
 
-        /// <summary>
-        /// ログファイル出力用のバッファ
-        /// </summary>
-        private StringBuilder fileOutputLogBuffer = new StringBuilder();
+        #endregion
 
-        private bool SaveLogEnabled
-        {
-            get
-            {
-                return Settings.Default.SaveLogEnabled &&
-                    !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
-            }
-        }
+        #region コンストラクター/デストラクター/Dispose
 
         /// <summary>
         /// コンストラクタ
@@ -160,89 +161,23 @@
             }
 
             ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
-            this.Clear();
+
+            LogLineEventArgs ignore;
+            while (logInfoQueue.TryDequeue(out ignore)) ;
+
+            this.FlushLogFile();
+
+            partyList = EMPTY_STRING_LIST;
+            placeholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
+            currentPetId = string.Empty;
+            petIdCheckedZone = string.Empty;
 
             GC.SuppressFinalize(this);
         }
 
-        public bool nonEmpty()
-        {
-            return !logInfoQueue.IsEmpty;
-        }
+        #endregion
 
-        /// <summary>
-        /// ログ行を返す
-        /// </summary>
-        /// <returns>
-        /// ログ行の配列</returns>
-        public IReadOnlyList<string> GetLogLines()
-        {
-            return OnLogLineRead();
-        }
-
-        /// <summary>
-        /// バッファをクリアする
-        /// </summary>
-        public void Clear()
-        {
-            lock (this.logInfoQueue)
-            {
-                LogLineEventArgs ignore;
-                while (logInfoQueue.TryDequeue(out ignore)) ;
-
-                _PartyList = EMPTY_STRING_LIST;
-                _PlaceholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
-
-                // ログファイルをフラッシュする
-                this.FlushLogFile();
-
-#if DEBUG
-                Debug.WriteLine("Logをクリアしました");
-#endif
-            }
-        }
-
-        /// <summary>
-        /// ログを追記する
-        /// </summary>
-        /// <param name="logLine">追記するログ</param>
-        public void AppendLogFile(string logLine)
-        {
-            if (SaveLogEnabled)
-            {
-                lock (this.fileOutputLogBuffer)
-                {
-                    this.fileOutputLogBuffer.AppendLine(logLine);
-
-                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
-                    {
-                        this.FlushLogFile();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// ログファイルをフラッシュする
-        /// </summary>
-        public void FlushLogFile()
-        {
-            if (SaveLogEnabled)
-            {
-                lock (this.fileOutputLogBuffer)
-                {
-                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
-                    {
-                        File.AppendAllText(
-                            Settings.Default.SaveLogFile,
-                            this.fileOutputLogBuffer.ToString(),
-                            new UTF8Encoding(false));
-
-                        this.fileOutputLogBuffer.Clear();
-                    }
-                }
-            }
-        }
+        #region ACT event hander
 
         /// <summary>
         /// ログを一行読取った
@@ -259,13 +194,26 @@
             logInfoQueue.Enqueue(logInfo);
         }
 
-        /// <summary>
-        /// ためたログを集めて返す
-        /// </summary>
-        /// <returns>ためていたログ</returns>
-        private IReadOnlyList<string> OnLogLineRead()
-        {
+        #endregion
 
+        #region ログ処理
+
+        /// <summary>
+        /// バッファーにログがない場合 true
+        /// </summary>
+        /// <returns>バッファーにログがない場合 true</returns>
+        public bool nonEmpty()
+        {
+            return !logInfoQueue.IsEmpty;
+        }
+
+        /// <summary>
+        /// ログ行を返す
+        /// </summary>
+        /// <returns>
+        /// ログ行の配列</returns>
+        public IReadOnlyList<string> GetLogLines()
+        {
             var playerRefreshed = false;
             var partyRefreshed = false;
 
@@ -294,9 +242,6 @@
             while (logInfoQueue.TryDequeue(out logInfo))
             {
                 string logLine = logInfo.logLine.Trim();
-#if false
-                Debug.WriteLine(logInfo.logLine);
-#endif
                 // ジョブに変化あり？
                 if (!jobChanged)
                 {
@@ -333,9 +278,6 @@
                     if (player != null)
                     {
                         var jobName = Job.GetJobName(player.Job);
-#if DEBUG
-                        Debug.WriteLine("JOB NAME!! " + jobName);
-#endif
                         if (player.AsJob().IsSummoner())
                         {
                             if (logLine.Contains(player.Name + "の「サモン") ||
@@ -420,17 +362,69 @@
             return list;
         }
 
-        private bool IsJobChanged(string logLine)
+        private static bool IsJobChanged(string logLine)
         {
-            return logLine.Contains("にチェンジした。") ||
-                logLine.Contains("You change to ");
+            return logLine.Contains("にチェンジした。") || logLine.Contains("You change to ");
         }
 
-        private bool IsPartyChanged(string logLine)
+        private static bool IsPartyChanged(string logLine)
         {
             return PARTY_CHANGED_WORDS.AsParallel()
                 .Any(words => words.Any(word => logLine.Contains(word)));
         }
+
+        #endregion
+
+        #region private 生ログのファイル書き出し機能
+
+        private bool SaveLogEnabled =>
+            Settings.Default.SaveLogEnabled && !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
+
+        /// <summary>
+        /// ログを追記する
+        /// </summary>
+        /// <param name="logLine">追記するログ</param>
+        private void AppendLogFile(string logLine)
+        {
+            if (SaveLogEnabled)
+            {
+                lock (this.fileOutputLogBuffer)
+                {
+                    this.fileOutputLogBuffer.AppendLine(logLine);
+
+                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
+                    {
+                        this.FlushLogFile();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// ログファイルをフラッシュする
+        /// </summary>
+        private void FlushLogFile()
+        {
+            if (SaveLogEnabled)
+            {
+                lock (this.fileOutputLogBuffer)
+                {
+                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
+                    {
+                        File.AppendAllText(
+                            Settings.Default.SaveLogFile,
+                            this.fileOutputLogBuffer.ToString(),
+                            new UTF8Encoding(false));
+
+                        this.fileOutputLogBuffer.Clear();
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region public static キーワードの代名詞を実際の値に置換
 
         /// <summary>
         /// マッチングキーワードを生成する
@@ -446,7 +440,7 @@
 
             keyword = keyword.Trim();
 
-            if (!keyword.Any() || !keyword.Contains("<") || !keyword.Contains(">"))
+            if (keyword.Length == 0 || !keyword.Contains("<") || !keyword.Contains(">"))
             {
                 return keyword;
             }
@@ -478,15 +472,14 @@
                 keyword = keyword.Replace(replacement.Key, replacement.Value);
             }
 
-            // カスタムプレースホルダを置換する
-            // ex. <C1>, <C2> <focus> <ターゲット>...
-            foreach (var p in customPlaceholders)
-            {
-                keyword = keyword.Replace("<" + p.Key + ">", p.Value);
-            }
+            keyword = ReplaceCustomPlaceholders(keyword);
 
             return keyword;
         }
+
+        #endregion
+
+        #region public static 状態更新指示
 
         /// <summary>
         /// パーティリストを更新する
@@ -522,7 +515,7 @@
                     select
                     x.Name.Trim();
 
-                _PartyList = new List<string>(sorted);
+                partyList = new List<string>(sorted);
 
                 // パーティメンバが空だったら自分を補完しておく
                 if (!combatants.Any())
@@ -578,7 +571,7 @@
                     newList.Add(oldValue.ToUpper(), newValue);
                 }
 
-                _PlaceholderToJobNameDictionaly = newList;
+                placeholderToJobNameDictionaly = newList;
             }
 
             // 置換後のマッチングキーワードを消去する
@@ -634,6 +627,44 @@
             }
         }
 
+        #endregion
+
+        #region public static カスタムプレースホルダー
+
+        /// <summary>
+        /// カスタム代名詞による置換文字列のセット
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, string> customPlaceholders =
+            new ConcurrentDictionary<string, string>();
+
+        /// <summary>
+        /// カスタムプレースホルダを置換する
+        /// ex. <C1>, <C2> <focus> <ターゲット>...
+        /// </summary>
+        private static string ReplaceCustomPlaceholders(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+            {
+                return keyword;
+            }
+
+            var ret = keyword;
+            foreach (var p in customPlaceholders)
+            {
+                ret = ret.Replace(p.Key, p.Value);
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// カスタム代名詞辞書のキーを作る
+        /// </summary>
+        private static string ToCustomPlaceholderKey(string name)
+        {
+            return "<" + name + ">";
+        }
+
         /// <summary>
         /// カスタムプレースホルダーに追加する
         /// <param name="name">追加するプレースホルダーの名称</param>
@@ -641,7 +672,7 @@
         /// </summary>
         public static void SetCustomPlaceholder(string name, string value)
         {
-            customPlaceholders.AddOrUpdate(name, value, (key, oldValue) => value);
+            customPlaceholders.AddOrUpdate(ToCustomPlaceholderKey(name), value, (key, oldValue) => value);
 
             // 置換後のマッチングキーワードを消去する
             SpellTimerTable.ClearReplacedKeywords();
@@ -655,7 +686,7 @@
         public static void ClearCustomPlaceholder(string name)
         {
             string beforeValue;
-            customPlaceholders.TryRemove(name, out beforeValue);
+            customPlaceholders.TryRemove(ToCustomPlaceholderKey(name), out beforeValue);
 
             // 置換後のマッチングキーワードを消去する
             SpellTimerTable.ClearReplacedKeywords();
@@ -673,5 +704,7 @@
             SpellTimerTable.ClearReplacedKeywords();
             OnePointTelopTable.Default.ClearReplacedKeywords();
         }
+
+        #endregion
     }
 }

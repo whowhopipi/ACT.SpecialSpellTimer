@@ -19,7 +19,7 @@
     /// </summary>
     public static class SpellTimerTable
     {
-        private static object lockObject = new object();
+        private static readonly object lockObject = new object();
 
         /// <summary>
         /// SpellTimerデータテーブル
@@ -53,16 +53,17 @@
         /// <summary>
         /// 有効なSpellTimerデータテーブル
         /// </summary>
-        public static SpellTimer[] EnabledTable
+        public static IReadOnlyList<SpellTimer> EnabledTable
         {
             get
             {
                 lock (lockObject)
                 {
+                    var now = DateTime.Now;
                     if (enabledTable == null ||
-                        (DateTime.Now - enabledTableTimeStamp).TotalSeconds >= 5.0d)
+                        (now - enabledTableTimeStamp).TotalSeconds >= 5.0d)
                     {
-                        enabledTableTimeStamp = DateTime.Now;
+                        enabledTableTimeStamp = now;
                         enabledTable = EnabledTableCore;
                     }
 
@@ -98,7 +99,7 @@
 
                     // ジョブフィルタをかける
                     if (player == null ||
-                        string.IsNullOrWhiteSpace(spell.JobFilter))
+                        string.IsNullOrEmpty(spell.JobFilter))
                     {
                         enabledByJob = true;
                     }
@@ -113,7 +114,7 @@
 
                     // ゾーンフィルタをかける
                     if (currentZoneID == 0 ||
-                        string.IsNullOrWhiteSpace(spell.ZoneFilter))
+                        string.IsNullOrEmpty(spell.ZoneFilter))
                     {
                         enabledByZone = true;
                     }
@@ -135,19 +136,22 @@
                 // コンパイル済みの正規表現をセットする
                 foreach (var spell in spellsFilteredJob)
                 {
-                    if (string.IsNullOrWhiteSpace(spell.KeywordReplaced))
+                    if (string.IsNullOrEmpty(spell.KeywordReplaced))
                     {
-                        spell.KeywordReplaced = LogBuffer.MakeKeyword(spell.Keyword);
+                        spell.KeywordReplaced = string.IsNullOrEmpty(spell.Keyword)
+                            ? string.Empty : LogBuffer.MakeKeyword(spell.Keyword);
                     }
 
-                    if (string.IsNullOrWhiteSpace(spell.KeywordForExtendReplaced1))
+                    if (string.IsNullOrEmpty(spell.KeywordForExtendReplaced1))
                     {
-                        spell.KeywordForExtendReplaced1 = LogBuffer.MakeKeyword(spell.KeywordForExtend1);
+                        spell.KeywordForExtendReplaced1 = string.IsNullOrEmpty(spell.KeywordForExtend1)
+                            ? string.Empty : LogBuffer.MakeKeyword(spell.KeywordForExtend1);
                     }
 
-                    if (string.IsNullOrWhiteSpace(spell.KeywordForExtendReplaced2))
+                    if (string.IsNullOrEmpty(spell.KeywordForExtendReplaced2))
                     {
-                        spell.KeywordForExtendReplaced2 = LogBuffer.MakeKeyword(spell.KeywordForExtend2);
+                        spell.KeywordForExtendReplaced2 = string.IsNullOrEmpty(spell.KeywordForExtend2)
+                            ? string.Empty : LogBuffer.MakeKeyword(spell.KeywordForExtend2);
                     }
 
                     if (!spell.RegexEnabled)
@@ -162,11 +166,11 @@
                     }
 
                     // マッチングキーワードの正規表現を生成する
-                    var pattern = !string.IsNullOrWhiteSpace(spell.KeywordReplaced) ?
+                    var pattern = !string.IsNullOrEmpty(spell.KeywordReplaced) ?
                         ".*" + spell.KeywordReplaced + ".*" :
                         string.Empty;
 
-                    if (!string.IsNullOrWhiteSpace(pattern))
+                    if (!string.IsNullOrEmpty(pattern))
                     {
                         if (spell.Regex == null ||
                             spell.RegexPattern != pattern)
@@ -184,11 +188,11 @@
                     }
 
                     // 延長するためのマッチングキーワードの正規表現を生成する1
-                    pattern = !string.IsNullOrWhiteSpace(spell.KeywordForExtendReplaced1) ?
+                    pattern = !string.IsNullOrEmpty(spell.KeywordForExtendReplaced1) ?
                         ".*" + spell.KeywordForExtendReplaced1 + ".*" :
                         string.Empty;
 
-                    if (!string.IsNullOrWhiteSpace(pattern))
+                    if (!string.IsNullOrEmpty(pattern))
                     {
                         if (spell.RegexForExtend1 == null ||
                             spell.RegexForExtendPattern1 != pattern)
@@ -206,11 +210,11 @@
                     }
 
                     // 延長するためのマッチングキーワードの正規表現を生成する2
-                    pattern = !string.IsNullOrWhiteSpace(spell.KeywordForExtendReplaced2) ?
+                    pattern = !string.IsNullOrEmpty(spell.KeywordForExtendReplaced2) ?
                         ".*" + spell.KeywordForExtendReplaced2 + ".*" :
                         string.Empty;
 
-                    if (!string.IsNullOrWhiteSpace(pattern))
+                    if (!string.IsNullOrEmpty(pattern))
                     {
                         if (spell.RegexForExtend2 == null ||
                             spell.RegexForExtendPattern2 != pattern)

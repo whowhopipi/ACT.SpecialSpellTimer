@@ -229,8 +229,7 @@
                 {
                     Logger.Update();
 
-                    if (SpecialSpellTimerPlugin.ConfigPanel != null &&
-                        SpecialSpellTimerPlugin.ConfigPanel.MonitorTabSelected)
+                    if (SpecialSpellTimerPlugin.ConfigPanel != null)
                     {
                         SpecialSpellTimerPlugin.ConfigPanel.UpdateMonitor();
                     }
@@ -359,7 +358,7 @@
         /// </summary>
         /// <param name="spells">Spell</param>
         private void GarbageSpellPanelWindows(
-            SpellTimer[] spells)
+            IReadOnlyList<SpellTimer> spells)
         {
             if (this.SpellTimerPanels != null)
             {
@@ -411,7 +410,7 @@
         /// <param name="spells">Spell</param>
         /// <param name="logLines">ログ</param>
         private void MatchSpells(
-            SpellTimer[] spells,
+            IReadOnlyList<SpellTimer> spells,
             IReadOnlyList<string> logLines)
         {
             foreach (var logLine in logLines)
@@ -718,7 +717,7 @@
         /// <param name="spells">
         /// 対象のスペル</param>
         private void RefreshSpellPanelWindows(
-            SpellTimer[] spells)
+            IReadOnlyList<SpellTimer> spells)
         {
             var spellsGroupByPanel =
                 from s in spells

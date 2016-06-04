@@ -37,13 +37,7 @@
             }
         }
 
-        public bool MonitorTabSelected
-        {
-            get
-            {
-                return this.TabControl.SelectedTab == this.tabPage3;
-            }
-        }
+        private bool MonitorTabSelected => this.TabControl.SelectedTab == this.tabPage3;
 
         /// <summary>
         /// ログを追加する
@@ -63,8 +57,16 @@
 
         public void UpdateMonitor()
         {
-            if (Interlocked.CompareExchange(ref placeholderIsValid, VALID, INVALID) != INVALID)
+            if (!MonitorTabSelected)
+            {
+                InvalidatePlaceholders();
                 return;
+            }
+
+            if (Interlocked.CompareExchange(ref placeholderIsValid, VALID, INVALID) != INVALID)
+            {
+                return;
+            }
 
             var player = FF14PluginHelper.GetPlayer();
             RefreshPlaceholders(

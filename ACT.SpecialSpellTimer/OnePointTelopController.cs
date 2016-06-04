@@ -159,7 +159,7 @@
         /// </summary>
         /// <param name="telops">Telops</param>
         public static void GarbageWindows(
-            OnePointTelop[] telops)
+            IReadOnlyList<OnePointTelop> telops)
         {
             // 不要になったWindowを閉じる
             var removeWindowList = new List<OnePointTelopWindow>();
@@ -190,7 +190,7 @@
         /// <param name="telops">Telops</param>
         /// <param name="logLines">ログ行</param>
         public static void Match(
-            OnePointTelop[] telops,
+            IReadOnlyList<OnePointTelop> telops,
             IReadOnlyList<string> logLines)
         {
             foreach (var log in logLines)
@@ -349,7 +349,7 @@
         /// </summary>
         /// <param name="telop">テロップ</param>
         public static void RefreshTelopWindows(
-            OnePointTelop[] telops)
+            IReadOnlyList<OnePointTelop> telops)
         {
             foreach (var telop in telops)
             {
