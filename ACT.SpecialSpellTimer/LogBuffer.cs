@@ -586,11 +586,8 @@
             // スペルタイマーの再描画を行う
             SpellTimerTable.ClearUpdateFlags();
 
-            // モニタタブに出力する
-            SpecialSpellTimerPlugin.ConfigPanel.RefreshPlaceholders(
-                player.Name,
-                PartyList,
-                PlaceholderToJobNameDictionaly);
+            // モニタタブの情報を無効にする
+            SpecialSpellTimerPlugin.ConfigPanel.InvalidatePlaceholders();
         }
 
         /// <summary>

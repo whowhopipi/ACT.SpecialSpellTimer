@@ -225,6 +225,12 @@
                 {
                     Logger.Update();
 
+                    if (SpecialSpellTimerPlugin.ConfigPanel != null &&
+                        SpecialSpellTimerPlugin.ConfigPanel.MonitorTabSelected)
+                    {
+                        SpecialSpellTimerPlugin.ConfigPanel.UpdateMonitor();
+                    }
+
                     // 有効なスペルとテロップのリストを取得する
                     var spellArray = SpellTimerTable.EnabledTable;
                     var telopArray = OnePointTelopTable.Default.EnabledTable;
