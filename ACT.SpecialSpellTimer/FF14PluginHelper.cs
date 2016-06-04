@@ -15,7 +15,7 @@
         private static object pluginMemory;
         private static dynamic pluginConfig;
         private static dynamic pluginScancombat;
-        private static List<Zone> zoneList;
+        private static volatile IReadOnlyList<Zone> zoneList;
 
         public static void Initialize()
         {
@@ -176,22 +176,22 @@
             return partyList;
         }
 
-        public static Zone[] GetZoneList()
+        public static IReadOnlyList<Zone> GetZoneList()
         {
-            if (zoneList != null &&
-                zoneList.Count() > 0)
+            var list = zoneList;
+            if (list != null && list.Count() > 0)
             {
-                return zoneList.OrderBy(x => x.ID).ToArray();
+                return list;
             }
-
-            zoneList = new List<Zone>();
 
             Initialize();
 
             if (plugin == null)
             {
-                return zoneList.OrderBy(x => x.ID).ToArray();
+                return Enumerable.Empty<Zone>().ToList();
             }
+
+            var newList = new List<Zone>();
 
             var asm = plugin.GetType().Assembly;
 
@@ -206,7 +206,7 @@
                         var values = line.Split('|');
                         if (values.Length >= 2)
                         {
-                            zoneList.Add(new Zone()
+                            newList.Add(new Zone()
                             {
                                 ID = int.Parse(values[0]),
                                 Name = values[1].Trim()
@@ -227,7 +227,7 @@
                         var values = line.Split('|');
                         if (values.Length >= 2)
                         {
-                            zoneList.Add(new Zone()
+                            newList.Add(new Zone()
                             {
                                 ID = int.Parse(values[0]),
                                 Name = values[1].Trim()
@@ -237,31 +237,29 @@
                 }
             }
 
-            return zoneList.OrderBy(x => x.ID).ToArray();
+            newList = newList.OrderBy(x => x.ID).ToList();
+            zoneList = newList;
+            return newList;
         }
 
         public static int GetCurrentZoneID()
         {
+            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
+            if (string.IsNullOrEmpty(currentZoneName) || currentZoneName == "Unknown Zone")
+            {
+                return 0;
+            }
+
             var zoneList = GetZoneList();
 
-            if (zoneList == null ||
-                zoneList.Length < 1)
+            if (zoneList == null || zoneList.Count < 1)
             {
                 return 0;
             }
 
-            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-            if (currentZoneName == null)
-            {
-                return 0;
-            }
-
-            return (
-                from x in zoneList
-                where
-                x.Name.ToLower() == currentZoneName.ToLower()
-                select
-                x.ID).FirstOrDefault();
+            var foundZone = zoneList.AsParallel().FirstOrDefault(zone =>
+                string.Equals(zone.Name, currentZoneName, System.StringComparison.OrdinalIgnoreCase));
+            return foundZone != null ? foundZone.ID : 0;
         }
     }
 
@@ -279,6 +277,11 @@
         public int CurrentMP;
         public int MaxMP;
         public int CurrentTP;
+
+        public SpecialSpellTimer.Job AsJob()
+        {
+            return SpecialSpellTimer.Job.FromId(Job);
+        }
     }
 
     public class Zone

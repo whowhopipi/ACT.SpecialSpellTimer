@@ -59,7 +59,7 @@
             OnePointTelopController.CloseTelops();
 
             FF14PluginHelper.RefreshPlayer();
-            LogBuffer.RefreshPTList();
+            LogBuffer.RefreshPartyList();
             LogBuffer.RefreshPetID();
 
             if (Settings.Default.OverlayVisible)
@@ -135,6 +135,8 @@
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
+            Logger.Begin();
+
             try
             {
                 Logger.Write("Plugin Start.");
@@ -205,6 +207,7 @@
 
                 this.PluginStatusLabel.Text = "Plugin Exited Error";
             }
+            Logger.End();
         }
 
         /// <summary>
@@ -243,7 +246,7 @@
                 OnePointTelopController.CloseTelops();
 
                 FF14PluginHelper.RefreshPlayer();
-                LogBuffer.RefreshPTList();
+                LogBuffer.RefreshPartyList();
                 LogBuffer.RefreshPetID();
 
                 if (Settings.Default.OverlayVisible)

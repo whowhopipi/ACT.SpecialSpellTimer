@@ -1,44 +1,43 @@
 ﻿namespace ACT.SpecialSpellTimer.Utility
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
+    using System.Threading;
 
     /// <summary>
     /// ログ
     /// </summary>
     public static class Logger
     {
+        private static readonly object lockObject = new object();
+
+        private static Timer flushTimer;
+        private static readonly TimeSpan dueTime = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan period = TimeSpan.FromSeconds(5);
+
+        private static volatile ConcurrentQueue<LogItem> buffer;
+        private static volatile ConcurrentQueue<string> bufferForFile;
+
+        private static string logFile
+        {
+            get
+            {
+                return Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        @"anoyetta\ACT\ACT.SpecialSpellTimer." + DateTime.Now.ToString("yyyy-MM") + ".log");
+            }
+        }
+
         /// <summary>
         /// ログを書き込む
         /// </summary>
         /// <param name="text">書き込む内容</param>
-        public static void Write(
-            string text)
+        public static void Write(string text)
         {
-            try
-            {
-                var textToWrite =
-                    "[" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff") + "] " +
-                    text;
-
-                if (SpecialSpellTimerPlugin.ConfigPanel != null)
-                {
-                    SpecialSpellTimerPlugin.ConfigPanel.AppendLog(textToWrite);
-                }
-
-                var logFile = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    @"anoyetta\ACT\ACT.SpecialSpellTimer.log");
-
-                File.AppendAllText(
-                    logFile, 
-                    textToWrite + Environment.NewLine, 
-                    new UTF8Encoding(false));
-            }
-            catch (Exception)
-            {
-            }
+            buffer.Enqueue(new LogItem(null, text, null));
         }
 
         /// <summary>
@@ -46,11 +45,132 @@
         /// </summary>
         /// <param name="text">書き込む内容</param>
         /// <param name="ex">例外情報</param>
-        public static void Write(
-            string text,
-            Exception ex)
+        public static void Write(string text, Exception ex)
         {
-            Write(text + Environment.NewLine + ex.ToString());
+            buffer.Enqueue(new LogItem(ex, text, null));
         }
+
+        /// <summary>
+        /// ログを書き込む
+        /// </summary>
+        /// <param name="format">複合書式設定文字列</param>
+        /// <param name="args">0 個以上の書式設定対象オブジェクトを含んだオブジェクト配列。</param>
+        public static void Write(string format, params object[] args)
+        {
+            buffer.Enqueue(new LogItem(null, format, args));
+        }
+
+        #region Controll metods
+
+        public static void Begin()
+        {
+            lock (lockObject)
+            {
+                buffer = new ConcurrentQueue<LogItem>();
+                bufferForFile = new ConcurrentQueue<string>();
+                if (flushTimer != null)
+                    flushTimer.Dispose();
+                flushTimer = new Timer(ignoreState => Flush(), null, dueTime, period);
+            }
+        }
+
+        public static void End()
+        {
+            lock (lockObject)
+            {
+                if (flushTimer != null)
+                    flushTimer.Dispose();
+                flushTimer = null;
+
+                LogItem item;
+                while (buffer.TryDequeue(out item))
+                    bufferForFile.Enqueue(item.ToString());
+
+                Flush();
+
+                buffer = null;
+                bufferForFile = null;
+            }
+        }
+
+        public static void Update()
+        {
+            if (SpecialSpellTimerPlugin.ConfigPanel == null)
+                return;
+
+            var buf = buffer;
+            var fileBuf = bufferForFile;
+
+            if (buf == null || fileBuf == null || buf.IsEmpty)
+                return;
+
+            LogItem item;
+            while (buf.TryDequeue(out item))
+            {
+                var line = item.ToString();
+                fileBuf.Enqueue(line);
+                try
+                {
+                    SpecialSpellTimerPlugin.ConfigPanel.AppendLog(line);
+                }
+                catch (Exception ex)
+                {
+                    if (!line.Contains("ConfigPanel.AppendLog failed."))
+                        Write("ConfigPanel.AppendLog failed.", ex);
+                }
+            }
+        }
+
+        private static void Flush()
+        {
+            var fileBuf = bufferForFile;
+            if (fileBuf == null || fileBuf.IsEmpty)
+                return;
+
+            lock (lockObject)
+            {
+                var lines = new StringBuilder();
+                string line;
+                while (fileBuf.TryDequeue(out line))
+                    lines.AppendLine(line);
+                try
+                {
+                    File.AppendAllText(logFile, lines.ToString(), new UTF8Encoding(false));
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        #endregion
+
+        #region LogItem
+
+        private class LogItem
+        {
+            DateTime logTime;
+            string text;
+            Exception cause;
+            private object[] args;
+
+            public LogItem(Exception cause, string text, object[] args)
+            {
+                logTime = DateTime.Now;
+                this.cause = cause;
+                this.text = text;
+                this.args = args != null && args.Length == 0 ? null : args;
+            }
+
+            public override string ToString()
+            {
+                var log = "[" + logTime.ToString("yyyy/MM/dd HH:mm:ss.fff") + "] "
+                    + (args == null ? text : string.Format(text, args));
+                return cause == null ? log : log + Environment.NewLine + cause.ToString();
+            }
+        }
+
+        #endregion
+
     }
 }

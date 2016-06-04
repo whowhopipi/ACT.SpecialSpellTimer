@@ -8,6 +8,7 @@
     using System.Runtime.InteropServices;
     using System.Text.RegularExpressions;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
@@ -50,9 +51,9 @@
 #endif
 
         /// <summary>
-        /// ログ監視タイマ
+        /// ログポーリングスレッド
         /// </summary>
-        private System.Timers.Timer WatchLogTimer;
+        private Thread logPoller;
 
         /// <summary>
         /// RefreshWindowタイマ
@@ -88,6 +89,8 @@
             set;
         }
 
+        private volatile bool running = false;
+
         /// <summary>
         /// 開始する
         /// </summary>
@@ -111,42 +114,31 @@
             this.RefreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
             this.RefreshWindowTimer.Start();
 
+            running = true;
             // ログ監視タイマを開始する
-            this.WatchLogTimer = new System.Timers.Timer()
+            logPoller = new Thread(() =>
             {
-                Interval = Settings.Default.LogPollSleepInterval,
-                AutoReset = true,
-            };
-
-            this.WatchLogTimer.Elapsed += (s, e) =>
-            {
-#if DEBUG
-                var sw = Stopwatch.StartNew();
-#endif
-                try
+                Thread.Sleep(TimeSpan.FromSeconds(5));
+                Logger.Write("start log poll");
+                while (running)
                 {
-                    if (this.WatchLogTimer != null &&
-                        this.WatchLogTimer.Enabled)
+                    try
                     {
-                        this.WatchLog();
+                        WatchLog();
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        running = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write("logPoller error:", ex);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Logger.Write(Translate.Get("SpellTimerRefreshError"), ex);
-                }
-                finally
-                {
-#if DEBUG
-                    sw.Stop();
-                    Debug.WriteLine(
-                        DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
-                        "●WatchLog " + sw.Elapsed.TotalMilliseconds.ToString("N4") + "ms");
-#endif
-                }
-            };
+                Logger.Write("end log poll");
+            });
 
-            this.WatchLogTimer.Start();
+            logPoller.Start();
         }
 
         /// <summary>
@@ -154,6 +146,8 @@
         /// </summary>
         public void End()
         {
+            running = false;
+
             // 戦闘分析を開放する
             CombatAnalyzer.Default.Denitialize();
 
@@ -171,11 +165,22 @@
                 this.RefreshWindowTimer = null;
             }
 
-            if (this.WatchLogTimer != null)
+            if (logPoller != null)
             {
-                this.WatchLogTimer.Stop();
-                this.WatchLogTimer.Dispose();
-                this.WatchLogTimer = null;
+                if (logPoller.IsAlive)
+                {
+                    try
+                    {
+                        if (!logPoller.Join(TimeSpan.FromSeconds(5)))
+                        {
+                            logPoller.Abort();
+                        }
+                    }
+                    catch
+                    {
+                    }
+                    logPoller = null;
+                }
             }
 
             // 全てのPanelを閉じる
@@ -217,12 +222,18 @@
                 if (Interlocked.CompareExchange(ref settingsIsValid, VALID, INVALID) == INVALID)
                 {
                     RefreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
-                    WatchLogTimer.Interval = Settings.Default.LogPollSleepInterval;
                 }
 
                 if (this.RefreshWindowTimer != null &&
                     this.RefreshWindowTimer.IsEnabled)
                 {
+                    Logger.Update();
+
+                    if (SpecialSpellTimerPlugin.ConfigPanel != null)
+                    {
+                        SpecialSpellTimerPlugin.ConfigPanel.UpdateMonitor();
+                    }
+
                     // 有効なスペルとテロップのリストを取得する
                     var spellArray = SpellTimerTable.EnabledTable;
                     var telopArray = OnePointTelopTable.Default.EnabledTable;
@@ -308,30 +319,38 @@
             // ACTが起動していない？
             if (ActGlobals.oFormActMain == null)
             {
-                Thread.Sleep(1000);
+                Logger.Write("act not started.");
+                Thread.Sleep(TimeSpan.FromSeconds(3));
                 return;
             }
 
-            // 有効なスペルとテロップのリストを取得する
-            var spellArray = SpellTimerTable.EnabledTable;
-            var telopArray = OnePointTelopTable.Default.EnabledTable;
+            if (this.LogBuffer.nonEmpty())
+            {
+                // 有効なスペルとテロップのリストを取得する
+                var spellArray = Task.Run(() => SpellTimerTable.EnabledTable);
+                var telopArray = Task.Run(() => OnePointTelopTable.Default.EnabledTable);
 
-            // ログを取り出す
-            var logLines = this.LogBuffer.GetLogLines();
+                // ログを取り出す
+                var logLines = Task.Run(() => this.LogBuffer.GetLogLines());
 
-            // テロップとマッチングする
-            OnePointTelopController.Match(
-                telopArray,
-                logLines);
+                if (logLines.Result.Count > 0)
+                {
+                    // テロップとマッチングする
+                    var t1 = Task.Run(() => OnePointTelopController.Match(telopArray.Result, logLines.Result));
 
-            // スペルリストとマッチングする
-            this.MatchSpells(
-                spellArray,
-                logLines);
+                    // スペルリストとマッチングする
+                    var t2 = Task.Run(() => this.MatchSpells(spellArray.Result, logLines.Result));
 
-            // コマンドとマッチングする
-            TextCommandController.MatchCommand(
-                logLines);
+                    // コマンドとマッチングする
+                    var t3 = Task.Run(() => TextCommandController.MatchCommand(logLines.Result));
+
+                    Task.WaitAll(t1, t2, t3);
+
+                    return;
+                }
+            }
+
+            Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
         }
 
         /// <summary>
@@ -339,7 +358,7 @@
         /// </summary>
         /// <param name="spells">Spell</param>
         private void GarbageSpellPanelWindows(
-            SpellTimer[] spells)
+            IReadOnlyList<SpellTimer> spells)
         {
             if (this.SpellTimerPanels != null)
             {
@@ -391,13 +410,13 @@
         /// <param name="spells">Spell</param>
         /// <param name="logLines">ログ</param>
         private void MatchSpells(
-            SpellTimer[] spells,
-            string[] logLines)
+            IReadOnlyList<SpellTimer> spells,
+            IReadOnlyList<string> logLines)
         {
             foreach (var logLine in logLines)
             {
                 // マッチする？
-                foreach (var spell in spells)
+                spells.AsParallel().ForAll(spell =>
                 {
                     var regex = spell.Regex;
                     var notifyNeeded = false;
@@ -414,7 +433,7 @@
                                 var keyword = spell.KeywordReplaced;
                                 if (string.IsNullOrWhiteSpace(keyword))
                                 {
-                                    continue;
+                                    return;
                                 }
 
                                 // キーワードが含まれるか？
@@ -579,7 +598,7 @@
                         this.updateNormalSpellTimer(spell, false);
                         this.notifyNormalSpellTimer(spell);
                     }
-                }
+                });
                 // end loop spells
             }
 
@@ -698,7 +717,7 @@
         /// <param name="spells">
         /// 対象のスペル</param>
         private void RefreshSpellPanelWindows(
-            SpellTimer[] spells)
+            IReadOnlyList<SpellTimer> spells)
         {
             var spellsGroupByPanel =
                 from s in spells

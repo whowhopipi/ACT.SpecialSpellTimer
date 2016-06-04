@@ -196,7 +196,7 @@
             {
                 // プレイヤ情報とパーティリストを取得する
                 var player = FF14PluginHelper.GetPlayer();
-                var ptlist = LogBuffer.GetPTMember();
+                var ptlist = LogBuffer.PartyList;
 
                 if (player == null ||
                     ptlist == null)

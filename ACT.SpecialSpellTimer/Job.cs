@@ -1,6 +1,7 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// ジョブ
@@ -10,77 +11,76 @@
         /// <summary>
         /// ジョブリスト
         /// </summary>
-        private static Job[] jobList;
+        private static readonly IReadOnlyList<Job> _jobList = new List<Job> {
+            new Job(JobIds.GLD, JobRoles.Tank),
+            new Job(JobIds.PUG, JobRoles.MeleeDPS),
+            new Job(JobIds.MRD, JobRoles.Tank),
+            new Job(JobIds.LNC, JobRoles.MeleeDPS),
+            new Job(JobIds.ARC, JobRoles.RangerDPS),
+            new Job(JobIds.CNJ, JobRoles.Healer),
+            new Job(JobIds.THM, JobRoles.CasterDPS),
+            new Job(JobIds.CRP, JobRoles.Crafter),
+            new Job(JobIds.BSM, JobRoles.Crafter),
+            new Job(JobIds.ARM, JobRoles.Crafter),
+            new Job(JobIds.GSM, JobRoles.Crafter),
+            new Job(JobIds.LTW, JobRoles.Crafter),
+            new Job(JobIds.WVR, JobRoles.Crafter),
+            new Job(JobIds.ALC, JobRoles.Crafter),
+            new Job(JobIds.CUL, JobRoles.Crafter),
+            new Job(JobIds.MIN, JobRoles.Gatherer),
+            new Job(JobIds.BOT, JobRoles.Gatherer),
+            new Job(JobIds.FSH, JobRoles.Gatherer),
+            new Job(JobIds.PLD, JobRoles.Tank),
+            new Job(JobIds.MNK, JobRoles.MeleeDPS),
+            new Job(JobIds.WAR, JobRoles.Tank),
+            new Job(JobIds.DRG, JobRoles.MeleeDPS),
+            new Job(JobIds.BRD, JobRoles.RangerDPS),
+            new Job(JobIds.WHM, JobRoles.Healer),
+            new Job(JobIds.BLM, JobRoles.CasterDPS),
+            new Job(JobIds.ACN, JobRoles.CasterDPS),
+            new Job(JobIds.SMN, JobRoles.CasterDPS),
+            new Job(JobIds.SCH, JobRoles.Healer),
+            new Job(JobIds.ROG, JobRoles.MeleeDPS),
+            new Job(JobIds.NIN, JobRoles.MeleeDPS),
+            new Job(JobIds.MCH, JobRoles.RangerDPS),
+            new Job(JobIds.DRK, JobRoles.Tank),
+            new Job(JobIds.AST, JobRoles.Healer),
+        };
 
         /// <summary>
         /// ジョブ辞書
         /// </summary>
-        private static Dictionary<int, Job> jobDictinary;
+        private static readonly IReadOnlyDictionary<int, Job> _jobDictionary =
+            _jobList.ToDictionary(job => job.JobId, job => job);
+
+        /// <summary>
+        /// ジョブの一覧
+        /// </summary>
+        public static IReadOnlyList<Job> JobList => _jobList;
+
+        /// <summary>
+        /// ジョブIDをキーに持つ辞書
+        /// </summary>
+        public static IReadOnlyDictionary<int, Job> JobDictionary => _jobDictionary;
 
         /// <summary>
         /// JobId
         /// </summary>
-        public int JobId { get; set; }
+        public int JobId { get; }
 
         /// <summary>
         /// JobName
         /// </summary>
-        public string JobName { get; set; }
+        public string JobName { get; }
 
         /// <summary>
         /// ロール
         /// </summary>
-        public JobRoles Role { get; set; }
+        public JobRoles Role { get; }
 
-        /// <summary>
-        /// ジョブリストを取得する
-        /// </summary>
-        /// <returns>
-        /// ジョブリスト</returns>
-        public static Job[] GetJobList()
+        public static Job FromId(int jobId)
         {
-            if (jobList == null)
-            {
-                var list = new List<Job>();
-
-                list.Add(new Job() { JobId = 1, JobName = "GLD", Role = JobRoles.Tank });
-                list.Add(new Job() { JobId = 2, JobName = "PUG", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 3, JobName = "MRD", Role = JobRoles.Tank });
-                list.Add(new Job() { JobId = 4, JobName = "LNC", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 5, JobName = "ARC", Role = JobRoles.RangerDPS });
-                list.Add(new Job() { JobId = 6, JobName = "CNJ", Role = JobRoles.Healer });
-                list.Add(new Job() { JobId = 7, JobName = "THM", Role = JobRoles.CasterDPS });
-                list.Add(new Job() { JobId = 8, JobName = "CRP", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 9, JobName = "BSM", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 10, JobName = "ARM", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 11, JobName = "GSM", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 12, JobName = "LTW", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 13, JobName = "WVR", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 14, JobName = "ALC", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 15, JobName = "CUL", Role = JobRoles.Crafter });
-                list.Add(new Job() { JobId = 16, JobName = "MIN", Role = JobRoles.Gatherer });
-                list.Add(new Job() { JobId = 17, JobName = "BOT", Role = JobRoles.Gatherer });
-                list.Add(new Job() { JobId = 18, JobName = "FSH", Role = JobRoles.Gatherer });
-                list.Add(new Job() { JobId = 19, JobName = "PLD", Role = JobRoles.Tank });
-                list.Add(new Job() { JobId = 20, JobName = "MNK", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 21, JobName = "WAR", Role = JobRoles.Tank });
-                list.Add(new Job() { JobId = 22, JobName = "DRG", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 23, JobName = "BRD", Role = JobRoles.RangerDPS });
-                list.Add(new Job() { JobId = 24, JobName = "WHM", Role = JobRoles.Healer });
-                list.Add(new Job() { JobId = 25, JobName = "BLM", Role = JobRoles.CasterDPS });
-                list.Add(new Job() { JobId = 26, JobName = "ACN", Role = JobRoles.CasterDPS });
-                list.Add(new Job() { JobId = 27, JobName = "SMN", Role = JobRoles.CasterDPS });
-                list.Add(new Job() { JobId = 28, JobName = "SCH", Role = JobRoles.Healer });
-                list.Add(new Job() { JobId = 29, JobName = "ROG", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 30, JobName = "NIN", Role = JobRoles.MeleeDPS });
-                list.Add(new Job() { JobId = 31, JobName = "MCH", Role = JobRoles.RangerDPS });
-                list.Add(new Job() { JobId = 32, JobName = "DRK", Role = JobRoles.Tank });
-                list.Add(new Job() { JobId = 33, JobName = "AST", Role = JobRoles.Healer });
-
-                jobList = list.ToArray();
-            }
-
-            return jobList;
+            return JobDictionary[jobId];
         }
 
         /// <summary>
@@ -88,26 +88,31 @@
         /// </summary>
         /// <param name="jobID">ジョブID</param>
         /// <returns>ジョブ名</returns>
-        public static string GetJobName(
-            int jobID)
+        public static string GetJobName(int jobID)
         {
-            if (jobDictinary == null)
+            if (JobDictionary.ContainsKey(jobID))
             {
-                jobDictinary = new Dictionary<int, Job>();
-                foreach (var job in GetJobList())
-                {
-                    jobDictinary.Add(job.JobId, job);
-                }
-            }
-
-            if (jobDictinary.ContainsKey(jobID))
-            {
-                return jobDictinary[jobID].JobName;
+                return JobDictionary[jobID].JobName;
             }
             else
             {
                 return string.Empty;
             }
+        }
+
+        private Job(JobIds id, JobRoles role)
+        {
+            this.JobId = (int)id;
+            this.JobName = System.Enum.GetName(typeof(JobIds), id);
+            this.Role = role;
+        }
+
+        public bool IsSummoner()
+        {
+            const int ARC = (int)JobIds.ARC;
+            const int SCH = (int)JobIds.SCH;
+            const int SMN = (int)JobIds.SMN;
+            return JobId == ARC || JobId == SCH || JobId == SMN;
         }
 
         /// <summary>
@@ -130,5 +135,42 @@
         CasterDPS = 33,
         Crafter = 40,
         Gatherer = 50,
+    }
+
+    public enum JobIds
+    {
+        GLD = 1,
+        PUG = 2,
+        MRD = 3,
+        LNC = 4,
+        ARC = 5,
+        CNJ = 6,
+        THM = 7,
+        CRP = 8,
+        BSM = 9,
+        ARM = 10,
+        GSM = 11,
+        LTW = 12,
+        WVR = 13,
+        ALC = 14,
+        CUL = 15,
+        MIN = 16,
+        BOT = 17,
+        FSH = 18,
+        PLD = 19,
+        MNK = 20,
+        WAR = 21,
+        DRG = 22,
+        BRD = 23,
+        WHM = 24,
+        BLM = 25,
+        ACN = 26,
+        SMN = 27,
+        SCH = 28,
+        ROG = 29,
+        NIN = 30,
+        MCH = 31,
+        DRK = 32,
+        AST = 33,
     }
 }

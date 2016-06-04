@@ -42,9 +42,9 @@
         /// <summary>
         /// データテーブル
         /// </summary>
-        private List<OnePointTelop> table = new List<OnePointTelop>();
+        private readonly List<OnePointTelop> table = new List<OnePointTelop>();
 
-        private OnePointTelop[] enabledTable;
+        private volatile OnePointTelop[] enabledTable;
 
         private DateTime enabledTableTimeStamp;
 
@@ -70,14 +70,15 @@
         /// <summary>
         /// 有効なエントリのリスト
         /// </summary>
-        public OnePointTelop[] EnabledTable
+        public IReadOnlyList<OnePointTelop> EnabledTable
         {
             get
             {
+                var now = DateTime.Now;
                 if (this.enabledTable == null ||
-                    (DateTime.Now - this.enabledTableTimeStamp).TotalSeconds >= 5.0d)
+                    (now - this.enabledTableTimeStamp).TotalSeconds >= 5.0d)
                 {
-                    this.enabledTableTimeStamp = DateTime.Now;
+                    this.enabledTableTimeStamp = now;
                     this.enabledTable = EnabledTableCore;
                 }
 

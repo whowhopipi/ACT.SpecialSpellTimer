@@ -159,7 +159,7 @@
         /// </summary>
         /// <param name="telops">Telops</param>
         public static void GarbageWindows(
-            OnePointTelop[] telops)
+            IReadOnlyList<OnePointTelop> telops)
         {
             // 不要になったWindowを閉じる
             var removeWindowList = new List<OnePointTelopWindow>();
@@ -190,12 +190,12 @@
         /// <param name="telops">Telops</param>
         /// <param name="logLines">ログ行</param>
         public static void Match(
-            OnePointTelop[] telops,
-            string[] logLines)
+            IReadOnlyList<OnePointTelop> telops,
+            IReadOnlyList<string> logLines)
         {
             foreach (var log in logLines)
             {
-                foreach (var telop in telops)
+                telops.AsParallel().ForAll(telop =>
                 {
                     var matched = false;
 
@@ -240,7 +240,7 @@
                         }
 
                         // 正規表現マッチ
-                        if (regex != null)
+                        else
                         {
                             var match = regex.Match(log);
                             if (match.Success)
@@ -278,7 +278,7 @@
                     {
                         SpellTimerCore.Default.updateNormalSpellTimerForTelop(telop, telop.ForceHide);
                         SpellTimerCore.Default.notifyNormalSpellTimerForTelop(telop.Title);
-                        continue;
+                        return;
                     }
 
                     // 通常マッチ(強制非表示)
@@ -297,7 +297,7 @@
                     }
 
                     // 正規表現マッチ(強制非表示)
-                    if (regexToHide != null)
+                    else
                     {
                         if (regexToHide.IsMatch(log))
                         {
@@ -311,7 +311,8 @@
                         SpellTimerCore.Default.updateNormalSpellTimerForTelop(telop, telop.ForceHide);
                         SpellTimerCore.Default.notifyNormalSpellTimerForTelop(telop.Title);
                     }
-                }   // end loop telops
+
+                });   // end loop telops
             }
 
             // スペルの更新とサウンド処理を行う
@@ -348,7 +349,7 @@
         /// </summary>
         /// <param name="telop">テロップ</param>
         public static void RefreshTelopWindows(
-            OnePointTelop[] telops)
+            IReadOnlyList<OnePointTelop> telops)
         {
             foreach (var telop in telops)
             {

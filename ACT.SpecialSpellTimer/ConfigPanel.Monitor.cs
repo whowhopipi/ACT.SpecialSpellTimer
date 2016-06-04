@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading;
 
     /// <summary>
     /// Configパネル モニター
@@ -11,9 +12,13 @@
     public partial class ConfigPanel
     {
         private string playerName;
-        private List<string> partyMemberNames;
-        private List<KeyValuePair<string, string>> jobPlaceholders;
+        private IReadOnlyList<string> partyMemberNames;
+        private IReadOnlyDictionary<string, string> jobPlaceholders;
         private StringBuilder logBuffer = new StringBuilder();
+
+        private const int VALID = 0;
+        private const int INVALID = 1;
+        private int placeholderIsValid = VALID;
 
         /// <summary>
         /// モニタタブ用のロード
@@ -32,6 +37,8 @@
             }
         }
 
+        private bool MonitorTabSelected => this.TabControl.SelectedTab == this.tabPage3;
+
         /// <summary>
         /// ログを追加する
         /// </summary>
@@ -43,16 +50,41 @@
             this.LogTextBox.AppendText(text + Environment.NewLine);
         }
 
+        public void InvalidatePlaceholders()
+        {
+            placeholderIsValid = INVALID;
+        }
+
+        public void UpdateMonitor()
+        {
+            if (!MonitorTabSelected)
+            {
+                InvalidatePlaceholders();
+                return;
+            }
+
+            if (Interlocked.CompareExchange(ref placeholderIsValid, VALID, INVALID) != INVALID)
+            {
+                return;
+            }
+
+            var player = FF14PluginHelper.GetPlayer();
+            RefreshPlaceholders(
+                player != null ? player.Name : "",
+                LogBuffer.PartyList,
+                LogBuffer.PlaceholderToJobNameDictionaly);
+        }
+
         /// <summary>
         /// プレースホルダの表示を更新する
         /// </summary>
         /// <param name="playerName">プレイヤー名</param>
         /// <param name="partyMemberNames">パーティメンバーの名前リスト</param>
         /// <param name="jobPlaceholders">ジョブ名プレースホルダのリスト</param>
-        public void RefreshPlaceholders(
+        private void RefreshPlaceholders(
             string playerName,
-            List<string> partyMemberNames,
-            List< KeyValuePair<string, string>> jobPlaceholders)
+            IReadOnlyList<string> partyMemberNames,
+            IReadOnlyDictionary<string, string> jobPlaceholders)
         {
             // 一旦クリアする
             this.MeTextBox.Clear();

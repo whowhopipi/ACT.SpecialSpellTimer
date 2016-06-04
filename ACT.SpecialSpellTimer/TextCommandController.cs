@@ -1,5 +1,6 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
+    using System.Collections.Generic;
     using System.Media;
     using System.Text.RegularExpressions;
 
@@ -24,7 +25,7 @@
         /// <param name="logLines">
         /// ログ行</param>
         public static void MatchCommand(
-            string[] logLines)
+            IReadOnlyList<string> logLines)
         {
             var commandDone = false;
             foreach (var log in logLines)
@@ -88,7 +89,7 @@
                                 break;
 
                             case "pt":
-                                LogBuffer.RefreshPTList();
+                                LogBuffer.RefreshPartyList();
                                 commandDone = true;
                                 break;
 
