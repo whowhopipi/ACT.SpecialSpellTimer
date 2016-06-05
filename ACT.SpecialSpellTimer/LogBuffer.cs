@@ -86,7 +86,7 @@
         /// <summary>
         /// パーティメンバの代名詞が有効か？
         /// </summary>
-        private static bool enabledPartyMemberPlaceHolder = Settings.Default.EnabledPartyMemberPlaceholder;
+        private static bool enabledPartyMemberPlaceHolder => Settings.Default.EnabledPartyMemberPlaceholder;
 
         #endregion
 
@@ -265,7 +265,7 @@
                 // パーティに変化あり
                 if (!partyChanged)
                 {
-                    if (enabledPartyMemberPlaceHolder && IsPartyChanged(logLine))
+                    if (IsPartyChanged(logLine))
                     {
                         partyChanged = true;
                     }
@@ -572,6 +572,11 @@
                 }
 
                 placeholderToJobNameDictionaly = newList;
+            }
+            else
+            {
+                partyList = EMPTY_STRING_LIST;
+                placeholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
             }
 
             // 置換後のマッチングキーワードを消去する

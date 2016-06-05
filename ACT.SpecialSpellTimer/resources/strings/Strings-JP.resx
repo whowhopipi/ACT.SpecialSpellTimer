@@ -438,8 +438,8 @@
     <comment>Panel name</comment>
   </data>
   <data name="PartyMemberNumberExplainLabel" xml:space="preserve">
-    <value>※&lt;2&gt;～&lt;8&gt;が使用可能になります。ただし2～8の順序は正しくない場合があります（要再起動）</value>
-    <comment>※ &lt;2&gt; - &lt;8&gt; can be used, however the order may be incorrect. (Requires restart)</comment>
+    <value>※&lt;2&gt;～&lt;8&gt;が使用可能になります。ただし2～8の順序は正しくない場合があります。</value>
+    <comment>※ &lt;2&gt; - &lt;8&gt; can be used, however the order may be incorrect.</comment>
   </data>
   <data name="PartyPronounLabel" xml:space="preserve">
     <value>PTメンバの代名詞を有効にする</value>

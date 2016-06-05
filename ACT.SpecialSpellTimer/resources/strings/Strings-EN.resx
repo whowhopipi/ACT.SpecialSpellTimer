@@ -438,8 +438,8 @@
     <comment>表示するパネルの名前</comment>
   </data>
   <data name="PartyMemberNumberExplainLabel" xml:space="preserve">
-    <value>※ &lt;2&gt; - &lt;8&gt; can be used, however the order may be incorrect. (Requires restart)</value>
-    <comment>※&lt;2&gt;～&lt;8&gt;が使用可能になります。ただし2～8の順序は正しくない場合があります（要再起動）</comment>
+    <value>※ &lt;2&gt; - &lt;8&gt; can be used, however the order may be incorrect.</value>
+    <comment>※&lt;2&gt;～&lt;8&gt;が使用可能になります。ただし2～8の順序は正しくない場合があります</comment>
   </data>
   <data name="PartyPronounLabel" xml:space="preserve">
     <value>Use party member names in matching</value>
