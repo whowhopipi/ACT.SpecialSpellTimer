@@ -1,6 +1,7 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
@@ -12,7 +13,6 @@
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
-    using Advanced_Combat_Tracker;
 
     /// <summary>
     /// SpellTimerテーブル
@@ -29,6 +29,12 @@
         private static SpellTimer[] enabledTable;
 
         private static DateTime enabledTableTimeStamp;
+
+        /// <summary>
+        /// インスタンス化されたスペルの辞書
+        /// key : スペルの表示名
+        /// </summary>
+        private static ConcurrentDictionary<string, SpellTimer> instanceSpells = new ConcurrentDictionary<string, SpellTimer>();
 
         /// <summary>
         /// SpellTimerデータテーブル
@@ -237,104 +243,140 @@
         }
 
         /// <summary>
-        /// 定義のインスタンス（表示用のコピー）を生成する
+        /// 同じスペル表示名のインスタンスを取得するか新たに作成する
         /// </summary>
-        /// <param name="element">インスタンス化する定義</param>
-        /// <returns>生成されたインスタンス</returns>
-        public static SpellTimer CreateInstanceByElement(
-            SpellTimer element)
+        /// <param name="spellTitle">スペル表示名</param>
+        /// <param name="sourceSpell">インスタンスの元となるスペル</param>
+        /// <returns>
+        /// インスタンススペル</returns>
+        public static SpellTimer GetOrAddInstance(
+            string spellTitle,
+            SpellTimer sourceSpell)
         {
-            var instance = new SpellTimer();
+            var instance = instanceSpells.GetOrAdd(
+                spellTitle,
+                (x) =>
+                {
+                    var ns = new SpellTimer();
 
-            instance.ID = Table.Max(x => x.ID) + 1;
-            instance.guid = Guid.NewGuid();
-            instance.Panel = element.Panel;
-            instance.SpellTitle = element.SpellTitle;
-            instance.SpellIcon = element.SpellIcon;
-            instance.SpellIconSize = element.SpellIconSize;
-            instance.Keyword = element.Keyword;
-            instance.KeywordForExtend1 = element.KeywordForExtend1;
-            instance.KeywordForExtend2 = element.KeywordForExtend2;
-            instance.RecastTime = element.RecastTime;
-            instance.RecastTimeExtending1 = element.RecastTimeExtending1;
-            instance.RecastTimeExtending2 = element.RecastTimeExtending2;
-            instance.ExtendBeyondOriginalRecastTime = element.ExtendBeyondOriginalRecastTime;
-            instance.UpperLimitOfExtension = element.UpperLimitOfExtension;
-            instance.RepeatEnabled = element.RepeatEnabled;
-            instance.ProgressBarVisible = element.ProgressBarVisible;
-            instance.MatchSound = element.MatchSound;
-            instance.MatchTextToSpeak = element.MatchTextToSpeak;
-            instance.OverSound = element.OverSound;
-            instance.OverTextToSpeak = element.OverTextToSpeak;
-            instance.OverTime = element.OverTime;
-            instance.BeforeSound = element.BeforeSound;
-            instance.BeforeTextToSpeak = element.BeforeTextToSpeak;
-            instance.BeforeTime = element.BeforeTime;
-            instance.TimeupSound = element.TimeupSound;
-            instance.TimeupTextToSpeak = element.TimeupTextToSpeak;
-            instance.MatchDateTime = element.MatchDateTime;
-            instance.TimeupHide = element.TimeupHide;
-            instance.IsReverse = element.IsReverse;
-            instance.Font = element.Font;
-            instance.FontFamily = element.FontFamily;
-            instance.FontSize = element.FontSize;
-            instance.FontStyle = element.FontStyle;
-            instance.FontColor = element.FontColor;
-            instance.FontOutlineColor = element.FontOutlineColor;
-            instance.BarColor = element.BarColor;
-            instance.BarOutlineColor = element.BarOutlineColor;
-            instance.BarWidth = element.BarWidth;
-            instance.BarHeight = element.BarHeight;
-            instance.BackgroundColor = element.BackgroundColor;
-            instance.BackgroundAlpha = element.BackgroundAlpha;
-            instance.DontHide = element.DontHide;
-            instance.HideSpellName = element.HideSpellName;
-            instance.OverlapRecastTime = element.OverlapRecastTime;
-            instance.ReduceIconBrightness = element.ReduceIconBrightness;
-            instance.RegexEnabled = element.RegexEnabled;
-            instance.JobFilter = element.JobFilter;
-            instance.ZoneFilter = element.ZoneFilter;
-            instance.TimersMustRunningForStart = element.TimersMustRunningForStart;
-            instance.TimersMustStoppingForStart = element.TimersMustStoppingForStart;
-            instance.Enabled = element.Enabled;
+                    ns.SpellTitleReplaced = x;
 
-            instance.MatchedLog = element.MatchedLog;
-            instance.Regex = element.Regex;
-            instance.RegexPattern = element.RegexPattern;
-            instance.KeywordReplaced = element.KeywordReplaced;
-            instance.RegexForExtend1 = element.RegexForExtend1;
-            instance.RegexForExtendPattern1 = element.RegexForExtendPattern1;
-            instance.KeywordForExtendReplaced1 = element.KeywordForExtendReplaced1;
-            instance.RegexForExtend2 = element.RegexForExtend2;
-            instance.RegexForExtendPattern2 = element.RegexForExtendPattern2;
-            instance.KeywordForExtendReplaced2 = element.KeywordForExtendReplaced2;
+                    ns.guid = Guid.NewGuid();
+                    ns.Panel = sourceSpell.Panel;
+                    ns.SpellTitle = sourceSpell.SpellTitle;
+                    ns.SpellIcon = sourceSpell.SpellIcon;
+                    ns.SpellIconSize = sourceSpell.SpellIconSize;
+                    ns.Keyword = sourceSpell.Keyword;
+                    ns.KeywordForExtend1 = sourceSpell.KeywordForExtend1;
+                    ns.KeywordForExtend2 = sourceSpell.KeywordForExtend2;
+                    ns.RecastTime = sourceSpell.RecastTime;
+                    ns.RecastTimeExtending1 = sourceSpell.RecastTimeExtending1;
+                    ns.RecastTimeExtending2 = sourceSpell.RecastTimeExtending2;
+                    ns.ExtendBeyondOriginalRecastTime = sourceSpell.ExtendBeyondOriginalRecastTime;
+                    ns.UpperLimitOfExtension = sourceSpell.UpperLimitOfExtension;
+                    ns.RepeatEnabled = sourceSpell.RepeatEnabled;
+                    ns.ProgressBarVisible = sourceSpell.ProgressBarVisible;
+                    ns.MatchSound = sourceSpell.MatchSound;
+                    ns.MatchTextToSpeak = sourceSpell.MatchTextToSpeak;
+                    ns.OverSound = sourceSpell.OverSound;
+                    ns.OverTextToSpeak = sourceSpell.OverTextToSpeak;
+                    ns.OverTime = sourceSpell.OverTime;
+                    ns.BeforeSound = sourceSpell.BeforeSound;
+                    ns.BeforeTextToSpeak = sourceSpell.BeforeTextToSpeak;
+                    ns.BeforeTime = sourceSpell.BeforeTime;
+                    ns.TimeupSound = sourceSpell.TimeupSound;
+                    ns.TimeupTextToSpeak = sourceSpell.TimeupTextToSpeak;
+                    ns.MatchDateTime = sourceSpell.MatchDateTime;
+                    ns.TimeupHide = sourceSpell.TimeupHide;
+                    ns.IsReverse = sourceSpell.IsReverse;
+                    ns.Font = sourceSpell.Font;
+                    ns.FontFamily = sourceSpell.FontFamily;
+                    ns.FontSize = sourceSpell.FontSize;
+                    ns.FontStyle = sourceSpell.FontStyle;
+                    ns.FontColor = sourceSpell.FontColor;
+                    ns.FontOutlineColor = sourceSpell.FontOutlineColor;
+                    ns.BarColor = sourceSpell.BarColor;
+                    ns.BarOutlineColor = sourceSpell.BarOutlineColor;
+                    ns.BarWidth = sourceSpell.BarWidth;
+                    ns.BarHeight = sourceSpell.BarHeight;
+                    ns.BackgroundColor = sourceSpell.BackgroundColor;
+                    ns.BackgroundAlpha = sourceSpell.BackgroundAlpha;
+                    ns.DontHide = sourceSpell.DontHide;
+                    ns.HideSpellName = sourceSpell.HideSpellName;
+                    ns.OverlapRecastTime = sourceSpell.OverlapRecastTime;
+                    ns.ReduceIconBrightness = sourceSpell.ReduceIconBrightness;
+                    ns.RegexEnabled = sourceSpell.RegexEnabled;
+                    ns.JobFilter = sourceSpell.JobFilter;
+                    ns.ZoneFilter = sourceSpell.ZoneFilter;
+                    ns.TimersMustRunningForStart = sourceSpell.TimersMustRunningForStart;
+                    ns.TimersMustStoppingForStart = sourceSpell.TimersMustStoppingForStart;
+                    ns.Enabled = sourceSpell.Enabled;
 
-            instance.ToInstance = false;
-            instance.IsInstance = true;
+                    ns.MatchedLog = sourceSpell.MatchedLog;
+                    ns.Regex = sourceSpell.Regex;
+                    ns.RegexPattern = sourceSpell.RegexPattern;
+                    ns.KeywordReplaced = sourceSpell.KeywordReplaced;
+                    ns.RegexForExtend1 = sourceSpell.RegexForExtend1;
+                    ns.RegexForExtendPattern1 = sourceSpell.RegexForExtendPattern1;
+                    ns.KeywordForExtendReplaced1 = sourceSpell.KeywordForExtendReplaced1;
+                    ns.RegexForExtend2 = sourceSpell.RegexForExtend2;
+                    ns.RegexForExtendPattern2 = sourceSpell.RegexForExtendPattern2;
+                    ns.KeywordForExtendReplaced2 = sourceSpell.KeywordForExtendReplaced2;
 
-            lock (lockObject)
+                    ns.ToInstance = false;
+                    ns.IsInstance = true;
+
+                    return ns;
+                });
+
+            lock (instance)
             {
-                table.Add(instance);
+                instance.CompleteScheduledTime = DateTime.MinValue;
 
-                var array = new SpellTimer[enabledTable.Length + 1];
-                Array.Copy(enabledTable, array, enabledTable.Length);
-                array[enabledTable.Length] = instance;
-                enabledTable = array;
+                instanceSpells.TryAdd(
+                    instance.SpellTitleReplaced,
+                    instance);
+
+                // スペルテーブル本体に登録する
+                lock (lockObject)
+                {
+                    instance.ID = Table.Max(y => y.ID) + 1;
+
+                    table.Add(instance);
+
+                    var array = new SpellTimer[enabledTable.Length + 1];
+                    Array.Copy(enabledTable, array, enabledTable.Length);
+                    array[enabledTable.Length] = instance;
+                    enabledTable = array;
+                }
             }
 
             return instance;
         }
 
         /// <summary>
-        /// 指定したスペルをコレクションから除去する
+        /// instanceが不要になっていたらコレクションから除去する
         /// </summary>
-        /// <param name="spell">除去するスペル</param>
-        public static void RemoveSpell(
-            SpellTimer spell)
+        /// <param name="instance">インスタンス</param>
+        public static void TryRemoveInstance(
+            SpellTimer instance)
         {
-            lock (lockObject)
+            var ttl = Settings.Default.TimeOfHideSpell + 30;
+
+            lock (instance)
             {
-                table.Remove(spell);
+                if (instance.CompleteScheduledTime != DateTime.MinValue &&
+                    (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
+                {
+                    SpellTimer o;
+                    instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
+
+                    // スペルコレクション本体から除去する
+                    lock (lockObject)
+                    {
+                        table.Remove(instance);
+                    }
+                }
             }
         }
 
@@ -343,6 +385,8 @@
         /// </summary>
         public static void RemoveAllInstanceSpells()
         {
+            instanceSpells.Clear();
+
             lock (lockObject)
             {
                 var collection = table.Where(x => x.IsInstance);

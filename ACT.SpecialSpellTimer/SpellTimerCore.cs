@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -114,13 +115,14 @@
             this.RefreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
             this.RefreshWindowTimer.Start();
 
-            running = true;
+            this.running = true;
+
             // ログ監視タイマを開始する
             logPoller = new Thread(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 Logger.Write("start log poll");
-                while (running)
+                while (this.running)
                 {
                     try
                     {
@@ -128,13 +130,14 @@
                     }
                     catch (ThreadAbortException)
                     {
-                        running = false;
+                        this.running = false;
                     }
                     catch (Exception ex)
                     {
                         Logger.Write("logPoller error:", ex);
                     }
                 }
+
                 Logger.Write("end log poll");
             });
 
@@ -146,7 +149,7 @@
         /// </summary>
         public void End()
         {
-            running = false;
+            this.running = false;
 
             // 戦闘分析を開放する
             CombatAnalyzer.Default.Denitialize();
@@ -165,21 +168,22 @@
                 this.RefreshWindowTimer = null;
             }
 
-            if (logPoller != null)
+            if (this.logPoller != null)
             {
-                if (logPoller.IsAlive)
+                if (this.logPoller.IsAlive)
                 {
                     try
                     {
-                        if (!logPoller.Join(TimeSpan.FromSeconds(5)))
+                        if (!this.logPoller.Join(TimeSpan.FromSeconds(5)))
                         {
-                            logPoller.Abort();
+                            this.logPoller.Abort();
                         }
                     }
                     catch
                     {
                     }
-                    logPoller = null;
+
+                    this.logPoller = null;
                 }
             }
 
@@ -482,10 +486,9 @@
                                     {
                                         // 同じタイトルのインスタンススペルを探す
                                         // 存在すればそれを使用して、なければ新しいインスタンスを生成する
-                                        targetSpell = SpellTimerTable.EnabledTable.FirstOrDefault(x =>
-                                            x.IsInstance &&
-                                            x.SpellTitleReplaced == replacedTitle) ??
-                                            SpellTimerTable.CreateInstanceByElement(spell);
+                                        targetSpell = SpellTimerTable.GetOrAddInstance(
+                                            replacedTitle,
+                                            spell);
                                     }
 
                                     targetSpell.SpellTitleReplaced = replacedTitle;
@@ -691,24 +694,9 @@
                 // インスタンス化したスペルを削除する
                 if (spell.IsInstance)
                 {
-                    var ttl = Settings.Default.TimeOfHideSpell;
-                    if (ttl < 1)
-                    {
-                        ttl = 60.0d;
-                    }
-
-                    if ((DateTime.Now - spell.CompleteScheduledTime).TotalSeconds >= (ttl + 0.05d))
-                    {
-                        SpellTimerTable.RemoveSpell(spell);
-                    }
+                    SpellTimerTable.TryRemoveInstance(spell);
                 }
             }
-
-#if false
-            Parallel.ForEach(spells, (spell) =>
-            {
-            }); // end loop spells
-#endif
         }
 
         /// <summary>
@@ -1319,7 +1307,7 @@
                     }
                 }
             }
-            catch (System.ComponentModel.Win32Exception)
+            catch (Win32Exception)
             {
                 // ignore
             }
