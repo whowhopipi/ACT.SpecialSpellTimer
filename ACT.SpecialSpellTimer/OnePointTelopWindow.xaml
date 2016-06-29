@@ -76,7 +76,7 @@
           <DropShadowEffect
             Direction="0" 
             ShadowDepth="0" 
-            BlurRadius="3" 
+            BlurRadius="2" 
             RenderingBias="Performance"
             Color="{Binding ElementName=MessageTextBlock, Path=Stroke.Color, Mode=OneWay}" />
         </Utility:OutlineTextBlock.Effect>

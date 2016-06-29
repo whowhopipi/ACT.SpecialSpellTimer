@@ -14,6 +14,8 @@
         private FormattedText FormattedText;
         private Geometry TextGeometry;
 
+        private Pen StrokePen;
+
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text", typeof(string), typeof(OutlineTextBlock),
             new FrameworkPropertyMetadata(OnFormattedTextInvalidated));
@@ -106,13 +108,21 @@
         public Brush Stroke
         {
             get { return (Brush)GetValue(StrokeProperty); }
-            set { SetValue(StrokeProperty, value); }
+            set
+            {
+                SetValue(StrokeProperty, value);
+                this.StrokePen = new Pen(value, this.StrokeThickness);
+            }
         }
 
         public double StrokeThickness
         {
             get { return (double)GetValue(StrokeThicknessProperty); }
-            set { SetValue(StrokeThicknessProperty, value); }
+            set
+            {
+                SetValue(StrokeThicknessProperty, value);
+                this.StrokePen = new Pen(this.Stroke, value);
+            }
         }
 
         public string Text
@@ -149,9 +159,16 @@
         {
             this.EnsureGeometry();
 
+            // アウトラインを描画する
             drawingContext.DrawGeometry(
-                this.Fill, 
-                new Pen(this.Stroke, this.StrokeThickness), 
+                null,
+                this.StrokePen,
+                this.TextGeometry);
+
+            // テキスト本体を上書きする
+            drawingContext.DrawGeometry(
+                this.Fill,
+                null,
                 this.TextGeometry);
         }
 

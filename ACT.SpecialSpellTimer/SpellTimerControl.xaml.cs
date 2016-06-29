@@ -238,7 +238,11 @@
                 tb.SetFontInfo(font);
                 tb.Fill = this.FontBrush;
                 tb.Stroke = this.FontOutlineBrush;
-                tb.StrokeThickness = 0.5d * tb.FontSize / 13.0d;
+                tb.StrokeThickness = 0.65d *
+                    this.FontSize *
+                    (this.FontWeight.ToOpenTypeWeight() / FontWeights.Normal.ToOpenTypeWeight()) /
+                    13.0d;
+
             }
 
             if (this.HideSpellName)
