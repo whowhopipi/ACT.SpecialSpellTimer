@@ -1447,6 +1447,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   アイコン暗転時の明るさ に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ReduceIconBrightness {
+            get {
+                return ResourceManager.GetString("ReduceIconBrightness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   リキャスト中はアイコンを暗くする に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ReduceIconBrightnessCheckBox {

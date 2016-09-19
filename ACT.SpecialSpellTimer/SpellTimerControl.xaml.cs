@@ -153,11 +153,15 @@
             {
                 if (this.RecastTime > 0)
                 {
-                    image.Opacity = this.IsReverse ? 1.0 : 0.55;
+                    image.Opacity = this.IsReverse ? 
+                        1.0 : 
+                        (Settings.Default.ReduceIconBrightness / 100);
                 }
                 else
                 {
-                    image.Opacity = this.IsReverse ? 0.55 : 1.0;
+                    image.Opacity = this.IsReverse ? 
+                        (Settings.Default.ReduceIconBrightness / 100) : 
+                        1.0;
                 }
             }
             else

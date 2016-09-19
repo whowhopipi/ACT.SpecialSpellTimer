@@ -101,5 +101,8 @@
     <Setting Name="LogPollSleepInterval" Type="System.Int64" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
+    <Setting Name="ReduceIconBrightness" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">55</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

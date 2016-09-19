@@ -180,6 +180,7 @@
             this.DefaultVisualSetting.RefreshSampleImage();
 
             this.OpacityNumericUpDown.Value = Settings.Default.Opacity;
+            this.ReduceIconBrightnessNumericUpDown.Value = Settings.Default.ReduceIconBrightness;
             this.ClickThroughCheckBox.Checked = Settings.Default.ClickThroughEnabled;
             this.AutoSortCheckBox.Checked = Settings.Default.AutoSortEnabled;
             this.AutoSortReverseCheckBox.Checked = Settings.Default.AutoSortReverse;
@@ -217,6 +218,7 @@
             Settings.Default.BackgroundColor = this.DefaultVisualSetting.BackgroundColor;
 
             Settings.Default.Opacity = (int)this.OpacityNumericUpDown.Value;
+            Settings.Default.ReduceIconBrightness = (int)this.ReduceIconBrightnessNumericUpDown.Value;
             Settings.Default.ClickThroughEnabled = this.ClickThroughCheckBox.Checked;
             Settings.Default.AutoSortEnabled = this.AutoSortCheckBox.Checked;
             Settings.Default.AutoSortReverse = this.AutoSortReverseCheckBox.Checked;

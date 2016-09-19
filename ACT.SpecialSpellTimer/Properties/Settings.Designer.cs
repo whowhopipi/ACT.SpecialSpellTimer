@@ -418,5 +418,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["LogPollSleepInterval"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("55")]
+        public int ReduceIconBrightness {
+            get {
+                return ((int)(this["ReduceIconBrightness"]));
+            }
+            set {
+                this["ReduceIconBrightness"] = value;
+            }
+        }
     }
 }

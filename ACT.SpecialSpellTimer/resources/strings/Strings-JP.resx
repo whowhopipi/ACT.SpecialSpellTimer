@@ -1049,4 +1049,8 @@
     <value>ログ処理の最短間隔</value>
     <comment>log poll sleep interval</comment>
   </data>
+  <data name="ReduceIconBrightness" xml:space="preserve">
+    <value>アイコン暗転時の明るさ</value>
+    <comment>During the recast time reduce brightness of icon</comment>
+  </data>
 </root>
