@@ -155,12 +155,12 @@
                 {
                     image.Opacity = this.IsReverse ?
                         1.0 :
-                        (Settings.Default.ReduceIconBrightness / 100);
+                        ((double)Settings.Default.ReduceIconBrightness / 100d);
                 }
                 else
                 {
                     image.Opacity = this.IsReverse ?
-                        (Settings.Default.ReduceIconBrightness / 100) :
+                        ((double)Settings.Default.ReduceIconBrightness / 100d) :
                         1.0;
                 }
             }
