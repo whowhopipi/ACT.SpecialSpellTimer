@@ -735,6 +735,7 @@
         {
             var spellsGroupByPanel =
                 from s in spells
+                where !s.ToInstance
                 group s by s.Panel.Trim();
 
             foreach (var panel in spellsGroupByPanel)
