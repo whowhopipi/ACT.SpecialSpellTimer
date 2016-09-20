@@ -5,12 +5,12 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using System.Windows.Media.Animation;
     using System.Windows.Media.Imaging;
 
     using ACT.SpecialSpellTimer.Image;
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
-    using System.Windows.Media.Animation;
 
     /// <summary>
     /// SpellTimerControl
@@ -153,14 +153,14 @@
             {
                 if (this.RecastTime > 0)
                 {
-                    image.Opacity = this.IsReverse ? 
-                        1.0 : 
+                    image.Opacity = this.IsReverse ?
+                        1.0 :
                         (Settings.Default.ReduceIconBrightness / 100);
                 }
                 else
                 {
-                    image.Opacity = this.IsReverse ? 
-                        (Settings.Default.ReduceIconBrightness / 100) : 
+                    image.Opacity = this.IsReverse ?
+                        (Settings.Default.ReduceIconBrightness / 100) :
                         1.0;
                 }
             }

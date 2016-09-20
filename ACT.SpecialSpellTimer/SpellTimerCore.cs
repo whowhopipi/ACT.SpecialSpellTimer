@@ -1297,6 +1297,7 @@
 
                     if (fileName.ToLower() == "ffxiv.exe" ||
                         fileName.ToLower() == "ffxiv_dx11.exe" ||
+                        fileName.ToLower() == "dqx.exe" ||
                         fileName.ToLower() == actFileName.ToLower())
                     {
                         r = true;
