@@ -829,5 +829,9 @@
         /// <summary>インスタンス化されたスペルか？</summary>
         [XmlIgnore]
         public bool IsInstance { get; set; }
+
+        /// <summary>スペルが作用した対象</summary>
+        [XmlIgnore]
+        public string TargetName { get; set; }
     }
 }

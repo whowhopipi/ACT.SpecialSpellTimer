@@ -509,6 +509,14 @@
 
                                     targetSpell.CompleteScheduledTime = targetSpell.MatchDateTime.AddSeconds(duration);
 
+                                    // スペル対象を保存する
+                                    // グループ "target" をキャプチャーしていた場合はその文字列を保存する
+                                    var targetName = match.Groups["target"].Value;
+                                    if (!string.IsNullOrWhiteSpace(targetName))
+                                    {
+                                        targetSpell.TargetName = targetName;
+                                    }
+
                                     // マッチ時点のサウンドを再生する
                                     this.Play(targetSpell.MatchSound);
 
@@ -538,22 +546,40 @@
                             var timeToExtend = timeToExtends[i];
 
                             // マッチングする
-                            var match = false;
+                            var matched = false;
 
                             if (!spell.RegexEnabled ||
                                 regexToExtend == null)
                             {
                                 if (!string.IsNullOrWhiteSpace(keywordToExtend))
                                 {
-                                    match = logLine.ToUpper().Contains(keywordToExtend.ToUpper());
+                                    matched = logLine.ToUpper().Contains(keywordToExtend.ToUpper());
                                 }
                             }
                             else
                             {
-                                match = regexToExtend.Match(logLine).Success;
+                                var match = regexToExtend.Match(logLine);
+                                matched = match.Success;
+
+                                if (matched)
+                                {
+                                    // targetをキャプチャーしている？
+                                    if (!string.IsNullOrWhiteSpace(spell.TargetName))
+                                    {
+                                        var targetName = match.Groups["target"].Value;
+                                        if (!string.IsNullOrWhiteSpace(targetName))
+                                        {
+                                            // targetが当初のマッチングと一致するか確認する
+                                            if (spell.TargetName != targetName)
+                                            {
+                                                matched = false;
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
-                            if (!match)
+                            if (!matched)
                             {
                                 continue;
                             }
