@@ -48,21 +48,22 @@
         /// パーティ変更をチェックするワードパターン
         /// </summary>
         private static readonly IReadOnlyCollection<IReadOnlyCollection<string>> PARTY_CHANGED_WORDS =
-            new List<IReadOnlyCollection<string>> {
-                    new List<string> { "パーティを解散しました。" },
-                    new List<string> { "がパーティに参加しました。" },
-                    new List<string> { "がパーティから離脱しました。" },
-                    new List<string> { "をパーティから離脱させました。" },
-                    new List<string> { "の攻略を開始した。" },
-                    new List<string> { "の攻略を終了した。" },
-                    new List<string> { "You join ", "'s party." },
-                    new List<string> { "You left the party." },
-                    new List<string> { "You dissolve the party." },
-                    new List<string> { "The party has been disbanded." },
-                    new List<string> { "joins the party." },
-                    new List<string> { "has left the party." },
-                    new List<string> { "was removed from the party." },
-                };
+            new List<IReadOnlyCollection<string>>
+            {
+                new List<string> { "パーティを解散しました。" },
+                new List<string> { "がパーティに参加しました。" },
+                new List<string> { "がパーティから離脱しました。" },
+                new List<string> { "をパーティから離脱させました。" },
+                new List<string> { "の攻略を開始した。" },
+                new List<string> { "の攻略を終了した。" },
+                new List<string> { "You join ", "'s party." },
+                new List<string> { "You left the party." },
+                new List<string> { "You dissolve the party." },
+                new List<string> { "The party has been disbanded." },
+                new List<string> { "joins the party." },
+                new List<string> { "has left the party." },
+                new List<string> { "was removed from the party." },
+            };
 
         /// <summary>
         /// 現在のパーティメンバー名リストのキャッシュ
