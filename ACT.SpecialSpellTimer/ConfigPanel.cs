@@ -508,7 +508,9 @@
                     }
 
                     SpellTimerTable.ClearReplacedKeywords();
+#if false
                     SpellTimerTable.RemoveAllInstanceSpells();
+#endif
                     SpellTimerTable.Save();
                     this.LoadSpellTimerTable();
 

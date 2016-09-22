@@ -453,6 +453,22 @@
         /// <summary>
         /// カウントをリセットする
         /// </summary>
+        public static void ResetCount()
+        {
+            foreach (var row in EnabledTable)
+            {
+                row.MatchDateTime = DateTime.MinValue;
+                row.UpdateDone = false;
+                row.OverDone = false;
+                row.BeforeDone = false;
+                row.TimeupDone = false;
+                row.CompleteScheduledTime = DateTime.MinValue;
+            }
+        }
+
+        /// <summary>
+        /// スペルテーブルを初期化する
+        /// </summary>
         public static void Reset()
         {
             var id = 0L;
