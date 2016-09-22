@@ -2068,6 +2068,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   FFXIV以外で使用する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string UseOtherThanFFXIVCheckbox {
+            get {
+                return ResourceManager.GetString("UseOtherThanFFXIVCheckbox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   正規表現ON に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string UseRegex {

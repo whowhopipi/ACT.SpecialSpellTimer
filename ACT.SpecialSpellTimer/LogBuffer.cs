@@ -11,6 +11,7 @@
     using System.Threading.Tasks;
 
     using ACT.SpecialSpellTimer.Properties;
+    using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
     /// <summary>
@@ -126,6 +127,11 @@
         /// </summary>
         private DateTime lastLogineTimestamp;
 
+        /// <summary>
+        /// 最初のログが到着したか？
+        /// </summary>
+        private bool firstLogArrived;
+
         #endregion
 
         #region コンストラクター/デストラクター/Dispose
@@ -191,7 +197,15 @@
                 return;
             }
 
-            logInfoQueue.Enqueue(logInfo);
+            this.logInfoQueue.Enqueue(logInfo);
+
+            // 最初のログならば動作ログに出力する
+            if (!this.firstLogArrived)
+            {
+                Logger.Write("First log has arrived.");
+            }
+
+            this.firstLogArrived = true;
         }
 
         #endregion
@@ -242,59 +256,65 @@
             while (logInfoQueue.TryDequeue(out logInfo))
             {
                 string logLine = logInfo.logLine.Trim();
-                // ジョブに変化あり？
-                if (!jobChanged)
-                {
-                    if (IsJobChanged(logLine))
-                    {
-                        jobChanged = true;
-                        if (!playerRefreshed)
-                        {
-                            FF14PluginHelper.RefreshPlayer();
-                            playerRefreshed = true;
-                        }
 
-                        if (!partyRefreshed)
-                        {
-                            RefreshPartyList();
-                            partyRefreshed = true;
-                        }
-                    }
-                }
-
-                // パーティに変化あり
-                if (!partyChanged)
+                // FFXIVでの使用？
+                if (!Settings.Default.UseOtherThanFFXIV)
                 {
-                    if (IsPartyChanged(logLine))
+                    // ジョブに変化あり？
+                    if (!jobChanged)
                     {
-                        partyChanged = true;
-                    }
-                }
-
-                if (!(summoned && zoneChanged))
-                {
-                    // ペットIDのCacheを更新する
-                    var player = FF14PluginHelper.GetPlayer();
-                    if (player != null)
-                    {
-                        var jobName = Job.GetJobName(player.Job);
-                        if (player.AsJob().IsSummoner())
+                        if (IsJobChanged(logLine))
                         {
-                            if (logLine.Contains(player.Name + "の「サモン") ||
-                                logLine.Contains("You cast Summon"))
+                            jobChanged = true;
+                            if (!playerRefreshed)
                             {
-                                summoned = true;
+                                FF14PluginHelper.RefreshPlayer();
+                                playerRefreshed = true;
                             }
 
-                            if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
+                            if (!partyRefreshed)
                             {
-                                zoneChanged = true;
+                                RefreshPartyList();
+                                partyRefreshed = true;
+                            }
+                        }
+                    }
+
+                    // パーティに変化あり
+                    if (!partyChanged)
+                    {
+                        if (IsPartyChanged(logLine))
+                        {
+                            partyChanged = true;
+                        }
+                    }
+
+                    if (!(summoned && zoneChanged))
+                    {
+                        // ペットIDのCacheを更新する
+                        var player = FF14PluginHelper.GetPlayer();
+                        if (player != null)
+                        {
+                            var jobName = Job.GetJobName(player.Job);
+                            if (player.AsJob().IsSummoner())
+                            {
+                                if (logLine.Contains(player.Name + "の「サモン") ||
+                                    logLine.Contains("You cast Summon"))
+                                {
+                                    summoned = true;
+                                }
+
+                                if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
+                                {
+                                    zoneChanged = true;
+                                }
                             }
                         }
                     }
                 }
 
                 list.Add(logLine);
+
                 // ログファイルに出力する
                 this.AppendLogFile(logLine);
             }
@@ -439,6 +459,14 @@
             }
 
             keyword = keyword.Trim();
+
+            // FFXIV以外での使用？
+            if (Settings.Default.UseOtherThanFFXIV)
+            {
+                // カスタムプレースホルダを置換する
+                keyword = ReplaceCustomPlaceholders(keyword);
+                return keyword;
+            }
 
             if (keyword.Length == 0 || !keyword.Contains("<") || !keyword.Contains(">"))
             {

@@ -68,7 +68,6 @@
             this.ExpandSecounds1NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.KeywordToExpand1TextBox = new System.Windows.Forms.TextBox();
             this.label50 = new System.Windows.Forms.Label();
-            this.SpellVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.RegexEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.DontHideCheckBox = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -130,7 +129,6 @@
             this.TelopDetailGroupBox = new System.Windows.Forms.GroupBox();
             this.TelopSetConditionButton = new System.Windows.Forms.Button();
             this.TelopSelectZoneButton = new System.Windows.Forms.Button();
-            this.TelopVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.TelopSelectJobButton = new System.Windows.Forms.Button();
             this.TelopProgressBarEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.EnabledAddMessageCheckBox = new System.Windows.Forms.CheckBox();
@@ -247,6 +245,9 @@
             this.label69 = new System.Windows.Forms.Label();
             this.label68 = new System.Windows.Forms.Label();
             this.OptionTabPage = new System.Windows.Forms.TabPage();
+            this.label94 = new System.Windows.Forms.Label();
+            this.ReduceIconBrightnessNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label93 = new System.Windows.Forms.Label();
             this.label90 = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
             this.LogPollSleepNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -294,16 +295,16 @@
             this.label18 = new System.Windows.Forms.Label();
             this.SwitchOverlayButton = new System.Windows.Forms.Button();
             this.ShokikaButton = new System.Windows.Forms.Button();
-            this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
             this.SaveLogFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.label93 = new System.Windows.Forms.Label();
-            this.ReduceIconBrightnessNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label94 = new System.Windows.Forms.Label();
+            this.UseOtherThanFFXIVCheckbox = new System.Windows.Forms.CheckBox();
+            this.SpellVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
+            this.TelopVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
+            this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
             this.DetailPanelGroupBox.SuspendLayout();
@@ -339,11 +340,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.OptionTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogPollSleepNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimeOfHideNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // TabControl
@@ -622,7 +623,7 @@
             // ToInstanceCheckBox
             // 
             this.ToInstanceCheckBox.AutoSize = true;
-            this.ToInstanceCheckBox.Location = new System.Drawing.Point(519, 399);
+            this.ToInstanceCheckBox.Location = new System.Drawing.Point(519, 384);
             this.ToInstanceCheckBox.Name = "ToInstanceCheckBox";
             this.ToInstanceCheckBox.Size = new System.Drawing.Size(132, 16);
             this.ToInstanceCheckBox.TabIndex = 73;
@@ -632,7 +633,7 @@
             // ReduceIconBrightnessCheckBox
             // 
             this.ReduceIconBrightnessCheckBox.AutoSize = true;
-            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(519, 377);
+            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(519, 362);
             this.ReduceIconBrightnessCheckBox.Name = "ReduceIconBrightnessCheckBox";
             this.ReduceIconBrightnessCheckBox.Size = new System.Drawing.Size(190, 16);
             this.ReduceIconBrightnessCheckBox.TabIndex = 72;
@@ -642,7 +643,7 @@
             // OverlapRecastTimeCheckBox
             // 
             this.OverlapRecastTimeCheckBox.AutoSize = true;
-            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(519, 355);
+            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(519, 340);
             this.OverlapRecastTimeCheckBox.Name = "OverlapRecastTimeCheckBox";
             this.OverlapRecastTimeCheckBox.Size = new System.Drawing.Size(176, 16);
             this.OverlapRecastTimeCheckBox.TabIndex = 71;
@@ -652,7 +653,7 @@
             // HideSpellNameCheckBox
             // 
             this.HideSpellNameCheckBox.AutoSize = true;
-            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(519, 333);
+            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(519, 318);
             this.HideSpellNameCheckBox.Name = "HideSpellNameCheckBox";
             this.HideSpellNameCheckBox.Size = new System.Drawing.Size(153, 16);
             this.HideSpellNameCheckBox.TabIndex = 70;
@@ -851,29 +852,11 @@
             this.label50.TabIndex = 52;
             this.label50.Text = "MatchingLogWordToExpandLabel";
             // 
-            // SpellVisualSetting
-            // 
-            this.SpellVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
-            this.SpellVisualSetting.BarColor = System.Drawing.Color.White;
-            this.SpellVisualSetting.BarEnabled = true;
-            this.SpellVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.SpellVisualSetting.BarSize = new System.Drawing.Size(190, 8);
-            this.SpellVisualSetting.FontColor = System.Drawing.Color.White;
-            this.SpellVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.SpellVisualSetting.HideSpellName = false;
-            this.SpellVisualSetting.Location = new System.Drawing.Point(195, 262);
-            this.SpellVisualSetting.Name = "SpellVisualSetting";
-            this.SpellVisualSetting.OverlapRecastTime = false;
-            this.SpellVisualSetting.Size = new System.Drawing.Size(306, 109);
-            this.SpellVisualSetting.SpellIcon = "";
-            this.SpellVisualSetting.SpellIconSize = 0;
-            this.SpellVisualSetting.TabIndex = 51;
-            // 
             // RegexEnabledCheckBox
             // 
             this.RegexEnabledCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RegexEnabledCheckBox.AutoSize = true;
-            this.RegexEnabledCheckBox.Location = new System.Drawing.Point(704, 86);
+            this.RegexEnabledCheckBox.Location = new System.Drawing.Point(711, 86);
             this.RegexEnabledCheckBox.Name = "RegexEnabledCheckBox";
             this.RegexEnabledCheckBox.Size = new System.Drawing.Size(76, 16);
             this.RegexEnabledCheckBox.TabIndex = 41;
@@ -883,7 +866,7 @@
             // DontHideCheckBox
             // 
             this.DontHideCheckBox.AutoSize = true;
-            this.DontHideCheckBox.Location = new System.Drawing.Point(519, 311);
+            this.DontHideCheckBox.Location = new System.Drawing.Point(519, 296);
             this.DontHideCheckBox.Name = "DontHideCheckBox";
             this.DontHideCheckBox.Size = new System.Drawing.Size(123, 16);
             this.DontHideCheckBox.TabIndex = 48;
@@ -925,7 +908,7 @@
             // IsReverseCheckBox
             // 
             this.IsReverseCheckBox.AutoSize = true;
-            this.IsReverseCheckBox.Location = new System.Drawing.Point(519, 289);
+            this.IsReverseCheckBox.Location = new System.Drawing.Point(519, 274);
             this.IsReverseCheckBox.Name = "IsReverseCheckBox";
             this.IsReverseCheckBox.Size = new System.Drawing.Size(162, 16);
             this.IsReverseCheckBox.TabIndex = 47;
@@ -935,7 +918,7 @@
             // ShowProgressBarCheckBox
             // 
             this.ShowProgressBarCheckBox.AutoSize = true;
-            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(519, 267);
+            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(519, 252);
             this.ShowProgressBarCheckBox.Name = "ShowProgressBarCheckBox";
             this.ShowProgressBarCheckBox.Size = new System.Drawing.Size(166, 16);
             this.ShowProgressBarCheckBox.TabIndex = 46;
@@ -945,7 +928,7 @@
             // RepeatCheckBox
             // 
             this.RepeatCheckBox.AutoSize = true;
-            this.RepeatCheckBox.Location = new System.Drawing.Point(269, 113);
+            this.RepeatCheckBox.Location = new System.Drawing.Point(275, 113);
             this.RepeatCheckBox.Name = "RepeatCheckBox";
             this.RepeatCheckBox.Size = new System.Drawing.Size(112, 16);
             this.RepeatCheckBox.TabIndex = 44;
@@ -1539,24 +1522,6 @@
             this.TelopSelectZoneButton.Text = "SelectZoneButton";
             this.TelopSelectZoneButton.UseVisualStyleBackColor = true;
             // 
-            // TelopVisualSetting
-            // 
-            this.TelopVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
-            this.TelopVisualSetting.BarColor = System.Drawing.Color.White;
-            this.TelopVisualSetting.BarEnabled = false;
-            this.TelopVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.TelopVisualSetting.BarSize = new System.Drawing.Size(190, 8);
-            this.TelopVisualSetting.FontColor = System.Drawing.Color.White;
-            this.TelopVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.TelopVisualSetting.HideSpellName = false;
-            this.TelopVisualSetting.Location = new System.Drawing.Point(187, 143);
-            this.TelopVisualSetting.Name = "TelopVisualSetting";
-            this.TelopVisualSetting.OverlapRecastTime = false;
-            this.TelopVisualSetting.Size = new System.Drawing.Size(306, 71);
-            this.TelopVisualSetting.SpellIcon = "";
-            this.TelopVisualSetting.SpellIconSize = 0;
-            this.TelopVisualSetting.TabIndex = 6;
-            // 
             // TelopSelectJobButton
             // 
             this.TelopSelectJobButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -1713,14 +1678,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TelopKeywordToHideTextBox.Location = new System.Drawing.Point(187, 93);
             this.TelopKeywordToHideTextBox.Name = "TelopKeywordToHideTextBox";
-            this.TelopKeywordToHideTextBox.Size = new System.Drawing.Size(563, 19);
+            this.TelopKeywordToHideTextBox.Size = new System.Drawing.Size(549, 19);
             this.TelopKeywordToHideTextBox.TabIndex = 3;
             // 
             // TelopRegexEnabledCheckBox
             // 
             this.TelopRegexEnabledCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.TelopRegexEnabledCheckBox.AutoSize = true;
-            this.TelopRegexEnabledCheckBox.Location = new System.Drawing.Point(761, 95);
+            this.TelopRegexEnabledCheckBox.Location = new System.Drawing.Point(749, 95);
             this.TelopRegexEnabledCheckBox.Name = "TelopRegexEnabledCheckBox";
             this.TelopRegexEnabledCheckBox.Size = new System.Drawing.Size(76, 16);
             this.TelopRegexEnabledCheckBox.TabIndex = 4;
@@ -1929,7 +1894,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TelopKeywordTextBox.Location = new System.Drawing.Point(187, 68);
             this.TelopKeywordTextBox.Name = "TelopKeywordTextBox";
-            this.TelopKeywordTextBox.Size = new System.Drawing.Size(563, 19);
+            this.TelopKeywordTextBox.Size = new System.Drawing.Size(549, 19);
             this.TelopKeywordTextBox.TabIndex = 2;
             // 
             // TelopMessageTextBox
@@ -2699,6 +2664,7 @@
             // OptionTabPage
             // 
             this.OptionTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.OptionTabPage.Controls.Add(this.UseOtherThanFFXIVCheckbox);
             this.OptionTabPage.Controls.Add(this.label94);
             this.OptionTabPage.Controls.Add(this.ReduceIconBrightnessNumericUpDown);
             this.OptionTabPage.Controls.Add(this.label93);
@@ -2757,10 +2723,37 @@
             this.OptionTabPage.TabIndex = 1;
             this.OptionTabPage.Text = "OptionTabPageTitle";
             // 
+            // label94
+            // 
+            this.label94.AutoSize = true;
+            this.label94.Location = new System.Drawing.Point(359, 204);
+            this.label94.Name = "label94";
+            this.label94.Size = new System.Drawing.Size(19, 12);
+            this.label94.TabIndex = 63;
+            this.label94.Text = "__%";
+            // 
+            // ReduceIconBrightnessNumericUpDown
+            // 
+            this.ReduceIconBrightnessNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(293, 202);
+            this.ReduceIconBrightnessNumericUpDown.Name = "ReduceIconBrightnessNumericUpDown";
+            this.ReduceIconBrightnessNumericUpDown.Size = new System.Drawing.Size(59, 19);
+            this.ReduceIconBrightnessNumericUpDown.TabIndex = 62;
+            this.ReduceIconBrightnessNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label93
+            // 
+            this.label93.AutoSize = true;
+            this.label93.Location = new System.Drawing.Point(6, 204);
+            this.label93.Name = "label93";
+            this.label93.Size = new System.Drawing.Size(119, 12);
+            this.label93.TabIndex = 61;
+            this.label93.Text = "ReduceIconBrightness";
+            // 
             // label90
             // 
             this.label90.AutoSize = true;
-            this.label90.Location = new System.Drawing.Point(405, 356);
+            this.label90.Location = new System.Drawing.Point(405, 323);
             this.label90.Name = "label90";
             this.label90.Size = new System.Drawing.Size(63, 12);
             this.label90.TabIndex = 59;
@@ -2769,7 +2762,7 @@
             // label92
             // 
             this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(358, 356);
+            this.label92.Location = new System.Drawing.Point(358, 323);
             this.label92.Name = "label92";
             this.label92.Size = new System.Drawing.Size(62, 12);
             this.label92.TabIndex = 60;
@@ -2778,7 +2771,7 @@
             // LogPollSleepNumericUpDown
             // 
             this.LogPollSleepNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.LogPollSleepNumericUpDown.Location = new System.Drawing.Point(293, 354);
+            this.LogPollSleepNumericUpDown.Location = new System.Drawing.Point(293, 321);
             this.LogPollSleepNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -2802,7 +2795,7 @@
             // label91
             // 
             this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(6, 356);
+            this.label91.Location = new System.Drawing.Point(6, 323);
             this.label91.Name = "label91";
             this.label91.Size = new System.Drawing.Size(135, 12);
             this.label91.TabIndex = 57;
@@ -2811,7 +2804,7 @@
             // HideWhenNotActiceCheckBox
             // 
             this.HideWhenNotActiceCheckBox.AutoSize = true;
-            this.HideWhenNotActiceCheckBox.Location = new System.Drawing.Point(8, 99);
+            this.HideWhenNotActiceCheckBox.Location = new System.Drawing.Point(520, 57);
             this.HideWhenNotActiceCheckBox.Name = "HideWhenNotActiceCheckBox";
             this.HideWhenNotActiceCheckBox.Size = new System.Drawing.Size(177, 16);
             this.HideWhenNotActiceCheckBox.TabIndex = 56;
@@ -2821,7 +2814,7 @@
             // SaveLogButton
             // 
             this.SaveLogButton.Enabled = false;
-            this.SaveLogButton.Location = new System.Drawing.Point(605, 514);
+            this.SaveLogButton.Location = new System.Drawing.Point(605, 481);
             this.SaveLogButton.Name = "SaveLogButton";
             this.SaveLogButton.Size = new System.Drawing.Size(37, 25);
             this.SaveLogButton.TabIndex = 55;
@@ -2831,7 +2824,7 @@
             // SaveLogCheckBox
             // 
             this.SaveLogCheckBox.AutoSize = true;
-            this.SaveLogCheckBox.Location = new System.Drawing.Point(293, 495);
+            this.SaveLogCheckBox.Location = new System.Drawing.Point(293, 462);
             this.SaveLogCheckBox.Name = "SaveLogCheckBox";
             this.SaveLogCheckBox.Size = new System.Drawing.Size(64, 16);
             this.SaveLogCheckBox.TabIndex = 54;
@@ -2841,7 +2834,7 @@
             // SaveLogTextBox
             // 
             this.SaveLogTextBox.Enabled = false;
-            this.SaveLogTextBox.Location = new System.Drawing.Point(293, 517);
+            this.SaveLogTextBox.Location = new System.Drawing.Point(293, 484);
             this.SaveLogTextBox.Name = "SaveLogTextBox";
             this.SaveLogTextBox.Size = new System.Drawing.Size(306, 19);
             this.SaveLogTextBox.TabIndex = 53;
@@ -2849,7 +2842,7 @@
             // label67
             // 
             this.label67.AutoSize = true;
-            this.label67.Location = new System.Drawing.Point(6, 496);
+            this.label67.Location = new System.Drawing.Point(6, 463);
             this.label67.Name = "label67";
             this.label67.Size = new System.Drawing.Size(75, 12);
             this.label67.TabIndex = 52;
@@ -2857,7 +2850,7 @@
             // 
             // OverTextBox
             // 
-            this.OverTextBox.Location = new System.Drawing.Point(293, 470);
+            this.OverTextBox.Location = new System.Drawing.Point(293, 437);
             this.OverTextBox.Name = "OverTextBox";
             this.OverTextBox.Size = new System.Drawing.Size(100, 19);
             this.OverTextBox.TabIndex = 51;
@@ -2865,7 +2858,7 @@
             // label66
             // 
             this.label66.AutoSize = true;
-            this.label66.Location = new System.Drawing.Point(6, 473);
+            this.label66.Location = new System.Drawing.Point(6, 440);
             this.label66.Name = "label66";
             this.label66.Size = new System.Drawing.Size(79, 12);
             this.label66.TabIndex = 50;
@@ -2873,7 +2866,7 @@
             // 
             // ReadyTextBox
             // 
-            this.ReadyTextBox.Location = new System.Drawing.Point(293, 445);
+            this.ReadyTextBox.Location = new System.Drawing.Point(293, 412);
             this.ReadyTextBox.Name = "ReadyTextBox";
             this.ReadyTextBox.Size = new System.Drawing.Size(100, 19);
             this.ReadyTextBox.TabIndex = 49;
@@ -2881,7 +2874,7 @@
             // label65
             // 
             this.label65.AutoSize = true;
-            this.label65.Location = new System.Drawing.Point(6, 448);
+            this.label65.Location = new System.Drawing.Point(6, 415);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(87, 12);
             this.label65.TabIndex = 48;
@@ -2890,7 +2883,7 @@
             // label64
             // 
             this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(357, 424);
+            this.label64.Location = new System.Drawing.Point(357, 391);
             this.label64.Name = "label64";
             this.label64.Size = new System.Drawing.Size(190, 12);
             this.label64.TabIndex = 47;
@@ -2899,7 +2892,7 @@
             // EnabledNotifyNormalSpellTimerCheckBox
             // 
             this.EnabledNotifyNormalSpellTimerCheckBox.AutoSize = true;
-            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(293, 423);
+            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(293, 390);
             this.EnabledNotifyNormalSpellTimerCheckBox.Name = "EnabledNotifyNormalSpellTimerCheckBox";
             this.EnabledNotifyNormalSpellTimerCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledNotifyNormalSpellTimerCheckBox.TabIndex = 46;
@@ -2909,7 +2902,7 @@
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(6, 424);
+            this.label63.Location = new System.Drawing.Point(6, 391);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(153, 12);
             this.label63.TabIndex = 45;
@@ -2918,7 +2911,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(357, 402);
+            this.label49.Location = new System.Drawing.Point(357, 369);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(159, 12);
             this.label49.TabIndex = 44;
@@ -2927,7 +2920,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(6, 402);
+            this.label31.Location = new System.Drawing.Point(6, 369);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(122, 12);
             this.label31.TabIndex = 43;
@@ -2936,7 +2929,7 @@
             // EnabledSpellTimerNoDecimalCheckBox
             // 
             this.EnabledSpellTimerNoDecimalCheckBox.AutoSize = true;
-            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(293, 401);
+            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(293, 368);
             this.EnabledSpellTimerNoDecimalCheckBox.Name = "EnabledSpellTimerNoDecimalCheckBox";
             this.EnabledSpellTimerNoDecimalCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledSpellTimerNoDecimalCheckBox.TabIndex = 42;
@@ -2976,7 +2969,7 @@
             // OverlayForceVisibleCheckBox
             // 
             this.OverlayForceVisibleCheckBox.AutoSize = true;
-            this.OverlayForceVisibleCheckBox.Location = new System.Drawing.Point(8, 77);
+            this.OverlayForceVisibleCheckBox.Location = new System.Drawing.Point(520, 35);
             this.OverlayForceVisibleCheckBox.Name = "OverlayForceVisibleCheckBox";
             this.OverlayForceVisibleCheckBox.Size = new System.Drawing.Size(179, 16);
             this.OverlayForceVisibleCheckBox.TabIndex = 38;
@@ -2986,7 +2979,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(357, 380);
+            this.label48.Location = new System.Drawing.Point(357, 347);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(175, 12);
             this.label48.TabIndex = 32;
@@ -2995,7 +2988,7 @@
             // EnabledPTPlaceholderCheckBox
             // 
             this.EnabledPTPlaceholderCheckBox.AutoSize = true;
-            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(293, 379);
+            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(293, 346);
             this.EnabledPTPlaceholderCheckBox.Name = "EnabledPTPlaceholderCheckBox";
             this.EnabledPTPlaceholderCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledPTPlaceholderCheckBox.TabIndex = 31;
@@ -3005,7 +2998,7 @@
             // label43
             // 
             this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(6, 380);
+            this.label43.Location = new System.Drawing.Point(6, 347);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(100, 12);
             this.label43.TabIndex = 30;
@@ -3013,7 +3006,7 @@
             // 
             // SwitchTelopButton
             // 
-            this.SwitchTelopButton.Location = new System.Drawing.Point(264, 29);
+            this.SwitchTelopButton.Location = new System.Drawing.Point(264, 35);
             this.SwitchTelopButton.Name = "SwitchTelopButton";
             this.SwitchTelopButton.Size = new System.Drawing.Size(250, 42);
             this.SwitchTelopButton.TabIndex = 29;
@@ -3023,7 +3016,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(405, 332);
+            this.label30.Location = new System.Drawing.Point(405, 299);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(63, 12);
             this.label30.TabIndex = 28;
@@ -3032,7 +3025,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(358, 332);
+            this.label29.Location = new System.Drawing.Point(358, 299);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(62, 12);
             this.label29.TabIndex = 27;
@@ -3041,7 +3034,7 @@
             // RefreshIntervalNumericUpDown
             // 
             this.RefreshIntervalNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(293, 330);
+            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(293, 297);
             this.RefreshIntervalNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -3065,7 +3058,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(6, 332);
+            this.label28.Location = new System.Drawing.Point(6, 299);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(128, 12);
             this.label28.TabIndex = 25;
@@ -3074,7 +3067,7 @@
             // AutoSortReverseCheckBox
             // 
             this.AutoSortReverseCheckBox.AutoSize = true;
-            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(373, 283);
+            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(373, 250);
             this.AutoSortReverseCheckBox.Name = "AutoSortReverseCheckBox";
             this.AutoSortReverseCheckBox.Size = new System.Drawing.Size(161, 16);
             this.AutoSortReverseCheckBox.TabIndex = 9;
@@ -3095,7 +3088,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(403, 307);
+            this.label26.Location = new System.Drawing.Point(403, 274);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(97, 12);
             this.label26.TabIndex = 11;
@@ -3104,7 +3097,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 307);
+            this.label25.Location = new System.Drawing.Point(6, 274);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(96, 12);
             this.label25.TabIndex = 24;
@@ -3113,7 +3106,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(358, 307);
+            this.label24.Location = new System.Drawing.Point(358, 274);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(74, 12);
             this.label24.TabIndex = 23;
@@ -3122,7 +3115,7 @@
             // TimeOfHideNumericUpDown
             // 
             this.TimeOfHideNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(293, 305);
+            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(293, 272);
             this.TimeOfHideNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -3136,7 +3129,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 284);
+            this.label23.Location = new System.Drawing.Point(6, 251);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(104, 12);
             this.label23.TabIndex = 21;
@@ -3145,7 +3138,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(6, 262);
+            this.label22.Location = new System.Drawing.Point(6, 229);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(72, 12);
             this.label22.TabIndex = 20;
@@ -3154,7 +3147,7 @@
             // AutoSortCheckBox
             // 
             this.AutoSortCheckBox.AutoSize = true;
-            this.AutoSortCheckBox.Location = new System.Drawing.Point(293, 283);
+            this.AutoSortCheckBox.Location = new System.Drawing.Point(293, 250);
             this.AutoSortCheckBox.Name = "AutoSortCheckBox";
             this.AutoSortCheckBox.Size = new System.Drawing.Size(64, 16);
             this.AutoSortCheckBox.TabIndex = 8;
@@ -3164,7 +3157,7 @@
             // ClickThroughCheckBox
             // 
             this.ClickThroughCheckBox.AutoSize = true;
-            this.ClickThroughCheckBox.Location = new System.Drawing.Point(293, 261);
+            this.ClickThroughCheckBox.Location = new System.Drawing.Point(293, 228);
             this.ClickThroughCheckBox.Name = "ClickThroughCheckBox";
             this.ClickThroughCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ClickThroughCheckBox.TabIndex = 7;
@@ -3174,7 +3167,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 212);
+            this.label21.Location = new System.Drawing.Point(6, 179);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(89, 12);
             this.label21.TabIndex = 17;
@@ -3183,7 +3176,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(359, 212);
+            this.label20.Location = new System.Drawing.Point(359, 179);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(19, 12);
             this.label20.TabIndex = 16;
@@ -3192,7 +3185,7 @@
             // OpacityNumericUpDown
             // 
             this.OpacityNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.OpacityNumericUpDown.Location = new System.Drawing.Point(293, 210);
+            this.OpacityNumericUpDown.Location = new System.Drawing.Point(293, 177);
             this.OpacityNumericUpDown.Name = "OpacityNumericUpDown";
             this.OpacityNumericUpDown.Size = new System.Drawing.Size(59, 19);
             this.OpacityNumericUpDown.TabIndex = 6;
@@ -3201,7 +3194,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(6, 132);
+            this.label18.Location = new System.Drawing.Point(6, 111);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(128, 12);
             this.label18.TabIndex = 10;
@@ -3209,7 +3202,7 @@
             // 
             // SwitchOverlayButton
             // 
-            this.SwitchOverlayButton.Location = new System.Drawing.Point(8, 29);
+            this.SwitchOverlayButton.Location = new System.Drawing.Point(8, 35);
             this.SwitchOverlayButton.Name = "SwitchOverlayButton";
             this.SwitchOverlayButton.Size = new System.Drawing.Size(250, 42);
             this.SwitchOverlayButton.TabIndex = 0;
@@ -3226,24 +3219,6 @@
             this.ShokikaButton.Text = "InitializationButton";
             this.ShokikaButton.UseVisualStyleBackColor = true;
             this.ShokikaButton.Click += new System.EventHandler(this.ShokikaButton_Click);
-            // 
-            // DefaultVisualSetting
-            // 
-            this.DefaultVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
-            this.DefaultVisualSetting.BarColor = System.Drawing.Color.White;
-            this.DefaultVisualSetting.BarEnabled = true;
-            this.DefaultVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.DefaultVisualSetting.BarSize = new System.Drawing.Size(190, 8);
-            this.DefaultVisualSetting.FontColor = System.Drawing.Color.White;
-            this.DefaultVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
-            this.DefaultVisualSetting.HideSpellName = false;
-            this.DefaultVisualSetting.Location = new System.Drawing.Point(293, 126);
-            this.DefaultVisualSetting.Name = "DefaultVisualSetting";
-            this.DefaultVisualSetting.OverlapRecastTime = false;
-            this.DefaultVisualSetting.Size = new System.Drawing.Size(306, 71);
-            this.DefaultVisualSetting.SpellIcon = "";
-            this.DefaultVisualSetting.SpellIconSize = 0;
-            this.DefaultVisualSetting.TabIndex = 37;
             // 
             // OpenFileDialog
             // 
@@ -3283,32 +3258,70 @@
             this.SaveLogFileDialog.Filter = "Log files (*.log)|*.log|Text files (*.txt)|*.txt|All files (*.*)|*.*";
             this.SaveLogFileDialog.RestoreDirectory = true;
             // 
-            // label93
+            // UseOtherThanFFXIVCheckbox
             // 
-            this.label93.AutoSize = true;
-            this.label93.Location = new System.Drawing.Point(6, 237);
-            this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(119, 12);
-            this.label93.TabIndex = 61;
-            this.label93.Text = "ReduceIconBrightness";
+            this.UseOtherThanFFXIVCheckbox.AutoSize = true;
+            this.UseOtherThanFFXIVCheckbox.ForeColor = System.Drawing.Color.OrangeRed;
+            this.UseOtherThanFFXIVCheckbox.Location = new System.Drawing.Point(520, 79);
+            this.UseOtherThanFFXIVCheckbox.Name = "UseOtherThanFFXIVCheckbox";
+            this.UseOtherThanFFXIVCheckbox.Size = new System.Drawing.Size(179, 16);
+            this.UseOtherThanFFXIVCheckbox.TabIndex = 64;
+            this.UseOtherThanFFXIVCheckbox.Text = "UseOtherThanFFXIVCheckbox";
+            this.UseOtherThanFFXIVCheckbox.UseVisualStyleBackColor = true;
             // 
-            // ReduceIconBrightnessNumericUpDown
+            // SpellVisualSetting
             // 
-            this.ReduceIconBrightnessNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(293, 235);
-            this.ReduceIconBrightnessNumericUpDown.Name = "ReduceIconBrightnessNumericUpDown";
-            this.ReduceIconBrightnessNumericUpDown.Size = new System.Drawing.Size(59, 19);
-            this.ReduceIconBrightnessNumericUpDown.TabIndex = 62;
-            this.ReduceIconBrightnessNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.SpellVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
+            this.SpellVisualSetting.BarColor = System.Drawing.Color.White;
+            this.SpellVisualSetting.BarEnabled = true;
+            this.SpellVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.SpellVisualSetting.BarSize = new System.Drawing.Size(190, 8);
+            this.SpellVisualSetting.FontColor = System.Drawing.Color.White;
+            this.SpellVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.SpellVisualSetting.HideSpellName = false;
+            this.SpellVisualSetting.Location = new System.Drawing.Point(195, 247);
+            this.SpellVisualSetting.Name = "SpellVisualSetting";
+            this.SpellVisualSetting.OverlapRecastTime = false;
+            this.SpellVisualSetting.Size = new System.Drawing.Size(306, 109);
+            this.SpellVisualSetting.SpellIcon = "";
+            this.SpellVisualSetting.SpellIconSize = 0;
+            this.SpellVisualSetting.TabIndex = 51;
             // 
-            // label94
+            // TelopVisualSetting
             // 
-            this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(359, 237);
-            this.label94.Name = "label94";
-            this.label94.Size = new System.Drawing.Size(19, 12);
-            this.label94.TabIndex = 63;
-            this.label94.Text = "__%";
+            this.TelopVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
+            this.TelopVisualSetting.BarColor = System.Drawing.Color.White;
+            this.TelopVisualSetting.BarEnabled = false;
+            this.TelopVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.TelopVisualSetting.BarSize = new System.Drawing.Size(190, 8);
+            this.TelopVisualSetting.FontColor = System.Drawing.Color.White;
+            this.TelopVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.TelopVisualSetting.HideSpellName = false;
+            this.TelopVisualSetting.Location = new System.Drawing.Point(187, 143);
+            this.TelopVisualSetting.Name = "TelopVisualSetting";
+            this.TelopVisualSetting.OverlapRecastTime = false;
+            this.TelopVisualSetting.Size = new System.Drawing.Size(306, 71);
+            this.TelopVisualSetting.SpellIcon = "";
+            this.TelopVisualSetting.SpellIconSize = 0;
+            this.TelopVisualSetting.TabIndex = 6;
+            // 
+            // DefaultVisualSetting
+            // 
+            this.DefaultVisualSetting.BackgroundColor = System.Drawing.Color.Empty;
+            this.DefaultVisualSetting.BarColor = System.Drawing.Color.White;
+            this.DefaultVisualSetting.BarEnabled = true;
+            this.DefaultVisualSetting.BarOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.DefaultVisualSetting.BarSize = new System.Drawing.Size(190, 8);
+            this.DefaultVisualSetting.FontColor = System.Drawing.Color.White;
+            this.DefaultVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
+            this.DefaultVisualSetting.HideSpellName = false;
+            this.DefaultVisualSetting.Location = new System.Drawing.Point(293, 105);
+            this.DefaultVisualSetting.Name = "DefaultVisualSetting";
+            this.DefaultVisualSetting.OverlapRecastTime = false;
+            this.DefaultVisualSetting.Size = new System.Drawing.Size(306, 71);
+            this.DefaultVisualSetting.SpellIcon = "";
+            this.DefaultVisualSetting.SpellIconSize = 0;
+            this.DefaultVisualSetting.TabIndex = 37;
             // 
             // ConfigPanel
             // 
@@ -3364,11 +3377,11 @@
             this.tabPage3.PerformLayout();
             this.OptionTabPage.ResumeLayout(false);
             this.OptionTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogPollSleepNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimeOfHideNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3650,5 +3663,6 @@
         private System.Windows.Forms.Label label94;
         private System.Windows.Forms.NumericUpDown ReduceIconBrightnessNumericUpDown;
         private System.Windows.Forms.Label label93;
+        private System.Windows.Forms.CheckBox UseOtherThanFFXIVCheckbox;
     }
 }

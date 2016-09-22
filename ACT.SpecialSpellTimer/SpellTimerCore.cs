@@ -257,21 +257,25 @@
                         return;
                     }
 
-                    if ((DateTime.Now - this.LastFFXIVProcessDateTime).TotalSeconds >= 5.0d)
+                    // FFXIVでの使用？
+                    if (!Settings.Default.UseOtherThanFFXIV)
                     {
-                        // FF14が起動していない？
-                        if (FF14PluginHelper.GetFFXIVProcess == null)
+                        if ((DateTime.Now - this.LastFFXIVProcessDateTime).TotalSeconds >= 5.0d)
                         {
-                            if (!Settings.Default.OverlayForceVisible)
+                            // FF14が起動していない？
+                            if (FF14PluginHelper.GetFFXIVProcess == null)
                             {
-                                this.ClosePanels();
-                                OnePointTelopController.CloseTelops();
+                                if (!Settings.Default.OverlayForceVisible)
+                                {
+                                    this.ClosePanels();
+                                    OnePointTelopController.CloseTelops();
 
-                                return;
+                                    return;
+                                }
                             }
-                        }
 
-                        this.LastFFXIVProcessDateTime = DateTime.Now;
+                            this.LastFFXIVProcessDateTime = DateTime.Now;
+                        }
                     }
 
                     // オーバーレイが非表示？

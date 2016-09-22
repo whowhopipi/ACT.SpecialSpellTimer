@@ -24,6 +24,24 @@
                 Settings.Default.Save();
             };
 
+            this.UseOtherThanFFXIVCheckbox.CheckedChanged += (s1, e1) =>
+            {
+                if (this.UseOtherThanFFXIVCheckbox.Checked)
+                {
+                    this.OverlayForceVisibleCheckBox.Checked = true;
+                    this.EnabledPTPlaceholderCheckBox.Checked = false;
+
+                    this.OverlayForceVisibleCheckBox.Enabled = false;
+                    this.EnabledPTPlaceholderCheckBox.Enabled = false;
+                }
+                else
+                {
+
+                    this.OverlayForceVisibleCheckBox.Enabled = true;
+                    this.EnabledPTPlaceholderCheckBox.Enabled = true;
+                }
+            };
+
             this.SwitchOverlayButton.Click += (s1, e1) =>
             {
                 Settings.Default.OverlayVisible = !Settings.Default.OverlayVisible;
@@ -151,6 +169,7 @@
 
             this.OverlayForceVisibleCheckBox.Checked = Settings.Default.OverlayForceVisible;
             this.HideWhenNotActiceCheckBox.Checked = Settings.Default.HideWhenNotActive;
+            this.UseOtherThanFFXIVCheckbox.Checked = Settings.Default.UseOtherThanFFXIV;
 
             if (Settings.Default.OverlayVisible)
             {
@@ -168,6 +187,18 @@
             else
             {
                 this.SwitchTelopButton.Text = Translate.Get("TelopDisplaySwitchIsOff");
+            }
+
+            if (this.UseOtherThanFFXIVCheckbox.Checked)
+            {
+                this.OverlayForceVisibleCheckBox.Enabled = false;
+                this.EnabledPTPlaceholderCheckBox.Enabled = false;
+            }
+            else
+            {
+
+                this.OverlayForceVisibleCheckBox.Enabled = true;
+                this.EnabledPTPlaceholderCheckBox.Enabled = true;
             }
 
             this.DefaultVisualSetting.BarSize = Settings.Default.ProgressBarSize;
@@ -207,8 +238,11 @@
         private void ApplySettingsOption()
         {
             Settings.Default.Language = ((Utility.Language)this.LanguageComboBox.SelectedItem).Value;
+
             Settings.Default.OverlayForceVisible = this.OverlayForceVisibleCheckBox.Checked;
             Settings.Default.HideWhenNotActive = this.HideWhenNotActiceCheckBox.Checked;
+            Settings.Default.UseOtherThanFFXIV = this.UseOtherThanFFXIVCheckbox.Checked;
+
             Settings.Default.ProgressBarSize = this.DefaultVisualSetting.BarSize;
             Settings.Default.ProgressBarColor = this.DefaultVisualSetting.BarColor;
             Settings.Default.ProgressBarOutlineColor = this.DefaultVisualSetting.BarOutlineColor;

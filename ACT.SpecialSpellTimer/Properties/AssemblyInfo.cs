@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("anoyetta")]
 [assembly: AssemblyProduct("ACT.SpecialSpellTimer")]
-[assembly: AssemblyCopyright("Copyright (c) 2016, anoyetta")]
+[assembly: AssemblyCopyright("Copyright (c) 2014-2016, anoyetta")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
 [assembly: Guid("a71552bd-0ca6-48b2-bdb2-66447aef9c99")]
 
-[assembly: AssemblyVersion("1.15.0.12")]
-[assembly: AssemblyFileVersion("1.15.0.12")]
+[assembly: AssemblyVersion("1.15.0.13")]
+[assembly: AssemblyFileVersion("1.15.0.13")]

@@ -28,11 +28,22 @@
         private static double playerInfoRefreshInterval = Settings.Default.PlayerInfoRefreshInterval;
 
         /// <summary>
+        /// 空のCombatantリスト
+        /// </summary>
+        private static readonly List<Combatant> emptyCombatantList = new List<Combatant>();
+
+        /// <summary>
         /// プレイヤー情報を取得する
         /// </summary>
         /// <returns>プレイヤー情報</returns>
         public static Combatant GetPlayer()
         {
+            // FFXIV以外の使用？
+            if (Settings.Default.UseOtherThanFFXIV)
+            {
+                return null;
+            }
+
             // 3分以上経過した？
             if (player == null ||
                 lastPlayerDateTime <= DateTime.MinValue ||
@@ -63,6 +74,12 @@
         /// <returns>パーティの戦闘メンバリスト</returns>
         public static List<Combatant> GetCombatantListParty()
         {
+            // FFXIV以外の使用？
+            if (Settings.Default.UseOtherThanFFXIV)
+            {
+                return emptyCombatantList;
+            }
+
             // 総戦闘メンバリストを取得する（周囲のPC, NPC, MOB等すべて）
             var combatListAll = FF14PluginHelper.GetCombatantList();
 

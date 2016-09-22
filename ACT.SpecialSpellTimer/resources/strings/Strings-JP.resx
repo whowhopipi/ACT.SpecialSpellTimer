@@ -611,11 +611,11 @@
   </data>
   <data name="TelopDisplaySwitchIsOff" xml:space="preserve">
     <value>テロップの表示スイッチ\n現在の状態 -&gt; 通常</value>
-    <comment>Display all tickers (for position adjustment): OFF</comment>
+    <comment>Display all tickers\n(for position adjustment): OFF</comment>
   </data>
   <data name="TelopDisplaySwitchIsOn" xml:space="preserve">
     <value>テロップの表示スイッチ\n現在の状態 -&gt; 常に表示(位置調整向け)</value>
-    <comment>Display all tickers (for position adjustment): ON</comment>
+    <comment>Display all tickers\n(for position adjustment): ON</comment>
   </data>
   <data name="TelopTabPageTitle" xml:space="preserve">
     <value>ワンポイントテロップ</value>
@@ -1052,5 +1052,9 @@
   <data name="ReduceIconBrightness" xml:space="preserve">
     <value>アイコン暗転時の明るさ</value>
     <comment>During the recast time reduce brightness of icon</comment>
+  </data>
+  <data name="UseOtherThanFFXIVCheckbox" xml:space="preserve">
+    <value>FFXIV以外で使用する</value>
+    <comment>Use other than FFXIV.</comment>
   </data>
 </root>

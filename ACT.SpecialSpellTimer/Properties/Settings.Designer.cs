@@ -430,5 +430,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["ReduceIconBrightness"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseOtherThanFFXIV {
+            get {
+                return ((bool)(this["UseOtherThanFFXIV"]));
+            }
+            set {
+                this["UseOtherThanFFXIV"] = value;
+            }
+        }
     }
 }

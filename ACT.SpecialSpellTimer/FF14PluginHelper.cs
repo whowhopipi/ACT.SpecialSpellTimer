@@ -1,12 +1,15 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
 
+    using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
+    using Properties;
 
     public static partial class FF14PluginHelper
     {
@@ -19,6 +22,13 @@
 
         public static void Initialize()
         {
+            // FFXIV以外で使用する？
+            if (Settings.Default.UseOtherThanFFXIV)
+            {
+                // 何もしない
+                return;
+            }
+
             lock (lockObject)
             {
                 if (!ActGlobals.oFormActMain.Visible)
@@ -34,6 +44,8 @@
                             item.lblPluginStatus.Text.ToUpper() == "FFXIV Plugin Started.".ToUpper())
                         {
                             plugin = item.pluginObj;
+
+                            Logger.Write("FFXIV_ACT_Plugin.dll found. and started.");
                             break;
                         }
                     }
@@ -258,7 +270,7 @@
             }
 
             var foundZone = zoneList.AsParallel().FirstOrDefault(zone =>
-                string.Equals(zone.Name, currentZoneName, System.StringComparison.OrdinalIgnoreCase));
+                string.Equals(zone.Name, currentZoneName, StringComparison.OrdinalIgnoreCase));
             return foundZone != null ? foundZone.ID : 0;
         }
     }

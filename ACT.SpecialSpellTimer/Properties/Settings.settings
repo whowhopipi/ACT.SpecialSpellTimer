@@ -104,5 +104,8 @@
     <Setting Name="ReduceIconBrightness" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">55</Value>
     </Setting>
+    <Setting Name="UseOtherThanFFXIV" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

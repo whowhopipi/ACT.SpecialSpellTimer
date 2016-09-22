@@ -1933,7 +1933,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Display all tickers (for position adjustment): OFF に類似しているローカライズされた文字列を検索します。
+        ///   Display all tickers\n(for position adjustment): OFF に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string TelopDisplaySwitchIsOff {
             get {
@@ -1942,7 +1942,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Display all tickers (for position adjustment): ON に類似しているローカライズされた文字列を検索します。
+        ///   Display all tickers\n(for position adjustment): ON に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string TelopDisplaySwitchIsOn {
             get {
@@ -2064,6 +2064,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string UpdateTelopNameTitle {
             get {
                 return ResourceManager.GetString("UpdateTelopNameTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   FFXIV以外で使用する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string UseOtherThanFFXIVCheckbox {
+            get {
+                return ResourceManager.GetString("UseOtherThanFFXIVCheckbox", resourceCulture);
             }
         }
         
