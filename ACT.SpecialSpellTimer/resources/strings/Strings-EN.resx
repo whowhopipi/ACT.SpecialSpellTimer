@@ -1054,7 +1054,47 @@
     <comment>アイコン暗転時の明るさ</comment>
   </data>
   <data name="UseOtherThanFFXIVCheckbox" xml:space="preserve">
-    <value>FFXIV以外で使用する</value>
-    <comment>Use other than FFXIV.</comment>
+    <value>Use other than FFXIV.</value>
+    <comment>FFXIV以外で使用する</comment>
+  </data>
+  <data name="DQXOptionTabPage" xml:space="preserve">
+    <value>Option for DQX</value>
+    <comment>DQX向けオプション</comment>
+  </data>
+  <data name="DQXPlayerNameLabel" xml:space="preserve">
+    <value>&lt;me&gt; : Player</value>
+    <comment>&lt;me&gt; : プレイヤー名（パーティメンバ1）</comment>
+  </data>
+  <data name="DQXPTMember2Label" xml:space="preserve">
+    <value>&lt;2&gt; : Member2</value>
+    <comment>&lt;2&gt; : パーティメンバ2</comment>
+  </data>
+  <data name="DQXPTMember3Label" xml:space="preserve">
+    <value>&lt;3&gt; : Member3</value>
+    <comment>&lt;3&gt; : パーティメンバ3</comment>
+  </data>
+  <data name="DQXPTMember4Label" xml:space="preserve">
+    <value>&lt;4&gt; : Member4</value>
+    <comment>&lt;4&gt; : パーティメンバ4</comment>
+  </data>
+  <data name="DQXPTMember5Label" xml:space="preserve">
+    <value>&lt;5&gt; : Member5</value>
+    <comment>&lt;5&gt; : パーティメンバ5</comment>
+  </data>
+  <data name="DQXPTMember6Label" xml:space="preserve">
+    <value>&lt;6&gt; : Member6</value>
+    <comment>&lt;6&gt; : パーティメンバ6</comment>
+  </data>
+  <data name="DQXPTMember7Label" xml:space="preserve">
+    <value>&lt;7&gt; : Member7</value>
+    <comment>&lt;7&gt; : パーティメンバ7</comment>
+  </data>
+  <data name="DQXPTMember8Label" xml:space="preserve">
+    <value>&lt;8&gt; : Member8</value>
+    <comment>&lt;8&gt; : パーティメンバ8</comment>
+  </data>
+  <data name="DQXOptionEnabledCheckBox" xml:space="preserve">
+    <value>DQX向け機能を有効にする</value>
+    <comment>DQX向け機能を有効にする</comment>
   </data>
 </root>

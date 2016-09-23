@@ -583,6 +583,96 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   DQX向け機能を有効にする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXOptionEnabledCheckBox {
+            get {
+                return ResourceManager.GetString("DQXOptionEnabledCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   DQX向けオプション に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXOptionTabPage {
+            get {
+                return ResourceManager.GetString("DQXOptionTabPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;me&gt; : プレイヤー名(パーティメンバ1) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPlayerNameLabel {
+            get {
+                return ResourceManager.GetString("DQXPlayerNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;2&gt; : パーティメンバ2 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPTMember2Label {
+            get {
+                return ResourceManager.GetString("DQXPTMember2Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;3&gt; : パーティメンバ3 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPTMember3Label {
+            get {
+                return ResourceManager.GetString("DQXPTMember3Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;4&gt; : パーティメンバ4 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPTMember4Label {
+            get {
+                return ResourceManager.GetString("DQXPTMember4Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;5&gt; : パーティメンバ5 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPTMember5Label {
+            get {
+                return ResourceManager.GetString("DQXPTMember5Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;6&gt; : パーティメンバ6 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPTMember6Label {
+            get {
+                return ResourceManager.GetString("DQXPTMember6Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;7&gt; : パーティメンバ7 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPTMember7Label {
+            get {
+                return ResourceManager.GetString("DQXPTMember7Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;8&gt; : パーティメンバ8 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DQXPTMember8Label {
+            get {
+                return ResourceManager.GetString("DQXPTMember8Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   竜騎士 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string DRG {

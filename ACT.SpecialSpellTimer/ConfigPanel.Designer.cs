@@ -199,7 +199,7 @@
             this.CombatLogEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzingLabel = new System.Windows.Forms.Label();
             this.AnalyzeCombatButton = new System.Windows.Forms.Button();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.MonitorTabPage = new System.Windows.Forms.TabPage();
             this.label89 = new System.Windows.Forms.Label();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.label88 = new System.Windows.Forms.Label();
@@ -245,6 +245,7 @@
             this.label69 = new System.Windows.Forms.Label();
             this.label68 = new System.Windows.Forms.Label();
             this.OptionTabPage = new System.Windows.Forms.TabPage();
+            this.UseOtherThanFFXIVCheckbox = new System.Windows.Forms.CheckBox();
             this.label94 = new System.Windows.Forms.Label();
             this.ReduceIconBrightnessNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label93 = new System.Windows.Forms.Label();
@@ -295,13 +296,31 @@
             this.label18 = new System.Windows.Forms.Label();
             this.SwitchOverlayButton = new System.Windows.Forms.Button();
             this.ShokikaButton = new System.Windows.Forms.Button();
+            this.DQXOptionTabPage = new System.Windows.Forms.TabPage();
+            this.DQXOptionEnabledCheckBox = new System.Windows.Forms.CheckBox();
+            this.label101 = new System.Windows.Forms.Label();
+            this.label100 = new System.Windows.Forms.Label();
+            this.label99 = new System.Windows.Forms.Label();
+            this.label98 = new System.Windows.Forms.Label();
+            this.label97 = new System.Windows.Forms.Label();
+            this.label96 = new System.Windows.Forms.Label();
+            this.label95 = new System.Windows.Forms.Label();
+            this.DQXPTMember8TextBox = new System.Windows.Forms.TextBox();
+            this.DQXPTMember7TextBox = new System.Windows.Forms.TextBox();
+            this.DQXPTMember6TextBox = new System.Windows.Forms.TextBox();
+            this.DQXPTMember5TextBox = new System.Windows.Forms.TextBox();
+            this.DQXPTMember4TextBox = new System.Windows.Forms.TextBox();
+            this.DQXPTMember3TextBox = new System.Windows.Forms.TextBox();
+            this.DQXPTMember2TextBox = new System.Windows.Forms.TextBox();
+            this.DQXPlayerNameTextBox = new System.Windows.Forms.TextBox();
+            this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
+            this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
             this.SaveLogFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.UseOtherThanFFXIVCheckbox = new System.Windows.Forms.CheckBox();
             this.SpellVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.TelopVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
@@ -338,13 +357,14 @@
             this.CombatAnalyzerTabPage.SuspendLayout();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).BeginInit();
-            this.tabPage3.SuspendLayout();
+            this.MonitorTabPage.SuspendLayout();
             this.OptionTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogPollSleepNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimeOfHideNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).BeginInit();
+            this.DQXOptionTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabControl
@@ -355,8 +375,9 @@
             this.TabControl.Controls.Add(this.SpecialSpellTabPage);
             this.TabControl.Controls.Add(this.OnPointTelopTabPage);
             this.TabControl.Controls.Add(this.CombatAnalyzerTabPage);
-            this.TabControl.Controls.Add(this.tabPage3);
+            this.TabControl.Controls.Add(this.MonitorTabPage);
             this.TabControl.Controls.Add(this.OptionTabPage);
+            this.TabControl.Controls.Add(this.DQXOptionTabPage);
             this.TabControl.Location = new System.Drawing.Point(3, 3);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
@@ -2216,58 +2237,58 @@
             this.AnalyzeCombatButton.Text = "AnalyzeCombat";
             this.AnalyzeCombatButton.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
+            // MonitorTabPage
             // 
-            this.tabPage3.Controls.Add(this.label89);
-            this.tabPage3.Controls.Add(this.LogTextBox);
-            this.tabPage3.Controls.Add(this.label88);
-            this.tabPage3.Controls.Add(this.SMNTextBox);
-            this.tabPage3.Controls.Add(this.label87);
-            this.tabPage3.Controls.Add(this.label86);
-            this.tabPage3.Controls.Add(this.label85);
-            this.tabPage3.Controls.Add(this.label84);
-            this.tabPage3.Controls.Add(this.label83);
-            this.tabPage3.Controls.Add(this.BLMTextBox);
-            this.tabPage3.Controls.Add(this.MCHTextBox);
-            this.tabPage3.Controls.Add(this.BRDTextBox);
-            this.tabPage3.Controls.Add(this.NINTextBox);
-            this.tabPage3.Controls.Add(this.DRGTextBox);
-            this.tabPage3.Controls.Add(this.label82);
-            this.tabPage3.Controls.Add(this.MNKTextBox);
-            this.tabPage3.Controls.Add(this.label81);
-            this.tabPage3.Controls.Add(this.ASTTextBox);
-            this.tabPage3.Controls.Add(this.label80);
-            this.tabPage3.Controls.Add(this.label79);
-            this.tabPage3.Controls.Add(this.label78);
-            this.tabPage3.Controls.Add(this.label77);
-            this.tabPage3.Controls.Add(this.SCHTextBox);
-            this.tabPage3.Controls.Add(this.WHMTextBox);
-            this.tabPage3.Controls.Add(this.DRKTextBox);
-            this.tabPage3.Controls.Add(this.WARTextBox);
-            this.tabPage3.Controls.Add(this.label76);
-            this.tabPage3.Controls.Add(this.PLDTextBox);
-            this.tabPage3.Controls.Add(this.Member8TextBox);
-            this.tabPage3.Controls.Add(this.Member7TextBox);
-            this.tabPage3.Controls.Add(this.Member6TextBox);
-            this.tabPage3.Controls.Add(this.Member5TextBox);
-            this.tabPage3.Controls.Add(this.Member4TextBox);
-            this.tabPage3.Controls.Add(this.Member3TextBox);
-            this.tabPage3.Controls.Add(this.Member2TextBox);
-            this.tabPage3.Controls.Add(this.MeTextBox);
-            this.tabPage3.Controls.Add(this.label75);
-            this.tabPage3.Controls.Add(this.label74);
-            this.tabPage3.Controls.Add(this.label73);
-            this.tabPage3.Controls.Add(this.label72);
-            this.tabPage3.Controls.Add(this.label71);
-            this.tabPage3.Controls.Add(this.label70);
-            this.tabPage3.Controls.Add(this.label69);
-            this.tabPage3.Controls.Add(this.label68);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1186, 668);
-            this.tabPage3.TabIndex = 4;
-            this.tabPage3.Text = "MonitorTabPage";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.MonitorTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.MonitorTabPage.Controls.Add(this.label89);
+            this.MonitorTabPage.Controls.Add(this.LogTextBox);
+            this.MonitorTabPage.Controls.Add(this.label88);
+            this.MonitorTabPage.Controls.Add(this.SMNTextBox);
+            this.MonitorTabPage.Controls.Add(this.label87);
+            this.MonitorTabPage.Controls.Add(this.label86);
+            this.MonitorTabPage.Controls.Add(this.label85);
+            this.MonitorTabPage.Controls.Add(this.label84);
+            this.MonitorTabPage.Controls.Add(this.label83);
+            this.MonitorTabPage.Controls.Add(this.BLMTextBox);
+            this.MonitorTabPage.Controls.Add(this.MCHTextBox);
+            this.MonitorTabPage.Controls.Add(this.BRDTextBox);
+            this.MonitorTabPage.Controls.Add(this.NINTextBox);
+            this.MonitorTabPage.Controls.Add(this.DRGTextBox);
+            this.MonitorTabPage.Controls.Add(this.label82);
+            this.MonitorTabPage.Controls.Add(this.MNKTextBox);
+            this.MonitorTabPage.Controls.Add(this.label81);
+            this.MonitorTabPage.Controls.Add(this.ASTTextBox);
+            this.MonitorTabPage.Controls.Add(this.label80);
+            this.MonitorTabPage.Controls.Add(this.label79);
+            this.MonitorTabPage.Controls.Add(this.label78);
+            this.MonitorTabPage.Controls.Add(this.label77);
+            this.MonitorTabPage.Controls.Add(this.SCHTextBox);
+            this.MonitorTabPage.Controls.Add(this.WHMTextBox);
+            this.MonitorTabPage.Controls.Add(this.DRKTextBox);
+            this.MonitorTabPage.Controls.Add(this.WARTextBox);
+            this.MonitorTabPage.Controls.Add(this.label76);
+            this.MonitorTabPage.Controls.Add(this.PLDTextBox);
+            this.MonitorTabPage.Controls.Add(this.Member8TextBox);
+            this.MonitorTabPage.Controls.Add(this.Member7TextBox);
+            this.MonitorTabPage.Controls.Add(this.Member6TextBox);
+            this.MonitorTabPage.Controls.Add(this.Member5TextBox);
+            this.MonitorTabPage.Controls.Add(this.Member4TextBox);
+            this.MonitorTabPage.Controls.Add(this.Member3TextBox);
+            this.MonitorTabPage.Controls.Add(this.Member2TextBox);
+            this.MonitorTabPage.Controls.Add(this.MeTextBox);
+            this.MonitorTabPage.Controls.Add(this.label75);
+            this.MonitorTabPage.Controls.Add(this.label74);
+            this.MonitorTabPage.Controls.Add(this.label73);
+            this.MonitorTabPage.Controls.Add(this.label72);
+            this.MonitorTabPage.Controls.Add(this.label71);
+            this.MonitorTabPage.Controls.Add(this.label70);
+            this.MonitorTabPage.Controls.Add(this.label69);
+            this.MonitorTabPage.Controls.Add(this.label68);
+            this.MonitorTabPage.Location = new System.Drawing.Point(4, 22);
+            this.MonitorTabPage.Name = "MonitorTabPage";
+            this.MonitorTabPage.Size = new System.Drawing.Size(1186, 668);
+            this.MonitorTabPage.TabIndex = 4;
+            this.MonitorTabPage.Text = "MonitorTabPage";
             // 
             // label89
             // 
@@ -2723,10 +2744,21 @@
             this.OptionTabPage.TabIndex = 1;
             this.OptionTabPage.Text = "OptionTabPageTitle";
             // 
+            // UseOtherThanFFXIVCheckbox
+            // 
+            this.UseOtherThanFFXIVCheckbox.AutoSize = true;
+            this.UseOtherThanFFXIVCheckbox.ForeColor = System.Drawing.Color.OrangeRed;
+            this.UseOtherThanFFXIVCheckbox.Location = new System.Drawing.Point(520, 79);
+            this.UseOtherThanFFXIVCheckbox.Name = "UseOtherThanFFXIVCheckbox";
+            this.UseOtherThanFFXIVCheckbox.Size = new System.Drawing.Size(179, 16);
+            this.UseOtherThanFFXIVCheckbox.TabIndex = 64;
+            this.UseOtherThanFFXIVCheckbox.Text = "UseOtherThanFFXIVCheckbox";
+            this.UseOtherThanFFXIVCheckbox.UseVisualStyleBackColor = true;
+            // 
             // label94
             // 
             this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(359, 204);
+            this.label94.Location = new System.Drawing.Point(348, 204);
             this.label94.Name = "label94";
             this.label94.Size = new System.Drawing.Size(19, 12);
             this.label94.TabIndex = 63;
@@ -2735,7 +2767,7 @@
             // ReduceIconBrightnessNumericUpDown
             // 
             this.ReduceIconBrightnessNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(293, 202);
+            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(282, 202);
             this.ReduceIconBrightnessNumericUpDown.Name = "ReduceIconBrightnessNumericUpDown";
             this.ReduceIconBrightnessNumericUpDown.Size = new System.Drawing.Size(59, 19);
             this.ReduceIconBrightnessNumericUpDown.TabIndex = 62;
@@ -2753,7 +2785,7 @@
             // label90
             // 
             this.label90.AutoSize = true;
-            this.label90.Location = new System.Drawing.Point(405, 323);
+            this.label90.Location = new System.Drawing.Point(394, 323);
             this.label90.Name = "label90";
             this.label90.Size = new System.Drawing.Size(63, 12);
             this.label90.TabIndex = 59;
@@ -2762,7 +2794,7 @@
             // label92
             // 
             this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(358, 323);
+            this.label92.Location = new System.Drawing.Point(347, 323);
             this.label92.Name = "label92";
             this.label92.Size = new System.Drawing.Size(62, 12);
             this.label92.TabIndex = 60;
@@ -2771,7 +2803,7 @@
             // LogPollSleepNumericUpDown
             // 
             this.LogPollSleepNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.LogPollSleepNumericUpDown.Location = new System.Drawing.Point(293, 321);
+            this.LogPollSleepNumericUpDown.Location = new System.Drawing.Point(282, 321);
             this.LogPollSleepNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -2814,7 +2846,7 @@
             // SaveLogButton
             // 
             this.SaveLogButton.Enabled = false;
-            this.SaveLogButton.Location = new System.Drawing.Point(605, 481);
+            this.SaveLogButton.Location = new System.Drawing.Point(668, 459);
             this.SaveLogButton.Name = "SaveLogButton";
             this.SaveLogButton.Size = new System.Drawing.Size(37, 25);
             this.SaveLogButton.TabIndex = 55;
@@ -2824,7 +2856,7 @@
             // SaveLogCheckBox
             // 
             this.SaveLogCheckBox.AutoSize = true;
-            this.SaveLogCheckBox.Location = new System.Drawing.Point(293, 462);
+            this.SaveLogCheckBox.Location = new System.Drawing.Point(282, 465);
             this.SaveLogCheckBox.Name = "SaveLogCheckBox";
             this.SaveLogCheckBox.Size = new System.Drawing.Size(64, 16);
             this.SaveLogCheckBox.TabIndex = 54;
@@ -2834,7 +2866,7 @@
             // SaveLogTextBox
             // 
             this.SaveLogTextBox.Enabled = false;
-            this.SaveLogTextBox.Location = new System.Drawing.Point(293, 484);
+            this.SaveLogTextBox.Location = new System.Drawing.Point(356, 462);
             this.SaveLogTextBox.Name = "SaveLogTextBox";
             this.SaveLogTextBox.Size = new System.Drawing.Size(306, 19);
             this.SaveLogTextBox.TabIndex = 53;
@@ -2842,7 +2874,7 @@
             // label67
             // 
             this.label67.AutoSize = true;
-            this.label67.Location = new System.Drawing.Point(6, 463);
+            this.label67.Location = new System.Drawing.Point(6, 466);
             this.label67.Name = "label67";
             this.label67.Size = new System.Drawing.Size(75, 12);
             this.label67.TabIndex = 52;
@@ -2850,7 +2882,7 @@
             // 
             // OverTextBox
             // 
-            this.OverTextBox.Location = new System.Drawing.Point(293, 437);
+            this.OverTextBox.Location = new System.Drawing.Point(282, 437);
             this.OverTextBox.Name = "OverTextBox";
             this.OverTextBox.Size = new System.Drawing.Size(100, 19);
             this.OverTextBox.TabIndex = 51;
@@ -2866,7 +2898,7 @@
             // 
             // ReadyTextBox
             // 
-            this.ReadyTextBox.Location = new System.Drawing.Point(293, 412);
+            this.ReadyTextBox.Location = new System.Drawing.Point(282, 412);
             this.ReadyTextBox.Name = "ReadyTextBox";
             this.ReadyTextBox.Size = new System.Drawing.Size(100, 19);
             this.ReadyTextBox.TabIndex = 49;
@@ -2883,7 +2915,7 @@
             // label64
             // 
             this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(357, 391);
+            this.label64.Location = new System.Drawing.Point(346, 391);
             this.label64.Name = "label64";
             this.label64.Size = new System.Drawing.Size(190, 12);
             this.label64.TabIndex = 47;
@@ -2892,7 +2924,7 @@
             // EnabledNotifyNormalSpellTimerCheckBox
             // 
             this.EnabledNotifyNormalSpellTimerCheckBox.AutoSize = true;
-            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(293, 390);
+            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(282, 390);
             this.EnabledNotifyNormalSpellTimerCheckBox.Name = "EnabledNotifyNormalSpellTimerCheckBox";
             this.EnabledNotifyNormalSpellTimerCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledNotifyNormalSpellTimerCheckBox.TabIndex = 46;
@@ -2911,7 +2943,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(357, 369);
+            this.label49.Location = new System.Drawing.Point(346, 369);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(159, 12);
             this.label49.TabIndex = 44;
@@ -2929,7 +2961,7 @@
             // EnabledSpellTimerNoDecimalCheckBox
             // 
             this.EnabledSpellTimerNoDecimalCheckBox.AutoSize = true;
-            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(293, 368);
+            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(282, 368);
             this.EnabledSpellTimerNoDecimalCheckBox.Name = "EnabledSpellTimerNoDecimalCheckBox";
             this.EnabledSpellTimerNoDecimalCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledSpellTimerNoDecimalCheckBox.TabIndex = 42;
@@ -2979,7 +3011,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(357, 347);
+            this.label48.Location = new System.Drawing.Point(346, 347);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(175, 12);
             this.label48.TabIndex = 32;
@@ -2988,7 +3020,7 @@
             // EnabledPTPlaceholderCheckBox
             // 
             this.EnabledPTPlaceholderCheckBox.AutoSize = true;
-            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(293, 346);
+            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(282, 346);
             this.EnabledPTPlaceholderCheckBox.Name = "EnabledPTPlaceholderCheckBox";
             this.EnabledPTPlaceholderCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledPTPlaceholderCheckBox.TabIndex = 31;
@@ -3016,7 +3048,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(405, 299);
+            this.label30.Location = new System.Drawing.Point(394, 299);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(63, 12);
             this.label30.TabIndex = 28;
@@ -3025,7 +3057,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(358, 299);
+            this.label29.Location = new System.Drawing.Point(347, 299);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(62, 12);
             this.label29.TabIndex = 27;
@@ -3034,7 +3066,7 @@
             // RefreshIntervalNumericUpDown
             // 
             this.RefreshIntervalNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(293, 297);
+            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(282, 297);
             this.RefreshIntervalNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -3067,7 +3099,7 @@
             // AutoSortReverseCheckBox
             // 
             this.AutoSortReverseCheckBox.AutoSize = true;
-            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(373, 250);
+            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(362, 250);
             this.AutoSortReverseCheckBox.Name = "AutoSortReverseCheckBox";
             this.AutoSortReverseCheckBox.Size = new System.Drawing.Size(161, 16);
             this.AutoSortReverseCheckBox.TabIndex = 9;
@@ -3088,7 +3120,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(403, 274);
+            this.label26.Location = new System.Drawing.Point(392, 274);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(97, 12);
             this.label26.TabIndex = 11;
@@ -3106,7 +3138,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(358, 274);
+            this.label24.Location = new System.Drawing.Point(347, 274);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(74, 12);
             this.label24.TabIndex = 23;
@@ -3115,7 +3147,7 @@
             // TimeOfHideNumericUpDown
             // 
             this.TimeOfHideNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(293, 272);
+            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(282, 272);
             this.TimeOfHideNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -3147,7 +3179,7 @@
             // AutoSortCheckBox
             // 
             this.AutoSortCheckBox.AutoSize = true;
-            this.AutoSortCheckBox.Location = new System.Drawing.Point(293, 250);
+            this.AutoSortCheckBox.Location = new System.Drawing.Point(282, 250);
             this.AutoSortCheckBox.Name = "AutoSortCheckBox";
             this.AutoSortCheckBox.Size = new System.Drawing.Size(64, 16);
             this.AutoSortCheckBox.TabIndex = 8;
@@ -3157,7 +3189,7 @@
             // ClickThroughCheckBox
             // 
             this.ClickThroughCheckBox.AutoSize = true;
-            this.ClickThroughCheckBox.Location = new System.Drawing.Point(293, 228);
+            this.ClickThroughCheckBox.Location = new System.Drawing.Point(282, 228);
             this.ClickThroughCheckBox.Name = "ClickThroughCheckBox";
             this.ClickThroughCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ClickThroughCheckBox.TabIndex = 7;
@@ -3176,7 +3208,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(359, 179);
+            this.label20.Location = new System.Drawing.Point(348, 179);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(19, 12);
             this.label20.TabIndex = 16;
@@ -3185,7 +3217,7 @@
             // OpacityNumericUpDown
             // 
             this.OpacityNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.OpacityNumericUpDown.Location = new System.Drawing.Point(293, 177);
+            this.OpacityNumericUpDown.Location = new System.Drawing.Point(282, 177);
             this.OpacityNumericUpDown.Name = "OpacityNumericUpDown";
             this.OpacityNumericUpDown.Size = new System.Drawing.Size(59, 19);
             this.OpacityNumericUpDown.TabIndex = 6;
@@ -3211,14 +3243,196 @@
             // 
             // ShokikaButton
             // 
-            this.ShokikaButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ShokikaButton.Location = new System.Drawing.Point(6, 637);
+            this.ShokikaButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ShokikaButton.Location = new System.Drawing.Point(922, 637);
             this.ShokikaButton.Name = "ShokikaButton";
             this.ShokikaButton.Size = new System.Drawing.Size(126, 25);
             this.ShokikaButton.TabIndex = 13;
             this.ShokikaButton.Text = "InitializationButton";
             this.ShokikaButton.UseVisualStyleBackColor = true;
             this.ShokikaButton.Click += new System.EventHandler(this.ShokikaButton_Click);
+            // 
+            // DQXOptionTabPage
+            // 
+            this.DQXOptionTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.DQXOptionTabPage.Controls.Add(this.DQXOptionEnabledCheckBox);
+            this.DQXOptionTabPage.Controls.Add(this.label101);
+            this.DQXOptionTabPage.Controls.Add(this.label100);
+            this.DQXOptionTabPage.Controls.Add(this.label99);
+            this.DQXOptionTabPage.Controls.Add(this.label98);
+            this.DQXOptionTabPage.Controls.Add(this.label97);
+            this.DQXOptionTabPage.Controls.Add(this.label96);
+            this.DQXOptionTabPage.Controls.Add(this.label95);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPTMember8TextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPTMember7TextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPTMember6TextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPTMember5TextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPTMember4TextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPTMember3TextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPTMember2TextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPlayerNameTextBox);
+            this.DQXOptionTabPage.Controls.Add(this.DQXPlayerNameLabel);
+            this.DQXOptionTabPage.Controls.Add(this.DQXAppleyButton);
+            this.DQXOptionTabPage.Location = new System.Drawing.Point(4, 22);
+            this.DQXOptionTabPage.Name = "DQXOptionTabPage";
+            this.DQXOptionTabPage.Size = new System.Drawing.Size(1186, 668);
+            this.DQXOptionTabPage.TabIndex = 5;
+            this.DQXOptionTabPage.Text = "DQXOptionTabPage";
+            // 
+            // DQXOptionEnabledCheckBox
+            // 
+            this.DQXOptionEnabledCheckBox.AutoSize = true;
+            this.DQXOptionEnabledCheckBox.Location = new System.Drawing.Point(5, 16);
+            this.DQXOptionEnabledCheckBox.Name = "DQXOptionEnabledCheckBox";
+            this.DQXOptionEnabledCheckBox.Size = new System.Drawing.Size(172, 16);
+            this.DQXOptionEnabledCheckBox.TabIndex = 30;
+            this.DQXOptionEnabledCheckBox.Text = "DQXOptionEnabledCheckBox";
+            this.DQXOptionEnabledCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label101
+            // 
+            this.label101.AutoSize = true;
+            this.label101.Location = new System.Drawing.Point(3, 220);
+            this.label101.Name = "label101";
+            this.label101.Size = new System.Drawing.Size(115, 12);
+            this.label101.TabIndex = 29;
+            this.label101.Text = "DQXPTMember8Label";
+            // 
+            // label100
+            // 
+            this.label100.AutoSize = true;
+            this.label100.Location = new System.Drawing.Point(3, 195);
+            this.label100.Name = "label100";
+            this.label100.Size = new System.Drawing.Size(115, 12);
+            this.label100.TabIndex = 28;
+            this.label100.Text = "DQXPTMember7Label";
+            // 
+            // label99
+            // 
+            this.label99.AutoSize = true;
+            this.label99.Location = new System.Drawing.Point(3, 170);
+            this.label99.Name = "label99";
+            this.label99.Size = new System.Drawing.Size(115, 12);
+            this.label99.TabIndex = 27;
+            this.label99.Text = "DQXPTMember6Label";
+            // 
+            // label98
+            // 
+            this.label98.AutoSize = true;
+            this.label98.Location = new System.Drawing.Point(3, 145);
+            this.label98.Name = "label98";
+            this.label98.Size = new System.Drawing.Size(115, 12);
+            this.label98.TabIndex = 26;
+            this.label98.Text = "DQXPTMember5Label";
+            // 
+            // label97
+            // 
+            this.label97.AutoSize = true;
+            this.label97.Location = new System.Drawing.Point(3, 120);
+            this.label97.Name = "label97";
+            this.label97.Size = new System.Drawing.Size(115, 12);
+            this.label97.TabIndex = 25;
+            this.label97.Text = "DQXPTMember4Label";
+            // 
+            // label96
+            // 
+            this.label96.AutoSize = true;
+            this.label96.Location = new System.Drawing.Point(3, 95);
+            this.label96.Name = "label96";
+            this.label96.Size = new System.Drawing.Size(115, 12);
+            this.label96.TabIndex = 24;
+            this.label96.Text = "DQXPTMember3Label";
+            // 
+            // label95
+            // 
+            this.label95.AutoSize = true;
+            this.label95.Location = new System.Drawing.Point(3, 70);
+            this.label95.Name = "label95";
+            this.label95.Size = new System.Drawing.Size(115, 12);
+            this.label95.TabIndex = 23;
+            this.label95.Text = "DQXPTMember2Label";
+            // 
+            // DQXPTMember8TextBox
+            // 
+            this.DQXPTMember8TextBox.Location = new System.Drawing.Point(196, 217);
+            this.DQXPTMember8TextBox.Name = "DQXPTMember8TextBox";
+            this.DQXPTMember8TextBox.ReadOnly = true;
+            this.DQXPTMember8TextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPTMember8TextBox.TabIndex = 22;
+            // 
+            // DQXPTMember7TextBox
+            // 
+            this.DQXPTMember7TextBox.Location = new System.Drawing.Point(196, 192);
+            this.DQXPTMember7TextBox.Name = "DQXPTMember7TextBox";
+            this.DQXPTMember7TextBox.ReadOnly = true;
+            this.DQXPTMember7TextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPTMember7TextBox.TabIndex = 21;
+            // 
+            // DQXPTMember6TextBox
+            // 
+            this.DQXPTMember6TextBox.Location = new System.Drawing.Point(196, 167);
+            this.DQXPTMember6TextBox.Name = "DQXPTMember6TextBox";
+            this.DQXPTMember6TextBox.ReadOnly = true;
+            this.DQXPTMember6TextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPTMember6TextBox.TabIndex = 20;
+            // 
+            // DQXPTMember5TextBox
+            // 
+            this.DQXPTMember5TextBox.Location = new System.Drawing.Point(196, 142);
+            this.DQXPTMember5TextBox.Name = "DQXPTMember5TextBox";
+            this.DQXPTMember5TextBox.ReadOnly = true;
+            this.DQXPTMember5TextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPTMember5TextBox.TabIndex = 19;
+            // 
+            // DQXPTMember4TextBox
+            // 
+            this.DQXPTMember4TextBox.Location = new System.Drawing.Point(196, 117);
+            this.DQXPTMember4TextBox.Name = "DQXPTMember4TextBox";
+            this.DQXPTMember4TextBox.ReadOnly = true;
+            this.DQXPTMember4TextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPTMember4TextBox.TabIndex = 18;
+            // 
+            // DQXPTMember3TextBox
+            // 
+            this.DQXPTMember3TextBox.Location = new System.Drawing.Point(196, 92);
+            this.DQXPTMember3TextBox.Name = "DQXPTMember3TextBox";
+            this.DQXPTMember3TextBox.ReadOnly = true;
+            this.DQXPTMember3TextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPTMember3TextBox.TabIndex = 17;
+            // 
+            // DQXPTMember2TextBox
+            // 
+            this.DQXPTMember2TextBox.Location = new System.Drawing.Point(196, 67);
+            this.DQXPTMember2TextBox.Name = "DQXPTMember2TextBox";
+            this.DQXPTMember2TextBox.ReadOnly = true;
+            this.DQXPTMember2TextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPTMember2TextBox.TabIndex = 16;
+            // 
+            // DQXPlayerNameTextBox
+            // 
+            this.DQXPlayerNameTextBox.Location = new System.Drawing.Point(196, 42);
+            this.DQXPlayerNameTextBox.Name = "DQXPlayerNameTextBox";
+            this.DQXPlayerNameTextBox.Size = new System.Drawing.Size(185, 19);
+            this.DQXPlayerNameTextBox.TabIndex = 15;
+            // 
+            // DQXPlayerNameLabel
+            // 
+            this.DQXPlayerNameLabel.AutoSize = true;
+            this.DQXPlayerNameLabel.Location = new System.Drawing.Point(3, 45);
+            this.DQXPlayerNameLabel.Name = "DQXPlayerNameLabel";
+            this.DQXPlayerNameLabel.Size = new System.Drawing.Size(116, 12);
+            this.DQXPlayerNameLabel.TabIndex = 14;
+            this.DQXPlayerNameLabel.Text = "DQXPlayerNameLabel";
+            // 
+            // DQXAppleyButton
+            // 
+            this.DQXAppleyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DQXAppleyButton.Location = new System.Drawing.Point(1057, 640);
+            this.DQXAppleyButton.Name = "DQXAppleyButton";
+            this.DQXAppleyButton.Size = new System.Drawing.Size(126, 25);
+            this.DQXAppleyButton.TabIndex = 13;
+            this.DQXAppleyButton.Text = "ApplyButton";
+            this.DQXAppleyButton.UseVisualStyleBackColor = true;
             // 
             // OpenFileDialog
             // 
@@ -3257,17 +3471,6 @@
             this.SaveLogFileDialog.DefaultExt = "log";
             this.SaveLogFileDialog.Filter = "Log files (*.log)|*.log|Text files (*.txt)|*.txt|All files (*.*)|*.*";
             this.SaveLogFileDialog.RestoreDirectory = true;
-            // 
-            // UseOtherThanFFXIVCheckbox
-            // 
-            this.UseOtherThanFFXIVCheckbox.AutoSize = true;
-            this.UseOtherThanFFXIVCheckbox.ForeColor = System.Drawing.Color.OrangeRed;
-            this.UseOtherThanFFXIVCheckbox.Location = new System.Drawing.Point(520, 79);
-            this.UseOtherThanFFXIVCheckbox.Name = "UseOtherThanFFXIVCheckbox";
-            this.UseOtherThanFFXIVCheckbox.Size = new System.Drawing.Size(179, 16);
-            this.UseOtherThanFFXIVCheckbox.TabIndex = 64;
-            this.UseOtherThanFFXIVCheckbox.Text = "UseOtherThanFFXIVCheckbox";
-            this.UseOtherThanFFXIVCheckbox.UseVisualStyleBackColor = true;
             // 
             // SpellVisualSetting
             // 
@@ -3315,7 +3518,7 @@
             this.DefaultVisualSetting.FontColor = System.Drawing.Color.White;
             this.DefaultVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
             this.DefaultVisualSetting.HideSpellName = false;
-            this.DefaultVisualSetting.Location = new System.Drawing.Point(293, 105);
+            this.DefaultVisualSetting.Location = new System.Drawing.Point(282, 105);
             this.DefaultVisualSetting.Name = "DefaultVisualSetting";
             this.DefaultVisualSetting.OverlapRecastTime = false;
             this.DefaultVisualSetting.Size = new System.Drawing.Size(306, 71);
@@ -3373,8 +3576,8 @@
             this.CombatAnalyzerTabPage.PerformLayout();
             this.CombatAnalyzerContextMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).EndInit();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.MonitorTabPage.ResumeLayout(false);
+            this.MonitorTabPage.PerformLayout();
             this.OptionTabPage.ResumeLayout(false);
             this.OptionTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).EndInit();
@@ -3382,6 +3585,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimeOfHideNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).EndInit();
+            this.DQXOptionTabPage.ResumeLayout(false);
+            this.DQXOptionTabPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3611,7 +3816,7 @@
         private System.Windows.Forms.Label label67;
         private System.Windows.Forms.SaveFileDialog SaveLogFileDialog;
         private System.Windows.Forms.CheckBox HideWhenNotActiceCheckBox;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage MonitorTabPage;
         private System.Windows.Forms.TextBox Member8TextBox;
         private System.Windows.Forms.TextBox Member7TextBox;
         private System.Windows.Forms.TextBox Member6TextBox;
@@ -3664,5 +3869,24 @@
         private System.Windows.Forms.NumericUpDown ReduceIconBrightnessNumericUpDown;
         private System.Windows.Forms.Label label93;
         private System.Windows.Forms.CheckBox UseOtherThanFFXIVCheckbox;
+        private System.Windows.Forms.TabPage DQXOptionTabPage;
+        private System.Windows.Forms.Button DQXAppleyButton;
+        private System.Windows.Forms.TextBox DQXPTMember8TextBox;
+        private System.Windows.Forms.TextBox DQXPTMember7TextBox;
+        private System.Windows.Forms.TextBox DQXPTMember6TextBox;
+        private System.Windows.Forms.TextBox DQXPTMember5TextBox;
+        private System.Windows.Forms.TextBox DQXPTMember4TextBox;
+        private System.Windows.Forms.TextBox DQXPTMember3TextBox;
+        private System.Windows.Forms.TextBox DQXPTMember2TextBox;
+        private System.Windows.Forms.TextBox DQXPlayerNameTextBox;
+        private System.Windows.Forms.Label DQXPlayerNameLabel;
+        private System.Windows.Forms.Label label101;
+        private System.Windows.Forms.Label label100;
+        private System.Windows.Forms.Label label99;
+        private System.Windows.Forms.Label label98;
+        private System.Windows.Forms.Label label97;
+        private System.Windows.Forms.Label label96;
+        private System.Windows.Forms.Label label95;
+        private System.Windows.Forms.CheckBox DQXOptionEnabledCheckBox;
     }
 }

@@ -76,6 +76,7 @@
     <Compile Include="ConfigPanel.Option.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="DQXUtility.cs" />
     <Compile Include="FF14PluginHelper.cs" />
     <Compile Include="FF14PluginHelper.Extension.cs" />
     <Compile Include="Image\IconController.cs" />
@@ -259,6 +260,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="ConfigPanel.DQXOption.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -193,11 +193,12 @@
         /// <param name="logInfo">ログ情報</param>
         private void oFormActMain_OnLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
+#if !DEBUG
             if (isImport)
             {
                 return;
             }
-
+#endif
             this.logInfoQueue.Enqueue(logInfo);
 
             // 最初のログならば動作ログに出力する
@@ -209,9 +210,9 @@
             this.firstLogArrived = true;
         }
 
-        #endregion
+#endregion
 
-        #region ログ処理
+#region ログ処理
 
         /// <summary>
         /// バッファーにログがない場合 true
@@ -252,6 +253,7 @@
             var jobChanged = false;
             var summoned = false;
             var zoneChanged = false;
+            var partyChangedAtDQX = false;
 
             LogLineEventArgs logInfo;
             while (logInfoQueue.TryDequeue(out logInfo))
@@ -314,6 +316,13 @@
                     }
                 }
 
+                // パーティに変化があるか？（対DQX）
+                var r = DQXUtility.IsPartyChanged(logLine);
+                if (!partyChangedAtDQX)
+                {
+                    partyChangedAtDQX = r;
+                }
+
                 list.Add(logLine);
 
                 // ログファイルに出力する
@@ -326,6 +335,15 @@
                 {
                     await Task.Delay(TimeSpan.FromSeconds(5));
                     RefreshPartyList();
+                });
+            }
+
+            if (partyChangedAtDQX)
+            {
+                Task.Run(async () =>
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    DQXUtility.RefeshKeywords();
                 });
             }
 
@@ -394,9 +412,9 @@
                 .Any(words => words.Any(word => logLine.Contains(word)));
         }
 
-        #endregion
+#endregion
 
-        #region private 生ログのファイル書き出し機能
+#region private 生ログのファイル書き出し機能
 
         private bool SaveLogEnabled =>
             Settings.Default.SaveLogEnabled && !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
@@ -443,9 +461,9 @@
             }
         }
 
-        #endregion
+#endregion
 
-        #region public static キーワードの代名詞を実際の値に置換
+#region public static キーワードの代名詞を実際の値に置換
 
         /// <summary>
         /// マッチングキーワードを生成する
@@ -461,15 +479,19 @@
 
             keyword = keyword.Trim();
 
-            // FFXIV以外での使用？
-            if (Settings.Default.UseOtherThanFFXIV)
+            if (keyword.Length == 0 || !keyword.Contains("<") || !keyword.Contains(">"))
             {
-                // カスタムプレースホルダを置換する
-                keyword = ReplaceCustomPlaceholders(keyword);
                 return keyword;
             }
 
-            if (keyword.Length == 0 || !keyword.Contains("<") || !keyword.Contains(">"))
+            // カスタムプレスホルダを置換する
+            keyword = ReplaceCustomPlaceholders(keyword);
+
+            // 対DQX用のキーワードを置換する
+            keyword = DQXUtility.MakeKeyword(keyword);
+
+            // FFXIV以外での使用？
+            if (Settings.Default.UseOtherThanFFXIV)
             {
                 return keyword;
             }
@@ -501,14 +523,12 @@
                 keyword = keyword.Replace(replacement.Key, replacement.Value);
             }
 
-            keyword = ReplaceCustomPlaceholders(keyword);
-
             return keyword;
         }
 
-        #endregion
+#endregion
 
-        #region public static 状態更新指示
+#region public static 状態更新指示
 
         /// <summary>
         /// パーティリストを更新する
@@ -661,9 +681,9 @@
             }
         }
 
-        #endregion
+#endregion
 
-        #region public static カスタムプレースホルダー
+#region public static カスタムプレースホルダー
 
         /// <summary>
         /// カスタム代名詞による置換文字列のセット
@@ -739,6 +759,6 @@
             OnePointTelopTable.Default.ClearReplacedKeywords();
         }
 
-        #endregion
+#endregion
     }
 }

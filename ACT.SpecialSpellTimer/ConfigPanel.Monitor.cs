@@ -37,7 +37,7 @@
             }
         }
 
-        private bool MonitorTabSelected => this.TabControl.SelectedTab == this.tabPage3;
+        private bool MonitorTabSelected => this.TabControl.SelectedTab == this.MonitorTabPage;
 
         /// <summary>
         /// ログを追加する

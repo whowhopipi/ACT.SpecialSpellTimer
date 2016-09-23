@@ -261,6 +261,7 @@
 
             // オプションのロードメソッドを呼ぶ
             this.LoadOption();
+            this.LoadDQXOption();
 
             // ワンポイントテロップのロードメソッドを呼ぶ
             this.LoadOnePointTelop();

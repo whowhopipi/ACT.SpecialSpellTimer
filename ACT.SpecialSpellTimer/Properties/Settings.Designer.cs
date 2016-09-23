@@ -442,5 +442,29 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["UseOtherThanFFXIV"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DQXUtilityEnabled {
+            get {
+                return ((bool)(this["DQXUtilityEnabled"]));
+            }
+            set {
+                this["DQXUtilityEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DQXPlayerName {
+            get {
+                return ((string)(this["DQXPlayerName"]));
+            }
+            set {
+                this["DQXPlayerName"] = value;
+            }
+        }
     }
 }
