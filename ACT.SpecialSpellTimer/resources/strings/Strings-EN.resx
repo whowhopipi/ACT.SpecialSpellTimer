@@ -1097,4 +1097,8 @@
     <value>DQX向け機能を有効にする</value>
     <comment>DQX向け機能を有効にする</comment>
   </data>
+  <data name="ResetOnWipeOutLabel" xml:space="preserve">
+    <value>Reset counter at wipe out.</value>
+    <comment>全滅時にカウントをリセットする</comment>
+  </data>
 </root>

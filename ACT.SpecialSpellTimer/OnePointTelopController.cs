@@ -314,9 +314,16 @@
 
                 });   // end loop telops
             }
+        }
 
+        /// <summary>
+        /// 遅延サウンドを再生する
+        /// </summary>
+        public static void PlayDelaySound(
+            IReadOnlyList<OnePointTelop> telops)
+        {
             // スペルの更新とサウンド処理を行う
-            foreach (var telop in telops)
+            telops.AsParallel().ForAll(telop =>
             {
                 var regex = telop.Regex;
 
@@ -336,12 +343,7 @@
                         SoundController.Default.Play(tts);
                     }
                 }
-            }
-#if false
-            Parallel.ForEach(telops, (telop) =>
-            {
-            }); // end loop telops
-#endif
+            });
         }
 
         /// <summary>

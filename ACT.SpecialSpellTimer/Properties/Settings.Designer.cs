@@ -466,5 +466,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["DQXPlayerName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ResetOnWipeOut {
+            get {
+                return ((bool)(this["ResetOnWipeOut"]));
+            }
+            set {
+                this["ResetOnWipeOut"] = value;
+            }
+        }
     }
 }

@@ -30,15 +30,18 @@
                 {
                     this.OverlayForceVisibleCheckBox.Checked = true;
                     this.EnabledPTPlaceholderCheckBox.Checked = false;
+                    this.ResetOnWipeOutCheckBox.Checked = false;
 
                     this.OverlayForceVisibleCheckBox.Enabled = false;
                     this.EnabledPTPlaceholderCheckBox.Enabled = false;
+                    this.ResetOnWipeOutCheckBox.Enabled = false;
                 }
                 else
                 {
 
                     this.OverlayForceVisibleCheckBox.Enabled = true;
                     this.EnabledPTPlaceholderCheckBox.Enabled = true;
+                    this.ResetOnWipeOutCheckBox.Enabled = true;
                 }
             };
 
@@ -189,18 +192,6 @@
                 this.SwitchTelopButton.Text = Translate.Get("TelopDisplaySwitchIsOff");
             }
 
-            if (this.UseOtherThanFFXIVCheckbox.Checked)
-            {
-                this.OverlayForceVisibleCheckBox.Enabled = false;
-                this.EnabledPTPlaceholderCheckBox.Enabled = false;
-            }
-            else
-            {
-
-                this.OverlayForceVisibleCheckBox.Enabled = true;
-                this.EnabledPTPlaceholderCheckBox.Enabled = true;
-            }
-
             this.DefaultVisualSetting.BarSize = Settings.Default.ProgressBarSize;
             this.DefaultVisualSetting.BarColor = Settings.Default.ProgressBarColor;
             this.DefaultVisualSetting.BarOutlineColor = Settings.Default.ProgressBarOutlineColor;
@@ -227,6 +218,17 @@
 
             this.SaveLogCheckBox.Checked = Settings.Default.SaveLogEnabled;
             this.SaveLogTextBox.Text = Settings.Default.SaveLogFile;
+
+            this.ResetOnWipeOutCheckBox.Checked = Settings.Default.ResetOnWipeOut;
+
+            var sw1 = this.SaveLogCheckBox.Checked;
+            this.SaveLogTextBox.Enabled = sw1;
+            this.SaveLogButton.Enabled = sw1;
+
+            var sw2 = !this.UseOtherThanFFXIVCheckbox.Checked;
+            this.OverlayForceVisibleCheckBox.Enabled = sw2;
+            this.EnabledPTPlaceholderCheckBox.Enabled = sw2;
+            this.ResetOnWipeOutCheckBox.Enabled = sw2;
 
             // 標準のスペルタイマーへ設定を反映する
             SpellTimerCore.Default.applyToNormalSpellTimer();
@@ -267,6 +269,8 @@
 
             Settings.Default.SaveLogEnabled = this.SaveLogCheckBox.Checked;
             Settings.Default.SaveLogFile = this.SaveLogTextBox.Text;
+
+            Settings.Default.ResetOnWipeOut = this.ResetOnWipeOutCheckBox.Checked;
 
             SpellTimerCore.Default.InvalidateSettings();
 

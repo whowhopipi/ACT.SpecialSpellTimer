@@ -1600,6 +1600,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Reset counter at wipe out. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ResetOnWipeOutLabel {
+            get {
+                return ResourceManager.GetString("ResetOnWipeOutLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Apply bar size to all spell timers に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ResetSpellBarSize {
