@@ -258,6 +258,19 @@
         }
 
         /// <summary>
+        /// カウントをリセットする
+        /// </summary>
+        public void ResetCount()
+        {
+            foreach (var row in this.EnabledTable)
+            {
+                row.MatchDateTime = DateTime.MinValue;
+                row.Delayed = false;
+                row.ForceHide = false;
+            }
+        }
+
+        /// <summary>
         /// マッチ状態をリセットする
         /// </summary>
         public void Reset()

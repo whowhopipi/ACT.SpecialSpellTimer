@@ -358,6 +358,9 @@
                 }
             }
 
+            // 全滅によるリセットを判定する
+            this.ResetCountAtRestart();
+
             Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
         }
 
@@ -782,6 +785,39 @@
                 {
                     w.RefreshSpellTimer();
                 }
+            }
+        }
+
+        /// <summary>
+        /// リスタートのときスペルのカウントをリセットする
+        /// </summary>
+        private void ResetCountAtRestart()
+        {
+            // FFXIV以外での使用ならば何もしない
+            if (Settings.Default.UseOtherThanFFXIV)
+            {
+                return;
+            }
+
+            var combatants = FF14PluginHelper.GetCombatantListParty();
+
+            if (combatants == null ||
+                combatants.Count < 1)
+            {
+                return;
+            }
+
+            // 関係者が全員死んでる？
+            if (combatants.Count ==
+                combatants.Count(x => x.CurrentHP <= 0))
+            {
+                Logger.Write("Party was wiped out. Reset spells and tickers.");
+
+                // スペルのカウントをリセットする
+                SpellTimerTable.ResetCount();
+
+                // テロップのカウントをリセットする
+                OnePointTelopTable.Default.ResetCount();
             }
         }
 
