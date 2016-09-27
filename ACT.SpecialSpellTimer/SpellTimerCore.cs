@@ -330,6 +330,12 @@
         private void WatchLog()
         {
             var existsLog = false;
+            Task
+                t1 = null,
+                t2 = null,
+                t3 = null,
+                t4 = null,
+                t5 = null;
 
             // ACTが起動していない？
             if (ActGlobals.oFormActMain == null)
@@ -351,32 +357,29 @@
                 if (logLines.Result.Count > 0)
                 {
                     // テロップとマッチングする
-                    var t1 = Task.Run(() => OnePointTelopController.Match(telopArray.Result, logLines.Result));
+                    t1 = Task.Run(() => OnePointTelopController.Match(telopArray.Result, logLines.Result));
 
                     // スペルリストとマッチングする
-                    var t2 = Task.Run(() => this.MatchSpells(spellArray.Result, logLines.Result));
+                    t2 = Task.Run(() => this.MatchSpells(spellArray.Result, logLines.Result));
 
                     // コマンドとマッチングする
-                    var t3 = Task.Run(() => TextCommandController.MatchCommand(logLines.Result));
-
-                    // 同期する
-                    Task.WaitAll(t1, t2, t3);
+                    t3 = Task.Run(() => TextCommandController.MatchCommand(logLines.Result));
 
                     existsLog = true;
                 }
             }
 
             // テロップの遅延サウンドを処理する
-            var t4 = Task.Run(() => OnePointTelopController.PlayDelaySound(telopArray.Result));
+            t4 = Task.Run(() => OnePointTelopController.PlayDelaySound(telopArray.Result));
 
             // スペルの遅延サウンドを処理する
-            var t5 = Task.Run(() => this.PlayDelaySound(spellArray.Result));
+            t5 = Task.Run(() => this.PlayDelaySound(spellArray.Result));
 
             // 全滅によるリセットを判定する
             this.ResetCountAtRestart();
 
             // 同期する
-            Task.WaitAll(t4, t5);
+            Task.WaitAll(t1, t2, t3, t4, t5);
 
             if (!existsLog)
             {
@@ -1433,7 +1436,7 @@
             return r;
         }
 
-#region NativeMethods
+        #region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -1455,6 +1458,6 @@
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-#endregion
+        #endregion
     }
 }

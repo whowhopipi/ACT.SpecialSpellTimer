@@ -22,6 +22,7 @@
             "仲間になった！",
             "仲間から はずれました",
             "パーティを 解散しました",
+            "reset dqx party",
         };
 
         /// <summary>
@@ -31,7 +32,7 @@
         {
             "仲間から はずれました",
             "パーティを 解散しました",
-            "reset dqx party"
+            "reset dqx party",
         };
 
         /// <summary>

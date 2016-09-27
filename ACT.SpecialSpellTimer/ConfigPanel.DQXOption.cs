@@ -20,6 +20,15 @@
         {
             this.LoadSettingsDQXOption();
 
+            this.DQXOptionEnabledCheckBox.CheckedChanged += (s, e) =>
+            {
+                this.DQXPlayerNameTextBox.Enabled = this.DQXOptionEnabledCheckBox.Checked;
+                if (!this.DQXPlayerNameTextBox.Enabled)
+                {
+                    this.DQXPlayerNameTextBox.Clear();
+                }
+            };
+
             this.DQXAppleyButton.Click += this.DQXAppleyButton_Click;
 
             this.DQXOptionTabRefreshTimer.Tick += this.DQXOtionTabRefreshTimer_Tick;
@@ -80,6 +89,12 @@
         {
             this.DQXOptionEnabledCheckBox.Checked = Settings.Default.DQXUtilityEnabled;
             this.DQXPlayerNameTextBox.Text = Settings.Default.DQXPlayerName;
+
+            this.DQXPlayerNameTextBox.Enabled = this.DQXOptionEnabledCheckBox.Checked;
+            if (!this.DQXPlayerNameTextBox.Enabled)
+            {
+                this.DQXPlayerNameTextBox.Clear();
+            }
         }
     }
 }
