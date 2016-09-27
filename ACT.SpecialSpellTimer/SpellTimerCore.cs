@@ -230,7 +230,7 @@
             {
                 if (Interlocked.CompareExchange(ref settingsIsValid, VALID, INVALID) == INVALID)
                 {
-                    RefreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
+                    this.RefreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
                 }
 
                 if (this.RefreshWindowTimer != null &&
