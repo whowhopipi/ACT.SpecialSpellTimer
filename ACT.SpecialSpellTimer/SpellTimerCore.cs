@@ -379,7 +379,10 @@
             this.ResetCountAtRestart();
 
             // 同期する
-            Task.WaitAll(t1, t2, t3, t4, t5);
+            Task.WaitAll(
+                new Task[] { t1, t2, t3, t4, t5 }
+                .Where(x => x != null)
+                .ToArray());
 
             if (!existsLog)
             {
