@@ -330,12 +330,6 @@
         private void WatchLog()
         {
             var existsLog = false;
-            Task
-                t1 = null,
-                t2 = null,
-                t3 = null,
-                t4 = null,
-                t5 = null;
 
             // ACTが起動していない？
             if (ActGlobals.oFormActMain == null)
@@ -357,36 +351,39 @@
                 if (logLines.Result.Count > 0)
                 {
                     // テロップとマッチングする
-                    t1 = Task.Run(() => OnePointTelopController.Match(telopArray.Result, logLines.Result));
+                    var t1 = Task.Run(() => OnePointTelopController.Match(telopArray.Result, logLines.Result));
 
                     // スペルリストとマッチングする
-                    t2 = Task.Run(() => this.MatchSpells(spellArray.Result, logLines.Result));
+                    var t2 = Task.Run(() => this.MatchSpells(spellArray.Result, logLines.Result));
 
                     // コマンドとマッチングする
-                    t3 = Task.Run(() => TextCommandController.MatchCommand(logLines.Result));
+                    var t3 = Task.Run(() => TextCommandController.MatchCommand(logLines.Result));
+
+                    Task.WaitAll(t1, t2, t3);
 
                     existsLog = true;
                 }
             }
 
             // テロップの遅延サウンドを処理する
-            t4 = Task.Run(() => OnePointTelopController.PlayDelaySound(telopArray.Result));
+            var t4 = Task.Run(() => OnePointTelopController.PlayDelaySound(telopArray.Result));
 
             // スペルの遅延サウンドを処理する
-            t5 = Task.Run(() => this.PlayDelaySound(spellArray.Result));
+            var t5 = Task.Run(() => this.PlayDelaySound(spellArray.Result));
 
             // 全滅によるリセットを判定する
             this.ResetCountAtRestart();
 
             // 同期する
-            Task.WaitAll(
-                new Task[] { t1, t2, t3, t4, t5 }
-                .Where(x => x != null)
-                .ToArray());
+            Task.WaitAll(t4, t5);
 
-            if (!existsLog)
+            if (existsLog)
             {
-                Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
+                Thread.Sleep(5);
+            }
+            else
+            {
+                Thread.Sleep((int)Settings.Default.LogPollSleepInterval);
             }
         }
 
@@ -673,7 +670,6 @@
         private void PlayDelaySound(
             IReadOnlyList<SpellTimer> spells)
         {
-            // スペルの更新とサウンド処理を行う
             spells.AsParallel().ForAll(spell =>
             {
                 var regex = spell.Regex;
@@ -699,6 +695,8 @@
 
                     if (DateTime.Now >= over)
                     {
+                        spell.OverDone = true;
+
                         this.Play(spell.OverSound);
                         if (!string.IsNullOrWhiteSpace(spell.OverTextToSpeak))
                         {
@@ -707,8 +705,6 @@
                                 spell.OverTextToSpeak;
                             this.Play(tts);
                         }
-
-                        spell.OverDone = true;
                     }
                 }
 
@@ -722,6 +718,8 @@
 
                         if (DateTime.Now >= before)
                         {
+                            spell.BeforeDone = true;
+
                             this.Play(spell.BeforeSound);
                             if (!string.IsNullOrWhiteSpace(spell.BeforeTextToSpeak))
                             {
@@ -730,8 +728,6 @@
                                     spell.BeforeTextToSpeak;
                                 this.Play(tts);
                             }
-
-                            spell.BeforeDone = true;
                         }
                     }
                 }
@@ -743,6 +739,8 @@
                     if (spell.CompleteScheduledTime > DateTime.MinValue &&
                         DateTime.Now >= spell.CompleteScheduledTime)
                     {
+                        spell.TimeupDone = true;
+
                         this.Play(spell.TimeupSound);
                         if (!string.IsNullOrWhiteSpace(spell.TimeupTextToSpeak))
                         {
@@ -751,20 +749,15 @@
                                 spell.TimeupTextToSpeak;
                             this.Play(tts);
                         }
-
-                        spell.TimeupDone = true;
                     }
                 }
-            });
 
-            foreach (var spell in spells)
-            {
                 // インスタンス化したスペルを削除する
                 if (spell.IsInstance)
                 {
                     SpellTimerTable.TryRemoveInstance(spell);
                 }
-            }
+            });
         }
 
         /// <summary>

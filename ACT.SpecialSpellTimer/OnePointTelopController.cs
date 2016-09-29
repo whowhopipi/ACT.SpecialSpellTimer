@@ -336,6 +336,7 @@
                     if (DateTime.Now >= delayed)
                     {
                         telop.Delayed = true;
+
                         SoundController.Default.Play(telop.DelaySound);
                         var tts = regex != null && !string.IsNullOrWhiteSpace(telop.DelayTextToSpeak) ?
                             regex.Replace(telop.MatchedLog, telop.DelayTextToSpeak) :
