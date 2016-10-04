@@ -12,7 +12,7 @@
     /// ワンポイントテロップ
     /// </summary>
     [Serializable]
-    public class Ticker
+    public class Ticker : IDisposable
     {
         private Timer delayedSoundTimer;
 
@@ -51,6 +51,18 @@
             };
 
             this.delayedSoundTimer.Elapsed += this.DelayedSoundTimer_Elapsed;
+        }
+
+        public void Dispose()
+        {
+            if (this.delayedSoundTimer != null)
+            {
+                this.delayedSoundTimer.Stop();
+                this.delayedSoundTimer.Dispose();
+                this.delayedSoundTimer = null;
+            }
+
+            GC.SuppressFinalize(true);
         }
 
         /// <summary>

@@ -12,7 +12,7 @@
     /// スペルタイマ
     /// </summary>
     [Serializable]
-    public class Spell
+    public class Spell : IDisposable
     {
         private Timer overSoundTimer;
         private Timer beforeSoundTimer;
@@ -90,6 +90,39 @@
             };
 
             this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
+        }
+
+        public void Dispose()
+        {
+            if (this.overSoundTimer != null)
+            {
+                this.overSoundTimer.Stop();
+                this.overSoundTimer.Dispose();
+                this.overSoundTimer = null;
+            }
+
+            if (this.beforeSoundTimer != null)
+            {
+                this.beforeSoundTimer.Stop();
+                this.beforeSoundTimer.Dispose();
+                this.beforeSoundTimer = null;
+            }
+
+            if (this.timeupSoundTimer != null)
+            {
+                this.timeupSoundTimer.Stop();
+                this.timeupSoundTimer.Dispose();
+                this.timeupSoundTimer = null;
+            }
+
+            if (this.garbageInstanceTimer != null)
+            {
+                this.garbageInstanceTimer.Stop();
+                this.garbageInstanceTimer.Dispose();
+                this.garbageInstanceTimer = null;
+            }
+
+            GC.SuppressFinalize(true);
         }
 
         /// <summary>

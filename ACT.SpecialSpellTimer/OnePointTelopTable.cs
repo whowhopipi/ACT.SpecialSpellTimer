@@ -268,6 +268,8 @@
                 row.MatchDateTime = DateTime.MinValue;
                 row.Delayed = false;
                 row.ForceHide = false;
+
+                row.StartDelayedSoundTimer();
             }
         }
 

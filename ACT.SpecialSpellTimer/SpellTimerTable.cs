@@ -380,6 +380,8 @@
                     {
                         table.Remove(instance);
                     }
+
+                    instance.Dispose();
                 }
             }
         }
@@ -467,6 +469,11 @@
                 row.BeforeDone = false;
                 row.TimeupDone = false;
                 row.CompleteScheduledTime = DateTime.MinValue;
+
+                row.StartOverSoundTimer();
+                row.StartBeforeSoundTimer();
+                row.StartTimeupSoundTimer();
+                row.StartGarbageInstanceTimer();
             }
         }
 
