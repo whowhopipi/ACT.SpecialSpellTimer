@@ -293,7 +293,7 @@
                         log.logLine.Contains("フェアリー・") ||
                         log.logLine.Contains("カーバンクル・"))
                     {
-                        return;
+                        continue;
                     }
 
                     if (player != null &&
