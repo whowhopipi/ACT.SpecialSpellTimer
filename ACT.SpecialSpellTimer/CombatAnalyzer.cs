@@ -310,7 +310,7 @@
                         {
                             if (log.logLine.Contains(name))
                             {
-                                continue;
+                                break;
                             }
                         }
                     }
@@ -321,7 +321,7 @@
                         if (log.logLine.Contains(keyword))
                         {
                             this.StoreCastLog(log);
-                            continue;
+                            break;
                         }
                     }
 
@@ -331,7 +331,7 @@
                         if (log.logLine.Contains(keyword))
                         {
                             this.StoreActionLog(log);
-                            continue;
+                            break;
                         }
                     }
 
@@ -341,7 +341,7 @@
                         if (log.logLine.Contains(keyword))
                         {
                             this.StoreHPRateLog(log);
-                            continue;
+                            break;
                         }
                     }
 
@@ -351,7 +351,7 @@
                         if (log.logLine.Contains(keyword))
                         {
                             this.StoreAddedLog(log);
-                            continue;
+                            break;
                         }
                     }
                 }
