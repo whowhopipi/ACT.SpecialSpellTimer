@@ -104,7 +104,33 @@
         {
             this.ClearLogBuffer();
 
+            if (Settings.Default.CombatLogEnabled)
+            {
+                this.StartPoller();
+            }
+
             ActGlobals.oFormActMain.OnLogLineRead += this.oFormActMain_OnLogLineRead;
+            Logger.Write("start combat analyze.");
+        }
+
+        /// <summary>
+        /// 分析を停止する
+        /// </summary>
+        public void Denitialize()
+        {
+            this.EndPoller();
+
+            ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
+            this.CurrentCombatLogList.Clear();
+            Logger.Write("end combat analyze.");
+        }
+
+        /// <summary>
+        /// ログのポーリングを開始する
+        /// </summary>
+        public void StartPoller()
+        {
+            this.ClearLogInfoQueue();
 
             this.storeLogThread = new Thread(() =>
             {
@@ -112,6 +138,7 @@
 
                 try
                 {
+                    Logger.Write("start log poll for analyze.");
                     this.StoreLogPoller();
                 }
                 catch (ThreadAbortException)
@@ -121,8 +148,12 @@
                 catch (Exception ex)
                 {
                     Logger.Write(
-                        "Catch exception at Store log for analyze.\n" + 
+                        "Catch exception at Store log for analyze.\n" +
                         ex.ToString());
+                }
+                finally
+                {
+                    Logger.Write("end log poll for analyze.");
                 }
             });
 
@@ -131,31 +162,21 @@
         }
 
         /// <summary>
-        /// 分析を停止する
+        /// ログのポーリングを終了する
         /// </summary>
-        public void Denitialize()
+        public void EndPoller()
         {
             if (this.storeLogThread != null)
             {
                 if (this.storeLogThread.IsAlive)
                 {
-                    try
-                    {
-                        if (!this.storeLogThread.Join(TimeSpan.FromSeconds(5)))
-                        {
-                            this.storeLogThread.Abort();
-                        }
-                    }
-                    catch
-                    {
-                    }
+                    this.storeLogThread.Abort();
                 }
 
                 this.storeLogThread = null;
             }
 
-            ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
-            this.CurrentCombatLogList.Clear();
+            this.ClearLogInfoQueue();
         }
 
         /// <summary>

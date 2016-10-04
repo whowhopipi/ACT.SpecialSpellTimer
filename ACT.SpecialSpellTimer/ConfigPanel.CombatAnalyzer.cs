@@ -82,14 +82,25 @@
                 Settings.Default.Save();
             });
 
-            this.CombatLogEnabledCheckBox.CheckedChanged += (s, e) =>
+            this.CombatLogEnabledCheckBox.CheckedChanged += async (s, e) =>
             {
                 saveSettings();
 
-                if (!Settings.Default.CombatLogEnabled)
+                var t = Task.Run(() =>
                 {
-                    CombatAnalyzer.Default.ClearLogBuffer();
-                }
+                    if (Settings.Default.CombatLogEnabled)
+                    {
+                        CombatAnalyzer.Default.ClearLogBuffer();
+                        CombatAnalyzer.Default.StartPoller();
+                    }
+                    else
+                    {
+                        CombatAnalyzer.Default.EndPoller();
+                        CombatAnalyzer.Default.ClearLogBuffer();
+                    }
+                });
+
+                await t;
             };
 
             this.CombatLogBufferSizeNumericUpDown.ValueChanged += (s, e) => saveSettings();
