@@ -272,91 +272,92 @@
         {
             while (this.isRunning)
             {
-                // プレイヤ情報とパーティリストを取得する
-                var player = FF14PluginHelper.GetPlayer();
-                var ptlist = LogBuffer.PartyList;
-
-                while (!this.logInfoQueue.IsEmpty)
+                try
                 {
-                    Thread.Sleep(0);
+                    // プレイヤ情報とパーティリストを取得する
+                    var player = FF14PluginHelper.GetPlayer();
+                    var ptlist = LogBuffer.PartyList;
 
-                    LogLineEventArgs log = null;
-                    this.logInfoQueue.TryDequeue(out log);
-
-                    if (log == null)
+                    while (!this.logInfoQueue.IsEmpty)
                     {
-                        continue;
-                    }
+                        Thread.Sleep(0);
 
-                    // ログにペットが含まれている？
-                    if (log.logLine.Contains("・エギ") ||
-                        log.logLine.Contains("フェアリー・") ||
-                        log.logLine.Contains("カーバンクル・"))
-                    {
-                        continue;
-                    }
+                        LogLineEventArgs log = null;
+                        this.logInfoQueue.TryDequeue(out log);
 
-                    if (player != null &&
-                        ptlist != null)
-                    {
-                        // ログにプレイヤ名が含まれている？
-                        if (log.logLine.Contains(player.Name))
+                        if (log == null)
                         {
                             continue;
                         }
 
-                        // ログにパーティメンバ名が含まれている？
-                        foreach (var name in ptlist)
+                        // ログにペットが含まれている？
+                        if (log.logLine.Contains("・エギ") ||
+                            log.logLine.Contains("フェアリー・") ||
+                            log.logLine.Contains("カーバンクル・"))
                         {
-                            if (log.logLine.Contains(name))
+                            continue;
+                        }
+
+                        if (player != null &&
+                            ptlist != null)
+                        {
+                            // ログにプレイヤ名が含まれている？
+                            if (log.logLine.Contains(player.Name))
                             {
-                                break;
+                                continue;
+                            }
+
+                            // ログにパーティメンバ名が含まれている？
+                            if (ptlist.AsParallel()
+                                .Any(x => log.logLine.Contains(x)))
+                            {
+                                continue;
                             }
                         }
-                    }
 
-                    // キャストのキーワードが含まれている？
-                    foreach (var keyword in CastKeywords)
-                    {
-                        if (log.logLine.Contains(keyword))
+                        // キャストのキーワードが含まれている？
+                        if (CastKeywords.AsParallel()
+                            .Any(x => log.logLine.Contains(x)))
                         {
                             this.StoreCastLog(log);
-                            break;
+                            continue;
                         }
-                    }
 
-                    // アクションのキーワードが含まれている？
-                    foreach (var keyword in ActionKeywords)
-                    {
-                        if (log.logLine.Contains(keyword))
+                        // アクションのキーワードが含まれている？
+                        if (ActionKeywords.AsParallel()
+                            .Any(x => log.logLine.Contains(x)))
                         {
                             this.StoreActionLog(log);
-                            break;
+                            continue;
                         }
-                    }
 
-                    // 残HP率のキーワードが含まれている？
-                    foreach (var keyword in HPRateKeywords)
-                    {
-                        if (log.logLine.Contains(keyword))
+                        // 残HP率のキーワードが含まれている？
+                        if (HPRateKeywords.AsParallel()
+                            .Any(x => log.logLine.Contains(x)))
                         {
                             this.StoreHPRateLog(log);
-                            break;
+                            continue;
                         }
-                    }
 
-                    // Addedのキーワードが含まれている？
-                    foreach (var keyword in AddedKeywords)
-                    {
-                        if (log.logLine.Contains(keyword))
+                        // Addedのキーワードが含まれている？
+                        if (AddedKeywords.AsParallel()
+                            .Any(x => log.logLine.Contains(x)))
                         {
                             this.StoreAddedLog(log);
-                            break;
+                            continue;
                         }
                     }
                 }
-
-                Thread.Sleep((int)Settings.Default.LogPollSleepInterval);
+                catch (Exception ex)
+                {
+                    Logger.Write(
+                        "Catch exception at Store log poller for analyze.\n" +
+                        ex.ToString());
+                }
+                finally
+                {
+                    Thread.Sleep((int)Settings.Default.LogPollSleepInterval);
+                }
             }
         }
 
