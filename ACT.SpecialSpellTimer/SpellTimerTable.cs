@@ -369,6 +369,9 @@
                 if (instance.CompleteScheduledTime != DateTime.MinValue &&
                     (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
                 {
+                    // ガーベージタイマを止める
+                    instance.StopGarbageInstanceTimer();
+
                     Spell o;
                     instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
 

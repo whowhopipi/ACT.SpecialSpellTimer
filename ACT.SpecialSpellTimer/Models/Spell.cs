@@ -229,7 +229,19 @@
                 return;
             }
 
+            timer.AutoReset = true;
             timer.Start();
+        }
+
+        /// <summary>
+        /// インスタンススペルのガーベージタイマを開始する
+        /// </summary>
+        public void StopGarbageInstanceTimer()
+        {
+            var timer = this.garbageInstanceTimer;
+
+            timer.AutoReset = false;
+            timer.Stop();
         }
 
         private void OverSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
