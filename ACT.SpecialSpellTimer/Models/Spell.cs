@@ -12,14 +12,18 @@
     /// スペルタイマ
     /// </summary>
     [Serializable]
-    public class Spell : IDisposable
+    public class SpellTimer : IDisposable
     {
+        [XmlIgnore]
         private Timer overSoundTimer;
+        [XmlIgnore]
         private Timer beforeSoundTimer;
+        [XmlIgnore]
         private Timer timeupSoundTimer;
+        [XmlIgnore]
         private Timer garbageInstanceTimer;
 
-        public Spell()
+        public SpellTimer()
         {
             this.guid = Guid.Empty;
             this.Panel = string.Empty;

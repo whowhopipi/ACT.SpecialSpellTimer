@@ -126,7 +126,7 @@
                 {
                     if (node.Checked)
                     {
-                        var spell = (Spell)node.Tag;
+                        var spell = (SpellTimer)node.Tag;
                         spells.Add(spell.guid);
                     }
                 }
@@ -147,7 +147,7 @@
             {
                 if (node.Checked)
                 {
-                    var telop = (Ticker)node.Tag;
+                    var telop = (OnePointTelop)node.Tag;
                     telops.Add(telop.guid);
                 }
             }

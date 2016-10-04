@@ -100,7 +100,7 @@
         /// <summary>
         /// 表示するデータソース
         /// </summary>
-        public Ticker DataSource
+        public OnePointTelop DataSource
         {
             get;
             set;

@@ -43,9 +43,9 @@
         /// <summary>
         /// データテーブル
         /// </summary>
-        private readonly List<Ticker> table = new List<Ticker>();
+        private readonly List<OnePointTelop> table = new List<OnePointTelop>();
 
-        private volatile Ticker[] enabledTable;
+        private volatile OnePointTelop[] enabledTable;
 
         private DateTime enabledTableTimeStamp;
 
@@ -60,7 +60,7 @@
         /// <summary>
         /// 生のテーブル
         /// </summary>
-        public List<Ticker> Table
+        public List<OnePointTelop> Table
         {
             get
             {
@@ -71,7 +71,7 @@
         /// <summary>
         /// 有効なエントリのリスト
         /// </summary>
-        public IReadOnlyList<Ticker> EnabledTable
+        public IReadOnlyList<OnePointTelop> EnabledTable
         {
             get
             {
@@ -90,7 +90,7 @@
         /// <summary>
         /// 有効なエントリのリスト
         /// </summary>
-        private Ticker[] EnabledTableCore
+        private OnePointTelop[] EnabledTableCore
         {
             get
             {
@@ -106,7 +106,7 @@
                 var player = FF14PluginHelper.GetPlayer();
                 var currentZoneID = FF14PluginHelper.GetCurrentZoneID();
 
-                var spellsFilteredJob = new List<Ticker>();
+                var spellsFilteredJob = new List<OnePointTelop>();
                 foreach (var spell in spells)
                 {
                     var enabledByJob = false;
@@ -236,7 +236,7 @@
         /// 指定されたGuidを持つOnePointTelopを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public Ticker GetOnePointTelopByGuid(Guid guid)
+        public OnePointTelop GetOnePointTelopByGuid(Guid guid)
         {
             return table.Where(x => x.guid == guid).FirstOrDefault();
         }
@@ -370,7 +370,7 @@
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<Ticker>;
+                            var data = xs.Deserialize(sr) as List<OnePointTelop>;
                             table.AddRange(data);
                         }
                     }

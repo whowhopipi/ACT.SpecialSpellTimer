@@ -12,11 +12,12 @@
     /// ワンポイントテロップ
     /// </summary>
     [Serializable]
-    public class Ticker : IDisposable
+    public class OnePointTelop : IDisposable
     {
+        [XmlIgnore]
         private Timer delayedSoundTimer;
 
-        public Ticker()
+        public OnePointTelop()
         {
             this.guid = Guid.Empty;
             this.Title = string.Empty;

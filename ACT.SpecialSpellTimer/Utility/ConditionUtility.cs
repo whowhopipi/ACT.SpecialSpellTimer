@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="spell">SpellTimer</param>
         /// <returns>条件を満たしていればtrue</returns>
-        public static bool CheckConditionsForSpell(Spell spell)
+        public static bool CheckConditionsForSpell(SpellTimer spell)
         {
             return CheckConditions(spell.TimersMustRunningForStart, spell.TimersMustStoppingForStart);
         }
@@ -26,7 +26,7 @@
         /// </summary>
         /// <param name="telop">OnePointTelop</param>
         /// <returns>条件を満たしていればtrue</returns>
-        public static bool CheckConditionsForTelop(Ticker telop)
+        public static bool CheckConditionsForTelop(OnePointTelop telop)
         {
             return CheckConditions(telop.TimersMustRunningForStart, telop.TimersMustStoppingForStart);
         }
@@ -36,7 +36,7 @@
         /// </summary>
         /// <param name="spell">SpellTimer</param>
         /// <returns>置換後のTitle</returns>
-        public static string GetReplacedTitle(Spell spell)
+        public static string GetReplacedTitle(SpellTimer spell)
         {
             var builder = new StringBuilder(spell.SpellTitle);
 
@@ -54,7 +54,7 @@
         /// </summary>
         /// <param name="telop">OnePointTelop</param>
         /// <returns>置換後のMessage</returns>
-        public static string GetReplacedMessage(Ticker telop)
+        public static string GetReplacedMessage(OnePointTelop telop)
         {
             var builder = new StringBuilder(telop.Message);
             
@@ -193,7 +193,7 @@
         /// </summary>
         /// <param name="spell">SpellTimer</param>
         /// <returns>稼働中であればtrue</returns>
-        private static bool IsRunning(Spell spell)
+        private static bool IsRunning(SpellTimer spell)
         {
             var recastTime = (spell.CompleteScheduledTime - DateTime.Now).TotalSeconds;
             return recastTime >= 0;
@@ -205,7 +205,7 @@
         /// </summary>
         /// <param name="telop">OnePointTelop</param>
         /// <returns>稼働中であればtrue</returns>
-        private static bool IsRunning(Ticker telop)
+        private static bool IsRunning(OnePointTelop telop)
         {
             if (telop.MatchDateTime > DateTime.MinValue && !telop.ForceHide)
             {

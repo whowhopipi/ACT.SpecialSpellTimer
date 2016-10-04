@@ -91,7 +91,7 @@
         /// <summary>
         /// 扱うSpellTimerのリスト
         /// </summary>
-        public Spell[] SpellTimers { get; set; }
+        public SpellTimer[] SpellTimers { get; set; }
 
         /// <summary>
         /// 扱っているスペルタイマコントロールのリスト

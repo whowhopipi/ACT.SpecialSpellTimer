@@ -25,9 +25,9 @@
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        private static List<Spell> table;
+        private static List<SpellTimer> table;
 
-        private static Spell[] enabledTable;
+        private static SpellTimer[] enabledTable;
 
         private static DateTime enabledTableTimeStamp;
 
@@ -35,12 +35,12 @@
         /// インスタンス化されたスペルの辞書
         /// key : スペルの表示名
         /// </summary>
-        private static ConcurrentDictionary<string, Spell> instanceSpells = new ConcurrentDictionary<string, Spell>();
+        private static ConcurrentDictionary<string, SpellTimer> instanceSpells = new ConcurrentDictionary<string, SpellTimer>();
 
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        public static List<Spell> Table
+        public static List<SpellTimer> Table
         {
             get
             {
@@ -48,7 +48,7 @@
                 {
                     if (table == null)
                     {
-                        table = new List<Spell>();
+                        table = new List<SpellTimer>();
                         Load();
                     }
 
@@ -60,7 +60,7 @@
         /// <summary>
         /// 有効なSpellTimerデータテーブル
         /// </summary>
-        public static IReadOnlyList<Spell> EnabledTable
+        public static IReadOnlyList<SpellTimer> EnabledTable
         {
             get
             {
@@ -82,7 +82,7 @@
         /// <summary>
         /// 有効なSpellTimerデータテーブル
         /// </summary>
-        private static Spell[] EnabledTableCore
+        private static SpellTimer[] EnabledTableCore
         {
             get
             {
@@ -98,7 +98,7 @@
                 var player = FF14PluginHelper.GetPlayer();
                 var currentZoneID = FF14PluginHelper.GetCurrentZoneID();
 
-                var spellsFilteredJob = new List<Spell>();
+                var spellsFilteredJob = new List<SpellTimer>();
                 foreach (var spell in spells)
                 {
                     var enabledByJob = false;
@@ -250,15 +250,15 @@
         /// <param name="sourceSpell">インスタンスの元となるスペル</param>
         /// <returns>
         /// インスタンススペル</returns>
-        public static Spell GetOrAddInstance(
+        public static SpellTimer GetOrAddInstance(
             string spellTitle,
-            Spell sourceSpell)
+            SpellTimer sourceSpell)
         {
             var instance = instanceSpells.GetOrAdd(
                 spellTitle,
                 (x) =>
                 {
-                    var ns = new Spell();
+                    var ns = new SpellTimer();
 
                     ns.SpellTitleReplaced = x;
 
@@ -345,7 +345,7 @@
 
                     table.Add(instance);
 
-                    var array = new Spell[enabledTable.Length + 1];
+                    var array = new SpellTimer[enabledTable.Length + 1];
                     Array.Copy(enabledTable, array, enabledTable.Length);
                     array[enabledTable.Length] = instance;
                     enabledTable = array;
@@ -360,7 +360,7 @@
         /// </summary>
         /// <param name="instance">インスタンス</param>
         public static void TryRemoveInstance(
-            Spell instance)
+            SpellTimer instance)
         {
             var ttl = Settings.Default.TimeOfHideSpell + 30;
 
@@ -372,7 +372,7 @@
                     // ガーベージタイマを止める
                     instance.StopGarbageInstanceTimer();
 
-                    Spell o;
+                    SpellTimer o;
                     instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
 
                     // スペルコレクション本体から除去する
@@ -434,7 +434,7 @@
         /// 指定されたGuidを持つSpellTimerを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public static Spell GetSpellTimerByGuid(Guid guid)
+        public static SpellTimer GetSpellTimerByGuid(Guid guid)
         {
             return table.Where(x => x.guid == guid).FirstOrDefault();
         }
@@ -599,7 +599,7 @@
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<Spell>;
+                            var data = xs.Deserialize(sr) as List<SpellTimer>;
                             table.AddRange(data);
                         }
                     }
@@ -640,7 +640,7 @@
                 Directory.CreateDirectory(dir);
             }
 
-            var work = new List<Spell>(
+            var work = new List<SpellTimer>(
                 table.Where(x => !x.IsInstance));
 
             foreach (var item in work)

@@ -397,7 +397,7 @@
         /// </summary>
         /// <param name="spells">Spell</param>
         private void GarbageSpellPanelWindows(
-            IReadOnlyList<Spell> spells)
+            IReadOnlyList<Models.SpellTimer> spells)
         {
             if (this.SpellTimerPanels != null)
             {
@@ -449,7 +449,7 @@
         /// <param name="spells">Spell</param>
         /// <param name="logLines">ログ</param>
         private void MatchSpells(
-            IReadOnlyList<Spell> spells,
+            IReadOnlyList<Models.SpellTimer> spells,
             IReadOnlyList<string> logLines)
         {
             foreach (var logLine in logLines)
@@ -790,7 +790,7 @@
         /// <param name="spells">
         /// 対象のスペル</param>
         private void RefreshSpellPanelWindows(
-            IReadOnlyList<Spell> spells)
+            IReadOnlyList<Models.SpellTimer> spells)
         {
             var spellsGroupByPanel =
                 from s in spells
@@ -1154,7 +1154,7 @@
         /// </summary>
         /// <param name="spellTimer">元になるスペルタイマー</param>
         /// <param name="useRecastTime">リキャスト時間にRecastの値を使うか。falseの場合はCompleteScheduledTimeから計算される</param>
-        public void updateNormalSpellTimer(Spell spellTimer, bool useRecastTime)
+        public void updateNormalSpellTimer(Models.SpellTimer spellTimer, bool useRecastTime)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -1192,7 +1192,7 @@
         /// </summary>
         /// <param name="spellTimer">元になるテロップ</param>
         /// <param name="forceHide">強制非表示か？</param>
-        public void updateNormalSpellTimerForTelop(Ticker telop, bool forceHide)
+        public void updateNormalSpellTimerForTelop(OnePointTelop telop, bool forceHide)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -1228,7 +1228,7 @@
         /// ACT標準のスペルタイマーに通知する
         /// </summary>
         /// <param name="spellTimer">通知先に対応するスペルタイマー</param>
-        public void notifyNormalSpellTimer(Spell spellTimer)
+        public void notifyNormalSpellTimer(Models.SpellTimer spellTimer)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
