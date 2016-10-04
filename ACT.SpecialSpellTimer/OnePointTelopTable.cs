@@ -11,6 +11,7 @@
 
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
+    using ACT.SpecialSpellTimer.Models;
     using Advanced_Combat_Tracker;
 
     /// <summary>
@@ -42,9 +43,9 @@
         /// <summary>
         /// データテーブル
         /// </summary>
-        private readonly List<OnePointTelop> table = new List<OnePointTelop>();
+        private readonly List<Ticker> table = new List<Ticker>();
 
-        private volatile OnePointTelop[] enabledTable;
+        private volatile Ticker[] enabledTable;
 
         private DateTime enabledTableTimeStamp;
 
@@ -59,7 +60,7 @@
         /// <summary>
         /// 生のテーブル
         /// </summary>
-        public List<OnePointTelop> Table
+        public List<Ticker> Table
         {
             get
             {
@@ -70,7 +71,7 @@
         /// <summary>
         /// 有効なエントリのリスト
         /// </summary>
-        public IReadOnlyList<OnePointTelop> EnabledTable
+        public IReadOnlyList<Ticker> EnabledTable
         {
             get
             {
@@ -89,7 +90,7 @@
         /// <summary>
         /// 有効なエントリのリスト
         /// </summary>
-        private OnePointTelop[] EnabledTableCore
+        private Ticker[] EnabledTableCore
         {
             get
             {
@@ -105,7 +106,7 @@
                 var player = FF14PluginHelper.GetPlayer();
                 var currentZoneID = FF14PluginHelper.GetCurrentZoneID();
 
-                var spellsFilteredJob = new List<OnePointTelop>();
+                var spellsFilteredJob = new List<Ticker>();
                 foreach (var spell in spells)
                 {
                     var enabledByJob = false;
@@ -235,7 +236,7 @@
         /// 指定されたGuidを持つOnePointTelopを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public OnePointTelop GetOnePointTelopByGuid(Guid guid)
+        public Ticker GetOnePointTelopByGuid(Guid guid)
         {
             return table.Where(x => x.guid == guid).FirstOrDefault();
         }
@@ -367,7 +368,7 @@
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<OnePointTelop>;
+                            var data = xs.Deserialize(sr) as List<Ticker>;
                             table.AddRange(data);
                         }
                     }
@@ -467,94 +468,5 @@
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// ワンポイントテロップ
-    /// </summary>
-    [Serializable]
-    public class OnePointTelop
-    {
-        public OnePointTelop()
-        {
-            this.guid = Guid.Empty;
-            this.Title = string.Empty;
-            this.Keyword = string.Empty;
-            this.KeywordToHide = string.Empty;
-            this.Message = string.Empty;
-            this.MatchSound = string.Empty;
-            this.MatchTextToSpeak = string.Empty;
-            this.DelaySound = string.Empty;
-            this.DelayTextToSpeak = string.Empty;
-            this.BackgroundColor = string.Empty;
-            this.FontFamily = string.Empty;
-            this.FontColor = string.Empty;
-            this.FontOutlineColor = string.Empty;
-            this.MatchedLog = string.Empty;
-            this.MessageReplaced = string.Empty;
-            this.RegexPattern = string.Empty;
-            this.RegexPatternToHide = string.Empty;
-            this.JobFilter = string.Empty;
-            this.ZoneFilter = string.Empty;
-            this.TimersMustRunningForStart = new Guid[0];
-            this.TimersMustStoppingForStart = new Guid[0];
-            this.Font = new FontInfo();
-            this.KeywordReplaced = string.Empty;
-            this.KeywordToHideReplaced = string.Empty;
-        }
-
-        public long ID { get; set; }
-        public Guid guid { get; set; }
-        public string Title { get; set; }
-        public string Keyword { get; set; }
-        public string KeywordToHide { get; set; }
-        public string Message { get; set; }
-        public long Delay { get; set; }
-        public long DisplayTime { get; set; }
-        public bool AddMessageEnabled { get; set; }
-        public bool ProgressBarEnabled { get; set; }
-        public string MatchSound { get; set; }
-        public string MatchTextToSpeak { get; set; }
-        public string DelaySound { get; set; }
-        public string DelayTextToSpeak { get; set; }
-        public string BackgroundColor { get; set; }
-        public int BackgroundAlpha { get; set; }
-        public FontInfo Font { get; set; }
-        public string FontFamily { get; set; }
-        public float FontSize { get; set; }
-        public int FontStyle { get; set; }
-        public string FontColor { get; set; }
-        public string FontOutlineColor { get; set; }
-        public bool RegexEnabled { get; set; }
-        public double Left { get; set; }
-        public double Top { get; set; }
-        public string JobFilter { get; set; }
-        public string ZoneFilter { get; set; }
-        public Guid[] TimersMustRunningForStart { get; set; }
-        public Guid[] TimersMustStoppingForStart { get; set; }
-        public bool Enabled { get; set; }
-
-        [XmlIgnore]
-        public DateTime MatchDateTime { get; set; }
-        [XmlIgnore]
-        public bool Delayed { get; set; }
-        [XmlIgnore]
-        public string MatchedLog { get; set; }
-        [XmlIgnore]
-        public string MessageReplaced { get; set; }
-        [XmlIgnore]
-        public string RegexPattern { get; set; }
-        [XmlIgnore]
-        public string RegexPatternToHide { get; set; }
-        [XmlIgnore]
-        public Regex Regex { get; set; }
-        [XmlIgnore]
-        public Regex RegexToHide { get; set; }
-        [XmlIgnore]
-        public bool ForceHide { get; set; }
-        [XmlIgnore]
-        public string KeywordReplaced { get; set; }
-        [XmlIgnore]
-        public string KeywordToHideReplaced { get; set; }
     }
 }

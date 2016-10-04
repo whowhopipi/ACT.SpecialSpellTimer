@@ -11,6 +11,7 @@
     using System.Windows.Interop;
     using System.Windows.Media;
 
+    using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
 
@@ -90,7 +91,7 @@
         /// <summary>
         /// 扱うSpellTimerのリスト
         /// </summary>
-        public SpellTimer[] SpellTimers { get; set; }
+        public Spell[] SpellTimers { get; set; }
 
         /// <summary>
         /// 扱っているスペルタイマコントロールのリスト

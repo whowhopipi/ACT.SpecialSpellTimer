@@ -6,6 +6,8 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using ACT.SpecialSpellTimer.Models;
+
     public partial class SetConditionForm : Form
     {
         public SetConditionForm()
@@ -124,7 +126,7 @@
                 {
                     if (node.Checked)
                     {
-                        var spell = (SpellTimer)node.Tag;
+                        var spell = (Spell)node.Tag;
                         spells.Add(spell.guid);
                     }
                 }
@@ -145,7 +147,7 @@
             {
                 if (node.Checked)
                 {
-                    var telop = (OnePointTelop)node.Tag;
+                    var telop = (Ticker)node.Tag;
                     telops.Add(telop.guid);
                 }
             }

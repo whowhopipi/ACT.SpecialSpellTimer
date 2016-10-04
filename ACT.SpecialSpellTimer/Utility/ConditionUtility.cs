@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace ACT.SpecialSpellTimer.Utility
+﻿namespace ACT.SpecialSpellTimer.Utility
 {
-    class ConditionUtility
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+
+    using ACT.SpecialSpellTimer.Models;
+
+    public class ConditionUtility
     {
         /// <summary>
         /// 指定されたSpellTimerの条件を確認する
         /// </summary>
         /// <param name="spell">SpellTimer</param>
         /// <returns>条件を満たしていればtrue</returns>
-        public static bool CheckConditionsForSpell(SpellTimer spell)
+        public static bool CheckConditionsForSpell(Spell spell)
         {
             return CheckConditions(spell.TimersMustRunningForStart, spell.TimersMustStoppingForStart);
         }
@@ -24,7 +26,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// </summary>
         /// <param name="telop">OnePointTelop</param>
         /// <returns>条件を満たしていればtrue</returns>
-        public static bool CheckConditionsForTelop(OnePointTelop telop)
+        public static bool CheckConditionsForTelop(Ticker telop)
         {
             return CheckConditions(telop.TimersMustRunningForStart, telop.TimersMustStoppingForStart);
         }
@@ -34,7 +36,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// </summary>
         /// <param name="spell">SpellTimer</param>
         /// <returns>置換後のTitle</returns>
-        public static string GetReplacedTitle(SpellTimer spell)
+        public static string GetReplacedTitle(Spell spell)
         {
             var builder = new StringBuilder(spell.SpellTitle);
 
@@ -52,7 +54,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// </summary>
         /// <param name="telop">OnePointTelop</param>
         /// <returns>置換後のMessage</returns>
-        public static string GetReplacedMessage(OnePointTelop telop)
+        public static string GetReplacedMessage(Ticker telop)
         {
             var builder = new StringBuilder(telop.Message);
             
@@ -191,7 +193,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// </summary>
         /// <param name="spell">SpellTimer</param>
         /// <returns>稼働中であればtrue</returns>
-        private static bool IsRunning(SpellTimer spell)
+        private static bool IsRunning(Spell spell)
         {
             var recastTime = (spell.CompleteScheduledTime - DateTime.Now).TotalSeconds;
             return recastTime >= 0;
@@ -203,7 +205,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// </summary>
         /// <param name="telop">OnePointTelop</param>
         /// <returns>稼働中であればtrue</returns>
-        private static bool IsRunning(OnePointTelop telop)
+        private static bool IsRunning(Ticker telop)
         {
             if (telop.MatchDateTime > DateTime.MinValue && !telop.ForceHide)
             {

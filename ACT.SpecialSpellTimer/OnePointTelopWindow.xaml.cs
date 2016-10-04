@@ -10,6 +10,7 @@
     using System.Windows.Media;
     using System.Windows.Threading;
 
+    using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
 
@@ -99,7 +100,7 @@
         /// <summary>
         /// 表示するデータソース
         /// </summary>
-        public OnePointTelop DataSource
+        public Ticker DataSource
         {
             get;
             set;

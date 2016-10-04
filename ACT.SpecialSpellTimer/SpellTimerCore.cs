@@ -11,6 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
@@ -85,6 +86,11 @@
         /// 最後に全滅した日時
         /// </summary>
         private DateTime LastWipeOutDateTime = DateTime.MinValue;
+
+        /// <summary>
+        /// 最後に全滅を判定した日時
+        /// </summary>
+        private DateTime LastCheckWipeOutDateTime = DateTime.MinValue;
 
         /// <summary>
         /// SpellTimerのPanelリスト
@@ -339,14 +345,14 @@
                 return;
             }
 
-            // 有効なスペルとテロップのリストを取得する
-            var spellArray = Task.Run(() => SpellTimerTable.EnabledTable);
-            var telopArray = Task.Run(() => OnePointTelopTable.Default.EnabledTable);
-
             if (this.LogBuffer.nonEmpty())
             {
                 // ログを取り出す
                 var logLines = Task.Run(() => this.LogBuffer.GetLogLines());
+
+                // 有効なスペルとテロップのリストを取得する
+                var spellArray = Task.Run(() => SpellTimerTable.EnabledTable);
+                var telopArray = Task.Run(() => OnePointTelopTable.Default.EnabledTable);
 
                 if (logLines.Result.Count > 0)
                 {
@@ -364,24 +370,23 @@
                     existsLog = true;
                 }
             }
-
+#if false
             // テロップの遅延サウンドを処理する
             var t4 = Task.Run(() => OnePointTelopController.PlayDelaySound(telopArray.Result));
 
             // スペルの遅延サウンドを処理する
             var t5 = Task.Run(() => this.PlayDelaySound(spellArray.Result));
+#endif
 
             // 全滅によるリセットを判定する
             this.ResetCountAtRestart();
 
+#if false
             // 同期する
             Task.WaitAll(t4, t5);
+#endif
 
-            if (existsLog)
-            {
-                Thread.Sleep(5);
-            }
-            else
+            if (!existsLog)
             {
                 Thread.Sleep((int)Settings.Default.LogPollSleepInterval);
             }
@@ -392,7 +397,7 @@
         /// </summary>
         /// <param name="spells">Spell</param>
         private void GarbageSpellPanelWindows(
-            IReadOnlyList<SpellTimer> spells)
+            IReadOnlyList<Spell> spells)
         {
             if (this.SpellTimerPanels != null)
             {
@@ -444,7 +449,7 @@
         /// <param name="spells">Spell</param>
         /// <param name="logLines">ログ</param>
         private void MatchSpells(
-            IReadOnlyList<SpellTimer> spells,
+            IReadOnlyList<Spell> spells,
             IReadOnlyList<string> logLines)
         {
             foreach (var logLine in logLines)
@@ -495,6 +500,11 @@
                                     this.Play(targetSpell.MatchTextToSpeak);
 
                                     notifyNeeded = true;
+
+                                    // 遅延サウンドタイマを開始する
+                                    targetSpell.StartOverSoundTimer();
+                                    targetSpell.StartBeforeSoundTimer();
+                                    targetSpell.StartTimeupSoundTimer();
                                 }
                             }
                             else
@@ -519,6 +529,9 @@
                                         targetSpell = SpellTimerTable.GetOrAddInstance(
                                             replacedTitle,
                                             spell);
+
+                                        // インスタンスのガーベージタイマをスタートする
+                                        targetSpell.StartGarbageInstanceTimer();
                                     }
 
                                     targetSpell.SpellTitleReplaced = replacedTitle;
@@ -557,6 +570,11 @@
                                     }
 
                                     notifyNeeded = true;
+
+                                    // 遅延サウンドタイマを開始する
+                                    targetSpell.StartOverSoundTimer();
+                                    targetSpell.StartBeforeSoundTimer();
+                                    targetSpell.StartTimeupSoundTimer();
                                 }
                             }
                         }
@@ -647,6 +665,10 @@
                             spell.CompleteScheduledTime = newSchedule;
 
                             notifyNeeded = true;
+
+                            // 遅延サウンドタイマを開始(更新)する
+                            spell.StartOverSoundTimer();
+                            spell.StartTimeupSoundTimer();
                         }
                     }
                     // end if 延長マッチング
@@ -663,12 +685,13 @@
             // end loop of LogLines
         }
 
+#if false
         /// <summary>
         /// 遅延サウンドを再生する
         /// </summary>
         /// <param name="spells"></param>
         private void PlayDelaySound(
-            IReadOnlyList<SpellTimer> spells)
+            IReadOnlyList<Spell> spells)
         {
             spells.AsParallel().ForAll(spell =>
             {
@@ -759,6 +782,7 @@
                 }
             });
         }
+#endif
 
         /// <summary>
         /// スペルパネルWindowを更新する
@@ -766,7 +790,7 @@
         /// <param name="spells">
         /// 対象のスペル</param>
         private void RefreshSpellPanelWindows(
-            IReadOnlyList<SpellTimer> spells)
+            IReadOnlyList<Spell> spells)
         {
             var spellsGroupByPanel =
                 from s in spells
@@ -827,11 +851,20 @@
                 return;
             }
 
-            // 有効？
+            // 無効？
             if (!Settings.Default.ResetOnWipeOut)
             {
                 return;
             }
+
+            // Combatantsを頻繁に取得したくないので5秒に1回だけ判定する
+            if ((DateTime.Now - this.LastCheckWipeOutDateTime).TotalSeconds <= 5d)
+            {
+                this.LastCheckWipeOutDateTime = DateTime.Now;
+                return;
+            }
+
+            this.LastCheckWipeOutDateTime = DateTime.Now;
 
             var combatants = FF14PluginHelper.GetCombatantListParty();
 
@@ -1121,7 +1154,7 @@
         /// </summary>
         /// <param name="spellTimer">元になるスペルタイマー</param>
         /// <param name="useRecastTime">リキャスト時間にRecastの値を使うか。falseの場合はCompleteScheduledTimeから計算される</param>
-        public void updateNormalSpellTimer(SpellTimer spellTimer, bool useRecastTime)
+        public void updateNormalSpellTimer(Spell spellTimer, bool useRecastTime)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -1159,7 +1192,7 @@
         /// </summary>
         /// <param name="spellTimer">元になるテロップ</param>
         /// <param name="forceHide">強制非表示か？</param>
-        public void updateNormalSpellTimerForTelop(OnePointTelop telop, bool forceHide)
+        public void updateNormalSpellTimerForTelop(Ticker telop, bool forceHide)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -1195,7 +1228,7 @@
         /// ACT標準のスペルタイマーに通知する
         /// </summary>
         /// <param name="spellTimer">通知先に対応するスペルタイマー</param>
-        public void notifyNormalSpellTimer(SpellTimer spellTimer)
+        public void notifyNormalSpellTimer(Spell spellTimer)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -1432,7 +1465,7 @@
             return r;
         }
 
-        #region NativeMethods
+#region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -1454,6 +1487,6 @@
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-        #endregion
+#endregion
     }
 }

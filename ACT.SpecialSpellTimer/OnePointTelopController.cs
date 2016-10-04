@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -159,7 +160,7 @@
         /// </summary>
         /// <param name="telops">Telops</param>
         public static void GarbageWindows(
-            IReadOnlyList<OnePointTelop> telops)
+            IReadOnlyList<Ticker> telops)
         {
             // 不要になったWindowを閉じる
             var removeWindowList = new List<OnePointTelopWindow>();
@@ -190,7 +191,7 @@
         /// <param name="telops">Telops</param>
         /// <param name="logLines">ログ行</param>
         public static void Match(
-            IReadOnlyList<OnePointTelop> telops,
+            IReadOnlyList<Ticker> telops,
             IReadOnlyList<string> logLines)
         {
             foreach (var log in logLines)
@@ -276,8 +277,12 @@
 
                     if (matched)
                     {
+                        // ディレイサウンドをスタートさせる
+                        telop.StartDelayedSoundTimer();
+
                         SpellTimerCore.Default.updateNormalSpellTimerForTelop(telop, telop.ForceHide);
                         SpellTimerCore.Default.notifyNormalSpellTimerForTelop(telop.Title);
+
                         return;
                     }
 
@@ -316,11 +321,12 @@
             }
         }
 
+#if false
         /// <summary>
         /// 遅延サウンドを再生する
         /// </summary>
         public static void PlayDelaySound(
-            IReadOnlyList<OnePointTelop> telops)
+            IReadOnlyList<Ticker> telops)
         {
             // スペルの更新とサウンド処理を行う
             telops.AsParallel().ForAll(telop =>
@@ -346,13 +352,14 @@
                 }
             });
         }
+#endif
 
         /// <summary>
         /// Windowをリフレッシュする
         /// </summary>
         /// <param name="telop">テロップ</param>
         public static void RefreshTelopWindows(
-            IReadOnlyList<OnePointTelop> telops)
+            IReadOnlyList<Ticker> telops)
         {
             foreach (var telop in telops)
             {

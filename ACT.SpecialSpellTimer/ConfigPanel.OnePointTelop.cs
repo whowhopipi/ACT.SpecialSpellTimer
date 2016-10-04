@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -55,7 +56,7 @@
 
             this.TelopTreeView.AfterCheck += (s1, e1) =>
             {
-                var source = e1.Node.Tag as OnePointTelop;
+                var source = e1.Node.Tag as Ticker;
                 if (source != null)
                 {
                     source.Enabled = e1.Node.Checked;
@@ -71,12 +72,12 @@
             this.TelopTreeView.AfterSelect += (s1, e1) =>
             {
                 this.ShowTelopDetail(
-                    e1.Node.Tag as OnePointTelop);
+                    e1.Node.Tag as Ticker);
             };
 
             this.TelopSelectJobButton.Click += (s1, e1) =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
                     using (var f = new SelectJobForm())
@@ -95,7 +96,7 @@
 
             this.TelopSelectZoneButton.Click += (s1, e1) =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
                     using (var f = new SelectZoneForm())
@@ -114,7 +115,7 @@
 
             this.TelopSetConditionButton.Click += (s1, e1) =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
                     using (var f = new SetConditionForm())
@@ -210,7 +211,7 @@
         /// <param name="e">イベント引数</param>
         private void TelopAddButton_Click(object sender, EventArgs e)
         {
-            var nr = new OnePointTelop();
+            var nr = new Ticker();
 
             nr.ID = OnePointTelopTable.Default.Table.Any() ?
                 OnePointTelopTable.Default.Table.Max(x => x.ID) + 1 :
@@ -235,8 +236,8 @@
             if (this.TelopTreeView.SelectedNode != null)
             {
                 var baseRow = this.TelopTreeView.SelectedNode.Tag != null ?
-                    this.TelopTreeView.SelectedNode.Tag as OnePointTelop :
-                    this.TelopTreeView.SelectedNode.Nodes[0].Tag as OnePointTelop;
+                    this.TelopTreeView.SelectedNode.Tag as Ticker :
+                    this.TelopTreeView.SelectedNode.Nodes[0].Tag as Ticker;
 
                 if (baseRow != null)
                 {
@@ -323,7 +324,7 @@
                 return;
             }
 
-            var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+            var src = this.TelopDetailGroupBox.Tag as Ticker;
             if (src != null)
             {
                 src.Title = this.TelopTitleTextBox.Text;
@@ -365,7 +366,7 @@
 
                 foreach (TreeNode node in this.TelopTreeView.Nodes)
                 {
-                    var ds = node.Tag as OnePointTelop;
+                    var ds = node.Tag as Ticker;
                     if (ds != null)
                     {
                         if (ds.ID == src.ID)
@@ -387,7 +388,7 @@
         {
             lock (OnePointTelopTable.Default.Table)
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
                     OnePointTelopTable.Default.Table.Remove(src);
@@ -459,7 +460,7 @@
         /// </summary>
         /// <param name="dataSource"></param>
         private void ShowTelopDetail(
-            OnePointTelop dataSource)
+            Ticker dataSource)
         {
             var src = dataSource;
             if (src == null)

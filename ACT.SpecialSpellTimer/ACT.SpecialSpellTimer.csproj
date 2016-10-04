@@ -82,6 +82,8 @@
     <Compile Include="Image\IconController.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="LogBuffer.cs" />
+    <Compile Include="Models\Spell.cs" />
+    <Compile Include="Models\Ticker.cs" />
     <Compile Include="OnePointTelopController.cs" />
     <Compile Include="OnePointTelopTable.cs" />
     <Compile Include="OnePointTelopWindow.xaml.cs">

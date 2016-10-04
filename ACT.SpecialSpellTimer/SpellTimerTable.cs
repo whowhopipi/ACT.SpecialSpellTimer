@@ -10,6 +10,7 @@
     using System.Text.RegularExpressions;
     using System.Xml.Serialization;
 
+    using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -24,9 +25,9 @@
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        private static List<SpellTimer> table;
+        private static List<Spell> table;
 
-        private static SpellTimer[] enabledTable;
+        private static Spell[] enabledTable;
 
         private static DateTime enabledTableTimeStamp;
 
@@ -34,12 +35,12 @@
         /// インスタンス化されたスペルの辞書
         /// key : スペルの表示名
         /// </summary>
-        private static ConcurrentDictionary<string, SpellTimer> instanceSpells = new ConcurrentDictionary<string, SpellTimer>();
+        private static ConcurrentDictionary<string, Spell> instanceSpells = new ConcurrentDictionary<string, Spell>();
 
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        public static List<SpellTimer> Table
+        public static List<Spell> Table
         {
             get
             {
@@ -47,7 +48,7 @@
                 {
                     if (table == null)
                     {
-                        table = new List<SpellTimer>();
+                        table = new List<Spell>();
                         Load();
                     }
 
@@ -59,7 +60,7 @@
         /// <summary>
         /// 有効なSpellTimerデータテーブル
         /// </summary>
-        public static IReadOnlyList<SpellTimer> EnabledTable
+        public static IReadOnlyList<Spell> EnabledTable
         {
             get
             {
@@ -81,7 +82,7 @@
         /// <summary>
         /// 有効なSpellTimerデータテーブル
         /// </summary>
-        private static SpellTimer[] EnabledTableCore
+        private static Spell[] EnabledTableCore
         {
             get
             {
@@ -97,7 +98,7 @@
                 var player = FF14PluginHelper.GetPlayer();
                 var currentZoneID = FF14PluginHelper.GetCurrentZoneID();
 
-                var spellsFilteredJob = new List<SpellTimer>();
+                var spellsFilteredJob = new List<Spell>();
                 foreach (var spell in spells)
                 {
                     var enabledByJob = false;
@@ -249,15 +250,15 @@
         /// <param name="sourceSpell">インスタンスの元となるスペル</param>
         /// <returns>
         /// インスタンススペル</returns>
-        public static SpellTimer GetOrAddInstance(
+        public static Spell GetOrAddInstance(
             string spellTitle,
-            SpellTimer sourceSpell)
+            Spell sourceSpell)
         {
             var instance = instanceSpells.GetOrAdd(
                 spellTitle,
                 (x) =>
                 {
-                    var ns = new SpellTimer();
+                    var ns = new Spell();
 
                     ns.SpellTitleReplaced = x;
 
@@ -344,7 +345,7 @@
 
                     table.Add(instance);
 
-                    var array = new SpellTimer[enabledTable.Length + 1];
+                    var array = new Spell[enabledTable.Length + 1];
                     Array.Copy(enabledTable, array, enabledTable.Length);
                     array[enabledTable.Length] = instance;
                     enabledTable = array;
@@ -359,7 +360,7 @@
         /// </summary>
         /// <param name="instance">インスタンス</param>
         public static void TryRemoveInstance(
-            SpellTimer instance)
+            Spell instance)
         {
             var ttl = Settings.Default.TimeOfHideSpell + 30;
 
@@ -368,7 +369,7 @@
                 if (instance.CompleteScheduledTime != DateTime.MinValue &&
                     (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
                 {
-                    SpellTimer o;
+                    Spell o;
                     instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
 
                     // スペルコレクション本体から除去する
@@ -428,7 +429,7 @@
         /// 指定されたGuidを持つSpellTimerを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public static SpellTimer GetSpellTimerByGuid(Guid guid)
+        public static Spell GetSpellTimerByGuid(Guid guid)
         {
             return table.Where(x => x.guid == guid).FirstOrDefault();
         }
@@ -588,7 +589,7 @@
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<SpellTimer>;
+                            var data = xs.Deserialize(sr) as List<Spell>;
                             table.AddRange(data);
                         }
                     }
@@ -629,7 +630,7 @@
                 Directory.CreateDirectory(dir);
             }
 
-            var work = new List<SpellTimer>(
+            var work = new List<Spell>(
                 table.Where(x => !x.IsInstance));
 
             foreach (var item in work)
@@ -709,145 +710,5 @@
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// スペルタイマ
-    /// </summary>
-    [Serializable]
-    public class SpellTimer
-    {
-        public SpellTimer()
-        {
-            this.guid = Guid.Empty;
-            this.Panel = string.Empty;
-            this.SpellTitle = string.Empty;
-            this.SpellIcon = string.Empty;
-            this.Keyword = string.Empty;
-            this.KeywordForExtend1 = string.Empty;
-            this.KeywordForExtend2 = string.Empty;
-            this.MatchSound = string.Empty;
-            this.MatchTextToSpeak = string.Empty;
-            this.OverSound = string.Empty;
-            this.OverTextToSpeak = string.Empty;
-            this.TimeupSound = string.Empty;
-            this.TimeupTextToSpeak = string.Empty;
-            this.FontColor = string.Empty;
-            this.FontOutlineColor = string.Empty;
-            this.BarColor = string.Empty;
-            this.BarOutlineColor = string.Empty;
-            this.BackgroundColor = string.Empty;
-            this.JobFilter = string.Empty;
-            this.SpellTitleReplaced = string.Empty;
-            this.MatchedLog = string.Empty;
-            this.RegexPattern = string.Empty;
-            this.JobFilter = string.Empty;
-            this.ZoneFilter = string.Empty;
-            this.TimersMustRunningForStart = new Guid[0];
-            this.TimersMustStoppingForStart = new Guid[0];
-            this.Font = new FontInfo();
-            this.KeywordReplaced = string.Empty;
-            this.KeywordForExtendReplaced1 = string.Empty;
-            this.KeywordForExtendReplaced2 = string.Empty;
-        }
-
-        public long ID { get; set; }
-        public Guid guid { get; set; }
-        public long DisplayNo { get; set; }
-        public string Panel { get; set; }
-        public string SpellTitle { get; set; }
-        public string SpellIcon { get; set; }
-        public int SpellIconSize { get; set; }
-        public string Keyword { get; set; }
-        public string KeywordForExtend1 { get; set; }
-        public string KeywordForExtend2 { get; set; }
-        public long RecastTime { get; set; }
-        public long RecastTimeExtending1 { get; set; }
-        public long RecastTimeExtending2 { get; set; }
-        public bool ExtendBeyondOriginalRecastTime { get; set; }
-        public long UpperLimitOfExtension { get; set; }
-        public bool RepeatEnabled { get; set; }
-        public bool ProgressBarVisible { get; set; }
-        public string MatchSound { get; set; }
-        public string MatchTextToSpeak { get; set; }
-        public string OverSound { get; set; }
-        public string OverTextToSpeak { get; set; }
-        public long OverTime { get; set; }
-        public string BeforeSound { get; set; }
-        public string BeforeTextToSpeak { get; set; }
-        public long BeforeTime { get; set; }
-        public string TimeupSound { get; set; }
-        public string TimeupTextToSpeak { get; set; }
-        public DateTime MatchDateTime { get; set; }
-        public bool TimeupHide { get; set; }
-        public bool IsReverse { get; set; }
-        public FontInfo Font { get; set; }
-        public string FontFamily { get; set; }
-        public float FontSize { get; set; }
-        public int FontStyle { get; set; }
-        public string FontColor { get; set; }
-        public string FontOutlineColor { get; set; }
-        public string BarColor { get; set; }
-        public string BarOutlineColor { get; set; }
-        public int BarWidth { get; set; }
-        public int BarHeight { get; set; }
-        public string BackgroundColor { get; set; }
-        public int BackgroundAlpha { get; set; }
-        public bool DontHide { get; set; }
-        public bool HideSpellName { get; set; }
-        public bool OverlapRecastTime { get; set; }
-        public bool ReduceIconBrightness { get; set; }
-        public bool RegexEnabled { get; set; }
-        public string JobFilter { get; set; }
-        public string ZoneFilter { get; set; }
-        public Guid[] TimersMustRunningForStart { get; set; }
-        public Guid[] TimersMustStoppingForStart { get; set; }
-
-        /// <summary>インスタンス化する</summary>
-        /// <remarks>表示テキストが異なる条件でマッチングした場合に当該スペルの新しいインスタンスを生成する</remarks>
-        public bool ToInstance { get; set; }
-
-        public bool Enabled { get; set; }
-
-        [XmlIgnore]
-        public DateTime CompleteScheduledTime { get; set; }
-        [XmlIgnore]
-        public volatile bool UpdateDone;
-        [XmlIgnore]
-        public bool OverDone { get; set; }
-        [XmlIgnore]
-        public bool BeforeDone { get; set; }
-        [XmlIgnore]
-        public bool TimeupDone { get; set; }
-        [XmlIgnore]
-        public string SpellTitleReplaced { get; set; }
-        [XmlIgnore]
-        public string MatchedLog { get; set; }
-        [XmlIgnore]
-        public Regex Regex { get; set; }
-        [XmlIgnore]
-        public string RegexPattern { get; set; }
-        [XmlIgnore]
-        public string KeywordReplaced { get; set; }
-        [XmlIgnore]
-        public Regex RegexForExtend1 { get; set; }
-        [XmlIgnore]
-        public string RegexForExtendPattern1 { get; set; }
-        [XmlIgnore]
-        public string KeywordForExtendReplaced1 { get; set; }
-        [XmlIgnore]
-        public Regex RegexForExtend2 { get; set; }
-        [XmlIgnore]
-        public string RegexForExtendPattern2 { get; set; }
-        [XmlIgnore]
-        public string KeywordForExtendReplaced2 { get; set; }
-
-        /// <summary>インスタンス化されたスペルか？</summary>
-        [XmlIgnore]
-        public bool IsInstance { get; set; }
-
-        /// <summary>スペルが作用した対象</summary>
-        [XmlIgnore]
-        public string TargetName { get; set; }
     }
 }
