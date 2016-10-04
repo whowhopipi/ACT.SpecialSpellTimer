@@ -80,7 +80,14 @@
 
         public static Job FromId(int jobId)
         {
-            return JobDictionary[jobId];
+            if (JobDictionary.ContainsKey(jobId))
+            {
+                return JobDictionary[jobId];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -139,6 +146,7 @@
 
     public enum JobIds
     {
+        Unknown = 0,
         GLD = 1,
         PUG = 2,
         MRD = 3,

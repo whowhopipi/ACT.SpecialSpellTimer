@@ -298,18 +298,21 @@
                         var player = FF14PluginHelper.GetPlayer();
                         if (player != null)
                         {
-                            var jobName = Job.GetJobName(player.Job);
-                            if (player.AsJob().IsSummoner())
+                            var job = player.AsJob();
+                            if (job != null)
                             {
-                                if (logLine.Contains(player.Name + "の「サモン") ||
-                                    logLine.Contains("You cast Summon"))
+                                if (player.AsJob().IsSummoner())
                                 {
-                                    summoned = true;
-                                }
+                                    if (logLine.Contains(player.Name + "の「サモン") ||
+                                        logLine.Contains("You cast Summon"))
+                                    {
+                                        summoned = true;
+                                    }
 
-                                if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
-                                {
-                                    zoneChanged = true;
+                                    if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
+                                    {
+                                        zoneChanged = true;
+                                    }
                                 }
                             }
                         }
