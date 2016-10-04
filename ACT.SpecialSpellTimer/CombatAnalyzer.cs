@@ -369,13 +369,22 @@
             bool isImport,
             LogLineEventArgs logInfo)
         {
-            if (!Settings.Default.CombatLogEnabled)
+            try
             {
-                return;
-            }
+                if (!Settings.Default.CombatLogEnabled)
+                {
+                    return;
+                }
 
-            // キューに貯める
-            this.logInfoQueue.Enqueue(logInfo);
+                // キューに貯める
+                this.logInfoQueue.Enqueue(logInfo);
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(
+                    "catch exception at Combat Analyzer OnLogLineRead.\n" +
+                    ex.ToString());
+            }
 
 #if false
             if (this.CurrentCombatLogList == null)
