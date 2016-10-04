@@ -1,12 +1,14 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
 
     using ACT.SpecialSpellTimer.Properties;
+    using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
     /// <summary>
@@ -81,12 +83,51 @@
         private long id;
 
         /// <summary>
+        /// ログ一時バッファ
+        /// </summary>
+        private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
+
+        /// <summary>
+        /// ログ格納スレッド
+        /// </summary>
+        private Thread storeLogThread;
+
+        /// <summary>
+        /// スレッド稼働中？
+        /// </summary>
+        private bool isRunning;
+
+        /// <summary>
         /// 分析を開始する
         /// </summary>
         public void Initialize()
         {
-            this.CurrentCombatLogList.Clear();
+            this.ClearLogBuffer();
+
             ActGlobals.oFormActMain.OnLogLineRead += this.oFormActMain_OnLogLineRead;
+
+            this.storeLogThread = new Thread(() =>
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+
+                try
+                {
+                    this.StoreLogPoller();
+                }
+                catch (ThreadAbortException)
+                {
+                    this.isRunning = false;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(
+                        "Catch exception at Store log for analyze.\n" + 
+                        ex.ToString());
+                }
+            });
+
+            this.isRunning = true;
+            this.storeLogThread.Start();
         }
 
         /// <summary>
@@ -94,6 +135,25 @@
         /// </summary>
         public void Denitialize()
         {
+            if (this.storeLogThread != null)
+            {
+                if (this.storeLogThread.IsAlive)
+                {
+                    try
+                    {
+                        if (!this.storeLogThread.Join(TimeSpan.FromSeconds(5)))
+                        {
+                            this.storeLogThread.Abort();
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                this.storeLogThread = null;
+            }
+
             ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
             this.CurrentCombatLogList.Clear();
         }
@@ -105,6 +165,7 @@
         {
             lock (this.CurrentCombatLogList)
             {
+                this.ClearLogInfoQueue();
                 this.CurrentCombatLogList.Clear();
                 this.ActorHPRate.Clear();
             }
@@ -125,16 +186,23 @@
         public void AnalyzeLog(
             List<CombatLog> logList)
         {
-            if (logList == null ||
-                logList.Count < 1)
+            CombatLog[] logs;
+
+            lock (this.CurrentCombatLogList)
             {
-                return;
+                if (logList == null ||
+                    logList.Count < 1)
+                {
+                    return;
+                }
+
+                logs = logList.OrderBy(x => x.ID).ToArray();
             }
 
             var previouseAction = new Dictionary<string, DateTime>();
 
             var i = 0L;
-            foreach (var log in logList.OrderBy(x => x.ID))
+            foreach (var log in logs)
             {
                 // 10回に1回ちょっとだけスリープする
                 if ((i % 10) == 0)
@@ -165,6 +233,113 @@
         }
 
         /// <summary>
+        /// ログキューを消去する
+        /// </summary>
+        private void ClearLogInfoQueue()
+        {
+            while(!this.logInfoQueue.IsEmpty)
+            {
+                LogLineEventArgs l;
+                this.logInfoQueue.TryDequeue(out l);
+            }
+        }
+
+        /// <summary>
+        /// ログを格納するスレッド
+        /// </summary>
+        private void StoreLogPoller()
+        {
+            while (this.isRunning)
+            {
+                // プレイヤ情報とパーティリストを取得する
+                var player = FF14PluginHelper.GetPlayer();
+                var ptlist = LogBuffer.PartyList;
+
+                while (!this.logInfoQueue.IsEmpty)
+                {
+                    Thread.Sleep(0);
+
+                    LogLineEventArgs log = null;
+                    this.logInfoQueue.TryDequeue(out log);
+
+                    if (log == null)
+                    {
+                        continue;
+                    }
+
+                    // ログにペットが含まれている？
+                    if (log.logLine.Contains("・エギ") ||
+                        log.logLine.Contains("フェアリー・") ||
+                        log.logLine.Contains("カーバンクル・"))
+                    {
+                        return;
+                    }
+
+                    if (player != null &&
+                        ptlist != null)
+                    {
+                        // ログにプレイヤ名が含まれている？
+                        if (log.logLine.Contains(player.Name))
+                        {
+                            continue;
+                        }
+
+                        // ログにパーティメンバ名が含まれている？
+                        foreach (var name in ptlist)
+                        {
+                            if (log.logLine.Contains(name))
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
+                    // キャストのキーワードが含まれている？
+                    foreach (var keyword in CastKeywords)
+                    {
+                        if (log.logLine.Contains(keyword))
+                        {
+                            this.StoreCastLog(log);
+                            continue;
+                        }
+                    }
+
+                    // アクションのキーワードが含まれている？
+                    foreach (var keyword in ActionKeywords)
+                    {
+                        if (log.logLine.Contains(keyword))
+                        {
+                            this.StoreActionLog(log);
+                            continue;
+                        }
+                    }
+
+                    // 残HP率のキーワードが含まれている？
+                    foreach (var keyword in HPRateKeywords)
+                    {
+                        if (log.logLine.Contains(keyword))
+                        {
+                            this.StoreHPRateLog(log);
+                            continue;
+                        }
+                    }
+
+                    // Addedのキーワードが含まれている？
+                    foreach (var keyword in AddedKeywords)
+                    {
+                        if (log.logLine.Contains(keyword))
+                        {
+                            this.StoreAddedLog(log);
+                            continue;
+                        }
+                    }
+                }
+
+                Thread.Sleep((int)Settings.Default.LogPollSleepInterval);
+            }
+        }
+
+        /// <summary>
         /// ログを1行読取った
         /// </summary>
         /// <param name="isImport">Importか？</param>
@@ -178,6 +353,10 @@
                 return;
             }
 
+            // キューに貯める
+            this.logInfoQueue.Enqueue(logInfo);
+
+#if false
             if (this.CurrentCombatLogList == null)
             {
                 return;
@@ -259,6 +438,7 @@
                     return;
                 }
             }
+#endif
         }
 
         /// <summary>

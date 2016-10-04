@@ -129,7 +129,7 @@
             this.running = true;
 
             // ログ監視タイマを開始する
-            logPoller = new Thread(() =>
+            this.logPoller = new Thread(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 Logger.Write("start log poll");
@@ -152,7 +152,7 @@
                 Logger.Write("end log poll");
             });
 
-            logPoller.Start();
+            this.logPoller.Start();
         }
 
         /// <summary>
