@@ -152,6 +152,7 @@
     <Compile Include="Utility\Language.cs" />
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\MetroWindow.cs" />
+    <Compile Include="Utility\StringExtensions.cs" />
     <Compile Include="Utility\Translate.cs" />
     <Compile Include="Utility\OutlineTextBlock.cs" />
     <Compile Include="VisualSettingControl.cs">

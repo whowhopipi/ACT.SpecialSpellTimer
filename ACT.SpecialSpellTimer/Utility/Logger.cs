@@ -36,7 +36,10 @@
         /// <param name="text">書き込む内容</param>
         public static void Write(string text)
         {
-            buffer.Enqueue(new LogItem(null, text, null));
+            if (buffer != null)
+            {
+                buffer.Enqueue(new LogItem(null, text, null));
+            }
         }
 
         /// <summary>
@@ -46,7 +49,10 @@
         /// <param name="ex">例外情報</param>
         public static void Write(string text, Exception ex)
         {
-            buffer.Enqueue(new LogItem(ex, text, null));
+            if (buffer != null)
+            {
+                buffer.Enqueue(new LogItem(ex, text, null));
+            }
         }
 
         /// <summary>
@@ -56,7 +62,10 @@
         /// <param name="args">0 個以上の書式設定対象オブジェクトを含んだオブジェクト配列。</param>
         public static void Write(string format, params object[] args)
         {
-            buffer.Enqueue(new LogItem(null, format, args));
+            if (buffer != null)
+            {
+                buffer.Enqueue(new LogItem(null, format, args));
+            }
         }
 
         #region Controll metods

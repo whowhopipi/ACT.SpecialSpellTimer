@@ -1843,6 +1843,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   正規表現を単純にする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SimpleRegexLabel {
+            get {
+                return ResourceManager.GetString("SimpleRegexLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   召喚士 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string SMN {

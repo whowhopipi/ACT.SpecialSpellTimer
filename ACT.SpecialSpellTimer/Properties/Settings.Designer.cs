@@ -478,5 +478,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["ResetOnWipeOut"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SimpleRegex {
+            get {
+                return ((bool)(this["SimpleRegex"]));
+            }
+            set {
+                this["SimpleRegex"] = value;
+            }
+        }
     }
 }

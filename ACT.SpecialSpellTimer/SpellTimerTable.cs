@@ -7,7 +7,6 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Xml.Serialization;
 
     using ACT.SpecialSpellTimer.Models;
@@ -173,19 +172,14 @@
                     }
 
                     // マッチングキーワードの正規表現を生成する
-                    var pattern = !string.IsNullOrEmpty(spell.KeywordReplaced) ?
-                        ".*" + spell.KeywordReplaced + ".*" :
-                        string.Empty;
-
+                    var pattern = spell.KeywordReplaced.ToRegexPattern();
                     if (!string.IsNullOrEmpty(pattern))
                     {
                         if (spell.Regex == null ||
                             spell.RegexPattern != pattern)
                         {
                             spell.RegexPattern = pattern;
-                            spell.Regex = new Regex(
-                                pattern,
-                                RegexOptions.Compiled);
+                            spell.Regex = pattern.ToRegex();
                         }
                     }
                     else
@@ -195,19 +189,14 @@
                     }
 
                     // 延長するためのマッチングキーワードの正規表現を生成する1
-                    pattern = !string.IsNullOrEmpty(spell.KeywordForExtendReplaced1) ?
-                        ".*" + spell.KeywordForExtendReplaced1 + ".*" :
-                        string.Empty;
-
+                    pattern = spell.KeywordForExtendReplaced1.ToRegexPattern();
                     if (!string.IsNullOrEmpty(pattern))
                     {
                         if (spell.RegexForExtend1 == null ||
                             spell.RegexForExtendPattern1 != pattern)
                         {
                             spell.RegexForExtendPattern1 = pattern;
-                            spell.RegexForExtend1 = new Regex(
-                                pattern,
-                                RegexOptions.Compiled);
+                            spell.RegexForExtend1 = pattern.ToRegex();
                         }
                     }
                     else
@@ -217,19 +206,14 @@
                     }
 
                     // 延長するためのマッチングキーワードの正規表現を生成する2
-                    pattern = !string.IsNullOrEmpty(spell.KeywordForExtendReplaced2) ?
-                        ".*" + spell.KeywordForExtendReplaced2 + ".*" :
-                        string.Empty;
-
+                    pattern = spell.KeywordForExtendReplaced2.ToRegexPattern();
                     if (!string.IsNullOrEmpty(pattern))
                     {
                         if (spell.RegexForExtend2 == null ||
                             spell.RegexForExtendPattern2 != pattern)
                         {
                             spell.RegexForExtendPattern2 = pattern;
-                            spell.RegexForExtend2 = new Regex(
-                                pattern,
-                                RegexOptions.Compiled);
+                            spell.RegexForExtend2 = pattern.ToRegex();
                         }
                     }
                     else

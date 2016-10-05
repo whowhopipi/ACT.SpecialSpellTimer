@@ -1101,4 +1101,8 @@
     <value>Reset counter at wipe out.</value>
     <comment>全滅時にカウントをリセットする</comment>
   </data>
+  <data name="SimpleRegexLabel" xml:space="preserve">
+    <value>To simplify the Regex.</value>
+    <comment>正規表現を単純にする</comment>
+  </data>
 </root>

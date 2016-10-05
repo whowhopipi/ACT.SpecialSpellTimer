@@ -6,13 +6,11 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
     using System.Xml.Serialization;
 
+    using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
-    using ACT.SpecialSpellTimer.Models;
-    using Advanced_Combat_Tracker;
 
     /// <summary>
     /// ワンポイントテレロップ設定テーブル
@@ -170,19 +168,15 @@
                         continue;
                     }
 
-                    var pattern = !string.IsNullOrWhiteSpace(spell.KeywordReplaced) ?
-                        ".*" + spell.KeywordReplaced + ".*" :
-                        string.Empty;
-
+                    // 表示用の正規表現を設定する
+                    var pattern = spell.KeywordReplaced.ToRegexPattern();
                     if (!string.IsNullOrWhiteSpace(pattern))
                     {
                         if (spell.Regex == null ||
                             spell.RegexPattern != pattern)
                         {
                             spell.RegexPattern = pattern;
-                            spell.Regex = new Regex(
-                                pattern,
-                                RegexOptions.Compiled);
+                            spell.Regex = pattern.ToRegex();
                         }
                     }
                     else
@@ -191,19 +185,15 @@
                         spell.Regex = null;
                     }
 
-                    var patternToHide = !string.IsNullOrWhiteSpace(spell.KeywordToHideReplaced) ?
-                        ".*" + spell.KeywordToHideReplaced + ".*" :
-                        string.Empty;
-
+                    // 非表示用の正規表現を設定する
+                    var patternToHide = spell.KeywordToHideReplaced.ToRegexPattern();
                     if (!string.IsNullOrWhiteSpace(patternToHide))
                     {
                         if (spell.RegexToHide == null ||
                             spell.RegexPatternToHide != patternToHide)
                         {
                             spell.RegexPatternToHide = patternToHide;
-                            spell.RegexToHide = new Regex(
-                                patternToHide,
-                                RegexOptions.Compiled);
+                            spell.RegexToHide = patternToHide.ToRegex();
                         }
                     }
                     else

@@ -220,6 +220,7 @@
             this.SaveLogTextBox.Text = Settings.Default.SaveLogFile;
 
             this.ResetOnWipeOutCheckBox.Checked = Settings.Default.ResetOnWipeOut;
+            this.SimpleRegexCheckBox.Checked = Settings.Default.SimpleRegex;
 
             var sw1 = this.SaveLogCheckBox.Checked;
             this.SaveLogTextBox.Enabled = sw1;
@@ -271,6 +272,7 @@
             Settings.Default.SaveLogFile = this.SaveLogTextBox.Text;
 
             Settings.Default.ResetOnWipeOut = this.ResetOnWipeOutCheckBox.Checked;
+            Settings.Default.SimpleRegex = this.SimpleRegexCheckBox.Checked;
 
             SpellTimerCore.Default.InvalidateSettings();
 

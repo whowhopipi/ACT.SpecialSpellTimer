@@ -210,9 +210,9 @@
             this.firstLogArrived = true;
         }
 
-#endregion
+        #endregion
 
-#region ログ処理
+        #region ログ処理
 
         /// <summary>
         /// バッファーにログがない場合 true
@@ -415,9 +415,9 @@
                 .Any(words => words.Any(word => logLine.Contains(word)));
         }
 
-#endregion
+        #endregion
 
-#region private 生ログのファイル書き出し機能
+        #region private 生ログのファイル書き出し機能
 
         private bool SaveLogEnabled =>
             Settings.Default.SaveLogEnabled && !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
@@ -464,9 +464,9 @@
             }
         }
 
-#endregion
+        #endregion
 
-#region public static キーワードの代名詞を実際の値に置換
+        #region public static キーワードの代名詞を実際の値に置換
 
         /// <summary>
         /// マッチングキーワードを生成する
@@ -529,9 +529,9 @@
             return keyword;
         }
 
-#endregion
+        #endregion
 
-#region public static 状態更新指示
+        #region public static 状態更新指示
 
         /// <summary>
         /// パーティリストを更新する
@@ -684,9 +684,9 @@
             }
         }
 
-#endregion
+        #endregion
 
-#region public static カスタムプレースホルダー
+        #region public static カスタムプレースホルダー
 
         /// <summary>
         /// カスタム代名詞による置換文字列のセット
@@ -762,6 +762,6 @@
             OnePointTelopTable.Default.ClearReplacedKeywords();
         }
 
-#endregion
+        #endregion
     }
 }
