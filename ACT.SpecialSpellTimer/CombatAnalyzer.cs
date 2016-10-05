@@ -16,10 +16,18 @@
     /// </summary>
     public class CombatAnalyzer
     {
-        private static readonly string[] CastKeywords = new string[] { "を唱えた。", "の構え。" };
-        private static readonly string[] ActionKeywords = new string[] { "「", "」" };
-        private static readonly string[] HPRateKeywords = new string[] { "HP at" };
-        private static readonly string[] AddedKeywords = new string[] { "Added new combatant" };
+        private static readonly IReadOnlyCollection<AnalyzeKeyword> Keywords = new List<AnalyzeKeyword>()
+        {
+            new AnalyzeKeyword() { Keyword = "・エギ", Category = AnalyzeKeywordCategory.Pet },
+            new AnalyzeKeyword() { Keyword = "フェアリー・", Category = AnalyzeKeywordCategory.Pet },
+            new AnalyzeKeyword() { Keyword = "カーバンクル・", Category = AnalyzeKeywordCategory.Pet },
+            new AnalyzeKeyword() { Keyword = "を唱えた。", Category = AnalyzeKeywordCategory.Cast },
+            new AnalyzeKeyword() { Keyword = "の構え。", Category = AnalyzeKeywordCategory.Cast },
+            new AnalyzeKeyword() { Keyword = "「", Category = AnalyzeKeywordCategory.Action },
+            new AnalyzeKeyword() { Keyword = "」", Category = AnalyzeKeywordCategory.Action },
+            new AnalyzeKeyword() { Keyword = "HP at", Category = AnalyzeKeywordCategory.HPRate },
+            new AnalyzeKeyword() { Keyword = "Added new combatant", Category = AnalyzeKeywordCategory.Added },
+        };
 
         private static readonly Regex CastRegex = new Regex(
             @"\[.+?\] 00:2[89a]..:(?<actor>.+?)は「(?<skill>.+?)」(を唱えた。|の構え。)$",
@@ -47,35 +55,18 @@
         /// </summary>
         public static CombatAnalyzer Default
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new CombatAnalyzer();
-                }
-
-                return instance;
-            }
-        }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public CombatAnalyzer()
-        {
-            this.CurrentCombatLogList = new List<CombatLog>();
-            this.ActorHPRate = new Dictionary<string, decimal>();
+            get { return (instance ?? (instance = new CombatAnalyzer())); }
         }
 
         /// <summary>
         /// 戦闘ログのリスト
         /// </summary>
-        public List<CombatLog> CurrentCombatLogList { get; private set; }
+        public List<CombatLog> CurrentCombatLogList { get; private set; } = new List<CombatLog>();
 
         /// <summary>
         /// アクターのHP率
         /// </summary>
-        private Dictionary<string, decimal> ActorHPRate { get; set; }
+        private Dictionary<string, decimal> ActorHPRate { get; set; } = new Dictionary<string, decimal>();
 
         /// <summary>
         /// ログのID
@@ -258,7 +249,7 @@
         /// </summary>
         private void ClearLogInfoQueue()
         {
-            while(!this.logInfoQueue.IsEmpty)
+            while (!this.logInfoQueue.IsEmpty)
             {
                 LogLineEventArgs l;
                 this.logInfoQueue.TryDequeue(out l);
@@ -270,13 +261,27 @@
         /// </summary>
         private void StoreLogPoller()
         {
+            var analyzeLogLine = new Func<string, IReadOnlyCollection<AnalyzeKeyword>, AnalyzeKeywordCategory>(
+                (log, keywords) =>
+                {
+                    var key = (
+                        from x in keywords.AsParallel()
+                        where
+                        log.Contains(x.Keyword)
+                        select
+                        x).FirstOrDefault();
+
+                    return key != null ? 
+                        key.Category : 
+                        AnalyzeKeywordCategory.Unknown;
+                });
+
             while (this.isRunning)
             {
                 try
                 {
-                    // プレイヤ情報とパーティリストを取得する
-                    var player = FF14PluginHelper.GetPlayer();
-                    var ptlist = LogBuffer.PartyList;
+                    // 分析用キーワードを取得する
+                    var keywords = this.GetKeywords();
 
                     while (!this.logInfoQueue.IsEmpty)
                     {
@@ -290,61 +295,33 @@
                             continue;
                         }
 
-                        // ログにペットが含まれている？
-                        if (log.logLine.Contains("・エギ") ||
-                            log.logLine.Contains("フェアリー・") ||
-                            log.logLine.Contains("カーバンクル・"))
+                        // ログを分類する
+                        var category = analyzeLogLine(log.logLine, keywords);
+                        switch (category)
                         {
-                            continue;
-                        }
+                            case AnalyzeKeywordCategory.Me:
+                            case AnalyzeKeywordCategory.PartyMember:
+                            case AnalyzeKeywordCategory.Pet:
+                                break;
 
-                        if (player != null &&
-                            ptlist != null)
-                        {
-                            // ログにプレイヤ名が含まれている？
-                            if (log.logLine.Contains(player.Name))
-                            {
-                                continue;
-                            }
+                            case AnalyzeKeywordCategory.Cast:
+                                this.StoreCastLog(log);
+                                break;
 
-                            // ログにパーティメンバ名が含まれている？
-                            if (ptlist.AsParallel()
-                                .Any(x => log.logLine.Contains(x)))
-                            {
-                                continue;
-                            }
-                        }
+                            case AnalyzeKeywordCategory.Action:
+                                this.StoreActionLog(log);
+                                break;
 
-                        // キャストのキーワードが含まれている？
-                        if (CastKeywords.AsParallel()
-                            .Any(x => log.logLine.Contains(x)))
-                        {
-                            this.StoreCastLog(log);
-                            continue;
-                        }
+                            case AnalyzeKeywordCategory.HPRate:
+                                this.StoreHPRateLog(log);
+                                break;
 
-                        // アクションのキーワードが含まれている？
-                        if (ActionKeywords.AsParallel()
-                            .Any(x => log.logLine.Contains(x)))
-                        {
-                            this.StoreActionLog(log);
-                            continue;
-                        }
+                            case AnalyzeKeywordCategory.Added:
+                                this.StoreAddedLog(log);
+                                break;
 
-                        // 残HP率のキーワードが含まれている？
-                        if (HPRateKeywords.AsParallel()
-                            .Any(x => log.logLine.Contains(x)))
-                        {
-                            this.StoreHPRateLog(log);
-                            continue;
-                        }
-
-                        // Addedのキーワードが含まれている？
-                        if (AddedKeywords.AsParallel()
-                            .Any(x => log.logLine.Contains(x)))
-                        {
-                            this.StoreAddedLog(log);
-                            continue;
+                            default:
+                                break;
                         }
                     }
                 }
@@ -470,6 +447,43 @@
                 }
             }
 #endif
+        }
+
+        /// <summary>
+        /// 分析用のキーワードを取得する
+        /// </summary>
+        /// <returns>
+        /// キーワードコレクション</returns>
+        private IReadOnlyCollection<AnalyzeKeyword> GetKeywords()
+        {
+            var list = Keywords.ToList();
+
+            // プレイヤ情報とパーティリストを取得する
+            var player = FF14PluginHelper.GetPlayer();
+            var ptlist = new List<string>(LogBuffer.PartyList);
+
+            if (player != null)
+            {
+                list.Add(new AnalyzeKeyword()
+                {
+                    Keyword = player.Name,
+                    Category = AnalyzeKeywordCategory.Me,
+                });
+            }
+
+            if (ptlist != null)
+            {
+                foreach (var name in ptlist)
+                {
+                    list.Add(new AnalyzeKeyword()
+                    {
+                        Keyword = name,
+                        Category = AnalyzeKeywordCategory.PartyMember,
+                    });
+                }
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -642,6 +656,73 @@
             };
 
             this.StoreLog(log);
+        }
+    }
+
+    /// <summary>
+    /// 分析キーワードの分類
+    /// </summary>
+    public enum AnalyzeKeywordCategory
+    {
+        /// <summary>未使用</summary>
+        Unknown = 0,
+
+        /// <summary>自分</summary>
+        Me = 0x01,
+
+        /// <summary>パーティメンバ</summary>
+        PartyMember = 0x02,
+
+        /// <summary>ペット</summary>
+        Pet = 0x03,
+
+        /// <summary>構え等準備動作</summary>
+        Cast = 0x10,
+
+        /// <summary>アクションの発動</summary>
+        Action = 0x20,
+
+        /// <summary>残HP率</summary>
+        HPRate = 0x30,
+
+        /// <summary>Added Combatant</summary>
+        Added = 0x40
+    }
+
+    /// <summary>
+    /// 分析キーワード
+    /// </summary>
+    public class AnalyzeKeyword
+    {
+        /// <summary>キーワード</summary>
+        public string Keyword { get; set; }
+
+        /// <summary>キーワードの分類</summary>
+        public AnalyzeKeywordCategory Category { get; set; }
+
+        /// <summary>
+        /// 同一カテゴリのキーワードをまとめて生成する
+        /// </summary>
+        /// <param name="keywords">キーワード</param>
+        /// <param name="category">カテゴリ</param>
+        /// <returns>
+        /// 生成したキーワードオブジェクト</returns>
+        public static AnalyzeKeyword[] CreateKeywords(
+            string[] keywords,
+            AnalyzeKeywordCategory category)
+        {
+            var list = new List<AnalyzeKeyword>();
+
+            foreach (var k in keywords)
+            {
+                list.Add(new AnalyzeKeyword()
+                {
+                    Keyword = k,
+                    Category = category
+                });
+            }
+
+            return list.ToArray();
         }
     }
 }
