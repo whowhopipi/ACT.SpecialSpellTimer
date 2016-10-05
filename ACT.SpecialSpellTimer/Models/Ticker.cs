@@ -105,15 +105,25 @@
         {
             this.Delayed = true;
 
+            var regex = this.Regex;
+            var wave = this.DelaySound;
+            var speak = this.DelayTextToSpeak;
+
             SoundController.Default.Play(this.DelaySound);
 
             if (!string.IsNullOrWhiteSpace(this.DelayTextToSpeak))
             {
-                var tts = this.Regex != null && !string.IsNullOrWhiteSpace(this.DelayTextToSpeak) ?
-                    this.Regex.Replace(this.MatchedLog, this.DelayTextToSpeak) :
-                    this.DelayTextToSpeak;
+                if (regex == null ||
+                    !speak.Contains("$"))
+                {
+                    SoundController.Default.Play(speak);
+                    return;
+                }
 
-                SoundController.Default.Play(tts);
+                var match = regex.Match(this.MatchedLog);
+                speak = match.Result(speak);
+
+                SoundController.Default.Play(speak);
             }
         }
 
