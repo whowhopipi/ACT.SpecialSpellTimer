@@ -218,3 +218,9 @@ http://maoudamashii.jokersounds.com/
 不具合報告、要望、質問及び最新版情報などはTwitterにて  
 GitHubと連動しているためツイートは少々五月蠅いかもしれません  
 https://twitter.com/anoyetta  
+
+
+<a href="https://github.com/anoyetta/ACT.SpecialSpellTimer">
+  <img src="https://ga-beacon.appspot.com/UA-58705151-2/https://github.com/anoyetta/ACT.SpecialSpellTimer?pixel"/>
+</a>
+
