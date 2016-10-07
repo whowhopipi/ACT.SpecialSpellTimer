@@ -293,17 +293,11 @@
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
-                if (regex == null ||
-                    !speak.Contains("$"))
-                {
-                    SoundController.Default.Play(speak);
-                    return;
-                }
+                var tts = regex != null && !string.IsNullOrWhiteSpace(speak) ?
+                    this.Regex.Replace(this.MatchedLog, speak) :
+                    speak;
 
-                var match = regex.Match(this.MatchedLog);
-                speak = match.Result(speak);
-
-                SoundController.Default.Play(speak);
+                SoundController.Default.Play(tts);
             }
         }
 
@@ -319,17 +313,11 @@
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
-                if (regex == null ||
-                    !speak.Contains("$"))
-                {
-                    SoundController.Default.Play(speak);
-                    return;
-                }
+                var tts = regex != null && !string.IsNullOrWhiteSpace(speak) ?
+                    this.Regex.Replace(this.MatchedLog, speak) :
+                    speak;
 
-                var match = regex.Match(this.MatchedLog);
-                speak = match.Result(speak);
-
-                SoundController.Default.Play(speak);
+                SoundController.Default.Play(tts);
             }
         }
 
@@ -345,17 +333,11 @@
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
-                if (regex == null ||
-                    !speak.Contains("$"))
-                {
-                    SoundController.Default.Play(speak);
-                    return;
-                }
+                var tts = regex != null && !string.IsNullOrWhiteSpace(speak) ?
+                    this.Regex.Replace(this.MatchedLog, speak) :
+                    speak;
 
-                var match = regex.Match(this.MatchedLog);
-                speak = match.Result(speak);
-
-                SoundController.Default.Play(speak);
+                SoundController.Default.Play(tts);
             }
         }
 

@@ -655,7 +655,7 @@
                 }
 
                 // Combatantリストを取得する
-                var combatants = FF14PluginHelper.Combatants;
+                var combatants = FF14PluginHelper.GetCombatantList();
 
                 if (combatants != null && combatants.Count > 0)
                 {

@@ -60,7 +60,7 @@
         /// </summary>
         public static void RefreshPlayer()
         {
-            var list = FF14PluginHelper.Combatants;
+            var list = FF14PluginHelper.GetCombatantList();
             if (list.Count > 0)
             {
                 player = list[0];
@@ -81,7 +81,7 @@
             }
 
             // 総戦闘メンバリストを取得する（周囲のPC, NPC, MOB等すべて）
-            var combatListAll = FF14PluginHelper.Combatants;
+            var combatListAll = FF14PluginHelper.GetCombatantList();
 
             // パーティメンバのIDリストを取得する
             int partyCount;
