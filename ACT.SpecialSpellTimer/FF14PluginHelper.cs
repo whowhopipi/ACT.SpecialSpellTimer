@@ -63,7 +63,9 @@
 
                 if (pluginMemory == null)
                 {
-                    fi = plugin.GetType().GetField("_Memory", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                    fi = plugin.GetType().GetField(
+                        "_Memory",
+                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
                     pluginMemory = fi.GetValue(plugin);
                 }
 
@@ -74,7 +76,9 @@
 
                 if (pluginConfig == null)
                 {
-                    fi = pluginMemory.GetType().GetField("_config", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                    fi = pluginMemory.GetType().GetField(
+                        "_config",
+                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
                     pluginConfig = fi.GetValue(pluginMemory);
                 }
 
@@ -85,7 +89,9 @@
 
                 if (pluginScancombat == null)
                 {
-                    fi = pluginConfig.GetType().GetField("ScanCombatants", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                    fi = pluginConfig.GetType().GetField(
+                        "ScanCombatants",
+                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
                     pluginScancombat = fi.GetValue(pluginConfig);
                 }
             }
