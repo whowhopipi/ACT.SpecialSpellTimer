@@ -153,6 +153,9 @@
             });
 
             this.logPoller.Start();
+
+            // FFXIVの監視タスクを走らせる
+            FF14PluginHelper.Run();
         }
 
         /// <summary>
@@ -197,6 +200,9 @@
                     this.logPoller = null;
                 }
             }
+
+            // FFXIVの監視タスクをとめる
+            FF14PluginHelper.Stop();
 
             // 全てのPanelを閉じる
             this.ClosePanels();
@@ -274,7 +280,7 @@
                         if ((DateTime.Now - this.LastFFXIVProcessDateTime).TotalSeconds >= 5.0d)
                         {
                             // FF14が起動していない？
-                            if (FF14PluginHelper.GetFFXIVProcess == null)
+                            if (FF14PluginHelper.FFXIVProcess == null)
                             {
                                 if (!Settings.Default.OverlayForceVisible)
                                 {
