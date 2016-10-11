@@ -158,7 +158,11 @@
                 }
 
                 // 設定Panelを追加する
-                ConfigPanel = new ConfigPanel();
+                ConfigPanel = new ConfigPanel()
+                {
+                    AutoScaleMode = AutoScaleMode.Font
+                };
+
                 pluginScreenSpace.Controls.Add(ConfigPanel);
                 ConfigPanel.Size = pluginScreenSpace.Size;
                 ConfigPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;

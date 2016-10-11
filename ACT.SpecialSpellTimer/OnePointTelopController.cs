@@ -321,39 +321,6 @@
             }
         }
 
-#if false
-        /// <summary>
-        /// 遅延サウンドを再生する
-        /// </summary>
-        public static void PlayDelaySound(
-            IReadOnlyList<Ticker> telops)
-        {
-            // スペルの更新とサウンド処理を行う
-            telops.AsParallel().ForAll(telop =>
-            {
-                var regex = telop.Regex;
-
-                // ディレイ時間が経過した？
-                if (!telop.Delayed &&
-                    telop.MatchDateTime > DateTime.MinValue &&
-                    telop.Delay > 0)
-                {
-                    var delayed = telop.MatchDateTime.AddSeconds(telop.Delay);
-                    if (DateTime.Now >= delayed)
-                    {
-                        telop.Delayed = true;
-
-                        SoundController.Default.Play(telop.DelaySound);
-                        var tts = regex != null && !string.IsNullOrWhiteSpace(telop.DelayTextToSpeak) ?
-                            regex.Replace(telop.MatchedLog, telop.DelayTextToSpeak) :
-                            telop.DelayTextToSpeak;
-                        SoundController.Default.Play(tts);
-                    }
-                }
-            });
-        }
-#endif
-
         /// <summary>
         /// Windowをリフレッシュする
         /// </summary>

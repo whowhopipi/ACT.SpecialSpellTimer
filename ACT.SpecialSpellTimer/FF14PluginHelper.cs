@@ -94,14 +94,7 @@
                 {
                     Initialize();
 
-                    if (pluginConfig == null)
-                    {
-                        return null;
-                    }
-
-                    var process = pluginConfig.Process;
-
-                    return (Process)process;
+                    return (Process)pluginConfig?.Process;
                 }
                 catch
                 {
@@ -131,8 +124,8 @@
                 return result;
             }
 
-            dynamic list = pluginScancombat.GetCombatantList();
-            foreach (dynamic item in list.ToArray())
+            var list = pluginScancombat.GetCombatantList() as List<dynamic>;
+            foreach (dynamic item in list)
             {
                 if (item == null)
                 {
@@ -257,7 +250,7 @@
         public static int GetCurrentZoneID()
         {
             var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-            if (string.IsNullOrEmpty(currentZoneName) || 
+            if (string.IsNullOrEmpty(currentZoneName) ||
                 currentZoneName == "Unknown Zone")
             {
                 return 0;
@@ -265,7 +258,7 @@
 
             var zoneList = GetZoneList();
 
-            if (zoneList == null || 
+            if (zoneList == null ||
                 zoneList.Count < 1)
             {
                 return 0;
@@ -307,7 +300,7 @@
 
         public MobType MobType => (MobType)this.type;
 
-        public float GetHorizontalDistance(Combatant target) => 
+        public float GetHorizontalDistance(Combatant target) =>
             (float)Math.Sqrt(
                 Math.Pow(this.PosX - target.PosX, 2) +
                 Math.Pow(this.PosY - target.PosY, 2));
