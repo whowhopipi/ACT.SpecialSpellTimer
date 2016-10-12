@@ -45,6 +45,13 @@
             }
         }
 
+#if false
+        /// <summary>
+        /// Refreshタイマ
+        /// </summary>
+        private System.Windows.Forms.Timer RefreshTimer;
+#endif
+
         /// <summary>
         /// ログポーリングスレッド
         /// </summary>
@@ -363,9 +370,21 @@
                     existsLog = true;
                 }
             }
+#if false
+            // テロップの遅延サウンドを処理する
+            var t4 = Task.Run(() => OnePointTelopController.PlayDelaySound(telopArray.Result));
+
+            // スペルの遅延サウンドを処理する
+            var t5 = Task.Run(() => this.PlayDelaySound(spellArray.Result));
+#endif
 
             // 全滅によるリセットを判定する
             this.ResetCountAtRestart();
+
+#if false
+            // 同期する
+            Task.WaitAll(t4, t5);
+#endif
 
             if (!existsLog)
             {
@@ -665,6 +684,105 @@
             }
             // end loop of LogLines
         }
+
+#if false
+        /// <summary>
+        /// 遅延サウンドを再生する
+        /// </summary>
+        /// <param name="spells"></param>
+        private void PlayDelaySound(
+            IReadOnlyList<Spell> spells)
+        {
+            spells.AsParallel().ForAll(spell =>
+            {
+                var regex = spell.Regex;
+
+                // Repeat対象のSpellを更新する
+                if (spell.RepeatEnabled &&
+                    spell.MatchDateTime > DateTime.MinValue)
+                {
+                    if (DateTime.Now >= spell.MatchDateTime.AddSeconds(spell.RecastTime))
+                    {
+                        spell.MatchDateTime = DateTime.Now;
+                        spell.UpdateDone = false;
+                        spell.OverDone = false;
+                        spell.TimeupDone = false;
+                    }
+                }
+
+                // ｎ秒後のSoundを再生する
+                if (spell.OverTime > 0 && !spell.OverDone &&
+                    spell.MatchDateTime > DateTime.MinValue)
+                {
+                    var over = spell.MatchDateTime.AddSeconds(spell.OverTime);
+
+                    if (DateTime.Now >= over)
+                    {
+                        spell.OverDone = true;
+
+                        this.Play(spell.OverSound);
+                        if (!string.IsNullOrWhiteSpace(spell.OverTextToSpeak))
+                        {
+                            var tts = spell.RegexEnabled && regex != null ?
+                                regex.Replace(spell.MatchedLog, spell.OverTextToSpeak) :
+                                spell.OverTextToSpeak;
+                            this.Play(tts);
+                        }
+                    }
+                }
+
+                // リキャストｎ秒前のSoundを再生する
+                if (spell.BeforeTime > 0 && !spell.BeforeDone &&
+                    spell.MatchDateTime > DateTime.MinValue)
+                {
+                    if (spell.CompleteScheduledTime > DateTime.MinValue)
+                    {
+                        var before = spell.CompleteScheduledTime.AddSeconds(spell.BeforeTime * -1);
+
+                        if (DateTime.Now >= before)
+                        {
+                            spell.BeforeDone = true;
+
+                            this.Play(spell.BeforeSound);
+                            if (!string.IsNullOrWhiteSpace(spell.BeforeTextToSpeak))
+                            {
+                                var tts = spell.RegexEnabled && regex != null ?
+                                    regex.Replace(spell.MatchedLog, spell.BeforeTextToSpeak) :
+                                    spell.BeforeTextToSpeak;
+                                this.Play(tts);
+                            }
+                        }
+                    }
+                }
+
+                // リキャスト完了のSoundを再生する
+                if (spell.RecastTime > 0 && !spell.TimeupDone &&
+                    spell.MatchDateTime > DateTime.MinValue)
+                {
+                    if (spell.CompleteScheduledTime > DateTime.MinValue &&
+                        DateTime.Now >= spell.CompleteScheduledTime)
+                    {
+                        spell.TimeupDone = true;
+
+                        this.Play(spell.TimeupSound);
+                        if (!string.IsNullOrWhiteSpace(spell.TimeupTextToSpeak))
+                        {
+                            var tts = spell.RegexEnabled && regex != null ?
+                                regex.Replace(spell.MatchedLog, spell.TimeupTextToSpeak) :
+                                spell.TimeupTextToSpeak;
+                            this.Play(tts);
+                        }
+                    }
+                }
+
+                // インスタンス化したスペルを削除する
+                if (spell.IsInstance)
+                {
+                    SpellTimerTable.TryRemoveInstance(spell);
+                }
+            });
+        }
+#endif
 
         /// <summary>
         /// スペルパネルWindowを更新する
