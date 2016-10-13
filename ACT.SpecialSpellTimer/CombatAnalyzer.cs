@@ -157,13 +157,11 @@
         /// </summary>
         public void EndPoller()
         {
+            this.isRunning = false;
+
             if (this.storeLogThread != null)
             {
-                if (this.storeLogThread.IsAlive)
-                {
-                    this.storeLogThread.Abort();
-                }
-
+                this.storeLogThread.Join();
                 this.storeLogThread = null;
             }
 
@@ -325,6 +323,10 @@
                         }
                     }
                 }
+                catch (ThreadAbortException)
+                {
+                    this.isRunning = false;
+                }
                 catch (Exception ex)
                 {
                     Logger.Write(
@@ -363,90 +365,6 @@
                     "catch exception at Combat Analyzer OnLogLineRead.\n" +
                     ex.ToString());
             }
-
-#if false
-            if (this.CurrentCombatLogList == null)
-            {
-                return;
-            }
-
-            // ログにペットが含まれている？
-            if (logInfo.logLine.Contains("・エギ") ||
-                logInfo.logLine.Contains("フェアリー・") ||
-                logInfo.logLine.Contains("カーバンクル・"))
-            {
-                return;
-            }
-
-            // インポートログではない？
-            if (!isImport)
-            {
-                // プレイヤ情報とパーティリストを取得する
-                var player = FF14PluginHelper.GetPlayer();
-                var ptlist = LogBuffer.PartyList;
-
-                if (player == null ||
-                    ptlist == null)
-                {
-                    return;
-                }
-
-                // ログにプレイヤ名が含まれている？
-                if (logInfo.logLine.Contains(player.Name))
-                {
-                    return;
-                }
-
-                // ログにパーティメンバ名が含まれている？
-                foreach (var name in ptlist)
-                {
-                    if (logInfo.logLine.Contains(name))
-                    {
-                        return;
-                    }
-                }
-            }
-
-            // キャストのキーワードが含まれている？
-            foreach (var keyword in CastKeywords)
-            {
-                if (logInfo.logLine.Contains(keyword))
-                {
-                    this.StoreCastLog(logInfo);
-                    return;
-                }
-            }
-
-            // アクションのキーワードが含まれている？
-            foreach (var keyword in ActionKeywords)
-            {
-                if (logInfo.logLine.Contains(keyword))
-                {
-                    this.StoreActionLog(logInfo);
-                    return;
-                }
-            }
-
-            // 残HP率のキーワードが含まれている？
-            foreach (var keyword in HPRateKeywords)
-            {
-                if (logInfo.logLine.Contains(keyword))
-                {
-                    this.StoreHPRateLog(logInfo);
-                    return;
-                }
-            }
-
-            // Addedのキーワードが含まれている？
-            foreach (var keyword in AddedKeywords)
-            {
-                if (logInfo.logLine.Contains(keyword))
-                {
-                    this.StoreAddedLog(logInfo);
-                    return;
-                }
-            }
-#endif
         }
 
         /// <summary>
