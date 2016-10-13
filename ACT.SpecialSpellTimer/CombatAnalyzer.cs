@@ -132,10 +132,6 @@
                     Logger.Write("start log poll for analyze.");
                     this.StoreLogPoller();
                 }
-                catch (ThreadAbortException)
-                {
-                    this.isRunning = false;
-                }
                 catch (Exception ex)
                 {
                     Logger.Write(
