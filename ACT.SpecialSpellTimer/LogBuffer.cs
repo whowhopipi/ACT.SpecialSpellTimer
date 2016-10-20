@@ -267,7 +267,10 @@
                 var logLine = logInfo.logLine.Trim();
 
                 // エフェクトに付与されるツールチップ文字を除去する
-                logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
+                if (Settings.Default.RemoveTooltipSymbols)
+                {
+                    logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
+                }
 
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)

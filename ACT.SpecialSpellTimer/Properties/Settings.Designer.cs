@@ -490,5 +490,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["SimpleRegex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RemoveTooltipSymbols {
+            get {
+                return ((bool)(this["RemoveTooltipSymbols"]));
+            }
+            set {
+                this["RemoveTooltipSymbols"] = value;
+            }
+        }
     }
 }

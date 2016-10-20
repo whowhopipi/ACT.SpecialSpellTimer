@@ -328,6 +328,8 @@
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
             this.SaveLogFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.label103 = new System.Windows.Forms.Label();
+            this.RemoveTooltipSymbolsCheckBox = new System.Windows.Forms.CheckBox();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
             this.DetailPanelGroupBox.SuspendLayout();
@@ -2727,6 +2729,8 @@
             // OptionTabPage
             // 
             this.OptionTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.OptionTabPage.Controls.Add(this.RemoveTooltipSymbolsCheckBox);
+            this.OptionTabPage.Controls.Add(this.label103);
             this.OptionTabPage.Controls.Add(this.SimpleRegexCheckBox);
             this.OptionTabPage.Controls.Add(this.label102);
             this.OptionTabPage.Controls.Add(this.ResetOnWipeOutLabel);
@@ -3576,6 +3580,26 @@
             this.SaveLogFileDialog.Filter = "Log files (*.log)|*.log|Text files (*.txt)|*.txt|All files (*.*)|*.*";
             this.SaveLogFileDialog.RestoreDirectory = true;
             // 
+            // label103
+            // 
+            this.label103.AutoSize = true;
+            this.label103.Location = new System.Drawing.Point(751, 219);
+            this.label103.Name = "label103";
+            this.label103.Size = new System.Drawing.Size(151, 12);
+            this.label103.TabIndex = 69;
+            this.label103.Text = "RemoveTooltipSymbolsLabel";
+            // 
+            // RemoveTooltipSymbolsCheckBox
+            // 
+            this.RemoveTooltipSymbolsCheckBox.AutoSize = true;
+            this.RemoveTooltipSymbolsCheckBox.Location = new System.Drawing.Point(952, 218);
+            this.RemoveTooltipSymbolsCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.RemoveTooltipSymbolsCheckBox.Name = "RemoveTooltipSymbolsCheckBox";
+            this.RemoveTooltipSymbolsCheckBox.Size = new System.Drawing.Size(64, 16);
+            this.RemoveTooltipSymbolsCheckBox.TabIndex = 70;
+            this.RemoveTooltipSymbolsCheckBox.Text = "Enabled";
+            this.RemoveTooltipSymbolsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -3942,5 +3966,7 @@
         private System.Windows.Forms.CheckBox ResetOnWipeOutCheckBox;
         private System.Windows.Forms.CheckBox SimpleRegexCheckBox;
         private System.Windows.Forms.Label label102;
+        private System.Windows.Forms.CheckBox RemoveTooltipSymbolsCheckBox;
+        private System.Windows.Forms.Label label103;
     }
 }
