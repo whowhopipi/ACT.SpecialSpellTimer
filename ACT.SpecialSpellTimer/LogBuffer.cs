@@ -7,6 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -89,6 +90,11 @@
         /// パーティメンバの代名詞が有効か？
         /// </summary>
         private static bool enabledPartyMemberPlaceHolder => Settings.Default.EnabledPartyMemberPlaceholder;
+
+        /// <summary>
+        /// 無効な文字を除去するための正規表現
+        /// </summary>
+        private static readonly Regex InvalidCharsRegex = new Regex(@"[\u0000-\u001F\uE000-\uFFFD]+", RegexOptions.Compiled);
 
         #endregion
 
@@ -258,7 +264,10 @@
             LogLineEventArgs logInfo;
             while (logInfoQueue.TryDequeue(out logInfo))
             {
-                string logLine = logInfo.logLine.Trim();
+                var logLine = logInfo.logLine.Trim();
+
+                // 無効な文字を除去する
+                logLine = InvalidCharsRegex.Replace(logLine, string.Empty);
 
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
