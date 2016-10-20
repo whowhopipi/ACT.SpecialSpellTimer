@@ -92,9 +92,9 @@
         private static bool enabledPartyMemberPlaceHolder => Settings.Default.EnabledPartyMemberPlaceholder;
 
         /// <summary>
-        /// 無効な文字を除去するための正規表現
+        /// ツールチップ文字除去するための正規表現
         /// </summary>
-        private static readonly Regex InvalidCharsRegex = new Regex(@"[\u0000-\u001F\uE000-\uFFFD]+", RegexOptions.Compiled);
+        private static readonly Regex TooltipCharsRegex = new Regex(@".\u0001\u0001\uFFFD", RegexOptions.Compiled);
 
         #endregion
 
@@ -266,8 +266,8 @@
             {
                 var logLine = logInfo.logLine.Trim();
 
-                // 無効な文字を除去する
-                logLine = InvalidCharsRegex.Replace(logLine, string.Empty);
+                // エフェクトに付与されるツールチップ文字を除去する
+                logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
 
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
