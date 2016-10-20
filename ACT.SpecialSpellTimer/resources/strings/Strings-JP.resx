@@ -1105,4 +1105,8 @@
     <value>正規表現を単純にする</value>
     <comment>To simplify the Regex.</comment>
   </data>
+  <data name="RemoveTooltipSymbolsLabel" xml:space="preserve">
+    <value>ツールチップ記号を除去する</value>
+    <comment>To remove Tooltip symbols.</comment>
+  </data>
 </root>

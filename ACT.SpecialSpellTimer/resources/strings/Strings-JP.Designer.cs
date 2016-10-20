@@ -1573,6 +1573,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   ツールチップ記号を除去する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string RemoveTooltipSymbolsLabel {
+            get {
+                return ResourceManager.GetString("RemoveTooltipSymbolsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   リキャスト後に繰り返す に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string RepeatCheckBox {
