@@ -656,6 +656,7 @@
 
                             // 遅延サウンドタイマを開始(更新)する
                             spell.StartOverSoundTimer();
+                            spell.StartBeforeSoundTimer();
                             spell.StartTimeupSoundTimer();
                         }
                     }
