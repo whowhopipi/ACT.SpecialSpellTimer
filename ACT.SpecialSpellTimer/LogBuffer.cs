@@ -148,7 +148,12 @@
         /// </summary>
         public LogBuffer()
         {
-            ActGlobals.oFormActMain.OnLogLineRead += this.oFormActMain_OnLogLineRead;
+            if (Settings.Default.DetectPacketDump)
+            {
+                ActGlobals.oFormActMain.BeforeLogLineRead += this.OnBeforeLogLineRead;
+            }
+
+            ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
         }
 
         /// <summary>
@@ -173,7 +178,8 @@
                 return;
             }
 
-            ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
+            ActGlobals.oFormActMain.BeforeLogLineRead -= this.OnBeforeLogLineRead;
+            ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
 
             LogLineEventArgs ignore;
             while (logInfoQueue.TryDequeue(out ignore)) ;
@@ -193,11 +199,13 @@
         #region ACT event hander
 
         /// <summary>
-        /// ログを一行読取った
+        /// OnLogLineRead
         /// </summary>
         /// <param name="isImport">Importか？</param>
         /// <param name="logInfo">ログ情報</param>
-        private void oFormActMain_OnLogLineRead(bool isImport, LogLineEventArgs logInfo)
+        /// <remarks>
+        /// FFXIVプラグインが加工した後のログが通知されるイベント</remarks>
+        private void OnLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
 #if !DEBUG
             if (isImport)
@@ -214,6 +222,51 @@
             }
 
             this.firstLogArrived = true;
+        }
+
+        /// <summary>
+        /// OnBeforeLogLineRead
+        /// </summary>
+        /// <param name="isImport">Importか？</param>
+        /// <param name="logInfo">ログ情報</param>
+        /// <remarks>
+        /// FFXIVプラグインが加工する前のログが通知されるイベント
+        /// こちらは一部カットされてしまうログがカットされずに通知される
+        /// またログのデリミタが異なるため、通常のログと同様に扱えるようにデリミタを変換して取り込む</remarks>
+        private void OnBeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)
+        {
+            if (isImport)
+            {
+                return;
+            }
+
+            try
+            {
+                var data = logInfo.logLine.Split('|');
+
+                if (data.Length >= 2)
+                {
+                    var messageType = int.Parse(data[0]);
+                    var timeStamp = DateTime.Parse(data[1]);
+
+                    switch (messageType)
+                    {
+                        // 251:Debug, 252:PacketDump, 253:Version
+                        case 251:
+                        case 252:
+                        case 253:
+                            logInfo.logLine =
+                                $"[{timeStamp:HH:mm:ss.fff}] {messageType:X2}:{string.Join(":", data)}";
+
+                            this.logInfoQueue.Enqueue(logInfo);
+                            break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // 例外は握りつぶす
+            }
         }
 
         #endregion

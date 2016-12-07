@@ -222,6 +222,7 @@
             this.ResetOnWipeOutCheckBox.Checked = Settings.Default.ResetOnWipeOut;
             this.SimpleRegexCheckBox.Checked = Settings.Default.SimpleRegex;
             this.RemoveTooltipSymbolsCheckBox.Checked = Settings.Default.RemoveTooltipSymbols;
+            this.DetectPacketDumpcheckBox.Checked = Settings.Default.DetectPacketDump;
 
             var sw1 = this.SaveLogCheckBox.Checked;
             this.SaveLogTextBox.Enabled = sw1;
@@ -275,6 +276,7 @@
             Settings.Default.ResetOnWipeOut = this.ResetOnWipeOutCheckBox.Checked;
             Settings.Default.SimpleRegex = this.SimpleRegexCheckBox.Checked;
             Settings.Default.RemoveTooltipSymbols = this.RemoveTooltipSymbolsCheckBox.Checked;
+            Settings.Default.DetectPacketDump = this.DetectPacketDumpcheckBox.Checked;
 
             SpellTimerCore.Default.InvalidateSettings();
 

@@ -529,6 +529,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   FCから始まるPacketDumpも解析対象にする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DetectPacketDumpLabel {
+            get {
+                return ResourceManager.GetString("DetectPacketDumpLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ※0にすると無効（消去しない） に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string DisableWhenClear {

@@ -1109,4 +1109,8 @@
     <value>To remove Tooltip symbols.</value>
     <comment>ツールチップ記号を除去する</comment>
   </data>
+  <data name="DetectPacketDumpLabel" xml:space="preserve">
+    <value>Detect FC:PacketDump</value>
+    <comment>FCから始まるPacketDumpも解析対象にする</comment>
+  </data>
 </root>

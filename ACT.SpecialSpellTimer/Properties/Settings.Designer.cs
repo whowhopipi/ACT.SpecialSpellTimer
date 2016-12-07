@@ -502,5 +502,17 @@ namespace ACT.SpecialSpellTimer.Properties {
                 this["RemoveTooltipSymbols"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DetectPacketDump {
+            get {
+                return ((bool)(this["DetectPacketDump"]));
+            }
+            set {
+                this["DetectPacketDump"] = value;
+            }
+        }
     }
 }
