@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading;
@@ -148,7 +149,11 @@
         /// </summary>
         public LogBuffer()
         {
-            ActGlobals.oFormActMain.BeforeLogLineRead += this.OnBeforeLogLineRead;
+            // BeforeLogLineReadイベントを登録する
+            // 無理やり一番目に処理されるようにする
+            this.AddOnBeforeLogLineRead();
+
+            // LogLineRead1イベントを登録する
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
         }
 
@@ -264,10 +269,19 @@
                         case 251:
                         case 252:
                         case 253:
-                            logInfo.logLine =
+                            // ログオブジェクトをコピーする
+                            var copyLogInfo = new LogLineEventArgs(
+                                logInfo.logLine,
+                                logInfo.detectedType,
+                                logInfo.detectedTime,
+                                logInfo.detectedZone,
+                                logInfo.inCombat);
+
+                            // ログを出力用に書き換える
+                            copyLogInfo.logLine =
                                 $"[{timeStamp:HH:mm:ss.fff}] {messageType:X2}:{string.Join(":", data)}";
 
-                            this.logInfoQueue.Enqueue(logInfo);
+                            this.logInfoQueue.Enqueue(copyLogInfo);
                             break;
                     }
                 }
@@ -275,6 +289,51 @@
             catch (Exception)
             {
                 // 例外は握りつぶす
+            }
+        }
+
+        /// <summary>
+        /// OnBeforeLogLineRead イベントを追加する
+        /// </summary>
+        /// <remarks>
+        /// スペスペのOnBeforeLogLineReadをACT本体に登録する。
+        /// ただし、FFXIVプラグインよりも先に処理する必要があるのでイベントを一旦除去して
+        /// スペスペのイベントを登録した後に元のイベントを登録する</remarks>
+        private void AddOnBeforeLogLineRead()
+        {
+            try
+            {
+                var fi = ActGlobals.oFormActMain.GetType().GetField(
+                    "BeforeLogLineRead",
+                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static);
+
+                var beforeLogLineReadDelegate =
+                    fi.GetValue(ActGlobals.oFormActMain)
+                    as Delegate;
+
+                if (beforeLogLineReadDelegate != null)
+                {
+                    var handlers = beforeLogLineReadDelegate.GetInvocationList();
+
+                    // イベントを一旦すべて抜く
+                    foreach (var handler in handlers)
+                    {
+                        ActGlobals.oFormActMain.BeforeLogLineRead -= (LogLineEventDelegate)handler;
+                    }
+
+                    // スペスペのイベントをハンドラを最初に登録する
+                    ActGlobals.oFormActMain.BeforeLogLineRead += this.OnBeforeLogLineRead;
+
+                    // イベントを戻す
+                    foreach (var handler in handlers)
+                    {
+                        ActGlobals.oFormActMain.BeforeLogLineRead += (LogLineEventDelegate)handler;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("AddOnBeforeLogLineRead error:", ex);
             }
         }
 
