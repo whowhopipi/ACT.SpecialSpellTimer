@@ -209,6 +209,13 @@
                 return;
             }
 #endif
+            // 18文字以下のログは読み捨てる
+            // なぜならば、タイムスタンプ＋ログタイプのみのログだから
+            if (logInfo.logLine.Length <= 18)
+            {
+                return;
+            }
+
             this.logInfoQueue.Enqueue(logInfo);
 
             // 最初のログならば動作ログに出力する
@@ -236,6 +243,7 @@
                 return;
             }
 
+            // PacketDumpを解析対象にしていないならば何もしない
             if (!Settings.Default.DetectPacketDump)
             {
                 return;
