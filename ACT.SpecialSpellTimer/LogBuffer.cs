@@ -148,11 +148,7 @@
         /// </summary>
         public LogBuffer()
         {
-            if (Settings.Default.DetectPacketDump)
-            {
-                ActGlobals.oFormActMain.BeforeLogLineRead += this.OnBeforeLogLineRead;
-            }
-
+            ActGlobals.oFormActMain.BeforeLogLineRead += this.OnBeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
         }
 
@@ -236,6 +232,11 @@
         private void OnBeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
             if (isImport)
+            {
+                return;
+            }
+
+            if (!Settings.Default.DetectPacketDump)
             {
                 return;
             }
