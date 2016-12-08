@@ -153,7 +153,7 @@
             // 無理やり一番目に処理されるようにする
             this.AddOnBeforeLogLineRead();
 
-            // LogLineRead1イベントを登録する
+            // LogLineReadイベントを登録する
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
         }
 
@@ -315,16 +315,16 @@
                 {
                     var handlers = beforeLogLineReadDelegate.GetInvocationList();
 
-                    // イベントを一旦すべて抜く
+                    // 全てのイベントハンドラを一度解除する
                     foreach (var handler in handlers)
                     {
                         ActGlobals.oFormActMain.BeforeLogLineRead -= (LogLineEventDelegate)handler;
                     }
 
-                    // スペスペのイベントをハンドラを最初に登録する
+                    // スペスペのイベントハンドラを最初に登録する
                     ActGlobals.oFormActMain.BeforeLogLineRead += this.OnBeforeLogLineRead;
 
-                    // イベントを戻す
+                    // 解除したイベントハンドラを登録し直す
                     foreach (var handler in handlers)
                     {
                         ActGlobals.oFormActMain.BeforeLogLineRead += (LogLineEventDelegate)handler;
