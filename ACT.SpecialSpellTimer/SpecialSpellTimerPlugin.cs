@@ -141,7 +141,7 @@
             {
                 Logger.Write("Plugin Start.");
 
-                pluginScreenSpace.Text = "SpecialSpellTimer(スペスペ)";
+                pluginScreenSpace.Text = Translate.Get("LN_Tabname");
                 this.PluginStatusLabel = pluginStatusText;
 
                 // アップデートを確認する

@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>E:\Advanced Combat Tracker\Plugins\SpecialSpellTimer\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -36,8 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Advanced Combat Tracker">
-      <HintPath>..\..\ACTv3\Advanced Combat Tracker.exe</HintPath>
-      <Private>False</Private>
+      <HintPath>E:\Advanced Combat Tracker\Advanced Combat Tracker.exe</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -96,11 +95,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="resources\strings\Strings-EN.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -111,6 +105,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings-JP.resx</DependentUpon>
     </Compile>
+    <Compile Include="resources\strings\Strings-KR.Designer.cs" />
     <Compile Include="SetConditionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +124,7 @@
     <Compile Include="SelectJobForm.Designer.cs">
       <DependentUpon>SelectJobForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.Global.cs" />
     <Compile Include="Sound\SoundController.cs" />
     <Compile Include="SpecialSpellTimerPlugin.cs" />
     <Compile Include="SpellTimerControl.xaml.cs">
@@ -266,10 +262,6 @@
     <Compile Include="ConfigPanel.DQXOption.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Include="SpellTimerDataSet.xsc">
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
     </None>
@@ -301,6 +293,7 @@
       <LastGenOutput>Strings-JP.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="resources\strings\Strings-KR.resx" />
     <EmbeddedResource Include="SetConditionForm.resx">
       <DependentUpon>SetConditionForm.cs</DependentUpon>
     </EmbeddedResource>
