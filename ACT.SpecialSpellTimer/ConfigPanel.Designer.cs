@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.TabControl = new System.Windows.Forms.TabControl();
+            this.TabControl = new TabControlExt();
             this.SpecialSpellTabPage = new System.Windows.Forms.TabPage();
             this.DetailPanelGroupBox = new System.Windows.Forms.GroupBox();
             this.FixedPositionSpellCheckBox = new System.Windows.Forms.CheckBox();
@@ -3691,7 +3691,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TabControl TabControl;
+        private TabControlExt TabControl;
         private System.Windows.Forms.TabPage SpecialSpellTabPage;
         private System.Windows.Forms.TabPage OptionTabPage;
         private System.Windows.Forms.TreeView SpellTimerTreeView;
