@@ -1113,4 +1113,8 @@
     <value>FCから始まるPacketDumpも解析対象にする</value>
     <comment>Detect FC:PacketDump</comment>
   </data>
+  <data name="LN_Tabname" xml:space="preserve">
+    <value>スペシャルスペルタイマ(スペスペ)</value>
+    <comment>Special SpellTimer (SupeSupe)</comment>
+  </data>
 </root>

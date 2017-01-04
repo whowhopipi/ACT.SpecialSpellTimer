@@ -22,14 +22,14 @@ namespace ACT.SpecialSpellTimer.resources.strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings_JP {
+    internal class Strings_KR {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Strings_JP() {
+        internal Strings_KR() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ACT.SpecialSpellTimer.resources.strings.Strings-JP", typeof(Strings_JP).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ACT.SpecialSpellTimer.resources.strings.Strings-KR", typeof(Strings_KR).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   巴術士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   비술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ACN {
             get {
@@ -70,7 +70,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ACT.SpecialSpellTimer Assemblyの解決で例外が発生しました。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스페셜 스펠 타이머에 어셈블리 예외가 발생했습니다.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ACTAssemblyError {
             get {
@@ -79,7 +79,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   アクション과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   동작과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ActionHeader {
             get {
@@ -88,7 +88,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   アクター과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   시전자과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ActorHeader {
             get {
@@ -97,7 +97,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ACT.SpecialSpellTimer プラグインの初期化で例外が発生しました。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스페셜 스펠 타이머에 초기화 예외가 발생했습니다.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ACTPluginStartError {
             get {
@@ -106,7 +106,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ACT.SpecialSpellTimer プラグインの終了で例外が発生しました。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스페셜 스펠 타이머에 종료 예외가 발생했습니다.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ACTPluginStopError {
             get {
@@ -115,7 +115,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   追加과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   추가과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AddButton {
             get {
@@ -124,7 +124,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   継続的にマッチさせてメッセージを追加表示する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   타이머 추가시 재시작과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AddMessageCheckBox {
             get {
@@ -133,7 +133,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   アラーム及びTTS과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   알림 또는 TTS (글자 읽어주기 보조도구)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AlarmTab {
             get {
@@ -142,7 +142,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   錬金術師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   연금술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ALC {
             get {
@@ -151,7 +151,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全てOFF과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모두 끄기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AllOffButton {
             get {
@@ -160,7 +160,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全てON과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모두 켜기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AllOnButton {
             get {
@@ -169,7 +169,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップを常に表示する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   항상 위과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AlwaysDisplayTelop {
             get {
@@ -178,7 +178,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   分析する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   분석과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AnalyzeCombat {
             get {
@@ -187,7 +187,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   適用する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   확인과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ApplyButton {
             get {
@@ -196,7 +196,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   弓術士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   궁술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ARC {
             get {
@@ -205,7 +205,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   甲冑師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   갑주제작사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ARM {
             get {
@@ -214,7 +214,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   占星術師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   점성술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AST {
             get {
@@ -232,7 +232,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   逆(遠い順)にする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   역순 정렬과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string AutoSortReverseCheckbox {
             get {
@@ -241,7 +241,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   背景色のアルファチャンネル과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   배경색 알파 채널(투명도)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string BackgroundColorAlphaTitle {
             get {
@@ -250,7 +250,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ﾊﾞｰのｻｲｽﾞ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   막대 크기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string BarSize {
             get {
@@ -259,7 +259,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   黒魔道士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   흑마도사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string BLM {
             get {
@@ -277,7 +277,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   園芸師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   원예가과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string BOT {
             get {
@@ -286,7 +286,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   吟遊詩人과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   음유시인과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string BRD {
             get {
@@ -304,7 +304,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   鍛冶師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   대장장이과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string BSM {
             get {
@@ -313,7 +313,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   バッファのサイズ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   버퍼 사이즈과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string BufferSize {
             get {
@@ -322,7 +322,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   キャンセル과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   취소과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CancelButton {
             get {
@@ -331,7 +331,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   背景色のアルファチャンネルを変更する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   배경 투명도과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeBackgroundAlpha {
             get {
@@ -340,7 +340,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   背景色を変更する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   배경 색상과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeBackgroundColor {
             get {
@@ -349,7 +349,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   バーの色を変更する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   막대 색상과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeBarColor {
             get {
@@ -358,7 +358,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   バーのアウトラインの色を変更する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   막대 테두리 색상과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeBarOutlineColor {
             get {
@@ -367,7 +367,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※右クリックで変更과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   오른쪽 클릭으로 수정과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeByRightClicking {
             get {
@@ -376,7 +376,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   フォントを変更する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   글씨체과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeFont {
             get {
@@ -385,7 +385,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   フォントの色を変更する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   글자 색상과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeFontColor {
             get {
@@ -394,7 +394,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   フォントのアウトラインの色を変更する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   글자 테두리 색상과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ChangeFontOutlineColor {
             get {
@@ -403,7 +403,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全て削除과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모두 삭제과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ClearAllButton {
             get {
@@ -412,7 +412,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   クリックスルー과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   클릭 통과과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ClickThrough {
             get {
@@ -421,7 +421,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   幻術士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   환술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CNJ {
             get {
@@ -430,7 +430,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   戦闘アナライザ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   전투 분석과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CombatAnalyzerTabTitle {
             get {
@@ -439,7 +439,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログを解析しています . . .과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그를 분석 중입니다...과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CombatAnalyzing {
             get {
@@ -448,7 +448,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   分析用に敵の行動を記録する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   전투 로그 분석 활성화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CombatLogEnabledCheckBox {
             get {
@@ -457,7 +457,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   「, (カンマ)」で改行になります과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   콤마 &quot;,&quot;로 줄 변경과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CommaLineBreakExplain {
             get {
@@ -466,7 +466,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログをコピーする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 복사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CopyLog {
             get {
@@ -475,7 +475,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログの詳細をコピーする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   상세 로그 복사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CopyLogDetail {
             get {
@@ -484,7 +484,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   木工師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   목수과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CRP {
             get {
@@ -493,7 +493,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   調理師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   요리사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string CUL {
             get {
@@ -502,7 +502,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ディレイ後に鳴らすサウンド과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   소리 재생 지연과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DelayedSoundEffect {
             get {
@@ -511,7 +511,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログにマッチしてｎ秒後に鳴らすサウンド과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 일치 시 N초 후 소리 재생과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DelayedSoundEffectAfterMatch {
             get {
@@ -520,7 +520,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   削除과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   삭제과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DeleteButton {
             get {
@@ -529,16 +529,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   FCから始まるPacketDumpも解析対象にする과(와) 유사한 지역화된 문자열을 찾습니다.
-        /// </summary>
-        internal static string DetectPacketDumpLabel {
-            get {
-                return ResourceManager.GetString("DetectPacketDumpLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   ※0にすると無効（消去しない）과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ 비활성 하려면 0으로 설정 (숨겨지지 않음)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DisableWhenClear {
             get {
@@ -547,7 +538,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   表示順과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   우선 순위과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DisplayOrderLabel {
             get {
@@ -556,7 +547,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   残り時間をプログレスバーで表示する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   진행 막대 표시과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DisplayRemainingTimeCheckBox {
             get {
@@ -565,7 +556,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒間表示する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   초과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DisplaySeconds {
             get {
@@ -574,7 +565,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャスト後に消去しない과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   항상 표시 (완료 시)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DontHideCheckBox {
             get {
@@ -583,7 +574,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ダウンロードしますか？과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   다운로드를 원하십니까?과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DownloadPrompt {
             get {
@@ -592,7 +583,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   DQX向け機能を有効にする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   DQX 기능 활성화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXOptionEnabledCheckBox {
             get {
@@ -601,7 +592,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   DQX向けオプション과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   DQX 설정과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXOptionTabPage {
             get {
@@ -610,7 +601,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;me&gt; : プレイヤー名(パーティメンバ1)과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;me&gt; : 자신과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPlayerNameLabel {
             get {
@@ -619,7 +610,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;2&gt; : パーティメンバ2과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;2&gt; : 파티원 2과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPTMember2Label {
             get {
@@ -628,7 +619,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;3&gt; : パーティメンバ3과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;3&gt; : 파티원 3과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPTMember3Label {
             get {
@@ -637,7 +628,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;4&gt; : パーティメンバ4과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;4&gt; : 파티원 4과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPTMember4Label {
             get {
@@ -646,7 +637,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;5&gt; : パーティメンバ5과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;5&gt; : 파티원 5과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPTMember5Label {
             get {
@@ -655,7 +646,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;6&gt; : パーティメンバ6과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;6&gt; : 파티원 6과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPTMember6Label {
             get {
@@ -664,7 +655,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;7&gt; : パーティメンバ7과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;7&gt; : 파티원 7과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPTMember7Label {
             get {
@@ -673,7 +664,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   &lt;8&gt; : パーティメンバ8과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   &lt;8&gt; : 파티원 8과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DQXPTMember8Label {
             get {
@@ -682,7 +673,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   竜騎士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   용기사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DRG {
             get {
@@ -700,7 +691,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   暗黒騎士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   암흑기사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string DRK {
             get {
@@ -718,7 +709,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒後から과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   경과 시간과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Duration {
             get {
@@ -727,7 +718,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   経過秒과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   경과 초과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ElapsedHeader {
             get {
@@ -736,7 +727,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   有効과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   활성화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Enabled {
             get {
@@ -745,7 +736,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   有効과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   활성화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string EnabledSpellTimerNoDecimalCheckBox {
             get {
@@ -754,7 +745,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャスト完了後に消去する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   시전 완료 후 타이머 숨기기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string EraseAfterRecast {
             get {
@@ -763,7 +754,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Export과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   내보내기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ExportButton {
             get {
@@ -772,7 +763,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   CSV保存과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   내보내기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ExportCSVButton {
             get {
@@ -781,7 +772,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   元のリキャストタイムを超えて延長する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   시전시간 확장과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ExtendBeyondOriginalRecastTimeCheckBox {
             get {
@@ -790,7 +781,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒を上限とする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   확장 시간 제한과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ExtendLimitLabel {
             get {
@@ -799,7 +790,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペル位置を固定する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   시전 위치 고정과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string FixedPositionSpell {
             get {
@@ -808,7 +799,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   漁師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   어부과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string FSH {
             get {
@@ -817,7 +808,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全般과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   일반과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string GeneralTab {
             get {
@@ -826,7 +817,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   剣術士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   검술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string GLD {
             get {
@@ -835,7 +826,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   彫金師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   보석공예사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string GSM {
             get {
@@ -844,7 +835,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペル名を表示しない과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스킬 이름 숨기기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string HideSpellNameCheckBox {
             get {
@@ -853,7 +844,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   非アクティブのときオーバーレイを隠す과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   비활성화 시 오버레이 숨기기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string HideWhenNotActiceCheckBox {
             get {
@@ -862,7 +853,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   水平レイアウト과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   수평 레이아웃과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string HorizontalLayout {
             get {
@@ -880,7 +871,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログにマッチした直後に鳴らすサウンド과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 일치 시 소리 재생과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ImmediateSoundEffect {
             get {
@@ -889,7 +880,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Import과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   가져오기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ImportButton {
             get {
@@ -898,7 +889,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   初期化과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   초기값으로 설정과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string InitializationButton {
             get {
@@ -907,7 +898,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   稼働中과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   실행 중과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string IsRunning {
             get {
@@ -916,7 +907,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   停止中과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   정지 중과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string IsStopping {
             get {
@@ -925,7 +916,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   言語 (Language)과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   언어 (Language)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LanguageLabel {
             get {
@@ -934,7 +925,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   行과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   줄과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LinesLabel {
             get {
@@ -943,16 +934,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペシャルスペルタイマ(スペスペ)과(와) 유사한 지역화된 문자열을 찾습니다.
-        /// </summary>
-        internal static string LN_Tabname {
-            get {
-                return ResourceManager.GetString("LN_Tabname", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   槍術士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   창술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LNC {
             get {
@@ -961,7 +943,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   配色を読み込む과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   색상표 가져오기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LoadColorSet {
             get {
@@ -970,7 +952,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   XMLファイルの読み込みで例外が発生しました과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   XML 파일에 오류가 있습니다.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LoadXMLError {
             get {
@@ -979,7 +961,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   位置과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   위치과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Location {
             get {
@@ -988,7 +970,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LogHeader {
             get {
@@ -997,7 +979,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Log과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LogLabel {
             get {
@@ -1006,7 +988,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログ処理の最短間隔과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 처리 대기시간과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LogPollSleepIntervalLabel {
             get {
@@ -1015,7 +997,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   種類과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   타입과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LogTypeHeader {
             get {
@@ -1024,7 +1006,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   革細工師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   가죽공예사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LTW {
             get {
@@ -1033,7 +1015,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   マージン과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   여백과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Margin {
             get {
@@ -1042,7 +1024,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログに対して部分一致でマッチングします\n例)\nマッチングワード : は「凍てつく剣」の構え\nログ : シヴァは「凍てつく剣」の構え。\n→ マッチします과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   This looks for partial matches in the game log\nExample)\r\nIf you chose &quot;freezing sword&quot; as your matching text.\nAnd the log contains the string &quot;Shiva uses stance of freezing sword&quot;.\n→ Then this would match that line in the game log.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MatchingKeywordExplanationTooltip {
             get {
@@ -1051,7 +1033,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログに対するマッチングワード과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 일치 시 보여주기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MatchingLogWordLabel {
             get {
@@ -1060,7 +1042,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   延長するマッチングワード과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 일치 시 확장하기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MatchingLogWordToExpandLabel {
             get {
@@ -1069,7 +1051,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   非表示にするマッチングワード과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 일치 시 사라지기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MatchingWordsToHide {
             get {
@@ -1078,7 +1060,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログにマッチして・・・과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   지연 표시과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MatchLogLabel {
             get {
@@ -1087,7 +1069,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   機工士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   기공사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MCH {
             get {
@@ -1177,7 +1159,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップに表示するメッセージ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   틱 표시를 보이기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MessageOnTickerLabel {
             get {
@@ -1186,7 +1168,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ミリ秒과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   밀리초과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Millisecond {
             get {
@@ -1195,7 +1177,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   採掘師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   광부과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MIN {
             get {
@@ -1204,7 +1186,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   モンク과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   몽크과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MNK {
             get {
@@ -1222,7 +1204,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   モニター과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   화면과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MonitorTabPage {
             get {
@@ -1231,7 +1213,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   斧術士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   도끼술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string MRD {
             get {
@@ -1240,7 +1222,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   New Telop과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   새 표식과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string NewTelop {
             get {
@@ -1249,7 +1231,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   アップデートの確認で例外が発生しました。{0}과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   An exception occurred in the confirmation of updates: {0}과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string NewVersionError {
             get {
@@ -1258,7 +1240,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   {0} の新しいバージョンがリリースされています。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   새 버전 {0}이 출시되었습니다.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string NewVersionReleased {
             get {
@@ -1267,7 +1249,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   忍者과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   닌자과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string NIN {
             get {
@@ -1303,7 +1285,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※ログマッチ時に標準のスペルタイマーへの通知が行われます（試験的な機能）과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ 로그 일치 시 ACT 스펠타이머로 알림 (실험적인 기능)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string NotifyNormalSpellTimerExplainLabel {
             get {
@@ -1312,7 +1294,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   標準のスペルタイマーに通知する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스펠타이머로 알림과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string NotifyNormalSpellTimerLabel {
             get {
@@ -1321,7 +1303,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   No과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   순번과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string NumberHeader {
             get {
@@ -1330,7 +1312,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   OK과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   확인과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OKButton {
             get {
@@ -1339,7 +1321,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   0:透明, 255:不透明과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   0:투명, 255:불투명과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OpacityDescription {
             get {
@@ -1348,7 +1330,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   オプション과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   설정과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OptionTabPageTitle {
             get {
@@ -1357,7 +1339,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャストタイムを重ねる과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   재사용 대기 시간 겹쳐서 표시하기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OverlapRecastTimeCheckBox {
             get {
@@ -1366,7 +1348,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   オーバーレイの表示スイッチ\n現在の状態 -&gt; OFF과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   오버레이 표시 : 비표시중과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OverlayDisplaySwitchIsOff {
             get {
@@ -1375,7 +1357,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   オーバーレイの表示スイッチ\n現在の状態 -&gt; ON과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   오버레이 표시 : 표시중과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OverlayDisplaySwitchIsOn {
             get {
@@ -1384,7 +1366,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   FFXIVが起動していなくてもオーバーレイを表示する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   파이널판타지가 실행중이지 않을때도 오버레이 사용과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OverlayForceVisibleCheckBox {
             get {
@@ -1393,7 +1375,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルタイマが完了した時のテキスト(Over)과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   타이머 완료 시 표시할 텍스트 (이상)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OverTextLabel {
             get {
@@ -1402,7 +1384,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   表示するパネルの名前과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   그룹명과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PanelNameLabel {
             get {
@@ -1411,7 +1393,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※&lt;2&gt;～&lt;8&gt;が使用可能になります。ただし2～8の順序は正しくない場合があります。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ &lt;2&gt; - &lt;8&gt; 를 사용할 수 있지만 순서가 다를 수 있음.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PartyMemberNumberExplainLabel {
             get {
@@ -1420,7 +1402,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   PTメンバの代名詞を有効にする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   파티원 이름 매칭 사용과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PartyPronounLabel {
             get {
@@ -1438,7 +1420,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ナイト과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   나이트과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PLD {
             get {
@@ -1456,7 +1438,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Please Wait과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   기다려주세요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PleaseWait1 {
             get {
@@ -1465,7 +1447,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Please Wait .과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   기다려주세요 .과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PleaseWait2 {
             get {
@@ -1474,7 +1456,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Please Wait . .과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   기다려주세요 . .과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PleaseWait3 {
             get {
@@ -1483,7 +1465,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Please Wait . . .과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   기다려주세요 . . .과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PleaseWait4 {
             get {
@@ -1492,7 +1474,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Please Wait . . . .과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   기다려주세요 . . . .과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PleaseWait5 {
             get {
@@ -1501,7 +1483,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※より小さいほうが優先과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ 더 작은 쪽을 우선과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PriorityExplainLabel {
             get {
@@ -1510,7 +1492,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   プログレスバーの見た目과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   진행 막대 형태과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ProgressBarAppearance {
             get {
@@ -1519,7 +1501,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   格闘士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   격투사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string PUG {
             get {
@@ -1528,7 +1510,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルタイマが完了した時のテキスト(Ready)과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   타이머 종료 후 표시할 텍스트 (완료 시)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ReadyTextLabel {
             get {
@@ -1537,7 +1519,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャスト完了時に鳴らすサウンド과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   타이머 초과 시 표시할 텍스트과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string RecastCompleteSoundEffect {
             get {
@@ -1546,7 +1528,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルのリキャスト時間(秒)과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   재사용 대기 시간 (초)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string RecastTimeLabel {
             get {
@@ -1555,7 +1537,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   アイコン暗転時の明るさ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   재사용 대기 시간 초기화 시 아이콘 반짝임과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ReduceIconBrightness {
             get {
@@ -1564,7 +1546,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャスト中はアイコンを暗くする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   재사용 대기 시간 초기화 시 아이콘 반짝임과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ReduceIconBrightnessCheckBox {
             get {
@@ -1582,7 +1564,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   正規表現が無効でも部分一致は既定で有効となっています\n正規表現OFFでの部分一致のほうがパフォーマンスは向上します과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   정규식 매칭은 기본적으로 비활성입니다.\n성능 향상을 위해서는 정규 표현식 대신 부분일치를 사용하시기 바랍니다. (c# Regex가 느림의 의미인 듯)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string RegularExpressionExplanationTooltip {
             get {
@@ -1591,7 +1573,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ツールチップ記号を除去する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   툴팁 메세지 삭제과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string RemoveTooltipSymbolsLabel {
             get {
@@ -1600,7 +1582,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャスト後に繰り返す과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   반복과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string RepeatCheckBox {
             get {
@@ -1609,7 +1591,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※再起動が必要과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ 변경 시 재시작 필요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string RequiresRestart {
             get {
@@ -1618,7 +1600,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   あなたはすべての設定とテロップ位置をリセットしてもよろしいですか？과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   정말로 모든 설정과 틱 표시를 초기화 하시겠습니까?과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ResetAllPrompt {
             get {
@@ -1627,7 +1609,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全滅時にカウントをリセットする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   전멸 시 카운터 재설정과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ResetOnWipeOutLabel {
             get {
@@ -1636,7 +1618,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルをこのバーサイズで統一する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 스펠타이머 막대 크기 초기화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ResetSpellBarSize {
             get {
@@ -1645,7 +1627,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルをこの配色で統一する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 스펠타이머 색상 초기화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ResetSpellColor {
             get {
@@ -1654,7 +1636,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルをこのフォントで統一する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 스펠타이머 글씨체 초기화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ResetSpellFont {
             get {
@@ -1663,7 +1645,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップをこの配色で統一する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 스펠타이머 표식 초기화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ResetTelopColor {
             get {
@@ -1672,7 +1654,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップをこのフォントで統一する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 스펠타이머 표식 글씨체 초기화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ResetTelopFont {
             get {
@@ -1681,7 +1663,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   進行方向を逆にする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   막대 진행방향 바꾸기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ReverseDirectionCheckbox {
             get {
@@ -1690,7 +1672,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   双剣士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   쌍검사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ROG {
             get {
@@ -1699,7 +1681,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   サンプルスペル과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   예시 스킬과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SampleSpell {
             get {
@@ -1708,7 +1690,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   サンプルテロップ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   예시 타이머과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SampleTelop {
             get {
@@ -1717,7 +1699,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   配色を保存する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   색상표 저장과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SaveColorSet {
             get {
@@ -1726,7 +1708,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ログを保存する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   로그 저장과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SaveLogLabel {
             get {
@@ -1735,7 +1717,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   学者과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   학자과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SCH {
             get {
@@ -1753,7 +1735,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   画面の更新間隔과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   화면 갱신 시간과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ScreenUpdateTimeLabel {
             get {
@@ -1762,7 +1744,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒延長する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   초과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SecondsLabel {
             get {
@@ -1771,7 +1753,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒後과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   초 후과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SecondsLater {
             get {
@@ -1780,7 +1762,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全て選択과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모두 선택과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SelectAll {
             get {
@@ -1789,7 +1771,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ジョブを限定する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   직업 필터과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SelectJobButton {
             get {
@@ -1798,7 +1780,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※対象とするジョブを限定したい場合はチェックをONにしてください과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ 적용할 직업을 체크하세요 (체크하지 않으면 필터되지 않음)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SelectJobSubtitle {
             get {
@@ -1807,7 +1789,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   対象のジョブを選択してください과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   적용 직업 선택창과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SelectJobTitle {
             get {
@@ -1816,7 +1798,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ゾーンを限定する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   지역 필터과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SelectZoneButton {
             get {
@@ -1825,7 +1807,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   対象のゾーンを選択して下さい과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   지역을 선택하세요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SelectZoneTitle {
             get {
@@ -1834,7 +1816,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   開始条件を設定する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   시작 조건과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SetConditionForStartButton {
             get {
@@ -1843,7 +1825,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   条件を設定して下さい과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   조건을 선택하세요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SetConditionTitle {
             get {
@@ -1852,7 +1834,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   このログを経過秒の起点にする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   이 로그를 기점으로 0초 설정과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SetLogOrigin {
             get {
@@ -1861,7 +1843,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルリストに表示する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   타이머와 진행 막대를 표시과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ShowProgressBarCheckBox {
             get {
@@ -1870,7 +1852,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   正規表現を単純にする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   정규식을 단순화과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SimpleRegexLabel {
             get {
@@ -1879,7 +1861,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   召喚士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   소환사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SMN {
             get {
@@ -1897,7 +1879,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャスト完了が近い順でソートする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   다음 스펠까지 타이머 정렬과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SortByRecastOrder {
             get {
@@ -1906,7 +1888,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   リキャスト完了ｎ秒前に鳴らすサウンド과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   완료되기 N초 전 소리 재생과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SoundEffectBeforeComplete {
             get {
@@ -1915,7 +1897,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ACT.SpecialSpellTimer Soundの再生で例外が発生しました。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   An exception occurred in the regeneration of ACT.SpecialSpellTimer Sound.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SoundError {
             get {
@@ -1924,7 +1906,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒後に鳴らす과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   소리 재생까지 대기시간(초)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SoundInSeconds {
             get {
@@ -1933,7 +1915,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒前に鳴らす과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   초 전과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SoundInSecondsBefore {
             get {
@@ -1942,7 +1924,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   周期과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   기간과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpanHeader {
             get {
@@ -1960,7 +1942,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※スペックに合わせて設定してください과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ PC 사양에 맞춰 설정하십시오과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpecsLabel {
             get {
@@ -1969,7 +1951,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全てのスペルを削除してよろしいですか？과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 스펠 타이머를 지우시겠습니까?과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellClearAllPrompt {
             get {
@@ -1978,7 +1960,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルのアイコン과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스킬 아이콘과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellIconLabel {
             get {
@@ -1987,7 +1969,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルアイコンのサイズ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스킬 아이콘 크기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellIconSizeLabel {
             get {
@@ -1996,7 +1978,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルの名前과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스킬 이름과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellNameLabel {
             get {
@@ -2005,7 +1987,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ※描画の負荷が下がります（要再起動）과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   ※ 그림 객체 성능 향상 (재시작 필요)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellTimerFormatExplainLabel {
             get {
@@ -2014,7 +1996,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルタイマの秒数を整数表示にする과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   재사용 대기시간 정수로 표시과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellTimerFormatLabel {
             get {
@@ -2023,7 +2005,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ACT.SpecialSpellTimer スペルタイマWindowのRefreshで例外が発生しました。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   An exception occurred in the Refresh of ACT.SpecialSpellTimer spell timer Window.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellTimerRefreshError {
             get {
@@ -2032,7 +2014,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペシャルスペルタイマ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스펠 타이머과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SpellTimerTabTitle {
             get {
@@ -2041,7 +2023,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペスペ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스페스페과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SupeSupe {
             get {
@@ -2050,7 +2032,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルを表示する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스킬 보이기과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string SwitchOverlayButton {
             get {
@@ -2059,7 +2041,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   全てのテロップを削除してよろしいですか？과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   정말로 모든 틱 표시를 지우시겠습니까?과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TelopClearAllPrompt {
             get {
@@ -2068,7 +2050,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップの表示スイッチ\n現在の状態 -&gt; 通常과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 틱커 표시\n현재 : OFF과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TelopDisplaySwitchIsOff {
             get {
@@ -2077,7 +2059,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップの表示スイッチ\n現在の状態 -&gt; 常に表示(位置調整向け)과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   모든 틱커 표시\n현재 : ON과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TelopDisplaySwitchIsOn {
             get {
@@ -2086,7 +2068,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   {COUNT}と記入するとテロップが消えるまでの秒数に置換されます\n{COUNT} → 小数点第1位まで表示。例) 30.0\n{COUNT0} → 整数部のみ表示。例) 30과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   For the displayed message, {COUNT} will be replaced by the number of seconds until the ticker completes.\n{COUNT} → displays a single decimal point (eg. 30.0)\n{COUNT0} → display no decimals (eg. 30)과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TelopMessageExplanationTooltip {
             get {
@@ -2095,7 +2077,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ワンポイントテロップ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   틱 표시과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TelopTabPageTitle {
             get {
@@ -2104,7 +2086,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   TextToSpeak과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   글자 읽어주기 보조도구과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TextToSpeakLabel {
             get {
@@ -2113,7 +2095,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   呪術士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   주술사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string THM {
             get {
@@ -2122,7 +2104,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップの名前과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   틱 표시 이름과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TickerName {
             get {
@@ -2131,7 +2113,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   タイムスタンプ과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   타임스탬프과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TimestampHeader {
             get {
@@ -2140,7 +2122,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペルの名前(表示テキスト)が異なる場合にインスタンス化する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스킬 이름 (표시명)이 다른 경우 인스턴스화 합니다.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ToInstanceCheckBox {
             get {
@@ -2149,7 +2131,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   オーバーレイの透過率과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   오버레이 투명도과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TransmitOverlay {
             get {
@@ -2158,7 +2140,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   更新과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   판올림과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string Update {
             get {
@@ -2167,7 +2149,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   更新과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   저장과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string UpdateButton {
             get {
@@ -2176,7 +2158,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   スペル名を入力してください과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   스킬의 이름을 정해주세요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string UpdateSpellNameTitle {
             get {
@@ -2185,7 +2167,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   パネル名を入力してください과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   패널의 이름을 정해주세요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string UpdateSpellPanelTitle {
             get {
@@ -2194,7 +2176,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   テロップの名前を入力してください과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   틱 표시의 이름을 정해주세요과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string UpdateTelopNameTitle {
             get {
@@ -2203,7 +2185,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   FFXIV以外で使用する과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   파이널 판타지 14 이외에서 사용과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string UseOtherThanFFXIVCheckbox {
             get {
@@ -2212,7 +2194,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   正規表現ON과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   정규식 사용과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string UseRegex {
             get {
@@ -2221,7 +2203,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   戦士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   전사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string WAR {
             get {
@@ -2239,7 +2221,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   ACT.SpecialSpellTimer フォアグラウンドWindowの監視で例外が発生しました。과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   An exception occurred in the Watch foreground window.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string WatchActiveError {
             get {
@@ -2248,7 +2230,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   wave과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   소리 효과과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string WaveSoundLabel {
             get {
@@ -2257,7 +2239,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   白魔道士과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   백마도사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string WHM {
             get {
@@ -2275,7 +2257,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   裁縫師과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   재봉사과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string WVR {
             get {
@@ -2293,7 +2275,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   XMLファイル (*.xml)|*.xml|全てのファイル (*.*)|*.*과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   XML files (*.xml)|*.xml|All files (*.*)|*.*과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string XmlFileFilter {
             get {

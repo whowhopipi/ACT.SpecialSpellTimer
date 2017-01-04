@@ -8,10 +8,10 @@ namespace ACT.SpecialSpellTimer.Utility
 {
     class Language
     {
-        public String FriendlyName { get; set; }
-        public String Value { get; set; }
+        public string FriendlyName { get; set; }
+        public string Value { get; set; }
 
-        public override String ToString()
+        public override string ToString()
         {
             return FriendlyName;
         }
@@ -21,6 +21,7 @@ namespace ACT.SpecialSpellTimer.Utility
             return new Language[] {
                 new Language { FriendlyName = "English", Value = "EN" },
                 new Language { FriendlyName = "日本語", Value = "JP" },
+                new Language { FriendlyName = "한국어", Value = "KR" },
             };
         }
     }

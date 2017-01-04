@@ -14,9 +14,11 @@
                     return resources.strings.Strings_EN.ResourceManager;
                 case "JP":
                     return resources.strings.Strings_JP.ResourceManager;
+                case "KR":
+                    return resources.strings.Strings_KR.ResourceManager;
             }
 
-            Logger.Write("Unknown language: " + Properties.Settings.Default.Language + " -> " + name);
+            Logger.Write("Unknown language: " + Settings.Default.Language + " -> " + name);
 
             return resources.strings.Strings_JP.ResourceManager;
         }
@@ -25,7 +27,7 @@
         {
             if (Language != null)
                 return;
-            Language = GetTranslationsFor(Properties.Settings.Default.Language);
+            Language = GetTranslationsFor(Settings.Default.Language);
         }
 
         public static String Get(String name)
