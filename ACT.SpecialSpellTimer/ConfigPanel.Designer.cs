@@ -552,6 +552,7 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -565,6 +566,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.BackColor = System.Drawing.Color.White;
             this.splitContainer1.Panel2.Controls.Add(this.DetailGroupBox);
             this.splitContainer1.Panel2.Controls.Add(this.DetailPanelGroupBox);
             this.splitContainer1.Size = new System.Drawing.Size(1228, 825);
@@ -574,6 +576,7 @@
             // 
             // SpellTimerTreeView
             // 
+            this.SpellTimerTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.SpellTimerTreeView.CheckBoxes = true;
             this.SpellTimerTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SpellTimerTreeView.HideSelection = false;
@@ -1653,6 +1656,7 @@
             this.OnPointTelopTabPage.Controls.Add(this.splitContainer2);
             this.OnPointTelopTabPage.Location = new System.Drawing.Point(164, 4);
             this.OnPointTelopTabPage.Name = "OnPointTelopTabPage";
+            this.OnPointTelopTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.OnPointTelopTabPage.Size = new System.Drawing.Size(1232, 829);
             this.OnPointTelopTabPage.TabIndex = 2;
             this.OnPointTelopTabPage.Text = "TelopTabPageTitle";
@@ -1661,7 +1665,7 @@
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Location = new System.Drawing.Point(2, 2);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -1672,9 +1676,10 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.BackColor = System.Drawing.Color.White;
             this.splitContainer2.Panel2.Controls.Add(this.panel9);
             this.splitContainer2.Panel2.Controls.Add(this.TelopDetailGroupBox);
-            this.splitContainer2.Size = new System.Drawing.Size(1232, 829);
+            this.splitContainer2.Size = new System.Drawing.Size(1228, 825);
             this.splitContainer2.SplitterDistance = 370;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 6;
@@ -1688,7 +1693,7 @@
             this.TelopTreeView.Location = new System.Drawing.Point(0, 24);
             this.TelopTreeView.Name = "TelopTreeView";
             this.TelopTreeView.ShowNodeToolTips = true;
-            this.TelopTreeView.Size = new System.Drawing.Size(370, 805);
+            this.TelopTreeView.Size = new System.Drawing.Size(370, 801);
             this.TelopTreeView.TabIndex = 0;
             // 
             // menuStrip2
@@ -1735,15 +1740,15 @@
             this.panel9.Controls.Add(this.TelopDeleteButton);
             this.panel9.Controls.Add(this.TelopUpdateButton);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel9.Location = new System.Drawing.Point(0, 797);
+            this.panel9.Location = new System.Drawing.Point(0, 793);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(860, 32);
+            this.panel9.Size = new System.Drawing.Size(856, 32);
             this.panel9.TabIndex = 1;
             // 
             // TelopDeleteButton
             // 
             this.TelopDeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.TelopDeleteButton.Location = new System.Drawing.Point(738, 3);
+            this.TelopDeleteButton.Location = new System.Drawing.Point(734, 3);
             this.TelopDeleteButton.Name = "TelopDeleteButton";
             this.TelopDeleteButton.Size = new System.Drawing.Size(119, 25);
             this.TelopDeleteButton.TabIndex = 11;
@@ -1753,7 +1758,7 @@
             // TelopUpdateButton
             // 
             this.TelopUpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.TelopUpdateButton.Location = new System.Drawing.Point(612, 3);
+            this.TelopUpdateButton.Location = new System.Drawing.Point(608, 3);
             this.TelopUpdateButton.Name = "TelopUpdateButton";
             this.TelopUpdateButton.Size = new System.Drawing.Size(119, 25);
             this.TelopUpdateButton.TabIndex = 10;
@@ -1795,7 +1800,7 @@
             this.TelopDetailGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TelopDetailGroupBox.Location = new System.Drawing.Point(0, 0);
             this.TelopDetailGroupBox.Name = "TelopDetailGroupBox";
-            this.TelopDetailGroupBox.Size = new System.Drawing.Size(860, 829);
+            this.TelopDetailGroupBox.Size = new System.Drawing.Size(856, 825);
             this.TelopDetailGroupBox.TabIndex = 0;
             // 
             // TelopSetConditionButton
@@ -1890,7 +1895,7 @@
             this.groupBox5.Controls.Add(this.label38);
             this.groupBox5.Location = new System.Drawing.Point(8, 452);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(840, 75);
+            this.groupBox5.Size = new System.Drawing.Size(836, 75);
             this.groupBox5.TabIndex = 20;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DelayedSoundEffect";
@@ -1919,7 +1924,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TelopDelayTTSTextBox.Location = new System.Drawing.Point(297, 44);
             this.TelopDelayTTSTextBox.Name = "TelopDelayTTSTextBox";
-            this.TelopDelayTTSTextBox.Size = new System.Drawing.Size(534, 21);
+            this.TelopDelayTTSTextBox.Size = new System.Drawing.Size(530, 21);
             this.TelopDelayTTSTextBox.TabIndex = 1;
             // 
             // label37
@@ -1969,7 +1974,7 @@
             this.groupBox7.Controls.Add(this.label42);
             this.groupBox7.Location = new System.Drawing.Point(8, 371);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(840, 75);
+            this.groupBox7.Size = new System.Drawing.Size(836, 75);
             this.groupBox7.TabIndex = 12;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "ImmediateSoundEffect";
@@ -1998,7 +2003,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TelopMatchTTSTextBox.Location = new System.Drawing.Point(297, 44);
             this.TelopMatchTTSTextBox.Name = "TelopMatchTTSTextBox";
-            this.TelopMatchTTSTextBox.Size = new System.Drawing.Size(534, 21);
+            this.TelopMatchTTSTextBox.Size = new System.Drawing.Size(530, 21);
             this.TelopMatchTTSTextBox.TabIndex = 1;
             // 
             // label41
