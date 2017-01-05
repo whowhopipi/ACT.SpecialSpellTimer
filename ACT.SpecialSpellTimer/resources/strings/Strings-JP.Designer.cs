@@ -934,6 +934,51 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Combat Log Analyze과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string lblCombatAnalyzer {
+            get {
+                return ResourceManager.GetString("lblCombatAnalyzer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Party Member Alarm과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string lblDQX {
+            get {
+                return ResourceManager.GetString("lblDQX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Language Setting과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string lblLanguage {
+            get {
+                return ResourceManager.GetString("lblLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Monitor과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string lblMonitor {
+            get {
+                return ResourceManager.GetString("lblMonitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Spell Timer Setting과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string lblSpellTimer {
+            get {
+                return ResourceManager.GetString("lblSpellTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   行과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string LinesLabel {
@@ -1011,6 +1056,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string LogPollSleepIntervalLabel {
             get {
                 return ResourceManager.GetString("LogPollSleepIntervalLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Log과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string LogTabPage {
+            get {
+                return ResourceManager.GetString("LogTabPage", resourceCulture);
             }
         }
         
@@ -2059,6 +2113,42 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Detail Options과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string tabDetailOptions {
+            get {
+                return ResourceManager.GetString("tabDetailOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Overlay Options과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string tabOverlayOptions {
+            get {
+                return ResourceManager.GetString("tabOverlayOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Add New과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string TelopAddButton {
+            get {
+                return ResourceManager.GetString("TelopAddButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Clear All과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string TelopClearAllButton {
+            get {
+                return ResourceManager.GetString("TelopClearAllButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   全てのテロップを削除してよろしいですか？과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string TelopClearAllPrompt {
@@ -2082,6 +2172,24 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string TelopDisplaySwitchIsOn {
             get {
                 return ResourceManager.GetString("TelopDisplaySwitchIsOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Export과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string TelopExportButton {
+            get {
+                return ResourceManager.GetString("TelopExportButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Import과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string TelopImportButton {
+            get {
+                return ResourceManager.GetString("TelopImportButton", resourceCulture);
             }
         }
         

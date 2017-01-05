@@ -642,7 +642,7 @@
     <comment>オーバーレイの透過率</comment>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>판올림</value>
+    <value>적용</value>
     <comment>更新</comment>
   </data>
   <data name="UpdateButton" xml:space="preserve">
@@ -834,7 +834,7 @@
     <comment>元のリキャストタイムを超えて延長する</comment>
   </data>
   <data name="AlarmTab" xml:space="preserve">
-    <value>알림 또는 TTS (글자 읽어주기 보조도구)</value>
+    <value>알림&amp; TTS</value>
     <comment>アラーム及びTTS</comment>
   </data>
   <data name="GeneralTab" xml:space="preserve">
@@ -1116,5 +1116,41 @@
   <data name="LN_Tabname" xml:space="preserve">
     <value>스페셜 스펠타이머(스페스페)</value>
     <comment>Special SpellTimer (SupeSupe)</comment>
+  </data>
+  <data name="lblCombatAnalyzer" xml:space="preserve">
+    <value>전투로그 분석</value>
+  </data>
+  <data name="lblDQX" xml:space="preserve">
+    <value>파티원 알림</value>
+  </data>
+  <data name="lblLanguage" xml:space="preserve">
+    <value>언어 설정 (Language Setting)</value>
+  </data>
+  <data name="lblMonitor" xml:space="preserve">
+    <value>표시</value>
+  </data>
+  <data name="lblSpellTimer" xml:space="preserve">
+    <value>스펠타이머 설정</value>
+  </data>
+  <data name="LogTabPage" xml:space="preserve">
+    <value>로그</value>
+  </data>
+  <data name="tabDetailOptions" xml:space="preserve">
+    <value>상세 설정</value>
+  </data>
+  <data name="tabOverlayOptions" xml:space="preserve">
+    <value>오버레이 설정</value>
+  </data>
+  <data name="TelopAddButton" xml:space="preserve">
+    <value>추가</value>
+  </data>
+  <data name="TelopClearAllButton" xml:space="preserve">
+    <value>모두 삭제</value>
+  </data>
+  <data name="TelopExportButton" xml:space="preserve">
+    <value>내보내기</value>
+  </data>
+  <data name="TelopImportButton" xml:space="preserve">
+    <value>가져오기</value>
   </data>
 </root>

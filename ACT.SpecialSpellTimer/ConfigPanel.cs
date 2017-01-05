@@ -12,7 +12,7 @@
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
-
+    using System.IO;
     /// <summary>
     /// 設定Panel
     /// </summary>
@@ -42,9 +42,6 @@
                 .SetValue(this.CombatLogListView, true, null);
 
             // パネルの詳細用グループボックスの場所を決める
-            this.DetailPanelGroupBox.Location = this.DetailGroupBox.Location;
-            this.DetailPanelGroupBox.Size = this.DetailGroupBox.Size;
-            this.DetailPanelGroupBox.Anchor = this.DetailGroupBox.Anchor;
 
             // インスタンス化に伴う正規表現のON/OFFを制限する
             this.ToInstanceCheckBox.CheckedChanged += (s, e) =>
@@ -548,46 +545,7 @@
         /// <param name="e">イベント引数</param>
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            lock (SpellTimerTable.Table)
-            {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
-                if (src != null)
-                {
-                    SpellTimerTable.Table.Remove(src);
-                    SpellTimerTable.ClearReplacedKeywords();
-                    SpellTimerTable.RemoveAllInstanceSpells();
-                    SpellTimerTable.Save();
 
-                    this.DetailGroupBox.Visible = false;
-                    this.DetailPanelGroupBox.Visible = false;
-                }
-            }
-
-            // 今の選択ノードを取り出す
-            var targetNode = this.SpellTimerTreeView.SelectedNode;
-            if (targetNode != null)
-            {
-                // 1個前のノードを取り出しておく
-                var prevNode = targetNode.PrevNode;
-
-                if (targetNode.Parent != null &&
-                    targetNode.Parent.Nodes.Count > 1)
-                {
-                    targetNode.Remove();
-
-                    if (prevNode != null)
-                    {
-                        this.SpellTimerTreeView.SelectedNode = prevNode;
-                    }
-                }
-                else
-                {
-                    targetNode.Parent.Remove();
-                }
-            }
-
-            // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
         }
 
         /// <summary>
@@ -887,6 +845,85 @@
 
                 this.LoadSpellTimerTable();
             }
+        }
+
+        /// <summary>
+        /// ExportCSVButton Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void ExportCSVButton_Click(object sender, EventArgs e)
+        {
+            var dialog = this.combatAnalysisCSVExportSaveFileDialog;
+            dialog.RestoreDirectory = true;
+            dialog.DefaultExt = "csv";
+            dialog.Filter = "CSV File (*.csv) | *.csv";
+            dialog.OverwritePrompt = true;
+            dialog.CreatePrompt = false;
+            dialog.Title = "Export to CSV file";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string filename = dialog.FileName;
+                using (var sw = new StreamWriter(filename))
+                {
+                    foreach (ListViewItem item in this.CombatLogListView.Items)
+                    {
+                        var row = item.SubItems.OfType<ListViewItem.ListViewSubItem>().Skip(1).Select(s => s.Text).ToArray();
+                        sw.WriteLine(string.Join(",", row));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 初期化 Button
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void ShokikaButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                this,
+                Translate.Get("ResetAllPrompt"),
+                "ACT.SpecialSpellTimer",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2) != DialogResult.OK)
+            {
+                return;
+            }
+
+            Settings.Default.Reset();
+            Settings.Default.Save();
+
+            PanelSettings.Default.SettingsTable.Clear();
+            PanelSettings.Default.Save();
+
+            foreach (var telop in OnePointTelopTable.Default.Table)
+            {
+                telop.Left = 10.0d;
+                telop.Top = 10.0d;
+            }
+
+            OnePointTelopTable.Default.Save();
+
+            this.LoadSettingsOption();
+            SpellTimerCore.Default.LayoutPanels();
+        }
+
+        /// <summary>
+        /// 適用する Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void TekiyoButton_Click(object sender, EventArgs e)
+        {
+            this.ApplySettingsOption();
+
+            // Windowを一旦すべて閉じる
+            SpellTimerCore.Default.ClosePanels();
+            OnePointTelopController.CloseTelops();
         }
     }
 }

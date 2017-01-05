@@ -42,8 +42,7 @@
             if (int.TryParse(name, out a))
                 return name;
             String s = Language.GetString(name);
-            if (s == null)
-                throw new Exception("Unable to find translation for " + name);
+            if (s == null) return " ";
             return s.Replace("\\n", Environment.NewLine);
         }
 
@@ -79,6 +78,20 @@
                         if (combo.Items[i] is String)
                             combo.Items[i] = Get((String)combo.Items[i]);
                     }
+                }
+
+                // Controls may have a context menu, these are not controls but they do have Text.
+                if (control is System.Windows.Forms.MenuStrip)
+                {
+                    foreach (System.Windows.Forms.ToolStripItem c in ((System.Windows.Forms.MenuStrip)control).Items)
+                        c.Text = Get(c.Text);
+                }
+
+                // Controls may have a context menu, these are not controls but they do have Text.
+                if (control is System.Windows.Forms.ContextMenuStrip)
+                {
+                    foreach (System.Windows.Forms.ToolStripItem c in ((System.Windows.Forms.ContextMenuStrip)control).Items)
+                        c.Text = Get(c.Text);
                 }
             }
             catch (Exception ex)

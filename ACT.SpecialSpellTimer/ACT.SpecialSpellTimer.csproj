@@ -27,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>E:\Advanced Combat Tracker\Plugins\SpecialSpellTimer\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -135,6 +135,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="TabControlExtHoriz.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TabControlExt.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="TextCommandController.cs" />
     <Compile Include="Utility\ActInvoker.cs" />
