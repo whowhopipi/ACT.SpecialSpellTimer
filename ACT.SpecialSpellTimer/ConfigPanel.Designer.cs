@@ -769,15 +769,15 @@
             // 
             // KeywordToExpand1TextBox
             // 
-            this.KeywordToExpand1TextBox.Location = new System.Drawing.Point(9, 337);
+            this.KeywordToExpand1TextBox.Location = new System.Drawing.Point(40, 337);
             this.KeywordToExpand1TextBox.Name = "KeywordToExpand1TextBox";
-            this.KeywordToExpand1TextBox.Size = new System.Drawing.Size(339, 21);
+            this.KeywordToExpand1TextBox.Size = new System.Drawing.Size(308, 21);
             this.KeywordToExpand1TextBox.TabIndex = 53;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 108);
+            this.label1.Location = new System.Drawing.Point(10, 106);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(102, 12);
             this.label1.TabIndex = 35;
@@ -839,9 +839,9 @@
             // 
             // KeywordToExpand2TextBox
             // 
-            this.KeywordToExpand2TextBox.Location = new System.Drawing.Point(9, 380);
+            this.KeywordToExpand2TextBox.Location = new System.Drawing.Point(40, 380);
             this.KeywordToExpand2TextBox.Name = "KeywordToExpand2TextBox";
-            this.KeywordToExpand2TextBox.Size = new System.Drawing.Size(339, 21);
+            this.KeywordToExpand2TextBox.Size = new System.Drawing.Size(308, 21);
             this.KeywordToExpand2TextBox.TabIndex = 57;
             // 
             // SelectJobButton
@@ -969,7 +969,7 @@
             // label56
             // 
             this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(211, 320);
+            this.label56.Location = new System.Drawing.Point(7, 340);
             this.label56.Name = "label56";
             this.label56.Size = new System.Drawing.Size(58, 12);
             this.label56.TabIndex = 60;
@@ -1041,7 +1041,7 @@
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(211, 363);
+            this.label58.Location = new System.Drawing.Point(7, 383);
             this.label58.Name = "label58";
             this.label58.Size = new System.Drawing.Size(58, 12);
             this.label58.TabIndex = 62;
@@ -2916,6 +2916,7 @@
             // 
             // tabOverlayOptions
             // 
+            this.tabOverlayOptions.AutoScroll = true;
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
             this.tabOverlayOptions.Controls.Add(this.DefaultVisualSetting);
             this.tabOverlayOptions.Controls.Add(this.label18);
@@ -3122,6 +3123,7 @@
             // 
             // tabDetailOptions
             // 
+            this.tabDetailOptions.AutoScroll = true;
             this.tabDetailOptions.BackColor = System.Drawing.Color.White;
             this.tabDetailOptions.Controls.Add(this.label23);
             this.tabDetailOptions.Controls.Add(this.AutoSortCheckBox);
