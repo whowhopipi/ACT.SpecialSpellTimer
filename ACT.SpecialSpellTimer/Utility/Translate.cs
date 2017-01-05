@@ -42,8 +42,7 @@
             if (int.TryParse(name, out a))
                 return name;
             String s = Language.GetString(name);
-            if (s == null)
-                throw new Exception("Unable to find translation for " + name);
+            if (s == null) return " ";
             return s.Replace("\\n", Environment.NewLine);
         }
 
