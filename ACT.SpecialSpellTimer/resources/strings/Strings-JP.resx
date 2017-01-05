@@ -1117,4 +1117,40 @@
     <value>スペシャルスペルタイマ(スペスペ)</value>
     <comment>Special SpellTimer (SupeSupe)</comment>
   </data>
+  <data name="lblCombatAnalyzer" xml:space="preserve">
+    <value>Combat Log Analyze</value>
+  </data>
+  <data name="lblDQX" xml:space="preserve">
+    <value>Party Member Alarm</value>
+  </data>
+  <data name="lblLanguage" xml:space="preserve">
+    <value>Language Setting</value>
+  </data>
+  <data name="lblMonitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="lblSpellTimer" xml:space="preserve">
+    <value>Spell Timer Setting</value>
+  </data>
+  <data name="LogTabPage" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="tabDetailOptions" xml:space="preserve">
+    <value>Detail Options</value>
+  </data>
+  <data name="tabOverlayOptions" xml:space="preserve">
+    <value>Overlay Options</value>
+  </data>
+  <data name="TelopAddButton" xml:space="preserve">
+    <value>Add New</value>
+  </data>
+  <data name="TelopClearAllButton" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="TelopExportButton" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="TelopImportButton" xml:space="preserve">
+    <value>Import</value>
+  </data>
 </root>
