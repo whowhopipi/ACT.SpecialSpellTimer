@@ -79,6 +79,13 @@
                             combo.Items[i] = Get((String)combo.Items[i]);
                     }
                 }
+
+                // Controls may have a context menu, these are not controls but they do have Text.
+                if (control is System.Windows.Forms.MenuStrip)
+                {
+                    foreach (System.Windows.Forms.ToolStripItem c in ((System.Windows.Forms.MenuStrip)control).Items)
+                        c.Text = Get(c.Text);
+                }
             }
             catch (Exception ex)
             {
