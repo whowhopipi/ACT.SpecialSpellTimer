@@ -136,6 +136,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="TabControlExtHoriz.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TabControlExt.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -29,6 +29,19 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.CombatAnalyzerContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CASelectAllItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.CACopyLogItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CACopyLogDetailItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.CASetOriginItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
+            this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
+            this.SaveLogFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.TabControl = new ACT.SpecialSpellTimer.TabControlExt();
             this.SpecialSpellTabPage = new System.Windows.Forms.TabPage();
             this.DetailPanelGroupBox = new System.Windows.Forms.GroupBox();
@@ -188,13 +201,6 @@
             this.ActionColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SpanColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.LogColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.CombatAnalyzerContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.CASelectAllItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.CACopyLogItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.CACopyLogDetailItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.CASetOriginItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.CombatLogBufferSizeNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -202,8 +208,6 @@
             this.CombatAnalyzingLabel = new System.Windows.Forms.Label();
             this.AnalyzeCombatButton = new System.Windows.Forms.Button();
             this.MonitorTabPage = new System.Windows.Forms.TabPage();
-            this.label89 = new System.Windows.Forms.Label();
-            this.LogTextBox = new System.Windows.Forms.TextBox();
             this.label88 = new System.Windows.Forms.Label();
             this.SMNTextBox = new System.Windows.Forms.TextBox();
             this.label87 = new System.Windows.Forms.Label();
@@ -247,6 +251,14 @@
             this.label69 = new System.Windows.Forms.Label();
             this.label68 = new System.Windows.Forms.Label();
             this.OptionTabPage = new System.Windows.Forms.TabPage();
+            this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.TabControlExtHoriz();
+            this.tabOverlayOptions = new System.Windows.Forms.TabPage();
+            this.tabDetailOptions = new System.Windows.Forms.TabPage();
+            this.pnlLanguage = new System.Windows.Forms.Panel();
+            this.label17 = new System.Windows.Forms.Label();
+            this.LanguageComboBox = new System.Windows.Forms.ComboBox();
+            this.LanguageRestartLabel = new System.Windows.Forms.Label();
+            this.lblLanguage = new System.Windows.Forms.Label();
             this.label104 = new System.Windows.Forms.Label();
             this.DetectPacketDumpcheckBox = new System.Windows.Forms.CheckBox();
             this.RemoveTooltipSymbolsCheckBox = new System.Windows.Forms.CheckBox();
@@ -278,9 +290,6 @@
             this.label49 = new System.Windows.Forms.Label();
             this.label31 = new System.Windows.Forms.Label();
             this.EnabledSpellTimerNoDecimalCheckBox = new System.Windows.Forms.CheckBox();
-            this.LanguageRestartLabel = new System.Windows.Forms.Label();
-            this.LanguageComboBox = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.OverlayForceVisibleCheckBox = new System.Windows.Forms.CheckBox();
             this.label48 = new System.Windows.Forms.Label();
             this.EnabledPTPlaceholderCheckBox = new System.Windows.Forms.CheckBox();
@@ -308,6 +317,7 @@
             this.ShokikaButton = new System.Windows.Forms.Button();
             this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.DQXOptionTabPage = new System.Windows.Forms.TabPage();
+            this.lblDQX = new System.Windows.Forms.Label();
             this.DQXOptionEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.label101 = new System.Windows.Forms.Label();
             this.label100 = new System.Windows.Forms.Label();
@@ -326,17 +336,10 @@
             this.DQXPlayerNameTextBox = new System.Windows.Forms.TextBox();
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
-            this.OpenFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.SaveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
-            this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
-            this.SaveLogFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.lblDQX = new System.Windows.Forms.Label();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.lblLanguage = new System.Windows.Forms.Label();
-            this.pnlLanguage = new System.Windows.Forms.Panel();
-            this.lblOverlay = new System.Windows.Forms.Label();
+            this.LogTextBox = new System.Windows.Forms.TextBox();
+            this.label89 = new System.Windows.Forms.Label();
+            this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
             this.DetailPanelGroupBox.SuspendLayout();
@@ -368,10 +371,13 @@
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TelopDelayNumericUpDown)).BeginInit();
             this.CombatAnalyzerTabPage.SuspendLayout();
-            this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).BeginInit();
             this.MonitorTabPage.SuspendLayout();
             this.OptionTabPage.SuspendLayout();
+            this.tabControlExtHoriz1.SuspendLayout();
+            this.tabOverlayOptions.SuspendLayout();
+            this.tabDetailOptions.SuspendLayout();
+            this.pnlLanguage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogPollSleepNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).BeginInit();
@@ -379,8 +385,98 @@
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).BeginInit();
             this.DQXOptionTabPage.SuspendLayout();
             this.LogTabPage.SuspendLayout();
-            this.pnlLanguage.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // CombatAnalyzerContextMenuStrip
+            // 
+            this.CombatAnalyzerContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.CombatAnalyzerContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CASelectAllItem,
+            this.toolStripSeparator1,
+            this.CACopyLogItem,
+            this.CACopyLogDetailItem,
+            this.toolStripSeparator2,
+            this.CASetOriginItem});
+            this.CombatAnalyzerContextMenuStrip.Name = "CombatAnalyzerContextMenuStrip";
+            this.CombatAnalyzerContextMenuStrip.Size = new System.Drawing.Size(229, 104);
+            // 
+            // CASelectAllItem
+            // 
+            this.CASelectAllItem.Name = "CASelectAllItem";
+            this.CASelectAllItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.CASelectAllItem.Size = new System.Drawing.Size(228, 22);
+            this.CASelectAllItem.Text = "SelectAll";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(225, 6);
+            // 
+            // CACopyLogItem
+            // 
+            this.CACopyLogItem.Name = "CACopyLogItem";
+            this.CACopyLogItem.ShortcutKeyDisplayString = "";
+            this.CACopyLogItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.CACopyLogItem.Size = new System.Drawing.Size(228, 22);
+            this.CACopyLogItem.Text = "CopyLog";
+            // 
+            // CACopyLogDetailItem
+            // 
+            this.CACopyLogDetailItem.Name = "CACopyLogDetailItem";
+            this.CACopyLogDetailItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.C)));
+            this.CACopyLogDetailItem.Size = new System.Drawing.Size(228, 22);
+            this.CACopyLogDetailItem.Text = "CopyLogDetail";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(225, 6);
+            // 
+            // CASetOriginItem
+            // 
+            this.CASetOriginItem.Name = "CASetOriginItem";
+            this.CASetOriginItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.CASetOriginItem.Size = new System.Drawing.Size(228, 22);
+            this.CASetOriginItem.Text = "SetLogOrigin";
+            // 
+            // OpenFileDialog
+            // 
+            this.OpenFileDialog.DefaultExt = "xml";
+            this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
+            this.OpenFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+            this.OpenFileDialog.RestoreDirectory = true;
+            // 
+            // SaveFileDialog
+            // 
+            this.SaveFileDialog.DefaultExt = "xml";
+            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
+            this.SaveFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+            this.SaveFileDialog.RestoreDirectory = true;
+            // 
+            // ToolTip
+            // 
+            this.ToolTip.IsBalloon = true;
+            // 
+            // CombatAnalyzingTimer
+            // 
+            this.CombatAnalyzingTimer.Interval = 600;
+            // 
+            // EnabledSpellTimerNoDecimal
+            // 
+            this.EnabledSpellTimerNoDecimal.AutoSize = true;
+            this.EnabledSpellTimerNoDecimal.Location = new System.Drawing.Point(213, 335);
+            this.EnabledSpellTimerNoDecimal.Name = "EnabledSpellTimerNoDecimal";
+            this.EnabledSpellTimerNoDecimal.Size = new System.Drawing.Size(64, 16);
+            this.EnabledSpellTimerNoDecimal.TabIndex = 42;
+            this.EnabledSpellTimerNoDecimal.Text = "Enabled";
+            this.EnabledSpellTimerNoDecimal.UseVisualStyleBackColor = true;
+            // 
+            // SaveLogFileDialog
+            // 
+            this.SaveLogFileDialog.DefaultExt = "log";
+            this.SaveLogFileDialog.Filter = "Log files (*.log)|*.log|Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            this.SaveLogFileDialog.RestoreDirectory = true;
             // 
             // TabControl
             // 
@@ -1078,7 +1174,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(970, 587);
+            this.tabPage2.Size = new System.Drawing.Size(970, 623);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "AlarmTab";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -2171,59 +2267,6 @@
             this.LogColumnHeader.Text = "LogHeader";
             this.LogColumnHeader.Width = 600;
             // 
-            // CombatAnalyzerContextMenuStrip
-            // 
-            this.CombatAnalyzerContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.CombatAnalyzerContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.CASelectAllItem,
-            this.toolStripSeparator1,
-            this.CACopyLogItem,
-            this.CACopyLogDetailItem,
-            this.toolStripSeparator2,
-            this.CASetOriginItem});
-            this.CombatAnalyzerContextMenuStrip.Name = "CombatAnalyzerContextMenuStrip";
-            this.CombatAnalyzerContextMenuStrip.Size = new System.Drawing.Size(229, 104);
-            // 
-            // CASelectAllItem
-            // 
-            this.CASelectAllItem.Name = "CASelectAllItem";
-            this.CASelectAllItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.CASelectAllItem.Size = new System.Drawing.Size(228, 22);
-            this.CASelectAllItem.Text = "SelectAll";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(225, 6);
-            // 
-            // CACopyLogItem
-            // 
-            this.CACopyLogItem.Name = "CACopyLogItem";
-            this.CACopyLogItem.ShortcutKeyDisplayString = "";
-            this.CACopyLogItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.CACopyLogItem.Size = new System.Drawing.Size(228, 22);
-            this.CACopyLogItem.Text = "CopyLog";
-            // 
-            // CACopyLogDetailItem
-            // 
-            this.CACopyLogDetailItem.Name = "CACopyLogDetailItem";
-            this.CACopyLogDetailItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.C)));
-            this.CACopyLogDetailItem.Size = new System.Drawing.Size(228, 22);
-            this.CACopyLogDetailItem.Text = "CopyLogDetail";
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(225, 6);
-            // 
-            // CASetOriginItem
-            // 
-            this.CASetOriginItem.Name = "CASetOriginItem";
-            this.CASetOriginItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.CASetOriginItem.Size = new System.Drawing.Size(228, 22);
-            this.CASetOriginItem.Text = "SetLogOrigin";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -2345,30 +2388,6 @@
             this.MonitorTabPage.Size = new System.Drawing.Size(1225, 722);
             this.MonitorTabPage.TabIndex = 4;
             this.MonitorTabPage.Text = "MonitorTabPage";
-            // 
-            // label89
-            // 
-            this.label89.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label89.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label89.Location = new System.Drawing.Point(2, 2);
-            this.label89.Name = "label89";
-            this.label89.Padding = new System.Windows.Forms.Padding(5);
-            this.label89.Size = new System.Drawing.Size(1221, 24);
-            this.label89.TabIndex = 43;
-            this.label89.Text = "LogLabel";
-            // 
-            // LogTextBox
-            // 
-            this.LogTextBox.BackColor = System.Drawing.Color.White;
-            this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogTextBox.Location = new System.Drawing.Point(2, 26);
-            this.LogTextBox.Multiline = true;
-            this.LogTextBox.Name = "LogTextBox";
-            this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.LogTextBox.Size = new System.Drawing.Size(1221, 694);
-            this.LogTextBox.TabIndex = 42;
             // 
             // label88
             // 
@@ -2743,66 +2762,11 @@
             // OptionTabPage
             // 
             this.OptionTabPage.BackColor = System.Drawing.Color.White;
-            this.OptionTabPage.Controls.Add(this.lblOverlay);
+            this.OptionTabPage.Controls.Add(this.tabControlExtHoriz1);
             this.OptionTabPage.Controls.Add(this.pnlLanguage);
             this.OptionTabPage.Controls.Add(this.lblLanguage);
-            this.OptionTabPage.Controls.Add(this.label104);
-            this.OptionTabPage.Controls.Add(this.DetectPacketDumpcheckBox);
-            this.OptionTabPage.Controls.Add(this.RemoveTooltipSymbolsCheckBox);
-            this.OptionTabPage.Controls.Add(this.label103);
-            this.OptionTabPage.Controls.Add(this.SimpleRegexCheckBox);
-            this.OptionTabPage.Controls.Add(this.label102);
-            this.OptionTabPage.Controls.Add(this.ResetOnWipeOutLabel);
-            this.OptionTabPage.Controls.Add(this.ResetOnWipeOutCheckBox);
-            this.OptionTabPage.Controls.Add(this.UseOtherThanFFXIVCheckbox);
-            this.OptionTabPage.Controls.Add(this.label94);
-            this.OptionTabPage.Controls.Add(this.ReduceIconBrightnessNumericUpDown);
-            this.OptionTabPage.Controls.Add(this.label93);
-            this.OptionTabPage.Controls.Add(this.label90);
-            this.OptionTabPage.Controls.Add(this.label92);
-            this.OptionTabPage.Controls.Add(this.LogPollSleepNumericUpDown);
-            this.OptionTabPage.Controls.Add(this.label91);
-            this.OptionTabPage.Controls.Add(this.HideWhenNotActiceCheckBox);
-            this.OptionTabPage.Controls.Add(this.SaveLogButton);
-            this.OptionTabPage.Controls.Add(this.SaveLogCheckBox);
-            this.OptionTabPage.Controls.Add(this.SaveLogTextBox);
-            this.OptionTabPage.Controls.Add(this.label67);
-            this.OptionTabPage.Controls.Add(this.OverTextBox);
-            this.OptionTabPage.Controls.Add(this.label66);
-            this.OptionTabPage.Controls.Add(this.ReadyTextBox);
-            this.OptionTabPage.Controls.Add(this.label65);
-            this.OptionTabPage.Controls.Add(this.label64);
-            this.OptionTabPage.Controls.Add(this.EnabledNotifyNormalSpellTimerCheckBox);
-            this.OptionTabPage.Controls.Add(this.label63);
-            this.OptionTabPage.Controls.Add(this.label49);
-            this.OptionTabPage.Controls.Add(this.label31);
-            this.OptionTabPage.Controls.Add(this.EnabledSpellTimerNoDecimalCheckBox);
-            this.OptionTabPage.Controls.Add(this.OverlayForceVisibleCheckBox);
-            this.OptionTabPage.Controls.Add(this.label48);
-            this.OptionTabPage.Controls.Add(this.EnabledPTPlaceholderCheckBox);
-            this.OptionTabPage.Controls.Add(this.label43);
-            this.OptionTabPage.Controls.Add(this.SwitchTelopButton);
-            this.OptionTabPage.Controls.Add(this.label30);
-            this.OptionTabPage.Controls.Add(this.label29);
-            this.OptionTabPage.Controls.Add(this.RefreshIntervalNumericUpDown);
-            this.OptionTabPage.Controls.Add(this.label28);
-            this.OptionTabPage.Controls.Add(this.AutoSortReverseCheckBox);
             this.OptionTabPage.Controls.Add(this.TekiyoButton);
-            this.OptionTabPage.Controls.Add(this.label26);
-            this.OptionTabPage.Controls.Add(this.label25);
-            this.OptionTabPage.Controls.Add(this.label24);
-            this.OptionTabPage.Controls.Add(this.TimeOfHideNumericUpDown);
-            this.OptionTabPage.Controls.Add(this.label23);
-            this.OptionTabPage.Controls.Add(this.label22);
-            this.OptionTabPage.Controls.Add(this.AutoSortCheckBox);
-            this.OptionTabPage.Controls.Add(this.ClickThroughCheckBox);
-            this.OptionTabPage.Controls.Add(this.label21);
-            this.OptionTabPage.Controls.Add(this.label20);
-            this.OptionTabPage.Controls.Add(this.OpacityNumericUpDown);
-            this.OptionTabPage.Controls.Add(this.label18);
-            this.OptionTabPage.Controls.Add(this.SwitchOverlayButton);
             this.OptionTabPage.Controls.Add(this.ShokikaButton);
-            this.OptionTabPage.Controls.Add(this.DefaultVisualSetting);
             this.OptionTabPage.Location = new System.Drawing.Point(164, 4);
             this.OptionTabPage.Name = "OptionTabPage";
             this.OptionTabPage.Padding = new System.Windows.Forms.Padding(2);
@@ -2810,10 +2774,150 @@
             this.OptionTabPage.TabIndex = 1;
             this.OptionTabPage.Text = "OptionTabPageTitle";
             // 
+            // tabControlExtHoriz1
+            // 
+            this.tabControlExtHoriz1.Controls.Add(this.tabOverlayOptions);
+            this.tabControlExtHoriz1.Controls.Add(this.tabDetailOptions);
+            this.tabControlExtHoriz1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlExtHoriz1.ItemSize = new System.Drawing.Size(100, 24);
+            this.tabControlExtHoriz1.Location = new System.Drawing.Point(2, 58);
+            this.tabControlExtHoriz1.Name = "tabControlExtHoriz1";
+            this.tabControlExtHoriz1.SelectedIndex = 0;
+            this.tabControlExtHoriz1.Size = new System.Drawing.Size(1221, 662);
+            this.tabControlExtHoriz1.TabIndex = 76;
+            // 
+            // tabOverlayOptions
+            // 
+            this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.DefaultVisualSetting);
+            this.tabOverlayOptions.Controls.Add(this.label18);
+            this.tabOverlayOptions.Controls.Add(this.OpacityNumericUpDown);
+            this.tabOverlayOptions.Controls.Add(this.label20);
+            this.tabOverlayOptions.Controls.Add(this.label21);
+            this.tabOverlayOptions.Controls.Add(this.ClickThroughCheckBox);
+            this.tabOverlayOptions.Controls.Add(this.label22);
+            this.tabOverlayOptions.Controls.Add(this.EnabledSpellTimerNoDecimalCheckBox);
+            this.tabOverlayOptions.Controls.Add(this.label31);
+            this.tabOverlayOptions.Controls.Add(this.label49);
+            this.tabOverlayOptions.Controls.Add(this.label93);
+            this.tabOverlayOptions.Controls.Add(this.UseOtherThanFFXIVCheckbox);
+            this.tabOverlayOptions.Controls.Add(this.ReduceIconBrightnessNumericUpDown);
+            this.tabOverlayOptions.Controls.Add(this.label94);
+            this.tabOverlayOptions.Controls.Add(this.SwitchOverlayButton);
+            this.tabOverlayOptions.Controls.Add(this.SwitchTelopButton);
+            this.tabOverlayOptions.Controls.Add(this.OverlayForceVisibleCheckBox);
+            this.tabOverlayOptions.Controls.Add(this.HideWhenNotActiceCheckBox);
+            this.tabOverlayOptions.Location = new System.Drawing.Point(-1, 23);
+            this.tabOverlayOptions.Name = "tabOverlayOptions";
+            this.tabOverlayOptions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabOverlayOptions.Size = new System.Drawing.Size(1223, 640);
+            this.tabOverlayOptions.TabIndex = 0;
+            this.tabOverlayOptions.Text = "tabOverlayOptions";
+            // 
+            // tabDetailOptions
+            // 
+            this.tabDetailOptions.BackColor = System.Drawing.Color.White;
+            this.tabDetailOptions.Controls.Add(this.label23);
+            this.tabDetailOptions.Controls.Add(this.AutoSortCheckBox);
+            this.tabDetailOptions.Controls.Add(this.TimeOfHideNumericUpDown);
+            this.tabDetailOptions.Controls.Add(this.label104);
+            this.tabDetailOptions.Controls.Add(this.label24);
+            this.tabDetailOptions.Controls.Add(this.DetectPacketDumpcheckBox);
+            this.tabDetailOptions.Controls.Add(this.label25);
+            this.tabDetailOptions.Controls.Add(this.RemoveTooltipSymbolsCheckBox);
+            this.tabDetailOptions.Controls.Add(this.label26);
+            this.tabDetailOptions.Controls.Add(this.label103);
+            this.tabDetailOptions.Controls.Add(this.AutoSortReverseCheckBox);
+            this.tabDetailOptions.Controls.Add(this.SimpleRegexCheckBox);
+            this.tabDetailOptions.Controls.Add(this.label28);
+            this.tabDetailOptions.Controls.Add(this.label102);
+            this.tabDetailOptions.Controls.Add(this.RefreshIntervalNumericUpDown);
+            this.tabDetailOptions.Controls.Add(this.ResetOnWipeOutLabel);
+            this.tabDetailOptions.Controls.Add(this.label29);
+            this.tabDetailOptions.Controls.Add(this.ResetOnWipeOutCheckBox);
+            this.tabDetailOptions.Controls.Add(this.label30);
+            this.tabDetailOptions.Controls.Add(this.label90);
+            this.tabDetailOptions.Controls.Add(this.label43);
+            this.tabDetailOptions.Controls.Add(this.label92);
+            this.tabDetailOptions.Controls.Add(this.EnabledPTPlaceholderCheckBox);
+            this.tabDetailOptions.Controls.Add(this.LogPollSleepNumericUpDown);
+            this.tabDetailOptions.Controls.Add(this.label48);
+            this.tabDetailOptions.Controls.Add(this.label91);
+            this.tabDetailOptions.Controls.Add(this.label63);
+            this.tabDetailOptions.Controls.Add(this.SaveLogButton);
+            this.tabDetailOptions.Controls.Add(this.EnabledNotifyNormalSpellTimerCheckBox);
+            this.tabDetailOptions.Controls.Add(this.SaveLogCheckBox);
+            this.tabDetailOptions.Controls.Add(this.label64);
+            this.tabDetailOptions.Controls.Add(this.SaveLogTextBox);
+            this.tabDetailOptions.Controls.Add(this.label65);
+            this.tabDetailOptions.Controls.Add(this.label67);
+            this.tabDetailOptions.Controls.Add(this.ReadyTextBox);
+            this.tabDetailOptions.Controls.Add(this.OverTextBox);
+            this.tabDetailOptions.Controls.Add(this.label66);
+            this.tabDetailOptions.Location = new System.Drawing.Point(-1, 23);
+            this.tabDetailOptions.Name = "tabDetailOptions";
+            this.tabDetailOptions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDetailOptions.Size = new System.Drawing.Size(1223, 640);
+            this.tabDetailOptions.TabIndex = 1;
+            this.tabDetailOptions.Text = "tabDetailOptions";
+            // 
+            // pnlLanguage
+            // 
+            this.pnlLanguage.Controls.Add(this.label17);
+            this.pnlLanguage.Controls.Add(this.LanguageComboBox);
+            this.pnlLanguage.Controls.Add(this.LanguageRestartLabel);
+            this.pnlLanguage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlLanguage.Location = new System.Drawing.Point(2, 26);
+            this.pnlLanguage.Name = "pnlLanguage";
+            this.pnlLanguage.Size = new System.Drawing.Size(1221, 32);
+            this.pnlLanguage.TabIndex = 74;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(8, 9);
+            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(92, 12);
+            this.label17.TabIndex = 39;
+            this.label17.Text = "LanguageLabel";
+            // 
+            // LanguageComboBox
+            // 
+            this.LanguageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.LanguageComboBox.FormattingEnabled = true;
+            this.LanguageComboBox.Location = new System.Drawing.Point(114, 6);
+            this.LanguageComboBox.Margin = new System.Windows.Forms.Padding(2);
+            this.LanguageComboBox.Name = "LanguageComboBox";
+            this.LanguageComboBox.Size = new System.Drawing.Size(165, 20);
+            this.LanguageComboBox.TabIndex = 40;
+            // 
+            // LanguageRestartLabel
+            // 
+            this.LanguageRestartLabel.AutoSize = true;
+            this.LanguageRestartLabel.Location = new System.Drawing.Point(293, 9);
+            this.LanguageRestartLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.LanguageRestartLabel.Name = "LanguageRestartLabel";
+            this.LanguageRestartLabel.Size = new System.Drawing.Size(94, 12);
+            this.LanguageRestartLabel.TabIndex = 41;
+            this.LanguageRestartLabel.Text = "RequiresRestart";
+            // 
+            // lblLanguage
+            // 
+            this.lblLanguage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLanguage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblLanguage.Location = new System.Drawing.Point(2, 2);
+            this.lblLanguage.Name = "lblLanguage";
+            this.lblLanguage.Padding = new System.Windows.Forms.Padding(5);
+            this.lblLanguage.Size = new System.Drawing.Size(1221, 24);
+            this.lblLanguage.TabIndex = 73;
+            this.lblLanguage.Text = "lblLanguage";
+            this.lblLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // label104
             // 
             this.label104.AutoSize = true;
-            this.label104.Location = new System.Drawing.Point(22, 697);
+            this.label104.Location = new System.Drawing.Point(9, 342);
             this.label104.Name = "label104";
             this.label104.Size = new System.Drawing.Size(142, 12);
             this.label104.TabIndex = 72;
@@ -2822,7 +2926,7 @@
             // DetectPacketDumpcheckBox
             // 
             this.DetectPacketDumpcheckBox.AutoSize = true;
-            this.DetectPacketDumpcheckBox.Location = new System.Drawing.Point(313, 696);
+            this.DetectPacketDumpcheckBox.Location = new System.Drawing.Point(333, 341);
             this.DetectPacketDumpcheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.DetectPacketDumpcheckBox.Name = "DetectPacketDumpcheckBox";
             this.DetectPacketDumpcheckBox.Size = new System.Drawing.Size(70, 16);
@@ -2833,7 +2937,7 @@
             // RemoveTooltipSymbolsCheckBox
             // 
             this.RemoveTooltipSymbolsCheckBox.AutoSize = true;
-            this.RemoveTooltipSymbolsCheckBox.Location = new System.Drawing.Point(313, 676);
+            this.RemoveTooltipSymbolsCheckBox.Location = new System.Drawing.Point(333, 316);
             this.RemoveTooltipSymbolsCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.RemoveTooltipSymbolsCheckBox.Name = "RemoveTooltipSymbolsCheckBox";
             this.RemoveTooltipSymbolsCheckBox.Size = new System.Drawing.Size(70, 16);
@@ -2844,7 +2948,7 @@
             // label103
             // 
             this.label103.AutoSize = true;
-            this.label103.Location = new System.Drawing.Point(22, 677);
+            this.label103.Location = new System.Drawing.Point(9, 317);
             this.label103.Name = "label103";
             this.label103.Size = new System.Drawing.Size(170, 12);
             this.label103.TabIndex = 69;
@@ -2853,7 +2957,7 @@
             // SimpleRegexCheckBox
             // 
             this.SimpleRegexCheckBox.AutoSize = true;
-            this.SimpleRegexCheckBox.Location = new System.Drawing.Point(313, 656);
+            this.SimpleRegexCheckBox.Location = new System.Drawing.Point(333, 291);
             this.SimpleRegexCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.SimpleRegexCheckBox.Name = "SimpleRegexCheckBox";
             this.SimpleRegexCheckBox.Size = new System.Drawing.Size(70, 16);
@@ -2864,7 +2968,7 @@
             // label102
             // 
             this.label102.AutoSize = true;
-            this.label102.Location = new System.Drawing.Point(22, 657);
+            this.label102.Location = new System.Drawing.Point(9, 292);
             this.label102.Name = "label102";
             this.label102.Size = new System.Drawing.Size(111, 12);
             this.label102.TabIndex = 67;
@@ -2873,7 +2977,7 @@
             // ResetOnWipeOutLabel
             // 
             this.ResetOnWipeOutLabel.AutoSize = true;
-            this.ResetOnWipeOutLabel.Location = new System.Drawing.Point(22, 636);
+            this.ResetOnWipeOutLabel.Location = new System.Drawing.Point(9, 266);
             this.ResetOnWipeOutLabel.Name = "ResetOnWipeOutLabel";
             this.ResetOnWipeOutLabel.Size = new System.Drawing.Size(130, 12);
             this.ResetOnWipeOutLabel.TabIndex = 66;
@@ -2882,7 +2986,7 @@
             // ResetOnWipeOutCheckBox
             // 
             this.ResetOnWipeOutCheckBox.AutoSize = true;
-            this.ResetOnWipeOutCheckBox.Location = new System.Drawing.Point(313, 636);
+            this.ResetOnWipeOutCheckBox.Location = new System.Drawing.Point(333, 266);
             this.ResetOnWipeOutCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.ResetOnWipeOutCheckBox.Name = "ResetOnWipeOutCheckBox";
             this.ResetOnWipeOutCheckBox.Size = new System.Drawing.Size(70, 16);
@@ -2894,7 +2998,7 @@
             // 
             this.UseOtherThanFFXIVCheckbox.AutoSize = true;
             this.UseOtherThanFFXIVCheckbox.ForeColor = System.Drawing.Color.OrangeRed;
-            this.UseOtherThanFFXIVCheckbox.Location = new System.Drawing.Point(305, 136);
+            this.UseOtherThanFFXIVCheckbox.Location = new System.Drawing.Point(314, 64);
             this.UseOtherThanFFXIVCheckbox.Name = "UseOtherThanFFXIVCheckbox";
             this.UseOtherThanFFXIVCheckbox.Size = new System.Drawing.Size(195, 16);
             this.UseOtherThanFFXIVCheckbox.TabIndex = 64;
@@ -2904,7 +3008,7 @@
             // label94
             // 
             this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(416, 317);
+            this.label94.Location = new System.Drawing.Point(415, 256);
             this.label94.Name = "label94";
             this.label94.Size = new System.Drawing.Size(27, 12);
             this.label94.TabIndex = 63;
@@ -2913,7 +3017,7 @@
             // ReduceIconBrightnessNumericUpDown
             // 
             this.ReduceIconBrightnessNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(340, 316);
+            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(339, 255);
             this.ReduceIconBrightnessNumericUpDown.Name = "ReduceIconBrightnessNumericUpDown";
             this.ReduceIconBrightnessNumericUpDown.Size = new System.Drawing.Size(69, 21);
             this.ReduceIconBrightnessNumericUpDown.TabIndex = 62;
@@ -2922,7 +3026,7 @@
             // label93
             // 
             this.label93.AutoSize = true;
-            this.label93.Location = new System.Drawing.Point(17, 317);
+            this.label93.Location = new System.Drawing.Point(16, 256);
             this.label93.Name = "label93";
             this.label93.Size = new System.Drawing.Size(132, 12);
             this.label93.TabIndex = 61;
@@ -2931,7 +3035,7 @@
             // label90
             // 
             this.label90.AutoSize = true;
-            this.label90.Location = new System.Drawing.Point(473, 468);
+            this.label90.Location = new System.Drawing.Point(464, 85);
             this.label90.Name = "label90";
             this.label90.Size = new System.Drawing.Size(72, 12);
             this.label90.TabIndex = 59;
@@ -2940,7 +3044,7 @@
             // label92
             // 
             this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(418, 468);
+            this.label92.Location = new System.Drawing.Point(409, 85);
             this.label92.Name = "label92";
             this.label92.Size = new System.Drawing.Size(70, 12);
             this.label92.TabIndex = 60;
@@ -2949,7 +3053,7 @@
             // LogPollSleepNumericUpDown
             // 
             this.LogPollSleepNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.LogPollSleepNumericUpDown.Location = new System.Drawing.Point(343, 467);
+            this.LogPollSleepNumericUpDown.Location = new System.Drawing.Point(334, 84);
             this.LogPollSleepNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -2973,7 +3077,7 @@
             // label91
             // 
             this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(20, 468);
+            this.label91.Location = new System.Drawing.Point(9, 86);
             this.label91.Name = "label91";
             this.label91.Size = new System.Drawing.Size(150, 12);
             this.label91.TabIndex = 57;
@@ -2982,7 +3086,7 @@
             // HideWhenNotActiceCheckBox
             // 
             this.HideWhenNotActiceCheckBox.AutoSize = true;
-            this.HideWhenNotActiceCheckBox.Location = new System.Drawing.Point(305, 114);
+            this.HideWhenNotActiceCheckBox.Location = new System.Drawing.Point(314, 42);
             this.HideWhenNotActiceCheckBox.Name = "HideWhenNotActiceCheckBox";
             this.HideWhenNotActiceCheckBox.Size = new System.Drawing.Size(192, 16);
             this.HideWhenNotActiceCheckBox.TabIndex = 56;
@@ -2992,9 +3096,9 @@
             // SaveLogButton
             // 
             this.SaveLogButton.Enabled = false;
-            this.SaveLogButton.Location = new System.Drawing.Point(793, 605);
+            this.SaveLogButton.Location = new System.Drawing.Point(373, 232);
             this.SaveLogButton.Name = "SaveLogButton";
-            this.SaveLogButton.Size = new System.Drawing.Size(43, 25);
+            this.SaveLogButton.Size = new System.Drawing.Size(77, 23);
             this.SaveLogButton.TabIndex = 55;
             this.SaveLogButton.Text = "ReferenceButton";
             this.SaveLogButton.UseVisualStyleBackColor = true;
@@ -3002,7 +3106,7 @@
             // SaveLogCheckBox
             // 
             this.SaveLogCheckBox.AutoSize = true;
-            this.SaveLogCheckBox.Location = new System.Drawing.Point(342, 610);
+            this.SaveLogCheckBox.Location = new System.Drawing.Point(333, 209);
             this.SaveLogCheckBox.Name = "SaveLogCheckBox";
             this.SaveLogCheckBox.Size = new System.Drawing.Size(70, 16);
             this.SaveLogCheckBox.TabIndex = 54;
@@ -3012,7 +3116,7 @@
             // SaveLogTextBox
             // 
             this.SaveLogTextBox.Enabled = false;
-            this.SaveLogTextBox.Location = new System.Drawing.Point(429, 608);
+            this.SaveLogTextBox.Location = new System.Drawing.Point(11, 233);
             this.SaveLogTextBox.Name = "SaveLogTextBox";
             this.SaveLogTextBox.Size = new System.Drawing.Size(356, 21);
             this.SaveLogTextBox.TabIndex = 53;
@@ -3020,7 +3124,7 @@
             // label67
             // 
             this.label67.AutoSize = true;
-            this.label67.Location = new System.Drawing.Point(20, 611);
+            this.label67.Location = new System.Drawing.Point(9, 209);
             this.label67.Name = "label67";
             this.label67.Size = new System.Drawing.Size(85, 12);
             this.label67.TabIndex = 52;
@@ -3028,7 +3132,7 @@
             // 
             // OverTextBox
             // 
-            this.OverTextBox.Location = new System.Drawing.Point(343, 583);
+            this.OverTextBox.Location = new System.Drawing.Point(334, 182);
             this.OverTextBox.Name = "OverTextBox";
             this.OverTextBox.Size = new System.Drawing.Size(116, 21);
             this.OverTextBox.TabIndex = 51;
@@ -3036,7 +3140,7 @@
             // label66
             // 
             this.label66.AutoSize = true;
-            this.label66.Location = new System.Drawing.Point(20, 585);
+            this.label66.Location = new System.Drawing.Point(9, 185);
             this.label66.Name = "label66";
             this.label66.Size = new System.Drawing.Size(87, 12);
             this.label66.TabIndex = 50;
@@ -3044,7 +3148,7 @@
             // 
             // ReadyTextBox
             // 
-            this.ReadyTextBox.Location = new System.Drawing.Point(343, 558);
+            this.ReadyTextBox.Location = new System.Drawing.Point(334, 157);
             this.ReadyTextBox.Name = "ReadyTextBox";
             this.ReadyTextBox.Size = new System.Drawing.Size(116, 21);
             this.ReadyTextBox.TabIndex = 49;
@@ -3052,7 +3156,7 @@
             // label65
             // 
             this.label65.AutoSize = true;
-            this.label65.Location = new System.Drawing.Point(20, 560);
+            this.label65.Location = new System.Drawing.Point(9, 160);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(97, 12);
             this.label65.TabIndex = 48;
@@ -3061,7 +3165,7 @@
             // label64
             // 
             this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(417, 536);
+            this.label64.Location = new System.Drawing.Point(408, 135);
             this.label64.Name = "label64";
             this.label64.Size = new System.Drawing.Size(212, 12);
             this.label64.TabIndex = 47;
@@ -3070,7 +3174,7 @@
             // EnabledNotifyNormalSpellTimerCheckBox
             // 
             this.EnabledNotifyNormalSpellTimerCheckBox.AutoSize = true;
-            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(342, 535);
+            this.EnabledNotifyNormalSpellTimerCheckBox.Location = new System.Drawing.Point(333, 134);
             this.EnabledNotifyNormalSpellTimerCheckBox.Name = "EnabledNotifyNormalSpellTimerCheckBox";
             this.EnabledNotifyNormalSpellTimerCheckBox.Size = new System.Drawing.Size(70, 16);
             this.EnabledNotifyNormalSpellTimerCheckBox.TabIndex = 46;
@@ -3080,7 +3184,7 @@
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(20, 536);
+            this.label63.Location = new System.Drawing.Point(9, 134);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(170, 12);
             this.label63.TabIndex = 45;
@@ -3089,7 +3193,7 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(415, 366);
+            this.label49.Location = new System.Drawing.Point(414, 313);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(178, 12);
             this.label49.TabIndex = 44;
@@ -3098,7 +3202,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(18, 366);
+            this.label31.Location = new System.Drawing.Point(17, 313);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(136, 12);
             this.label31.TabIndex = 43;
@@ -3107,47 +3211,17 @@
             // EnabledSpellTimerNoDecimalCheckBox
             // 
             this.EnabledSpellTimerNoDecimalCheckBox.AutoSize = true;
-            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(340, 365);
+            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(339, 312);
             this.EnabledSpellTimerNoDecimalCheckBox.Name = "EnabledSpellTimerNoDecimalCheckBox";
             this.EnabledSpellTimerNoDecimalCheckBox.Size = new System.Drawing.Size(70, 16);
             this.EnabledSpellTimerNoDecimalCheckBox.TabIndex = 42;
             this.EnabledSpellTimerNoDecimalCheckBox.Text = "Enabled";
             this.EnabledSpellTimerNoDecimalCheckBox.UseVisualStyleBackColor = true;
             // 
-            // LanguageRestartLabel
-            // 
-            this.LanguageRestartLabel.AutoSize = true;
-            this.LanguageRestartLabel.Location = new System.Drawing.Point(293, 9);
-            this.LanguageRestartLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.LanguageRestartLabel.Name = "LanguageRestartLabel";
-            this.LanguageRestartLabel.Size = new System.Drawing.Size(94, 12);
-            this.LanguageRestartLabel.TabIndex = 41;
-            this.LanguageRestartLabel.Text = "RequiresRestart";
-            // 
-            // LanguageComboBox
-            // 
-            this.LanguageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.LanguageComboBox.FormattingEnabled = true;
-            this.LanguageComboBox.Location = new System.Drawing.Point(114, 6);
-            this.LanguageComboBox.Margin = new System.Windows.Forms.Padding(2);
-            this.LanguageComboBox.Name = "LanguageComboBox";
-            this.LanguageComboBox.Size = new System.Drawing.Size(165, 20);
-            this.LanguageComboBox.TabIndex = 40;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(8, 9);
-            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(92, 12);
-            this.label17.TabIndex = 39;
-            this.label17.Text = "LanguageLabel";
-            // 
             // OverlayForceVisibleCheckBox
             // 
             this.OverlayForceVisibleCheckBox.AutoSize = true;
-            this.OverlayForceVisibleCheckBox.Location = new System.Drawing.Point(305, 92);
+            this.OverlayForceVisibleCheckBox.Location = new System.Drawing.Point(314, 20);
             this.OverlayForceVisibleCheckBox.Name = "OverlayForceVisibleCheckBox";
             this.OverlayForceVisibleCheckBox.Size = new System.Drawing.Size(195, 16);
             this.OverlayForceVisibleCheckBox.TabIndex = 38;
@@ -3157,7 +3231,7 @@
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(417, 492);
+            this.label48.Location = new System.Drawing.Point(408, 111);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(199, 12);
             this.label48.TabIndex = 32;
@@ -3166,7 +3240,7 @@
             // EnabledPTPlaceholderCheckBox
             // 
             this.EnabledPTPlaceholderCheckBox.AutoSize = true;
-            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(342, 491);
+            this.EnabledPTPlaceholderCheckBox.Location = new System.Drawing.Point(333, 110);
             this.EnabledPTPlaceholderCheckBox.Name = "EnabledPTPlaceholderCheckBox";
             this.EnabledPTPlaceholderCheckBox.Size = new System.Drawing.Size(70, 16);
             this.EnabledPTPlaceholderCheckBox.TabIndex = 31;
@@ -3176,7 +3250,7 @@
             // label43
             // 
             this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(20, 492);
+            this.label43.Location = new System.Drawing.Point(9, 110);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(112, 12);
             this.label43.TabIndex = 30;
@@ -3184,7 +3258,7 @@
             // 
             // SwitchTelopButton
             // 
-            this.SwitchTelopButton.Location = new System.Drawing.Point(7, 137);
+            this.SwitchTelopButton.Location = new System.Drawing.Point(5, 54);
             this.SwitchTelopButton.Name = "SwitchTelopButton";
             this.SwitchTelopButton.Size = new System.Drawing.Size(292, 42);
             this.SwitchTelopButton.TabIndex = 29;
@@ -3194,7 +3268,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(473, 444);
+            this.label30.Location = new System.Drawing.Point(464, 61);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(72, 12);
             this.label30.TabIndex = 28;
@@ -3203,7 +3277,7 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(418, 444);
+            this.label29.Location = new System.Drawing.Point(409, 61);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(70, 12);
             this.label29.TabIndex = 27;
@@ -3212,7 +3286,7 @@
             // RefreshIntervalNumericUpDown
             // 
             this.RefreshIntervalNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(343, 443);
+            this.RefreshIntervalNumericUpDown.Location = new System.Drawing.Point(334, 60);
             this.RefreshIntervalNumericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -3236,7 +3310,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(20, 444);
+            this.label28.Location = new System.Drawing.Point(9, 62);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(144, 12);
             this.label28.TabIndex = 25;
@@ -3245,7 +3319,7 @@
             // AutoSortReverseCheckBox
             // 
             this.AutoSortReverseCheckBox.AutoSize = true;
-            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(429, 387);
+            this.AutoSortReverseCheckBox.Location = new System.Drawing.Point(420, 12);
             this.AutoSortReverseCheckBox.Name = "AutoSortReverseCheckBox";
             this.AutoSortReverseCheckBox.Size = new System.Drawing.Size(174, 16);
             this.AutoSortReverseCheckBox.TabIndex = 9;
@@ -3266,7 +3340,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(470, 419);
+            this.label26.Location = new System.Drawing.Point(461, 36);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(108, 12);
             this.label26.TabIndex = 11;
@@ -3275,7 +3349,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(20, 419);
+            this.label25.Location = new System.Drawing.Point(9, 37);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(102, 12);
             this.label25.TabIndex = 24;
@@ -3284,7 +3358,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(418, 419);
+            this.label24.Location = new System.Drawing.Point(409, 36);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(83, 12);
             this.label24.TabIndex = 23;
@@ -3293,7 +3367,7 @@
             // TimeOfHideNumericUpDown
             // 
             this.TimeOfHideNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(343, 418);
+            this.TimeOfHideNumericUpDown.Location = new System.Drawing.Point(334, 35);
             this.TimeOfHideNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -3307,7 +3381,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(18, 388);
+            this.label23.Location = new System.Drawing.Point(9, 13);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(112, 12);
             this.label23.TabIndex = 21;
@@ -3316,7 +3390,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(18, 344);
+            this.label22.Location = new System.Drawing.Point(17, 285);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(80, 12);
             this.label22.TabIndex = 20;
@@ -3325,7 +3399,7 @@
             // AutoSortCheckBox
             // 
             this.AutoSortCheckBox.AutoSize = true;
-            this.AutoSortCheckBox.Location = new System.Drawing.Point(340, 387);
+            this.AutoSortCheckBox.Location = new System.Drawing.Point(331, 12);
             this.AutoSortCheckBox.Name = "AutoSortCheckBox";
             this.AutoSortCheckBox.Size = new System.Drawing.Size(70, 16);
             this.AutoSortCheckBox.TabIndex = 8;
@@ -3335,7 +3409,7 @@
             // ClickThroughCheckBox
             // 
             this.ClickThroughCheckBox.AutoSize = true;
-            this.ClickThroughCheckBox.Location = new System.Drawing.Point(340, 343);
+            this.ClickThroughCheckBox.Location = new System.Drawing.Point(339, 284);
             this.ClickThroughCheckBox.Name = "ClickThroughCheckBox";
             this.ClickThroughCheckBox.Size = new System.Drawing.Size(70, 16);
             this.ClickThroughCheckBox.TabIndex = 7;
@@ -3345,7 +3419,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(17, 290);
+            this.label21.Location = new System.Drawing.Point(16, 229);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(98, 12);
             this.label21.TabIndex = 17;
@@ -3354,7 +3428,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(416, 290);
+            this.label20.Location = new System.Drawing.Point(415, 229);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(27, 12);
             this.label20.TabIndex = 16;
@@ -3363,7 +3437,7 @@
             // OpacityNumericUpDown
             // 
             this.OpacityNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.OpacityNumericUpDown.Location = new System.Drawing.Point(340, 289);
+            this.OpacityNumericUpDown.Location = new System.Drawing.Point(339, 228);
             this.OpacityNumericUpDown.Name = "OpacityNumericUpDown";
             this.OpacityNumericUpDown.Size = new System.Drawing.Size(69, 21);
             this.OpacityNumericUpDown.TabIndex = 6;
@@ -3372,7 +3446,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(17, 187);
+            this.label18.Location = new System.Drawing.Point(16, 105);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(143, 12);
             this.label18.TabIndex = 10;
@@ -3380,7 +3454,7 @@
             // 
             // SwitchOverlayButton
             // 
-            this.SwitchOverlayButton.Location = new System.Drawing.Point(7, 89);
+            this.SwitchOverlayButton.Location = new System.Drawing.Point(5, 6);
             this.SwitchOverlayButton.Name = "SwitchOverlayButton";
             this.SwitchOverlayButton.Size = new System.Drawing.Size(292, 42);
             this.SwitchOverlayButton.TabIndex = 0;
@@ -3409,10 +3483,10 @@
             this.DefaultVisualSetting.FontColor = System.Drawing.Color.White;
             this.DefaultVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
             this.DefaultVisualSetting.HideSpellName = false;
-            this.DefaultVisualSetting.Location = new System.Drawing.Point(7, 207);
+            this.DefaultVisualSetting.Location = new System.Drawing.Point(6, 125);
             this.DefaultVisualSetting.Name = "DefaultVisualSetting";
             this.DefaultVisualSetting.OverlapRecastTime = false;
-            this.DefaultVisualSetting.Size = new System.Drawing.Size(405, 71);
+            this.DefaultVisualSetting.Size = new System.Drawing.Size(405, 90);
             this.DefaultVisualSetting.SpellIcon = "";
             this.DefaultVisualSetting.SpellIconSize = 0;
             this.DefaultVisualSetting.TabIndex = 37;
@@ -3445,6 +3519,18 @@
             this.DQXOptionTabPage.Size = new System.Drawing.Size(1225, 722);
             this.DQXOptionTabPage.TabIndex = 5;
             this.DQXOptionTabPage.Text = "DQXOptionTabPage";
+            // 
+            // lblDQX
+            // 
+            this.lblDQX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblDQX.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblDQX.Location = new System.Drawing.Point(2, 2);
+            this.lblDQX.Name = "lblDQX";
+            this.lblDQX.Padding = new System.Windows.Forms.Padding(5);
+            this.lblDQX.Size = new System.Drawing.Size(1221, 23);
+            this.lblDQX.TabIndex = 31;
+            this.lblDQX.Text = "lblDQX";
+            this.lblDQX.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DQXOptionEnabledCheckBox
             // 
@@ -3601,56 +3687,6 @@
             this.DQXAppleyButton.Text = "ApplyButton";
             this.DQXAppleyButton.UseVisualStyleBackColor = true;
             // 
-            // OpenFileDialog
-            // 
-            this.OpenFileDialog.DefaultExt = "xml";
-            this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
-            this.OpenFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-            this.OpenFileDialog.RestoreDirectory = true;
-            // 
-            // SaveFileDialog
-            // 
-            this.SaveFileDialog.DefaultExt = "xml";
-            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
-            this.SaveFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-            this.SaveFileDialog.RestoreDirectory = true;
-            // 
-            // ToolTip
-            // 
-            this.ToolTip.IsBalloon = true;
-            // 
-            // CombatAnalyzingTimer
-            // 
-            this.CombatAnalyzingTimer.Interval = 600;
-            // 
-            // EnabledSpellTimerNoDecimal
-            // 
-            this.EnabledSpellTimerNoDecimal.AutoSize = true;
-            this.EnabledSpellTimerNoDecimal.Location = new System.Drawing.Point(213, 335);
-            this.EnabledSpellTimerNoDecimal.Name = "EnabledSpellTimerNoDecimal";
-            this.EnabledSpellTimerNoDecimal.Size = new System.Drawing.Size(64, 16);
-            this.EnabledSpellTimerNoDecimal.TabIndex = 42;
-            this.EnabledSpellTimerNoDecimal.Text = "Enabled";
-            this.EnabledSpellTimerNoDecimal.UseVisualStyleBackColor = true;
-            // 
-            // SaveLogFileDialog
-            // 
-            this.SaveLogFileDialog.DefaultExt = "log";
-            this.SaveLogFileDialog.Filter = "Log files (*.log)|*.log|Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            this.SaveLogFileDialog.RestoreDirectory = true;
-            // 
-            // lblDQX
-            // 
-            this.lblDQX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblDQX.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblDQX.Location = new System.Drawing.Point(2, 2);
-            this.lblDQX.Name = "lblDQX";
-            this.lblDQX.Padding = new System.Windows.Forms.Padding(5);
-            this.lblDQX.Size = new System.Drawing.Size(1221, 23);
-            this.lblDQX.TabIndex = 31;
-            this.lblDQX.Text = "lblDQX";
-            this.lblDQX.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // LogTabPage
             // 
             this.LogTabPage.Controls.Add(this.LogTextBox);
@@ -3663,40 +3699,29 @@
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // lblLanguage
+            // LogTextBox
             // 
-            this.lblLanguage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblLanguage.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblLanguage.Location = new System.Drawing.Point(2, 2);
-            this.lblLanguage.Name = "lblLanguage";
-            this.lblLanguage.Padding = new System.Windows.Forms.Padding(5);
-            this.lblLanguage.Size = new System.Drawing.Size(1221, 24);
-            this.lblLanguage.TabIndex = 73;
-            this.lblLanguage.Text = "lblLanguage";
-            this.lblLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LogTextBox.BackColor = System.Drawing.Color.White;
+            this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LogTextBox.Location = new System.Drawing.Point(2, 26);
+            this.LogTextBox.Multiline = true;
+            this.LogTextBox.Name = "LogTextBox";
+            this.LogTextBox.ReadOnly = true;
+            this.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.LogTextBox.Size = new System.Drawing.Size(1221, 694);
+            this.LogTextBox.TabIndex = 42;
             // 
-            // pnlLanguage
+            // label89
             // 
-            this.pnlLanguage.Controls.Add(this.label17);
-            this.pnlLanguage.Controls.Add(this.LanguageComboBox);
-            this.pnlLanguage.Controls.Add(this.LanguageRestartLabel);
-            this.pnlLanguage.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlLanguage.Location = new System.Drawing.Point(2, 26);
-            this.pnlLanguage.Name = "pnlLanguage";
-            this.pnlLanguage.Size = new System.Drawing.Size(1221, 32);
-            this.pnlLanguage.TabIndex = 74;
-            // 
-            // lblOverlay
-            // 
-            this.lblOverlay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.lblOverlay.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblOverlay.Location = new System.Drawing.Point(2, 58);
-            this.lblOverlay.Name = "lblOverlay";
-            this.lblOverlay.Padding = new System.Windows.Forms.Padding(5);
-            this.lblOverlay.Size = new System.Drawing.Size(1221, 24);
-            this.lblOverlay.TabIndex = 75;
-            this.lblOverlay.Text = "lblOverlay";
-            this.lblOverlay.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label89.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label89.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label89.Location = new System.Drawing.Point(2, 2);
+            this.label89.Name = "label89";
+            this.label89.Padding = new System.Windows.Forms.Padding(5);
+            this.label89.Size = new System.Drawing.Size(1221, 24);
+            this.label89.TabIndex = 43;
+            this.label89.Text = "LogLabel";
             // 
             // ConfigPanel
             // 
@@ -3705,6 +3730,7 @@
             this.Controls.Add(this.TabControl);
             this.Name = "ConfigPanel";
             this.Size = new System.Drawing.Size(1400, 837);
+            this.CombatAnalyzerContextMenuStrip.ResumeLayout(false);
             this.TabControl.ResumeLayout(false);
             this.SpecialSpellTabPage.ResumeLayout(false);
             this.DetailPanelGroupBox.ResumeLayout(false);
@@ -3746,12 +3772,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.TelopDelayNumericUpDown)).EndInit();
             this.CombatAnalyzerTabPage.ResumeLayout(false);
             this.CombatAnalyzerTabPage.PerformLayout();
-            this.CombatAnalyzerContextMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).EndInit();
             this.MonitorTabPage.ResumeLayout(false);
             this.MonitorTabPage.PerformLayout();
             this.OptionTabPage.ResumeLayout(false);
-            this.OptionTabPage.PerformLayout();
+            this.tabControlExtHoriz1.ResumeLayout(false);
+            this.tabOverlayOptions.ResumeLayout(false);
+            this.tabOverlayOptions.PerformLayout();
+            this.tabDetailOptions.ResumeLayout(false);
+            this.tabDetailOptions.PerformLayout();
+            this.pnlLanguage.ResumeLayout(false);
+            this.pnlLanguage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogPollSleepNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RefreshIntervalNumericUpDown)).EndInit();
@@ -3761,8 +3792,6 @@
             this.DQXOptionTabPage.PerformLayout();
             this.LogTabPage.ResumeLayout(false);
             this.LogTabPage.PerformLayout();
-            this.pnlLanguage.ResumeLayout(false);
-            this.pnlLanguage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -4076,6 +4105,8 @@
         private System.Windows.Forms.TabPage LogTabPage;
         private System.Windows.Forms.Panel pnlLanguage;
         private System.Windows.Forms.Label lblLanguage;
-        private System.Windows.Forms.Label lblOverlay;
+        private TabControlExtHoriz tabControlExtHoriz1;
+        private System.Windows.Forms.TabPage tabOverlayOptions;
+        private System.Windows.Forms.TabPage tabDetailOptions;
     }
 }
