@@ -1355,7 +1355,7 @@
             return r;
         }
 
-#region NativeMethods
+        #region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -1377,6 +1377,6 @@
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-#endregion
+        #endregion
     }
 }

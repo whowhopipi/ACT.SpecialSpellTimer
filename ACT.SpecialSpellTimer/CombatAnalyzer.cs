@@ -265,8 +265,8 @@
                         select
                         x).FirstOrDefault();
 
-                    return key != null ? 
-                        key.Category : 
+                    return key != null ?
+                        key.Category :
                         AnalyzeKeywordCategory.Unknown;
                 });
 

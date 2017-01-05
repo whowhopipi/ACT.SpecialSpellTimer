@@ -41,16 +41,16 @@
 
         /// <summary>1:分析終了</summary>
         AnalyzeEnd = 1,
-        
+
         /// <summary>2:詠唱開始</summary>
         CastStart = 2,
-        
+
         /// <summary>3:アクション(発動)</summary>
         Action = 3,
-        
+
         /// <summary>4:Add</summary>
         Added = 4,
-        
+
         /// <summary>5:残HP率の記録</summary>
         HPRate = 5
     }

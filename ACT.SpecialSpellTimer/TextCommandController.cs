@@ -182,7 +182,8 @@
                                     LogBuffer.ClearCustomPlaceholderAll();
 
                                     commandDone = true;
-                                } else if (windowname.Trim() != string.Empty)
+                                }
+                                else if (windowname.Trim() != string.Empty)
                                 {
                                     LogBuffer.ClearCustomPlaceholder(windowname.Trim());
 
