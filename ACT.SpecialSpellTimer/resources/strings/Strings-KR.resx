@@ -1141,4 +1141,16 @@
   <data name="tabOverlayOptions" xml:space="preserve">
     <value>오버레이 설정</value>
   </data>
+  <data name="TelopAddButton" xml:space="preserve">
+    <value>추가</value>
+  </data>
+  <data name="TelopClearAllButton" xml:space="preserve">
+    <value>모두 삭제</value>
+  </data>
+  <data name="TelopExportButton" xml:space="preserve">
+    <value>내보내기</value>
+  </data>
+  <data name="TelopImportButton" xml:space="preserve">
+    <value>가져오기</value>
+  </data>
 </root>

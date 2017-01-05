@@ -110,56 +110,6 @@
         }
 
         /// <summary>
-        /// 初期化 Button
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void ShokikaButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(
-                this,
-                Translate.Get("ResetAllPrompt"),
-                "ACT.SpecialSpellTimer",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2) != DialogResult.OK)
-            {
-                return;
-            }
-
-            Settings.Default.Reset();
-            Settings.Default.Save();
-
-            PanelSettings.Default.SettingsTable.Clear();
-            PanelSettings.Default.Save();
-
-            foreach (var telop in OnePointTelopTable.Default.Table)
-            {
-                telop.Left = 10.0d;
-                telop.Top = 10.0d;
-            }
-
-            OnePointTelopTable.Default.Save();
-
-            this.LoadSettingsOption();
-            SpellTimerCore.Default.LayoutPanels();
-        }
-
-        /// <summary>
-        /// 適用する Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void TekiyoButton_Click(object sender, EventArgs e)
-        {
-            this.ApplySettingsOption();
-
-            // Windowを一旦すべて閉じる
-            SpellTimerCore.Default.ClosePanels();
-            OnePointTelopController.CloseTelops();
-        }
-
-        /// <summary>
         /// オプション設定をロードする
         /// </summary>
         private void LoadSettingsOption()
