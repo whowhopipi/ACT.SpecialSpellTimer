@@ -7,7 +7,6 @@
     using System.Text.RegularExpressions;
     using System.Threading;
 
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
