@@ -1,9 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer
 {
+    using System;
+    using System.Drawing;
+    using System.Windows.Forms;
+
     public class TabControlExt : TabControl
     {
         protected override void OnPaint(PaintEventArgs e)

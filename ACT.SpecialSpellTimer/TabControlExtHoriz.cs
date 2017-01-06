@@ -1,10 +1,10 @@
-﻿using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-
-namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer
 {
+    using System;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
+    using System.Windows.Forms;
+
     public class TabControlExtHoriz : TabControl
     {
         // code from SRT Project (what?)
@@ -15,7 +15,7 @@ namespace ACT.SpecialSpellTimer
             if ((m.Msg == TCM_ADJUSTRECT))
             {
                 RECT rc = (RECT)m.GetLParam(typeof(RECT));
-                //Adjust these values to suit, dependant upon Appearance
+                // Adjust these values to suit, dependant upon Appearance
                 rc.left -= 5;
                 rc.right += 5;
                 rc.top -= 5;

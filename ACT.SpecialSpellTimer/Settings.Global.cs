@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Advanced_Combat_Tracker;
-using System.IO;
-using System.Windows.Forms;
-using System.Xml;
-using System.Diagnostics;
-
-namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.IO;
+    using System.Reflection;
+    using System.Xml;
+
     public class Settings
     {
         private string xmlpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Advanced Combat Tracker\\Config\\ACT.SpecialSpellTimer.config.xml";
@@ -23,7 +18,7 @@ namespace ACT.SpecialSpellTimer
 
         private Color IntToColor(uint color)
         {
-            byte a = (byte)(color >> 24); 
+            byte a = (byte)(color >> 24);
             byte r = (byte)(color >> 16);
             byte g = (byte)(color >> 8);
             byte b = (byte)(color >> 0);
@@ -143,7 +138,7 @@ namespace ACT.SpecialSpellTimer
             xd.AppendChild(Config);
             xd.Save(xmlpath);
         }
-        
+
         public void Load()
         {
             if (File.Exists(xmlpath))
@@ -151,7 +146,7 @@ namespace ACT.SpecialSpellTimer
                 XmlDocument xd = new XmlDocument();
                 xd.Load(xmlpath);
 
-                foreach(XmlElement xe in xd.SelectNodes("/Config/SettingsSerializer/*"))
+                foreach (XmlElement xe in xd.SelectNodes("/Config/SettingsSerializer/*"))
                 {
                     try
                     {
@@ -186,7 +181,7 @@ namespace ACT.SpecialSpellTimer
                                 int w = 0, h = 0;
                                 foreach (XmlElement sizeattr in xe.ChildNodes)
                                 {
-                                    switch(sizeattr.Name)
+                                    switch (sizeattr.Name)
                                     {
                                         case "Width":
                                             w = Convert.ToInt32(sizeattr.InnerText);
@@ -214,7 +209,7 @@ namespace ACT.SpecialSpellTimer
         public Settings()
         {
             Dictionary<string, object> def = DefaultValue;
-            foreach(KeyValuePair<string, object> v in def)
+            foreach (KeyValuePair<string, object> v in def)
             {
                 GetType().GetProperty(v.Key).SetValue(this, v.Value);
             }
