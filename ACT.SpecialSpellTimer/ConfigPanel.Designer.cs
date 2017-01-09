@@ -627,7 +627,6 @@
             this.AddButton.Name = "AddButton";
             this.AddButton.Size = new System.Drawing.Size(85, 20);
             this.AddButton.Text = "AddButton";
-            this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // DetailGroupBox
             // 
