@@ -2131,7 +2131,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Add New に類似しているローカライズされた文字列を検索します。
+        ///   追加 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string TelopAddButton {
             get {
@@ -2140,7 +2140,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Clear All に類似しているローカライズされた文字列を検索します。
+        ///   全て削除 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string TelopClearAllButton {
             get {
