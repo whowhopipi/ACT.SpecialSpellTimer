@@ -96,6 +96,7 @@
             {
                 XmlElement xe = xd.CreateElement(val.Value.GetType().ToString().Replace("System.", "").Replace("Drawing.", ""));
                 xe.SetAttribute("Name", val.Key);
+
                 if (val.Value.GetType() == typeof(Font))
                 {
                     xe.SetAttribute("Value", new FontConverter().ConvertToString(GetType().GetProperty(val.Key).GetValue(this)));
@@ -108,13 +109,13 @@
                 {
                     xe = xd.CreateElement("Double");
                     xe.SetAttribute("Name", val.Key);
-                    xe.SetAttribute("Value", val.Value.ToString());
+                    xe.SetAttribute("Value", GetType().GetProperty(val.Key).GetValue(this).ToString());
                 }
                 else if (val.Value.GetType() == typeof(long))
                 {
                     xe = xd.CreateElement("Int64");
                     xe.SetAttribute("Name", val.Key);
-                    xe.SetAttribute("Value", val.Value.ToString());
+                    xe.SetAttribute("Value", GetType().GetProperty(val.Key).GetValue(this).ToString());
                 }
                 else if (val.Value.GetType() == typeof(Size))
                 {
