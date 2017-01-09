@@ -3,16 +3,16 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Windows.Forms;
 
     using ACT.SpecialSpellTimer.Image;
     using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
-    using System.IO;
+
     /// <summary>
     /// 設定Panel
     /// </summary>
@@ -507,9 +507,7 @@
                     }
 
                     SpellTimerTable.ClearReplacedKeywords();
-#if false
-                    SpellTimerTable.RemoveAllInstanceSpells();
-#endif
+
                     SpellTimerTable.Save();
                     this.LoadSpellTimerTable();
 
@@ -545,7 +543,46 @@
         /// <param name="e">イベント引数</param>
         private void DeleteButton_Click(object sender, EventArgs e)
         {
+            lock (SpellTimerTable.Table)
+            {
+                var src = this.DetailGroupBox.Tag as SpellTimer;
+                if (src != null)
+                {
+                    SpellTimerTable.Table.Remove(src);
+                    SpellTimerTable.ClearReplacedKeywords();
+                    SpellTimerTable.RemoveAllInstanceSpells();
+                    SpellTimerTable.Save();
 
+                    this.DetailGroupBox.Visible = false;
+                    this.DetailPanelGroupBox.Visible = false;
+                }
+            }
+
+            // 今の選択ノードを取り出す
+            var targetNode = this.SpellTimerTreeView.SelectedNode;
+            if (targetNode != null)
+            {
+                // 1個前のノードを取り出しておく
+                var prevNode = targetNode.PrevNode;
+
+                if (targetNode.Parent != null &&
+                    targetNode.Parent.Nodes.Count > 1)
+                {
+                    targetNode.Remove();
+
+                    if (prevNode != null)
+                    {
+                        this.SpellTimerTreeView.SelectedNode = prevNode;
+                    }
+                }
+                else
+                {
+                    targetNode.Parent.Remove();
+                }
+            }
+
+            // 標準のスペルタイマーへ変更を反映する
+            SpellTimerCore.Default.applyToNormalSpellTimer();
         }
 
         /// <summary>

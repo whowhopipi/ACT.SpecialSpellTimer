@@ -155,33 +155,36 @@
             this.TelopDeleteButton = new System.Windows.Forms.Button();
             this.TelopUpdateButton = new System.Windows.Forms.Button();
             this.TelopDetailGroupBox = new System.Windows.Forms.Panel();
+            this.TelopTitleTextBox = new System.Windows.Forms.TextBox();
+            this.TelopMessageTextBox = new System.Windows.Forms.TextBox();
+            this.TelopKeywordTextBox = new System.Windows.Forms.TextBox();
+            this.DisplayTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.TelopKeywordToHideTextBox = new System.Windows.Forms.TextBox();
+            this.TelopDelayNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.TelopSetConditionButton = new System.Windows.Forms.Button();
             this.label47 = new System.Windows.Forms.Label();
-            this.TelopTitleTextBox = new System.Windows.Forms.TextBox();
             this.TelopSelectZoneButton = new System.Windows.Forms.Button();
             this.TelopVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.TelopSelectJobButton = new System.Windows.Forms.Button();
             this.label46 = new System.Windows.Forms.Label();
             this.TelopProgressBarEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.TelopDelayTTSTextBox = new System.Windows.Forms.TextBox();
+            this.TelopDelaySoundComboBox = new System.Windows.Forms.ComboBox();
             this.TelopSpeak2Button = new System.Windows.Forms.Button();
             this.TelopPlay2Button = new System.Windows.Forms.Button();
-            this.TelopDelayTTSTextBox = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.TelopDelaySoundComboBox = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
-            this.TelopMessageTextBox = new System.Windows.Forms.TextBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.TelopMatchTTSTextBox = new System.Windows.Forms.TextBox();
+            this.TelopMatchSoundComboBox = new System.Windows.Forms.ComboBox();
             this.TelopSpeak1Button = new System.Windows.Forms.Button();
             this.TelopPlay1Button = new System.Windows.Forms.Button();
-            this.TelopMatchTTSTextBox = new System.Windows.Forms.TextBox();
             this.label41 = new System.Windows.Forms.Label();
-            this.TelopMatchSoundComboBox = new System.Windows.Forms.ComboBox();
             this.label42 = new System.Windows.Forms.Label();
             this.EnabledAddMessageCheckBox = new System.Windows.Forms.CheckBox();
             this.label45 = new System.Windows.Forms.Label();
             this.TelopTopNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.TelopKeywordTextBox = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
@@ -190,11 +193,8 @@
             this.label39 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
-            this.DisplayTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.TelopKeywordToHideTextBox = new System.Windows.Forms.TextBox();
             this.TelopRegexEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.label44 = new System.Windows.Forms.Label();
-            this.TelopDelayNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.CombatAnalyzerTabPage = new System.Windows.Forms.TabPage();
             this.CombatLogListView = new System.Windows.Forms.ListView();
             this.DummyColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -392,12 +392,12 @@
             this.menuStrip2.SuspendLayout();
             this.panel9.SuspendLayout();
             this.TelopDetailGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayTimeNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TelopDelayNumericUpDown)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TelopTopNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TelopLeftNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DisplayTimeNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TelopDelayNumericUpDown)).BeginInit();
             this.CombatAnalyzerTabPage.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CombatLogBufferSizeNumericUpDown)).BeginInit();
@@ -1819,6 +1819,67 @@
             this.TelopDetailGroupBox.Size = new System.Drawing.Size(656, 825);
             this.TelopDetailGroupBox.TabIndex = 0;
             // 
+            // TelopTitleTextBox
+            // 
+            this.TelopTitleTextBox.Location = new System.Drawing.Point(7, 27);
+            this.TelopTitleTextBox.Name = "TelopTitleTextBox";
+            this.TelopTitleTextBox.Size = new System.Drawing.Size(364, 19);
+            this.TelopTitleTextBox.TabIndex = 0;
+            // 
+            // TelopMessageTextBox
+            // 
+            this.TelopMessageTextBox.Location = new System.Drawing.Point(7, 70);
+            this.TelopMessageTextBox.Name = "TelopMessageTextBox";
+            this.TelopMessageTextBox.Size = new System.Drawing.Size(364, 19);
+            this.TelopMessageTextBox.TabIndex = 1;
+            // 
+            // TelopKeywordTextBox
+            // 
+            this.TelopKeywordTextBox.Location = new System.Drawing.Point(7, 113);
+            this.TelopKeywordTextBox.Name = "TelopKeywordTextBox";
+            this.TelopKeywordTextBox.Size = new System.Drawing.Size(364, 19);
+            this.TelopKeywordTextBox.TabIndex = 2;
+            // 
+            // DisplayTimeNumericUpDown
+            // 
+            this.DisplayTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.DisplayTimeNumericUpDown.Location = new System.Drawing.Point(147, 199);
+            this.DisplayTimeNumericUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.DisplayTimeNumericUpDown.Name = "DisplayTimeNumericUpDown";
+            this.DisplayTimeNumericUpDown.Size = new System.Drawing.Size(68, 19);
+            this.DisplayTimeNumericUpDown.TabIndex = 40;
+            this.DisplayTimeNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.DisplayTimeNumericUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // TelopKeywordToHideTextBox
+            // 
+            this.TelopKeywordToHideTextBox.Location = new System.Drawing.Point(7, 156);
+            this.TelopKeywordToHideTextBox.Name = "TelopKeywordToHideTextBox";
+            this.TelopKeywordToHideTextBox.Size = new System.Drawing.Size(364, 19);
+            this.TelopKeywordToHideTextBox.TabIndex = 3;
+            // 
+            // TelopDelayNumericUpDown
+            // 
+            this.TelopDelayNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.TelopDelayNumericUpDown.Location = new System.Drawing.Point(7, 199);
+            this.TelopDelayNumericUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.TelopDelayNumericUpDown.Name = "TelopDelayNumericUpDown";
+            this.TelopDelayNumericUpDown.Size = new System.Drawing.Size(68, 19);
+            this.TelopDelayNumericUpDown.TabIndex = 5;
+            this.TelopDelayNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // TelopSetConditionButton
             // 
             this.TelopSetConditionButton.Location = new System.Drawing.Point(7, 595);
@@ -1837,13 +1898,6 @@
             this.label47.Size = new System.Drawing.Size(66, 12);
             this.label47.TabIndex = 0;
             this.label47.Text = "TickerName";
-            // 
-            // TelopTitleTextBox
-            // 
-            this.TelopTitleTextBox.Location = new System.Drawing.Point(7, 27);
-            this.TelopTitleTextBox.Name = "TelopTitleTextBox";
-            this.TelopTitleTextBox.Size = new System.Drawing.Size(364, 19);
-            this.TelopTitleTextBox.TabIndex = 0;
             // 
             // TelopSelectZoneButton
             // 
@@ -1918,6 +1972,25 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DelayedSoundEffect";
             // 
+            // TelopDelayTTSTextBox
+            // 
+            this.TelopDelayTTSTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TelopDelayTTSTextBox.Location = new System.Drawing.Point(255, 44);
+            this.TelopDelayTTSTextBox.Name = "TelopDelayTTSTextBox";
+            this.TelopDelayTTSTextBox.Size = new System.Drawing.Size(377, 19);
+            this.TelopDelayTTSTextBox.TabIndex = 1;
+            // 
+            // TelopDelaySoundComboBox
+            // 
+            this.TelopDelaySoundComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.TelopDelaySoundComboBox.FormattingEnabled = true;
+            this.TelopDelaySoundComboBox.Location = new System.Drawing.Point(6, 44);
+            this.TelopDelaySoundComboBox.MaxDropDownItems = 16;
+            this.TelopDelaySoundComboBox.Name = "TelopDelaySoundComboBox";
+            this.TelopDelaySoundComboBox.Size = new System.Drawing.Size(243, 20);
+            this.TelopDelaySoundComboBox.TabIndex = 0;
+            // 
             // TelopSpeak2Button
             // 
             this.TelopSpeak2Button.Location = new System.Drawing.Point(255, 18);
@@ -1936,15 +2009,6 @@
             this.TelopPlay2Button.Text = "PlayButton";
             this.TelopPlay2Button.UseVisualStyleBackColor = true;
             // 
-            // TelopDelayTTSTextBox
-            // 
-            this.TelopDelayTTSTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TelopDelayTTSTextBox.Location = new System.Drawing.Point(255, 44);
-            this.TelopDelayTTSTextBox.Name = "TelopDelayTTSTextBox";
-            this.TelopDelayTTSTextBox.Size = new System.Drawing.Size(377, 19);
-            this.TelopDelayTTSTextBox.TabIndex = 1;
-            // 
             // label37
             // 
             this.label37.AutoSize = true;
@@ -1955,16 +2019,6 @@
             this.label37.TabIndex = 15;
             this.label37.Text = "TextToSpeakLabel";
             // 
-            // TelopDelaySoundComboBox
-            // 
-            this.TelopDelaySoundComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.TelopDelaySoundComboBox.FormattingEnabled = true;
-            this.TelopDelaySoundComboBox.Location = new System.Drawing.Point(6, 44);
-            this.TelopDelaySoundComboBox.MaxDropDownItems = 16;
-            this.TelopDelaySoundComboBox.Name = "TelopDelaySoundComboBox";
-            this.TelopDelaySoundComboBox.Size = new System.Drawing.Size(243, 20);
-            this.TelopDelaySoundComboBox.TabIndex = 0;
-            // 
             // label38
             // 
             this.label38.AutoSize = true;
@@ -1974,13 +2028,6 @@
             this.label38.Size = new System.Drawing.Size(90, 12);
             this.label38.TabIndex = 13;
             this.label38.Text = "WaveSoundLabel";
-            // 
-            // TelopMessageTextBox
-            // 
-            this.TelopMessageTextBox.Location = new System.Drawing.Point(7, 70);
-            this.TelopMessageTextBox.Name = "TelopMessageTextBox";
-            this.TelopMessageTextBox.Size = new System.Drawing.Size(364, 19);
-            this.TelopMessageTextBox.TabIndex = 1;
             // 
             // groupBox7
             // 
@@ -1998,6 +2045,25 @@
             this.groupBox7.TabIndex = 12;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "ImmediateSoundEffect";
+            // 
+            // TelopMatchTTSTextBox
+            // 
+            this.TelopMatchTTSTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TelopMatchTTSTextBox.Location = new System.Drawing.Point(255, 44);
+            this.TelopMatchTTSTextBox.Name = "TelopMatchTTSTextBox";
+            this.TelopMatchTTSTextBox.Size = new System.Drawing.Size(377, 19);
+            this.TelopMatchTTSTextBox.TabIndex = 1;
+            // 
+            // TelopMatchSoundComboBox
+            // 
+            this.TelopMatchSoundComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.TelopMatchSoundComboBox.FormattingEnabled = true;
+            this.TelopMatchSoundComboBox.Location = new System.Drawing.Point(6, 44);
+            this.TelopMatchSoundComboBox.MaxDropDownItems = 16;
+            this.TelopMatchSoundComboBox.Name = "TelopMatchSoundComboBox";
+            this.TelopMatchSoundComboBox.Size = new System.Drawing.Size(243, 20);
+            this.TelopMatchSoundComboBox.TabIndex = 0;
             // 
             // TelopSpeak1Button
             // 
@@ -2017,15 +2083,6 @@
             this.TelopPlay1Button.Text = "PlayButton";
             this.TelopPlay1Button.UseVisualStyleBackColor = true;
             // 
-            // TelopMatchTTSTextBox
-            // 
-            this.TelopMatchTTSTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TelopMatchTTSTextBox.Location = new System.Drawing.Point(255, 44);
-            this.TelopMatchTTSTextBox.Name = "TelopMatchTTSTextBox";
-            this.TelopMatchTTSTextBox.Size = new System.Drawing.Size(377, 19);
-            this.TelopMatchTTSTextBox.TabIndex = 1;
-            // 
             // label41
             // 
             this.label41.AutoSize = true;
@@ -2035,16 +2092,6 @@
             this.label41.Size = new System.Drawing.Size(99, 12);
             this.label41.TabIndex = 15;
             this.label41.Text = "TextToSpeakLabel";
-            // 
-            // TelopMatchSoundComboBox
-            // 
-            this.TelopMatchSoundComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.TelopMatchSoundComboBox.FormattingEnabled = true;
-            this.TelopMatchSoundComboBox.Location = new System.Drawing.Point(6, 44);
-            this.TelopMatchSoundComboBox.MaxDropDownItems = 16;
-            this.TelopMatchSoundComboBox.Name = "TelopMatchSoundComboBox";
-            this.TelopMatchSoundComboBox.Size = new System.Drawing.Size(243, 20);
-            this.TelopMatchSoundComboBox.TabIndex = 0;
             // 
             // label42
             // 
@@ -2094,13 +2141,6 @@
             this.TelopTopNumericUpDown.Size = new System.Drawing.Size(68, 19);
             this.TelopTopNumericUpDown.TabIndex = 38;
             this.TelopTopNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // TelopKeywordTextBox
-            // 
-            this.TelopKeywordTextBox.Location = new System.Drawing.Point(7, 113);
-            this.TelopKeywordTextBox.Name = "TelopKeywordTextBox";
-            this.TelopKeywordTextBox.Size = new System.Drawing.Size(364, 19);
-            this.TelopKeywordTextBox.TabIndex = 2;
             // 
             // label35
             // 
@@ -2186,32 +2226,6 @@
             this.label32.TabIndex = 33;
             this.label32.Text = "MatchingWordsToHide";
             // 
-            // DisplayTimeNumericUpDown
-            // 
-            this.DisplayTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.DisplayTimeNumericUpDown.Location = new System.Drawing.Point(147, 199);
-            this.DisplayTimeNumericUpDown.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.DisplayTimeNumericUpDown.Name = "DisplayTimeNumericUpDown";
-            this.DisplayTimeNumericUpDown.Size = new System.Drawing.Size(68, 19);
-            this.DisplayTimeNumericUpDown.TabIndex = 40;
-            this.DisplayTimeNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.DisplayTimeNumericUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // TelopKeywordToHideTextBox
-            // 
-            this.TelopKeywordToHideTextBox.Location = new System.Drawing.Point(7, 156);
-            this.TelopKeywordToHideTextBox.Name = "TelopKeywordToHideTextBox";
-            this.TelopKeywordToHideTextBox.Size = new System.Drawing.Size(364, 19);
-            this.TelopKeywordToHideTextBox.TabIndex = 3;
-            // 
             // TelopRegexEnabledCheckBox
             // 
             this.TelopRegexEnabledCheckBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2232,20 +2246,6 @@
             this.label44.Size = new System.Drawing.Size(81, 12);
             this.label44.TabIndex = 7;
             this.label44.Text = "MatchLogLabel";
-            // 
-            // TelopDelayNumericUpDown
-            // 
-            this.TelopDelayNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.TelopDelayNumericUpDown.Location = new System.Drawing.Point(7, 199);
-            this.TelopDelayNumericUpDown.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.TelopDelayNumericUpDown.Name = "TelopDelayNumericUpDown";
-            this.TelopDelayNumericUpDown.Size = new System.Drawing.Size(68, 19);
-            this.TelopDelayNumericUpDown.TabIndex = 5;
-            this.TelopDelayNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // CombatAnalyzerTabPage
             // 
@@ -3947,14 +3947,14 @@
             this.panel9.ResumeLayout(false);
             this.TelopDetailGroupBox.ResumeLayout(false);
             this.TelopDetailGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DisplayTimeNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TelopDelayNumericUpDown)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TelopTopNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TelopLeftNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DisplayTimeNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TelopDelayNumericUpDown)).EndInit();
             this.CombatAnalyzerTabPage.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
