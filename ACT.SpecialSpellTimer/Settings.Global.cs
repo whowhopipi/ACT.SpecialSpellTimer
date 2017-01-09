@@ -131,6 +131,7 @@
                 {
                     xe.SetAttribute("Value", GetType().GetProperty(val.Key).GetValue(this).ToString());
                 }
+
                 Setting.AppendChild(xe);
             }
 
@@ -159,24 +160,31 @@
                             case "Font":
                                 prop.SetValue(this, new FontConverter().ConvertFromString(value));
                                 break;
+
                             case "Color":
                                 prop.SetValue(this, IntToColor(Convert.ToUInt32(value)));
                                 break;
+
                             case "Boolean":
                                 prop.SetValue(this, (value == "True" ? true : false));
                                 break;
+
                             case "Double":
                                 prop.SetValue(this, Convert.ToDouble(value));
                                 break;
+
                             case "Int64":
                                 prop.SetValue(this, Convert.ToInt64(value));
                                 break;
+
                             case "Int32":
                                 prop.SetValue(this, Convert.ToInt32(value));
                                 break;
+
                             case "String":
                                 prop.SetValue(this, value.Trim());
                                 break;
+
                             case "Size":
                                 int w = 0, h = 0;
                                 foreach (XmlElement sizeattr in xe.ChildNodes)
@@ -193,6 +201,7 @@
                                 }
                                 prop.SetValue(this, new Size(w, h));
                                 break;
+
                             case "DateTime":
                                 prop.SetValue(this, DateTime.Parse(value));
                                 break;
@@ -200,7 +209,6 @@
                     }
                     catch
                     {
-
                     }
                 }
             }
@@ -213,6 +221,7 @@
             {
                 GetType().GetProperty(v.Key).SetValue(this, v.Value);
             }
+
             Load();
         }
 

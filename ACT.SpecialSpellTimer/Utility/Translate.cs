@@ -26,7 +26,10 @@
         private static void InitializeIfNeeded()
         {
             if (Language != null)
+            {
                 return;
+            }
+
             Language = GetTranslationsFor(Settings.Default.Language);
         }
 
@@ -35,14 +38,27 @@
             InitializeIfNeeded();
 
             if (name == "")
+            {
                 return name;
+            }
+
             if (name.StartsWith("__"))
+            {
                 return name.Substring(2);
+            }
+
             int a;
             if (int.TryParse(name, out a))
+            {
                 return name;
+            }
+
             String s = Language.GetString(name);
-            if (s == null) return " ";
+            if (s == null)
+            {
+                return " ";
+            }
+
             return s.Replace("\\n", Environment.NewLine);
         }
 
