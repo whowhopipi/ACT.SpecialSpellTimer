@@ -22,6 +22,7 @@
             new AnalyzeKeyword() { Keyword = "カーバンクル・", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "を唱えた。", Category = AnalyzeKeywordCategory.Cast },
             new AnalyzeKeyword() { Keyword = "の構え。", Category = AnalyzeKeywordCategory.Cast },
+            new AnalyzeKeyword() { Keyword = "starts using", Category = AnalyzeKeywordCategory.CastStartsUsing },
             new AnalyzeKeyword() { Keyword = "「", Category = AnalyzeKeywordCategory.Action },
             new AnalyzeKeyword() { Keyword = "」", Category = AnalyzeKeywordCategory.Action },
             new AnalyzeKeyword() { Keyword = "HP at", Category = AnalyzeKeywordCategory.HPRate },
@@ -30,6 +31,10 @@
 
         private static readonly Regex CastRegex = new Regex(
             @"\[.+?\] 00:2[89a]..:(?<actor>.+?)は「(?<skill>.+?)」(を唱えた。|の構え。)$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+        private static readonly Regex StartsUsingRegex = new Regex(
+            @"14:..:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         private static readonly Regex ActionRegex = new Regex(
@@ -301,6 +306,10 @@
                                 this.StoreCastLog(log);
                                 break;
 
+                            case AnalyzeKeywordCategory.CastStartsUsing:
+                                this.StoreCastStartsUsingLog(log);
+                                break;
+
                             case AnalyzeKeywordCategory.Action:
                                 this.StoreActionLog(log);
                                 break;
@@ -495,6 +504,31 @@
         }
 
         /// <summary>
+        /// キャストログを格納する
+        /// </summary>
+        /// <param name="logInfo">ログ情報</param>
+        private void StoreCastStartsUsingLog(
+            LogLineEventArgs logInfo)
+        {
+            var match = StartsUsingRegex.Match(logInfo.logLine);
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var log = new CombatLog()
+            {
+                TimeStamp = logInfo.detectedTime,
+                Raw = logInfo.logLine,
+                Actor = match.Groups["actor"].ToString(),
+                Action = match.Groups["skill"].ToString() + " の準備動作",
+                LogType = CombatLogType.CastStart
+            };
+
+            this.StoreLog(log);
+        }
+
+        /// <summary>
         /// アクションログを格納する
         /// </summary>
         /// <param name="logInfo">ログ情報</param>
@@ -591,6 +625,9 @@
 
         /// <summary>構え等準備動作</summary>
         Cast = 0x10,
+
+        /// <summary>構え等準備動作 starts using</summary>
+        CastStartsUsing = 0x11,
 
         /// <summary>アクションの発動</summary>
         Action = 0x20,

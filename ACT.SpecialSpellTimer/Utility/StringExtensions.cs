@@ -1,7 +1,6 @@
 ﻿namespace ACT.SpecialSpellTimer.Utility
 {
     using System.Text.RegularExpressions;
-    using ACT.SpecialSpellTimer.Properties;
 
     public static class StringExtensions
     {
