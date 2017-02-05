@@ -263,7 +263,7 @@
                 (log, keywords) =>
                 {
                     var key = (
-                        from x in keywords.AsParallel()
+                        from x in keywords
                         where
                         log.Contains(x.Keyword)
                         select
@@ -382,11 +382,11 @@
 
             // プレイヤ情報とパーティリストを取得する
             var player = FF14PluginHelper.GetPlayer();
-            var ptlist = new List<string>(LogBuffer.PartyList);
+            var ptlist = LogBuffer.PartyList;
 
             if (player != null)
             {
-                list.Add(new AnalyzeKeyword()
+                list.Insert(0, new AnalyzeKeyword()
                 {
                     Keyword = player.Name,
                     Category = AnalyzeKeywordCategory.Me,
@@ -397,7 +397,7 @@
             {
                 foreach (var name in ptlist)
                 {
-                    list.Add(new AnalyzeKeyword()
+                    list.Insert(0, new AnalyzeKeyword()
                     {
                         Keyword = name,
                         Category = AnalyzeKeywordCategory.PartyMember,
