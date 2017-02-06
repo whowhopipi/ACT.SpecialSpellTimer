@@ -7,6 +7,7 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
+
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -472,7 +473,7 @@
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Action = match.Groups["skill"].ToString() + " の準備動作",
+                Action = $"{match.Groups["skill"].ToString()} の準備動作",
                 LogType = CombatLogType.CastStart
             };
 
@@ -500,7 +501,7 @@
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Action = match.Groups["skill"].ToString() + " の準備動作",
+                Action = $"starts using {match.Groups["skill"].ToString()}",
                 LogType = CombatLogType.CastStart
             };
 
@@ -528,7 +529,7 @@
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Action = match.Groups["skill"].ToString() + " の発動",
+                Action = $"{match.Groups["skill"].ToString()} の発動",
                 LogType = CombatLogType.Action
             };
 
