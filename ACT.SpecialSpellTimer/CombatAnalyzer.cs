@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Threading;
-
+    using System.Threading.Tasks;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -186,14 +186,14 @@
         /// </summary>
         public void AnalyzeLog()
         {
-            this.AnalyzeLog(this.CurrentCombatLogList);
+            this.AnalyzeLogAsync(this.CurrentCombatLogList);
         }
 
         /// <summary>
         /// ログを分析する
         /// </summary>
         /// <param name="logList">ログのリスト</param>
-        public void AnalyzeLog(
+        public async void AnalyzeLogAsync(
             List<CombatLog> logList)
         {
             CombatLog[] logs;
@@ -211,35 +211,29 @@
 
             var previouseAction = new Dictionary<string, DateTime>();
 
-            var i = 0L;
-            foreach (var log in logs)
+            await Task.Run(() =>
             {
-                // 10回に1回ちょっとだけスリープする
-                if ((i % 10) == 0)
+                foreach (var log in logs)
                 {
-                    Thread.Sleep(1);
+                    if (log.LogType == CombatLogType.AnalyzeStart ||
+                        log.LogType == CombatLogType.AnalyzeEnd ||
+                        log.LogType == CombatLogType.HPRate)
+                    {
+                        continue;
+                    }
+
+                    var key = log.LogType.ToString() + "-" + log.Actor + "-" + log.Action;
+
+                    // 直前の同じログを探す
+                    if (previouseAction.ContainsKey(key))
+                    {
+                        log.Span = (log.TimeStamp - previouseAction[key]).TotalSeconds;
+                    }
+
+                    // 記録しておく
+                    previouseAction[key] = log.TimeStamp;
                 }
-
-                if (log.LogType == CombatLogType.AnalyzeStart ||
-                    log.LogType == CombatLogType.AnalyzeEnd ||
-                    log.LogType == CombatLogType.HPRate)
-                {
-                    continue;
-                }
-
-                var key = log.LogType.ToString() + "-" + log.Actor + "-" + log.Action;
-
-                // 直前の同じログを探す
-                if (previouseAction.ContainsKey(key))
-                {
-                    log.Span = (log.TimeStamp - previouseAction[key]).TotalSeconds;
-                }
-
-                // 記録しておく
-                previouseAction[key] = log.TimeStamp;
-
-                i++;
-            }
+            });
         }
 
         /// <summary>
