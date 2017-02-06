@@ -278,13 +278,8 @@
             {
                 try
                 {
-                    // 分析用キーワードを取得する
-                    var keywords = this.GetKeywords();
-
                     while (!this.logInfoQueue.IsEmpty)
                     {
-                        Thread.Sleep(0);
-
                         LogLineEventArgs log = null;
                         this.logInfoQueue.TryDequeue(out log);
 
@@ -294,11 +289,9 @@
                         }
 
                         // ログを分類する
-                        var category = analyzeLogLine(log.logLine, keywords);
+                        var category = analyzeLogLine(log.logLine, Keywords);
                         switch (category)
                         {
-                            case AnalyzeKeywordCategory.Me:
-                            case AnalyzeKeywordCategory.PartyMember:
                             case AnalyzeKeywordCategory.Pet:
                                 break;
 
@@ -376,9 +369,9 @@
         /// </summary>
         /// <returns>
         /// キーワードコレクション</returns>
-        private IReadOnlyCollection<AnalyzeKeyword> GetKeywords()
+        private IReadOnlyCollection<string> GetPartyMemberNames()
         {
-            var list = Keywords.ToList();
+            var names = new List<string>();
 
             // プレイヤ情報とパーティリストを取得する
             var player = FF14PluginHelper.GetPlayer();
@@ -386,26 +379,15 @@
 
             if (player != null)
             {
-                list.Insert(0, new AnalyzeKeyword()
-                {
-                    Keyword = player.Name,
-                    Category = AnalyzeKeywordCategory.Me,
-                });
+                names.Add(player.Name);
             }
 
             if (ptlist != null)
             {
-                foreach (var name in ptlist)
-                {
-                    list.Insert(0, new AnalyzeKeyword()
-                    {
-                        Keyword = name,
-                        Category = AnalyzeKeywordCategory.PartyMember,
-                    });
-                }
+                names.AddRange(ptlist);
             }
 
-            return list;
+            return names;
         }
 
         /// <summary>
@@ -500,7 +482,10 @@
                 LogType = CombatLogType.CastStart
             };
 
-            this.StoreLog(log);
+            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            {
+                this.StoreLog(log);
+            }
         }
 
         /// <summary>
@@ -525,7 +510,10 @@
                 LogType = CombatLogType.CastStart
             };
 
-            this.StoreLog(log);
+            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            {
+                this.StoreLog(log);
+            }
         }
 
         /// <summary>
@@ -550,7 +538,10 @@
                 LogType = CombatLogType.Action
             };
 
-            this.StoreLog(log);
+            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            {
+                this.StoreLog(log);
+            }
         }
 
         /// <summary>
@@ -602,7 +593,10 @@
                 LogType = CombatLogType.Added
             };
 
-            this.StoreLog(log);
+            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            {
+                this.StoreLog(log);
+            }
         }
     }
 
