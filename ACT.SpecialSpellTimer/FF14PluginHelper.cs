@@ -11,80 +11,28 @@
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
+    /// <summary>
+    /// Type of the entity
+    /// </summary>
+    public enum MobType : byte
+    {
+        Unknown = 0,
+        Player = 0x01,
+        Mob = 0x02,
+        NPC = 0x03,
+        Aetheryte = 0x05,
+        Gathering = 0x06,
+        Minion = 0x09
+    }
+
     public static partial class FF14PluginHelper
     {
         private static object lockObject = new object();
         private static object plugin;
-        private static object pluginMemory;
         private static dynamic pluginConfig;
+        private static object pluginMemory;
         private static dynamic pluginScancombat;
         private static volatile IReadOnlyList<Zone> zoneList;
-
-        public static void Initialize()
-        {
-            // FFXIV以外で使用する？
-            if (Settings.Default.UseOtherThanFFXIV)
-            {
-                // 何もしない
-                return;
-            }
-
-            lock (lockObject)
-            {
-                if (!ActGlobals.oFormActMain.Visible)
-                {
-                    return;
-                }
-
-                if (plugin == null)
-                {
-                    foreach (var item in ActGlobals.oFormActMain.ActPlugins)
-                    {
-                        if (item.pluginFile.Name.ToUpper() == "FFXIV_ACT_Plugin.dll".ToUpper() &&
-                            item.lblPluginStatus.Text.ToUpper() == "FFXIV Plugin Started.".ToUpper())
-                        {
-                            plugin = item.pluginObj;
-
-                            Logger.Write("FFXIV_ACT_Plugin.dll found. and started.");
-                            break;
-                        }
-                    }
-                }
-
-                if (plugin != null)
-                {
-                    FieldInfo fi;
-
-                    if (pluginMemory == null)
-                    {
-                        fi = plugin.GetType().GetField("_Memory", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                        pluginMemory = fi.GetValue(plugin);
-                    }
-
-                    if (pluginMemory == null)
-                    {
-                        return;
-                    }
-
-                    if (pluginConfig == null)
-                    {
-                        fi = pluginMemory.GetType().GetField("_config", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                        pluginConfig = fi.GetValue(pluginMemory);
-                    }
-
-                    if (pluginConfig == null)
-                    {
-                        return;
-                    }
-
-                    if (pluginScancombat == null)
-                    {
-                        fi = pluginConfig.GetType().GetField("ScanCombatants", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                        pluginScancombat = fi.GetValue(pluginConfig);
-                    }
-                }
-            }
-        }
 
         public static Process GetFFXIVProcess
         {
@@ -188,6 +136,28 @@
             return partyList;
         }
 
+        public static int GetCurrentZoneID()
+        {
+            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
+            if (string.IsNullOrEmpty(currentZoneName) ||
+                currentZoneName == "Unknown Zone")
+            {
+                return 0;
+            }
+
+            var zoneList = GetZoneList();
+
+            if (zoneList == null ||
+                zoneList.Count < 1)
+            {
+                return 0;
+            }
+
+            var foundZone = zoneList.AsParallel().FirstOrDefault(zone =>
+                string.Equals(zone.Name, currentZoneName, StringComparison.OrdinalIgnoreCase));
+            return foundZone != null ? foundZone.ID : 0;
+        }
+
         public static IReadOnlyList<Zone> GetZoneList()
         {
             var list = zoneList;
@@ -232,7 +202,7 @@
                     }
                 }
             }
-
+#if false
             using (var st = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.ZoneList_Custom.txt"))
             {
                 if (st != null)
@@ -258,69 +228,112 @@
                     }
                 }
             }
-
+#endif
             newList = newList.OrderBy(x => x.ID).ToList();
             zoneList = newList;
             return newList;
         }
 
-        public static int GetCurrentZoneID()
+        public static void Initialize()
         {
-            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-            if (string.IsNullOrEmpty(currentZoneName) || 
-                currentZoneName == "Unknown Zone")
+            // FFXIV以外で使用する？
+            if (Settings.Default.UseOtherThanFFXIV)
             {
-                return 0;
+                // 何もしない
+                return;
             }
 
-            var zoneList = GetZoneList();
-
-            if (zoneList == null || 
-                zoneList.Count < 1)
+            lock (lockObject)
             {
-                return 0;
-            }
+                if (!ActGlobals.oFormActMain.Visible)
+                {
+                    return;
+                }
 
-            var foundZone = zoneList.AsParallel().FirstOrDefault(zone =>
-                string.Equals(zone.Name, currentZoneName, StringComparison.OrdinalIgnoreCase));
-            return foundZone != null ? foundZone.ID : 0;
+                if (plugin == null)
+                {
+                    foreach (var item in ActGlobals.oFormActMain.ActPlugins)
+                    {
+                        if (item.pluginFile.Name.ToUpper().Contains("FFXIV_ACT_Plugin".ToUpper()) &&
+                            item.lblPluginStatus.Text.ToUpper() == "FFXIV Plugin Started.".ToUpper())
+                        {
+                            plugin = item.pluginObj;
+
+                            Logger.Write($"{item.pluginFile.Name} found. and started.");
+                            break;
+                        }
+                    }
+                }
+
+                if (plugin != null)
+                {
+                    FieldInfo fi;
+
+                    if (pluginMemory == null)
+                    {
+                        fi = plugin.GetType().GetField("_Memory", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                        pluginMemory = fi.GetValue(plugin);
+                    }
+
+                    if (pluginMemory == null)
+                    {
+                        return;
+                    }
+
+                    if (pluginConfig == null)
+                    {
+                        fi = pluginMemory.GetType().GetField("_config", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                        pluginConfig = fi.GetValue(pluginMemory);
+                    }
+
+                    if (pluginConfig == null)
+                    {
+                        return;
+                    }
+
+                    if (pluginScancombat == null)
+                    {
+                        fi = pluginConfig.GetType().GetField("ScanCombatants", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                        pluginScancombat = fi.GetValue(pluginConfig);
+                    }
+                }
+            }
         }
     }
 
     public class Combatant
     {
-        public uint ID;
-        public uint OwnerID;
-        public int Order;
-        public byte type;
-        public int Job;
-        public int Level;
-        public string Name;
-        public int CurrentHP;
-        public int MaxHP;
-        public int CurrentMP;
-        public int MaxMP;
-        public int CurrentTP;
-        public int MaxTP;
-        public int CurrentCP;
-        public int MaxCP;
-        public int CurrentGP;
-        public int MaxGP;
-        public bool IsCasting;
         public int CastBuffID;
-        public uint CastTargetID;
         public float CastDurationCurrent;
         public float CastDurationMax;
+        public uint CastTargetID;
+        public int CurrentCP;
+        public int CurrentGP;
+        public int CurrentHP;
+        public int CurrentMP;
+        public int CurrentTP;
+        public uint ID;
+        public bool IsCasting;
+        public int Job;
+        public int Level;
+        public int MaxCP;
+        public int MaxGP;
+        public int MaxHP;
+        public int MaxMP;
+        public int MaxTP;
+        public string Name;
+        public int Order;
+        public uint OwnerID;
         public float PosX;
         public float PosY;
         public float PosZ;
-
+        public byte type;
         public MobType MobType => (MobType)this.type;
 
-        public float GetHorizontalDistance(Combatant target) => 
-            (float)Math.Sqrt(
-                Math.Pow(this.PosX - target.PosX, 2) +
-                Math.Pow(this.PosY - target.PosY, 2));
+        public SpecialSpellTimer.Job AsJob()
+        {
+            return SpecialSpellTimer.Job.FromId(Job);
+        }
 
         public float GetDistance(Combatant target) =>
             (float)Math.Sqrt(
@@ -328,10 +341,10 @@
                 Math.Pow(this.PosY - target.PosY, 2) +
                 Math.Pow(this.PosZ - target.PosZ, 2));
 
-        public SpecialSpellTimer.Job AsJob()
-        {
-            return SpecialSpellTimer.Job.FromId(Job);
-        }
+        public float GetHorizontalDistance(Combatant target) =>
+                            (float)Math.Sqrt(
+                Math.Pow(this.PosX - target.PosX, 2) +
+                Math.Pow(this.PosY - target.PosY, 2));
     }
 
     public class Zone
@@ -343,19 +356,5 @@
         {
             return this.Name;
         }
-    }
-
-    /// <summary>
-    /// Type of the entity
-    /// </summary>
-    public enum MobType : byte
-    {
-        Unknown = 0,
-        Player = 0x01,
-        Mob = 0x02,
-        NPC = 0x03,
-        Aetheryte = 0x05,
-        Gathering = 0x06,
-        Minion = 0x09
     }
 }
