@@ -208,42 +208,52 @@
             var asm = plugin.GetType().Assembly;
 
             using (var st = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.ZoneList_EN.txt"))
-            using (var sr = new StreamReader(st))
             {
-                while (!sr.EndOfStream)
+                if (st != null)
                 {
-                    var line = sr.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(line))
+                    using (var sr = new StreamReader(st))
                     {
-                        var values = line.Split('|');
-                        if (values.Length >= 2)
+                        while (!sr.EndOfStream)
                         {
-                            newList.Add(new Zone()
+                            var line = sr.ReadLine();
+                            if (!string.IsNullOrWhiteSpace(line))
                             {
-                                ID = int.Parse(values[0]),
-                                Name = values[1].Trim()
-                            });
+                                var values = line.Split('|');
+                                if (values.Length >= 2)
+                                {
+                                    newList.Add(new Zone()
+                                    {
+                                        ID = int.Parse(values[0]),
+                                        Name = values[1].Trim()
+                                    });
+                                }
+                            }
                         }
                     }
                 }
             }
 
             using (var st = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.ZoneList_Custom.txt"))
-            using (var sr = new StreamReader(st))
             {
-                while (!sr.EndOfStream)
+                if (st != null)
                 {
-                    var line = sr.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(line))
+                    using (var sr = new StreamReader(st))
                     {
-                        var values = line.Split('|');
-                        if (values.Length >= 2)
+                        while (!sr.EndOfStream)
                         {
-                            newList.Add(new Zone()
+                            var line = sr.ReadLine();
+                            if (!string.IsNullOrWhiteSpace(line))
                             {
-                                ID = int.Parse(values[0]),
-                                Name = values[1].Trim()
-                            });
+                                var values = line.Split('|');
+                                if (values.Length >= 2)
+                                {
+                                    newList.Add(new Zone()
+                                    {
+                                        ID = int.Parse(values[0]),
+                                        Name = values[1].Trim()
+                                    });
+                                }
+                            }
                         }
                     }
                 }
