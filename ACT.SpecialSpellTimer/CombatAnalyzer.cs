@@ -275,6 +275,8 @@
                 {
                     while (!this.logInfoQueue.IsEmpty)
                     {
+                        Thread.Sleep(0);
+
                         LogLineEventArgs log = null;
                         this.logInfoQueue.TryDequeue(out log);
 
