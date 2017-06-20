@@ -10,6 +10,7 @@
     using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
+    using System.Collections;
 
     /// <summary>
     /// Type of the entity
@@ -175,60 +176,32 @@
 
             var newList = new List<Zone>();
 
-            var asm = plugin.GetType().Assembly;
+            // Zone
+            {
+                var t = plugin.GetType().Module.Assembly.GetType("FFXIV_ACT_Plugin.Resources.ZoneList");
+                var obj = t.GetField("_instance", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+                var s = t.GetField("_Zones", BindingFlags.NonPublic | BindingFlags.Instance).ReflectedType;
+                IDictionary zonelist = (IDictionary)t.GetField("_Zones", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
+                var listType = zonelist.GetType();
+                var GetEnumeratorMethod = listType.GetMethod("GetEnumerator", BindingFlags.Public | BindingFlags.Instance);
+                var ClearMethod = listType.GetMethod("Clear", BindingFlags.Public | BindingFlags.Instance);
+                var AddMethod = listType.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
+                var zoneType = AddMethod.GetParameters()[1].ParameterType;
 
-            using (var st = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.ZoneList_EN.txt"))
-            {
-                if (st != null)
+                var idField = zoneType.GetField("id", BindingFlags.Public | BindingFlags.Instance);
+                var nameField = zoneType.GetField("name", BindingFlags.Public | BindingFlags.Instance);
+
+                foreach (DictionaryEntry entry in zonelist)
                 {
-                    using (var sr = new StreamReader(st))
+                    var zone = entry.Value;
+                    newList.Add(new Zone()
                     {
-                        while (!sr.EndOfStream)
-                        {
-                            var line = sr.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(line))
-                            {
-                                var values = line.Split('|');
-                                if (values.Length >= 2)
-                                {
-                                    newList.Add(new Zone()
-                                    {
-                                        ID = int.Parse(values[0]),
-                                        Name = values[1].Trim()
-                                    });
-                                }
-                            }
-                        }
-                    }
+                        ID = (int)idField.GetValue(zone),
+                        Name = (string)nameField.GetValue(zone)
+                    });
                 }
             }
-#if false
-            using (var st = asm.GetManifestResourceStream("FFXIV_ACT_Plugin.Resources.ZoneList_Custom.txt"))
-            {
-                if (st != null)
-                {
-                    using (var sr = new StreamReader(st))
-                    {
-                        while (!sr.EndOfStream)
-                        {
-                            var line = sr.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(line))
-                            {
-                                var values = line.Split('|');
-                                if (values.Length >= 2)
-                                {
-                                    newList.Add(new Zone()
-                                    {
-                                        ID = int.Parse(values[0]),
-                                        Name = values[1].Trim()
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-#endif
+
             newList = newList.OrderBy(x => x.ID).ToList();
             zoneList = newList;
             return newList;
