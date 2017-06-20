@@ -21,38 +21,34 @@
     {
         private static readonly object lockObject = new object();
 
-        /// <summary>
-        /// SpellTimerデータテーブル
-        /// </summary>
-        private static List<SpellTimer> table;
-
         private static SpellTimer[] enabledTable;
 
         private static DateTime enabledTableTimeStamp;
 
         /// <summary>
-        /// インスタンス化されたスペルの辞書
-        /// key : スペルの表示名
+        /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
         private static ConcurrentDictionary<string, SpellTimer> instanceSpells = new ConcurrentDictionary<string, SpellTimer>();
 
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        public static List<SpellTimer> Table
+        private static List<SpellTimer> table;
+
+        /// <summary>
+        /// デフォルトのファイル
+        /// </summary>
+        public static string DefaultFile
         {
             get
             {
-                lock (lockObject)
-                {
-                    if (table == null)
-                    {
-                        table = new List<SpellTimer>();
-                        Load();
-                    }
+                var r = string.Empty;
 
-                    return table;
-                }
+                r = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    @"anoyetta\ACT\ACT.SpecialSpellTimer.Spells.xml");
+
+                return r;
             }
         }
 
@@ -74,6 +70,26 @@
                     }
 
                     return enabledTable;
+                }
+            }
+        }
+
+        /// <summary>
+        /// SpellTimerデータテーブル
+        /// </summary>
+        public static List<SpellTimer> Table
+        {
+            get
+            {
+                lock (lockObject)
+                {
+                    if (table == null)
+                    {
+                        table = new List<SpellTimer>();
+                        Load();
+                    }
+
+                    return table;
                 }
             }
         }
@@ -228,12 +244,68 @@
         }
 
         /// <summary>
+        /// テーブルファイルをバックアップする
+        /// </summary>
+        public static void Backup()
+        {
+            var file = DefaultFile;
+
+            if (File.Exists(file))
+            {
+                var backupFile = Path.Combine(
+                    Path.GetDirectoryName(file),
+                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
+
+                File.Copy(
+                    file,
+                    backupFile,
+                    true);
+
+                // 古いバックアップを消す
+                foreach (var bak in Directory.GetFiles(Path.GetDirectoryName(file), "*.bak"))
+                {
+                    var timeStamp = File.GetCreationTime(bak);
+                    if ((DateTime.Now - timeStamp).TotalDays >= 3.0d)
+                    {
+                        File.Delete(bak);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 置換後のキーワードをクリアする
+        /// </summary>
+        public static void ClearReplacedKeywords()
+        {
+            foreach (var item in Table)
+            {
+                item.KeywordReplaced = string.Empty;
+                item.KeywordForExtendReplaced1 = string.Empty;
+                item.KeywordForExtendReplaced2 = string.Empty;
+            }
+
+            // 有効SpellTimerのキャッシュを無効にする
+            enabledTableTimeStamp = DateTime.MinValue;
+        }
+
+        /// <summary>
+        /// スペルの描画済みフラグをクリアする
+        /// </summary>
+        public static void ClearUpdateFlags()
+        {
+            foreach (var item in Table)
+            {
+                item.UpdateDone = false;
+            }
+        }
+
+        /// <summary>
         /// 同じスペル表示名のインスタンスを取得するか新たに作成する
         /// </summary>
         /// <param name="spellTitle">スペル表示名</param>
         /// <param name="sourceSpell">インスタンスの元となるスペル</param>
-        /// <returns>
-        /// インスタンススペル</returns>
+        /// <returns>インスタンススペル</returns>
         public static SpellTimer GetOrAddInstance(
             string spellTitle,
             SpellTimer sourceSpell)
@@ -340,33 +412,62 @@
         }
 
         /// <summary>
-        /// instanceが不要になっていたらコレクションから除去する
+        /// 指定されたGuidを持つSpellTimerを取得する
         /// </summary>
-        /// <param name="instance">インスタンス</param>
-        public static void TryRemoveInstance(
-            SpellTimer instance)
+        /// <param name="guid">Guid</param>
+        public static SpellTimer GetSpellTimerByGuid(Guid guid)
         {
-            var ttl = Settings.Default.TimeOfHideSpell + 30;
+            return table.Where(x => x.guid == guid).FirstOrDefault();
+        }
 
-            lock (instance)
+        /// <summary>
+        /// 読み込む
+        /// </summary>
+        public static void Load()
+        {
+            Load(DefaultFile, true);
+        }
+
+        /// <summary>
+        /// 読み込む
+        /// </summary>
+        /// <param name="file">ファイルパス</param>
+        /// <param name="isClear">消去してからロードする？</param>
+        public static void Load(
+            string file,
+            bool isClear)
+        {
+            if (File.Exists(file))
             {
-                if (instance.CompleteScheduledTime != DateTime.MinValue &&
-                    (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
+                if (isClear)
                 {
-                    // ガーベージタイマを止める
-                    instance.StopGarbageInstanceTimer();
-
-                    SpellTimer o;
-                    instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
-
-                    // スペルコレクション本体から除去する
-                    lock (lockObject)
-                    {
-                        table.Remove(instance);
-                    }
-
-                    instance.Dispose();
+                    Table.Clear();
                 }
+
+                // 旧フォーマットを置換する
+                var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
+                    "DocumentElement",
+                    "ArrayOfSpellTimer");
+                File.WriteAllText(file, content, new UTF8Encoding(false));
+
+                using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+                {
+                    try
+                    {
+                        if (sr.BaseStream.Length > 0)
+                        {
+                            var xs = new XmlSerializer(table.GetType());
+                            var data = xs.Deserialize(sr) as List<SpellTimer>;
+                            table.AddRange(data);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write(Translate.Get("LoadXMLError"), ex);
+                    }
+                }
+
+                Reset();
             }
         }
 
@@ -384,80 +485,6 @@
                 {
                     table.Remove(item);
                 }
-            }
-        }
-
-        /// <summary>
-        /// 置換後のキーワードをクリアする
-        /// </summary>
-        public static void ClearReplacedKeywords()
-        {
-            foreach (var item in Table)
-            {
-                item.KeywordReplaced = string.Empty;
-                item.KeywordForExtendReplaced1 = string.Empty;
-                item.KeywordForExtendReplaced2 = string.Empty;
-            }
-
-            // 有効SpellTimerのキャッシュを無効にする
-            enabledTableTimeStamp = DateTime.MinValue;
-        }
-
-        /// <summary>
-        /// スペルの描画済みフラグをクリアする
-        /// </summary>
-        public static void ClearUpdateFlags()
-        {
-            foreach (var item in Table)
-            {
-                item.UpdateDone = false;
-            }
-        }
-
-        /// <summary>
-        /// 指定されたGuidを持つSpellTimerを取得する
-        /// </summary>
-        /// <param name="guid">Guid</param>
-        public static SpellTimer GetSpellTimerByGuid(Guid guid)
-        {
-            return table.Where(x => x.guid == guid).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// デフォルトのファイル
-        /// </summary>
-        public static string DefaultFile
-        {
-            get
-            {
-                var r = string.Empty;
-
-                r = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    @"anoyetta\ACT\ACT.SpecialSpellTimer.Spells.xml");
-
-                return r;
-            }
-        }
-
-        /// <summary>
-        /// カウントをリセットする
-        /// </summary>
-        public static void ResetCount()
-        {
-            foreach (var row in EnabledTable)
-            {
-                row.MatchDateTime = DateTime.MinValue;
-                row.UpdateDone = false;
-                row.OverDone = false;
-                row.BeforeDone = false;
-                row.TimeupDone = false;
-                row.CompleteScheduledTime = DateTime.MinValue;
-
-                row.StartOverSoundTimer();
-                row.StartBeforeSoundTimer();
-                row.StartTimeupSoundTimer();
-                row.StartGarbageInstanceTimer();
             }
         }
 
@@ -547,53 +574,23 @@
         }
 
         /// <summary>
-        /// 読み込む
+        /// カウントをリセットする
         /// </summary>
-        public static void Load()
+        public static void ResetCount()
         {
-            Load(DefaultFile, true);
-        }
-
-        /// <summary>
-        /// 読み込む
-        /// </summary>
-        /// <param name="file">ファイルパス</param>
-        /// <param name="isClear">消去してからロードする？</param>
-        public static void Load(
-            string file,
-            bool isClear)
-        {
-            if (File.Exists(file))
+            foreach (var row in EnabledTable)
             {
-                if (isClear)
-                {
-                    Table.Clear();
-                }
+                row.MatchDateTime = DateTime.MinValue;
+                row.UpdateDone = false;
+                row.OverDone = false;
+                row.BeforeDone = false;
+                row.TimeupDone = false;
+                row.CompleteScheduledTime = DateTime.MinValue;
 
-                // 旧フォーマットを置換する
-                var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
-                    "DocumentElement",
-                    "ArrayOfSpellTimer");
-                File.WriteAllText(file, content, new UTF8Encoding(false));
-
-                using (var sr = new StreamReader(file, new UTF8Encoding(false)))
-                {
-                    try
-                    {
-                        if (sr.BaseStream.Length > 0)
-                        {
-                            var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<SpellTimer>;
-                            table.AddRange(data);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(Translate.Get("LoadXMLError"), ex);
-                    }
-                }
-
-                Reset();
+                row.StartOverSoundTimer();
+                row.StartBeforeSoundTimer();
+                row.StartTimeupSoundTimer();
+                row.StartGarbageInstanceTimer();
             }
         }
 
@@ -605,13 +602,8 @@
             Save(DefaultFile);
         }
 
-        /// <summary>
-        /// 保存する
-        /// </summary>
-        /// <param name="file">ファイルパス</param>
-
         public static void Save(
-            string file)
+                    string file)
         {
             if (table == null)
             {
@@ -676,33 +668,39 @@
         }
 
         /// <summary>
-        /// テーブルファイルをバックアップする
+        /// instanceが不要になっていたらコレクションから除去する
         /// </summary>
-        public static void Backup()
+        /// <param name="instance">インスタンス</param>
+        public static void TryRemoveInstance(
+            SpellTimer instance)
         {
-            var file = DefaultFile;
+            var ttl = Settings.Default.TimeOfHideSpell + 30;
 
-            if (File.Exists(file))
+            lock (instance)
             {
-                var backupFile = Path.Combine(
-                    Path.GetDirectoryName(file),
-                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
-
-                File.Copy(
-                    file,
-                    backupFile,
-                    true);
-
-                // 古いバックアップを消す
-                foreach (var bak in Directory.GetFiles(Path.GetDirectoryName(file), "*.bak"))
+                if (instance.CompleteScheduledTime != DateTime.MinValue &&
+                    (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
                 {
-                    var timeStamp = File.GetCreationTime(bak);
-                    if ((DateTime.Now - timeStamp).TotalDays >= 3.0d)
+                    // ガーベージタイマを止める
+                    instance.StopGarbageInstanceTimer();
+
+                    SpellTimer o;
+                    instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
+
+                    // スペルコレクション本体から除去する
+                    lock (lockObject)
                     {
-                        File.Delete(bak);
+                        table.Remove(instance);
                     }
+
+                    instance.Dispose();
                 }
             }
         }
+
+        /// <summary>
+        /// 保存する
+        /// </summary>
+        /// <param name="file">ファイルパス</param>
     }
 }
