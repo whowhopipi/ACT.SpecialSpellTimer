@@ -11,42 +11,9 @@
     [ContentProperty("Text")]
     internal class OutlineTextBlock : FrameworkElement
     {
-        private FormattedText FormattedText;
-        private Geometry TextGeometry;
-
-        private Pen StrokePen;
-
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof(string), typeof(OutlineTextBlock),
-            new FrameworkPropertyMetadata(OnFormattedTextInvalidated));
-
-        public static readonly DependencyProperty TextAlignmentProperty = DependencyProperty.Register(
-            "TextAlignment", typeof(TextAlignment), typeof(OutlineTextBlock),
-            new FrameworkPropertyMetadata(OnFormattedTextUpdated));
-
-        public static readonly DependencyProperty TextDecorationsProperty = DependencyProperty.Register(
-            "TextDecorations", typeof(TextDecorationCollection), typeof(OutlineTextBlock),
-            new FrameworkPropertyMetadata(OnFormattedTextUpdated));
-
-        public static readonly DependencyProperty TextTrimmingProperty = DependencyProperty.Register(
-            "TextTrimming", typeof(TextTrimming), typeof(OutlineTextBlock),
-            new FrameworkPropertyMetadata(OnFormattedTextUpdated));
-
-        public static readonly DependencyProperty TextWrappingProperty = DependencyProperty.Register(
-            "TextWrapping", typeof(TextWrapping), typeof(OutlineTextBlock),
-            new FrameworkPropertyMetadata(TextWrapping.NoWrap, OnFormattedTextUpdated));
-
         public static readonly DependencyProperty FillProperty = DependencyProperty.Register(
             "Fill", typeof(Brush), typeof(OutlineTextBlock),
             new FrameworkPropertyMetadata(Brushes.Red, FrameworkPropertyMetadataOptions.AffectsRender));
-
-        public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
-            "Stroke", typeof(Brush), typeof(OutlineTextBlock),
-            new FrameworkPropertyMetadata(Brushes.Black, FrameworkPropertyMetadataOptions.AffectsRender));
-
-        public static readonly DependencyProperty StrokeThicknessProperty = DependencyProperty.Register(
-            "StrokeThickness", typeof(double), typeof(OutlineTextBlock),
-            new FrameworkPropertyMetadata(1d, FrameworkPropertyMetadataOptions.AffectsRender));
 
         public static readonly DependencyProperty FontFamilyProperty = TextElement.FontFamilyProperty.AddOwner(
             typeof(OutlineTextBlock), new FrameworkPropertyMetadata(OnFormattedTextUpdated));
@@ -62,6 +29,38 @@
 
         public static readonly DependencyProperty FontWeightProperty = TextElement.FontWeightProperty.AddOwner(
             typeof(OutlineTextBlock), new FrameworkPropertyMetadata(OnFormattedTextUpdated));
+
+        public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
+            "Stroke", typeof(Brush), typeof(OutlineTextBlock),
+            new FrameworkPropertyMetadata(Brushes.Black, FrameworkPropertyMetadataOptions.AffectsRender));
+
+        public static readonly DependencyProperty StrokeThicknessProperty = DependencyProperty.Register(
+            "StrokeThickness", typeof(double), typeof(OutlineTextBlock),
+            new FrameworkPropertyMetadata(1d, FrameworkPropertyMetadataOptions.AffectsRender));
+
+        public static readonly DependencyProperty TextAlignmentProperty = DependencyProperty.Register(
+            "TextAlignment", typeof(TextAlignment), typeof(OutlineTextBlock),
+            new FrameworkPropertyMetadata(OnFormattedTextUpdated));
+
+        public static readonly DependencyProperty TextDecorationsProperty = DependencyProperty.Register(
+            "TextDecorations", typeof(TextDecorationCollection), typeof(OutlineTextBlock),
+            new FrameworkPropertyMetadata(OnFormattedTextUpdated));
+
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+            "Text", typeof(string), typeof(OutlineTextBlock),
+            new FrameworkPropertyMetadata(OnFormattedTextInvalidated));
+
+        public static readonly DependencyProperty TextTrimmingProperty = DependencyProperty.Register(
+            "TextTrimming", typeof(TextTrimming), typeof(OutlineTextBlock),
+            new FrameworkPropertyMetadata(OnFormattedTextUpdated));
+
+        public static readonly DependencyProperty TextWrappingProperty = DependencyProperty.Register(
+            "TextWrapping", typeof(TextWrapping), typeof(OutlineTextBlock),
+            new FrameworkPropertyMetadata(TextWrapping.NoWrap, OnFormattedTextUpdated));
+
+        private FormattedText FormattedText;
+        private Pen StrokePen;
+        private Geometry TextGeometry;
 
         public OutlineTextBlock()
         {
@@ -155,21 +154,21 @@
             set { SetValue(TextWrappingProperty, value); }
         }
 
-        protected override void OnRender(DrawingContext drawingContext)
+        private double PixelPerDip => VisualTreeHelper.GetDpi(this).PixelsPerDip;
+
+        protected override Size ArrangeOverride(Size finalSize)
         {
-            this.EnsureGeometry();
+            this.EnsureFormattedText();
 
-            // アウトラインを描画する
-            drawingContext.DrawGeometry(
-                null,
-                this.StrokePen,
-                this.TextGeometry);
+            if (this.FormattedText != null)
+            {
+                this.FormattedText.MaxTextWidth = finalSize.Width > 0.0d ? finalSize.Width : 1.0d;
+                this.FormattedText.MaxTextHeight = finalSize.Height > 0.0d ? finalSize.Height : 1.0d;
+            }
 
-            // テキスト本体を上書きする
-            drawingContext.DrawGeometry(
-                this.Fill,
-                null,
-                this.TextGeometry);
+            this.TextGeometry = null;
+
+            return finalSize;
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -188,19 +187,21 @@
             }
         }
 
-        protected override Size ArrangeOverride(Size finalSize)
+        protected override void OnRender(DrawingContext drawingContext)
         {
-            this.EnsureFormattedText();
+            this.EnsureGeometry();
 
-            if (this.FormattedText != null)
-            {
-                this.FormattedText.MaxTextWidth = finalSize.Width > 0.0d ? finalSize.Width : 1.0d;
-                this.FormattedText.MaxTextHeight = finalSize.Height > 0.0d ? finalSize.Height : 1.0d;
-            }
+            // アウトラインを描画する
+            drawingContext.DrawGeometry(
+                null,
+                this.StrokePen,
+                this.TextGeometry);
 
-            this.TextGeometry = null;
-
-            return finalSize;
+            // テキスト本体を上書きする
+            drawingContext.DrawGeometry(
+                this.Fill,
+                null,
+                this.TextGeometry);
         }
 
         private static void OnFormattedTextInvalidated(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
@@ -238,9 +239,25 @@
                 this.FontSize,
                 Brushes.Black,
                 new NumberSubstitution(),
-                TextFormattingMode.Ideal);
+                TextFormattingMode.Display,
+                this.PixelPerDip);
 
             this.UpdateFormattedText();
+        }
+
+        private void EnsureGeometry()
+        {
+            if (this.TextGeometry != null)
+            {
+                return;
+            }
+
+            this.EnsureFormattedText();
+
+            if (this.FormattedText != null)
+            {
+                this.TextGeometry = this.FormattedText.BuildGeometry(new Point(1.0d, 0.0d));
+            }
         }
 
         private void UpdateFormattedText()
@@ -260,21 +277,6 @@
             this.FormattedText.SetFontFamily(this.FontFamily);
             this.FormattedText.SetFontStretch(this.FontStretch);
             this.FormattedText.SetTextDecorations(this.TextDecorations);
-        }
-
-        private void EnsureGeometry()
-        {
-            if (this.TextGeometry != null)
-            {
-                return;
-            }
-
-            this.EnsureFormattedText();
-
-            if (this.FormattedText != null)
-            {
-                this.TextGeometry = this.FormattedText.BuildGeometry(new Point(1.0d, 0.0d));
-            }
         }
     }
 }

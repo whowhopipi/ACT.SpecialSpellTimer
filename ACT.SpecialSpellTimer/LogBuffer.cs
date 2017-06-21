@@ -12,7 +12,6 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -317,7 +316,8 @@
                 return;
             }
 #endif
-            // 18文字以下のログは読み捨てる なぜならば、タイムスタンプ＋ログタイプのみのログだから
+            // 18文字以下のログは読み捨てる
+            // なぜならば、タイムスタンプ＋ログタイプのみのログだから
             if (logInfo.logLine.Length <= 18)
             {
                 return;
@@ -363,6 +363,7 @@
             }
 
             var list = new List<string>(logInfoQueue.Count);
+            var playerChanged = false;
             var partyChanged = false;
             var jobChanged = false;
             var summoned = false;
@@ -383,6 +384,25 @@
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
                 {
+                    // プレイヤーに変化あり？
+                    if (!playerChanged)
+                    {
+                        if ((playerChanged = IsPlayerChanged(logInfo.logLine)))
+                        {
+                            if (!playerRefreshed)
+                            {
+                                FF14PluginHelper.RefreshPlayer();
+                                playerRefreshed = true;
+                            }
+
+                            if (!partyRefreshed)
+                            {
+                                RefreshPartyList();
+                                partyRefreshed = true;
+                            }
+                        }
+                    }
+
                     // ジョブに変化あり？
                     if (!jobChanged)
                     {
@@ -533,15 +553,35 @@
             return !logInfoQueue.IsEmpty;
         }
 
+        /// <summary>
+        /// ジョブが変更されたか？
+        /// </summary>
+        /// <param name="logLine">ログ行</param>
+        /// <returns>bool</returns>
         private static bool IsJobChanged(string logLine)
         {
             return logLine.Contains("にチェンジした。") || logLine.Contains("You change to ");
         }
 
+        /// <summary>
+        /// パーティが変更されたか？
+        /// </summary>
+        /// <param name="logLine">ログ行</param>
+        /// <returns>bool</returns>
         private static bool IsPartyChanged(string logLine)
         {
             return PARTY_CHANGED_WORDS.AsParallel()
                 .Any(words => words.Any(word => logLine.Contains(word)));
+        }
+
+        /// <summary>
+        /// プレイヤーが変更されたか？
+        /// </summary>
+        /// <param name="logLine">ログ行</param>
+        /// <returns>bool</returns>
+        private static bool IsPlayerChanged(string logLine)
+        {
+            return logLine.Contains("Changed primary player to");
         }
 
         #endregion ログ処理
@@ -604,14 +644,16 @@
         /// <returns>生成したキーワード</returns>
         public static string MakeKeyword(string keyword)
         {
-            if (keyword == null)
+            if (string.IsNullOrEmpty(keyword))
             {
-                return "";
+                return string.Empty;
             }
 
             keyword = keyword.Trim();
 
-            if (keyword.Length == 0 || !keyword.Contains("<") || !keyword.Contains(">"))
+            if (keyword.Length == 0 ||
+                !keyword.Contains("<") ||
+                !keyword.Contains(">"))
             {
                 return keyword;
             }
@@ -648,7 +690,8 @@
                 keyword = keyword.Replace("<petid>", currentPetId);
             }
 
-            // ジョブ名プレースホルダを置換する ex. <PLD>, <PLD1> ...
+            // ジョブ名プレースホルダを置換する
+            // ex. <PLD>, <PLD1> ...
             foreach (var replacement in PlaceholderToJobNameDictionaly)
             {
                 keyword = keyword.Replace(replacement.Key, replacement.Value);
@@ -724,7 +767,9 @@
                         continue;
                     }
 
-                    // <JOBn>形式を置換する ex. <PLD1> → Taro Paladin ex. <PLD2> → Jiro Paladin
+                    // <JOBn>形式を置換する
+                    // ex. <PLD1> → Taro Paladin
+                    // ex. <PLD2> → Jiro Paladin
                     for (int i = 0; i < combatantsByJob.Length; i++)
                     {
                         var placeholder = string.Format(
@@ -735,8 +780,9 @@
                         newList.Add(placeholder.ToUpper(), combatantsByJob[i].Name);
                     }
 
-                    // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする また、グループ名にはジョブの略称を設定する ex. <PLD> →
-                    // (?<PLDs>Taro Paladin|Jiro Paladin)
+                    // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする
+                    // また、グループ名にはジョブの略称を設定する
+                    // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
                     var names = string.Join("|", combatantsByJob.Select(x => x.Name).ToArray());
                     var oldValue = string.Format("<{0}>", job.JobName);
                     var newValue = string.Format(
@@ -824,7 +870,9 @@
         public static void ClearCustomPlaceholder(string name)
         {
             string beforeValue;
-            customPlaceholders.TryRemove(ToCustomPlaceholderKey(name), out beforeValue);
+            customPlaceholders.TryRemove(
+                ToCustomPlaceholderKey(name),
+                out beforeValue);
 
             // 置換後のマッチングキーワードを消去する
             SpellTimerTable.ClearReplacedKeywords();
@@ -844,19 +892,26 @@
         }
 
         /// <summary>
-        /// カスタムプレースホルダーに追加する <param name="name">追加するプレースホルダーの名称</param><param
-        /// name="value">置換する文字列</param>
+        /// カスタムプレースホルダーに追加する
         /// </summary>
+        /// <param name="name">追加するプレースホルダーの名称</param>
+        /// <paramname="value">置換する文字列</param>
         public static void SetCustomPlaceholder(string name, string value)
         {
-            customPlaceholders.AddOrUpdate(ToCustomPlaceholderKey(name), value, (key, oldValue) => value);
+            customPlaceholders.AddOrUpdate(
+                ToCustomPlaceholderKey(name),
+                value,
+                (key, oldValue) => value);
 
             // 置換後のマッチングキーワードを消去する
             SpellTimerTable.ClearReplacedKeywords();
             OnePointTelopTable.Default.ClearReplacedKeywords();
         }
 
-        /// <summary> カスタムプレースホルダを置換する ex. <C1>, <C2> <focus> <ターゲット>... </summary>
+        /// <summary>
+        /// カスタムプレースホルダを置換する
+        /// ex. <C1>, <C2> <focus> <ターゲット>...
+        /// </summary>
         private static string ReplaceCustomPlaceholders(string keyword)
         {
             if (string.IsNullOrEmpty(keyword))
