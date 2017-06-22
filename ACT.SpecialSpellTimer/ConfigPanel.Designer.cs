@@ -128,20 +128,9 @@
             this.Play3Button = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
+            this.SpellButtonsPanel = new System.Windows.Forms.Panel();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.UpdateButton = new System.Windows.Forms.Button();
-            this.DetailPanelGroupBox = new System.Windows.Forms.GroupBox();
-            this.FixedPositionSpellCheckBox = new System.Windows.Forms.CheckBox();
-            this.HorizontalLayoutCheckBox = new System.Windows.Forms.CheckBox();
-            this.label62 = new System.Windows.Forms.Label();
-            this.MarginUpDown = new System.Windows.Forms.NumericUpDown();
-            this.PanelTopNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.PanelLeftNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label16 = new System.Windows.Forms.Label();
-            this.UpdatePanelButton = new System.Windows.Forms.Button();
             this.OnPointTelopTabPage = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TelopTreeView = new System.Windows.Forms.TreeView();
@@ -359,6 +348,17 @@
             this.RDMTextBox = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
             this.label57 = new System.Windows.Forms.Label();
+            this.UpdatePanelButton = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
+            this.PanelLeftNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.PanelTopNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.MarginUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label62 = new System.Windows.Forms.Label();
+            this.HorizontalLayoutCheckBox = new System.Windows.Forms.CheckBox();
+            this.FixedPositionSpellCheckBox = new System.Windows.Forms.CheckBox();
+            this.DetailPanelGroupBox = new System.Windows.Forms.GroupBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -385,11 +385,7 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OverTimeNumericUpDown)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.DetailPanelGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MarginUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PanelTopNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PanelLeftNumericUpDown)).BeginInit();
+            this.SpellButtonsPanel.SuspendLayout();
             this.OnPointTelopTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -426,6 +422,10 @@
             this.pnlLanguage.SuspendLayout();
             this.DQXOptionTabPage.SuspendLayout();
             this.LogTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PanelLeftNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PanelTopNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MarginUpDown)).BeginInit();
+            this.DetailPanelGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // CombatAnalyzerContextMenuStrip
@@ -569,6 +569,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.DetailPanelGroupBox);
             this.splitContainer1.Panel1.Controls.Add(this.SpellTimerTreeView);
             this.splitContainer1.Panel1.Controls.Add(this.menuStrip1);
             this.splitContainer1.Panel1MinSize = 400;
@@ -577,7 +578,6 @@
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.White;
             this.splitContainer1.Panel2.Controls.Add(this.DetailGroupBox);
-            this.splitContainer1.Panel2.Controls.Add(this.DetailPanelGroupBox);
             this.splitContainer1.Size = new System.Drawing.Size(1061, 825);
             this.splitContainer1.SplitterDistance = 520;
             this.splitContainer1.SplitterWidth = 2;
@@ -639,14 +639,12 @@
             // 
             // DetailGroupBox
             // 
-            this.DetailGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.DetailGroupBox.Controls.Add(this.tabControlExtHoriz2);
-            this.DetailGroupBox.Controls.Add(this.panel6);
+            this.DetailGroupBox.Controls.Add(this.SpellButtonsPanel);
+            this.DetailGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DetailGroupBox.Location = new System.Drawing.Point(0, 0);
             this.DetailGroupBox.Name = "DetailGroupBox";
-            this.DetailGroupBox.Size = new System.Drawing.Size(541, 825);
+            this.DetailGroupBox.Size = new System.Drawing.Size(539, 825);
             this.DetailGroupBox.TabIndex = 6;
             // 
             // tabControlExtHoriz2
@@ -658,7 +656,7 @@
             this.tabControlExtHoriz2.Location = new System.Drawing.Point(0, 0);
             this.tabControlExtHoriz2.Name = "tabControlExtHoriz2";
             this.tabControlExtHoriz2.SelectedIndex = 0;
-            this.tabControlExtHoriz2.Size = new System.Drawing.Size(541, 793);
+            this.tabControlExtHoriz2.Size = new System.Drawing.Size(539, 793);
             this.tabControlExtHoriz2.TabIndex = 3;
             // 
             // GeneralTab
@@ -667,7 +665,7 @@
             this.GeneralTab.Location = new System.Drawing.Point(-1, 31);
             this.GeneralTab.Name = "GeneralTab";
             this.GeneralTab.Padding = new System.Windows.Forms.Padding(2);
-            this.GeneralTab.Size = new System.Drawing.Size(543, 763);
+            this.GeneralTab.Size = new System.Drawing.Size(541, 763);
             this.GeneralTab.TabIndex = 0;
             this.GeneralTab.Text = "GeneralTab";
             this.GeneralTab.UseVisualStyleBackColor = true;
@@ -717,7 +715,7 @@
             this.SpellDetailPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SpellDetailPanel.Location = new System.Drawing.Point(2, 2);
             this.SpellDetailPanel.Name = "SpellDetailPanel";
-            this.SpellDetailPanel.Size = new System.Drawing.Size(539, 759);
+            this.SpellDetailPanel.Size = new System.Drawing.Size(537, 759);
             this.SpellDetailPanel.TabIndex = 74;
             // 
             // PanelNameTextBox
@@ -1501,20 +1499,20 @@
             this.label10.TabIndex = 13;
             this.label10.Text = "WaveSoundLabel";
             // 
-            // panel6
+            // SpellButtonsPanel
             // 
-            this.panel6.Controls.Add(this.DeleteButton);
-            this.panel6.Controls.Add(this.UpdateButton);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel6.Location = new System.Drawing.Point(0, 793);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(541, 32);
-            this.panel6.TabIndex = 0;
+            this.SpellButtonsPanel.Controls.Add(this.DeleteButton);
+            this.SpellButtonsPanel.Controls.Add(this.UpdateButton);
+            this.SpellButtonsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.SpellButtonsPanel.Location = new System.Drawing.Point(0, 793);
+            this.SpellButtonsPanel.Name = "SpellButtonsPanel";
+            this.SpellButtonsPanel.Size = new System.Drawing.Size(539, 32);
+            this.SpellButtonsPanel.TabIndex = 0;
             // 
             // DeleteButton
             // 
             this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DeleteButton.Location = new System.Drawing.Point(436, 3);
+            this.DeleteButton.Location = new System.Drawing.Point(434, 3);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(102, 26);
             this.DeleteButton.TabIndex = 13;
@@ -1524,156 +1522,12 @@
             // UpdateButton
             // 
             this.UpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdateButton.Location = new System.Drawing.Point(328, 3);
+            this.UpdateButton.Location = new System.Drawing.Point(326, 3);
             this.UpdateButton.Name = "UpdateButton";
             this.UpdateButton.Size = new System.Drawing.Size(102, 26);
             this.UpdateButton.TabIndex = 12;
             this.UpdateButton.Text = "UpdateButton";
             this.UpdateButton.UseVisualStyleBackColor = true;
-            // 
-            // DetailPanelGroupBox
-            // 
-            this.DetailPanelGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DetailPanelGroupBox.Controls.Add(this.FixedPositionSpellCheckBox);
-            this.DetailPanelGroupBox.Controls.Add(this.HorizontalLayoutCheckBox);
-            this.DetailPanelGroupBox.Controls.Add(this.label62);
-            this.DetailPanelGroupBox.Controls.Add(this.MarginUpDown);
-            this.DetailPanelGroupBox.Controls.Add(this.PanelTopNumericUpDown);
-            this.DetailPanelGroupBox.Controls.Add(this.label13);
-            this.DetailPanelGroupBox.Controls.Add(this.label15);
-            this.DetailPanelGroupBox.Controls.Add(this.PanelLeftNumericUpDown);
-            this.DetailPanelGroupBox.Controls.Add(this.label16);
-            this.DetailPanelGroupBox.Controls.Add(this.UpdatePanelButton);
-            this.DetailPanelGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.DetailPanelGroupBox.Name = "DetailPanelGroupBox";
-            this.DetailPanelGroupBox.Size = new System.Drawing.Size(541, 825);
-            this.DetailPanelGroupBox.TabIndex = 6;
-            this.DetailPanelGroupBox.TabStop = false;
-            // 
-            // FixedPositionSpellCheckBox
-            // 
-            this.FixedPositionSpellCheckBox.AutoSize = true;
-            this.FixedPositionSpellCheckBox.Location = new System.Drawing.Point(9, 110);
-            this.FixedPositionSpellCheckBox.Name = "FixedPositionSpellCheckBox";
-            this.FixedPositionSpellCheckBox.Size = new System.Drawing.Size(118, 16);
-            this.FixedPositionSpellCheckBox.TabIndex = 47;
-            this.FixedPositionSpellCheckBox.Text = "FixedPositionSpell";
-            this.FixedPositionSpellCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // HorizontalLayoutCheckBox
-            // 
-            this.HorizontalLayoutCheckBox.AutoSize = true;
-            this.HorizontalLayoutCheckBox.Location = new System.Drawing.Point(9, 88);
-            this.HorizontalLayoutCheckBox.Name = "HorizontalLayoutCheckBox";
-            this.HorizontalLayoutCheckBox.Size = new System.Drawing.Size(109, 16);
-            this.HorizontalLayoutCheckBox.TabIndex = 46;
-            this.HorizontalLayoutCheckBox.Text = "HorizontalLayout";
-            this.HorizontalLayoutCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // label62
-            // 
-            this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(125, 44);
-            this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(39, 12);
-            this.label62.TabIndex = 45;
-            this.label62.Text = "Margin";
-            // 
-            // MarginUpDown
-            // 
-            this.MarginUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.MarginUpDown.Location = new System.Drawing.Point(170, 42);
-            this.MarginUpDown.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.MarginUpDown.Minimum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            -2147483648});
-            this.MarginUpDown.Name = "MarginUpDown";
-            this.MarginUpDown.Size = new System.Drawing.Size(68, 19);
-            this.MarginUpDown.TabIndex = 44;
-            this.MarginUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // PanelTopNumericUpDown
-            // 
-            this.PanelTopNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.PanelTopNumericUpDown.Location = new System.Drawing.Point(170, 17);
-            this.PanelTopNumericUpDown.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.PanelTopNumericUpDown.Minimum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            -2147483648});
-            this.PanelTopNumericUpDown.Name = "PanelTopNumericUpDown";
-            this.PanelTopNumericUpDown.Size = new System.Drawing.Size(68, 19);
-            this.PanelTopNumericUpDown.TabIndex = 43;
-            this.PanelTopNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(152, 20);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(12, 12);
-            this.label13.TabIndex = 42;
-            this.label13.Text = "Y";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(59, 20);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(12, 12);
-            this.label15.TabIndex = 41;
-            this.label15.Text = "X";
-            // 
-            // PanelLeftNumericUpDown
-            // 
-            this.PanelLeftNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.PanelLeftNumericUpDown.Location = new System.Drawing.Point(77, 17);
-            this.PanelLeftNumericUpDown.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.PanelLeftNumericUpDown.Minimum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            -2147483648});
-            this.PanelLeftNumericUpDown.Name = "PanelLeftNumericUpDown";
-            this.PanelLeftNumericUpDown.Size = new System.Drawing.Size(68, 19);
-            this.PanelLeftNumericUpDown.TabIndex = 40;
-            this.PanelLeftNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(7, 21);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(48, 12);
-            this.label16.TabIndex = 39;
-            this.label16.Text = "Location";
-            // 
-            // UpdatePanelButton
-            // 
-            this.UpdatePanelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdatePanelButton.Location = new System.Drawing.Point(434, 793);
-            this.UpdatePanelButton.Name = "UpdatePanelButton";
-            this.UpdatePanelButton.Size = new System.Drawing.Size(102, 25);
-            this.UpdatePanelButton.TabIndex = 13;
-            this.UpdatePanelButton.Text = "Update";
-            this.UpdatePanelButton.UseVisualStyleBackColor = true;
             // 
             // OnPointTelopTabPage
             // 
@@ -3974,6 +3828,146 @@
             this.label57.TabIndex = 46;
             this.label57.Text = "RDMLabel";
             // 
+            // UpdatePanelButton
+            // 
+            this.UpdatePanelButton.Location = new System.Drawing.Point(9, 150);
+            this.UpdatePanelButton.Name = "UpdatePanelButton";
+            this.UpdatePanelButton.Size = new System.Drawing.Size(102, 25);
+            this.UpdatePanelButton.TabIndex = 13;
+            this.UpdatePanelButton.Text = "Update";
+            this.UpdatePanelButton.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 21);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(48, 12);
+            this.label16.TabIndex = 39;
+            this.label16.Text = "Location";
+            // 
+            // PanelLeftNumericUpDown
+            // 
+            this.PanelLeftNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.PanelLeftNumericUpDown.Location = new System.Drawing.Point(77, 17);
+            this.PanelLeftNumericUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.PanelLeftNumericUpDown.Minimum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            -2147483648});
+            this.PanelLeftNumericUpDown.Name = "PanelLeftNumericUpDown";
+            this.PanelLeftNumericUpDown.Size = new System.Drawing.Size(68, 19);
+            this.PanelLeftNumericUpDown.TabIndex = 40;
+            this.PanelLeftNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(59, 20);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(12, 12);
+            this.label15.TabIndex = 41;
+            this.label15.Text = "X";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(152, 20);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(12, 12);
+            this.label13.TabIndex = 42;
+            this.label13.Text = "Y";
+            // 
+            // PanelTopNumericUpDown
+            // 
+            this.PanelTopNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.PanelTopNumericUpDown.Location = new System.Drawing.Point(170, 17);
+            this.PanelTopNumericUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.PanelTopNumericUpDown.Minimum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            -2147483648});
+            this.PanelTopNumericUpDown.Name = "PanelTopNumericUpDown";
+            this.PanelTopNumericUpDown.Size = new System.Drawing.Size(68, 19);
+            this.PanelTopNumericUpDown.TabIndex = 43;
+            this.PanelTopNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // MarginUpDown
+            // 
+            this.MarginUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.MarginUpDown.Location = new System.Drawing.Point(170, 42);
+            this.MarginUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.MarginUpDown.Minimum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            -2147483648});
+            this.MarginUpDown.Name = "MarginUpDown";
+            this.MarginUpDown.Size = new System.Drawing.Size(68, 19);
+            this.MarginUpDown.TabIndex = 44;
+            this.MarginUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(125, 44);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(39, 12);
+            this.label62.TabIndex = 45;
+            this.label62.Text = "Margin";
+            // 
+            // HorizontalLayoutCheckBox
+            // 
+            this.HorizontalLayoutCheckBox.AutoSize = true;
+            this.HorizontalLayoutCheckBox.Location = new System.Drawing.Point(9, 88);
+            this.HorizontalLayoutCheckBox.Name = "HorizontalLayoutCheckBox";
+            this.HorizontalLayoutCheckBox.Size = new System.Drawing.Size(109, 16);
+            this.HorizontalLayoutCheckBox.TabIndex = 46;
+            this.HorizontalLayoutCheckBox.Text = "HorizontalLayout";
+            this.HorizontalLayoutCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // FixedPositionSpellCheckBox
+            // 
+            this.FixedPositionSpellCheckBox.AutoSize = true;
+            this.FixedPositionSpellCheckBox.Location = new System.Drawing.Point(9, 110);
+            this.FixedPositionSpellCheckBox.Name = "FixedPositionSpellCheckBox";
+            this.FixedPositionSpellCheckBox.Size = new System.Drawing.Size(118, 16);
+            this.FixedPositionSpellCheckBox.TabIndex = 47;
+            this.FixedPositionSpellCheckBox.Text = "FixedPositionSpell";
+            this.FixedPositionSpellCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // DetailPanelGroupBox
+            // 
+            this.DetailPanelGroupBox.Controls.Add(this.FixedPositionSpellCheckBox);
+            this.DetailPanelGroupBox.Controls.Add(this.HorizontalLayoutCheckBox);
+            this.DetailPanelGroupBox.Controls.Add(this.label62);
+            this.DetailPanelGroupBox.Controls.Add(this.MarginUpDown);
+            this.DetailPanelGroupBox.Controls.Add(this.PanelTopNumericUpDown);
+            this.DetailPanelGroupBox.Controls.Add(this.label13);
+            this.DetailPanelGroupBox.Controls.Add(this.label15);
+            this.DetailPanelGroupBox.Controls.Add(this.PanelLeftNumericUpDown);
+            this.DetailPanelGroupBox.Controls.Add(this.label16);
+            this.DetailPanelGroupBox.Controls.Add(this.UpdatePanelButton);
+            this.DetailPanelGroupBox.Location = new System.Drawing.Point(148, 472);
+            this.DetailPanelGroupBox.Name = "DetailPanelGroupBox";
+            this.DetailPanelGroupBox.Size = new System.Drawing.Size(312, 257);
+            this.DetailPanelGroupBox.TabIndex = 6;
+            this.DetailPanelGroupBox.TabStop = false;
+            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -4014,12 +4008,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.OverTimeNumericUpDown)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.DetailPanelGroupBox.ResumeLayout(false);
-            this.DetailPanelGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MarginUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PanelTopNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PanelLeftNumericUpDown)).EndInit();
+            this.SpellButtonsPanel.ResumeLayout(false);
             this.OnPointTelopTabPage.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
@@ -4069,6 +4058,11 @@
             this.DQXOptionTabPage.PerformLayout();
             this.LogTabPage.ResumeLayout(false);
             this.LogTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PanelLeftNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PanelTopNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MarginUpDown)).EndInit();
+            this.DetailPanelGroupBox.ResumeLayout(false);
+            this.DetailPanelGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -4138,13 +4132,6 @@
         private System.Windows.Forms.ToolStripMenuItem CASetOriginItem;
         private System.Windows.Forms.CheckBox OverlayForceVisibleCheckBox;
         private System.Windows.Forms.ColumnHeader HPRateColumnHeader;
-        private System.Windows.Forms.GroupBox DetailPanelGroupBox;
-        private System.Windows.Forms.NumericUpDown PanelTopNumericUpDown;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.NumericUpDown PanelLeftNumericUpDown;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Button UpdatePanelButton;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label LanguageRestartLabel;
         private System.Windows.Forms.ComboBox LanguageComboBox;
@@ -4153,10 +4140,6 @@
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.CheckBox EnabledSpellTimerNoDecimal;
         internal System.Windows.Forms.Button ExportCSVButton;
-        private System.Windows.Forms.Label label62;
-        private System.Windows.Forms.NumericUpDown MarginUpDown;
-        private System.Windows.Forms.CheckBox HorizontalLayoutCheckBox;
-        private System.Windows.Forms.CheckBox FixedPositionSpellCheckBox;
         private System.Windows.Forms.Label label64;
         private System.Windows.Forms.CheckBox EnabledNotifyNormalSpellTimerCheckBox;
         private System.Windows.Forms.Label label63;
@@ -4269,7 +4252,7 @@
         private System.Windows.Forms.ToolStripMenuItem ClearAllButton;
         private System.Windows.Forms.ToolStripMenuItem AddButton;
         private System.Windows.Forms.Panel DetailGroupBox;
-        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel SpellButtonsPanel;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.SplitContainer splitContainer2;
@@ -4405,5 +4388,16 @@
         private System.Windows.Forms.TextBox RDMTextBox;
         private System.Windows.Forms.TextBox SAMTextBox;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.GroupBox DetailPanelGroupBox;
+        private System.Windows.Forms.CheckBox FixedPositionSpellCheckBox;
+        private System.Windows.Forms.CheckBox HorizontalLayoutCheckBox;
+        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.NumericUpDown MarginUpDown;
+        private System.Windows.Forms.NumericUpDown PanelTopNumericUpDown;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.NumericUpDown PanelLeftNumericUpDown;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button UpdatePanelButton;
     }
 }

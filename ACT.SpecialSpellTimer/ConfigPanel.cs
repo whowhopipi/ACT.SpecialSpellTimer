@@ -795,6 +795,11 @@
                 return;
             }
 
+            // パネルの位置を調整する
+            this.DetailPanelGroupBox.Parent = this.DetailGroupBox.Parent;
+            this.DetailPanelGroupBox.Location = this.DetailGroupBox.Location;
+            this.DetailPanelGroupBox.Dock = DockStyle.Fill;
+
             // パネルの詳細を表示する
             this.DetailGroupBox.Visible = false;
             this.DetailPanelGroupBox.Visible = true;
