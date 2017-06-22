@@ -61,6 +61,237 @@
         }
 
         /// <summary>
+        /// スペルタイマテーブルを読み込む
+        /// </summary>
+        public void LoadSpellTimerTable()
+        {
+            try
+            {
+                this.SpellTimerTreeView.SuspendLayout();
+
+                this.SpellTimerTreeView.Nodes.Clear();
+
+                var panels = SpellTimerTable.Table
+                    .Where(x => !x.IsInstance)
+                    .OrderBy(x => x.Panel)
+                    .Select(x => x.Panel)
+                    .Distinct();
+                foreach (var panelName in panels)
+                {
+                    var children = new List<TreeNode>();
+                    var spells = SpellTimerTable.Table
+                        .Where(x => !x.IsInstance)
+                        .OrderBy(x => x.DisplayNo)
+                        .Where(x => x.Panel == panelName);
+                    foreach (var spell in spells)
+                    {
+                        var nc = new TreeNode()
+                        {
+                            Text = spell.SpellTitle,
+                            ToolTipText = spell.Keyword,
+                            Checked = spell.Enabled,
+                            Tag = spell,
+                        };
+
+                        children.Add(nc);
+                    }
+
+                    var n = new TreeNode(
+                        panelName,
+                        children.ToArray());
+
+                    n.Checked = children.Any(x => x.Checked);
+
+                    this.SpellTimerTreeView.Nodes.Add(n);
+                }
+
+                // スペルの再描画を行わせる
+                SpellTimerTable.ClearUpdateFlags();
+
+                // 標準のスペルタイマーへ変更を反映する
+                SpellTimerCore.Default.applyToNormalSpellTimer();
+
+                this.SpellTimerTreeView.ExpandAll();
+            }
+            finally
+            {
+                this.SpellTimerTreeView.ResumeLayout();
+            }
+        }
+
+        /// <summary>
+        /// 追加 Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void AddButton_Click(object sender, EventArgs e)
+        {
+            lock (SpellTimerTable.Table)
+            {
+                var nr = new SpellTimer();
+
+                nr.ID = SpellTimerTable.Table.Any() ?
+                    SpellTimerTable.Table.Max(x => x.ID) + 1 :
+                    1;
+                nr.guid = Guid.NewGuid();
+                nr.Panel = "General";
+                nr.SpellTitle = "New Spell";
+                nr.SpellIcon = string.Empty;
+                nr.SpellIconSize = 24;
+                nr.ProgressBarVisible = true;
+                nr.FontColor = Settings.Default.FontColor.ToHTML();
+                nr.FontOutlineColor = Settings.Default.FontOutlineColor.ToHTML();
+                nr.BarColor = Settings.Default.ProgressBarColor.ToHTML();
+                nr.BarOutlineColor = Settings.Default.ProgressBarOutlineColor.ToHTML();
+                nr.FontFamily = Settings.Default.Font.Name;
+                nr.FontSize = Settings.Default.Font.Size;
+                nr.FontStyle = (int)Settings.Default.Font.Style;
+                nr.BarWidth = Settings.Default.ProgressBarSize.Width;
+                nr.BarHeight = Settings.Default.ProgressBarSize.Height;
+                nr.BackgroundColor = Settings.Default.BackgroundColor.ToHTML();
+                nr.JobFilter = string.Empty;
+                nr.ZoneFilter = string.Empty;
+                nr.TimersMustRunningForStart = new Guid[0];
+                nr.TimersMustStoppingForStart = new Guid[0];
+
+                // 現在選択しているノードの情報を一部コピーする
+                if (this.SpellTimerTreeView.SelectedNode != null)
+                {
+                    var baseRow = this.SpellTimerTreeView.SelectedNode.Tag != null ?
+                        this.SpellTimerTreeView.SelectedNode.Tag as SpellTimer :
+                        this.SpellTimerTreeView.SelectedNode.Nodes[0].Tag as SpellTimer;
+
+                    if (baseRow != null)
+                    {
+                        nr.Panel = baseRow.Panel;
+                        nr.SpellTitle = baseRow.SpellTitle + " New";
+                        nr.SpellIcon = baseRow.SpellIcon;
+                        nr.SpellIconSize = baseRow.SpellIconSize;
+                        nr.Keyword = baseRow.Keyword;
+                        nr.RegexEnabled = baseRow.RegexEnabled;
+                        nr.RecastTime = baseRow.RecastTime;
+                        nr.KeywordForExtend1 = baseRow.KeywordForExtend1;
+                        nr.RecastTimeExtending1 = baseRow.RecastTimeExtending1;
+                        nr.KeywordForExtend2 = baseRow.KeywordForExtend2;
+                        nr.RecastTimeExtending2 = baseRow.RecastTimeExtending2;
+                        nr.ExtendBeyondOriginalRecastTime = baseRow.ExtendBeyondOriginalRecastTime;
+                        nr.UpperLimitOfExtension = baseRow.UpperLimitOfExtension;
+                        nr.RepeatEnabled = baseRow.RepeatEnabled;
+                        nr.ProgressBarVisible = baseRow.ProgressBarVisible;
+                        nr.IsReverse = baseRow.IsReverse;
+                        nr.FontColor = baseRow.FontColor;
+                        nr.FontOutlineColor = baseRow.FontOutlineColor;
+                        nr.BarColor = baseRow.BarColor;
+                        nr.BarOutlineColor = baseRow.BarOutlineColor;
+                        nr.DontHide = baseRow.DontHide;
+                        nr.HideSpellName = baseRow.HideSpellName;
+                        nr.OverlapRecastTime = baseRow.OverlapRecastTime;
+                        nr.ReduceIconBrightness = baseRow.ReduceIconBrightness;
+                        nr.FontFamily = baseRow.FontFamily;
+                        nr.FontSize = baseRow.FontSize;
+                        nr.FontStyle = baseRow.FontStyle;
+                        nr.Font = baseRow.Font;
+                        nr.BarWidth = baseRow.BarWidth;
+                        nr.BarHeight = baseRow.BarHeight;
+                        nr.BackgroundColor = baseRow.BackgroundColor;
+                        nr.BackgroundAlpha = baseRow.BackgroundAlpha;
+                        nr.JobFilter = baseRow.JobFilter;
+                        nr.ZoneFilter = baseRow.ZoneFilter;
+                        nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
+                        nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
+                        nr.ToInstance = baseRow.ToInstance;
+                    }
+                }
+
+                nr.MatchDateTime = DateTime.MinValue;
+                nr.UpdateDone = false;
+                nr.Enabled = true;
+                nr.DisplayNo = SpellTimerTable.Table.Any() ?
+                    SpellTimerTable.Table.Max(x => x.DisplayNo) + 1 :
+                    50;
+                nr.Regex = null;
+                nr.RegexPattern = string.Empty;
+                SpellTimerTable.Table.Add(nr);
+
+                SpellTimerTable.ClearReplacedKeywords();
+                SpellTimerTable.RemoveAllInstanceSpells();
+                SpellTimerTable.Save();
+
+                // 新しいノードを生成する
+                var node = new TreeNode(nr.SpellTitle)
+                {
+                    Tag = nr,
+                    ToolTipText = nr.Keyword,
+                    Checked = nr.Enabled
+                };
+
+                // 親ノードがあれば追加する
+                foreach (TreeNode item in this.SpellTimerTreeView.Nodes)
+                {
+                    if (item.Text == nr.Panel)
+                    {
+                        item.Nodes.Add(node);
+                        this.SpellTimerTreeView.SelectedNode = node;
+                        break;
+                    }
+                }
+
+                // 親ノードがなかった
+                if (this.SpellTimerTreeView.SelectedNode != node)
+                {
+                    var parentNode = new TreeNode(nr.Panel, new TreeNode[] { node })
+                    {
+                        Checked = true
+                    };
+
+                    this.SpellTimerTreeView.Nodes.Add(parentNode);
+                    this.SpellTimerTreeView.SelectedNode = node;
+                }
+
+                // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
+                this.SelectZoneButton.ForeColor = nr.ZoneFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
+
+                // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
+                this.SelectJobButton.ForeColor = nr.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
+
+                // 条件設定ボタンの色を変える（未設定：黒、設定有：青）
+                this.SetConditionButton.ForeColor =
+                    (nr.TimersMustRunningForStart.Length != 0 || nr.TimersMustStoppingForStart.Length != 0) ?
+                    Color.Blue :
+                    Button.DefaultForeColor;
+            }
+
+            // 標準のスペルタイマーへ変更を反映する
+            SpellTimerCore.Default.applyToNormalSpellTimer();
+        }
+
+        /// <summary>
+        /// 全て削除
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void ClearAllButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                this,
+                Translate.Get("SpellClearAllPrompt"),
+                "ACT.SpecialSpellTimer",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2) == DialogResult.OK)
+            {
+                lock (SpellTimerTable.Table)
+                {
+                    this.DetailGroupBox.Visible = false;
+                    this.DetailPanelGroupBox.Visible = false;
+                    SpellTimerTable.Table.Clear();
+                }
+
+                this.LoadSpellTimerTable();
+            }
+        }
+
+        /// <summary>
         /// Load
         /// </summary>
         /// <param name="sender">イベント発生元</param>
@@ -272,149 +503,345 @@
         }
 
         /// <summary>
-        /// 追加 Click
+        /// 削除 Click
         /// </summary>
         /// <param name="sender">イベント発生元</param>
         /// <param name="e">イベント引数</param>
-        private void AddButton_Click(object sender, EventArgs e)
+        private void DeleteButton_Click(object sender, EventArgs e)
         {
             lock (SpellTimerTable.Table)
             {
-                var nr = new SpellTimer();
-
-                nr.ID = SpellTimerTable.Table.Any() ?
-                    SpellTimerTable.Table.Max(x => x.ID) + 1 :
-                    1;
-                nr.guid = Guid.NewGuid();
-                nr.Panel = "General";
-                nr.SpellTitle = "New Spell";
-                nr.SpellIcon = string.Empty;
-                nr.SpellIconSize = 24;
-                nr.ProgressBarVisible = true;
-                nr.FontColor = Settings.Default.FontColor.ToHTML();
-                nr.FontOutlineColor = Settings.Default.FontOutlineColor.ToHTML();
-                nr.BarColor = Settings.Default.ProgressBarColor.ToHTML();
-                nr.BarOutlineColor = Settings.Default.ProgressBarOutlineColor.ToHTML();
-                nr.FontFamily = Settings.Default.Font.Name;
-                nr.FontSize = Settings.Default.Font.Size;
-                nr.FontStyle = (int)Settings.Default.Font.Style;
-                nr.BarWidth = Settings.Default.ProgressBarSize.Width;
-                nr.BarHeight = Settings.Default.ProgressBarSize.Height;
-                nr.BackgroundColor = Settings.Default.BackgroundColor.ToHTML();
-                nr.JobFilter = string.Empty;
-                nr.ZoneFilter = string.Empty;
-                nr.TimersMustRunningForStart = new Guid[0];
-                nr.TimersMustStoppingForStart = new Guid[0];
-
-                // 現在選択しているノードの情報を一部コピーする
-                if (this.SpellTimerTreeView.SelectedNode != null)
+                var src = this.DetailGroupBox.Tag as SpellTimer;
+                if (src != null)
                 {
-                    var baseRow = this.SpellTimerTreeView.SelectedNode.Tag != null ?
-                        this.SpellTimerTreeView.SelectedNode.Tag as SpellTimer :
-                        this.SpellTimerTreeView.SelectedNode.Nodes[0].Tag as SpellTimer;
+                    SpellTimerTable.Table.Remove(src);
+                    SpellTimerTable.ClearReplacedKeywords();
+                    SpellTimerTable.RemoveAllInstanceSpells();
+                    SpellTimerTable.Save();
 
-                    if (baseRow != null)
+                    this.DetailGroupBox.Visible = false;
+                    this.DetailPanelGroupBox.Visible = false;
+                }
+            }
+
+            // 今の選択ノードを取り出す
+            var targetNode = this.SpellTimerTreeView.SelectedNode;
+            if (targetNode != null)
+            {
+                // 1個前のノードを取り出しておく
+                var prevNode = targetNode.PrevNode;
+
+                if (targetNode.Parent != null &&
+                    targetNode.Parent.Nodes.Count > 1)
+                {
+                    targetNode.Remove();
+
+                    if (prevNode != null)
                     {
-                        nr.Panel = baseRow.Panel;
-                        nr.SpellTitle = baseRow.SpellTitle + " New";
-                        nr.SpellIcon = baseRow.SpellIcon;
-                        nr.SpellIconSize = baseRow.SpellIconSize;
-                        nr.Keyword = baseRow.Keyword;
-                        nr.RegexEnabled = baseRow.RegexEnabled;
-                        nr.RecastTime = baseRow.RecastTime;
-                        nr.KeywordForExtend1 = baseRow.KeywordForExtend1;
-                        nr.RecastTimeExtending1 = baseRow.RecastTimeExtending1;
-                        nr.KeywordForExtend2 = baseRow.KeywordForExtend2;
-                        nr.RecastTimeExtending2 = baseRow.RecastTimeExtending2;
-                        nr.ExtendBeyondOriginalRecastTime = baseRow.ExtendBeyondOriginalRecastTime;
-                        nr.UpperLimitOfExtension = baseRow.UpperLimitOfExtension;
-                        nr.RepeatEnabled = baseRow.RepeatEnabled;
-                        nr.ProgressBarVisible = baseRow.ProgressBarVisible;
-                        nr.IsReverse = baseRow.IsReverse;
-                        nr.FontColor = baseRow.FontColor;
-                        nr.FontOutlineColor = baseRow.FontOutlineColor;
-                        nr.BarColor = baseRow.BarColor;
-                        nr.BarOutlineColor = baseRow.BarOutlineColor;
-                        nr.DontHide = baseRow.DontHide;
-                        nr.HideSpellName = baseRow.HideSpellName;
-                        nr.OverlapRecastTime = baseRow.OverlapRecastTime;
-                        nr.ReduceIconBrightness = baseRow.ReduceIconBrightness;
-                        nr.FontFamily = baseRow.FontFamily;
-                        nr.FontSize = baseRow.FontSize;
-                        nr.FontStyle = baseRow.FontStyle;
-                        nr.Font = baseRow.Font;
-                        nr.BarWidth = baseRow.BarWidth;
-                        nr.BarHeight = baseRow.BarHeight;
-                        nr.BackgroundColor = baseRow.BackgroundColor;
-                        nr.BackgroundAlpha = baseRow.BackgroundAlpha;
-                        nr.JobFilter = baseRow.JobFilter;
-                        nr.ZoneFilter = baseRow.ZoneFilter;
-                        nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
-                        nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
-                        nr.ToInstance = baseRow.ToInstance;
+                        this.SpellTimerTreeView.SelectedNode = prevNode;
                     }
                 }
-
-                nr.MatchDateTime = DateTime.MinValue;
-                nr.UpdateDone = false;
-                nr.Enabled = true;
-                nr.DisplayNo = SpellTimerTable.Table.Any() ?
-                    SpellTimerTable.Table.Max(x => x.DisplayNo) + 1 :
-                    50;
-                nr.Regex = null;
-                nr.RegexPattern = string.Empty;
-                SpellTimerTable.Table.Add(nr);
-
-                SpellTimerTable.ClearReplacedKeywords();
-                SpellTimerTable.RemoveAllInstanceSpells();
-                SpellTimerTable.Save();
-
-                // 新しいノードを生成する
-                var node = new TreeNode(nr.SpellTitle)
+                else
                 {
-                    Tag = nr,
-                    ToolTipText = nr.Keyword,
-                    Checked = nr.Enabled
-                };
-
-                // 親ノードがあれば追加する
-                foreach (TreeNode item in this.SpellTimerTreeView.Nodes)
-                {
-                    if (item.Text == nr.Panel)
-                    {
-                        item.Nodes.Add(node);
-                        this.SpellTimerTreeView.SelectedNode = node;
-                        break;
-                    }
+                    targetNode.Parent.Remove();
                 }
-
-                // 親ノードがなかった
-                if (this.SpellTimerTreeView.SelectedNode != node)
-                {
-                    var parentNode = new TreeNode(nr.Panel, new TreeNode[] { node })
-                    {
-                        Checked = true
-                    };
-
-                    this.SpellTimerTreeView.Nodes.Add(parentNode);
-                    this.SpellTimerTreeView.SelectedNode = node;
-                }
-
-                // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
-                this.SelectZoneButton.ForeColor = nr.ZoneFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
-
-                // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
-                this.SelectJobButton.ForeColor = nr.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
-
-                // 条件設定ボタンの色を変える（未設定：黒、設定有：青）
-                this.SetConditionButton.ForeColor =
-                    (nr.TimersMustRunningForStart.Length != 0 || nr.TimersMustStoppingForStart.Length != 0) ?
-                    Color.Blue :
-                    Button.DefaultForeColor;
             }
 
             // 標準のスペルタイマーへ変更を反映する
             SpellTimerCore.Default.applyToNormalSpellTimer();
+        }
+
+        /// <summary>
+        /// エクスポート Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void ExportButton_Click(object sender, EventArgs e)
+        {
+            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
+            if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
+            {
+                SpellTimerTable.Save(
+                    this.SaveFileDialog.FileName);
+            }
+        }
+
+        /// <summary>
+        /// ExportCSVButton Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void ExportCSVButton_Click(object sender, EventArgs e)
+        {
+            var dialog = this.combatAnalysisCSVExportSaveFileDialog;
+            dialog.RestoreDirectory = true;
+            dialog.DefaultExt = "csv";
+            dialog.Filter = "CSV File (*.csv) | *.csv";
+            dialog.OverwritePrompt = true;
+            dialog.CreatePrompt = false;
+            dialog.Title = "Export to CSV file";
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string filename = dialog.FileName;
+                using (var sw = new StreamWriter(filename))
+                {
+                    foreach (ListViewItem item in this.CombatLogListView.Items)
+                    {
+                        var row = item.SubItems.OfType<ListViewItem.ListViewSubItem>().Skip(1).Select(s => s.Text).ToArray();
+                        sw.WriteLine(string.Join(",", row));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// インポート Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void ImportButton_Click(object sender, EventArgs e)
+        {
+            this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
+            if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
+            {
+                SpellTimerTable.Load(
+                    this.OpenFileDialog.FileName,
+                    false);
+
+                this.LoadSpellTimerTable();
+            }
+        }
+
+        /// <summary>
+        /// 初期化 Button
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void ShokikaButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                this,
+                Translate.Get("ResetAllPrompt"),
+                "ACT.SpecialSpellTimer",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2) != DialogResult.OK)
+            {
+                return;
+            }
+
+            Settings.Default.Reset();
+            Settings.Default.Save();
+
+            PanelSettings.Default.SettingsTable.Clear();
+            PanelSettings.Default.Save();
+
+            foreach (var telop in OnePointTelopTable.Default.Table)
+            {
+                telop.Left = 10.0d;
+                telop.Top = 10.0d;
+            }
+
+            OnePointTelopTable.Default.Save();
+
+            this.LoadSettingsOption();
+            SpellTimerCore.Default.LayoutPanels();
+        }
+
+        /// <summary>
+        /// 詳細を表示する
+        /// </summary>
+        /// <param name="dataSource">データソース</param>
+        private void ShowDetail(
+            SpellTimer dataSource)
+        {
+            var src = dataSource;
+            if (src == null)
+            {
+                this.DetailGroupBox.Visible = false;
+                return;
+            }
+
+            this.DetailGroupBox.Visible = true;
+
+            this.PanelNameTextBox.Text = src.Panel;
+            this.SpellTitleTextBox.Text = src.SpellTitle;
+            this.SpellIconComboBox.SelectedValue = src.SpellIcon;
+            this.SpellIconSizeUpDown.Value = src.SpellIconSize;
+            this.DisplayNoNumericUpDown.Value = src.DisplayNo;
+            this.KeywordTextBox.Text = src.Keyword;
+            this.RegexEnabledCheckBox.Checked = src.RegexEnabled;
+            this.RecastTimeNumericUpDown.Value = src.RecastTime;
+            this.RepeatCheckBox.Checked = src.RepeatEnabled;
+            this.ShowProgressBarCheckBox.Checked = src.ProgressBarVisible;
+
+            this.KeywordToExpand1TextBox.Text = src.KeywordForExtend1;
+            this.ExpandSecounds1NumericUpDown.Value = src.RecastTimeExtending1;
+            this.KeywordToExpand2TextBox.Text = src.KeywordForExtend2;
+            this.ExpandSecounds2NumericUpDown.Value = src.RecastTimeExtending2;
+            this.ExtendBeyondOriginalRecastTimeCheckBox.Checked = src.ExtendBeyondOriginalRecastTime;
+            this.UpperLimitOfExtensionNumericUpDown.Value = src.UpperLimitOfExtension;
+
+            this.MatchSoundComboBox.SelectedValue = src.MatchSound;
+            this.MatchTextToSpeakTextBox.Text = src.MatchTextToSpeak;
+
+            this.OverSoundComboBox.SelectedValue = src.OverSound;
+            this.OverTextToSpeakTextBox.Text = src.OverTextToSpeak;
+            this.OverTimeNumericUpDown.Value = src.OverTime;
+
+            this.BeforeSoundComboBox.SelectedValue = src.BeforeSound;
+            this.BeforeTextToSpeakTextBox.Text = src.BeforeTextToSpeak;
+            this.BeforeTimeNumericUpDown.Value = src.BeforeTime;
+
+            this.TimeupSoundComboBox.SelectedValue = src.TimeupSound;
+            this.TimeupTextToSpeakTextBox.Text = src.TimeupTextToSpeak;
+
+            this.IsReverseCheckBox.Checked = src.IsReverse;
+            this.DontHideCheckBox.Checked = src.DontHide;
+            this.HideSpellNameCheckBox.Checked = src.HideSpellName;
+            this.OverlapRecastTimeCheckBox.Checked = src.OverlapRecastTime;
+            this.ReduceIconBrightnessCheckBox.Checked = src.ReduceIconBrightness;
+            this.ToInstanceCheckBox.Checked = src.ToInstance;
+
+            this.SpellVisualSetting.SetFontInfo(src.Font);
+            this.SpellVisualSetting.BarColor = string.IsNullOrWhiteSpace(src.BarColor) ?
+                Settings.Default.ProgressBarColor :
+                src.BarColor.FromHTML();
+            this.SpellVisualSetting.BarOutlineColor = string.IsNullOrWhiteSpace(src.BarOutlineColor) ?
+                Settings.Default.ProgressBarOutlineColor :
+                src.BarOutlineColor.FromHTML();
+            this.SpellVisualSetting.FontColor = string.IsNullOrWhiteSpace(src.FontColor) ?
+                Settings.Default.FontColor :
+                src.FontColor.FromHTML();
+            this.SpellVisualSetting.FontOutlineColor = string.IsNullOrWhiteSpace(src.FontOutlineColor) ?
+                Settings.Default.FontOutlineColor :
+                src.FontOutlineColor.FromHTML();
+            this.SpellVisualSetting.BarSize = new Size(src.BarWidth, src.BarHeight);
+            this.SpellVisualSetting.BackgroundColor = string.IsNullOrWhiteSpace(src.BackgroundColor) ?
+                Settings.Default.BackgroundColor :
+                Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
+
+            this.SpellVisualSetting.SpellIcon = src.SpellIcon;
+            this.SpellVisualSetting.SpellIconSize = src.SpellIconSize;
+            this.SpellVisualSetting.HideSpellName = src.HideSpellName;
+            this.SpellVisualSetting.OverlapRecastTime = src.OverlapRecastTime;
+
+            this.SpellVisualSetting.RefreshSampleImage();
+
+            // データソースをタグに突っ込んでおく
+            this.DetailGroupBox.Tag = src;
+
+            // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
+            this.SelectZoneButton.ForeColor = src.ZoneFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
+
+            // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
+            this.SelectJobButton.ForeColor = src.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
+
+            // 条件設定ボタンの色を変える（未設定：黒、設定有：青）
+            this.SetConditionButton.ForeColor =
+                (src.TimersMustRunningForStart.Length != 0 || src.TimersMustStoppingForStart.Length != 0) ?
+                Color.Blue :
+                Button.DefaultForeColor;
+        }
+
+        /// <summary>
+        /// スペルタイマツリー AfterSelect
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void SpellTimerTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            var ds = e.Node.Tag as SpellTimer;
+
+            // スペルの詳細？
+            if (ds != null)
+            {
+                this.DetailPanelGroupBox.Visible = false;
+
+                this.ShowDetail(
+                    e.Node.Tag as SpellTimer);
+
+                return;
+            }
+
+            // パネルの詳細を表示する
+            this.DetailGroupBox.Visible = false;
+            this.DetailPanelGroupBox.Visible = true;
+
+            // パネル名を取り出す
+            var panelName = e.Node.Text;
+            this.DetailPanelGroupBox.Tag = panelName;
+
+            // パネルの位置を取得する
+            double left, top;
+            SpellTimerCore.Default.GetPanelLocation(
+                panelName,
+                out left,
+                out top);
+
+            this.PanelLeftNumericUpDown.Value = (int)left;
+            this.PanelTopNumericUpDown.Value = (int)top;
+
+            int margin;
+            SpellTimerCore.Default.GetSpellMargin(
+                panelName,
+                out margin);
+            this.MarginUpDown.Value = margin;
+
+            bool horizontal, fixedPositionSpell;
+            SpellTimerCore.Default.GetPanelLayout(
+                panelName,
+                out horizontal,
+                out fixedPositionSpell);
+            this.HorizontalLayoutCheckBox.Checked = horizontal;
+            this.FixedPositionSpellCheckBox.Checked = fixedPositionSpell;
+
+            // 更新ボタンの挙動をセットする
+            if (this.UpdatePanelButton.Tag == null ||
+                !(bool)(this.UpdatePanelButton.Tag))
+            {
+                this.UpdatePanelButton.Click += new EventHandler((s1, e1) =>
+                {
+                    left = (double)this.PanelLeftNumericUpDown.Value;
+                    top = (double)this.PanelTopNumericUpDown.Value;
+                    margin = (int)this.MarginUpDown.Value;
+                    horizontal = this.HorizontalLayoutCheckBox.Checked;
+                    fixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
+
+                    if (this.DetailPanelGroupBox.Tag != null)
+                    {
+                        var panelNameToUpdate = (string)this.DetailPanelGroupBox.Tag;
+                        SpellTimerCore.Default.SetPanelLocation(
+                            panelNameToUpdate,
+                            left,
+                            top);
+                        SpellTimerCore.Default.SetSpellMargin(
+                            panelNameToUpdate,
+                            margin);
+                        SpellTimerCore.Default.SetPanelLayout(
+                            panelNameToUpdate,
+                            horizontal,
+                            fixedPositionSpell);
+                    }
+                });
+
+                this.UpdatePanelButton.Tag = true;
+            }
+        }
+
+        /// <summary>
+        /// 適用する Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void TekiyoButton_Click(object sender, EventArgs e)
+        {
+            this.ApplySettingsOption();
+
+            // Windowを一旦すべて閉じる
+            SpellTimerCore.Default.ClosePanels();
+            OnePointTelopController.CloseTelops();
         }
 
         /// <summary>
@@ -534,433 +961,6 @@
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// 削除 Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void DeleteButton_Click(object sender, EventArgs e)
-        {
-            lock (SpellTimerTable.Table)
-            {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
-                if (src != null)
-                {
-                    SpellTimerTable.Table.Remove(src);
-                    SpellTimerTable.ClearReplacedKeywords();
-                    SpellTimerTable.RemoveAllInstanceSpells();
-                    SpellTimerTable.Save();
-
-                    this.DetailGroupBox.Visible = false;
-                    this.DetailPanelGroupBox.Visible = false;
-                }
-            }
-
-            // 今の選択ノードを取り出す
-            var targetNode = this.SpellTimerTreeView.SelectedNode;
-            if (targetNode != null)
-            {
-                // 1個前のノードを取り出しておく
-                var prevNode = targetNode.PrevNode;
-
-                if (targetNode.Parent != null &&
-                    targetNode.Parent.Nodes.Count > 1)
-                {
-                    targetNode.Remove();
-
-                    if (prevNode != null)
-                    {
-                        this.SpellTimerTreeView.SelectedNode = prevNode;
-                    }
-                }
-                else
-                {
-                    targetNode.Parent.Remove();
-                }
-            }
-
-            // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
-        }
-
-        /// <summary>
-        /// スペルタイマツリー AfterSelect
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void SpellTimerTreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            var ds = e.Node.Tag as SpellTimer;
-
-            // スペルの詳細？
-            if (ds != null)
-            {
-                this.DetailPanelGroupBox.Visible = false;
-
-                this.ShowDetail(
-                    e.Node.Tag as SpellTimer);
-
-                return;
-            }
-
-            // パネルの詳細を表示する
-            this.DetailGroupBox.Visible = false;
-            this.DetailPanelGroupBox.Visible = true;
-
-            // パネル名を取り出す
-            var panelName = e.Node.Text;
-            this.DetailPanelGroupBox.Tag = panelName;
-
-            // パネルの位置を取得する
-            double left, top;
-            SpellTimerCore.Default.GetPanelLocation(
-                panelName,
-                out left,
-                out top);
-
-            this.PanelLeftNumericUpDown.Value = (int)left;
-            this.PanelTopNumericUpDown.Value = (int)top;
-
-            int margin;
-            SpellTimerCore.Default.GetSpellMargin(
-                panelName,
-                out margin);
-            this.MarginUpDown.Value = margin;
-
-            bool horizontal, fixedPositionSpell;
-            SpellTimerCore.Default.GetPanelLayout(
-                panelName,
-                out horizontal,
-                out fixedPositionSpell);
-            this.HorizontalLayoutCheckBox.Checked = horizontal;
-            this.FixedPositionSpellCheckBox.Checked = fixedPositionSpell;
-
-            // 更新ボタンの挙動をセットする
-            if (this.UpdatePanelButton.Tag == null ||
-                !(bool)(this.UpdatePanelButton.Tag))
-            {
-                this.UpdatePanelButton.Click += new EventHandler((s1, e1) =>
-                {
-                    left = (double)this.PanelLeftNumericUpDown.Value;
-                    top = (double)this.PanelTopNumericUpDown.Value;
-                    margin = (int)this.MarginUpDown.Value;
-                    horizontal = this.HorizontalLayoutCheckBox.Checked;
-                    fixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
-
-                    if (this.DetailPanelGroupBox.Tag != null)
-                    {
-                        var panelNameToUpdate = (string)this.DetailPanelGroupBox.Tag;
-                        SpellTimerCore.Default.SetPanelLocation(
-                            panelNameToUpdate,
-                            left,
-                            top);
-                        SpellTimerCore.Default.SetSpellMargin(
-                            panelNameToUpdate,
-                            margin);
-                        SpellTimerCore.Default.SetPanelLayout(
-                            panelNameToUpdate,
-                            horizontal,
-                            fixedPositionSpell);
-                    }
-                });
-
-                this.UpdatePanelButton.Tag = true;
-            }
-        }
-
-        /// <summary>
-        /// スペルタイマテーブルを読み込む
-        /// </summary>
-        public void LoadSpellTimerTable()
-        {
-            try
-            {
-                this.SpellTimerTreeView.SuspendLayout();
-
-                this.SpellTimerTreeView.Nodes.Clear();
-
-                var panels = SpellTimerTable.Table
-                    .Where(x => !x.IsInstance)
-                    .OrderBy(x => x.Panel)
-                    .Select(x => x.Panel)
-                    .Distinct();
-                foreach (var panelName in panels)
-                {
-                    var children = new List<TreeNode>();
-                    var spells = SpellTimerTable.Table
-                        .Where(x => !x.IsInstance)
-                        .OrderBy(x => x.DisplayNo)
-                        .Where(x => x.Panel == panelName);
-                    foreach (var spell in spells)
-                    {
-                        var nc = new TreeNode()
-                        {
-                            Text = spell.SpellTitle,
-                            ToolTipText = spell.Keyword,
-                            Checked = spell.Enabled,
-                            Tag = spell,
-                        };
-
-                        children.Add(nc);
-                    }
-
-                    var n = new TreeNode(
-                        panelName,
-                        children.ToArray());
-
-                    n.Checked = children.Any(x => x.Checked);
-
-                    this.SpellTimerTreeView.Nodes.Add(n);
-                }
-
-                // スペルの再描画を行わせる
-                SpellTimerTable.ClearUpdateFlags();
-
-                // 標準のスペルタイマーへ変更を反映する
-                SpellTimerCore.Default.applyToNormalSpellTimer();
-
-                this.SpellTimerTreeView.ExpandAll();
-            }
-            finally
-            {
-                this.SpellTimerTreeView.ResumeLayout();
-            }
-        }
-
-        /// <summary>
-        /// 詳細を表示する
-        /// </summary>
-        /// <param name="dataSource">データソース</param>
-        private void ShowDetail(
-            SpellTimer dataSource)
-        {
-            var src = dataSource;
-            if (src == null)
-            {
-                this.DetailGroupBox.Visible = false;
-                return;
-            }
-
-            this.DetailGroupBox.Visible = true;
-
-            this.PanelNameTextBox.Text = src.Panel;
-            this.SpellTitleTextBox.Text = src.SpellTitle;
-            this.SpellIconComboBox.SelectedValue = src.SpellIcon;
-            this.SpellIconSizeUpDown.Value = src.SpellIconSize;
-            this.DisplayNoNumericUpDown.Value = src.DisplayNo;
-            this.KeywordTextBox.Text = src.Keyword;
-            this.RegexEnabledCheckBox.Checked = src.RegexEnabled;
-            this.RecastTimeNumericUpDown.Value = src.RecastTime;
-            this.RepeatCheckBox.Checked = src.RepeatEnabled;
-            this.ShowProgressBarCheckBox.Checked = src.ProgressBarVisible;
-
-            this.KeywordToExpand1TextBox.Text = src.KeywordForExtend1;
-            this.ExpandSecounds1NumericUpDown.Value = src.RecastTimeExtending1;
-            this.KeywordToExpand2TextBox.Text = src.KeywordForExtend2;
-            this.ExpandSecounds2NumericUpDown.Value = src.RecastTimeExtending2;
-            this.ExtendBeyondOriginalRecastTimeCheckBox.Checked = src.ExtendBeyondOriginalRecastTime;
-            this.UpperLimitOfExtensionNumericUpDown.Value = src.UpperLimitOfExtension;
-
-            this.MatchSoundComboBox.SelectedValue = src.MatchSound;
-            this.MatchTextToSpeakTextBox.Text = src.MatchTextToSpeak;
-
-            this.OverSoundComboBox.SelectedValue = src.OverSound;
-            this.OverTextToSpeakTextBox.Text = src.OverTextToSpeak;
-            this.OverTimeNumericUpDown.Value = src.OverTime;
-
-            this.BeforeSoundComboBox.SelectedValue = src.BeforeSound;
-            this.BeforeTextToSpeakTextBox.Text = src.BeforeTextToSpeak;
-            this.BeforeTimeNumericUpDown.Value = src.BeforeTime;
-
-            this.TimeupSoundComboBox.SelectedValue = src.TimeupSound;
-            this.TimeupTextToSpeakTextBox.Text = src.TimeupTextToSpeak;
-
-            this.IsReverseCheckBox.Checked = src.IsReverse;
-            this.DontHideCheckBox.Checked = src.DontHide;
-            this.HideSpellNameCheckBox.Checked = src.HideSpellName;
-            this.OverlapRecastTimeCheckBox.Checked = src.OverlapRecastTime;
-            this.ReduceIconBrightnessCheckBox.Checked = src.ReduceIconBrightness;
-            this.ToInstanceCheckBox.Checked = src.ToInstance;
-
-            this.SpellVisualSetting.SetFontInfo(src.Font);
-            this.SpellVisualSetting.BarColor = string.IsNullOrWhiteSpace(src.BarColor) ?
-                Settings.Default.ProgressBarColor :
-                src.BarColor.FromHTML();
-            this.SpellVisualSetting.BarOutlineColor = string.IsNullOrWhiteSpace(src.BarOutlineColor) ?
-                Settings.Default.ProgressBarOutlineColor :
-                src.BarOutlineColor.FromHTML();
-            this.SpellVisualSetting.FontColor = string.IsNullOrWhiteSpace(src.FontColor) ?
-                Settings.Default.FontColor :
-                src.FontColor.FromHTML();
-            this.SpellVisualSetting.FontOutlineColor = string.IsNullOrWhiteSpace(src.FontOutlineColor) ?
-                Settings.Default.FontOutlineColor :
-                src.FontOutlineColor.FromHTML();
-            this.SpellVisualSetting.BarSize = new Size(src.BarWidth, src.BarHeight);
-            this.SpellVisualSetting.BackgroundColor = string.IsNullOrWhiteSpace(src.BackgroundColor) ?
-                Settings.Default.BackgroundColor :
-                Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
-
-            this.SpellVisualSetting.SpellIcon = src.SpellIcon;
-            this.SpellVisualSetting.SpellIconSize = src.SpellIconSize;
-            this.SpellVisualSetting.HideSpellName = src.HideSpellName;
-            this.SpellVisualSetting.OverlapRecastTime = src.OverlapRecastTime;
-
-            this.SpellVisualSetting.RefreshSampleImage();
-
-            // データソースをタグに突っ込んでおく
-            this.DetailGroupBox.Tag = src;
-
-            // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
-            this.SelectZoneButton.ForeColor = src.ZoneFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
-
-            // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
-            this.SelectJobButton.ForeColor = src.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
-
-            // 条件設定ボタンの色を変える（未設定：黒、設定有：青）
-            this.SetConditionButton.ForeColor =
-                (src.TimersMustRunningForStart.Length != 0 || src.TimersMustStoppingForStart.Length != 0) ?
-                Color.Blue :
-                Button.DefaultForeColor;
-        }
-
-        /// <summary>
-        /// エクスポート Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void ExportButton_Click(object sender, EventArgs e)
-        {
-            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
-            if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
-            {
-                SpellTimerTable.Save(
-                    this.SaveFileDialog.FileName);
-            }
-        }
-
-        /// <summary>
-        /// インポート Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void ImportButton_Click(object sender, EventArgs e)
-        {
-            this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
-            if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
-            {
-                SpellTimerTable.Load(
-                    this.OpenFileDialog.FileName,
-                    false);
-
-                this.LoadSpellTimerTable();
-            }
-        }
-
-        /// <summary>
-        /// 全て削除
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void ClearAllButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(
-                this,
-                Translate.Get("SpellClearAllPrompt"),
-                "ACT.SpecialSpellTimer",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2) == DialogResult.OK)
-            {
-                lock (SpellTimerTable.Table)
-                {
-                    this.DetailGroupBox.Visible = false;
-                    this.DetailPanelGroupBox.Visible = false;
-                    SpellTimerTable.Table.Clear();
-                }
-
-                this.LoadSpellTimerTable();
-            }
-        }
-
-        /// <summary>
-        /// ExportCSVButton Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void ExportCSVButton_Click(object sender, EventArgs e)
-        {
-            var dialog = this.combatAnalysisCSVExportSaveFileDialog;
-            dialog.RestoreDirectory = true;
-            dialog.DefaultExt = "csv";
-            dialog.Filter = "CSV File (*.csv) | *.csv";
-            dialog.OverwritePrompt = true;
-            dialog.CreatePrompt = false;
-            dialog.Title = "Export to CSV file";
-
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                string filename = dialog.FileName;
-                using (var sw = new StreamWriter(filename))
-                {
-                    foreach (ListViewItem item in this.CombatLogListView.Items)
-                    {
-                        var row = item.SubItems.OfType<ListViewItem.ListViewSubItem>().Skip(1).Select(s => s.Text).ToArray();
-                        sw.WriteLine(string.Join(",", row));
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 初期化 Button
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void ShokikaButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(
-                this,
-                Translate.Get("ResetAllPrompt"),
-                "ACT.SpecialSpellTimer",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2) != DialogResult.OK)
-            {
-                return;
-            }
-
-            Settings.Default.Reset();
-            Settings.Default.Save();
-
-            PanelSettings.Default.SettingsTable.Clear();
-            PanelSettings.Default.Save();
-
-            foreach (var telop in OnePointTelopTable.Default.Table)
-            {
-                telop.Left = 10.0d;
-                telop.Top = 10.0d;
-            }
-
-            OnePointTelopTable.Default.Save();
-
-            this.LoadSettingsOption();
-            SpellTimerCore.Default.LayoutPanels();
-        }
-
-        /// <summary>
-        /// 適用する Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void TekiyoButton_Click(object sender, EventArgs e)
-        {
-            this.ApplySettingsOption();
-
-            // Windowを一旦すべて閉じる
-            SpellTimerCore.Default.ClosePanels();
-            OnePointTelopController.CloseTelops();
         }
     }
 }

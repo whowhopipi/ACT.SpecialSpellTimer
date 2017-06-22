@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -17,14 +16,52 @@
     public class SpecialSpellTimerPlugin : IActPluginV1
     {
         /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public SpecialSpellTimerPlugin()
+        {
+            // このDLLの配置場所とACT標準のPluginディレクトリも解決の対象にする
+            AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
+            {
+                try
+                {
+                    var asm = new AssemblyName(e.Name);
+
+                    var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this);
+                    if (plugin != null)
+                    {
+                        var thisDirectory = plugin.pluginFile.DirectoryName;
+                        var path1 = Path.Combine(thisDirectory, asm.Name + ".dll");
+                        if (File.Exists(path1))
+                        {
+                            return Assembly.LoadFrom(path1);
+                        }
+                    }
+
+                    var pluginDirectory = Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        @"Advanced Combat Tracker\Plugins");
+
+                    var path = Path.Combine(pluginDirectory, asm.Name + ".dll");
+
+                    if (File.Exists(path))
+                    {
+                        return Assembly.LoadFrom(path);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write(Utility.Translate.Get("ACTAssemblyError"), ex);
+                }
+
+                return null;
+            };
+        }
+
+        /// <summary>
         /// 設定パネル
         /// </summary>
         public static ConfigPanel ConfigPanel { get; private set; }
-
-        /// <summary>
-        /// 表示切り替えボタン
-        /// </summary>
-        private static Button SwitchVisibleButton { get; set; }
 
         /// <summary>
         /// 自身の場所
@@ -34,6 +71,11 @@
             get;
             private set;
         }
+
+        /// <summary>
+        /// 表示切り替えボタン
+        /// </summary>
+        private static Button SwitchVisibleButton { get; set; }
 
         /// <summary>
         /// プラグインステータス表示ラベル
@@ -84,46 +126,29 @@
         }
 
         /// <summary>
-        /// コンストラクタ
+        /// 後片付けをする
         /// </summary>
-        public SpecialSpellTimerPlugin()
+        void IActPluginV1.DeInitPlugin()
         {
-            // このDLLの配置場所とACT標準のPluginディレクトリも解決の対象にする
-            AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
+            try
             {
-                try
-                {
-                    var asm = new AssemblyName(e.Name);
+                SpellTimerCore.Default.End();
+                this.RemoveSwitchVisibleButton();
+                this.PluginStatusLabel.Text = "Plugin Exited";
 
-                    var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this);
-                    if (plugin != null)
-                    {
-                        var thisDirectory = plugin.pluginFile.DirectoryName;
-                        var path1 = Path.Combine(thisDirectory, asm.Name + ".dll");
-                        if (File.Exists(path1))
-                        {
-                            return Assembly.LoadFrom(path1);
-                        }
-                    }
+                Logger.Write("Plugin Exited.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Write(Utility.Translate.Get("ACTPluginStopError"), ex);
 
-                    var pluginDirectory = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                        @"Advanced Combat Tracker\Plugins");
+                ActGlobals.oFormActMain.WriteExceptionLog(
+                    ex,
+                    Utility.Translate.Get("ACTPluginStopError"));
 
-                    var path = Path.Combine(pluginDirectory, asm.Name + ".dll");
-
-                    if (File.Exists(path))
-                    {
-                        return Assembly.LoadFrom(path);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write(Utility.Translate.Get("ACTAssemblyError"), ex);
-                }
-
-                return null;
-            };
+                this.PluginStatusLabel.Text = "Plugin Exited Error";
+            }
+            Logger.End();
         }
 
         /// <summary>
@@ -185,29 +210,27 @@
         }
 
         /// <summary>
-        /// 後片付けをする
+        /// ACTメインフォーム Resize
         /// </summary>
-        void IActPluginV1.DeInitPlugin()
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void oFormActMain_Resize(object sender, EventArgs e)
         {
-            try
+            SwitchVisibleButton.Location = new Point(
+                ActGlobals.oFormActMain.Width - 533,
+                0);
+        }
+
+        /// <summary>
+        /// 表示切り替えボタンを除去する
+        /// </summary>
+        private void RemoveSwitchVisibleButton()
+        {
+            if (SwitchVisibleButton != null)
             {
-                SpellTimerCore.Default.End();
-                this.RemoveSwitchVisibleButton();
-                this.PluginStatusLabel.Text = "Plugin Exited";
-
-                Logger.Write("Plugin Exited.");
+                ActGlobals.oFormActMain.Resize -= this.oFormActMain_Resize;
+                ActGlobals.oFormActMain.Controls.Remove(SwitchVisibleButton);
             }
-            catch (Exception ex)
-            {
-                Logger.Write(Utility.Translate.Get("ACTPluginStopError"), ex);
-
-                ActGlobals.oFormActMain.WriteExceptionLog(
-                    ex,
-                    Utility.Translate.Get("ACTPluginStopError"));
-
-                this.PluginStatusLabel.Text = "Plugin Exited Error";
-            }
-            Logger.End();
         }
 
         /// <summary>
@@ -265,30 +288,6 @@
             ActGlobals.oFormActMain.Controls.SetChildIndex(SwitchVisibleButton, 1);
 
             this.oFormActMain_Resize(this, null);
-        }
-
-        /// <summary>
-        /// 表示切り替えボタンを除去する
-        /// </summary>
-        private void RemoveSwitchVisibleButton()
-        {
-            if (SwitchVisibleButton != null)
-            {
-                ActGlobals.oFormActMain.Resize -= this.oFormActMain_Resize;
-                ActGlobals.oFormActMain.Controls.Remove(SwitchVisibleButton);
-            }
-        }
-
-        /// <summary>
-        /// ACTメインフォーム Resize
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void oFormActMain_Resize(object sender, EventArgs e)
-        {
-            SwitchVisibleButton.Location = new Point(
-                ActGlobals.oFormActMain.Width - 533,
-                0);
         }
 
         /// <summary>

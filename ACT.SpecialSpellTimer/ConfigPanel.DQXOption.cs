@@ -3,37 +3,24 @@
     using System;
     using System.Windows.Forms;
 
-    using ACT.SpecialSpellTimer.Properties;
-
     /// <summary>
     /// DQX専用オプション
     /// </summary>
     public partial class ConfigPanel
     {
-        private bool DQXOptionTabSelected => this.TabControl.SelectedTab == this.DQXOptionTabPage;
         private Timer DQXOptionTabRefreshTimer = new Timer();
+        private bool DQXOptionTabSelected => this.TabControl.SelectedTab == this.DQXOptionTabPage;
 
-        /// <summary>
-        /// オプションのLoad
-        /// </summary>
-        private void LoadDQXOption()
+        private void DQXAppleyButton_Click(object sender, EventArgs e)
         {
-            this.LoadSettingsDQXOption();
+            this.SaveSettingsDQXOption();
 
-            this.DQXOptionEnabledCheckBox.CheckedChanged += (s, e) =>
-            {
-                this.DQXPlayerNameTextBox.Enabled = this.DQXOptionEnabledCheckBox.Checked;
-                if (!this.DQXPlayerNameTextBox.Enabled)
-                {
-                    this.DQXPlayerNameTextBox.Clear();
-                }
-            };
+            // 現在の設定を無効にする
+            SpellTimerCore.Default.InvalidateSettings();
 
-            this.DQXAppleyButton.Click += this.DQXAppleyButton_Click;
-
-            this.DQXOptionTabRefreshTimer.Tick += this.DQXOtionTabRefreshTimer_Tick;
-            this.DQXOptionTabRefreshTimer.Interval = 1000;
-            this.DQXOptionTabRefreshTimer.Start();
+            // Windowを一旦すべて閉じる
+            SpellTimerCore.Default.ClosePanels();
+            OnePointTelopController.CloseTelops();
         }
 
         private void DQXOtionTabRefreshTimer_Tick(object sender, EventArgs e)
@@ -60,16 +47,39 @@
             this.DQXPTMember8TextBox.Text = DQXUtility.PartyMemberList.Count > 6 ? DQXUtility.PartyMemberList[6] : string.Empty;
         }
 
-        private void DQXAppleyButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// オプションのLoad
+        /// </summary>
+        private void LoadDQXOption()
         {
-            this.SaveSettingsDQXOption();
+            this.LoadSettingsDQXOption();
 
-            // 現在の設定を無効にする
-            SpellTimerCore.Default.InvalidateSettings();
+            this.DQXOptionEnabledCheckBox.CheckedChanged += (s, e) =>
+            {
+                this.DQXPlayerNameTextBox.Enabled = this.DQXOptionEnabledCheckBox.Checked;
+                if (!this.DQXPlayerNameTextBox.Enabled)
+                {
+                    this.DQXPlayerNameTextBox.Clear();
+                }
+            };
 
-            // Windowを一旦すべて閉じる
-            SpellTimerCore.Default.ClosePanels();
-            OnePointTelopController.CloseTelops();
+            this.DQXAppleyButton.Click += this.DQXAppleyButton_Click;
+
+            this.DQXOptionTabRefreshTimer.Tick += this.DQXOtionTabRefreshTimer_Tick;
+            this.DQXOptionTabRefreshTimer.Interval = 1000;
+            this.DQXOptionTabRefreshTimer.Start();
+        }
+
+        private void LoadSettingsDQXOption()
+        {
+            this.DQXOptionEnabledCheckBox.Checked = Settings.Default.DQXUtilityEnabled;
+            this.DQXPlayerNameTextBox.Text = Settings.Default.DQXPlayerName;
+
+            this.DQXPlayerNameTextBox.Enabled = this.DQXOptionEnabledCheckBox.Checked;
+            if (!this.DQXPlayerNameTextBox.Enabled)
+            {
+                this.DQXPlayerNameTextBox.Clear();
+            }
         }
 
         private void SaveSettingsDQXOption()
@@ -83,18 +93,6 @@
 
             // 設定を保存する
             Settings.Default.Save();
-        }
-
-        private void LoadSettingsDQXOption()
-        {
-            this.DQXOptionEnabledCheckBox.Checked = Settings.Default.DQXUtilityEnabled;
-            this.DQXPlayerNameTextBox.Text = Settings.Default.DQXPlayerName;
-
-            this.DQXPlayerNameTextBox.Enabled = this.DQXOptionEnabledCheckBox.Checked;
-            if (!this.DQXPlayerNameTextBox.Enabled)
-            {
-                this.DQXPlayerNameTextBox.Clear();
-            }
         }
     }
 }

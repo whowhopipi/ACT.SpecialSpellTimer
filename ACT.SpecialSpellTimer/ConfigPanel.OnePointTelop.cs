@@ -6,7 +6,6 @@
     using System.Windows.Forms;
 
     using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
 
@@ -15,6 +14,41 @@
     /// </summary>
     public partial class ConfigPanel
     {
+        /// <summary>
+        /// テロップテーブルをツリーにロードする
+        /// </summary>
+        public void LoadTelopTable()
+        {
+            try
+            {
+                this.TelopTreeView.SuspendLayout();
+
+                this.TelopTreeView.Nodes.Clear();
+
+                var telops = OnePointTelopTable.Default.Table.OrderBy(x => x.Title);
+                foreach (var telop in telops)
+                {
+                    var n = new TreeNode();
+
+                    n.Tag = telop;
+                    n.Text = telop.Title;
+                    n.ToolTipText = telop.Message;
+                    n.Checked = telop.Enabled;
+
+                    this.TelopTreeView.Nodes.Add(n);
+                }
+
+                // 標準のスペルタイマーへ変更を反映する
+                SpellTimerCore.Default.applyToNormalSpellTimer();
+
+                this.TelopTreeView.ExpandAll();
+            }
+            finally
+            {
+                this.TelopTreeView.ResumeLayout();
+            }
+        }
+
         /// <summary>
         /// ワンポイントテロップのLoad
         /// </summary>
@@ -146,62 +180,85 @@
         }
 
         /// <summary>
-        /// テロップエクスポート Click
+        /// 詳細を表示する
         /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void TelopExportButton_Click(object sender, EventArgs e)
+        /// <param name="dataSource"></param>
+        private void ShowTelopDetail(
+            OnePointTelop dataSource)
         {
-            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
-            if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
+            var src = dataSource;
+            if (src == null)
             {
-                OnePointTelopTable.Default.Save(
-                    this.SaveFileDialog.FileName);
+                this.TelopDetailGroupBox.Visible = false;
+                return;
             }
-        }
 
-        /// <summary>
-        /// テロップインポート Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void TelopImportButton_Click(object sender, EventArgs e)
-        {
-            this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
-            if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
+            this.TelopDetailGroupBox.Visible = true;
+
+            this.TelopTitleTextBox.Text = src.Title;
+            this.TelopMessageTextBox.Text = src.Message;
+            this.TelopKeywordTextBox.Text = src.Keyword;
+            this.TelopKeywordToHideTextBox.Text = src.KeywordToHide;
+            this.TelopRegexEnabledCheckBox.Checked = src.RegexEnabled;
+            this.TelopDelayNumericUpDown.Value = src.Delay;
+            this.DisplayTimeNumericUpDown.Value = src.DisplayTime;
+            this.EnabledAddMessageCheckBox.Checked = src.AddMessageEnabled;
+            this.TelopProgressBarEnabledCheckBox.Checked = src.ProgressBarEnabled;
+
+            this.TelopVisualSetting.FontColor = src.FontColor.FromHTML();
+            this.TelopVisualSetting.FontOutlineColor = src.FontOutlineColor.FromHTML();
+            this.TelopVisualSetting.FontColor = src.FontColor.FromHTML();
+            this.TelopVisualSetting.SetFontInfo(src.Font);
+            this.TelopVisualSetting.BackgroundColor = string.IsNullOrWhiteSpace(src.BackgroundColor) ?
+                Settings.Default.BackgroundColor :
+                Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
+
+            this.TelopVisualSetting.RefreshSampleImage();
+
+            var left = (int)src.Left;
+            var top = (int)src.Top;
+
+            double x, y;
+            OnePointTelopController.GettLocation(
+                src.ID,
+                out x,
+                out y);
+
+            if (x != 0)
             {
-                OnePointTelopTable.Default.Load(
-                    this.OpenFileDialog.FileName,
-                    false);
-
-                this.LoadTelopTable();
+                left = (int)x;
             }
-        }
 
-        /// <summary>
-        /// テロップ全て削除 Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void TelopClearAllButton_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(
-                this,
-                Translate.Get("TelopClearAllPrompt"),
-                "ACT.SpecialSpellTimer",
-                MessageBoxButtons.OKCancel,
-                MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2) == DialogResult.OK)
+            if (y != 0)
             {
-                lock (OnePointTelopTable.Default.Table)
-                {
-                    this.TelopDetailGroupBox.Visible = false;
-                    OnePointTelopTable.Default.Table.Clear();
-                }
-
-                OnePointTelopController.CloseTelops();
-                this.LoadTelopTable();
+                top = (int)y;
             }
+
+            this.TelopLeftNumericUpDown.Value = left;
+            this.TelopLeftNumericUpDown.Tag = left;
+            this.TelopTopNumericUpDown.Value = top;
+            this.TelopTopNumericUpDown.Tag = top;
+
+            this.TelopMatchSoundComboBox.SelectedValue = src.MatchSound;
+            this.TelopMatchTTSTextBox.Text = src.MatchTextToSpeak;
+
+            this.TelopDelaySoundComboBox.SelectedValue = src.DelaySound;
+            this.TelopDelayTTSTextBox.Text = src.DelayTextToSpeak;
+
+            // データソースをタグに突っ込んでおく
+            this.TelopDetailGroupBox.Tag = src;
+
+            // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
+            this.TelopSelectJobButton.ForeColor = src.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
+
+            // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
+            this.TelopSelectZoneButton.ForeColor = src.ZoneFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
+
+            // 条件設定ボタンの色を変える（未設定：黒、設定有：青）
+            this.TelopSetConditionButton.ForeColor =
+                (src.TimersMustRunningForStart.Length != 0 || src.TimersMustStoppingForStart.Length != 0) ?
+                Color.Blue :
+                Button.DefaultForeColor;
         }
 
         /// <summary>
@@ -307,6 +364,106 @@
         }
 
         /// <summary>
+        /// テロップ全て削除 Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void TelopClearAllButton_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(
+                this,
+                Translate.Get("TelopClearAllPrompt"),
+                "ACT.SpecialSpellTimer",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2) == DialogResult.OK)
+            {
+                lock (OnePointTelopTable.Default.Table)
+                {
+                    this.TelopDetailGroupBox.Visible = false;
+                    OnePointTelopTable.Default.Table.Clear();
+                }
+
+                OnePointTelopController.CloseTelops();
+                this.LoadTelopTable();
+            }
+        }
+
+        /// <summary>
+        /// テロップ削除 Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void TelopDeleteButton_Click(object sender, EventArgs e)
+        {
+            lock (OnePointTelopTable.Default.Table)
+            {
+                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                if (src != null)
+                {
+                    OnePointTelopTable.Default.Table.Remove(src);
+                    OnePointTelopTable.Default.ClearReplacedKeywords();
+                    OnePointTelopTable.Default.Save();
+
+                    OnePointTelopController.CloseTelops();
+
+                    this.TelopDetailGroupBox.Visible = false;
+                }
+            }
+
+            // 今の選択ノードを取り出す
+            var targetNode = this.TelopTreeView.SelectedNode;
+            if (targetNode != null)
+            {
+                // 1個前のノードを取り出しておく
+                var prevNode = targetNode.PrevNode;
+
+                targetNode.Remove();
+
+                if (prevNode != null)
+                {
+                    this.TelopTreeView.SelectedNode = prevNode;
+                }
+            }
+
+            // 標準のスペルタイマーへ変更を反映する
+            SpellTimerCore.Default.applyToNormalSpellTimer();
+        }
+
+        /// <summary>
+        /// テロップエクスポート Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void TelopExportButton_Click(object sender, EventArgs e)
+        {
+            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
+            if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
+            {
+                OnePointTelopTable.Default.Save(
+                    this.SaveFileDialog.FileName);
+            }
+        }
+
+        /// <summary>
+        /// テロップインポート Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void TelopImportButton_Click(object sender, EventArgs e)
+        {
+            this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
+            if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
+            {
+                OnePointTelopTable.Default.Load(
+                    this.OpenFileDialog.FileName,
+                    false);
+
+                this.LoadTelopTable();
+            }
+        }
+
+        /// <summary>
         /// テロップ更新 Click
         /// </summary>
         /// <param name="sender">イベント発生元</param>
@@ -377,164 +534,6 @@
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// テロップ削除 Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void TelopDeleteButton_Click(object sender, EventArgs e)
-        {
-            lock (OnePointTelopTable.Default.Table)
-            {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
-                if (src != null)
-                {
-                    OnePointTelopTable.Default.Table.Remove(src);
-                    OnePointTelopTable.Default.ClearReplacedKeywords();
-                    OnePointTelopTable.Default.Save();
-
-                    OnePointTelopController.CloseTelops();
-
-                    this.TelopDetailGroupBox.Visible = false;
-                }
-            }
-
-            // 今の選択ノードを取り出す
-            var targetNode = this.TelopTreeView.SelectedNode;
-            if (targetNode != null)
-            {
-                // 1個前のノードを取り出しておく
-                var prevNode = targetNode.PrevNode;
-
-                targetNode.Remove();
-
-                if (prevNode != null)
-                {
-                    this.TelopTreeView.SelectedNode = prevNode;
-                }
-            }
-
-            // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
-        }
-
-        /// <summary>
-        /// テロップテーブルをツリーにロードする
-        /// </summary>
-        public void LoadTelopTable()
-        {
-            try
-            {
-                this.TelopTreeView.SuspendLayout();
-
-                this.TelopTreeView.Nodes.Clear();
-
-                var telops = OnePointTelopTable.Default.Table.OrderBy(x => x.Title);
-                foreach (var telop in telops)
-                {
-                    var n = new TreeNode();
-
-                    n.Tag = telop;
-                    n.Text = telop.Title;
-                    n.ToolTipText = telop.Message;
-                    n.Checked = telop.Enabled;
-
-                    this.TelopTreeView.Nodes.Add(n);
-                }
-
-                // 標準のスペルタイマーへ変更を反映する
-                SpellTimerCore.Default.applyToNormalSpellTimer();
-
-                this.TelopTreeView.ExpandAll();
-            }
-            finally
-            {
-                this.TelopTreeView.ResumeLayout();
-            }
-        }
-
-        /// <summary>
-        /// 詳細を表示する
-        /// </summary>
-        /// <param name="dataSource"></param>
-        private void ShowTelopDetail(
-            OnePointTelop dataSource)
-        {
-            var src = dataSource;
-            if (src == null)
-            {
-                this.TelopDetailGroupBox.Visible = false;
-                return;
-            }
-
-            this.TelopDetailGroupBox.Visible = true;
-
-            this.TelopTitleTextBox.Text = src.Title;
-            this.TelopMessageTextBox.Text = src.Message;
-            this.TelopKeywordTextBox.Text = src.Keyword;
-            this.TelopKeywordToHideTextBox.Text = src.KeywordToHide;
-            this.TelopRegexEnabledCheckBox.Checked = src.RegexEnabled;
-            this.TelopDelayNumericUpDown.Value = src.Delay;
-            this.DisplayTimeNumericUpDown.Value = src.DisplayTime;
-            this.EnabledAddMessageCheckBox.Checked = src.AddMessageEnabled;
-            this.TelopProgressBarEnabledCheckBox.Checked = src.ProgressBarEnabled;
-
-            this.TelopVisualSetting.FontColor = src.FontColor.FromHTML();
-            this.TelopVisualSetting.FontOutlineColor = src.FontOutlineColor.FromHTML();
-            this.TelopVisualSetting.FontColor = src.FontColor.FromHTML();
-            this.TelopVisualSetting.SetFontInfo(src.Font);
-            this.TelopVisualSetting.BackgroundColor = string.IsNullOrWhiteSpace(src.BackgroundColor) ?
-                Settings.Default.BackgroundColor :
-                Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
-
-            this.TelopVisualSetting.RefreshSampleImage();
-
-            var left = (int)src.Left;
-            var top = (int)src.Top;
-
-            double x, y;
-            OnePointTelopController.GettLocation(
-                src.ID,
-                out x,
-                out y);
-
-            if (x != 0)
-            {
-                left = (int)x;
-            }
-
-            if (y != 0)
-            {
-                top = (int)y;
-            }
-
-            this.TelopLeftNumericUpDown.Value = left;
-            this.TelopLeftNumericUpDown.Tag = left;
-            this.TelopTopNumericUpDown.Value = top;
-            this.TelopTopNumericUpDown.Tag = top;
-
-            this.TelopMatchSoundComboBox.SelectedValue = src.MatchSound;
-            this.TelopMatchTTSTextBox.Text = src.MatchTextToSpeak;
-
-            this.TelopDelaySoundComboBox.SelectedValue = src.DelaySound;
-            this.TelopDelayTTSTextBox.Text = src.DelayTextToSpeak;
-
-            // データソースをタグに突っ込んでおく
-            this.TelopDetailGroupBox.Tag = src;
-
-            // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
-            this.TelopSelectJobButton.ForeColor = src.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
-
-            // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
-            this.TelopSelectZoneButton.ForeColor = src.ZoneFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
-
-            // 条件設定ボタンの色を変える（未設定：黒、設定有：青）
-            this.TelopSetConditionButton.ForeColor =
-                (src.TimersMustRunningForStart.Length != 0 || src.TimersMustStoppingForStart.Length != 0) ?
-                Color.Blue :
-                Button.DefaultForeColor;
         }
     }
 }

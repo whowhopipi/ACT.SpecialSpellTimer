@@ -1153,4 +1153,20 @@
   <data name="TelopImportButton" xml:space="preserve">
     <value>가져오기</value>
   </data>
+  <data name="RDM" xml:space="preserve">
+    <value>Red Mage</value>
+    <comment>Red Mage</comment>
+  </data>
+  <data name="RDMLabel" xml:space="preserve">
+    <value>&lt;RDM&gt;</value>
+    <comment>&lt;RDM&gt;</comment>
+  </data>
+  <data name="SAM" xml:space="preserve">
+    <value>Samurai</value>
+    <comment>Samurai</comment>
+  </data>
+  <data name="SAMLabel" xml:space="preserve">
+    <value>&lt;SAM&gt;</value>
+    <comment>&lt;SAM&gt;</comment>
+  </data>
 </root>

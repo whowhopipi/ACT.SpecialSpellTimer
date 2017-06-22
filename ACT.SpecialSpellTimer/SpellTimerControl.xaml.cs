@@ -9,7 +9,6 @@
     using System.Windows.Media.Imaging;
 
     using ACT.SpecialSpellTimer.Image;
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>
@@ -35,9 +34,69 @@
         }
 
         /// <summary>
-        /// スペルのTitle
+        /// バーの色
         /// </summary>
-        public string SpellTitle { get; set; }
+        public string BarColor { get; set; }
+
+        /// <summary>
+        /// バーの高さ
+        /// </summary>
+        public int BarHeight { get; set; }
+
+        /// <summary>
+        /// バーOutlineの色
+        /// </summary>
+        public string BarOutlineColor { get; set; }
+
+        /// <summary>
+        /// バーの幅
+        /// </summary>
+        public int BarWidth { get; set; }
+
+        /// <summary>
+        /// Fontの色
+        /// </summary>
+        public string FontColor { get; set; }
+
+        /// <summary>
+        /// フォント
+        /// </summary>
+        public FontInfo FontInfo { get; set; }
+
+        /// <summary>
+        /// FontOutlineの色
+        /// </summary>
+        public string FontOutlineColor { get; set; }
+
+        /// <summary>
+        /// スペル名を非表示とするか？
+        /// </summary>
+        public bool HideSpellName { get; set; }
+
+        /// <summary>
+        /// プログレスバーを逆にするか？
+        /// </summary>
+        public bool IsReverse { get; set; }
+
+        /// <summary>
+        /// リキャストタイムを重ねて表示するか？
+        /// </summary>
+        public bool OverlapRecastTime { get; set; }
+
+        /// <summary>
+        /// リキャストの進捗率
+        /// </summary>
+        public double Progress { get; set; }
+
+        /// <summary>
+        /// 残りリキャストTime(秒数)
+        /// </summary>
+        public double RecastTime { get; set; }
+
+        /// <summary>
+        /// リキャスト中にアイコンの明度を下げるか？
+        /// </summary>
+        public bool ReduceIconBrightness { get; set; }
 
         /// <summary>
         /// スペルのIcon
@@ -50,53 +109,9 @@
         public int SpellIconSize { get; set; }
 
         /// <summary>
-        /// 残りリキャストTime(秒数)
+        /// スペルのTitle
         /// </summary>
-        public double RecastTime { get; set; }
-
-        /// <summary>
-        /// リキャストの進捗率
-        /// </summary>
-        public double Progress { get; set; }
-
-        /// <summary>
-        /// プログレスバーを逆にするか？
-        /// </summary>
-        public bool IsReverse { get; set; }
-
-        /// <summary>
-        /// スペル名を非表示とするか？
-        /// </summary>
-        public bool HideSpellName { get; set; }
-
-        /// <summary>
-        /// リキャストタイムを重ねて表示するか？
-        /// </summary>
-        public bool OverlapRecastTime { get; set; }
-
-        /// <summary>
-        /// リキャスト中にアイコンの明度を下げるか？
-        /// </summary>
-        public bool ReduceIconBrightness { get; set; }
-
-        /// <summary>
-        /// バーの色
-        /// </summary>
-        public string BarColor { get; set; }
-
-        /// <summary>
-        /// バーOutlineの色
-        /// </summary>
-        public string BarOutlineColor { get; set; }
-
-        /// <summary>
-        /// バーの幅
-        /// </summary>
-        public int BarWidth { get; set; }
-        /// <summary>
-        /// バーの高さ
-        /// </summary>
-        public int BarHeight { get; set; }
+        public string SpellTitle { get; set; }
 
         /// <summary>
         /// スペル表示領域の幅
@@ -109,38 +124,23 @@
             }
         }
 
-        /// <summary>
-        /// フォント
-        /// </summary>
-        public FontInfo FontInfo { get; set; }
+        /// <summary>バーのアニメーション用DoubleAnimation</summary>
+        private DoubleAnimation BarAnimation { get; set; }
 
-        /// <summary>
-        /// Fontの色
-        /// </summary>
-        public string FontColor { get; set; }
+        /// <summary>バーの背景のBrush</summary>
+        private SolidColorBrush BarBackBrush { get; set; }
 
-        /// <summary>
-        /// FontOutlineの色
-        /// </summary>
-        public string FontOutlineColor { get; set; }
+        /// <summary>バーのBrush</summary>
+        private SolidColorBrush BarBrush { get; set; }
+
+        /// <summary>バーのアウトラインのBrush</summary>
+        private SolidColorBrush BarOutlineBrush { get; set; }
 
         /// <summary>フォントのBrush</summary>
         private SolidColorBrush FontBrush { get; set; }
 
         /// <summary>フォントのアウトラインBrush</summary>
         private SolidColorBrush FontOutlineBrush { get; set; }
-
-        /// <summary>バーのBrush</summary>
-        private SolidColorBrush BarBrush { get; set; }
-
-        /// <summary>バーの背景のBrush</summary>
-        private SolidColorBrush BarBackBrush { get; set; }
-
-        /// <summary>バーのアウトラインのBrush</summary>
-        private SolidColorBrush BarOutlineBrush { get; set; }
-
-        /// <summary>バーのアニメーション用DoubleAnimation</summary>
-        private DoubleAnimation BarAnimation { get; set; }
 
         /// <summary>
         /// 描画を更新する
@@ -182,6 +182,50 @@
                 tb.Stroke = this.FontOutlineBrush;
                 tb.StrokeThickness = 0.5d * tb.FontSize / 13.0d;
             }
+        }
+
+        /// <summary>
+        /// バーのアニメーションを開始する
+        /// </summary>
+        public void StartBarAnimation()
+        {
+            if (this.BarWidth == 0)
+            {
+                return;
+            }
+
+            if (this.BarAnimation == null)
+            {
+                this.BarAnimation = new DoubleAnimation();
+                this.BarAnimation.AutoReverse = false;
+            }
+
+            var fps = (int)Math.Ceiling(this.BarWidth / this.RecastTime);
+            if (fps <= 0 || fps > Settings.Default.MaxFPS)
+            {
+                fps = Settings.Default.MaxFPS;
+            }
+
+            Timeline.SetDesiredFrameRate(this.BarAnimation, fps);
+
+            var currentWidth = this.IsReverse ?
+                (double)(this.BarWidth * (1.0d - this.Progress)) :
+                (double)(this.BarWidth * this.Progress);
+            if (this.IsReverse)
+            {
+                this.BarAnimation.From = currentWidth / this.BarWidth;
+                this.BarAnimation.To = 0;
+            }
+            else
+            {
+                this.BarAnimation.From = currentWidth / this.BarWidth;
+                this.BarAnimation.To = 1.0;
+            }
+
+            this.BarAnimation.Duration = new Duration(TimeSpan.FromSeconds(this.RecastTime));
+
+            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, this.BarAnimation);
         }
 
         /// <summary>
@@ -246,7 +290,6 @@
                     this.FontSize *
                     (this.FontWeight.ToOpenTypeWeight() / FontWeights.Normal.ToOpenTypeWeight()) /
                     13.0d;
-
             }
 
             if (this.HideSpellName)
@@ -311,50 +354,6 @@
             sw.Stop();
             Debug.WriteLine("Spell Refresh -> " + sw.ElapsedMilliseconds.ToString("N0") + "ms");
 #endif
-        }
-
-        /// <summary>
-        /// バーのアニメーションを開始する
-        /// </summary>
-        public void StartBarAnimation()
-        {
-            if (this.BarWidth == 0)
-            {
-                return;
-            }
-
-            if (this.BarAnimation == null)
-            {
-                this.BarAnimation = new DoubleAnimation();
-                this.BarAnimation.AutoReverse = false;
-            }
-
-            var fps = (int)Math.Ceiling(this.BarWidth / this.RecastTime);
-            if (fps <= 0 || fps > Settings.Default.MaxFPS)
-            {
-                fps = Settings.Default.MaxFPS;
-            }
-
-            Timeline.SetDesiredFrameRate(this.BarAnimation, fps);
-
-            var currentWidth = this.IsReverse ?
-                (double)(this.BarWidth * (1.0d - this.Progress)) :
-                (double)(this.BarWidth * this.Progress);
-            if (this.IsReverse)
-            {
-                this.BarAnimation.From = currentWidth / this.BarWidth;
-                this.BarAnimation.To = 0;
-            }
-            else
-            {
-                this.BarAnimation.From = currentWidth / this.BarWidth;
-                this.BarAnimation.To = 1.0;
-            }
-
-            this.BarAnimation.Duration = new Duration(TimeSpan.FromSeconds(this.RecastTime));
-
-            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
-            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, this.BarAnimation);
         }
     }
 }

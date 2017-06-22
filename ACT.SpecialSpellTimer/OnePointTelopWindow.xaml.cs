@@ -11,7 +11,6 @@
     using System.Windows.Threading;
 
     using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>
@@ -20,37 +19,14 @@
     public partial class OnePointTelopWindow : Window
     {
         /// <summary>
-        /// ドラッグ開始
-        /// </summary>
-        private Action<MouseEventArgs> DragOn;
-
-        /// <summary>
         /// ドラッグ終了
         /// </summary>
         private Action<MouseEventArgs> DragOff;
 
         /// <summary>
-        /// ドラッグ中か？
+        /// ドラッグ開始
         /// </summary>
-        public bool IsDragging { get; private set; }
-
-        /// <summary>フォントのBrush</summary>
-        private SolidColorBrush FontBrush { get; set; }
-
-        /// <summary>フォントのアウトラインBrush</summary>
-        private SolidColorBrush FontOutlineBrush { get; set; }
-
-        /// <summary>バーのBrush</summary>
-        private SolidColorBrush BarBrush { get; set; }
-
-        /// <summary>バーの背景のBrush</summary>
-        private SolidColorBrush BarBackBrush { get; set; }
-
-        /// <summary>バーのアウトラインのBrush</summary>
-        private SolidColorBrush BarOutlineBrush { get; set; }
-
-        /// <summary>背景色のBrush</summary>
-        private SolidColorBrush BackgroundBrush { get; set; }
+        private Action<MouseEventArgs> DragOn;
 
         /// <summary>
         /// コンストラクタ
@@ -107,20 +83,27 @@
         }
 
         /// <summary>
-        /// Loaded
+        /// ドラッグ中か？
         /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void OnePointTelopWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (this.DataSource != null)
-            {
-                this.Left = this.DataSource.Left;
-                this.Top = this.DataSource.Top;
-            }
+        public bool IsDragging { get; private set; }
 
-            this.Refresh();
-        }
+        /// <summary>背景色のBrush</summary>
+        private SolidColorBrush BackgroundBrush { get; set; }
+
+        /// <summary>バーの背景のBrush</summary>
+        private SolidColorBrush BarBackBrush { get; set; }
+
+        /// <summary>バーのBrush</summary>
+        private SolidColorBrush BarBrush { get; set; }
+
+        /// <summary>バーのアウトラインのBrush</summary>
+        private SolidColorBrush BarOutlineBrush { get; set; }
+
+        /// <summary>フォントのBrush</summary>
+        private SolidColorBrush FontBrush { get; set; }
+
+        /// <summary>フォントのアウトラインBrush</summary>
+        private SolidColorBrush FontOutlineBrush { get; set; }
 
         /// <summary>
         /// 描画を更新する
@@ -205,10 +188,10 @@
                 this.MessageTextBlock.SetFontInfo(this.DataSource.Font);
                 this.MessageTextBlock.Fill = this.FontBrush;
                 this.MessageTextBlock.Stroke = this.FontOutlineBrush;
-                this.MessageTextBlock.StrokeThickness = 
-                    0.65d * 
+                this.MessageTextBlock.StrokeThickness =
+                    0.65d *
                     this.MessageTextBlock.FontSize *
-                    (this.MessageTextBlock.FontWeight.ToOpenTypeWeight() / FontWeights.Normal.ToOpenTypeWeight()) / 
+                    (this.MessageTextBlock.FontWeight.ToOpenTypeWeight() / FontWeights.Normal.ToOpenTypeWeight()) /
                     13.0d;
             }
 
@@ -293,15 +276,26 @@
             }
         }
 
+        /// <summary>
+        /// Loaded
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnePointTelopWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.DataSource != null)
+            {
+                this.Left = this.DataSource.Left;
+                this.Top = this.DataSource.Top;
+            }
+
+            this.Refresh();
+        }
+
         #region フォーカスを奪わない対策
 
-        [DllImport("user32.dll")]
-        private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
         private const int GWL_EXSTYLE = -20;
+
         private const int WS_EX_NOACTIVATE = 0x08000000;
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -311,6 +305,12 @@
             SetWindowLong(helper.Handle, GWL_EXSTYLE, GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
         }
 
-        #endregion
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        #endregion フォーカスを奪わない対策
     }
 }

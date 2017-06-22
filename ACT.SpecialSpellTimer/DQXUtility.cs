@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>
@@ -12,6 +10,30 @@
     /// </summary>
     public static class DQXUtility
     {
+        /// <summary>
+        /// パーティメンバリスト
+        /// </summary>
+        public static List<string> PartyMemberList = new List<string>();
+
+        /// <summary>
+        /// パーティメンバ追加正規表現
+        /// </summary>
+        private static readonly IReadOnlyCollection<Regex> PartyAddedRegex = new List<Regex>
+        {
+            new Regex(@"\t(?<member>\S+?)が\s+仲間に加わった！", RegexOptions.Compiled),
+            new Regex(@"\t(?<member>\S+?)の\s+仲間になった！", RegexOptions.Compiled),
+        };
+
+        /// <summary>
+        /// パーティ解散ワード
+        /// </summary>
+        private static readonly IReadOnlyCollection<string> PartyBreakWords = new List<string>
+        {
+            "仲間から はずれました",
+            "パーティを 解散しました",
+            "reset dqx party",
+        };
+
         /// <summary>
         /// パーティ状況の変更ワード
         /// </summary>
@@ -26,25 +48,6 @@
         };
 
         /// <summary>
-        /// パーティ解散ワード
-        /// </summary>
-        private static readonly IReadOnlyCollection<string> PartyBreakWords = new List<string>
-        {
-            "仲間から はずれました",
-            "パーティを 解散しました",
-            "reset dqx party",
-        };
-
-        /// <summary>
-        /// パーティメンバ追加正規表現
-        /// </summary>
-        private static readonly IReadOnlyCollection<Regex> PartyAddedRegex = new List<Regex>
-        {
-            new Regex(@"\t(?<member>\S+?)が\s+仲間に加わった！", RegexOptions.Compiled),
-            new Regex(@"\t(?<member>\S+?)の\s+仲間になった！", RegexOptions.Compiled),
-        };
-
-        /// <summary>
         /// パーティメンバ減少正規表現
         /// </summary>
         private static readonly IReadOnlyCollection<Regex> PartyLeftRegex = new List<Regex>
@@ -56,11 +59,6 @@
         /// プレイヤー名
         /// </summary>
         public static string PlayerName { get; set; }
-
-        /// <summary>
-        /// パーティメンバリスト
-        /// </summary>
-        public static List<string> PartyMemberList = new List<string>();
 
         /// <summary>
         /// パーティに変更があったか？
@@ -148,27 +146,6 @@
         }
 
         /// <summary>
-        /// キーワードを再生成する
-        /// </summary>
-        public static void RefeshKeywords()
-        {
-            if (!Settings.Default.DQXUtilityEnabled)
-            {
-                return;
-            }
-
-            // 置換後のマッチングキーワードを消去する
-            SpellTimerTable.ClearReplacedKeywords();
-            OnePointTelopTable.Default.ClearReplacedKeywords();
-
-            // スペルタイマーの再描画を行う
-            SpellTimerTable.ClearUpdateFlags();
-
-            // モニタタブの情報を無効にする
-            SpecialSpellTimerPlugin.ConfigPanel.InvalidatePlaceholders();
-        }
-
-        /// <summary>
         /// キーワードを生成する
         /// </summary>
         /// <param name="keyword">元のキーワード</param>
@@ -231,6 +208,27 @@
 #endif
 
             return keyword;
+        }
+
+        /// <summary>
+        /// キーワードを再生成する
+        /// </summary>
+        public static void RefeshKeywords()
+        {
+            if (!Settings.Default.DQXUtilityEnabled)
+            {
+                return;
+            }
+
+            // 置換後のマッチングキーワードを消去する
+            SpellTimerTable.ClearReplacedKeywords();
+            OnePointTelopTable.Default.ClearReplacedKeywords();
+
+            // スペルタイマーの再描画を行う
+            SpellTimerTable.ClearUpdateFlags();
+
+            // モニタタブの情報を無効にする
+            SpecialSpellTimerPlugin.ConfigPanel.InvalidatePlaceholders();
         }
     }
 }

@@ -3,26 +3,20 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
-    using ACT.SpecialSpellTimer.Properties;
-
     /// <summary>
     /// 設定Panel
     /// </summary>
     public partial class ConfigPanel : UserControl
     {
-        private int timerCount;
-
         private List<CombatLog> bindedCombatLogList = new List<CombatLog>();
-
         private SaveFileDialog combatAnalysisCSVExportSaveFileDialog = new SaveFileDialog();
-
+        private int timerCount;
 
         /// <summary>
         /// 戦闘アナライザの有効性
@@ -37,152 +31,6 @@
             {
                 this.CombatLogEnabledCheckBox.Checked = value;
             }
-        }
-
-        /// <summary>
-        /// ロード
-        /// </summary>
-        private void LoadCombatAnalyzer()
-        {
-            this.CombatLogEnabledCheckBox.Checked = Settings.Default.CombatLogEnabled;
-            this.CombatLogBufferSizeNumericUpDown.Value = Settings.Default.CombatLogBufferSize;
-
-            var saveSettings = new Action(() =>
-            {
-                Settings.Default.CombatLogEnabled = this.CombatLogEnabledCheckBox.Checked;
-                Settings.Default.CombatLogBufferSize = (long)this.CombatLogBufferSizeNumericUpDown.Value;
-                Settings.Default.Save();
-            });
-
-            this.CombatLogEnabledCheckBox.CheckedChanged += async (s, e) =>
-            {
-                saveSettings();
-
-                var t = Task.Run(() =>
-                {
-                    if (Settings.Default.CombatLogEnabled)
-                    {
-                        CombatAnalyzer.Default.ClearLogBuffer();
-                        CombatAnalyzer.Default.StartPoller();
-                    }
-                    else
-                    {
-                        CombatAnalyzer.Default.EndPoller();
-                        CombatAnalyzer.Default.ClearLogBuffer();
-                    }
-                });
-
-                await t;
-            };
-
-            this.CombatLogBufferSizeNumericUpDown.ValueChanged += (s, e) => saveSettings();
-
-            this.CombatAnalyzingLabel.Text = string.Empty;
-            this.CombatAnalyzingLabel.Visible = false;
-
-            this.CombatAnalyzingTimer.Tick += (s, e) =>
-            {
-                this.timerCount++;
-
-                if (this.timerCount >= 5)
-                {
-                    this.timerCount = 0;
-                }
-
-                switch (this.timerCount)
-                {
-                    case 0:
-                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait1");
-                        break;
-                    case 1:
-                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait2");
-                        break;
-                    case 2:
-                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait3");
-                        break;
-                    case 3:
-                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait4");
-                        break;
-                    case 4:
-                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait5");
-                        break;
-                }
-
-                Application.DoEvents();
-            };
-
-            this.AnalyzeCombatButton.Click += (s, e) =>
-            {
-                this.AnalyzeCombatButton.Enabled = false;
-                this.CombatAnalyzingLabel.Visible = true;
-                this.CombatAnalyzingTimer.Start();
-
-                Task.Run(() =>
-                {
-                    CombatAnalyzer.Default.AnalyzeLog();
-                }).ContinueWith((t) =>
-                {
-                    if (t != null)
-                    {
-                        t.Dispose();
-                    }
-
-                    this.ShowCombatLog(CombatAnalyzer.Default.CurrentCombatLogList);
-                });
-            };
-
-            // コンテキストメニューを設定する
-            this.CASelectAllItem.Click += (s, e) => this.SelectAll();
-            this.CACopyLogItem.Click += (s, e) => this.CopyLog();
-            this.CACopyLogDetailItem.Click += (s, e) => this.CopyLogDetail();
-
-            // 経過秒の起点を変える
-            this.CASetOriginItem.Click += (s, e) =>
-            {
-                if (this.CombatLogListView.SelectedItems.Count < 1)
-                {
-                    return;
-                }
-
-                var ds = this.CombatLogListView.SelectedItems[0].Tag as CombatLog;
-                if (ds == null)
-                {
-                    return;
-                }
-
-                // 起点のタイムスタンプを取り出す
-                var originTimeStamp = ds.TimeStamp;
-
-                this.AnalyzeCombatButton.Enabled = false;
-                this.CombatAnalyzingLabel.Visible = true;
-                this.CombatAnalyzingTimer.Start();
-
-                Task.Run(() =>
-                {
-                    // 経過秒を計算し直す
-                    foreach (var log in this.bindedCombatLogList.AsParallel())
-                    {
-                        if ((log.TimeStamp.Ticks % 10) == 0)
-                        {
-                            Thread.Sleep(1);
-                        }
-
-                        log.IsOrigin = false;
-                        log.TimeStampElapted = (log.TimeStamp - originTimeStamp).TotalSeconds;
-                    }
-
-                    // 今回の起点だけマークする
-                    ds.IsOrigin = true;
-                }).ContinueWith((t) =>
-                {
-                    if (t != null)
-                    {
-                        t.Dispose();
-                    }
-
-                    this.ShowCombatLog();
-                });
-            };
         }
 
         /// <summary>
@@ -298,17 +146,6 @@
         }
 
         /// <summary>
-        /// 全て選択する
-        /// </summary>
-        private void SelectAll()
-        {
-            foreach (ListViewItem item in this.CombatLogListView.Items)
-            {
-                item.Selected = true;
-            }
-        }
-
-        /// <summary>
         /// ログをコピーする
         /// </summary>
         private void CopyLog()
@@ -350,6 +187,167 @@
             }
 
             Clipboard.SetText(sb.ToString());
+        }
+
+        /// <summary>
+        /// ロード
+        /// </summary>
+        private void LoadCombatAnalyzer()
+        {
+            this.CombatLogEnabledCheckBox.Checked = Settings.Default.CombatLogEnabled;
+            this.CombatLogBufferSizeNumericUpDown.Value = Settings.Default.CombatLogBufferSize;
+
+            var saveSettings = new Action(() =>
+            {
+                Settings.Default.CombatLogEnabled = this.CombatLogEnabledCheckBox.Checked;
+                Settings.Default.CombatLogBufferSize = (long)this.CombatLogBufferSizeNumericUpDown.Value;
+                Settings.Default.Save();
+            });
+
+            this.CombatLogEnabledCheckBox.CheckedChanged += async (s, e) =>
+            {
+                saveSettings();
+
+                var t = Task.Run(() =>
+                {
+                    if (Settings.Default.CombatLogEnabled)
+                    {
+                        CombatAnalyzer.Default.ClearLogBuffer();
+                        CombatAnalyzer.Default.StartPoller();
+                    }
+                    else
+                    {
+                        CombatAnalyzer.Default.EndPoller();
+                        CombatAnalyzer.Default.ClearLogBuffer();
+                    }
+                });
+
+                await t;
+            };
+
+            this.CombatLogBufferSizeNumericUpDown.ValueChanged += (s, e) => saveSettings();
+
+            this.CombatAnalyzingLabel.Text = string.Empty;
+            this.CombatAnalyzingLabel.Visible = false;
+
+            this.CombatAnalyzingTimer.Tick += (s, e) =>
+            {
+                this.timerCount++;
+
+                if (this.timerCount >= 5)
+                {
+                    this.timerCount = 0;
+                }
+
+                switch (this.timerCount)
+                {
+                    case 0:
+                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait1");
+                        break;
+
+                    case 1:
+                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait2");
+                        break;
+
+                    case 2:
+                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait3");
+                        break;
+
+                    case 3:
+                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait4");
+                        break;
+
+                    case 4:
+                        this.CombatAnalyzingLabel.Text = Utility.Translate.Get("PleaseWait5");
+                        break;
+                }
+
+                Application.DoEvents();
+            };
+
+            this.AnalyzeCombatButton.Click += (s, e) =>
+            {
+                this.AnalyzeCombatButton.Enabled = false;
+                this.CombatAnalyzingLabel.Visible = true;
+                this.CombatAnalyzingTimer.Start();
+
+                Task.Run(() =>
+                {
+                    CombatAnalyzer.Default.AnalyzeLog();
+                }).ContinueWith((t) =>
+                {
+                    if (t != null)
+                    {
+                        t.Dispose();
+                    }
+
+                    this.ShowCombatLog(CombatAnalyzer.Default.CurrentCombatLogList);
+                });
+            };
+
+            // コンテキストメニューを設定する
+            this.CASelectAllItem.Click += (s, e) => this.SelectAll();
+            this.CACopyLogItem.Click += (s, e) => this.CopyLog();
+            this.CACopyLogDetailItem.Click += (s, e) => this.CopyLogDetail();
+
+            // 経過秒の起点を変える
+            this.CASetOriginItem.Click += (s, e) =>
+            {
+                if (this.CombatLogListView.SelectedItems.Count < 1)
+                {
+                    return;
+                }
+
+                var ds = this.CombatLogListView.SelectedItems[0].Tag as CombatLog;
+                if (ds == null)
+                {
+                    return;
+                }
+
+                // 起点のタイムスタンプを取り出す
+                var originTimeStamp = ds.TimeStamp;
+
+                this.AnalyzeCombatButton.Enabled = false;
+                this.CombatAnalyzingLabel.Visible = true;
+                this.CombatAnalyzingTimer.Start();
+
+                Task.Run(() =>
+                {
+                    // 経過秒を計算し直す
+                    foreach (var log in this.bindedCombatLogList.AsParallel())
+                    {
+                        if ((log.TimeStamp.Ticks % 10) == 0)
+                        {
+                            Thread.Sleep(1);
+                        }
+
+                        log.IsOrigin = false;
+                        log.TimeStampElapted = (log.TimeStamp - originTimeStamp).TotalSeconds;
+                    }
+
+                    // 今回の起点だけマークする
+                    ds.IsOrigin = true;
+                }).ContinueWith((t) =>
+                {
+                    if (t != null)
+                    {
+                        t.Dispose();
+                    }
+
+                    this.ShowCombatLog();
+                });
+            };
+        }
+
+        /// <summary>
+        /// 全て選択する
+        /// </summary>
+        private void SelectAll()
+        {
+            foreach (ListViewItem item in this.CombatLogListView.Items)
+            {
+                item.Selected = true;
+            }
         }
     }
 }

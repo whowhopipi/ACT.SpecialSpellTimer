@@ -44,6 +44,24 @@
         public string JobFilter { get; set; }
 
         /// <summary>
+        /// OKボタン Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void OKButton_Click(object sender, EventArgs e)
+        {
+            var jobs = new List<string>();
+            foreach (Job item in this.JobsCheckedListBox.CheckedItems)
+            {
+                jobs.Add(item.JobId.ToString());
+            }
+
+            this.JobFilter = string.Join(
+                ",",
+                jobs.ToArray());
+        }
+
+        /// <summary>
         /// ロード
         /// </summary>
         /// <param name="sender">イベント発生元</param>
@@ -72,24 +90,6 @@
             {
                 this.Font = this.Owner.Font;
             }
-        }
-
-        /// <summary>
-        /// OKボタン Click
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void OKButton_Click(object sender, EventArgs e)
-        {
-            var jobs = new List<string>();
-            foreach (Job item in this.JobsCheckedListBox.CheckedItems)
-            {
-                jobs.Add(item.JobId.ToString());
-            }
-
-            this.JobFilter = string.Join(
-                ",",
-                jobs.ToArray());
         }
     }
 }

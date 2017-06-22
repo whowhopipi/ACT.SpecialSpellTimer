@@ -1582,6 +1582,24 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   赤魔道士 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string RDM {
+            get {
+                return ResourceManager.GetString("RDM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;RDM&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string RDMLabel {
+            get {
+                return ResourceManager.GetString("RDMLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   スペルタイマが完了した時のテキスト(Ready) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ReadyTextLabel {
@@ -1749,6 +1767,24 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string ROG {
             get {
                 return ResourceManager.GetString("ROG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   侍 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SAM {
+            get {
+                return ResourceManager.GetString("SAM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   &lt;SAM&gt; に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SAMLabel {
+            get {
+                return ResourceManager.GetString("SAMLabel", resourceCulture);
             }
         }
         

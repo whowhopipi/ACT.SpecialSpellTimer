@@ -1,16 +1,14 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
 
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
-    using System.Collections;
 
     /// <summary>
     /// Type of the entity

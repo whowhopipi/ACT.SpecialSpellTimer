@@ -10,7 +10,6 @@
     using System.Xml.Serialization;
 
     using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
 

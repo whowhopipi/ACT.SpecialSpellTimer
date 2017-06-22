@@ -12,7 +12,6 @@
     using System.Windows.Media;
 
     using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>
@@ -20,6 +19,16 @@
     /// </summary>
     public partial class SpellTimerListWindow : Window
     {
+        /// <summary>
+        /// ドラッグ終了
+        /// </summary>
+        private Action<MouseEventArgs> DragOff;
+
+        /// <summary>
+        /// ドラッグ開始
+        /// </summary>
+        private Action<MouseEventArgs> DragOn;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -69,6 +78,16 @@
         }
 
         /// <summary>
+        /// ドラッグ中か？
+        /// </summary>
+        public bool IsDragging { get; private set; }
+
+        /// <summary>
+        /// 水平レイアウトか？
+        /// </summary>
+        public bool IsHorizontal { get; set; }
+
+        /// <summary>
         /// このPanelの名前
         /// </summary>
         public string PanelName { get; set; }
@@ -79,19 +98,9 @@
         public int SpellMargin { get; set; }
 
         /// <summary>
-        /// 水平レイアウトか？
-        /// </summary>
-        public bool IsHorizontal { get; set; }
-
-        /// <summary>
         /// SpellTimerを固定位置に表示するか？
         /// </summary>
         public bool SpellPositionFixed { get; set; }
-
-        /// <summary>
-        /// 扱うSpellTimerのリスト
-        /// </summary>
-        public SpellTimer[] SpellTimers { get; set; }
 
         /// <summary>
         /// 扱っているスペルタイマコントロールのリスト
@@ -99,46 +108,12 @@
         public Dictionary<long, SpellTimerControl> SpellTimerControls { get; private set; }
 
         /// <summary>
-        /// ドラッグ中か？
+        /// 扱うSpellTimerのリスト
         /// </summary>
-        public bool IsDragging { get; private set; }
-
-        /// <summary>
-        /// ドラッグ開始
-        /// </summary>
-        private Action<MouseEventArgs> DragOn;
-
-        /// <summary>
-        /// ドラッグ終了
-        /// </summary>
-        private Action<MouseEventArgs> DragOff;
+        public SpellTimer[] SpellTimers { get; set; }
 
         /// <summary>背景色のBrush</summary>
         private SolidColorBrush BackgroundBrush { get; set; }
-
-        /// <summary>
-        /// Loaded
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void SpellTimerListWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Panelの位置を復元する
-            var setting = PanelSettings.Default.SettingsTable
-                .Where(x => x.PanelName == this.PanelName)
-                .FirstOrDefault();
-
-            if (setting != null)
-            {
-                this.Left = setting.Left;
-                this.Top = setting.Top;
-                this.SpellMargin = setting.Margin;
-                this.IsHorizontal = setting.Horizontal;
-                this.SpellPositionFixed = setting.FixedPositionSpell;
-            }
-
-            this.RefreshSpellTimer();
-        }
 
         /// <summary>
         /// SpellTimerの描画をRefreshする
@@ -166,7 +141,7 @@
                 x;
 
             // タイムアップしたものを除外する
-            if ((Settings.Default.TimeOfHideSpell > 0.0d) && 
+            if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
                 !this.SpellPositionFixed)
             {
                 spells =
@@ -293,7 +268,7 @@
                 c.BarOutlineColor = spell.BarOutlineColor;
 
                 // 一度もログにマッチしていない時はバーを初期化する
-                if (spell.MatchDateTime == DateTime.MinValue && 
+                if (spell.MatchDateTime == DateTime.MinValue &&
                     !spell.UpdateDone)
                 {
                     c.Progress = 1.0;
@@ -333,7 +308,7 @@
 
                 displayList.Add(c);
 
-                if ((Settings.Default.TimeOfHideSpell > 0.0d) && 
+                if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
                     this.SpellPositionFixed)
                 {
                     if (!spell.DontHide &&
@@ -422,15 +397,34 @@
             }
         }
 
+        /// <summary>
+        /// Loaded
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void SpellTimerListWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Panelの位置を復元する
+            var setting = PanelSettings.Default.SettingsTable
+                .Where(x => x.PanelName == this.PanelName)
+                .FirstOrDefault();
+
+            if (setting != null)
+            {
+                this.Left = setting.Left;
+                this.Top = setting.Top;
+                this.SpellMargin = setting.Margin;
+                this.IsHorizontal = setting.Horizontal;
+                this.SpellPositionFixed = setting.FixedPositionSpell;
+            }
+
+            this.RefreshSpellTimer();
+        }
+
         #region フォーカスを奪わない対策
 
-        [DllImport("user32.dll")]
-        private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
         private const int GWL_EXSTYLE = -20;
+
         private const int WS_EX_NOACTIVATE = 0x08000000;
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -440,6 +434,12 @@
             SetWindowLong(helper.Handle, GWL_EXSTYLE, GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
         }
 
-        #endregion
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        #endregion フォーカスを奪わない対策
     }
 }

@@ -5,17 +5,15 @@
     using System.Diagnostics;
     using System.Linq;
 
-    using ACT.SpecialSpellTimer.Properties;
-
     /// <summary>
     /// FF14Pluginヘルパーの拡張部分
     /// </summary>
     public static partial class FF14PluginHelper
     {
         /// <summary>
-        /// プレイヤー情報
+        /// 空のCombatantリスト
         /// </summary>
-        private static Combatant player;
+        private static readonly List<Combatant> emptyCombatantList = new List<Combatant>();
 
         /// <summary>
         /// プレイヤー情報を最後に取得した日時
@@ -23,50 +21,14 @@
         private static DateTime lastPlayerDateTime = DateTime.MinValue;
 
         /// <summary>
+        /// プレイヤー情報
+        /// </summary>
+        private static Combatant player;
+
+        /// <summary>
         /// プレイヤ情報の更新間隔
         /// </summary>
         private static double playerInfoRefreshInterval = Settings.Default.PlayerInfoRefreshInterval;
-
-        /// <summary>
-        /// 空のCombatantリスト
-        /// </summary>
-        private static readonly List<Combatant> emptyCombatantList = new List<Combatant>();
-
-        /// <summary>
-        /// プレイヤー情報を取得する
-        /// </summary>
-        /// <returns>プレイヤー情報</returns>
-        public static Combatant GetPlayer()
-        {
-            // FFXIV以外の使用？
-            if (Settings.Default.UseOtherThanFFXIV)
-            {
-                return null;
-            }
-
-            // 3分以上経過した？
-            if (player == null ||
-                lastPlayerDateTime <= DateTime.MinValue ||
-                (DateTime.Now - lastPlayerDateTime).TotalMinutes >= playerInfoRefreshInterval)
-            {
-                RefreshPlayer();
-            }
-
-            return player;
-        }
-
-        /// <summary>
-        /// プレイヤ情報をリフレッシュする
-        /// </summary>
-        public static void RefreshPlayer()
-        {
-            var list = FF14PluginHelper.GetCombatantList();
-            if (list.Count > 0)
-            {
-                player = list[0];
-                lastPlayerDateTime = DateTime.Now;
-            }
-        }
 
         /// <summary>
         /// パーティの戦闘メンバリストを取得する
@@ -113,6 +75,42 @@
             }
 
             return combatListParty;
+        }
+
+        /// <summary>
+        /// プレイヤー情報を取得する
+        /// </summary>
+        /// <returns>プレイヤー情報</returns>
+        public static Combatant GetPlayer()
+        {
+            // FFXIV以外の使用？
+            if (Settings.Default.UseOtherThanFFXIV)
+            {
+                return null;
+            }
+
+            // 3分以上経過した？
+            if (player == null ||
+                lastPlayerDateTime <= DateTime.MinValue ||
+                (DateTime.Now - lastPlayerDateTime).TotalMinutes >= playerInfoRefreshInterval)
+            {
+                RefreshPlayer();
+            }
+
+            return player;
+        }
+
+        /// <summary>
+        /// プレイヤ情報をリフレッシュする
+        /// </summary>
+        public static void RefreshPlayer()
+        {
+            var list = FF14PluginHelper.GetCombatantList();
+            if (list.Count > 0)
+            {
+                player = list[0];
+                lastPlayerDateTime = DateTime.Now;
+            }
         }
     }
 }

@@ -9,21 +9,113 @@
 
     public class Settings
     {
+        public static Settings def = new Settings();
         private string xmlpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Advanced Combat Tracker\\Config\\ACT.SpecialSpellTimer.config.xml";
 
-        private uint ColorToInt(Color color)
+        public Settings()
         {
-            return (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | (color.B << 0));
+            Dictionary<string, object> def = DefaultValue;
+            foreach (KeyValuePair<string, object> v in def)
+            {
+                GetType().GetProperty(v.Key).SetValue(this, v.Value);
+            }
+
+            Load();
         }
 
-        private Color IntToColor(uint color)
+        public static Settings Default
         {
-            byte a = (byte)(color >> 24);
-            byte r = (byte)(color >> 16);
-            byte g = (byte)(color >> 8);
-            byte b = (byte)(color >> 0);
-            return Color.FromArgb(a, r, g, b);
+            get
+            {
+                return def;
+            }
+            set
+            {
+                def = value;
+            }
         }
+
+        public bool AutoSortEnabled { get; set; }
+
+        public bool AutoSortReverse { get; set; }
+
+        public Color BackgroundColor { get; set; }
+
+        public bool ClickThroughEnabled { get; set; }
+
+        public long CombatLogBufferSize { get; set; }
+
+        public bool CombatLogEnabled { get; set; }
+
+        public bool DetectPacketDump { get; set; }
+
+        public string DQXPlayerName { get; set; }
+
+        public bool DQXUtilityEnabled { get; set; }
+
+        public bool EnabledNotifyNormalSpellTimer { get; set; }
+
+        public bool EnabledPartyMemberPlaceholder { get; set; }
+
+        public bool EnabledSpellTimerNoDecimal { get; set; }
+
+        public Font Font { get; set; }
+
+        public Color FontColor { get; set; }
+
+        public Color FontOutlineColor { get; set; }
+
+        public bool HideWhenNotActive { get; set; }
+
+        public string Language { get; set; }
+
+        public DateTime LastUpdateDateTime { get; set; }
+
+        public long LogPollSleepInterval { get; set; }
+
+        public int MaxFPS { get; set; }
+
+        public string NotifyNormalSpellTimerPrefix { get; set; }
+
+        public int Opacity { get; set; }
+
+        public bool OverlayForceVisible { get; set; }
+
+        public bool OverlayVisible { get; set; }
+
+        public string OverText { get; set; }
+
+        public double PlayerInfoRefreshInterval { get; set; }
+
+        public Color ProgressBarColor { get; set; }
+
+        public Color ProgressBarOutlineColor { get; set; }
+
+        public Size ProgressBarSize { get; set; }
+
+        public string ReadyText { get; set; }
+
+        public int ReduceIconBrightness { get; set; }
+
+        public long RefreshInterval { get; set; }
+
+        public bool RemoveTooltipSymbols { get; set; }
+
+        public bool ResetOnWipeOut { get; set; }
+
+        public bool SaveLogEnabled { get; set; }
+
+        public string SaveLogFile { get; set; }
+
+        public bool SimpleRegex { get; set; }
+
+        public bool TelopAlwaysVisible { get; set; }
+
+        public double TimeOfHideSpell { get; set; }
+
+        public double UpdateCheckInterval { get; set; }
+
+        public bool UseOtherThanFFXIV { get; set; }
 
         private Dictionary<string, object> DefaultValue
         {
@@ -73,6 +165,81 @@
                 dic.Add("DetectPacketDump", false);
 
                 return dic;
+            }
+        }
+
+        public void Load()
+        {
+            if (File.Exists(xmlpath))
+            {
+                XmlDocument xd = new XmlDocument();
+                xd.Load(xmlpath);
+
+                foreach (XmlElement xe in xd.SelectNodes("/Config/SettingsSerializer/*"))
+                {
+                    try
+                    {
+                        string name = xe.GetAttribute("Name");
+                        string value = xe.GetAttribute("Value");
+                        PropertyInfo prop = GetType().GetProperty(name);
+
+                        switch (xe.Name)
+                        {
+                            case "Font":
+                                prop.SetValue(this, new FontConverter().ConvertFromString(value));
+                                break;
+
+                            case "Color":
+                                prop.SetValue(this, IntToColor(Convert.ToUInt32(value)));
+                                break;
+
+                            case "Boolean":
+                                prop.SetValue(this, (value == "True" ? true : false));
+                                break;
+
+                            case "Double":
+                                prop.SetValue(this, Convert.ToDouble(value));
+                                break;
+
+                            case "Int64":
+                                prop.SetValue(this, Convert.ToInt64(value));
+                                break;
+
+                            case "Int32":
+                                prop.SetValue(this, Convert.ToInt32(value));
+                                break;
+
+                            case "String":
+                                prop.SetValue(this, value.Trim());
+                                break;
+
+                            case "Size":
+                                int w = 0, h = 0;
+                                foreach (XmlElement sizeattr in xe.ChildNodes)
+                                {
+                                    switch (sizeattr.Name)
+                                    {
+                                        case "Width":
+                                            w = Convert.ToInt32(sizeattr.InnerText);
+                                            break;
+
+                                        case "Height":
+                                            h = Convert.ToInt32(sizeattr.InnerText);
+                                            break;
+                                    }
+                                }
+                                prop.SetValue(this, new Size(w, h));
+                                break;
+
+                            case "DateTime":
+                                prop.SetValue(this, DateTime.Parse(value));
+                                break;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
             }
         }
 
@@ -141,145 +308,18 @@
             xd.Save(xmlpath);
         }
 
-        public void Load()
+        private uint ColorToInt(Color color)
         {
-            if (File.Exists(xmlpath))
-            {
-                XmlDocument xd = new XmlDocument();
-                xd.Load(xmlpath);
-
-                foreach (XmlElement xe in xd.SelectNodes("/Config/SettingsSerializer/*"))
-                {
-                    try
-                    {
-                        string name = xe.GetAttribute("Name");
-                        string value = xe.GetAttribute("Value");
-                        PropertyInfo prop = GetType().GetProperty(name);
-
-                        switch (xe.Name)
-                        {
-                            case "Font":
-                                prop.SetValue(this, new FontConverter().ConvertFromString(value));
-                                break;
-
-                            case "Color":
-                                prop.SetValue(this, IntToColor(Convert.ToUInt32(value)));
-                                break;
-
-                            case "Boolean":
-                                prop.SetValue(this, (value == "True" ? true : false));
-                                break;
-
-                            case "Double":
-                                prop.SetValue(this, Convert.ToDouble(value));
-                                break;
-
-                            case "Int64":
-                                prop.SetValue(this, Convert.ToInt64(value));
-                                break;
-
-                            case "Int32":
-                                prop.SetValue(this, Convert.ToInt32(value));
-                                break;
-
-                            case "String":
-                                prop.SetValue(this, value.Trim());
-                                break;
-
-                            case "Size":
-                                int w = 0, h = 0;
-                                foreach (XmlElement sizeattr in xe.ChildNodes)
-                                {
-                                    switch (sizeattr.Name)
-                                    {
-                                        case "Width":
-                                            w = Convert.ToInt32(sizeattr.InnerText);
-                                            break;
-                                        case "Height":
-                                            h = Convert.ToInt32(sizeattr.InnerText);
-                                            break;
-                                    }
-                                }
-                                prop.SetValue(this, new Size(w, h));
-                                break;
-
-                            case "DateTime":
-                                prop.SetValue(this, DateTime.Parse(value));
-                                break;
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
+            return (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | (color.B << 0));
         }
 
-        public Settings()
+        private Color IntToColor(uint color)
         {
-            Dictionary<string, object> def = DefaultValue;
-            foreach (KeyValuePair<string, object> v in def)
-            {
-                GetType().GetProperty(v.Key).SetValue(this, v.Value);
-            }
-
-            Load();
+            byte a = (byte)(color >> 24);
+            byte r = (byte)(color >> 16);
+            byte g = (byte)(color >> 8);
+            byte b = (byte)(color >> 0);
+            return Color.FromArgb(a, r, g, b);
         }
-
-        public static Settings def = new Settings();
-
-        public static Settings Default
-        {
-            get
-            {
-                return def;
-            }
-            set
-            {
-                def = value;
-            }
-        }
-
-        public DateTime LastUpdateDateTime { get; set; }
-        public Size ProgressBarSize { get; set; }
-        public Color BackgroundColor { get; set; }
-        public Color FontColor { get; set; }
-        public Color FontOutlineColor { get; set; }
-        public Color ProgressBarColor { get; set; }
-        public Color ProgressBarOutlineColor { get; set; }
-        public Font Font { get; set; }
-        public long RefreshInterval { get; set; }
-        public long CombatLogBufferSize { get; set; }
-        public long LogPollSleepInterval { get; set; }
-        public bool CombatLogEnabled { get; set; }
-        public bool OverlayForceVisible { get; set; }
-        public bool OverlayVisible { get; set; }
-        public bool AutoSortEnabled { get; set; }
-        public bool ClickThroughEnabled { get; set; }
-        public bool AutoSortReverse { get; set; }
-        public bool TelopAlwaysVisible { get; set; }
-        public bool EnabledPartyMemberPlaceholder { get; set; }
-        public bool EnabledSpellTimerNoDecimal { get; set; }
-        public bool EnabledNotifyNormalSpellTimer { get; set; }
-        public bool SaveLogEnabled { get; set; }
-        public bool HideWhenNotActive { get; set; }
-        public bool UseOtherThanFFXIV { get; set; }
-        public bool DQXUtilityEnabled { get; set; }
-        public bool ResetOnWipeOut { get; set; }
-        public bool SimpleRegex { get; set; }
-        public bool RemoveTooltipSymbols { get; set; }
-        public bool DetectPacketDump { get; set; }
-        public double TimeOfHideSpell { get; set; }
-        public double PlayerInfoRefreshInterval { get; set; }
-        public double UpdateCheckInterval { get; set; }
-        public string DQXPlayerName { get; set; }
-        public string Language { get; set; }
-        public string NotifyNormalSpellTimerPrefix { get; set; }
-        public string OverText { get; set; }
-        public string ReadyText { get; set; }
-        public string SaveLogFile { get; set; }
-        public int MaxFPS { get; set; }
-        public int Opacity { get; set; }
-        public int ReduceIconBrightness { get; set; }
     }
 }

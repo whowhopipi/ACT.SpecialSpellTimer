@@ -3,35 +3,6 @@
     using System;
 
     /// <summary>
-    /// 戦闘ログ
-    /// </summary>
-    public class CombatLog
-    {
-        public CombatLog()
-        {
-            this.Raw = string.Empty;
-            this.Actor = string.Empty;
-            this.Action = string.Empty;
-            this.Target = string.Empty;
-            this.LogTypeName = string.Empty;
-        }
-
-        public long ID { get; set; }
-        public bool IsOrigin { get; set; }
-        public DateTime TimeStamp { get; set; }
-        public double TimeStampElapted { get; set; }
-        public string Raw { get; set; }
-        public CombatLogType LogType { get; set; }
-        public string LogTypeName { get; set; }
-        public string Actor { get; set; }
-        public string Target { get; set; }
-        public string Action { get; set; }
-        public double CastTime { get; set; }
-        public double Span { get; set; }
-        public decimal HPRate { get; set; }
-    }
-
-    /// <summary>
     /// 戦闘ログの種類
     /// </summary>
     public enum CombatLogType
@@ -53,5 +24,34 @@
 
         /// <summary>5:残HP率の記録</summary>
         HPRate = 5
+    }
+
+    /// <summary>
+    /// 戦闘ログ
+    /// </summary>
+    public class CombatLog
+    {
+        public CombatLog()
+        {
+            this.Raw = string.Empty;
+            this.Actor = string.Empty;
+            this.Action = string.Empty;
+            this.Target = string.Empty;
+            this.LogTypeName = string.Empty;
+        }
+
+        public string Action { get; set; }
+        public string Actor { get; set; }
+        public double CastTime { get; set; }
+        public decimal HPRate { get; set; }
+        public long ID { get; set; }
+        public bool IsOrigin { get; set; }
+        public CombatLogType LogType { get; set; }
+        public string LogTypeName { get; set; }
+        public string Raw { get; set; }
+        public double Span { get; set; }
+        public string Target { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public double TimeStampElapted { get; set; }
     }
 }

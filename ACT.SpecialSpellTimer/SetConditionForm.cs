@@ -20,25 +20,78 @@
 
         public Guid[] TimersMustStopping { get; set; }
 
-        private void SelectConditionForm_Load(object sender, EventArgs e)
+        private void AllOFFButton_Click(object sender, EventArgs e)
         {
-            this.LoadSpells(this.SpellMustRunningTreeView, this.TimersMustRunning);
-            this.LoadSpells(this.SpellMustStoppingTreeView, this.TimersMustStopping);
-            this.LoadTelops(this.TelopMustRunningTreeView, this.TimersMustRunning);
-            this.LoadTelops(this.TelopMustStoppingTreeView, this.TimersMustStopping);
+            foreach (TreeNode node in this.SpellMustRunningTreeView.Nodes)
+            {
+                node.Checked = false;
+                foreach (TreeNode child in node.Nodes)
+                {
+                    child.Checked = false;
+                }
+            }
+
+            foreach (TreeNode node in this.SpellMustStoppingTreeView.Nodes)
+            {
+                node.Checked = false;
+                foreach (TreeNode child in node.Nodes)
+                {
+                    child.Checked = false;
+                }
+            }
+
+            foreach (TreeNode node in this.TelopMustRunningTreeView.Nodes)
+            {
+                node.Checked = false;
+            }
+
+            foreach (TreeNode node in this.TelopMustStoppingTreeView.Nodes)
+            {
+                node.Checked = false;
+            }
         }
 
         /// <summary>
-        /// Shown
+        /// TreeViewからチェックされたSpellTimerの一覧を取得する
         /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void SetConditionForm_Shown(object sender, EventArgs e)
+        /// <param name="treeView">TreeView</param>
+        /// <returns>チェックされたSpellTimerを表すGuidの配列</returns>
+        private Guid[] GetCheckedSpells(TreeView treeView)
         {
-            if (this.Owner != null)
+            var spells = new List<Guid>();
+            foreach (TreeNode parent in treeView.Nodes)
             {
-                this.Font = this.Owner.Font;
+                foreach (TreeNode node in parent.Nodes)
+                {
+                    if (node.Checked)
+                    {
+                        var spell = (SpellTimer)node.Tag;
+                        spells.Add(spell.guid);
+                    }
+                }
             }
+
+            return spells.ToArray();
+        }
+
+        /// <summary>
+        /// TreeViewからチェックされたOnePointTelopの一覧を取得する
+        /// </summary>
+        /// <param name="treeView">TreeView</param>
+        /// <returns>チェックされたOnePointTelopを表すGuidの配列</returns>
+        private Guid[] GetCheckedTelops(TreeView treeView)
+        {
+            var telops = new List<Guid>();
+            foreach (TreeNode node in treeView.Nodes)
+            {
+                if (node.Checked)
+                {
+                    var telop = (OnePointTelop)node.Tag;
+                    telops.Add(telop.guid);
+                }
+            }
+
+            return telops.ToArray();
         }
 
         /// <summary>
@@ -112,80 +165,6 @@
             treeView.ExpandAll();
         }
 
-        /// <summary>
-        /// TreeViewからチェックされたSpellTimerの一覧を取得する
-        /// </summary>
-        /// <param name="treeView">TreeView</param>
-        /// <returns>チェックされたSpellTimerを表すGuidの配列</returns>
-        private Guid[] GetCheckedSpells(TreeView treeView)
-        {
-            var spells = new List<Guid>();
-            foreach (TreeNode parent in treeView.Nodes)
-            {
-                foreach (TreeNode node in parent.Nodes)
-                {
-                    if (node.Checked)
-                    {
-                        var spell = (SpellTimer)node.Tag;
-                        spells.Add(spell.guid);
-                    }
-                }
-            }
-
-            return spells.ToArray();
-        }
-
-        /// <summary>
-        /// TreeViewからチェックされたOnePointTelopの一覧を取得する
-        /// </summary>
-        /// <param name="treeView">TreeView</param>
-        /// <returns>チェックされたOnePointTelopを表すGuidの配列</returns>
-        private Guid[] GetCheckedTelops(TreeView treeView)
-        {
-            var telops = new List<Guid>();
-            foreach (TreeNode node in treeView.Nodes)
-            {
-                if (node.Checked)
-                {
-                    var telop = (OnePointTelop)node.Tag;
-                    telops.Add(telop.guid);
-                }
-            }
-
-            return telops.ToArray();
-        }
-
-        private void AllOFFButton_Click(object sender, EventArgs e)
-        {
-            foreach(TreeNode node in this.SpellMustRunningTreeView.Nodes)
-            {
-                node.Checked = false;
-                foreach (TreeNode child in node.Nodes)
-                {
-                    child.Checked = false;
-                }
-            }
-
-            foreach (TreeNode node in this.SpellMustStoppingTreeView.Nodes)
-            {
-                node.Checked = false;
-                foreach (TreeNode child in node.Nodes)
-                {
-                    child.Checked = false;
-                }
-            }
-
-            foreach (TreeNode node in this.TelopMustRunningTreeView.Nodes)
-            {
-                node.Checked = false;
-            }
-
-            foreach (TreeNode node in this.TelopMustStoppingTreeView.Nodes)
-            {
-                node.Checked = false;
-            }
-        }
-
         private void OKButton_Click(object sender, EventArgs e)
         {
             var s1 = this.GetCheckedSpells(this.SpellMustRunningTreeView);
@@ -195,6 +174,27 @@
 
             this.TimersMustRunning = s1.Concat(t1).ToArray();
             this.TimersMustStopping = s2.Concat(t2).ToArray();
+        }
+
+        private void SelectConditionForm_Load(object sender, EventArgs e)
+        {
+            this.LoadSpells(this.SpellMustRunningTreeView, this.TimersMustRunning);
+            this.LoadSpells(this.SpellMustStoppingTreeView, this.TimersMustStopping);
+            this.LoadTelops(this.TelopMustRunningTreeView, this.TimersMustRunning);
+            this.LoadTelops(this.TelopMustStoppingTreeView, this.TimersMustStopping);
+        }
+
+        /// <summary>
+        /// Shown
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void SetConditionForm_Shown(object sender, EventArgs e)
+        {
+            if (this.Owner != null)
+            {
+                this.Font = this.Owner.Font;
+            }
         }
     }
 }

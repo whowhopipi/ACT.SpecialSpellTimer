@@ -2,8 +2,6 @@
 {
     using System;
     using System.Windows.Forms;
-
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>
@@ -11,6 +9,65 @@
     /// </summary>
     public partial class ConfigPanel
     {
+        /// <summary>
+        /// 設定を適用する
+        /// </summary>
+        private void ApplySettingsOption()
+        {
+            Settings.Default.Language = ((Utility.Language)this.LanguageComboBox.SelectedItem).Value;
+
+            Settings.Default.OverlayForceVisible = this.OverlayForceVisibleCheckBox.Checked;
+            Settings.Default.HideWhenNotActive = this.HideWhenNotActiceCheckBox.Checked;
+            Settings.Default.UseOtherThanFFXIV = this.UseOtherThanFFXIVCheckbox.Checked;
+
+            Settings.Default.ProgressBarSize = this.DefaultVisualSetting.BarSize;
+            Settings.Default.ProgressBarColor = this.DefaultVisualSetting.BarColor;
+            Settings.Default.ProgressBarOutlineColor = this.DefaultVisualSetting.BarOutlineColor;
+            Settings.Default.Font = this.DefaultVisualSetting.GetFontInfo().ToFontForWindowsForm();
+            Settings.Default.FontColor = this.DefaultVisualSetting.FontColor;
+            Settings.Default.FontOutlineColor = this.DefaultVisualSetting.FontOutlineColor;
+            Settings.Default.BackgroundColor = this.DefaultVisualSetting.BackgroundColor;
+
+            Settings.Default.Opacity = (int)this.OpacityNumericUpDown.Value;
+            Settings.Default.ReduceIconBrightness = (int)this.ReduceIconBrightnessNumericUpDown.Value;
+            Settings.Default.ClickThroughEnabled = this.ClickThroughCheckBox.Checked;
+            Settings.Default.AutoSortEnabled = this.AutoSortCheckBox.Checked;
+            Settings.Default.AutoSortReverse = this.AutoSortReverseCheckBox.Checked;
+            Settings.Default.TimeOfHideSpell = (double)this.TimeOfHideNumericUpDown.Value;
+            Settings.Default.RefreshInterval = (long)this.RefreshIntervalNumericUpDown.Value;
+            Settings.Default.LogPollSleepInterval = (long)this.LogPollSleepNumericUpDown.Value;
+            Settings.Default.EnabledPartyMemberPlaceholder = this.EnabledPTPlaceholderCheckBox.Checked;
+            Settings.Default.EnabledSpellTimerNoDecimal = this.EnabledSpellTimerNoDecimalCheckBox.Checked;
+
+            Settings.Default.ReadyText = this.ReadyTextBox.Text;
+            Settings.Default.OverText = this.OverTextBox.Text;
+
+            Settings.Default.SaveLogEnabled = this.SaveLogCheckBox.Checked;
+            Settings.Default.SaveLogFile = this.SaveLogTextBox.Text;
+
+            Settings.Default.ResetOnWipeOut = this.ResetOnWipeOutCheckBox.Checked;
+            Settings.Default.SimpleRegex = this.SimpleRegexCheckBox.Checked;
+            Settings.Default.RemoveTooltipSymbols = this.RemoveTooltipSymbolsCheckBox.Checked;
+            Settings.Default.DetectPacketDump = this.DetectPacketDumpcheckBox.Checked;
+
+            SpellTimerCore.Default.InvalidateSettings();
+
+            // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
+            if (Settings.Default.EnabledNotifyNormalSpellTimer &&
+                !this.EnabledNotifyNormalSpellTimerCheckBox.Checked)
+            {
+                SpellTimerCore.Default.clearNormalSpellTimer(true);
+            }
+
+            Settings.Default.EnabledNotifyNormalSpellTimer = this.EnabledNotifyNormalSpellTimerCheckBox.Checked;
+
+            // 標準のスペルタイマーへ設定を反映する
+            SpellTimerCore.Default.applyToNormalSpellTimer();
+
+            // 設定を保存する
+            Settings.Default.Save();
+        }
+
         /// <summary>
         /// オプションのLoad
         /// </summary>
@@ -38,7 +95,6 @@
                 }
                 else
                 {
-
                     this.OverlayForceVisibleCheckBox.Enabled = true;
                     this.EnabledPTPlaceholderCheckBox.Enabled = true;
                     this.ResetOnWipeOutCheckBox.Enabled = true;
@@ -185,65 +241,6 @@
 
             // 標準のスペルタイマーへ設定を反映する
             SpellTimerCore.Default.applyToNormalSpellTimer();
-        }
-
-        /// <summary>
-        /// 設定を適用する
-        /// </summary>
-        private void ApplySettingsOption()
-        {
-            Settings.Default.Language = ((Utility.Language)this.LanguageComboBox.SelectedItem).Value;
-
-            Settings.Default.OverlayForceVisible = this.OverlayForceVisibleCheckBox.Checked;
-            Settings.Default.HideWhenNotActive = this.HideWhenNotActiceCheckBox.Checked;
-            Settings.Default.UseOtherThanFFXIV = this.UseOtherThanFFXIVCheckbox.Checked;
-
-            Settings.Default.ProgressBarSize = this.DefaultVisualSetting.BarSize;
-            Settings.Default.ProgressBarColor = this.DefaultVisualSetting.BarColor;
-            Settings.Default.ProgressBarOutlineColor = this.DefaultVisualSetting.BarOutlineColor;
-            Settings.Default.Font = this.DefaultVisualSetting.GetFontInfo().ToFontForWindowsForm();
-            Settings.Default.FontColor = this.DefaultVisualSetting.FontColor;
-            Settings.Default.FontOutlineColor = this.DefaultVisualSetting.FontOutlineColor;
-            Settings.Default.BackgroundColor = this.DefaultVisualSetting.BackgroundColor;
-
-            Settings.Default.Opacity = (int)this.OpacityNumericUpDown.Value;
-            Settings.Default.ReduceIconBrightness = (int)this.ReduceIconBrightnessNumericUpDown.Value;
-            Settings.Default.ClickThroughEnabled = this.ClickThroughCheckBox.Checked;
-            Settings.Default.AutoSortEnabled = this.AutoSortCheckBox.Checked;
-            Settings.Default.AutoSortReverse = this.AutoSortReverseCheckBox.Checked;
-            Settings.Default.TimeOfHideSpell = (double)this.TimeOfHideNumericUpDown.Value;
-            Settings.Default.RefreshInterval = (long)this.RefreshIntervalNumericUpDown.Value;
-            Settings.Default.LogPollSleepInterval = (long)this.LogPollSleepNumericUpDown.Value;
-            Settings.Default.EnabledPartyMemberPlaceholder = this.EnabledPTPlaceholderCheckBox.Checked;
-            Settings.Default.EnabledSpellTimerNoDecimal = this.EnabledSpellTimerNoDecimalCheckBox.Checked;
-
-            Settings.Default.ReadyText = this.ReadyTextBox.Text;
-            Settings.Default.OverText = this.OverTextBox.Text;
-
-            Settings.Default.SaveLogEnabled = this.SaveLogCheckBox.Checked;
-            Settings.Default.SaveLogFile = this.SaveLogTextBox.Text;
-
-            Settings.Default.ResetOnWipeOut = this.ResetOnWipeOutCheckBox.Checked;
-            Settings.Default.SimpleRegex = this.SimpleRegexCheckBox.Checked;
-            Settings.Default.RemoveTooltipSymbols = this.RemoveTooltipSymbolsCheckBox.Checked;
-            Settings.Default.DetectPacketDump = this.DetectPacketDumpcheckBox.Checked;
-
-            SpellTimerCore.Default.InvalidateSettings();
-
-            // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
-            if (Settings.Default.EnabledNotifyNormalSpellTimer &&
-                !this.EnabledNotifyNormalSpellTimerCheckBox.Checked)
-            {
-                SpellTimerCore.Default.clearNormalSpellTimer(true);
-            }
-
-            Settings.Default.EnabledNotifyNormalSpellTimer = this.EnabledNotifyNormalSpellTimerCheckBox.Checked;
-
-            // 標準のスペルタイマーへ設定を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
-
-            // 設定を保存する
-            Settings.Default.Save();
         }
     }
 }

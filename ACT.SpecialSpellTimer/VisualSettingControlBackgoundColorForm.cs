@@ -5,8 +5,6 @@
 
     public partial class VisualSettingControlBackgoundColorForm : Form
     {
-        public int Alpha { get; set; }
-
         public VisualSettingControlBackgoundColorForm()
         {
             this.InitializeComponent();
@@ -14,7 +12,7 @@
 
             this.OpacityNumericUpDown.ValueChanged += (s1, e1) =>
             {
-                this.AlphaRateLabel.Text = 
+                this.AlphaRateLabel.Text =
                     (this.OpacityNumericUpDown.Value / 255m * 100m).ToString("N0") + "%";
             };
 
@@ -24,6 +22,8 @@
                 this.OpacityNumericUpDown.Focus();
             };
         }
+
+        public int Alpha { get; set; }
 
         private void OKButton_Click(object sender, EventArgs e)
         {

@@ -11,19 +11,115 @@
     using System.Xml.Serialization;
 
     using ACT.SpecialSpellTimer.Image;
-    using ACT.SpecialSpellTimer.Properties;
     using ACT.SpecialSpellTimer.Utility;
+
+    [Serializable]
+    public class ColorSet
+    {
+        public int BackgroundAlpha { get; set; }
+        public string BackgroundColor { get; set; }
+        public string BarColor { get; set; }
+        public string BarOutlineColor { get; set; }
+        public string FontColor { get; set; }
+        public string FontOutlineColor { get; set; }
+    }
 
     /// <summary>
     /// 見た目設定用コントロール
     /// </summary>
     public partial class VisualSettingControl : UserControl
     {
-        private bool barEnabled;
-
-        private Color backgroundColor;
-
         private VisualSettingControlBackgoundColorForm alphaDialog = new VisualSettingControlBackgoundColorForm();
+        private Color backgroundColor;
+        private bool barEnabled;
+        private FontInfo fontInfo;
+
+        public VisualSettingControl()
+        {
+            this.InitializeComponent();
+
+            this.components.Add(this.alphaDialog);
+            this.SetFontInfo(Settings.Default.Font.ToFontInfo());
+            this.FontColor = Settings.Default.FontColor;
+            this.FontOutlineColor = Settings.Default.FontOutlineColor;
+            this.BarColor = Settings.Default.ProgressBarColor;
+            this.BarOutlineColor = Settings.Default.ProgressBarOutlineColor;
+            this.BarSize = Settings.Default.ProgressBarSize;
+
+            this.SpellIcon = "";
+
+            this.BarEnabled = true;
+
+            this.Load += this.VisualSettingControl_Load;
+        }
+
+        public Color BackgroundColor
+        {
+            get
+            {
+                return this.backgroundColor;
+            }
+            set
+            {
+                this.backgroundColor = value;
+                this.alphaDialog.Alpha = this.backgroundColor.A;
+            }
+        }
+
+        public Color BarColor { get; set; }
+
+        public bool BarEnabled
+        {
+            get { return this.barEnabled; }
+            set
+            {
+                this.barEnabled = value;
+
+                if (this.barEnabled)
+                {
+                    this.WidthNumericUpDown.Visible = true;
+                    this.HeightNumericUpDown.Visible = true;
+                    this.BarSizeLabel.Visible = true;
+                    this.BarSizeXLabel.Visible = true;
+                    this.ChangeBarColorItem.Enabled = true;
+                    this.ChangeBarOutlineColorItem.Enabled = true;
+                    this.ResetSpellBarSizeItem.Enabled = true;
+                }
+                else
+                {
+                    this.WidthNumericUpDown.Visible = false;
+                    this.HeightNumericUpDown.Visible = false;
+                    this.BarSizeLabel.Visible = false;
+                    this.BarSizeXLabel.Visible = false;
+                    this.ChangeBarColorItem.Enabled = false;
+                    this.ChangeBarOutlineColorItem.Enabled = false;
+                    this.ResetSpellBarSizeItem.Enabled = false;
+                }
+
+                this.RefreshSampleImage();
+            }
+        }
+
+        public Color BarOutlineColor { get; set; }
+
+        public Size BarSize
+        {
+            get
+            {
+                return new Size(
+                    (int)this.WidthNumericUpDown.Value,
+                    (int)this.HeightNumericUpDown.Value);
+            }
+            set
+            {
+                this.WidthNumericUpDown.Value = value.Width;
+                this.HeightNumericUpDown.Value = value.Height;
+            }
+        }
+
+        public Color FontColor { get; set; }
+
+        public Color FontOutlineColor { get; set; }
 
         public string GetColorSetDirectory
         {
@@ -55,23 +151,191 @@
             }
         }
 
-        public VisualSettingControl()
+        public bool HideSpellName { get; set; }
+
+        public bool OverlapRecastTime { get; set; }
+
+        public String SpellIcon { get; set; }
+
+        public int SpellIconSize { get; set; }
+
+        public FontInfo GetFontInfo()
         {
-            this.InitializeComponent();
+            return fontInfo;
+        }
 
-            this.components.Add(this.alphaDialog);
-            this.SetFontInfo(Settings.Default.Font.ToFontInfo());
-            this.FontColor = Settings.Default.FontColor;
-            this.FontOutlineColor = Settings.Default.FontOutlineColor;
-            this.BarColor = Settings.Default.ProgressBarColor;
-            this.BarOutlineColor = Settings.Default.ProgressBarOutlineColor;
-            this.BarSize = Settings.Default.ProgressBarSize;
+        /// <summary>
+        /// サンプルイメージを描画する
+        /// </summary>
+        public void RefreshSampleImage()
+        {
+            var font = this.GetFontInfo().ToFontForWindowsForm();
+            var fontColor = this.FontColor;
+            var fontOutlineColor = this.FontOutlineColor;
+            var barColor = this.BarColor;
+            var barOutlineColor = this.BarOutlineColor;
+            var barSize = this.BarEnabled ?
+                this.BarSize :
+                this.SamplePictureBox.Size;
+            var barLocation = new Point(
+                (this.SamplePictureBox.Width / 2) - (barSize.Width / 2),
+                this.SamplePictureBox.Height - barSize.Height - 12);
 
-            this.SpellIcon = "";
+            var spellWidth = barSize.Width > this.SpellIconSize ? barSize.Width : this.SpellIconSize;
+            var spellX = barSize.Width > this.SpellIconSize ? barLocation.X : (this.SamplePictureBox.Size.Width / 2) - (this.SpellIconSize / 2);
 
-            this.BarEnabled = true;
+            var bmp = new Bitmap(this.SamplePictureBox.Width, this.SamplePictureBox.Height);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-            this.Load += this.VisualSettingControl_Load;
+                // 背景色を描く
+                var backgroundRect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+                var backgroundBrush = new SolidBrush(this.backgroundColor);
+                g.FillRectangle(backgroundBrush, backgroundRect);
+
+                if (this.BarEnabled)
+                {
+                    // バーの暗を描く
+                    var backRect = new Rectangle(barLocation, barSize);
+                    var backBrush = new SolidBrush(barColor.ChangeBrightness(0.4d));
+                    g.FillRectangle(backBrush, backRect);
+
+                    // バーの明を描く
+                    var foreRect = new Rectangle(barLocation, new Size((int)(barSize.Width * 0.6), barSize.Height));
+                    var foreBrush = new SolidBrush(barColor);
+                    g.FillRectangle(foreBrush, foreRect);
+
+                    // バーのアウトラインを描く
+                    var outlineRect = new Rectangle(barLocation, barSize);
+                    var outlinePen = new Pen(barOutlineColor, 1.0f);
+                    g.DrawRectangle(outlinePen, outlineRect);
+
+                    // 後片付け
+                    backBrush.Dispose();
+                    foreBrush.Dispose();
+                    outlinePen.Dispose();
+                }
+
+                // アイコンを描く
+                var hasIcon = false;
+                if (this.BarEnabled)
+                {
+                    var spellIcon = IconController.Default.getIconFile(this.SpellIcon);
+                    if (spellIcon != null)
+                    {
+                        var image = System.Drawing.Image.FromFile(spellIcon.FullPath);
+                        g.DrawImage(
+                            image,
+                            spellX,
+                            barLocation.Y - this.SpellIconSize,
+                            (float)this.SpellIconSize,
+                            (float)this.SpellIconSize);
+                        hasIcon = true;
+                    }
+                }
+
+                // フォントのペンを生成する
+                var fontBrush = new SolidBrush(fontColor);
+                var fontOutlinePen = new Pen(fontOutlineColor, 0.2f);
+                var fontHeight = font.Size * 2; // 正しくない計算
+                var fontRect = new Rectangle(
+                    hasIcon ? spellX + this.SpellIconSize : spellX,
+                    barLocation.Y - 2 - (int)fontHeight,
+                    hasIcon ? spellWidth - this.SpellIconSize : spellWidth,
+                    barLocation.Y - 2);
+
+                if (!this.BarEnabled)
+                {
+                    fontRect = new Rectangle(
+                        barLocation.X,
+                        6,
+                        barSize.Width,
+                        this.SamplePictureBox.Height - 6);
+                }
+
+                // フォントを描く
+                var spellSf = new StringFormat()
+                {
+                    Alignment = StringAlignment.Near
+                };
+
+                var recastSf = new StringFormat()
+                {
+                    Alignment = this.OverlapRecastTime ? StringAlignment.Near : StringAlignment.Far
+                };
+
+                var telopSf = new StringFormat()
+                {
+                    Alignment = StringAlignment.Center
+                };
+
+                var path = new GraphicsPath();
+
+                if (this.BarEnabled)
+                {
+                    if (!this.HideSpellName)
+                    {
+                        path.AddString(
+                            Translate.Get("SampleSpell"),
+                            font.FontFamily,
+                            (int)font.Style,
+                            (float)font.ToFontSizeWPF(),
+                            fontRect,
+                            spellSf);
+                    }
+
+                    if (this.OverlapRecastTime)
+                    {
+                        fontRect.X = spellX;
+                        fontRect.Width = this.SpellIconSize;
+                        recastSf.Alignment = StringAlignment.Center;
+                    }
+
+                    path.AddString(
+                        Settings.Default.EnabledSpellTimerNoDecimal ? "120" : "120.0",
+                        font.FontFamily,
+                        (int)font.Style,
+                        (float)font.ToFontSizeWPF(),
+                        fontRect,
+                        recastSf);
+                }
+                else
+                {
+                    path.AddString(
+                        Translate.Get("SampleTelop"),
+                        font.FontFamily,
+                        (int)font.Style,
+                        (float)font.ToFontSizeWPF(),
+                        fontRect,
+                        telopSf);
+                }
+
+                g.FillPath(fontBrush, path);
+                g.DrawPath(fontOutlinePen, path);
+
+                // まとめて後片付け
+                fontOutlinePen.Dispose();
+                path.Dispose();
+                spellSf.Dispose();
+                recastSf.Dispose();
+                telopSf.Dispose();
+            }
+
+            if (this.SamplePictureBox.Image != null)
+            {
+                this.SamplePictureBox.Image.Dispose();
+                this.SamplePictureBox.Image = null;
+            }
+
+            this.SamplePictureBox.Image = bmp;
+        }
+
+        public void SetFontInfo(
+            FontInfo fontInfo)
+        {
+            this.fontInfo = fontInfo;
         }
 
         private void VisualSettingControl_Load(object sender, EventArgs e)
@@ -299,273 +563,5 @@
                 OnePointTelopTable.Default.Save();
             };
         }
-
-        private FontInfo fontInfo;
-
-        public FontInfo GetFontInfo()
-        {
-            return fontInfo;
-        }
-
-        public void SetFontInfo(
-            FontInfo fontInfo)
-        {
-            this.fontInfo = fontInfo;
-        }
-
-        public String SpellIcon { get; set; }
-
-        public int SpellIconSize { get; set; }
-
-        public bool HideSpellName { get; set; }
-
-        public bool OverlapRecastTime { get; set; }
-
-        public Color FontColor { get; set; }
-
-        public Color FontOutlineColor { get; set; }
-
-        public Color BarColor { get; set; }
-
-        public Color BarOutlineColor { get; set; }
-
-        public Color BackgroundColor
-        {
-            get
-            {
-                return this.backgroundColor;
-            }
-            set
-            {
-                this.backgroundColor = value;
-                this.alphaDialog.Alpha = this.backgroundColor.A;
-            }
-        }
-
-        public Size BarSize
-        {
-            get
-            {
-                return new Size(
-                    (int)this.WidthNumericUpDown.Value,
-                    (int)this.HeightNumericUpDown.Value);
-            }
-            set
-            {
-                this.WidthNumericUpDown.Value = value.Width;
-                this.HeightNumericUpDown.Value = value.Height;
-            }
-        }
-
-        public bool BarEnabled
-        {
-            get { return this.barEnabled; }
-            set
-            {
-                this.barEnabled = value;
-
-                if (this.barEnabled)
-                {
-                    this.WidthNumericUpDown.Visible = true;
-                    this.HeightNumericUpDown.Visible = true;
-                    this.BarSizeLabel.Visible = true;
-                    this.BarSizeXLabel.Visible = true;
-                    this.ChangeBarColorItem.Enabled = true;
-                    this.ChangeBarOutlineColorItem.Enabled = true;
-                    this.ResetSpellBarSizeItem.Enabled = true;
-                }
-                else
-                {
-                    this.WidthNumericUpDown.Visible = false;
-                    this.HeightNumericUpDown.Visible = false;
-                    this.BarSizeLabel.Visible = false;
-                    this.BarSizeXLabel.Visible = false;
-                    this.ChangeBarColorItem.Enabled = false;
-                    this.ChangeBarOutlineColorItem.Enabled = false;
-                    this.ResetSpellBarSizeItem.Enabled = false;
-                }
-
-                this.RefreshSampleImage();
-            }
-        }
-
-        /// <summary>
-        /// サンプルイメージを描画する
-        /// </summary>
-        public void RefreshSampleImage()
-        {
-            var font = this.GetFontInfo().ToFontForWindowsForm();
-            var fontColor = this.FontColor;
-            var fontOutlineColor = this.FontOutlineColor;
-            var barColor = this.BarColor;
-            var barOutlineColor = this.BarOutlineColor;
-            var barSize = this.BarEnabled ?
-                this.BarSize :
-                this.SamplePictureBox.Size;
-            var barLocation = new Point(
-                (this.SamplePictureBox.Width / 2) - (barSize.Width / 2),
-                this.SamplePictureBox.Height - barSize.Height - 12);
-
-            var spellWidth = barSize.Width > this.SpellIconSize ? barSize.Width : this.SpellIconSize;
-            var spellX = barSize.Width > this.SpellIconSize ? barLocation.X : (this.SamplePictureBox.Size.Width / 2) - (this.SpellIconSize / 2);
-
-            var bmp = new Bitmap(this.SamplePictureBox.Width, this.SamplePictureBox.Height);
-            using (var g = Graphics.FromImage(bmp))
-            {
-                g.SmoothingMode = SmoothingMode.HighQuality;
-                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-
-                // 背景色を描く
-                var backgroundRect = new Rectangle(0, 0, bmp.Width, bmp.Height);
-                var backgroundBrush = new SolidBrush(this.backgroundColor);
-                g.FillRectangle(backgroundBrush, backgroundRect);
-
-                if (this.BarEnabled)
-                {
-                    // バーの暗を描く
-                    var backRect = new Rectangle(barLocation, barSize);
-                    var backBrush = new SolidBrush(barColor.ChangeBrightness(0.4d));
-                    g.FillRectangle(backBrush, backRect);
-
-                    // バーの明を描く
-                    var foreRect = new Rectangle(barLocation, new Size((int)(barSize.Width * 0.6), barSize.Height));
-                    var foreBrush = new SolidBrush(barColor);
-                    g.FillRectangle(foreBrush, foreRect);
-
-                    // バーのアウトラインを描く
-                    var outlineRect = new Rectangle(barLocation, barSize);
-                    var outlinePen = new Pen(barOutlineColor, 1.0f);
-                    g.DrawRectangle(outlinePen, outlineRect);
-
-                    // 後片付け
-                    backBrush.Dispose();
-                    foreBrush.Dispose();
-                    outlinePen.Dispose();
-                }
-
-                // アイコンを描く
-                var hasIcon = false;
-                if (this.BarEnabled)
-                {
-                    var spellIcon = IconController.Default.getIconFile(this.SpellIcon);
-                    if (spellIcon != null)
-                    {
-                        var image = System.Drawing.Image.FromFile(spellIcon.FullPath);
-                        g.DrawImage(
-                            image,
-                            spellX,
-                            barLocation.Y - this.SpellIconSize,
-                            (float)this.SpellIconSize,
-                            (float)this.SpellIconSize);
-                        hasIcon = true;
-                    }
-                }
-
-                // フォントのペンを生成する
-                var fontBrush = new SolidBrush(fontColor);
-                var fontOutlinePen = new Pen(fontOutlineColor, 0.2f);
-                var fontHeight = font.Size * 2; // 正しくない計算
-                var fontRect = new Rectangle(
-                    hasIcon ? spellX + this.SpellIconSize : spellX,
-                    barLocation.Y - 2 - (int)fontHeight,
-                    hasIcon ? spellWidth - this.SpellIconSize : spellWidth,
-                    barLocation.Y - 2);
-
-                if (!this.BarEnabled)
-                {
-                    fontRect = new Rectangle(
-                        barLocation.X,
-                        6,
-                        barSize.Width,
-                        this.SamplePictureBox.Height - 6);
-                }
-
-                // フォントを描く
-                var spellSf = new StringFormat()
-                {
-                    Alignment = StringAlignment.Near
-                };
-
-                var recastSf = new StringFormat()
-                {
-                    Alignment = this.OverlapRecastTime ? StringAlignment.Near : StringAlignment.Far
-                };
-
-                var telopSf = new StringFormat()
-                {
-                    Alignment = StringAlignment.Center
-                };
-
-                var path = new GraphicsPath();
-
-                if (this.BarEnabled)
-                {
-                    if (!this.HideSpellName)
-                    {
-                        path.AddString(
-                            Translate.Get("SampleSpell"),
-                            font.FontFamily,
-                            (int)font.Style,
-                            (float)font.ToFontSizeWPF(),
-                            fontRect,
-                            spellSf);
-                    }
-
-                    if (this.OverlapRecastTime)
-                    {
-                        fontRect.X = spellX;
-                        fontRect.Width = this.SpellIconSize;
-                        recastSf.Alignment = StringAlignment.Center;
-                    }
-
-                    path.AddString(
-                        Settings.Default.EnabledSpellTimerNoDecimal ? "120" : "120.0",
-                        font.FontFamily,
-                        (int)font.Style,
-                        (float)font.ToFontSizeWPF(),
-                        fontRect,
-                        recastSf);
-                }
-                else
-                {
-                    path.AddString(
-                        Translate.Get("SampleTelop"),
-                        font.FontFamily,
-                        (int)font.Style,
-                        (float)font.ToFontSizeWPF(),
-                        fontRect,
-                        telopSf);
-                }
-
-                g.FillPath(fontBrush, path);
-                g.DrawPath(fontOutlinePen, path);
-
-                // まとめて後片付け
-                fontOutlinePen.Dispose();
-                path.Dispose();
-                spellSf.Dispose();
-                recastSf.Dispose();
-                telopSf.Dispose();
-            }
-
-            if (this.SamplePictureBox.Image != null)
-            {
-                this.SamplePictureBox.Image.Dispose();
-                this.SamplePictureBox.Image = null;
-            }
-
-            this.SamplePictureBox.Image = bmp;
-        }
-    }
-
-    [Serializable]
-    public class ColorSet
-    {
-        public string FontColor { get; set; }
-        public string FontOutlineColor { get; set; }
-        public string BarColor { get; set; }
-        public string BarOutlineColor { get; set; }
-        public string BackgroundColor { get; set; }
-        public int BackgroundAlpha { get; set; }
     }
 }

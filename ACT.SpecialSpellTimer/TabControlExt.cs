@@ -6,6 +6,22 @@
 
     public class TabControlExt : TabControl
     {
+        public TabControlExt() : base()
+        {
+            Alignment = TabAlignment.Left;
+
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+
+            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.UserPaint, true);
+
+            DoubleBuffered = true;
+
+            ItemSize = new Size(30, 160);
+            SizeMode = TabSizeMode.Fixed;
+        }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -44,22 +60,6 @@
         {
             base.OnTabIndexChanged(e);
             Invalidate();
-        }
-
-        public TabControlExt() : base()
-        {
-            Alignment = TabAlignment.Left;
-
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.UserPaint, true);
-
-            DoubleBuffered = true;
-
-            ItemSize = new Size(30, 160);
-            SizeMode = TabSizeMode.Fixed;
         }
     }
 }

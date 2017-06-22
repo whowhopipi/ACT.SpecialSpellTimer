@@ -23,22 +23,6 @@
         private static OnePointTelopTable instance;
 
         /// <summary>
-        /// シングルトンinstance
-        /// </summary>
-        public static OnePointTelopTable Default
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new OnePointTelopTable();
-                }
-
-                return instance;
-            }
-        }
-
-        /// <summary>
         /// データテーブル
         /// </summary>
         private readonly List<OnePointTelop> table = new List<OnePointTelop>();
@@ -56,13 +40,35 @@
         }
 
         /// <summary>
-        /// 生のテーブル
+        /// シングルトンinstance
         /// </summary>
-        public List<OnePointTelop> Table
+        public static OnePointTelopTable Default
         {
             get
             {
-                return this.table;
+                if (instance == null)
+                {
+                    instance = new OnePointTelopTable();
+                }
+
+                return instance;
+            }
+        }
+
+        /// <summary>
+        /// デフォルトのファイル
+        /// </summary>
+        public string DefaultFile
+        {
+            get
+            {
+                var r = string.Empty;
+
+                r = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    @"anoyetta\ACT\ACT.SpecialSpellTimer.Telops.xml");
+
+                return r;
             }
         }
 
@@ -82,6 +88,17 @@
                 }
 
                 return this.enabledTable;
+            }
+        }
+
+        /// <summary>
+        /// 生のテーブル
+        /// </summary>
+        public List<OnePointTelop> Table
+        {
+            get
+            {
+                return this.table;
             }
         }
 
@@ -208,6 +225,36 @@
         }
 
         /// <summary>
+        /// テーブルファイルをバックアップする
+        /// </summary>
+        public void Backup()
+        {
+            var file = this.DefaultFile;
+
+            if (File.Exists(file))
+            {
+                var backupFile = Path.Combine(
+                    Path.GetDirectoryName(file),
+                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
+
+                File.Copy(
+                    file,
+                    backupFile,
+                    true);
+
+                // 古いバックアップを消す
+                foreach (var bak in Directory.GetFiles(Path.GetDirectoryName(file), "*.bak"))
+                {
+                    var timeStamp = File.GetCreationTime(bak);
+                    if ((DateTime.Now - timeStamp).TotalDays >= 3.0d)
+                    {
+                        File.Delete(bak);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 置換後のキーワードをクリアする
         /// </summary>
         public void ClearReplacedKeywords()
@@ -232,34 +279,53 @@
         }
 
         /// <summary>
-        /// デフォルトのファイル
+        /// Load
         /// </summary>
-        public string DefaultFile
+        public void Load()
         {
-            get
-            {
-                var r = string.Empty;
-
-                r = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    @"anoyetta\ACT\ACT.SpecialSpellTimer.Telops.xml");
-
-                return r;
-            }
+            this.Load(this.DefaultFile, true);
         }
 
         /// <summary>
-        /// カウントをリセットする
+        /// Load
         /// </summary>
-        public void ResetCount()
+        /// <param name="file">ファイル</param>
+        /// <param name="isClear">クリアしてから取り込むか？</param>
+        public void Load(
+            string file,
+            bool isClear)
         {
-            foreach (var row in this.EnabledTable)
+            if (File.Exists(file))
             {
-                row.MatchDateTime = DateTime.MinValue;
-                row.Delayed = false;
-                row.ForceHide = false;
+                if (isClear)
+                {
+                    this.table.Clear();
+                }
 
-                row.StartDelayedSoundTimer();
+                // 旧フォーマットを置換する
+                var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
+                    "DocumentElement",
+                    "ArrayOfOnePointTelop");
+                File.WriteAllText(file, content, new UTF8Encoding(false));
+
+                using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+                {
+                    try
+                    {
+                        if (sr.BaseStream.Length > 0)
+                        {
+                            var xs = new XmlSerializer(table.GetType());
+                            var data = xs.Deserialize(sr) as List<OnePointTelop>;
+                            table.AddRange(data);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write(Translate.Get("LoadXMLError"), ex);
+                    }
+                }
+
+                this.Reset();
             }
         }
 
@@ -324,53 +390,17 @@
         }
 
         /// <summary>
-        /// Load
+        /// カウントをリセットする
         /// </summary>
-        public void Load()
+        public void ResetCount()
         {
-            this.Load(this.DefaultFile, true);
-        }
-
-        /// <summary>
-        /// Load
-        /// </summary>
-        /// <param name="file">ファイル</param>
-        /// <param name="isClear">クリアしてから取り込むか？</param>
-        public void Load(
-            string file,
-            bool isClear)
-        {
-            if (File.Exists(file))
+            foreach (var row in this.EnabledTable)
             {
-                if (isClear)
-                {
-                    this.table.Clear();
-                }
+                row.MatchDateTime = DateTime.MinValue;
+                row.Delayed = false;
+                row.ForceHide = false;
 
-                // 旧フォーマットを置換する
-                var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
-                    "DocumentElement",
-                    "ArrayOfOnePointTelop");
-                File.WriteAllText(file, content, new UTF8Encoding(false));
-
-                using (var sr = new StreamReader(file, new UTF8Encoding(false)))
-                {
-                    try
-                    {
-                        if (sr.BaseStream.Length > 0)
-                        {
-                            var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<OnePointTelop>;
-                            table.AddRange(data);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(Translate.Get("LoadXMLError"), ex);
-                    }
-                }
-
-                this.Reset();
+                row.StartDelayedSoundTimer();
             }
         }
 
@@ -428,36 +458,6 @@
                 item.DelaySound = !string.IsNullOrWhiteSpace(item.DelaySound) ?
                     Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(item.DelaySound)) :
                     string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// テーブルファイルをバックアップする
-        /// </summary>
-        public void Backup()
-        {
-            var file = this.DefaultFile;
-
-            if (File.Exists(file))
-            {
-                var backupFile = Path.Combine(
-                    Path.GetDirectoryName(file),
-                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
-
-                File.Copy(
-                    file,
-                    backupFile,
-                    true);
-
-                // 古いバックアップを消す
-                foreach (var bak in Directory.GetFiles(Path.GetDirectoryName(file), "*.bak"))
-                {
-                    var timeStamp = File.GetCreationTime(bak);
-                    if ((DateTime.Now - timeStamp).TotalDays >= 3.0d)
-                    {
-                        File.Delete(bak);
-                    }
-                }
             }
         }
     }

@@ -11,32 +11,13 @@
     /// </summary>
     public partial class ConfigPanel
     {
-        private string playerName;
-        private IReadOnlyList<string> partyMemberNames;
+        private const int INVALID = 1;
+        private const int VALID = 0;
         private IReadOnlyDictionary<string, string> jobPlaceholders;
         private StringBuilder logBuffer = new StringBuilder();
-
-        private const int VALID = 0;
-        private const int INVALID = 1;
+        private IReadOnlyList<string> partyMemberNames;
         private int placeholderIsValid = VALID;
-
-        /// <summary>
-        /// モニタタブ用のロード
-        /// </summary>
-        public void LoadMonitorTab()
-        {
-            this.RefreshPlaceholders(
-                this.playerName,
-                this.partyMemberNames,
-                this.jobPlaceholders);
-
-            if (string.IsNullOrWhiteSpace(this.LogTextBox.Text) &&
-                this.logBuffer.Length > 0)
-            {
-                this.LogTextBox.AppendText(this.logBuffer.ToString());
-            }
-        }
-
+        private string playerName;
         private bool MonitorTabSelected => this.TabControl.SelectedTab == this.MonitorTabPage;
 
         /// <summary>
@@ -53,6 +34,23 @@
         public void InvalidatePlaceholders()
         {
             placeholderIsValid = INVALID;
+        }
+
+        /// <summary>
+        /// モニタタブ用のロード
+        /// </summary>
+        public void LoadMonitorTab()
+        {
+            this.RefreshPlaceholders(
+                this.playerName,
+                this.partyMemberNames,
+                this.jobPlaceholders);
+
+            if (string.IsNullOrWhiteSpace(this.LogTextBox.Text) &&
+                this.logBuffer.Length > 0)
+            {
+                this.LogTextBox.AppendText(this.logBuffer.ToString());
+            }
         }
 
         public void UpdateMonitor()
