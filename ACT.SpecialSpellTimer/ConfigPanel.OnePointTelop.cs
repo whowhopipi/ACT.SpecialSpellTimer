@@ -39,13 +39,31 @@
                 }
 
                 // 標準のスペルタイマーへ変更を反映する
-                SpellTimerCore.Default.applyToNormalSpellTimer();
+                SpellTimerCore.Default.ApplyToNormalSpellTimer();
 
                 this.TelopTreeView.ExpandAll();
             }
             finally
             {
                 this.TelopTreeView.ResumeLayout();
+            }
+        }
+
+        /// <summary>
+        /// Tickers(テロップ)テーブル編集ブロッカー
+        /// </summary>
+        /// <param name="action">アクション</param>
+        private void EditTickersTableBlock(Action action)
+        {
+            OnePointTelopTable.Default.IsEditingTable = true;
+
+            try
+            {
+                action();
+            }
+            finally
+            {
+                OnePointTelopTable.Default.IsEditingTable = false;
             }
         }
 
@@ -100,7 +118,7 @@
                 OnePointTelopTable.Default.ClearReplacedKeywords();
 
                 // テロップの有効・無効が変化した際に、標準のスペルタイマーに反映する
-                SpellTimerCore.Default.applyToNormalSpellTimer();
+                SpellTimerCore.Default.ApplyToNormalSpellTimer();
             };
 
             this.TelopTreeView.AfterSelect += (s1, e1) =>
@@ -270,71 +288,74 @@
         {
             var nr = new OnePointTelop();
 
-            nr.ID = OnePointTelopTable.Default.Table.Any() ?
-                OnePointTelopTable.Default.Table.Max(x => x.ID) + 1 :
-                1;
-            nr.guid = Guid.NewGuid();
-            nr.Title = Translate.Get("NewTelop");
-            nr.DisplayTime = 3;
-            nr.FontColor = Settings.Default.FontColor.ToHTML();
-            nr.FontOutlineColor = Settings.Default.FontOutlineColor.ToHTML();
-            nr.FontFamily = Settings.Default.Font.Name;
-            nr.FontSize = Settings.Default.Font.Size;
-            nr.FontStyle = (int)Settings.Default.Font.Style;
-            nr.BackgroundColor = Settings.Default.BackgroundColor.ToHTML();
-            nr.Left = 10.0d;
-            nr.Top = 10.0d;
-            nr.JobFilter = string.Empty;
-            nr.ZoneFilter = string.Empty;
-            nr.TimersMustRunningForStart = new Guid[0];
-            nr.TimersMustStoppingForStart = new Guid[0];
-
-            // 現在選択しているノードの情報を一部コピーする
-            if (this.TelopTreeView.SelectedNode != null)
+            this.EditTickersTableBlock(() =>
             {
-                var baseRow = this.TelopTreeView.SelectedNode.Tag != null ?
-                    this.TelopTreeView.SelectedNode.Tag as OnePointTelop :
-                    this.TelopTreeView.SelectedNode.Nodes[0].Tag as OnePointTelop;
+                nr.ID = OnePointTelopTable.Default.Table.Any() ?
+                    OnePointTelopTable.Default.Table.Max(x => x.ID) + 1 :
+                    1;
+                nr.guid = Guid.NewGuid();
+                nr.Title = Translate.Get("NewTelop");
+                nr.DisplayTime = 3;
+                nr.FontColor = Settings.Default.FontColor.ToHTML();
+                nr.FontOutlineColor = Settings.Default.FontOutlineColor.ToHTML();
+                nr.FontFamily = Settings.Default.Font.Name;
+                nr.FontSize = Settings.Default.Font.Size;
+                nr.FontStyle = (int)Settings.Default.Font.Style;
+                nr.BackgroundColor = Settings.Default.BackgroundColor.ToHTML();
+                nr.Left = 10.0d;
+                nr.Top = 10.0d;
+                nr.JobFilter = string.Empty;
+                nr.ZoneFilter = string.Empty;
+                nr.TimersMustRunningForStart = new Guid[0];
+                nr.TimersMustStoppingForStart = new Guid[0];
 
-                if (baseRow != null)
+                // 現在選択しているノードの情報を一部コピーする
+                if (this.TelopTreeView.SelectedNode != null)
                 {
-                    nr.Title = baseRow.Title + " New";
-                    nr.Message = baseRow.Message;
-                    nr.Keyword = baseRow.Keyword;
-                    nr.KeywordToHide = baseRow.KeywordToHide;
-                    nr.RegexEnabled = baseRow.RegexEnabled;
-                    nr.Delay = baseRow.Delay;
-                    nr.DisplayTime = baseRow.DisplayTime;
-                    nr.AddMessageEnabled = baseRow.AddMessageEnabled;
-                    nr.ProgressBarEnabled = baseRow.ProgressBarEnabled;
-                    nr.FontColor = baseRow.FontColor;
-                    nr.FontOutlineColor = baseRow.FontOutlineColor;
-                    nr.FontFamily = baseRow.FontFamily;
-                    nr.FontSize = baseRow.FontSize;
-                    nr.FontStyle = baseRow.FontStyle;
-                    nr.Font = baseRow.Font;
-                    nr.BackgroundColor = baseRow.BackgroundColor;
-                    nr.BackgroundAlpha = baseRow.BackgroundAlpha;
-                    nr.Left = baseRow.Left;
-                    nr.Top = baseRow.Top;
-                    nr.JobFilter = baseRow.JobFilter;
-                    nr.ZoneFilter = baseRow.ZoneFilter;
-                    nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
-                    nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
+                    var baseRow = this.TelopTreeView.SelectedNode.Tag != null ?
+                        this.TelopTreeView.SelectedNode.Tag as OnePointTelop :
+                        this.TelopTreeView.SelectedNode.Nodes[0].Tag as OnePointTelop;
+
+                    if (baseRow != null)
+                    {
+                        nr.Title = baseRow.Title + " New";
+                        nr.Message = baseRow.Message;
+                        nr.Keyword = baseRow.Keyword;
+                        nr.KeywordToHide = baseRow.KeywordToHide;
+                        nr.RegexEnabled = baseRow.RegexEnabled;
+                        nr.Delay = baseRow.Delay;
+                        nr.DisplayTime = baseRow.DisplayTime;
+                        nr.AddMessageEnabled = baseRow.AddMessageEnabled;
+                        nr.ProgressBarEnabled = baseRow.ProgressBarEnabled;
+                        nr.FontColor = baseRow.FontColor;
+                        nr.FontOutlineColor = baseRow.FontOutlineColor;
+                        nr.FontFamily = baseRow.FontFamily;
+                        nr.FontSize = baseRow.FontSize;
+                        nr.FontStyle = baseRow.FontStyle;
+                        nr.Font = baseRow.Font;
+                        nr.BackgroundColor = baseRow.BackgroundColor;
+                        nr.BackgroundAlpha = baseRow.BackgroundAlpha;
+                        nr.Left = baseRow.Left;
+                        nr.Top = baseRow.Top;
+                        nr.JobFilter = baseRow.JobFilter;
+                        nr.ZoneFilter = baseRow.ZoneFilter;
+                        nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
+                        nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
+                    }
                 }
-            }
 
-            nr.MatchDateTime = DateTime.MinValue;
-            nr.Enabled = true;
-            nr.Regex = null;
-            nr.RegexPattern = string.Empty;
-            nr.RegexToHide = null;
-            nr.RegexPatternToHide = string.Empty;
+                nr.MatchDateTime = DateTime.MinValue;
+                nr.Enabled = true;
+                nr.Regex = null;
+                nr.RegexPattern = string.Empty;
+                nr.RegexToHide = null;
+                nr.RegexPatternToHide = string.Empty;
 
-            OnePointTelopTable.Default.Table.Add(nr);
+                OnePointTelopTable.Default.Table.Add(nr);
 
-            OnePointTelopTable.Default.ClearReplacedKeywords();
-            OnePointTelopTable.Default.Save();
+                OnePointTelopTable.Default.ClearReplacedKeywords();
+                OnePointTelopTable.Default.Save();
+            });
 
             // 新しいノードを生成する
             var node = new TreeNode(nr.Title)
@@ -360,7 +381,7 @@
                 Button.DefaultForeColor;
 
             // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
+            SpellTimerCore.Default.ApplyToNormalSpellTimer();
         }
 
         /// <summary>
@@ -378,14 +399,17 @@
                 MessageBoxIcon.Question,
                 MessageBoxDefaultButton.Button2) == DialogResult.OK)
             {
-                lock (OnePointTelopTable.Default.Table)
+                this.EditTickersTableBlock(() =>
                 {
-                    this.TelopDetailGroupBox.Visible = false;
-                    OnePointTelopTable.Default.Table.Clear();
-                }
+                    lock (OnePointTelopTable.Default.Table)
+                    {
+                        this.TelopDetailGroupBox.Visible = false;
+                        OnePointTelopTable.Default.Table.Clear();
+                    }
 
-                OnePointTelopController.CloseTelops();
-                this.LoadTelopTable();
+                    OnePointTelopController.CloseTelops();
+                    this.LoadTelopTable();
+                });
             }
         }
 
@@ -396,20 +420,23 @@
         /// <param name="e">イベント引数</param>
         private void TelopDeleteButton_Click(object sender, EventArgs e)
         {
-            lock (OnePointTelopTable.Default.Table)
+            this.EditTickersTableBlock(() =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
-                if (src != null)
+                lock (OnePointTelopTable.Default.Table)
                 {
-                    OnePointTelopTable.Default.Table.Remove(src);
-                    OnePointTelopTable.Default.ClearReplacedKeywords();
-                    OnePointTelopTable.Default.Save();
+                    var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                    if (src != null)
+                    {
+                        OnePointTelopTable.Default.Table.Remove(src);
+                        OnePointTelopTable.Default.ClearReplacedKeywords();
+                        OnePointTelopTable.Default.Save();
 
-                    OnePointTelopController.CloseTelops();
+                        OnePointTelopController.CloseTelops();
 
-                    this.TelopDetailGroupBox.Visible = false;
+                        this.TelopDetailGroupBox.Visible = false;
+                    }
                 }
-            }
+            });
 
             // 今の選択ノードを取り出す
             var targetNode = this.TelopTreeView.SelectedNode;
@@ -427,7 +454,7 @@
             }
 
             // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
+            SpellTimerCore.Default.ApplyToNormalSpellTimer();
         }
 
         /// <summary>
@@ -452,15 +479,18 @@
         /// <param name="e">イベント引数</param>
         private void TelopImportButton_Click(object sender, EventArgs e)
         {
-            this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
-            if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
+            this.EditTickersTableBlock(() =>
             {
-                OnePointTelopTable.Default.Load(
-                    this.OpenFileDialog.FileName,
-                    false);
+                this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
+                if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
+                {
+                    OnePointTelopTable.Default.Load(
+                        this.OpenFileDialog.FileName,
+                        false);
 
-                this.LoadTelopTable();
-            }
+                    this.LoadTelopTable();
+                }
+            });
         }
 
         /// <summary>
@@ -478,62 +508,66 @@
                     "ACT.SpecialSpellTimer",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
+
                 return;
             }
 
-            var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
-            if (src != null)
+            this.EditTickersTableBlock(() =>
             {
-                src.Title = this.TelopTitleTextBox.Text;
-                src.Message = this.TelopMessageTextBox.Text;
-                src.Keyword = this.TelopKeywordTextBox.Text;
-                src.KeywordToHide = this.TelopKeywordToHideTextBox.Text;
-                src.RegexEnabled = this.TelopRegexEnabledCheckBox.Checked;
-                src.Delay = (long)this.TelopDelayNumericUpDown.Value;
-                src.DisplayTime = (long)this.DisplayTimeNumericUpDown.Value;
-                src.AddMessageEnabled = this.EnabledAddMessageCheckBox.Checked;
-                src.ProgressBarEnabled = this.TelopProgressBarEnabledCheckBox.Checked;
-                src.FontColor = this.TelopVisualSetting.FontColor.ToHTML();
-                src.FontOutlineColor = this.TelopVisualSetting.FontOutlineColor.ToHTML();
-                src.Font = this.TelopVisualSetting.GetFontInfo();
-                src.BackgroundColor = this.TelopVisualSetting.BackgroundColor.ToHTML();
-                src.BackgroundAlpha = this.TelopVisualSetting.BackgroundColor.A;
-                src.Left = (double)this.TelopLeftNumericUpDown.Value;
-                src.Top = (double)this.TelopTopNumericUpDown.Value;
-                src.MatchSound = (string)this.TelopMatchSoundComboBox.SelectedValue ?? string.Empty;
-                src.MatchTextToSpeak = this.TelopMatchTTSTextBox.Text;
-                src.DelaySound = (string)this.TelopDelaySoundComboBox.SelectedValue ?? string.Empty;
-                src.DelayTextToSpeak = this.TelopDelayTTSTextBox.Text;
-
-                if ((int)this.TelopLeftNumericUpDown.Tag != src.Left ||
-                    (int)this.TelopTopNumericUpDown.Tag != src.Top)
+                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                if (src != null)
                 {
-                    OnePointTelopController.SetLocation(
-                        src.ID,
-                        src.Left,
-                        src.Top);
-                }
+                    src.Title = this.TelopTitleTextBox.Text;
+                    src.Message = this.TelopMessageTextBox.Text;
+                    src.Keyword = this.TelopKeywordTextBox.Text;
+                    src.KeywordToHide = this.TelopKeywordToHideTextBox.Text;
+                    src.RegexEnabled = this.TelopRegexEnabledCheckBox.Checked;
+                    src.Delay = (long)this.TelopDelayNumericUpDown.Value;
+                    src.DisplayTime = (long)this.DisplayTimeNumericUpDown.Value;
+                    src.AddMessageEnabled = this.EnabledAddMessageCheckBox.Checked;
+                    src.ProgressBarEnabled = this.TelopProgressBarEnabledCheckBox.Checked;
+                    src.FontColor = this.TelopVisualSetting.FontColor.ToHTML();
+                    src.FontOutlineColor = this.TelopVisualSetting.FontOutlineColor.ToHTML();
+                    src.Font = this.TelopVisualSetting.GetFontInfo();
+                    src.BackgroundColor = this.TelopVisualSetting.BackgroundColor.ToHTML();
+                    src.BackgroundAlpha = this.TelopVisualSetting.BackgroundColor.A;
+                    src.Left = (double)this.TelopLeftNumericUpDown.Value;
+                    src.Top = (double)this.TelopTopNumericUpDown.Value;
+                    src.MatchSound = (string)this.TelopMatchSoundComboBox.SelectedValue ?? string.Empty;
+                    src.MatchTextToSpeak = this.TelopMatchTTSTextBox.Text;
+                    src.DelaySound = (string)this.TelopDelaySoundComboBox.SelectedValue ?? string.Empty;
+                    src.DelayTextToSpeak = this.TelopDelayTTSTextBox.Text;
 
-                OnePointTelopTable.Default.ClearReplacedKeywords();
-                OnePointTelopTable.Default.Save();
-                this.LoadTelopTable();
-
-                // 一度全てのテロップを閉じる
-                OnePointTelopController.CloseTelops();
-
-                foreach (TreeNode node in this.TelopTreeView.Nodes)
-                {
-                    var ds = node.Tag as OnePointTelop;
-                    if (ds != null)
+                    if ((int)this.TelopLeftNumericUpDown.Tag != src.Left ||
+                        (int)this.TelopTopNumericUpDown.Tag != src.Top)
                     {
-                        if (ds.ID == src.ID)
+                        OnePointTelopController.SetLocation(
+                            src.ID,
+                            src.Left,
+                            src.Top);
+                    }
+
+                    OnePointTelopTable.Default.ClearReplacedKeywords();
+                    OnePointTelopTable.Default.Save();
+                    this.LoadTelopTable();
+
+                    // 一度全てのテロップを閉じる
+                    OnePointTelopController.CloseTelops();
+
+                    foreach (TreeNode node in this.TelopTreeView.Nodes)
+                    {
+                        var ds = node.Tag as OnePointTelop;
+                        if (ds != null)
                         {
-                            this.TelopTreeView.SelectedNode = node;
-                            break;
+                            if (ds.ID == src.ID)
+                            {
+                                this.TelopTreeView.SelectedNode = node;
+                                break;
+                            }
                         }
                     }
                 }
-            }
+            });
         }
     }
 }

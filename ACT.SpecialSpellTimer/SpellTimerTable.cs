@@ -61,17 +61,26 @@
                 lock (lockObject)
                 {
                     var now = DateTime.Now;
-                    if (enabledTable == null ||
-                        (now - enabledTableTimeStamp).TotalSeconds >= 5.0d)
+
+                    if (!IsEditingTable)
                     {
-                        enabledTableTimeStamp = now;
-                        enabledTable = EnabledTableCore;
+                        if (enabledTable == null ||
+                            (now - enabledTableTimeStamp).TotalSeconds >= 5.0d)
+                        {
+                            enabledTableTimeStamp = now;
+                            enabledTable = EnabledTableCore;
+                        }
                     }
 
                     return enabledTable;
                 }
             }
         }
+
+        /// <summary>
+        /// テーブルの編集中？
+        /// </summary>
+        public static bool IsEditingTable { get; set; }
 
         /// <summary>
         /// SpellTimerデータテーブル
@@ -100,14 +109,14 @@
         {
             get
             {
-                var spells =
+                var spells = (
                     from x in Table
                     where
                     x.Enabled
                     orderby
                     x.DisplayNo
                     select
-                    x;
+                    x).ToArray();
 
                 var player = FF14PluginHelper.GetPlayer();
                 var currentZoneID = FF14PluginHelper.GetCurrentZoneID();

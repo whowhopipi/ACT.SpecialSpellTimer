@@ -62,7 +62,7 @@
             Settings.Default.EnabledNotifyNormalSpellTimer = this.EnabledNotifyNormalSpellTimerCheckBox.Checked;
 
             // 標準のスペルタイマーへ設定を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
+            SpellTimerCore.Default.ApplyToNormalSpellTimer();
 
             // 設定を保存する
             Settings.Default.Save();
@@ -240,7 +240,7 @@
             this.ResetOnWipeOutCheckBox.Enabled = sw2;
 
             // 標準のスペルタイマーへ設定を反映する
-            SpellTimerCore.Default.applyToNormalSpellTimer();
+            SpellTimerCore.Default.ApplyToNormalSpellTimer();
         }
     }
 }

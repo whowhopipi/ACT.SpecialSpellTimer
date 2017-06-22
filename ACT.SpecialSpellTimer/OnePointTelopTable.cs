@@ -80,11 +80,15 @@
             get
             {
                 var now = DateTime.Now;
-                if (this.enabledTable == null ||
-                    (now - this.enabledTableTimeStamp).TotalSeconds >= 5.0d)
+
+                if (!this.IsEditingTable)
                 {
-                    this.enabledTableTimeStamp = now;
-                    this.enabledTable = EnabledTableCore;
+                    if (this.enabledTable == null ||
+                        (now - this.enabledTableTimeStamp).TotalSeconds >= 5.0d)
+                    {
+                        this.enabledTableTimeStamp = now;
+                        this.enabledTable = EnabledTableCore;
+                    }
                 }
 
                 return this.enabledTable;
@@ -92,15 +96,14 @@
         }
 
         /// <summary>
+        /// テーブルの編集中？
+        /// </summary>
+        public bool IsEditingTable { get; set; }
+
+        /// <summary>
         /// 生のテーブル
         /// </summary>
-        public List<OnePointTelop> Table
-        {
-            get
-            {
-                return this.table;
-            }
-        }
+        public List<OnePointTelop> Table => this.table;
 
         /// <summary>
         /// 有効なエントリのリスト

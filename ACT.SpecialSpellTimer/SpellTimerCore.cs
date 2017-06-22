@@ -128,7 +128,7 @@
         /// <summary>
         /// 有効なSpellTimerをACT標準のSpellTimerに設定を反映させる
         /// </summary>
-        public void applyToNormalSpellTimer()
+        public void ApplyToNormalSpellTimer()
         {
             // 標準スペルタイマーへの通知が無効であれば何もしない
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
