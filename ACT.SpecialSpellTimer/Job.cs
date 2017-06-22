@@ -1,8 +1,12 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// ジョブID
+    /// </summary>
     public enum JobIds
     {
         Unknown = 0,
@@ -43,6 +47,9 @@
         RDM = 35,
     }
 
+    /// <summary>
+    /// ロール
+    /// </summary>
     public enum JobRoles
     {
         Tank = 10,
@@ -61,15 +68,20 @@
     public class Job
     {
         /// <summary>
-        /// ジョブ辞書
+        /// インスタンス
         /// </summary>
-        private static readonly IReadOnlyDictionary<int, Job> _jobDictionary =
-            _jobList.ToDictionary(job => job.JobId, job => job);
+        private static Job instance;
+
+        /// <summary>
+        /// インスタンス
+        /// </summary>
+        public static Job Instance => (instance ?? (instance = new Job()));
 
         /// <summary>
         /// ジョブリスト
         /// </summary>
-        private static readonly IReadOnlyList<Job> _jobList = new List<Job> {
+        private static Job[] jobList = new Job[]
+        {
             new Job(JobIds.GLD, JobRoles.Tank),
             new Job(JobIds.PUG, JobRoles.MeleeDPS),
             new Job(JobIds.MRD, JobRoles.Tank),
@@ -107,22 +119,41 @@
             new Job(JobIds.RDM, JobRoles.CasterDPS),
         };
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        private Job()
+        {
+        }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="id">ジョブID</param>
+        /// <param name="role">ロール</param>
         private Job(JobIds id, JobRoles role)
         {
             this.JobId = (int)id;
-            this.JobName = System.Enum.GetName(typeof(JobIds), id);
+            this.JobName = Enum.GetName(typeof(JobIds), id);
             this.Role = role;
         }
 
         /// <summary>
+        /// ジョブIDによる辞書
+        /// </summary>
+        private IReadOnlyDictionary<int, Job> jobDictionary;
+
+        /// <summary>
         /// ジョブIDをキーに持つ辞書
         /// </summary>
-        public static IReadOnlyDictionary<int, Job> JobDictionary => _jobDictionary;
+        public IReadOnlyDictionary<int, Job> JobDictionary
+            => (this.jobDictionary ?? 
+            (this.jobDictionary = jobList.ToDictionary(x => x.JobId, x => x)));
 
         /// <summary>
         /// ジョブの一覧
         /// </summary>
-        public static IReadOnlyList<Job> JobList => _jobList;
+        public IReadOnlyList<Job> JobList => jobList;
 
         /// <summary>
         /// JobId
@@ -139,11 +170,16 @@
         /// </summary>
         public JobRoles Role { get; }
 
-        public static Job FromId(int jobId)
+        /// <summary>
+        /// IDからジョブを取得する
+        /// </summary>
+        /// <param name="jobId">ジョブID</param>
+        /// <returns>ジョブ</returns>
+        public Job FromId(int jobId)
         {
-            if (JobDictionary.ContainsKey(jobId))
+            if (this.JobDictionary.ContainsKey(jobId))
             {
-                return JobDictionary[jobId];
+                return this.JobDictionary[jobId];
             }
             else
             {
@@ -156,11 +192,11 @@
         /// </summary>
         /// <param name="jobID">ジョブID</param>
         /// <returns>ジョブ名</returns>
-        public static string GetJobName(int jobID)
+        public string GetJobName(int jobID)
         {
-            if (JobDictionary.ContainsKey(jobID))
+            if (this.JobDictionary.ContainsKey(jobID))
             {
-                return JobDictionary[jobID].JobName;
+                return this.JobDictionary[jobID].JobName;
             }
             else
             {
@@ -168,12 +204,20 @@
             }
         }
 
+        /// <summary>
+        /// 当該ジョブがサモナーか？
+        /// </summary>
+        /// <returns>bool</returns>
         public bool IsSummoner()
         {
             const int ARC = (int)JobIds.ARC;
             const int SCH = (int)JobIds.SCH;
             const int SMN = (int)JobIds.SMN;
-            return JobId == ARC || JobId == SCH || JobId == SMN;
+
+            return 
+                this.JobId == ARC || 
+                this.JobId == SCH || 
+                this.JobId == SMN;
         }
 
         /// <summary>

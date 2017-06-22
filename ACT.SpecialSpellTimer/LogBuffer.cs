@@ -387,7 +387,7 @@
                     // プレイヤーに変化あり？
                     if (!playerChanged)
                     {
-                        if ((playerChanged = IsPlayerChanged(logInfo.logLine)))
+                        if (IsPlayerChanged(logInfo.logLine))
                         {
                             if (!playerRefreshed)
                             {
@@ -400,6 +400,10 @@
                                 RefreshPartyList();
                                 partyRefreshed = true;
                             }
+
+                            Logger.Write("primary player changed.");
+
+                            playerChanged = true;
                         }
                     }
 
@@ -727,7 +731,7 @@
                 // FF14内部のPTメンバ自動ソート順で並び替える
                 var sorted =
                     from x in combatants
-                    join y in Job.JobList on
+                    join y in Job.Instance.JobList on
                         x.Job equals y.JobId
                     where
                     x.ID != player.ID
@@ -749,7 +753,7 @@
                 var newList = new Dictionary<string, string>();
 
                 // ジョブ名によるプレースホルダを登録する
-                foreach (var job in Job.JobList)
+                foreach (var job in Job.Instance.JobList)
                 {
                     // このジョブに該当するパーティメンバを抽出する
                     var combatantsByJob = (

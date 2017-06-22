@@ -303,7 +303,7 @@
 
         public SpecialSpellTimer.Job AsJob()
         {
-            return SpecialSpellTimer.Job.FromId(Job);
+            return SpecialSpellTimer.Job.Instance.FromId(Job);
         }
 
         public float GetDistance(Combatant target) =>
