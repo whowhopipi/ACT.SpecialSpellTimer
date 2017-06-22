@@ -55,7 +55,7 @@
             this.DetailGroupBox = new System.Windows.Forms.Panel();
             this.tabControlExtHoriz2 = new ACT.SpecialSpellTimer.TabControlExtHoriz();
             this.GeneralTab = new System.Windows.Forms.TabPage();
-            this.panel8 = new System.Windows.Forms.Panel();
+            this.SpellDetailPanel = new System.Windows.Forms.Panel();
             this.PanelNameTextBox = new System.Windows.Forms.TextBox();
             this.ExpandSecounds1NumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.KeywordToExpand1TextBox = new System.Windows.Forms.TextBox();
@@ -367,7 +367,7 @@
             this.DetailGroupBox.SuspendLayout();
             this.tabControlExtHoriz2.SuspendLayout();
             this.GeneralTab.SuspendLayout();
-            this.panel8.SuspendLayout();
+            this.SpellDetailPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds1NumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds2NumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayNoNumericUpDown)).BeginInit();
@@ -435,26 +435,26 @@
             this.toolStripSeparator2,
             this.CASetOriginItem});
             this.CombatAnalyzerContextMenuStrip.Name = "CombatAnalyzerContextMenuStrip";
-            this.CombatAnalyzerContextMenuStrip.Size = new System.Drawing.Size(250, 104);
+            this.CombatAnalyzerContextMenuStrip.Size = new System.Drawing.Size(224, 104);
             // 
             // CASelectAllItem
             // 
             this.CASelectAllItem.Name = "CASelectAllItem";
             this.CASelectAllItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.CASelectAllItem.Size = new System.Drawing.Size(249, 22);
+            this.CASelectAllItem.Size = new System.Drawing.Size(223, 22);
             this.CASelectAllItem.Text = "SelectAll";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(246, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(220, 6);
             // 
             // CACopyLogItem
             // 
             this.CACopyLogItem.Name = "CACopyLogItem";
             this.CACopyLogItem.ShortcutKeyDisplayString = "";
             this.CACopyLogItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.CACopyLogItem.Size = new System.Drawing.Size(249, 22);
+            this.CACopyLogItem.Size = new System.Drawing.Size(223, 22);
             this.CACopyLogItem.Text = "CopyLog";
             // 
             // CACopyLogDetailItem
@@ -462,19 +462,19 @@
             this.CACopyLogDetailItem.Name = "CACopyLogDetailItem";
             this.CACopyLogDetailItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.C)));
-            this.CACopyLogDetailItem.Size = new System.Drawing.Size(249, 22);
+            this.CACopyLogDetailItem.Size = new System.Drawing.Size(223, 22);
             this.CACopyLogDetailItem.Text = "CopyLogDetail";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(246, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
             // 
             // CASetOriginItem
             // 
             this.CASetOriginItem.Name = "CASetOriginItem";
             this.CASetOriginItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.CASetOriginItem.Size = new System.Drawing.Size(249, 22);
+            this.CASetOriginItem.Size = new System.Drawing.Size(223, 22);
             this.CASetOriginItem.Text = "SetLogOrigin";
             // 
             // OpenFileDialog
@@ -609,35 +609,37 @@
             // ExportButton
             // 
             this.ExportButton.Name = "ExportButton";
-            this.ExportButton.Size = new System.Drawing.Size(100, 20);
+            this.ExportButton.Size = new System.Drawing.Size(89, 20);
             this.ExportButton.Text = "ExportButton";
             this.ExportButton.Click += new System.EventHandler(this.ExportButton_Click);
             // 
             // ImportButton
             // 
             this.ImportButton.Name = "ImportButton";
-            this.ImportButton.Size = new System.Drawing.Size(100, 20);
+            this.ImportButton.Size = new System.Drawing.Size(90, 20);
             this.ImportButton.Text = "ImportButton";
             this.ImportButton.Click += new System.EventHandler(this.ImportButton_Click);
             // 
             // ClearAllButton
             // 
             this.ClearAllButton.Name = "ClearAllButton";
-            this.ClearAllButton.Size = new System.Drawing.Size(106, 20);
+            this.ClearAllButton.Size = new System.Drawing.Size(95, 20);
             this.ClearAllButton.Text = "ClearAllButton";
             this.ClearAllButton.Click += new System.EventHandler(this.ClearAllButton_Click);
             // 
             // AddButton
             // 
             this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(85, 20);
+            this.AddButton.Size = new System.Drawing.Size(77, 20);
             this.AddButton.Text = "AddButton";
             // 
             // DetailGroupBox
             // 
+            this.DetailGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DetailGroupBox.Controls.Add(this.tabControlExtHoriz2);
             this.DetailGroupBox.Controls.Add(this.panel6);
-            this.DetailGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DetailGroupBox.Location = new System.Drawing.Point(0, 0);
             this.DetailGroupBox.Name = "DetailGroupBox";
             this.DetailGroupBox.Size = new System.Drawing.Size(539, 825);
@@ -657,7 +659,7 @@
             // 
             // GeneralTab
             // 
-            this.GeneralTab.Controls.Add(this.panel8);
+            this.GeneralTab.Controls.Add(this.SpellDetailPanel);
             this.GeneralTab.Location = new System.Drawing.Point(-1, 31);
             this.GeneralTab.Name = "GeneralTab";
             this.GeneralTab.Padding = new System.Windows.Forms.Padding(2);
@@ -666,53 +668,53 @@
             this.GeneralTab.Text = "GeneralTab";
             this.GeneralTab.UseVisualStyleBackColor = true;
             // 
-            // panel8
+            // SpellDetailPanel
             // 
-            this.panel8.AutoScroll = true;
-            this.panel8.Controls.Add(this.PanelNameTextBox);
-            this.panel8.Controls.Add(this.ExpandSecounds1NumericUpDown);
-            this.panel8.Controls.Add(this.KeywordToExpand1TextBox);
-            this.panel8.Controls.Add(this.KeywordToExpand2TextBox);
-            this.panel8.Controls.Add(this.RegexEnabledCheckBox);
-            this.panel8.Controls.Add(this.ExpandSecounds2NumericUpDown);
-            this.panel8.Controls.Add(this.SpellTitleTextBox);
-            this.panel8.Controls.Add(this.DisplayNoNumericUpDown);
-            this.panel8.Controls.Add(this.SpellIconSizeUpDown);
-            this.panel8.Controls.Add(this.KeywordTextBox);
-            this.panel8.Controls.Add(this.SpellIconComboBox);
-            this.panel8.Controls.Add(this.RecastTimeNumericUpDown);
-            this.panel8.Controls.Add(this.UpperLimitOfExtensionNumericUpDown);
-            this.panel8.Controls.Add(this.RepeatCheckBox);
-            this.panel8.Controls.Add(this.SpellVisualSetting);
-            this.panel8.Controls.Add(this.SetConditionButton);
-            this.panel8.Controls.Add(this.ToInstanceCheckBox);
-            this.panel8.Controls.Add(this.label1);
-            this.panel8.Controls.Add(this.label51);
-            this.panel8.Controls.Add(this.ReduceIconBrightnessCheckBox);
-            this.panel8.Controls.Add(this.label50);
-            this.panel8.Controls.Add(this.SelectZoneButton);
-            this.panel8.Controls.Add(this.ExtendBeyondOriginalRecastTimeCheckBox);
-            this.panel8.Controls.Add(this.SelectJobButton);
-            this.panel8.Controls.Add(this.OverlapRecastTimeCheckBox);
-            this.panel8.Controls.Add(this.label2);
-            this.panel8.Controls.Add(this.DontHideCheckBox);
-            this.panel8.Controls.Add(this.HideSpellNameCheckBox);
-            this.panel8.Controls.Add(this.label55);
-            this.panel8.Controls.Add(this.label56);
-            this.panel8.Controls.Add(this.label19);
-            this.panel8.Controls.Add(this.label61);
-            this.panel8.Controls.Add(this.label3);
-            this.panel8.Controls.Add(this.IsReverseCheckBox);
-            this.panel8.Controls.Add(this.label58);
-            this.panel8.Controls.Add(this.ShowProgressBarCheckBox);
-            this.panel8.Controls.Add(this.label60);
-            this.panel8.Controls.Add(this.label4);
-            this.panel8.Controls.Add(this.label59);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(2, 2);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(537, 759);
-            this.panel8.TabIndex = 74;
+            this.SpellDetailPanel.AutoScroll = true;
+            this.SpellDetailPanel.Controls.Add(this.PanelNameTextBox);
+            this.SpellDetailPanel.Controls.Add(this.ExpandSecounds1NumericUpDown);
+            this.SpellDetailPanel.Controls.Add(this.KeywordToExpand1TextBox);
+            this.SpellDetailPanel.Controls.Add(this.KeywordToExpand2TextBox);
+            this.SpellDetailPanel.Controls.Add(this.RegexEnabledCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.ExpandSecounds2NumericUpDown);
+            this.SpellDetailPanel.Controls.Add(this.SpellTitleTextBox);
+            this.SpellDetailPanel.Controls.Add(this.DisplayNoNumericUpDown);
+            this.SpellDetailPanel.Controls.Add(this.SpellIconSizeUpDown);
+            this.SpellDetailPanel.Controls.Add(this.KeywordTextBox);
+            this.SpellDetailPanel.Controls.Add(this.SpellIconComboBox);
+            this.SpellDetailPanel.Controls.Add(this.RecastTimeNumericUpDown);
+            this.SpellDetailPanel.Controls.Add(this.UpperLimitOfExtensionNumericUpDown);
+            this.SpellDetailPanel.Controls.Add(this.RepeatCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.SpellVisualSetting);
+            this.SpellDetailPanel.Controls.Add(this.SetConditionButton);
+            this.SpellDetailPanel.Controls.Add(this.ToInstanceCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.label1);
+            this.SpellDetailPanel.Controls.Add(this.label51);
+            this.SpellDetailPanel.Controls.Add(this.ReduceIconBrightnessCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.label50);
+            this.SpellDetailPanel.Controls.Add(this.SelectZoneButton);
+            this.SpellDetailPanel.Controls.Add(this.ExtendBeyondOriginalRecastTimeCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.SelectJobButton);
+            this.SpellDetailPanel.Controls.Add(this.OverlapRecastTimeCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.label2);
+            this.SpellDetailPanel.Controls.Add(this.DontHideCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.HideSpellNameCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.label55);
+            this.SpellDetailPanel.Controls.Add(this.label56);
+            this.SpellDetailPanel.Controls.Add(this.label19);
+            this.SpellDetailPanel.Controls.Add(this.label61);
+            this.SpellDetailPanel.Controls.Add(this.label3);
+            this.SpellDetailPanel.Controls.Add(this.IsReverseCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.label58);
+            this.SpellDetailPanel.Controls.Add(this.ShowProgressBarCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.label60);
+            this.SpellDetailPanel.Controls.Add(this.label4);
+            this.SpellDetailPanel.Controls.Add(this.label59);
+            this.SpellDetailPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SpellDetailPanel.Location = new System.Drawing.Point(2, 2);
+            this.SpellDetailPanel.Name = "SpellDetailPanel";
+            this.SpellDetailPanel.Size = new System.Drawing.Size(537, 759);
+            this.SpellDetailPanel.TabIndex = 74;
             // 
             // PanelNameTextBox
             // 
@@ -1527,6 +1529,9 @@
             // 
             // DetailPanelGroupBox
             // 
+            this.DetailPanelGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.DetailPanelGroupBox.Controls.Add(this.FixedPositionSpellCheckBox);
             this.DetailPanelGroupBox.Controls.Add(this.HorizontalLayoutCheckBox);
             this.DetailPanelGroupBox.Controls.Add(this.label62);
@@ -1537,7 +1542,6 @@
             this.DetailPanelGroupBox.Controls.Add(this.PanelLeftNumericUpDown);
             this.DetailPanelGroupBox.Controls.Add(this.label16);
             this.DetailPanelGroupBox.Controls.Add(this.UpdatePanelButton);
-            this.DetailPanelGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DetailPanelGroupBox.Location = new System.Drawing.Point(0, 0);
             this.DetailPanelGroupBox.Name = "DetailPanelGroupBox";
             this.DetailPanelGroupBox.Size = new System.Drawing.Size(539, 825);
@@ -1730,25 +1734,25 @@
             // TelopExportButton
             // 
             this.TelopExportButton.Name = "TelopExportButton";
-            this.TelopExportButton.Size = new System.Drawing.Size(133, 20);
+            this.TelopExportButton.Size = new System.Drawing.Size(117, 20);
             this.TelopExportButton.Text = "TelopExportButton";
             // 
             // TelopImportButton
             // 
             this.TelopImportButton.Name = "TelopImportButton";
-            this.TelopImportButton.Size = new System.Drawing.Size(133, 20);
+            this.TelopImportButton.Size = new System.Drawing.Size(118, 20);
             this.TelopImportButton.Text = "TelopImportButton";
             // 
             // TelopClearAllButton
             // 
             this.TelopClearAllButton.Name = "TelopClearAllButton";
-            this.TelopClearAllButton.Size = new System.Drawing.Size(139, 20);
+            this.TelopClearAllButton.Size = new System.Drawing.Size(123, 20);
             this.TelopClearAllButton.Text = "TelopClearAllButton";
             // 
             // TelopAddButton
             // 
             this.TelopAddButton.Name = "TelopAddButton";
-            this.TelopAddButton.Size = new System.Drawing.Size(118, 20);
+            this.TelopAddButton.Size = new System.Drawing.Size(105, 20);
             this.TelopAddButton.Text = "TelopAddButton";
             // 
             // TelopDetailGroupBox
@@ -3947,8 +3951,8 @@
             this.DetailGroupBox.ResumeLayout(false);
             this.tabControlExtHoriz2.ResumeLayout(false);
             this.GeneralTab.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
+            this.SpellDetailPanel.ResumeLayout(false);
+            this.SpellDetailPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds1NumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds2NumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DisplayNoNumericUpDown)).EndInit();
@@ -4234,7 +4238,7 @@
         private System.Windows.Forms.Panel TelopDetailGroupBox;
         private TabControlExtHoriz tabControlExtHoriz2;
         private System.Windows.Forms.TabPage GeneralTab;
-        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Panel SpellDetailPanel;
         private System.Windows.Forms.TextBox PanelNameTextBox;
         private System.Windows.Forms.NumericUpDown ExpandSecounds1NumericUpDown;
         private System.Windows.Forms.TextBox KeywordToExpand1TextBox;
