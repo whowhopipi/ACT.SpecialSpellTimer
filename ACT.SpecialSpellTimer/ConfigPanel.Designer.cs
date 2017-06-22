@@ -223,7 +223,6 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.label68 = new System.Windows.Forms.Label();
             this.label69 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.label70 = new System.Windows.Forms.Label();
             this.label88 = new System.Windows.Forms.Label();
             this.label71 = new System.Windows.Forms.Label();
@@ -355,6 +354,11 @@
             this.LogTabPage = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.label89 = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.SAMTextBox = new System.Windows.Forms.TextBox();
+            this.RDMTextBox = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label57 = new System.Windows.Forms.Label();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -642,7 +646,7 @@
             this.DetailGroupBox.Controls.Add(this.panel6);
             this.DetailGroupBox.Location = new System.Drawing.Point(0, 0);
             this.DetailGroupBox.Name = "DetailGroupBox";
-            this.DetailGroupBox.Size = new System.Drawing.Size(539, 825);
+            this.DetailGroupBox.Size = new System.Drawing.Size(541, 825);
             this.DetailGroupBox.TabIndex = 6;
             // 
             // tabControlExtHoriz2
@@ -654,7 +658,7 @@
             this.tabControlExtHoriz2.Location = new System.Drawing.Point(0, 0);
             this.tabControlExtHoriz2.Name = "tabControlExtHoriz2";
             this.tabControlExtHoriz2.SelectedIndex = 0;
-            this.tabControlExtHoriz2.Size = new System.Drawing.Size(539, 793);
+            this.tabControlExtHoriz2.Size = new System.Drawing.Size(541, 793);
             this.tabControlExtHoriz2.TabIndex = 3;
             // 
             // GeneralTab
@@ -663,7 +667,7 @@
             this.GeneralTab.Location = new System.Drawing.Point(-1, 31);
             this.GeneralTab.Name = "GeneralTab";
             this.GeneralTab.Padding = new System.Windows.Forms.Padding(2);
-            this.GeneralTab.Size = new System.Drawing.Size(541, 763);
+            this.GeneralTab.Size = new System.Drawing.Size(543, 763);
             this.GeneralTab.TabIndex = 0;
             this.GeneralTab.Text = "GeneralTab";
             this.GeneralTab.UseVisualStyleBackColor = true;
@@ -713,7 +717,7 @@
             this.SpellDetailPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SpellDetailPanel.Location = new System.Drawing.Point(2, 2);
             this.SpellDetailPanel.Name = "SpellDetailPanel";
-            this.SpellDetailPanel.Size = new System.Drawing.Size(537, 759);
+            this.SpellDetailPanel.Size = new System.Drawing.Size(539, 759);
             this.SpellDetailPanel.TabIndex = 74;
             // 
             // PanelNameTextBox
@@ -1144,7 +1148,7 @@
             this.AlarmTab.Location = new System.Drawing.Point(-1, 31);
             this.AlarmTab.Name = "AlarmTab";
             this.AlarmTab.Padding = new System.Windows.Forms.Padding(3);
-            this.AlarmTab.Size = new System.Drawing.Size(541, 763);
+            this.AlarmTab.Size = new System.Drawing.Size(543, 763);
             this.AlarmTab.TabIndex = 1;
             this.AlarmTab.Text = "AlarmTab";
             this.AlarmTab.UseVisualStyleBackColor = true;
@@ -1163,7 +1167,7 @@
             this.groupBox4.Controls.Add(this.label54);
             this.groupBox4.Location = new System.Drawing.Point(5, 195);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(529, 96);
+            this.groupBox4.Size = new System.Drawing.Size(531, 96);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "SoundEffectBeforeComplete";
@@ -1174,7 +1178,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BeforeTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.BeforeTextToSpeakTextBox.Name = "BeforeTextToSpeakTextBox";
-            this.BeforeTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
+            this.BeforeTextToSpeakTextBox.Size = new System.Drawing.Size(270, 19);
             this.BeforeTextToSpeakTextBox.TabIndex = 1;
             // 
             // BeforeSoundComboBox
@@ -1260,7 +1264,7 @@
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Location = new System.Drawing.Point(5, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(529, 75);
+            this.groupBox1.Size = new System.Drawing.Size(531, 75);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "ImmediateSoundEffect";
@@ -1271,7 +1275,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MatchTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.MatchTextToSpeakTextBox.Name = "MatchTextToSpeakTextBox";
-            this.MatchTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
+            this.MatchTextToSpeakTextBox.Size = new System.Drawing.Size(270, 19);
             this.MatchTextToSpeakTextBox.TabIndex = 1;
             // 
             // MatchSoundComboBox
@@ -1336,7 +1340,7 @@
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Location = new System.Drawing.Point(5, 93);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(529, 96);
+            this.groupBox3.Size = new System.Drawing.Size(531, 96);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "DelayedSoundEffectAfterMatch";
@@ -1347,7 +1351,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OverTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.OverTextToSpeakTextBox.Name = "OverTextToSpeakTextBox";
-            this.OverTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
+            this.OverTextToSpeakTextBox.Size = new System.Drawing.Size(270, 19);
             this.OverTextToSpeakTextBox.TabIndex = 1;
             // 
             // OverSoundComboBox
@@ -1435,7 +1439,7 @@
             this.groupBox2.Location = new System.Drawing.Point(5, 300);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(529, 75);
+            this.groupBox2.Size = new System.Drawing.Size(531, 75);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "RecastCompleteSoundEffect";
@@ -1446,7 +1450,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TimeupTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.TimeupTextToSpeakTextBox.Name = "TimeupTextToSpeakTextBox";
-            this.TimeupTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
+            this.TimeupTextToSpeakTextBox.Size = new System.Drawing.Size(270, 19);
             this.TimeupTextToSpeakTextBox.TabIndex = 1;
             // 
             // TimeupSoundComboBox
@@ -1504,13 +1508,13 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel6.Location = new System.Drawing.Point(0, 793);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(539, 32);
+            this.panel6.Size = new System.Drawing.Size(541, 32);
             this.panel6.TabIndex = 0;
             // 
             // DeleteButton
             // 
             this.DeleteButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DeleteButton.Location = new System.Drawing.Point(434, 3);
+            this.DeleteButton.Location = new System.Drawing.Point(436, 3);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(102, 26);
             this.DeleteButton.TabIndex = 13;
@@ -1520,7 +1524,7 @@
             // UpdateButton
             // 
             this.UpdateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdateButton.Location = new System.Drawing.Point(326, 3);
+            this.UpdateButton.Location = new System.Drawing.Point(328, 3);
             this.UpdateButton.Name = "UpdateButton";
             this.UpdateButton.Size = new System.Drawing.Size(102, 26);
             this.UpdateButton.TabIndex = 12;
@@ -1544,7 +1548,7 @@
             this.DetailPanelGroupBox.Controls.Add(this.UpdatePanelButton);
             this.DetailPanelGroupBox.Location = new System.Drawing.Point(0, 0);
             this.DetailPanelGroupBox.Name = "DetailPanelGroupBox";
-            this.DetailPanelGroupBox.Size = new System.Drawing.Size(539, 825);
+            this.DetailPanelGroupBox.Size = new System.Drawing.Size(541, 825);
             this.DetailPanelGroupBox.TabIndex = 6;
             this.DetailPanelGroupBox.TabStop = false;
             // 
@@ -1664,7 +1668,7 @@
             // UpdatePanelButton
             // 
             this.UpdatePanelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UpdatePanelButton.Location = new System.Drawing.Point(432, 793);
+            this.UpdatePanelButton.Location = new System.Drawing.Point(434, 793);
             this.UpdatePanelButton.Name = "UpdatePanelButton";
             this.UpdatePanelButton.Size = new System.Drawing.Size(102, 25);
             this.UpdatePanelButton.TabIndex = 13;
@@ -2517,6 +2521,10 @@
             // panel4
             // 
             this.panel4.AutoScroll = true;
+            this.panel4.Controls.Add(this.label57);
+            this.panel4.Controls.Add(this.label27);
+            this.panel4.Controls.Add(this.RDMTextBox);
+            this.panel4.Controls.Add(this.SAMTextBox);
             this.panel4.Controls.Add(this.label68);
             this.panel4.Controls.Add(this.label69);
             this.panel4.Controls.Add(this.panel3);
@@ -2584,13 +2592,6 @@
             this.label69.TabIndex = 1;
             this.label69.Text = "Member2Label";
             // 
-            // panel3
-            // 
-            this.panel3.Location = new System.Drawing.Point(34, 824);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(309, 42);
-            this.panel3.TabIndex = 42;
-            // 
             // label70
             // 
             this.label70.AutoSize = true;
@@ -2603,7 +2604,7 @@
             // label88
             // 
             this.label88.AutoSize = true;
-            this.label88.Location = new System.Drawing.Point(36, 781);
+            this.label88.Location = new System.Drawing.Point(34, 827);
             this.label88.Name = "label88";
             this.label88.Size = new System.Drawing.Size(56, 12);
             this.label88.TabIndex = 41;
@@ -2620,7 +2621,7 @@
             // 
             // SMNTextBox
             // 
-            this.SMNTextBox.Location = new System.Drawing.Point(93, 778);
+            this.SMNTextBox.Location = new System.Drawing.Point(93, 824);
             this.SMNTextBox.Multiline = true;
             this.SMNTextBox.Name = "SMNTextBox";
             this.SMNTextBox.ReadOnly = true;
@@ -2639,7 +2640,7 @@
             // label87
             // 
             this.label87.AutoSize = true;
-            this.label87.Location = new System.Drawing.Point(36, 735);
+            this.label87.Location = new System.Drawing.Point(34, 781);
             this.label87.Name = "label87";
             this.label87.Size = new System.Drawing.Size(55, 12);
             this.label87.TabIndex = 39;
@@ -2657,7 +2658,7 @@
             // label86
             // 
             this.label86.AutoSize = true;
-            this.label86.Location = new System.Drawing.Point(34, 689);
+            this.label86.Location = new System.Drawing.Point(34, 735);
             this.label86.Name = "label86";
             this.label86.Size = new System.Drawing.Size(57, 12);
             this.label86.TabIndex = 38;
@@ -2675,7 +2676,7 @@
             // label85
             // 
             this.label85.AutoSize = true;
-            this.label85.Location = new System.Drawing.Point(34, 643);
+            this.label85.Location = new System.Drawing.Point(34, 689);
             this.label85.Name = "label85";
             this.label85.Size = new System.Drawing.Size(56, 12);
             this.label85.TabIndex = 37;
@@ -2726,7 +2727,7 @@
             // 
             // BLMTextBox
             // 
-            this.BLMTextBox.Location = new System.Drawing.Point(93, 732);
+            this.BLMTextBox.Location = new System.Drawing.Point(93, 778);
             this.BLMTextBox.Multiline = true;
             this.BLMTextBox.Name = "BLMTextBox";
             this.BLMTextBox.ReadOnly = true;
@@ -2743,7 +2744,7 @@
             // 
             // MCHTextBox
             // 
-            this.MCHTextBox.Location = new System.Drawing.Point(93, 686);
+            this.MCHTextBox.Location = new System.Drawing.Point(93, 732);
             this.MCHTextBox.Multiline = true;
             this.MCHTextBox.Name = "MCHTextBox";
             this.MCHTextBox.ReadOnly = true;
@@ -2760,7 +2761,7 @@
             // 
             // BRDTextBox
             // 
-            this.BRDTextBox.Location = new System.Drawing.Point(93, 640);
+            this.BRDTextBox.Location = new System.Drawing.Point(93, 686);
             this.BRDTextBox.Multiline = true;
             this.BRDTextBox.Name = "BRDTextBox";
             this.BRDTextBox.ReadOnly = true;
@@ -3930,6 +3931,49 @@
             this.label89.TabIndex = 43;
             this.label89.Text = "LogLabel";
             // 
+            // panel3
+            // 
+            this.panel3.Location = new System.Drawing.Point(34, 918);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(309, 42);
+            this.panel3.TabIndex = 42;
+            // 
+            // SAMTextBox
+            // 
+            this.SAMTextBox.Location = new System.Drawing.Point(93, 640);
+            this.SAMTextBox.Multiline = true;
+            this.SAMTextBox.Name = "SAMTextBox";
+            this.SAMTextBox.ReadOnly = true;
+            this.SAMTextBox.Size = new System.Drawing.Size(207, 40);
+            this.SAMTextBox.TabIndex = 43;
+            // 
+            // RDMTextBox
+            // 
+            this.RDMTextBox.Location = new System.Drawing.Point(93, 870);
+            this.RDMTextBox.Multiline = true;
+            this.RDMTextBox.Name = "RDMTextBox";
+            this.RDMTextBox.ReadOnly = true;
+            this.RDMTextBox.Size = new System.Drawing.Size(207, 40);
+            this.RDMTextBox.TabIndex = 44;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(34, 643);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(56, 12);
+            this.label27.TabIndex = 45;
+            this.label27.Text = "SAMLabel";
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(34, 873);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(57, 12);
+            this.label57.TabIndex = 46;
+            this.label57.Text = "RDMLabel";
+            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -4216,7 +4260,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label lblCombatAnalyzer;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label lblMonitor;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -4357,5 +4400,10 @@
         private System.Windows.Forms.Button TelopPlay1Button;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox RDMTextBox;
+        private System.Windows.Forms.TextBox SAMTextBox;
+        private System.Windows.Forms.Panel panel3;
     }
 }

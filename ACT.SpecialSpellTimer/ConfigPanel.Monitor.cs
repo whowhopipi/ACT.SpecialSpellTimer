@@ -107,6 +107,8 @@
             this.MCHTextBox.Clear();
             this.BLMTextBox.Clear();
             this.SMNTextBox.Clear();
+            this.SAMTextBox.Clear();
+            this.RDMTextBox.Clear();
 
             this.MeTextBox.Text = playerName;
 
@@ -166,6 +168,13 @@
                 this.SMNTextBox.Text = string.Join(
                     Environment.NewLine,
                     jobPlaceholders.Where(x => x.Key.Contains("SMN")).ToArray());
+
+                this.SAMTextBox.Text = string.Join(
+                    Environment.NewLine,
+                    jobPlaceholders.Where(x => x.Key.Contains("SAM")).ToArray());
+                this.RDMTextBox.Text = string.Join(
+                    Environment.NewLine,
+                    jobPlaceholders.Where(x => x.Key.Contains("RDM")).ToArray());
             }
 
             this.playerName = playerName;
