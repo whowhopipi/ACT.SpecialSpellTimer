@@ -58,26 +58,6 @@
             }
         }
 
-        public IconFile getIconFile(String relativePath)
-        {
-            if (relativePath == string.Empty || relativePath == null)
-            {
-                return null;
-            }
-
-            var iconPath = Path.Combine(this.IconDirectory, relativePath);
-            if (File.Exists(iconPath))
-            {
-                return new IconFile()
-                {
-                    FullPath = iconPath.ToString(),
-                    RelativePath = relativePath
-                };
-            }
-
-            return null;
-        }
-
         /// <summary>
         /// Iconファイルを列挙する
         /// </summary>
@@ -100,6 +80,26 @@
             }
 
             return list.ToArray();
+        }
+
+        public IconFile getIconFile(String relativePath)
+        {
+            if (relativePath == string.Empty || relativePath == null)
+            {
+                return null;
+            }
+
+            var iconPath = Path.Combine(this.IconDirectory, relativePath);
+            if (File.Exists(iconPath))
+            {
+                return new IconFile()
+                {
+                    FullPath = iconPath.ToString(),
+                    RelativePath = relativePath
+                };
+            }
+
+            return null;
         }
 
         private IconFile[] EmulateIcon(String target, String prefix)
@@ -134,11 +134,6 @@
             public string FullPath { get; set; }
 
             /// <summary>
-            /// フルパス
-            /// </summary>
-            public string RelativePath { get; set; }
-
-            /// <summary>
             /// ファイル名
             /// </summary>
             public string Name
@@ -150,6 +145,11 @@
                         string.Empty;
                 }
             }
+
+            /// <summary>
+            /// フルパス
+            /// </summary>
+            public string RelativePath { get; set; }
 
             /// <summary>
             /// ToString()
