@@ -610,8 +610,12 @@
             Save(DefaultFile);
         }
 
+        /// <summary>
+        /// 保存する
+        /// </summary>
+        /// <param name="file">ファイルパス</param>
         public static void Save(
-                    string file)
+            string file)
         {
             if (table == null)
             {
@@ -705,10 +709,5 @@
                 }
             }
         }
-
-        /// <summary>
-        /// 保存する
-        /// </summary>
-        /// <param name="file">ファイルパス</param>
     }
 }
