@@ -4,8 +4,16 @@
 
     public static class StringExtensions
     {
-        public static string ToRegexPattern(
+        public static Regex ToRegex(
             this string s)
+        {
+            return !string.IsNullOrEmpty(s) ?
+                new Regex(s, RegexOptions.Compiled) :
+                null;
+        }
+
+        public static string ToRegexPattern(
+                    this string s)
         {
             if (Settings.Default.SimpleRegex)
             {
@@ -15,14 +23,6 @@
             return !string.IsNullOrEmpty(s) ?
                 ".*" + s + ".*" :
                 string.Empty;
-        }
-
-        public static Regex ToRegex(
-            this string s)
-        {
-            return !string.IsNullOrEmpty(s) ?
-                new Regex(s, RegexOptions.Compiled) :
-                null;
         }
     }
 }

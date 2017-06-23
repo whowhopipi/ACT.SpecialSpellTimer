@@ -1,37 +1,11 @@
 ﻿namespace ACT.SpecialSpellTimer.Utility
 {
     using System;
+    using System.Resources;
 
-    class Translate
+    internal class Translate
     {
-        static System.Resources.ResourceManager Language;
-
-        public static System.Resources.ResourceManager GetTranslationsFor(String name)
-        {
-            switch (name)
-            {
-                case "EN":
-                    return resources.strings.Strings_EN.ResourceManager;
-                case "JP":
-                    return resources.strings.Strings_JP.ResourceManager;
-                case "KR":
-                    return resources.strings.Strings_KR.ResourceManager;
-            }
-
-            Logger.Write("Unknown language: " + Settings.Default.Language + " -> " + name);
-
-            return resources.strings.Strings_JP.ResourceManager;
-        }
-
-        private static void InitializeIfNeeded()
-        {
-            if (Language != null)
-            {
-                return;
-            }
-
-            Language = GetTranslationsFor(Settings.Default.Language);
-        }
+        private static ResourceManager Language;
 
         public static String Get(String name)
         {
@@ -60,6 +34,25 @@
             }
 
             return s.Replace("\\n", Environment.NewLine);
+        }
+
+        public static System.Resources.ResourceManager GetTranslationsFor(String name)
+        {
+            switch (name)
+            {
+                case "EN":
+                    return resources.strings.Strings_EN.ResourceManager;
+
+                case "JP":
+                    return resources.strings.Strings_JP.ResourceManager;
+
+                case "KR":
+                    return resources.strings.Strings_KR.ResourceManager;
+            }
+
+            Logger.Write("Unknown language: " + Settings.Default.Language + " -> " + name);
+
+            return resources.strings.Strings_JP.ResourceManager;
         }
 
         public static void TranslateControls(System.Windows.Forms.Control control)
@@ -115,6 +108,16 @@
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
                 throw;
             }
+        }
+
+        private static void InitializeIfNeeded()
+        {
+            if (Language != null)
+            {
+                return;
+            }
+
+            Language = GetTranslationsFor(Settings.Default.Language);
         }
     }
 }

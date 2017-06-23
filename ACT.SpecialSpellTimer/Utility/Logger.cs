@@ -11,14 +11,13 @@
     /// </summary>
     public static class Logger
     {
+        private static readonly TimeSpan dueTime = TimeSpan.FromSeconds(10);
         private static readonly object lockObject = new object();
 
-        private static Timer flushTimer;
-        private static readonly TimeSpan dueTime = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan period = TimeSpan.FromSeconds(5);
-
         private static volatile ConcurrentQueue<LogItem> buffer;
         private static volatile ConcurrentQueue<string> bufferForFile;
+        private static Timer flushTimer;
 
         private static string logFile
         {
@@ -151,16 +150,16 @@
             }
         }
 
-        #endregion
+        #endregion Controll metods
 
         #region LogItem
 
         private class LogItem
         {
-            DateTime logTime;
-            string text;
-            Exception cause;
             private object[] args;
+            private Exception cause;
+            private DateTime logTime;
+            private string text;
 
             public LogItem(Exception cause, string text, object[] args)
             {
@@ -178,7 +177,6 @@
             }
         }
 
-        #endregion
-
+        #endregion LogItem
     }
 }
