@@ -21,6 +21,16 @@
         private static SoundController instance;
 
         /// <summary>
+        /// ゆっくりをチェックしたタイムスタンプ
+        /// </summary>
+        private DateTime checkedYukkuriTimeStamp = DateTime.MinValue;
+
+        /// <summary>
+        /// ゆっくりが有効かどうか？
+        /// </summary>
+        private bool enabledYukkuri;
+
+        /// <summary>
         /// シングルトンinstance
         /// </summary>
         public static SoundController Default
@@ -37,16 +47,6 @@
         }
 
         /// <summary>
-        /// ゆっくりをチェックしたタイムスタンプ
-        /// </summary>
-        private DateTime checkedYukkuriTimeStamp = DateTime.MinValue;
-
-        /// <summary>
-        /// ゆっくりが有効かどうか？
-        /// </summary>
-        private bool enabledYukkuri;
-
-        /// <summary>
         /// ゆっくりが有効かどうか？
         /// </summary>
         public bool EnabledYukkuri
@@ -59,7 +59,7 @@
                     {
                         this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
                             .Where(x =>
-                                x.pluginFile.Name.ToUpper() == "ACT.TTSYukkuri.dll".ToUpper() &&
+                                x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
                                 x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
                             .Any();
 

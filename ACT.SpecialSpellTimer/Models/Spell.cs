@@ -15,13 +15,19 @@
     public class SpellTimer : IDisposable
     {
         [XmlIgnore]
-        private Timer overSoundTimer;
+        public volatile bool UpdateDone;
+
         [XmlIgnore]
         private Timer beforeSoundTimer;
-        [XmlIgnore]
-        private Timer timeupSoundTimer;
+
         [XmlIgnore]
         private Timer garbageInstanceTimer;
+
+        [XmlIgnore]
+        private Timer overSoundTimer;
+
+        [XmlIgnore]
+        private Timer timeupSoundTimer;
 
         public SpellTimer()
         {
@@ -96,6 +102,167 @@
             this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
         }
 
+        public int BackgroundAlpha { get; set; }
+
+        public string BackgroundColor { get; set; }
+
+        public string BarColor { get; set; }
+
+        public int BarHeight { get; set; }
+
+        public string BarOutlineColor { get; set; }
+
+        public int BarWidth { get; set; }
+
+        [XmlIgnore]
+        public bool BeforeDone { get; set; }
+
+        public string BeforeSound { get; set; }
+
+        public string BeforeTextToSpeak { get; set; }
+
+        public long BeforeTime { get; set; }
+
+        [XmlIgnore]
+        public DateTime CompleteScheduledTime { get; set; }
+
+        public long DisplayNo { get; set; }
+
+        public bool DontHide { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public bool ExtendBeyondOriginalRecastTime { get; set; }
+
+        public FontInfo Font { get; set; }
+
+        public string FontColor { get; set; }
+
+        public string FontFamily { get; set; }
+
+        public string FontOutlineColor { get; set; }
+
+        public float FontSize { get; set; }
+
+        public int FontStyle { get; set; }
+
+        public Guid guid { get; set; }
+
+        public bool HideSpellName { get; set; }
+
+        public long ID { get; set; }
+
+        /// <summary>インスタンス化されたスペルか？</summary>
+        [XmlIgnore]
+        public bool IsInstance { get; set; }
+
+        public bool IsReverse { get; set; }
+
+        public string JobFilter { get; set; }
+
+        public string Keyword { get; set; }
+
+        public string KeywordForExtend1 { get; set; }
+
+        public string KeywordForExtend2 { get; set; }
+
+        [XmlIgnore]
+        public string KeywordForExtendReplaced1 { get; set; }
+
+        [XmlIgnore]
+        public string KeywordForExtendReplaced2 { get; set; }
+
+        [XmlIgnore]
+        public string KeywordReplaced { get; set; }
+
+        public DateTime MatchDateTime { get; set; }
+
+        [XmlIgnore]
+        public string MatchedLog { get; set; }
+
+        public string MatchSound { get; set; }
+
+        public string MatchTextToSpeak { get; set; }
+
+        [XmlIgnore]
+        public bool OverDone { get; set; }
+
+        public bool OverlapRecastTime { get; set; }
+
+        public string OverSound { get; set; }
+
+        public string OverTextToSpeak { get; set; }
+
+        public long OverTime { get; set; }
+
+        public string Panel { get; set; }
+
+        public bool ProgressBarVisible { get; set; }
+
+        public long RecastTime { get; set; }
+
+        public long RecastTimeExtending1 { get; set; }
+
+        public long RecastTimeExtending2 { get; set; }
+
+        public bool ReduceIconBrightness { get; set; }
+
+        [XmlIgnore]
+        public Regex Regex { get; set; }
+
+        public bool RegexEnabled { get; set; }
+
+        [XmlIgnore]
+        public Regex RegexForExtend1 { get; set; }
+
+        [XmlIgnore]
+        public Regex RegexForExtend2 { get; set; }
+
+        [XmlIgnore]
+        public string RegexForExtendPattern1 { get; set; }
+
+        [XmlIgnore]
+        public string RegexForExtendPattern2 { get; set; }
+
+        [XmlIgnore]
+        public string RegexPattern { get; set; }
+
+        public bool RepeatEnabled { get; set; }
+
+        public string SpellIcon { get; set; }
+
+        public int SpellIconSize { get; set; }
+
+        public string SpellTitle { get; set; }
+
+        [XmlIgnore]
+        public string SpellTitleReplaced { get; set; }
+
+        /// <summary>スペルが作用した対象</summary>
+        [XmlIgnore]
+        public string TargetName { get; set; }
+
+        public Guid[] TimersMustRunningForStart { get; set; }
+
+        public Guid[] TimersMustStoppingForStart { get; set; }
+
+        [XmlIgnore]
+        public bool TimeupDone { get; set; }
+
+        public bool TimeupHide { get; set; }
+
+        public string TimeupSound { get; set; }
+
+        public string TimeupTextToSpeak { get; set; }
+
+        /// <summary>インスタンス化する</summary>
+        /// <remarks>表示テキストが異なる条件でマッチングした場合に当該スペルの新しいインスタンスを生成する</remarks>
+        public bool ToInstance { get; set; }
+
+        public long UpperLimitOfExtension { get; set; }
+
+        public string ZoneFilter { get; set; }
+
         public void Dispose()
         {
             if (this.overSoundTimer != null)
@@ -127,52 +294,6 @@
             }
 
             GC.SuppressFinalize(true);
-        }
-
-        /// <summary>
-        /// 遅延処理のタイマを開始する
-        /// </summary>
-        public void StartTimer()
-        {
-            this.StartOverSoundTimer();
-            this.StartBeforeSoundTimer();
-            this.StartTimeupSoundTimer();
-            this.StartGarbageInstanceTimer();
-        }
-
-        /// <summary>
-        /// マッチ後ｎ秒後のサウンドタイマを開始する
-        /// </summary>
-        public void StartOverSoundTimer()
-        {
-            var timer = this.overSoundTimer;
-            if (timer.Enabled)
-            {
-                timer.Stop();
-            }
-
-            if (this.OverTime <= 0 ||
-                this.MatchDateTime <= DateTime.MinValue)
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(this.OverSound) &&
-                string.IsNullOrWhiteSpace(this.OverTextToSpeak))
-            {
-                return;
-            }
-
-            // タイマをセットする
-            var timeToPlay = this.MatchDateTime.AddSeconds(this.OverTime);
-            var duration = (timeToPlay - DateTime.Now).TotalMilliseconds;
-
-            if (duration > 0d)
-            {
-                // タイマスタート
-                timer.Interval = duration;
-                timer.Start();
-            }
         }
 
         /// <summary>
@@ -216,6 +337,72 @@
         }
 
         /// <summary>
+        /// インスタンススペルのガーベージタイマを開始する
+        /// </summary>
+        public void StartGarbageInstanceTimer()
+        {
+            var timer = this.garbageInstanceTimer;
+            if (timer.Enabled)
+            {
+                timer.Stop();
+            }
+
+            if (!this.IsInstance)
+            {
+                return;
+            }
+
+            timer.AutoReset = true;
+            timer.Start();
+        }
+
+        /// <summary>
+        /// マッチ後ｎ秒後のサウンドタイマを開始する
+        /// </summary>
+        public void StartOverSoundTimer()
+        {
+            var timer = this.overSoundTimer;
+            if (timer.Enabled)
+            {
+                timer.Stop();
+            }
+
+            if (this.OverTime <= 0 ||
+                this.MatchDateTime <= DateTime.MinValue)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(this.OverSound) &&
+                string.IsNullOrWhiteSpace(this.OverTextToSpeak))
+            {
+                return;
+            }
+
+            // タイマをセットする
+            var timeToPlay = this.MatchDateTime.AddSeconds(this.OverTime);
+            var duration = (timeToPlay - DateTime.Now).TotalMilliseconds;
+
+            if (duration > 0d)
+            {
+                // タイマスタート
+                timer.Interval = duration;
+                timer.Start();
+            }
+        }
+
+        /// <summary>
+        /// 遅延処理のタイマを開始する
+        /// </summary>
+        public void StartTimer()
+        {
+            this.StartOverSoundTimer();
+            this.StartBeforeSoundTimer();
+            this.StartTimeupSoundTimer();
+            this.StartGarbageInstanceTimer();
+        }
+
+        /// <summary>
         /// リキャスト完了のサウンドタイマを開始する
         /// </summary>
         public void StartTimeupSoundTimer()
@@ -253,26 +440,6 @@
         /// <summary>
         /// インスタンススペルのガーベージタイマを開始する
         /// </summary>
-        public void StartGarbageInstanceTimer()
-        {
-            var timer = this.garbageInstanceTimer;
-            if (timer.Enabled)
-            {
-                timer.Stop();
-            }
-
-            if (!this.IsInstance)
-            {
-                return;
-            }
-
-            timer.AutoReset = true;
-            timer.Start();
-        }
-
-        /// <summary>
-        /// インスタンススペルのガーベージタイマを開始する
-        /// </summary>
         public void StopGarbageInstanceTimer()
         {
             var timer = this.garbageInstanceTimer;
@@ -281,13 +448,13 @@
             timer.Stop();
         }
 
-        private void OverSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void BeforeSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.OverDone = true;
+            this.BeforeDone = true;
 
             var regex = this.Regex;
-            var wave = this.OverSound;
-            var speak = this.OverTextToSpeak;
+            var wave = this.BeforeSound;
+            var speak = this.BeforeTextToSpeak;
 
             SoundController.Default.Play(wave);
 
@@ -307,13 +474,18 @@
             }
         }
 
-        private void BeforeSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void GarbageInstanceTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.BeforeDone = true;
+            SpellTimerTable.TryRemoveInstance(this);
+        }
+
+        private void OverSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            this.OverDone = true;
 
             var regex = this.Regex;
-            var wave = this.BeforeSound;
-            var speak = this.BeforeTextToSpeak;
+            var wave = this.OverSound;
+            var speak = this.OverTextToSpeak;
 
             SoundController.Default.Play(wave);
 
@@ -358,109 +530,5 @@
                 SoundController.Default.Play(speak);
             }
         }
-
-        private void GarbageInstanceTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            SpellTimerTable.TryRemoveInstance(this);
-        }
-
-        public long ID { get; set; }
-        public Guid guid { get; set; }
-        public long DisplayNo { get; set; }
-        public string Panel { get; set; }
-        public string SpellTitle { get; set; }
-        public string SpellIcon { get; set; }
-        public int SpellIconSize { get; set; }
-        public string Keyword { get; set; }
-        public string KeywordForExtend1 { get; set; }
-        public string KeywordForExtend2 { get; set; }
-        public long RecastTime { get; set; }
-        public long RecastTimeExtending1 { get; set; }
-        public long RecastTimeExtending2 { get; set; }
-        public bool ExtendBeyondOriginalRecastTime { get; set; }
-        public long UpperLimitOfExtension { get; set; }
-        public bool RepeatEnabled { get; set; }
-        public bool ProgressBarVisible { get; set; }
-        public string MatchSound { get; set; }
-        public string MatchTextToSpeak { get; set; }
-        public string OverSound { get; set; }
-        public string OverTextToSpeak { get; set; }
-        public long OverTime { get; set; }
-        public string BeforeSound { get; set; }
-        public string BeforeTextToSpeak { get; set; }
-        public long BeforeTime { get; set; }
-        public string TimeupSound { get; set; }
-        public string TimeupTextToSpeak { get; set; }
-        public DateTime MatchDateTime { get; set; }
-        public bool TimeupHide { get; set; }
-        public bool IsReverse { get; set; }
-        public FontInfo Font { get; set; }
-        public string FontFamily { get; set; }
-        public float FontSize { get; set; }
-        public int FontStyle { get; set; }
-        public string FontColor { get; set; }
-        public string FontOutlineColor { get; set; }
-        public string BarColor { get; set; }
-        public string BarOutlineColor { get; set; }
-        public int BarWidth { get; set; }
-        public int BarHeight { get; set; }
-        public string BackgroundColor { get; set; }
-        public int BackgroundAlpha { get; set; }
-        public bool DontHide { get; set; }
-        public bool HideSpellName { get; set; }
-        public bool OverlapRecastTime { get; set; }
-        public bool ReduceIconBrightness { get; set; }
-        public bool RegexEnabled { get; set; }
-        public string JobFilter { get; set; }
-        public string ZoneFilter { get; set; }
-        public Guid[] TimersMustRunningForStart { get; set; }
-        public Guid[] TimersMustStoppingForStart { get; set; }
-
-        /// <summary>インスタンス化する</summary>
-        /// <remarks>表示テキストが異なる条件でマッチングした場合に当該スペルの新しいインスタンスを生成する</remarks>
-        public bool ToInstance { get; set; }
-
-        public bool Enabled { get; set; }
-
-        [XmlIgnore]
-        public DateTime CompleteScheduledTime { get; set; }
-        [XmlIgnore]
-        public volatile bool UpdateDone;
-        [XmlIgnore]
-        public bool OverDone { get; set; }
-        [XmlIgnore]
-        public bool BeforeDone { get; set; }
-        [XmlIgnore]
-        public bool TimeupDone { get; set; }
-        [XmlIgnore]
-        public string SpellTitleReplaced { get; set; }
-        [XmlIgnore]
-        public string MatchedLog { get; set; }
-        [XmlIgnore]
-        public Regex Regex { get; set; }
-        [XmlIgnore]
-        public string RegexPattern { get; set; }
-        [XmlIgnore]
-        public string KeywordReplaced { get; set; }
-        [XmlIgnore]
-        public Regex RegexForExtend1 { get; set; }
-        [XmlIgnore]
-        public string RegexForExtendPattern1 { get; set; }
-        [XmlIgnore]
-        public string KeywordForExtendReplaced1 { get; set; }
-        [XmlIgnore]
-        public Regex RegexForExtend2 { get; set; }
-        [XmlIgnore]
-        public string RegexForExtendPattern2 { get; set; }
-        [XmlIgnore]
-        public string KeywordForExtendReplaced2 { get; set; }
-
-        /// <summary>インスタンス化されたスペルか？</summary>
-        [XmlIgnore]
-        public bool IsInstance { get; set; }
-
-        /// <summary>スペルが作用した対象</summary>
-        [XmlIgnore]
-        public string TargetName { get; set; }
     }
 }
