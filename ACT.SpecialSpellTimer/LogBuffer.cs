@@ -212,7 +212,11 @@
             {
                 var fi = ActGlobals.oFormActMain.GetType().GetField(
                     "BeforeLogLineRead",
-                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.Public | BindingFlags.Static);
+                    BindingFlags.NonPublic |
+                    BindingFlags.Instance |
+                    BindingFlags.GetField |
+                    BindingFlags.Public |
+                    BindingFlags.Static);
 
                 var beforeLogLineReadDelegate =
                     fi.GetValue(ActGlobals.oFormActMain)
