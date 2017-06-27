@@ -202,7 +202,8 @@
         /// OnBeforeLogLineRead イベントを追加する
         /// </summary>
         /// <remarks>
-        /// スペスペのOnBeforeLogLineReadをACT本体に登録する。 ただし、FFXIVプラグインよりも先に処理する必要があるのでイベントを一旦除去して
+        /// スペスペのOnBeforeLogLineReadをACT本体に登録する。
+        /// ただし、FFXIVプラグインよりも先に処理する必要があるのでイベントを一旦除去して
         /// スペスペのイベントを登録した後に元のイベントを登録する
         /// </remarks>
         private void AddOnBeforeLogLineRead()
@@ -875,7 +876,8 @@
             new ConcurrentDictionary<string, string>();
 
         /// <summary>
-        /// カスタムプレースホルダーを削除する <param name="name">削除するプレースホルダーの名称</param>
+        /// カスタムプレースホルダーを削除する
+        /// <param name="name">削除するプレースホルダーの名称</param>
         /// </summary>
         public static void ClearCustomPlaceholder(string name)
         {
