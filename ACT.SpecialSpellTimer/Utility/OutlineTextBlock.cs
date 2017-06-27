@@ -204,7 +204,9 @@
                 this.TextGeometry);
         }
 
-        private static void OnFormattedTextInvalidated(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        private static void OnFormattedTextInvalidated(
+            DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs e)
         {
             var outlinedTextBlock = (OutlineTextBlock)dependencyObject;
             outlinedTextBlock.FormattedText = null;
@@ -214,7 +216,9 @@
             outlinedTextBlock.InvalidateVisual();
         }
 
-        private static void OnFormattedTextUpdated(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        private static void OnFormattedTextUpdated(
+            DependencyObject dependencyObject,
+            DependencyPropertyChangedEventArgs e)
         {
             var outlinedTextBlock = (OutlineTextBlock)dependencyObject;
             outlinedTextBlock.UpdateFormattedText();

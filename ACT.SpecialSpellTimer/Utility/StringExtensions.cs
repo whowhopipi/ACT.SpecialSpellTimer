@@ -13,7 +13,7 @@
         }
 
         public static string ToRegexPattern(
-                    this string s)
+            this string s)
         {
             if (Settings.Default.SimpleRegex)
             {
