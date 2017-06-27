@@ -67,7 +67,8 @@
         /// <summary>
         /// ツールチップ文字除去するための正規表現
         /// </summary>
-        private static readonly Regex TooltipCharsRegex = new Regex(@".\u0001\u0001\uFFFD", RegexOptions.Compiled);
+        private static readonly Regex TooltipCharsRegex =
+            new Regex(@".\u0001\u0001\uFFFD", RegexOptions.Compiled);
 
         /// <summary>
         /// ペットのID
@@ -251,7 +252,9 @@
         /// FFXIVプラグインが加工する前のログが通知されるイベント こちらは一部カットされてしまうログがカットされずに通知される
         /// またログのデリミタが異なるため、通常のログと同様に扱えるようにデリミタを変換して取り込む
         /// </remarks>
-        private void OnBeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)
+        private void OnBeforeLogLineRead(
+            bool isImport,
+            LogLineEventArgs logInfo)
         {
             if (isImport)
             {
@@ -564,7 +567,9 @@
         /// <returns>bool</returns>
         private static bool IsJobChanged(string logLine)
         {
-            return logLine.Contains("にチェンジした。") || logLine.Contains("You change to ");
+            return
+                logLine.Contains("にチェンジした。") ||
+                logLine.Contains("You change to ");
         }
 
         /// <summary>
@@ -593,7 +598,8 @@
         #region private 生ログのファイル書き出し機能
 
         private bool SaveLogEnabled =>
-            Settings.Default.SaveLogEnabled && !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
+            Settings.Default.SaveLogEnabled &&
+            !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
 
         /// <summary>
         /// ログを追記する
