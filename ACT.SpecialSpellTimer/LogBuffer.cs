@@ -371,7 +371,6 @@
             }
 
             var list = new List<string>(logInfoQueue.Count);
-            var playerChanged = false;
             var partyChanged = false;
             var jobChanged = false;
             var summoned = false;
@@ -392,29 +391,6 @@
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
                 {
-                    // プレイヤーに変化あり？
-                    if (!playerChanged)
-                    {
-                        if (IsPlayerChanged(logInfo.logLine))
-                        {
-                            if (!playerRefreshed)
-                            {
-                                FF14PluginHelper.RefreshPlayer();
-                                playerRefreshed = true;
-                            }
-
-                            if (!partyRefreshed)
-                            {
-                                RefreshPartyList();
-                                partyRefreshed = true;
-                            }
-
-                            Logger.Write("primary player changed.");
-
-                            playerChanged = true;
-                        }
-                    }
-
                     // ジョブに変化あり？
                     if (!jobChanged)
                     {
@@ -560,7 +536,7 @@
         /// バッファーにログがない場合 true
         /// </summary>
         /// <returns>バッファーにログがない場合 true</returns>
-        public bool nonEmpty()
+        public bool NonEmpty()
         {
             return !logInfoQueue.IsEmpty;
         }
@@ -586,16 +562,6 @@
         {
             return PARTY_CHANGED_WORDS.AsParallel()
                 .Any(words => words.Any(word => logLine.Contains(word)));
-        }
-
-        /// <summary>
-        /// プレイヤーが変更されたか？
-        /// </summary>
-        /// <param name="logLine">ログ行</param>
-        /// <returns>bool</returns>
-        private static bool IsPlayerChanged(string logLine)
-        {
-            return logLine.Contains("Changed primary player to");
         }
 
         #endregion ログ処理

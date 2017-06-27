@@ -1321,7 +1321,7 @@
                 return;
             }
 
-            if (this.LogBuffer.nonEmpty())
+            if (this.LogBuffer.NonEmpty())
             {
                 // ログを取り出す
                 var logLines = Task.Run(() => this.LogBuffer.GetLogLines());
