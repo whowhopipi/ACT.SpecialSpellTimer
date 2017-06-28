@@ -112,14 +112,14 @@
         {
             get
             {
-                var spells = (
+                var spells =
                     from x in this.table
                     where
                     x.Enabled
                     orderby
                     x.MatchDateTime ascending
                     select
-                    x).ToArray();
+                    x;
 
                 var player = FF14PluginHelper.GetPlayer();
                 var currentZoneID = FF14PluginHelper.GetCurrentZoneID();
