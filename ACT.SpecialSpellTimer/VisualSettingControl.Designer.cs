@@ -34,6 +34,8 @@
             this.ChangeFontItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeFontColorItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeFontOutlineColorItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ChangeWarningFontColorItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ChangeWarningFontOutlineColorItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeBarColorItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeBarOutlineColorItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeBackgoundColorItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,6 +84,8 @@
             this.ChangeFontItem,
             this.ChangeFontColorItem,
             this.ChangeFontOutlineColorItem,
+            this.ChangeWarningFontColorItem,
+            this.ChangeWarningFontOutlineColorItem,
             this.ChangeBarColorItem,
             this.ChangeBarOutlineColorItem,
             this.ChangeBackgoundColorItem,
@@ -116,6 +120,18 @@
             this.ChangeFontOutlineColorItem.Name = "ChangeFontOutlineColorItem";
             this.ChangeFontOutlineColorItem.Size = new System.Drawing.Size(217, 22);
             this.ChangeFontOutlineColorItem.Text = "ChangeFontOutlineColor";
+            // 
+            // ChangeFontColorItem
+            // 
+            this.ChangeWarningFontColorItem.Name = "ChangeWarningFontColorItem";
+            this.ChangeWarningFontColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeWarningFontColorItem.Text = "ChangeWarningFontColor";
+            // 
+            // ChangeFontOutlineColorItem
+            // 
+            this.ChangeWarningFontOutlineColorItem.Name = "ChangeWarningFontOutlineColorItem";
+            this.ChangeWarningFontOutlineColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeWarningFontOutlineColorItem.Text = "ChangeWarningFontOutlineColor";
             // 
             // ChangeBarColorItem
             // 
@@ -313,6 +329,8 @@
         private System.Windows.Forms.ToolStripMenuItem ChangeFontItem;
         private System.Windows.Forms.ToolStripMenuItem ChangeFontColorItem;
         private System.Windows.Forms.ToolStripMenuItem ChangeFontOutlineColorItem;
+        private System.Windows.Forms.ToolStripMenuItem ChangeWarningFontColorItem;
+        private System.Windows.Forms.ToolStripMenuItem ChangeWarningFontOutlineColorItem;
         private System.Windows.Forms.ToolStripMenuItem ChangeBarColorItem;
         private System.Windows.Forms.ToolStripMenuItem ChangeBarOutlineColorItem;
         private System.Windows.Forms.Label BarSizeLabel;

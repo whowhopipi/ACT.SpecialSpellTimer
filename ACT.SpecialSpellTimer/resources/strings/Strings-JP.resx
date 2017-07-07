@@ -725,6 +725,14 @@
     <value>フォントのアウトラインの色を変更する</value>
     <comment>Font outline color...</comment>
   </data>
+  <data name="ChangeWarningFontColor" xml:space="preserve">
+    <value>警告フォントの色を変更する</value>
+    <comment>Warning font color...</comment>
+  </data>
+  <data name="ChangeWarningFontOutlineColor" xml:space="preserve">
+    <value>警告フォントのアウトラインカラーを変更する</value>
+    <comment>Warning font outline color...</comment>
+  </data>
   <data name="LoadColorSet" xml:space="preserve">
     <value>配色を読み込む</value>
     <comment>Load color scheme</comment>
@@ -1168,5 +1176,13 @@
   <data name="SAMLabel" xml:space="preserve">
     <value>&lt;SAM&gt;</value>
     <comment>&lt;SAM&gt;</comment>
+  </data>
+  <data name="WarningTimeCheckBox" xml:space="preserve">
+    <value>時間が近づくと表示が変化する</value>
+    <comment>Display change as warning time approaches</comment>
+  </data>
+  <data name="WarningTimeLabel" xml:space="preserve">
+    <value>警告の時間</value>
+    <comment>Warning Time</comment>
   </data>
 </root>
