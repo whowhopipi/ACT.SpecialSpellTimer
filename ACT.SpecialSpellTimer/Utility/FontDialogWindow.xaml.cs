@@ -14,6 +14,84 @@
     using System.Windows.Media;
     using System.Xml.Serialization;
 
+    public static class ControlExtension
+    {
+        public static FontInfo GetFontInfo(
+            this Control control)
+        {
+            return new FontInfo(
+                control.FontFamily,
+                control.FontSize,
+                control.FontStyle,
+                control.FontWeight,
+                control.FontStretch);
+        }
+
+        public static void SetFontInfo(
+                    this Control control,
+            FontInfo fontInfo)
+        {
+            if (control.GetFontInfo().ToString() != fontInfo.ToString())
+            {
+                control.FontFamily = fontInfo.Family;
+                control.FontSize = fontInfo.Size;
+                control.FontStyle = fontInfo.Style;
+                control.FontWeight = fontInfo.Weight;
+                control.FontStretch = fontInfo.Stretch;
+            }
+        }
+
+        internal static FontInfo GetFontInfo(
+            this OutlineTextBlock control)
+        {
+            return new FontInfo(
+                control.FontFamily,
+                control.FontSize,
+                control.FontStyle,
+                control.FontWeight,
+                control.FontStretch);
+        }
+
+        internal static FontInfo GetFontInfo(
+            this TextBlock control)
+        {
+            return new FontInfo(
+                control.FontFamily,
+                control.FontSize,
+                control.FontStyle,
+                control.FontWeight,
+                control.FontStretch);
+        }
+
+        internal static void SetFontInfo(
+                            this OutlineTextBlock control,
+            FontInfo fontInfo)
+        {
+            if (control.GetFontInfo().ToString() != fontInfo.ToString())
+            {
+                control.FontFamily = fontInfo.Family;
+                control.FontSize = fontInfo.Size;
+                control.FontStyle = fontInfo.Style;
+                control.FontWeight = fontInfo.Weight;
+                control.FontStretch = fontInfo.Stretch;
+            }
+        }
+
+        internal static void SetFontInfo(
+            this TextBlock control,
+            FontInfo fontInfo)
+        {
+            if (control.GetFontInfo().ToString() != fontInfo.ToString())
+            {
+                control.FontFamily = fontInfo.Family;
+                control.FontSize = fontInfo.Size;
+                control.FontStyle = fontInfo.Style;
+                control.FontWeight = fontInfo.Weight;
+                control.FontStretch = fontInfo.Stretch;
+            }
+        }
+    }
+
     public partial class FontDialogWindow : MetroWindow
     {
         private FontInfo fontInfo = new FontInfo();
@@ -106,6 +184,12 @@
             helper.Owner = windowsControl.Handle;
         }
 
+        private void CancelBUtton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
+        }
+
         private void FontFamilyListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.FontStyleListBox.SelectedIndex = 0;
@@ -145,12 +229,6 @@
             this.Close();
         }
 
-        private void CancelBUtton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-            this.Close();
-        }
-
         private void ShowFontInfo()
         {
             this.FontSizeTextBox.Text = this.fontInfo.Size.ToString("N1");
@@ -180,20 +258,35 @@
         }
     }
 
+    public class FontFamilyToNameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var v = value as FontFamily;
+            var currentLang = XmlLanguage.GetLanguage(culture.IetfLanguageTag);
+            return v.FamilyNames.FirstOrDefault(o => o.Key == currentLang).Value ?? v.Source;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
     [Serializable]
     public class FontInfo
     {
         [XmlIgnore]
-        private static FontStyleConverter styleConverter = new FontStyleConverter();
+        private static Dictionary<string, FontFamily> fontFamilyDictionary = new Dictionary<string, FontFamily>();
 
         [XmlIgnore]
         private static FontStretchConverter stretchConverter = new FontStretchConverter();
 
         [XmlIgnore]
-        private static FontWeightConverter weightConverter = new FontWeightConverter();
+        private static FontStyleConverter styleConverter = new FontStyleConverter();
 
         [XmlIgnore]
-        private static Dictionary<string, FontFamily> fontFamilyDictionary = new Dictionary<string, FontFamily>();
+        private static FontWeightConverter weightConverter = new FontWeightConverter();
 
         public FontInfo()
         {
@@ -237,9 +330,9 @@
         {
             get
             {
-                return 
-                    this.Family != null ? 
-                    this.Family.Source ?? string.Empty : 
+                return
+                    this.Family != null ?
+                    this.Family.Source ?? string.Empty :
                     string.Empty;
             }
             set
@@ -252,26 +345,7 @@
         public double Size { get; set; }
 
         [XmlIgnore]
-        public FontStyle Style { get; set; }
-
-        [XmlIgnore]
         public FontStretch Stretch { get; set; }
-
-        [XmlIgnore]
-        public FontWeight Weight { get; set; }
-
-        [XmlAttribute("Style")]
-        public string StyleString
-        {
-            get
-            {
-                return styleConverter.ConvertToString(this.Style);
-            }
-            set
-            {
-                this.Style = (FontStyle)styleConverter.ConvertFromString(value);
-            }
-        }
 
         [XmlAttribute("Stretch")]
         public string StretchString
@@ -286,16 +360,19 @@
             }
         }
 
-        [XmlAttribute("Weight")]
-        public string WeightString
+        [XmlIgnore]
+        public FontStyle Style { get; set; }
+
+        [XmlAttribute("Style")]
+        public string StyleString
         {
             get
             {
-                return weightConverter.ConvertToString(this.Weight);
+                return styleConverter.ConvertToString(this.Style);
             }
             set
             {
-                this.Weight = (FontWeight)weightConverter.ConvertFromString(value);
+                this.Style = (FontStyle)styleConverter.ConvertFromString(value);
             }
         }
 
@@ -309,6 +386,22 @@
                 ftf.Weight = this.Weight;
                 ftf.Style = this.Style;
                 return ftf;
+            }
+        }
+
+        [XmlIgnore]
+        public FontWeight Weight { get; set; }
+
+        [XmlAttribute("Weight")]
+        public string WeightString
+        {
+            get
+            {
+                return weightConverter.ConvertToString(this.Weight);
+            }
+            set
+            {
+                this.Weight = (FontWeight)weightConverter.ConvertFromString(value);
             }
         }
 
@@ -359,98 +452,6 @@
             }
 
             return fontFamilyDictionary[source];
-        }
-    }
-    public class FontFamilyToNameConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var v = value as FontFamily;
-            var currentLang = XmlLanguage.GetLanguage(culture.IetfLanguageTag);
-            return v.FamilyNames.FirstOrDefault(o => o.Key == currentLang).Value ?? v.Source;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return null;
-        }
-    }
-
-    public static class ControlExtension
-    {
-        public static void SetFontInfo(
-            this Control control,
-            FontInfo fontInfo)
-        {
-            if (control.GetFontInfo().ToString() != fontInfo.ToString())
-            {
-                control.FontFamily = fontInfo.Family;
-                control.FontSize = fontInfo.Size;
-                control.FontStyle = fontInfo.Style;
-                control.FontWeight = fontInfo.Weight;
-                control.FontStretch = fontInfo.Stretch;
-            }
-        }
-
-        internal static void SetFontInfo(
-            this OutlineTextBlock control,
-            FontInfo fontInfo)
-        {
-            if (control.GetFontInfo().ToString() != fontInfo.ToString())
-            {
-                control.FontFamily = fontInfo.Family;
-                control.FontSize = fontInfo.Size;
-                control.FontStyle = fontInfo.Style;
-                control.FontWeight = fontInfo.Weight;
-                control.FontStretch = fontInfo.Stretch;
-            }
-        }
-
-        internal static void SetFontInfo(
-            this TextBlock control,
-            FontInfo fontInfo)
-        {
-            if (control.GetFontInfo().ToString() != fontInfo.ToString())
-            {
-                control.FontFamily = fontInfo.Family;
-                control.FontSize = fontInfo.Size;
-                control.FontStyle = fontInfo.Style;
-                control.FontWeight = fontInfo.Weight;
-                control.FontStretch = fontInfo.Stretch;
-            }
-        }
-
-        public static FontInfo GetFontInfo(
-            this Control control)
-        {
-            return new FontInfo(
-                control.FontFamily,
-                control.FontSize,
-                control.FontStyle,
-                control.FontWeight,
-                control.FontStretch);
-        }
-
-        internal static FontInfo GetFontInfo(
-            this OutlineTextBlock control)
-        {
-            return new FontInfo(
-                control.FontFamily,
-                control.FontSize,
-                control.FontStyle,
-                control.FontWeight,
-                control.FontStretch);
-        }
-
-        internal static FontInfo GetFontInfo(
-            this TextBlock control)
-        {
-            return new FontInfo(
-                control.FontFamily,
-                control.FontSize,
-                control.FontStyle,
-                control.FontWeight,
-                control.FontStretch);
         }
     }
 }
