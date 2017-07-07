@@ -65,6 +65,10 @@
 
         public Color FontOutlineColor { get; set; }
 
+        public Color WarningFontColor { get; set; }
+
+        public Color WarningFontOutlineColor { get; set; }
+
         public bool HideWhenNotActive { get; set; }
 
         public string Language { get; set; }
@@ -127,6 +131,8 @@
                 dic.Add("ProgressBarColor", Color.White);
                 dic.Add("FontColor", Color.AliceBlue);
                 dic.Add("FontOutlineColor", Color.FromArgb(22, 120, 157));
+                dic.Add("WarningFontColor", Color.OrangeRed);
+                dic.Add("WarningFontOutlineColor", Color.DarkRed);
                 dic.Add("ProgressBarOutlineColor", Color.FromArgb(22, 120, 157));
                 dic.Add("BackgroundColor", Color.Transparent);
                 dic.Add("Language", "EN");

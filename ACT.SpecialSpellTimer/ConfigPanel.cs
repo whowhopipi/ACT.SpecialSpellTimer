@@ -143,6 +143,8 @@
                     nr.ProgressBarVisible = true;
                     nr.FontColor = Settings.Default.FontColor.ToHTML();
                     nr.FontOutlineColor = Settings.Default.FontOutlineColor.ToHTML();
+                    nr.WarningFontColor = Settings.Default.WarningFontColor.ToHTML();
+                    nr.WarningFontOutlineColor = Settings.Default.WarningFontOutlineColor.ToHTML();
                     nr.BarColor = Settings.Default.ProgressBarColor.ToHTML();
                     nr.BarOutlineColor = Settings.Default.ProgressBarOutlineColor.ToHTML();
                     nr.FontFamily = Settings.Default.Font.Name;
@@ -183,10 +185,14 @@
                             nr.IsReverse = baseRow.IsReverse;
                             nr.FontColor = baseRow.FontColor;
                             nr.FontOutlineColor = baseRow.FontOutlineColor;
+                            nr.WarningFontColor = baseRow.WarningFontColor;
+                            nr.WarningFontOutlineColor = baseRow.WarningFontOutlineColor;
                             nr.BarColor = baseRow.BarColor;
                             nr.BarOutlineColor = baseRow.BarOutlineColor;
                             nr.DontHide = baseRow.DontHide;
                             nr.HideSpellName = baseRow.HideSpellName;
+                            nr.WarningTime = baseRow.WarningTime;
+                            nr.ChangeFontColorsWhenWarning = baseRow.ChangeFontColorsWhenWarning;
                             nr.OverlapRecastTime = baseRow.OverlapRecastTime;
                             nr.ReduceIconBrightness = baseRow.ReduceIconBrightness;
                             nr.FontFamily = baseRow.FontFamily;
@@ -712,6 +718,8 @@
             this.ExpandSecounds2NumericUpDown.Value = src.RecastTimeExtending2;
             this.ExtendBeyondOriginalRecastTimeCheckBox.Checked = src.ExtendBeyondOriginalRecastTime;
             this.UpperLimitOfExtensionNumericUpDown.Value = src.UpperLimitOfExtension;
+            this.WarningTimeNumericUpDown.Value = (decimal)src.WarningTime;
+            this.WarningTimeCheckBox.Checked = src.ChangeFontColorsWhenWarning;
 
             this.MatchSoundComboBox.SelectedValue = src.MatchSound;
             this.MatchTextToSpeakTextBox.Text = src.MatchTextToSpeak;
@@ -734,6 +742,9 @@
             this.ReduceIconBrightnessCheckBox.Checked = src.ReduceIconBrightness;
             this.ToInstanceCheckBox.Checked = src.ToInstance;
 
+            this.WarningTimeCheckBox.Checked = src.ChangeFontColorsWhenWarning;
+            this.WarningTimeNumericUpDown.Value = (decimal)src.WarningTime;
+
             this.SpellVisualSetting.SetFontInfo(src.Font);
             this.SpellVisualSetting.BarColor = string.IsNullOrWhiteSpace(src.BarColor) ?
                 Settings.Default.ProgressBarColor :
@@ -747,6 +758,12 @@
             this.SpellVisualSetting.FontOutlineColor = string.IsNullOrWhiteSpace(src.FontOutlineColor) ?
                 Settings.Default.FontOutlineColor :
                 src.FontOutlineColor.FromHTML();
+            this.SpellVisualSetting.WarningFontColor = string.IsNullOrWhiteSpace(src.WarningFontColor) ?
+                Settings.Default.WarningFontColor :
+                src.WarningFontColor.FromHTML();
+            this.SpellVisualSetting.WarningFontOutlineColor = string.IsNullOrWhiteSpace(src.WarningFontOutlineColor) ?
+                Settings.Default.WarningFontOutlineColor :
+                src.WarningFontOutlineColor.FromHTML();
             this.SpellVisualSetting.BarSize = new Size(src.BarWidth, src.BarHeight);
             this.SpellVisualSetting.BackgroundColor = string.IsNullOrWhiteSpace(src.BackgroundColor) ?
                 Settings.Default.BackgroundColor :
@@ -957,12 +974,17 @@
                         src.Font = this.SpellVisualSetting.GetFontInfo();
                         src.FontColor = this.SpellVisualSetting.FontColor.ToHTML();
                         src.FontOutlineColor = this.SpellVisualSetting.FontOutlineColor.ToHTML();
+                        src.WarningFontColor = this.SpellVisualSetting.WarningFontColor.ToHTML();
+                        src.WarningFontOutlineColor = this.SpellVisualSetting.WarningFontOutlineColor.ToHTML();
                         src.BarColor = this.SpellVisualSetting.BarColor.ToHTML();
                         src.BarOutlineColor = this.SpellVisualSetting.BarOutlineColor.ToHTML();
                         src.BarWidth = this.SpellVisualSetting.BarSize.Width;
                         src.BarHeight = this.SpellVisualSetting.BarSize.Height;
                         src.BackgroundColor = this.SpellVisualSetting.BackgroundColor.ToHTML();
                         src.BackgroundAlpha = this.SpellVisualSetting.BackgroundColor.A;
+
+                        src.WarningTime = (float)this.WarningTimeNumericUpDown.Value;
+                        src.ChangeFontColorsWhenWarning = this.WarningTimeCheckBox.Checked;
 
                         var panel = SpellTimerTable.Table.Where(x => x.Panel == src.Panel);
                         foreach (var s in panel)

@@ -22,6 +22,8 @@
         public string BarOutlineColor { get; set; }
         public string FontColor { get; set; }
         public string FontOutlineColor { get; set; }
+        public string WarningFontColor { get; set; }
+        public string WarningFontOutlineColor { get; set; }
     }
 
     /// <summary>
@@ -42,6 +44,8 @@
             this.SetFontInfo(Settings.Default.Font.ToFontInfo());
             this.FontColor = Settings.Default.FontColor;
             this.FontOutlineColor = Settings.Default.FontOutlineColor;
+            this.WarningFontColor = Settings.Default.WarningFontColor;
+            this.WarningFontOutlineColor = Settings.Default.WarningFontOutlineColor;
             this.BarColor = Settings.Default.ProgressBarColor;
             this.BarOutlineColor = Settings.Default.ProgressBarOutlineColor;
             this.BarSize = Settings.Default.ProgressBarSize;
@@ -120,6 +124,10 @@
         public Color FontColor { get; set; }
 
         public Color FontOutlineColor { get; set; }
+
+        public Color WarningFontColor { get; set; }
+
+        public Color WarningFontOutlineColor { get; set; }
 
         public string GetColorSetDirectory
         {
@@ -385,6 +393,26 @@
                 }
             };
 
+            this.ChangeWarningFontColorItem.Click += (s1, e1) =>
+            {
+                this.ColorDialog.Color = this.WarningFontColor;
+                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                {
+                    this.WarningFontColor = this.ColorDialog.Color;
+                    this.RefreshSampleImage();
+                }
+            };
+
+            this.ChangeWarningFontOutlineColorItem.Click += (s1, e1) =>
+            {
+                this.ColorDialog.Color = this.WarningFontOutlineColor;
+                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                {
+                    this.WarningFontOutlineColor = this.ColorDialog.Color;
+                    this.RefreshSampleImage();
+                }
+            };
+
             this.ChangeBarColorItem.Click += (s1, e1) =>
             {
                 this.ColorDialog.Color = this.BarColor;
@@ -441,6 +469,8 @@
                         {
                             this.FontColor = colorSet.FontColor.FromHTML();
                             this.FontOutlineColor = colorSet.FontOutlineColor.FromHTML();
+                            this.WarningFontColor = colorSet.WarningFontColor.FromHTML();
+                            this.WarningFontOutlineColor = colorSet.WarningFontOutlineColor.FromHTML();
                             this.BarColor = colorSet.BarColor.FromHTML();
                             this.BarOutlineColor = colorSet.BarOutlineColor.FromHTML();
                             this.backgroundColor = string.IsNullOrWhiteSpace(colorSet.BackgroundColor) ?
@@ -475,6 +505,8 @@
                     {
                         FontColor = this.FontColor.ToHTML(),
                         FontOutlineColor = this.FontOutlineColor.ToHTML(),
+                        WarningFontColor = this.WarningFontColor.ToHTML(),
+                        WarningFontOutlineColor = this.WarningFontOutlineColor.ToHTML(),
                         BarColor = this.BarColor.ToHTML(),
                         BarOutlineColor = this.BarOutlineColor.ToHTML(),
                         BackgroundColor = this.backgroundColor.ToHTML(),
@@ -528,6 +560,8 @@
                 {
                     s.FontColor = this.FontColor.ToHTML();
                     s.FontOutlineColor = this.FontOutlineColor.ToHTML();
+                    s.WarningFontColor = this.WarningFontColor.ToHTML();
+                    s.WarningFontOutlineColor = this.WarningFontOutlineColor.ToHTML();
                     s.BarColor = this.BarColor.ToHTML();
                     s.BarOutlineColor = this.BarOutlineColor.ToHTML();
                     s.BackgroundColor = this.backgroundColor.ToHTML();

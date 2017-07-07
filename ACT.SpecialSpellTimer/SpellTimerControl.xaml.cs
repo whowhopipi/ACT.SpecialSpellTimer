@@ -69,9 +69,29 @@
         public string FontOutlineColor { get; set; }
 
         /// <summary>
+        /// WarningFontの色
+        /// </summary>
+        public string WarningFontColor { get; set; }
+
+        /// <summary>
+        /// WarningFontOutlineの色
+        /// </summary>
+        public string WarningFontOutlineColor { get; set; }
+
+        /// <summary>
         /// スペル名を非表示とするか？
         /// </summary>
         public bool HideSpellName { get; set; }
+
+        /// <summary>
+        /// Time left warning in seconds
+        /// </summary>
+        public float WarningTime { get; set; }
+
+        /// <summary>
+        /// Should font color change when warning?
+        /// </summary>
+        public bool ChangeFontColorsWhenWarning { get; set; }
 
         /// <summary>
         /// プログレスバーを逆にするか？
@@ -142,6 +162,12 @@
         /// <summary>フォントのアウトラインBrush</summary>
         private SolidColorBrush FontOutlineBrush { get; set; }
 
+        /// <summary>フォントのBrush</summary>
+        private SolidColorBrush WarningFontBrush { get; set; }
+
+        /// <summary>フォントのアウトラインBrush</summary>
+        private SolidColorBrush WarningFontOutlineBrush { get; set; }
+
         /// <summary>
         /// 描画を更新する
         /// </summary>
@@ -169,6 +195,7 @@
                 image.Opacity = 1.0;
             }
 
+
             // リキャスト時間を描画する
             var tb = this.RecastTimeTextBlock;
             var recast = this.RecastTime > 0 ?
@@ -178,8 +205,16 @@
             {
                 tb.Text = recast;
                 tb.SetFontInfo(this.FontInfo);
-                tb.Fill = this.FontBrush;
-                tb.Stroke = this.FontOutlineBrush;
+                if (this.ChangeFontColorsWhenWarning && RecastTime < this.WarningTime)
+                {
+                    RecastTimeTextBlock.Fill = this.WarningFontBrush;
+                    RecastTimeTextBlock.Stroke = this.WarningFontOutlineBrush;
+                }
+                else
+                {
+                    tb.Fill = this.FontBrush;
+                    tb.Stroke = this.FontOutlineBrush;
+                }
                 tb.StrokeThickness = 0.5d * tb.FontSize / 13.0d;
             }
         }
@@ -245,6 +280,13 @@
             var fontOutlineColor = string.IsNullOrWhiteSpace(this.FontOutlineColor) ?
                 Settings.Default.FontOutlineColor.ToWPF() :
                 this.FontOutlineColor.FromHTMLWPF();
+            var warningFontColor = string.IsNullOrWhiteSpace(this.WarningFontColor) ?
+                    Settings.Default.WarningFontColor.ToWPF() :
+                    this.WarningFontColor.FromHTMLWPF();
+            var warningFontOutlineColor = string.IsNullOrWhiteSpace(this.WarningFontOutlineColor) ?
+                    Settings.Default.WarningFontOutlineColor.ToWPF() :
+                    this.WarningFontOutlineColor.FromHTMLWPF();
+
             var barColor = string.IsNullOrWhiteSpace(this.BarColor) ?
                 Settings.Default.ProgressBarColor.ToWPF() :
                 this.BarColor.FromHTMLWPF();
@@ -255,6 +297,8 @@
 
             this.FontBrush = this.GetBrush(fontColor);
             this.FontOutlineBrush = this.GetBrush(fontOutlineColor);
+            this.WarningFontBrush = this.GetBrush(warningFontColor);
+            this.WarningFontOutlineBrush = this.GetBrush(warningFontOutlineColor);
             this.BarBrush = this.GetBrush(barColor);
             this.BarBackBrush = this.GetBrush(barBackColor);
             this.BarOutlineBrush = this.GetBrush(barOutlineColor);

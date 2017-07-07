@@ -721,6 +721,14 @@
     <value>글자 테두리 색상</value>
     <comment>フォントのアウトラインの色を変更する</comment>
   </data>
+  <data name="ChangeWarningFontColor" xml:space="preserve">
+    <value>경고 글꼴 색상 변경</value>
+    <comment>Warning font color...</comment>
+  </data>
+  <data name="ChangeWarningFontOutlineColor" xml:space="preserve">
+    <value>경고 글꼴 개요 색상 변경</value>
+    <comment>Warning font outline color...</comment>
+  </data>
   <data name="LoadColorSet" xml:space="preserve">
     <value>색상표 가져오기</value>
     <comment>配色を読み込む</comment>
@@ -1168,5 +1176,13 @@
   <data name="SAMLabel" xml:space="preserve">
     <value>&lt;SAM&gt;</value>
     <comment>&lt;SAM&gt;</comment>
+  </data>
+  <data name="WarningTimeCheckBox" xml:space="preserve">
+    <value>타이머 끝 근처에 경고 색 표시</value>
+    <comment>Display warning color near timer end</comment>
+  </data>
+  <data name="WarningTimeLabel" xml:space="preserve">
+    <value>경고 시간</value>
+    <comment>Warning time</comment>
   </data>
 </root>
