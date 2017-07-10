@@ -46,6 +46,8 @@
             this.TimeupTextToSpeak = string.Empty;
             this.FontColor = string.Empty;
             this.FontOutlineColor = string.Empty;
+            this.WarningFontColor = string.Empty;
+            this.WarningFontOutlineColor = string.Empty;
             this.BarColor = string.Empty;
             this.BarOutlineColor = string.Empty;
             this.BackgroundColor = string.Empty;
@@ -142,6 +144,10 @@
 
         public string FontOutlineColor { get; set; }
 
+        public string WarningFontColor { get; set; }
+
+        public string WarningFontOutlineColor { get; set; }
+
         public float FontSize { get; set; }
 
         public int FontStyle { get; set; }
@@ -149,6 +155,10 @@
         public Guid guid { get; set; }
 
         public bool HideSpellName { get; set; }
+
+        public float WarningTime { get; set; }
+
+        public bool ChangeFontColorsWhenWarning { get; set; }
 
         public long ID { get; set; }
 

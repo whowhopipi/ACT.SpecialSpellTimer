@@ -254,6 +254,8 @@
                 c.SpellIconSize = spell.SpellIconSize;
                 c.IsReverse = spell.IsReverse;
                 c.HideSpellName = spell.HideSpellName;
+                c.WarningTime = spell.WarningTime;
+                c.ChangeFontColorsWhenWarning = spell.ChangeFontColorsWhenWarning;
                 c.OverlapRecastTime = spell.OverlapRecastTime;
                 c.ReduceIconBrightness = spell.ReduceIconBrightness;
                 c.RecastTime = 0;
@@ -264,6 +266,8 @@
                 c.FontInfo = spell.Font;
                 c.FontColor = spell.FontColor;
                 c.FontOutlineColor = spell.FontOutlineColor;
+                c.WarningFontColor = spell.WarningFontColor;
+                c.WarningFontOutlineColor = spell.WarningFontOutlineColor;
                 c.BarColor = spell.BarColor;
                 c.BarOutlineColor = spell.BarOutlineColor;
 

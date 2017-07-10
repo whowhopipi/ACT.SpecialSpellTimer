@@ -26,6 +26,8 @@
             Settings.Default.Font = this.DefaultVisualSetting.GetFontInfo().ToFontForWindowsForm();
             Settings.Default.FontColor = this.DefaultVisualSetting.FontColor;
             Settings.Default.FontOutlineColor = this.DefaultVisualSetting.FontOutlineColor;
+            Settings.Default.WarningFontColor = this.DefaultVisualSetting.WarningFontColor;
+            Settings.Default.WarningFontOutlineColor = this.DefaultVisualSetting.WarningFontOutlineColor;
             Settings.Default.BackgroundColor = this.DefaultVisualSetting.BackgroundColor;
 
             Settings.Default.Opacity = (int)this.OpacityNumericUpDown.Value;
@@ -204,6 +206,8 @@
             this.DefaultVisualSetting.SetFontInfo(Settings.Default.Font.ToFontInfo());
             this.DefaultVisualSetting.FontColor = Settings.Default.FontColor;
             this.DefaultVisualSetting.FontOutlineColor = Settings.Default.FontOutlineColor;
+            this.DefaultVisualSetting.WarningFontColor = Settings.Default.WarningFontColor;
+            this.DefaultVisualSetting.WarningFontOutlineColor = Settings.Default.WarningFontOutlineColor;
             this.DefaultVisualSetting.BackgroundColor = Settings.Default.BackgroundColor;
             this.DefaultVisualSetting.RefreshSampleImage();
 

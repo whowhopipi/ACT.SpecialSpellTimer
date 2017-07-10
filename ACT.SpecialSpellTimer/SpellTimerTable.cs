@@ -360,6 +360,8 @@
                     ns.FontStyle = sourceSpell.FontStyle;
                     ns.FontColor = sourceSpell.FontColor;
                     ns.FontOutlineColor = sourceSpell.FontOutlineColor;
+                    ns.WarningFontColor = sourceSpell.WarningFontColor;
+                    ns.WarningFontOutlineColor = sourceSpell.WarningFontOutlineColor;
                     ns.BarColor = sourceSpell.BarColor;
                     ns.BarOutlineColor = sourceSpell.BarOutlineColor;
                     ns.BarWidth = sourceSpell.BarWidth;
@@ -368,6 +370,8 @@
                     ns.BackgroundAlpha = sourceSpell.BackgroundAlpha;
                     ns.DontHide = sourceSpell.DontHide;
                     ns.HideSpellName = sourceSpell.HideSpellName;
+                    ns.WarningTime = sourceSpell.WarningTime;
+                    ns.ChangeFontColorsWhenWarning = sourceSpell.ChangeFontColorsWhenWarning;
                     ns.OverlapRecastTime = sourceSpell.OverlapRecastTime;
                     ns.ReduceIconBrightness = sourceSpell.ReduceIconBrightness;
                     ns.RegexEnabled = sourceSpell.RegexEnabled;

@@ -225,7 +225,6 @@
 
             this.TelopVisualSetting.FontColor = src.FontColor.FromHTML();
             this.TelopVisualSetting.FontOutlineColor = src.FontOutlineColor.FromHTML();
-            this.TelopVisualSetting.FontColor = src.FontColor.FromHTML();
             this.TelopVisualSetting.SetFontInfo(src.Font);
             this.TelopVisualSetting.BackgroundColor = string.IsNullOrWhiteSpace(src.BackgroundColor) ?
                 Settings.Default.BackgroundColor :
