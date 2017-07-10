@@ -21,11 +21,12 @@ namespace ACT.SpecialSpellTimer.Config
         {
             get
             {
+#if DEBUG
                 if (WPFHelper.IsDesignMode)
                 {
                     return DefaultSettings;
                 }
-
+#endif
                 if (instance == null)
                 {
                     instance = new Settings();
