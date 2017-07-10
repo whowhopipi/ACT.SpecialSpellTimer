@@ -65,6 +65,9 @@ namespace ACT.SpecialSpellTimer.Views
         public OutlineTextBlock()
         {
             this.TextDecorations = new TextDecorationCollection();
+
+            this.VisualTextHintingMode = TextHintingMode.Animated;
+            this.VisualTextRenderingMode = TextRenderingMode.ClearType;
         }
 
         public Brush Fill
