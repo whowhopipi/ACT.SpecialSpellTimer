@@ -940,27 +940,27 @@
                         src.DisplayNo = (int)this.DisplayNoNumericUpDown.Value;
                         src.Keyword = this.KeywordTextBox.Text;
                         src.RegexEnabled = this.RegexEnabledCheckBox.Checked;
-                        src.RecastTime = (long)this.RecastTimeNumericUpDown.Value;
+                        src.RecastTime = (double)this.RecastTimeNumericUpDown.Value;
                         src.RepeatEnabled = this.RepeatCheckBox.Checked;
                         src.ProgressBarVisible = this.ShowProgressBarCheckBox.Checked;
 
                         src.KeywordForExtend1 = this.KeywordToExpand1TextBox.Text;
-                        src.RecastTimeExtending1 = (long)this.ExpandSecounds1NumericUpDown.Value;
+                        src.RecastTimeExtending1 = (double)this.ExpandSecounds1NumericUpDown.Value;
                         src.KeywordForExtend2 = this.KeywordToExpand2TextBox.Text;
-                        src.RecastTimeExtending2 = (long)this.ExpandSecounds2NumericUpDown.Value;
+                        src.RecastTimeExtending2 = (double)this.ExpandSecounds2NumericUpDown.Value;
                         src.ExtendBeyondOriginalRecastTime = this.ExtendBeyondOriginalRecastTimeCheckBox.Checked;
-                        src.UpperLimitOfExtension = (long)this.UpperLimitOfExtensionNumericUpDown.Value;
+                        src.UpperLimitOfExtension = (double)this.UpperLimitOfExtensionNumericUpDown.Value;
 
                         src.MatchSound = (string)this.MatchSoundComboBox.SelectedValue ?? string.Empty;
                         src.MatchTextToSpeak = this.MatchTextToSpeakTextBox.Text;
 
                         src.OverSound = (string)this.OverSoundComboBox.SelectedValue ?? string.Empty;
                         src.OverTextToSpeak = this.OverTextToSpeakTextBox.Text;
-                        src.OverTime = (int)this.OverTimeNumericUpDown.Value;
+                        src.OverTime = (double)this.OverTimeNumericUpDown.Value;
 
                         src.BeforeSound = (string)this.BeforeSoundComboBox.SelectedValue ?? string.Empty;
                         src.BeforeTextToSpeak = this.BeforeTextToSpeakTextBox.Text;
-                        src.BeforeTime = (int)this.BeforeTimeNumericUpDown.Value;
+                        src.BeforeTime = (double)this.BeforeTimeNumericUpDown.Value;
 
                         src.TimeupSound = (string)this.TimeupSoundComboBox.SelectedValue ?? string.Empty;
                         src.TimeupTextToSpeak = this.TimeupTextToSpeakTextBox.Text;

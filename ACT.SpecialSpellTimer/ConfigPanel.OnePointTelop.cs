@@ -522,8 +522,8 @@
                     src.Keyword = this.TelopKeywordTextBox.Text;
                     src.KeywordToHide = this.TelopKeywordToHideTextBox.Text;
                     src.RegexEnabled = this.TelopRegexEnabledCheckBox.Checked;
-                    src.Delay = (long)this.TelopDelayNumericUpDown.Value;
-                    src.DisplayTime = (long)this.DisplayTimeNumericUpDown.Value;
+                    src.Delay = (double)this.TelopDelayNumericUpDown.Value;
+                    src.DisplayTime = (double)this.DisplayTimeNumericUpDown.Value;
                     src.AddMessageEnabled = this.EnabledAddMessageCheckBox.Checked;
                     src.ProgressBarEnabled = this.TelopProgressBarEnabledCheckBox.Checked;
                     src.FontColor = this.TelopVisualSetting.FontColor.ToHTML();
