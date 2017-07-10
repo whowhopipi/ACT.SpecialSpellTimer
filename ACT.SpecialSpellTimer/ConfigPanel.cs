@@ -718,7 +718,7 @@
             this.KeywordToExpand2TextBox.Text = src.KeywordForExtend2;
             this.ExpandSecounds2NumericUpDown.Value = (decimal)src.RecastTimeExtending2;
             this.ExtendBeyondOriginalRecastTimeCheckBox.Checked = src.ExtendBeyondOriginalRecastTime;
-            this.UpperLimitOfExtensionNumericUpDown.Value = src.UpperLimitOfExtension;
+            this.UpperLimitOfExtensionNumericUpDown.Value = (decimal)src.UpperLimitOfExtension;
             this.WarningTimeNumericUpDown.Value = (decimal)src.WarningTime;
             this.WarningTimeCheckBox.Checked = src.ChangeFontColorsWhenWarning;
 

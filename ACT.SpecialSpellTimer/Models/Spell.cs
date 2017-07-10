@@ -239,11 +239,11 @@
         /// <remarks>表示テキストが異なる条件でマッチングした場合に当該スペルの新しいインスタンスを生成する</remarks>
         public bool ToInstance { get; set; }
 
-        public long UpperLimitOfExtension { get; set; }
+        public double UpperLimitOfExtension { get; set; }
         public string WarningFontColor { get; set; }
 
         public string WarningFontOutlineColor { get; set; }
-        public float WarningTime { get; set; }
+        public double WarningTime { get; set; }
         public string ZoneFilter { get; set; }
 
         public void Dispose()

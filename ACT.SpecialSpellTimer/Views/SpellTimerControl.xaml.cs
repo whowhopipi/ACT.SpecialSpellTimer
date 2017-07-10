@@ -143,7 +143,7 @@
         /// <summary>
         /// Time left warning in seconds
         /// </summary>
-        public float WarningTime { get; set; }
+        public double WarningTime { get; set; }
 
         /// <summary>バーのアニメーション用DoubleAnimation</summary>
         private DoubleAnimation BarAnimation { get; set; }

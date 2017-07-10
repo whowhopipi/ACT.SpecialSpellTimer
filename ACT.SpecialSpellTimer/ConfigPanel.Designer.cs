@@ -883,6 +883,7 @@
             // 
             // WarningTimeNumericUpDown
             // 
+            this.WarningTimeNumericUpDown.DecimalPlaces = 1;
             this.WarningTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.WarningTimeNumericUpDown.Location = new System.Drawing.Point(5, 389);
             this.WarningTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
@@ -1049,6 +1050,7 @@
             // 
             // UpperLimitOfExtensionNumericUpDown
             // 
+            this.UpperLimitOfExtensionNumericUpDown.DecimalPlaces = 1;
             this.UpperLimitOfExtensionNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.UpperLimitOfExtensionNumericUpDown.Location = new System.Drawing.Point(5, 366);
             this.UpperLimitOfExtensionNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
