@@ -1,5 +1,5 @@
 ﻿<UserControl
-  x:Class="ACT.SpecialSpellTimer.SpellTimerControl"
+  x:Class="ACT.SpecialSpellTimer.Views.SpellTimerControl"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:Utility="clr-namespace:ACT.SpecialSpellTimer.Utility"
@@ -8,7 +8,7 @@
   d:DesignHeight="32"
   d:DesignWidth="300"
   Background="Transparent"
-  TextOptions.TextFormattingMode="Ideal"
+  TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   mc:Ignorable="d">
@@ -115,6 +115,5 @@
         </Utility:OutlineTextBlock.Effect>
       </Utility:OutlineTextBlock>
     </Viewbox>
-
   </Grid>
 </UserControl>

@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Views
 {
     using System;
     using System.Collections.Generic;

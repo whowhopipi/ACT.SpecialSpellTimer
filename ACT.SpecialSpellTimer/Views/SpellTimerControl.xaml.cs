@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Views
 {
     using System;
     using System.Diagnostics;
@@ -54,6 +54,11 @@
         public int BarWidth { get; set; }
 
         /// <summary>
+        /// Should font color change when warning?
+        /// </summary>
+        public bool ChangeFontColorsWhenWarning { get; set; }
+
+        /// <summary>
         /// Fontの色
         /// </summary>
         public string FontColor { get; set; }
@@ -69,29 +74,9 @@
         public string FontOutlineColor { get; set; }
 
         /// <summary>
-        /// WarningFontの色
-        /// </summary>
-        public string WarningFontColor { get; set; }
-
-        /// <summary>
-        /// WarningFontOutlineの色
-        /// </summary>
-        public string WarningFontOutlineColor { get; set; }
-
-        /// <summary>
         /// スペル名を非表示とするか？
         /// </summary>
         public bool HideSpellName { get; set; }
-
-        /// <summary>
-        /// Time left warning in seconds
-        /// </summary>
-        public float WarningTime { get; set; }
-
-        /// <summary>
-        /// Should font color change when warning?
-        /// </summary>
-        public bool ChangeFontColorsWhenWarning { get; set; }
 
         /// <summary>
         /// プログレスバーを逆にするか？
@@ -144,6 +129,21 @@
             }
         }
 
+        /// <summary>
+        /// WarningFontの色
+        /// </summary>
+        public string WarningFontColor { get; set; }
+
+        /// <summary>
+        /// WarningFontOutlineの色
+        /// </summary>
+        public string WarningFontOutlineColor { get; set; }
+
+        /// <summary>
+        /// Time left warning in seconds
+        /// </summary>
+        public float WarningTime { get; set; }
+
         /// <summary>バーのアニメーション用DoubleAnimation</summary>
         private DoubleAnimation BarAnimation { get; set; }
 
@@ -194,7 +194,6 @@
             {
                 image.Opacity = 1.0;
             }
-
 
             // リキャスト時間を描画する
             var tb = this.RecastTimeTextBlock;

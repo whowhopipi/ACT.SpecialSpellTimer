@@ -89,7 +89,7 @@
     <Compile Include="Models\Ticker.cs" />
     <Compile Include="OnePointTelopController.cs" />
     <Compile Include="OnePointTelopTable.cs" />
-    <Compile Include="OnePointTelopWindow.xaml.cs">
+    <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PanelSettings.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="Settings.Global.cs" />
     <Compile Include="Sound\SoundController.cs" />
     <Compile Include="SpecialSpellTimerPlugin.cs" />
-    <Compile Include="SpellTimerControl.xaml.cs">
+    <Compile Include="Views\SpellTimerControl.xaml.cs">
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpellTimerCore.cs" />
@@ -173,7 +173,7 @@
     </Compile>
     <Compile Include="WindowExtension.Visibility.cs" />
     <Compile Include="WindowExtension.Transparent.cs" />
-    <Compile Include="SpellTimerListWindow.xaml.cs">
+    <Compile Include="Views\SpellTimerListWindow.xaml.cs">
       <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpellTimerTable.cs" />
@@ -240,15 +240,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="OnePointTelopWindow.xaml">
+    <Page Include="Views\OnePointTelopWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SpellTimerControl.xaml">
+    <Page Include="Views\SpellTimerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SpellTimerListWindow.xaml">
+    <Page Include="Views\SpellTimerListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

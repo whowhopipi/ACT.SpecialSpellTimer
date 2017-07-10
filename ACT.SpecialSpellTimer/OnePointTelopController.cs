@@ -7,6 +7,7 @@
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
+    using ACT.SpecialSpellTimer.Views;
 
     /// <summary>
     /// ワンポイントテレロップ Controller
