@@ -8,6 +8,7 @@
     using System.Windows.Media.Animation;
     using System.Windows.Media.Imaging;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Image;
     using ACT.SpecialSpellTimer.Utility;
 
@@ -214,7 +215,8 @@
                     tb.Fill = this.FontBrush;
                     tb.Stroke = this.FontOutlineBrush;
                 }
-                tb.StrokeThickness = 0.5d * tb.FontSize / 13.0d;
+
+                tb.SetAutoStrokeThickness();
             }
         }
 
@@ -329,10 +331,7 @@
                 tb.SetFontInfo(font);
                 tb.Fill = this.FontBrush;
                 tb.Stroke = this.FontOutlineBrush;
-                tb.StrokeThickness = 0.65d *
-                    this.FontSize *
-                    (this.FontWeight.ToOpenTypeWeight() / FontWeights.Normal.ToOpenTypeWeight()) /
-                    13.0d;
+                tb.SetAutoStrokeThickness();
             }
 
             if (this.HideSpellName)

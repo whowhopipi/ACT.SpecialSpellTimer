@@ -14,6 +14,8 @@
     using System.Windows.Media;
     using System.Xml.Serialization;
 
+    using ACT.SpecialSpellTimer.Views;
+
     public static class ControlExtension
     {
         public static FontInfo GetFontInfo(

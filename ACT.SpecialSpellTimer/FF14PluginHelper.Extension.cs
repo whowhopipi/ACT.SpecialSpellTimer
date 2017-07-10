@@ -5,6 +5,8 @@
     using System.Diagnostics;
     using System.Linq;
 
+    using ACT.SpecialSpellTimer.Config;
+
     /// <summary>
     /// FF14Pluginヘルパーの拡張部分
     /// </summary>

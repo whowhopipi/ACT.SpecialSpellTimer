@@ -6,7 +6,7 @@
     using System.Reflection;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -136,6 +136,9 @@
                 this.RemoveSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Exited";
 
+                // 設定ファイルを保存する
+                Settings.Default.Save();
+
                 Logger.Write("Plugin Exited.");
             }
             catch (Exception ex)
@@ -148,6 +151,7 @@
 
                 this.PluginStatusLabel.Text = "Plugin Exited Error";
             }
+
             Logger.End();
         }
 
@@ -165,6 +169,9 @@
             try
             {
                 Logger.Write("Plugin Start.");
+
+                // 設定ファイルを読み込む
+                Settings.Default.Load();
 
                 pluginScreenSpace.Text = Translate.Get("LN_Tabname");
                 this.PluginStatusLabel = pluginStatusText;

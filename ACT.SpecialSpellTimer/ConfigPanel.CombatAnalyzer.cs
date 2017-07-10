@@ -9,6 +9,8 @@
     using System.Threading.Tasks;
     using System.Windows.Forms;
 
+    using ACT.SpecialSpellTimer.Config;
+
     /// <summary>
     /// 設定Panel
     /// </summary>

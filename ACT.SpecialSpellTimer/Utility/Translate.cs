@@ -3,6 +3,8 @@
     using System;
     using System.Resources;
 
+    using ACT.SpecialSpellTimer.Config;
+
     internal class Translate
     {
         private static ResourceManager Language;

@@ -3,6 +3,8 @@
     using System;
     using System.Windows.Forms;
 
+    using ACT.SpecialSpellTimer.Config;
+
     /// <summary>
     /// DQX専用オプション
     /// </summary>

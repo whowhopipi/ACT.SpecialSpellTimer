@@ -1,4 +1,5 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿#if false
+namespace ACT.SpecialSpellTimer
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +11,10 @@
     public class Settings
     {
         public static Settings def = new Settings();
-        private string xmlpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Advanced Combat Tracker\\Config\\ACT.SpecialSpellTimer.config.xml";
+
+        private string xmlpath =
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+            "\\Advanced Combat Tracker\\Config\\ACT.SpecialSpellTimer.config.xml";
 
         public Settings()
         {
@@ -25,101 +29,56 @@
 
         public static Settings Default
         {
-            get
-            {
-                return def;
-            }
-            set
-            {
-                def = value;
-            }
+            get => def;
+            set => def = value;
         }
 
         public bool AutoSortEnabled { get; set; }
-
         public bool AutoSortReverse { get; set; }
-
         public Color BackgroundColor { get; set; }
-
         public bool ClickThroughEnabled { get; set; }
-
         public long CombatLogBufferSize { get; set; }
-
         public bool CombatLogEnabled { get; set; }
-
         public bool DetectPacketDump { get; set; }
-
         public string DQXPlayerName { get; set; }
-
         public bool DQXUtilityEnabled { get; set; }
-
         public bool EnabledNotifyNormalSpellTimer { get; set; }
-
         public bool EnabledPartyMemberPlaceholder { get; set; }
-
         public bool EnabledSpellTimerNoDecimal { get; set; }
-
         public Font Font { get; set; }
-
         public Color FontColor { get; set; }
-
         public Color FontOutlineColor { get; set; }
-
+        public bool HideWhenNotActive { get; set; }
+        public string Language { get; set; } = "EN";
+        public DateTime LastUpdateDateTime { get; set; }
+        public long LogPollSleepInterval { get; set; }
+        public int MaxFPS { get; set; }
+        public string NotifyNormalSpellTimerPrefix { get; set; }
+        public int Opacity { get; set; }
+        public bool OverlayForceVisible { get; set; }
+        public bool OverlayVisible { get; set; }
+        public string OverText { get; set; }
+        public double PlayerInfoRefreshInterval { get; set; }
+        public Color ProgressBarColor { get; set; }
+        public Color ProgressBarOutlineColor { get; set; }
+        public Size ProgressBarSize { get; set; }
+        public string ReadyText { get; set; }
+        public int ReduceIconBrightness { get; set; }
+        public long RefreshInterval { get; set; }
+        public bool RemoveTooltipSymbols { get; set; }
+        public bool ResetOnWipeOut { get; set; }
+        public bool SaveLogEnabled { get; set; }
+        public string SaveLogFile { get; set; }
+        public bool SimpleRegex { get; set; }
+        public bool TelopAlwaysVisible { get; set; }
+        public double TextBlurGain { get; set; }
+        public double TextOutlineThicknessGain { get; set; }
+        public double TimeOfHideSpell { get; set; }
+        public double UpdateCheckInterval { get; set; }
+        public bool UseOtherThanFFXIV { get; set; }
         public Color WarningFontColor { get; set; }
 
         public Color WarningFontOutlineColor { get; set; }
-
-        public bool HideWhenNotActive { get; set; }
-
-        public string Language { get; set; }
-
-        public DateTime LastUpdateDateTime { get; set; }
-
-        public long LogPollSleepInterval { get; set; }
-
-        public int MaxFPS { get; set; }
-
-        public string NotifyNormalSpellTimerPrefix { get; set; }
-
-        public int Opacity { get; set; }
-
-        public bool OverlayForceVisible { get; set; }
-
-        public bool OverlayVisible { get; set; }
-
-        public string OverText { get; set; }
-
-        public double PlayerInfoRefreshInterval { get; set; }
-
-        public Color ProgressBarColor { get; set; }
-
-        public Color ProgressBarOutlineColor { get; set; }
-
-        public Size ProgressBarSize { get; set; }
-
-        public string ReadyText { get; set; }
-
-        public int ReduceIconBrightness { get; set; }
-
-        public long RefreshInterval { get; set; }
-
-        public bool RemoveTooltipSymbols { get; set; }
-
-        public bool ResetOnWipeOut { get; set; }
-
-        public bool SaveLogEnabled { get; set; }
-
-        public string SaveLogFile { get; set; }
-
-        public bool SimpleRegex { get; set; }
-
-        public bool TelopAlwaysVisible { get; set; }
-
-        public double TimeOfHideSpell { get; set; }
-
-        public double UpdateCheckInterval { get; set; }
-
-        public bool UseOtherThanFFXIV { get; set; }
 
         private Dictionary<string, object> DefaultValue
         {
@@ -169,6 +128,8 @@
                 dic.Add("SimpleRegex", false);
                 dic.Add("RemoveTooltipSymbols", false);
                 dic.Add("DetectPacketDump", false);
+                dic.Add("TextBluerGain", 2.0d);
+                dic.Add("TextOutlineThicknessGain", 1.0d);
 
                 return dic;
             }
@@ -316,7 +277,11 @@
 
         private uint ColorToInt(Color color)
         {
-            return (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | (color.B << 0));
+            return (uint)(
+                (color.A << 24) |
+                (color.R << 16) |
+                (color.G << 8) |
+                (color.B << 0));
         }
 
         private Color IntToColor(uint color)
@@ -325,7 +290,9 @@
             byte r = (byte)(color >> 16);
             byte g = (byte)(color >> 8);
             byte b = (byte)(color >> 0);
+
             return Color.FromArgb(a, r, g, b);
         }
     }
 }
+#endif

@@ -2,6 +2,8 @@
 {
     using System;
     using System.Windows.Forms;
+
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>
@@ -58,7 +60,7 @@
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&
                 !this.EnabledNotifyNormalSpellTimerCheckBox.Checked)
             {
-                SpellTimerCore.Default.clearNormalSpellTimer(true);
+                SpellTimerCore.Default.ClearNormalSpellTimer(true);
             }
 
             Settings.Default.EnabledNotifyNormalSpellTimer = this.EnabledNotifyNormalSpellTimerCheckBox.Checked;

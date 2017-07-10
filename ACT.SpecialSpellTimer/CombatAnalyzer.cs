@@ -8,6 +8,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 

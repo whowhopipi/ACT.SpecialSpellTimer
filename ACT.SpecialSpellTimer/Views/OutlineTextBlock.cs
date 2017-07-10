@@ -1,15 +1,15 @@
-﻿namespace ACT.SpecialSpellTimer.Utility
-{
-    using System;
-    using System.ComponentModel;
-    using System.Globalization;
-    using System.Windows;
-    using System.Windows.Documents;
-    using System.Windows.Markup;
-    using System.Windows.Media;
+﻿using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Markup;
+using System.Windows.Media;
 
+namespace ACT.SpecialSpellTimer.Views
+{
     [ContentProperty("Text")]
-    internal class OutlineTextBlock : FrameworkElement
+    public class OutlineTextBlock : FrameworkElement
     {
         public static readonly DependencyProperty FillProperty = DependencyProperty.Register(
             "Fill", typeof(Brush), typeof(OutlineTextBlock),

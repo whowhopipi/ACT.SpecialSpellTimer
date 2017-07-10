@@ -2,6 +2,8 @@
 {
     using System.Text.RegularExpressions;
 
+    using ACT.SpecialSpellTimer.Config;
+
     public static class StringExtensions
     {
         public static Regex ToRegex(

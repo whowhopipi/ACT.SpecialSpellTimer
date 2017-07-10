@@ -79,6 +79,8 @@
     <Compile Include="ConfigPanel.Option.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Config\FontSerializationHelper.cs" />
+    <Compile Include="Config\SerializableSize.cs" />
     <Compile Include="DQXUtility.cs" />
     <Compile Include="FF14PluginHelper.cs" />
     <Compile Include="FF14PluginHelper.Extension.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Models\Ticker.cs" />
     <Compile Include="OnePointTelopController.cs" />
     <Compile Include="OnePointTelopTable.cs" />
+    <Compile Include="Config\Settings.cs" />
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
     </Compile>
@@ -128,9 +131,9 @@
     <Compile Include="SelectJobForm.Designer.cs">
       <DependentUpon>SelectJobForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings.Global.cs" />
     <Compile Include="Sound\SoundController.cs" />
     <Compile Include="SpecialSpellTimerPlugin.cs" />
+    <Compile Include="Views\OutlineTextBlockExtensions.cs" />
     <Compile Include="Views\SpellTimerControl.xaml.cs">
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>
     </Compile>
@@ -160,7 +163,9 @@
     <Compile Include="Utility\MetroWindow.cs" />
     <Compile Include="Utility\StringExtensions.cs" />
     <Compile Include="Utility\Translate.cs" />
-    <Compile Include="Utility\OutlineTextBlock.cs" />
+    <Compile Include="Views\OutlineTextBlock.cs" />
+    <Compile Include="Views\StrokeThicknessToBlurRadiusConverter.cs" />
+    <Compile Include="Views\WPFHelper.cs" />
     <Compile Include="VisualSettingControl.cs" />
     <Compile Include="VisualSettingControl.Designer.cs">
       <DependentUpon>VisualSettingControl.cs</DependentUpon>

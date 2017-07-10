@@ -11,6 +11,7 @@
     using System.Windows.Interop;
     using System.Windows.Media;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Utility;
 

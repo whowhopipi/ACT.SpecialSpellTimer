@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>

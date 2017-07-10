@@ -11,6 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Utility;
     using ACT.SpecialSpellTimer.Views;
@@ -138,18 +139,18 @@
             }
 
             // 設定を一旦すべて削除する
-            clearNormalSpellTimer();
+            ClearNormalSpellTimer();
 
             var spells = SpellTimerTable.Table.Where(x => x.Enabled);
             foreach (var spell in spells)
             {
-                updateNormalSpellTimer(spell, true);
+                UpdateNormalSpellTimer(spell, true);
             }
 
             var telops = OnePointTelopTable.Default.Table.Where(x => x.Enabled);
             foreach (var telop in telops)
             {
-                updateNormalSpellTimerForTelop(telop, false);
+                UpdateNormalSpellTimerForTelop(telop, false);
             }
 
             // ACTのスペルタイマーに変更を反映する
@@ -212,7 +213,7 @@
         /// ACT標準のスペルタイマーから設定を削除する
         /// </summary>
         /// <param name="immediate">変更を即時に反映させるか？</param>
-        public void clearNormalSpellTimer(bool immediate = false)
+        public void ClearNormalSpellTimer(bool immediate = false)
         {
             var prefix = Settings.Default.NotifyNormalSpellTimerPrefix;
             var timerDefs = ActGlobals.oFormSpellTimers.TimerDefs
@@ -491,7 +492,7 @@
         /// ACT標準のスペルタイマーに通知する
         /// </summary>
         /// <param name="spellTimer">通知先に対応するスペルタイマー</param>
-        public void notifyNormalSpellTimer(Models.SpellTimer spellTimer)
+        public void NotifyNormalSpellTimer(Models.SpellTimer spellTimer)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -507,7 +508,7 @@
         /// ACT標準のスペルタイマーに通知する（テロップ用）
         /// </summary>
         /// <param name="telopTitle">通知先に対応するテロップ名</param>
-        public void notifyNormalSpellTimerForTelop(string telopTitle)
+        public void NotifyNormalSpellTimerForTelop(string telopTitle)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -613,7 +614,7 @@
         /// </summary>
         /// <param name="spellTimer">元になるスペルタイマー</param>
         /// <param name="useRecastTime">リキャスト時間にRecastの値を使うか。falseの場合はCompleteScheduledTimeから計算される</param>
-        public void updateNormalSpellTimer(Models.SpellTimer spellTimer, bool useRecastTime)
+        public void UpdateNormalSpellTimer(Models.SpellTimer spellTimer, bool useRecastTime)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -651,7 +652,7 @@
         /// </summary>
         /// <param name="spellTimer">元になるテロップ</param>
         /// <param name="forceHide">強制非表示か？</param>
-        public void updateNormalSpellTimerForTelop(OnePointTelop telop, bool forceHide)
+        public void UpdateNormalSpellTimerForTelop(OnePointTelop telop, bool forceHide)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -1067,8 +1068,8 @@
                     // ACT標準のSpellTimerに変更を通知する
                     if (notifyNeeded)
                     {
-                        this.updateNormalSpellTimer(spell, false);
-                        this.notifyNormalSpellTimer(spell);
+                        this.UpdateNormalSpellTimer(spell, false);
+                        this.NotifyNormalSpellTimer(spell);
                     }
                 });
                 // end loop of Spells

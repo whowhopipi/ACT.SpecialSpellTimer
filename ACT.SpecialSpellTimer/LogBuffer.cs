@@ -12,6 +12,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -93,7 +94,7 @@
         /// <summary>
         /// パーティメンバの代名詞が有効か？
         /// </summary>
-        private static bool enabledPartyMemberPlaceHolder => Settings.Default.EnabledPartyMemberPlaceholder;
+        private static bool EnabledPartyMemberPlaceHolder => Settings.Default.EnabledPartyMemberPlaceholder;
 
         #endregion private static fields
 
@@ -657,7 +658,7 @@
                 keyword = keyword.Replace("<me>", player.Name.Trim());
             }
 
-            if (enabledPartyMemberPlaceHolder && PartyList.Any())
+            if (EnabledPartyMemberPlaceHolder && PartyList.Any())
             {
                 foreach (var t in PartyList.Zip(PARTY_PLACEHOLDERS,
                     (name, placeholder) => Tuple.Create(placeholder, name)))
@@ -697,7 +698,7 @@
                 return;
             }
 
-            if (enabledPartyMemberPlaceHolder)
+            if (EnabledPartyMemberPlaceHolder)
             {
 #if DEBUG
                 Debug.WriteLine("PT: Refresh");

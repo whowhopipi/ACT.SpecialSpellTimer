@@ -8,6 +8,7 @@
     using System.Reflection;
     using System.Windows.Forms;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Image;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;

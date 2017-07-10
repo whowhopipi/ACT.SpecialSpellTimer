@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;

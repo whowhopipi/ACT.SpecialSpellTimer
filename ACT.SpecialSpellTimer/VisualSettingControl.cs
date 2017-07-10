@@ -10,6 +10,7 @@
     using System.Windows.Forms;
     using System.Xml.Serialization;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Image;
     using ACT.SpecialSpellTimer.Utility;
 
@@ -125,10 +126,6 @@
 
         public Color FontOutlineColor { get; set; }
 
-        public Color WarningFontColor { get; set; }
-
-        public Color WarningFontOutlineColor { get; set; }
-
         public string GetColorSetDirectory
         {
             get
@@ -160,12 +157,12 @@
         }
 
         public bool HideSpellName { get; set; }
-
         public bool OverlapRecastTime { get; set; }
-
         public String SpellIcon { get; set; }
-
         public int SpellIconSize { get; set; }
+        public Color WarningFontColor { get; set; }
+
+        public Color WarningFontOutlineColor { get; set; }
 
         public FontInfo GetFontInfo()
         {

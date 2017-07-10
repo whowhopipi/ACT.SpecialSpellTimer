@@ -10,6 +10,7 @@
     using System.Windows.Media;
     using System.Windows.Threading;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Utility;
 
@@ -188,11 +189,7 @@
                 this.MessageTextBlock.SetFontInfo(this.DataSource.Font);
                 this.MessageTextBlock.Fill = this.FontBrush;
                 this.MessageTextBlock.Stroke = this.FontOutlineBrush;
-                this.MessageTextBlock.StrokeThickness =
-                    0.65d *
-                    this.MessageTextBlock.FontSize *
-                    (this.MessageTextBlock.FontWeight.ToOpenTypeWeight() / FontWeights.Normal.ToOpenTypeWeight()) /
-                    13.0d;
+                this.MessageTextBlock.SetAutoStrokeThickness();
             }
 
             // プログレスバーを表示しない？

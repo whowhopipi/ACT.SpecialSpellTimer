@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Reflection;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -245,8 +246,8 @@
                         // ディレイサウンドをスタートさせる
                         telop.StartDelayedSoundTimer();
 
-                        SpellTimerCore.Default.updateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Default.notifyNormalSpellTimerForTelop(telop.Title);
+                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
 
                         return;
                     }
@@ -278,8 +279,8 @@
 
                     if (matched)
                     {
-                        SpellTimerCore.Default.updateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Default.notifyNormalSpellTimerForTelop(telop.Title);
+                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
                     }
                 });   // end loop telops
             }
