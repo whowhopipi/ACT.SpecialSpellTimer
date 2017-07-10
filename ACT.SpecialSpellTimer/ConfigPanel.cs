@@ -984,7 +984,7 @@
                         src.BackgroundColor = this.SpellVisualSetting.BackgroundColor.ToHTML();
                         src.BackgroundAlpha = this.SpellVisualSetting.BackgroundColor.A;
 
-                        src.WarningTime = (float)this.WarningTimeNumericUpDown.Value;
+                        src.WarningTime = (double)this.WarningTimeNumericUpDown.Value;
                         src.ChangeFontColorsWhenWarning = this.WarningTimeCheckBox.Checked;
 
                         var panel = SpellTimerTable.Table.Where(x => x.Panel == src.Panel);

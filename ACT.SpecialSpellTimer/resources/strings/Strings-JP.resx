@@ -1178,11 +1178,11 @@
     <comment>&lt;SAM&gt;</comment>
   </data>
   <data name="WarningTimeCheckBox" xml:space="preserve">
-    <value>時間が近づくと表示が変化する</value>
+    <value>残り時間でフォントを警告色に変える</value>
     <comment>Display change as warning time approaches</comment>
   </data>
   <data name="WarningTimeLabel" xml:space="preserve">
-    <value>警告の時間</value>
+    <value>警告色に変える残り時間</value>
     <comment>Warning Time</comment>
   </data>
   <data name="TextBlurRate" xml:space="preserve">

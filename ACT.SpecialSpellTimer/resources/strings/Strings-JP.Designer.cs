@@ -2419,7 +2419,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   時間が近づくと表示が変化する に類似しているローカライズされた文字列を検索します。
+        ///   残り時間でフォントを警告色に変える に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string WarningTimeCheckBox {
             get {
@@ -2428,7 +2428,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   警告の時間 に類似しているローカライズされた文字列を検索します。
+        ///   警告色に変える残り時間 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string WarningTimeLabel {
             get {
