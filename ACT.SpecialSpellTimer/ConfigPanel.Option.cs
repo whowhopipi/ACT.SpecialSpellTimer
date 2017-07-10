@@ -54,6 +54,9 @@
             Settings.Default.RemoveTooltipSymbols = this.RemoveTooltipSymbolsCheckBox.Checked;
             Settings.Default.DetectPacketDump = this.DetectPacketDumpcheckBox.Checked;
 
+            Settings.Default.TextOutlineThicknessRate = (double)this.TextOutlineThicknessRateNumericUpDown.Value;
+            Settings.Default.TextBlurRate = (double)this.TextBlurRateNumericUpDown.Value;
+
             SpellTimerCore.Default.InvalidateSettings();
 
             // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
@@ -235,6 +238,9 @@
             this.SimpleRegexCheckBox.Checked = Settings.Default.SimpleRegex;
             this.RemoveTooltipSymbolsCheckBox.Checked = Settings.Default.RemoveTooltipSymbols;
             this.DetectPacketDumpcheckBox.Checked = Settings.Default.DetectPacketDump;
+
+            this.TextOutlineThicknessRateNumericUpDown.Value = (decimal)Settings.Default.TextOutlineThicknessRate;
+            this.TextBlurRateNumericUpDown.Value = (decimal)Settings.Default.TextBlurRate;
 
             var sw1 = this.SaveLogCheckBox.Checked;
             this.SaveLogTextBox.Enabled = sw1;

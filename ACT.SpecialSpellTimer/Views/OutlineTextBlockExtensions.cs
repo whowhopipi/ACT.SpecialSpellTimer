@@ -30,10 +30,10 @@ namespace ACT.SpecialSpellTimer.Views
             var textOutlineThicknessGain = 1.0d;
             if (!WPFHelper.IsDesignMode)
             {
-                textOutlineThicknessGain = Settings.Default.TextOutlineThicknessGain;
+                textOutlineThicknessGain = Settings.Default.TextOutlineThicknessRate;
             }
 
-            t.StrokeThickness = thickness;
+            t.StrokeThickness = thickness * textOutlineThicknessGain;
         }
     }
 }

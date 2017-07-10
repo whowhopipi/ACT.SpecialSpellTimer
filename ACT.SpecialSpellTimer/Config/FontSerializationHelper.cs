@@ -9,9 +9,16 @@ namespace ACT.SpecialSpellTimer.Config
     {
         private const char FontSerializationDelimiter = ',';
 
+        private static readonly Font DefaultFont = new Font("Microsoft Sans Serif", 9.75f);
+
         public static Font FromString(
             string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return DefaultFont;
+            }
+
             var parts = value.Split(FontSerializationDelimiter);
             return new Font(
                 parts[0],
@@ -26,6 +33,11 @@ namespace ACT.SpecialSpellTimer.Config
         public static string ToString(
             Font font)
         {
+            if (font == null)
+            {
+                return string.Empty;
+            }
+
             return string.Join(
                 FontSerializationDelimiter.ToString(),
                 new string[]

@@ -6,6 +6,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using ACT.SpecialSpellTimer.Utility;
+using ACT.SpecialSpellTimer.Views;
 
 namespace ACT.SpecialSpellTimer.Config
 {
@@ -16,7 +17,23 @@ namespace ACT.SpecialSpellTimer.Config
 
         private static Settings instance;
 
-        public static Settings Default => (instance ?? (instance = new Settings()));
+        public static Settings Default
+        {
+            get
+            {
+                if (WPFHelper.IsDesignMode)
+                {
+                    return DefaultSettings;
+                }
+
+                if (instance == null)
+                {
+                    instance = new Settings();
+                }
+
+                return instance;
+            }
+        }
 
         #endregion Singleton
 
@@ -160,8 +177,8 @@ namespace ACT.SpecialSpellTimer.Config
         public string SaveLogFile { get; set; }
         public bool SimpleRegex { get; set; }
         public bool TelopAlwaysVisible { get; set; }
-        public double TextBlurGain { get; set; }
-        public double TextOutlineThicknessGain { get; set; }
+        public double TextBlurRate { get; set; }
+        public double TextOutlineThicknessRate { get; set; }
         public double TimeOfHideSpell { get; set; }
         public double UpdateCheckInterval { get; set; }
         public bool UseOtherThanFFXIV { get; set; }
@@ -281,8 +298,8 @@ namespace ACT.SpecialSpellTimer.Config
             ResetOnWipeOut = true,
             SimpleRegex = false,
             DetectPacketDump = false,
-            TextBlurGain = 2.0d,
-            TextOutlineThicknessGain = 1.0d,
+            TextBlurRate = 1.2d,
+            TextOutlineThicknessRate = 1.0d,
         };
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace ACT.SpecialSpellTimer.Views
             var textBlurGain = 2.0d;
             if (!WPFHelper.IsDesignMode)
             {
-                textBlurGain = Settings.Default.TextBlurGain;
+                textBlurGain = Settings.Default.TextBlurRate;
             }
 
             return (double)value * textBlurGain;

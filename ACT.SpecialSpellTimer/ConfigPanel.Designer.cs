@@ -275,6 +275,10 @@
             this.OptionTabPage = new System.Windows.Forms.TabPage();
             this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.TabControlExtHoriz();
             this.tabOverlayOptions = new System.Windows.Forms.TabPage();
+            this.label107 = new System.Windows.Forms.Label();
+            this.label106 = new System.Windows.Forms.Label();
+            this.TextBlurRateNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.TextOutlineThicknessRateNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
             this.label18 = new System.Windows.Forms.Label();
             this.OpacityNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -420,6 +424,8 @@
             this.OptionTabPage.SuspendLayout();
             this.tabControlExtHoriz1.SuspendLayout();
             this.tabOverlayOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TextBlurRateNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TextOutlineThicknessRateNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).BeginInit();
             this.tabDetailOptions.SuspendLayout();
@@ -879,7 +885,7 @@
             // 
             this.WarningTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.WarningTimeNumericUpDown.Location = new System.Drawing.Point(5, 389);
-            this.WarningTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.WarningTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.WarningTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -912,7 +918,7 @@
             this.ExpandSecounds1NumericUpDown.DecimalPlaces = 1;
             this.ExpandSecounds1NumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.ExpandSecounds1NumericUpDown.Location = new System.Drawing.Point(426, 289);
-            this.ExpandSecounds1NumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ExpandSecounds1NumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.ExpandSecounds1NumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -957,7 +963,7 @@
             this.ExpandSecounds2NumericUpDown.DecimalPlaces = 1;
             this.ExpandSecounds2NumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.ExpandSecounds2NumericUpDown.Location = new System.Drawing.Point(425, 316);
-            this.ExpandSecounds2NumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ExpandSecounds2NumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.ExpandSecounds2NumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1030,7 +1036,7 @@
             this.RecastTimeNumericUpDown.DecimalPlaces = 1;
             this.RecastTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.RecastTimeNumericUpDown.Location = new System.Drawing.Point(5, 245);
-            this.RecastTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.RecastTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.RecastTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1045,7 +1051,7 @@
             // 
             this.UpperLimitOfExtensionNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.UpperLimitOfExtensionNumericUpDown.Location = new System.Drawing.Point(5, 366);
-            this.UpperLimitOfExtensionNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.UpperLimitOfExtensionNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.UpperLimitOfExtensionNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1624,7 +1630,7 @@
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Location = new System.Drawing.Point(5, 300);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(529, 75);
             this.groupBox2.TabIndex = 3;
@@ -3076,6 +3082,10 @@
             // 
             this.tabOverlayOptions.AutoScroll = true;
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.label107);
+            this.tabOverlayOptions.Controls.Add(this.label106);
+            this.tabOverlayOptions.Controls.Add(this.TextBlurRateNumericUpDown);
+            this.tabOverlayOptions.Controls.Add(this.TextOutlineThicknessRateNumericUpDown);
             this.tabOverlayOptions.Controls.Add(this.DefaultVisualSetting);
             this.tabOverlayOptions.Controls.Add(this.label18);
             this.tabOverlayOptions.Controls.Add(this.OpacityNumericUpDown);
@@ -3100,6 +3110,74 @@
             this.tabOverlayOptions.Size = new System.Drawing.Size(1063, 708);
             this.tabOverlayOptions.TabIndex = 0;
             this.tabOverlayOptions.Text = "tabOverlayOptions";
+            // 
+            // label107
+            // 
+            this.label107.AutoSize = true;
+            this.label107.Location = new System.Drawing.Point(15, 372);
+            this.label107.Name = "label107";
+            this.label107.Size = new System.Drawing.Size(73, 12);
+            this.label107.TabIndex = 68;
+            this.label107.Text = "TextBlurRate";
+            // 
+            // label106
+            // 
+            this.label106.AutoSize = true;
+            this.label106.Location = new System.Drawing.Point(15, 347);
+            this.label106.Name = "label106";
+            this.label106.Size = new System.Drawing.Size(140, 12);
+            this.label106.TabIndex = 67;
+            this.label106.Text = "TextOutlineThicknessRate";
+            // 
+            // TextBlurRateNumericUpDown
+            // 
+            this.TextBlurRateNumericUpDown.DecimalPlaces = 1;
+            this.TextBlurRateNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.TextBlurRateNumericUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.TextBlurRateNumericUpDown.Location = new System.Drawing.Point(291, 370);
+            this.TextBlurRateNumericUpDown.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.TextBlurRateNumericUpDown.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.TextBlurRateNumericUpDown.Name = "TextBlurRateNumericUpDown";
+            this.TextBlurRateNumericUpDown.Size = new System.Drawing.Size(59, 19);
+            this.TextBlurRateNumericUpDown.TabIndex = 66;
+            this.TextBlurRateNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // TextOutlineThicknessRateNumericUpDown
+            // 
+            this.TextOutlineThicknessRateNumericUpDown.DecimalPlaces = 1;
+            this.TextOutlineThicknessRateNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.TextOutlineThicknessRateNumericUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.TextOutlineThicknessRateNumericUpDown.Location = new System.Drawing.Point(291, 345);
+            this.TextOutlineThicknessRateNumericUpDown.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.TextOutlineThicknessRateNumericUpDown.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            -2147483648});
+            this.TextOutlineThicknessRateNumericUpDown.Name = "TextOutlineThicknessRateNumericUpDown";
+            this.TextOutlineThicknessRateNumericUpDown.Size = new System.Drawing.Size(59, 19);
+            this.TextOutlineThicknessRateNumericUpDown.TabIndex = 65;
+            this.TextOutlineThicknessRateNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // DefaultVisualSetting
             // 
@@ -4105,6 +4183,8 @@
             this.tabControlExtHoriz1.ResumeLayout(false);
             this.tabOverlayOptions.ResumeLayout(false);
             this.tabOverlayOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TextBlurRateNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TextOutlineThicknessRateNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReduceIconBrightnessNumericUpDown)).EndInit();
             this.tabDetailOptions.ResumeLayout(false);
@@ -4458,5 +4538,9 @@
         private System.Windows.Forms.NumericUpDown WarningTimeNumericUpDown;
         private System.Windows.Forms.Label label105;
         private System.Windows.Forms.CheckBox WarningTimeCheckBox;
+        private System.Windows.Forms.Label label107;
+        private System.Windows.Forms.Label label106;
+        private System.Windows.Forms.NumericUpDown TextBlurRateNumericUpDown;
+        private System.Windows.Forms.NumericUpDown TextOutlineThicknessRateNumericUpDown;
     }
 }

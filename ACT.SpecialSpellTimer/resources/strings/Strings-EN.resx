@@ -1183,4 +1183,12 @@
   <data name="WarningTimeLabel" xml:space="preserve">
     <value>Warning time</value>
   </data>
+  <data name="TextBlurRate" xml:space="preserve">
+    <value>Text blur rate</value>
+    <comment>テキストのブラー増幅率</comment>
+  </data>
+  <data name="TextOutlineThicknessRate" xml:space="preserve">
+    <value>Text outline thickness rate</value>
+    <comment>テキストのアウトライン増幅率</comment>
+  </data>
 </root>

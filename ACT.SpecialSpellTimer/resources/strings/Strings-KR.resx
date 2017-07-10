@@ -1185,4 +1185,12 @@
     <value>경고 시간</value>
     <comment>Warning time</comment>
   </data>
+  <data name="TextBlurRate" xml:space="preserve">
+    <value>Text blur rate</value>
+    <comment>テキストのブラー増幅率</comment>
+  </data>
+  <data name="TextOutlineThicknessRate" xml:space="preserve">
+    <value>Text outline thickness rate</value>
+    <comment>テキストのアウトライン増幅率</comment>
+  </data>
 </root>
