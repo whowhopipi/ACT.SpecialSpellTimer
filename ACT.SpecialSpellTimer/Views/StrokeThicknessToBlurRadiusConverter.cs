@@ -19,10 +19,13 @@ namespace ACT.SpecialSpellTimer.Views
             // アウトラインの太さを基準にして増幅する
             // 増幅率は一応設定可能とする
             var textBlurGain = 2.0d;
-            if (!WPFHelper.IsDesignMode)
+#if DEBUG
+            if (WPFHelper.IsDesignMode)
             {
-                textBlurGain = Settings.Default.TextBlurRate;
+                return (double)value * textBlurGain;
             }
+#endif
+            textBlurGain = Settings.Default.TextBlurRate;
 
             return (double)value * textBlurGain;
         }
