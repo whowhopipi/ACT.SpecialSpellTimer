@@ -205,10 +205,11 @@
             {
                 tb.Text = recast;
                 tb.SetFontInfo(this.FontInfo);
-                if (this.ChangeFontColorsWhenWarning && RecastTime < this.WarningTime)
+                if (this.ChangeFontColorsWhenWarning &&
+                    this.RecastTime < this.WarningTime)
                 {
-                    RecastTimeTextBlock.Fill = this.WarningFontBrush;
-                    RecastTimeTextBlock.Stroke = this.WarningFontOutlineBrush;
+                    tb.Fill = this.WarningFontBrush;
+                    tb.Stroke = this.WarningFontOutlineBrush;
                 }
                 else
                 {
