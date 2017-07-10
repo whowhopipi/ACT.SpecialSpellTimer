@@ -708,14 +708,14 @@
             this.DisplayNoNumericUpDown.Value = src.DisplayNo;
             this.KeywordTextBox.Text = src.Keyword;
             this.RegexEnabledCheckBox.Checked = src.RegexEnabled;
-            this.RecastTimeNumericUpDown.Value = src.RecastTime;
+            this.RecastTimeNumericUpDown.Value = (decimal)src.RecastTime;
             this.RepeatCheckBox.Checked = src.RepeatEnabled;
             this.ShowProgressBarCheckBox.Checked = src.ProgressBarVisible;
 
             this.KeywordToExpand1TextBox.Text = src.KeywordForExtend1;
-            this.ExpandSecounds1NumericUpDown.Value = src.RecastTimeExtending1;
+            this.ExpandSecounds1NumericUpDown.Value = (decimal)src.RecastTimeExtending1;
             this.KeywordToExpand2TextBox.Text = src.KeywordForExtend2;
-            this.ExpandSecounds2NumericUpDown.Value = src.RecastTimeExtending2;
+            this.ExpandSecounds2NumericUpDown.Value = (decimal)src.RecastTimeExtending2;
             this.ExtendBeyondOriginalRecastTimeCheckBox.Checked = src.ExtendBeyondOriginalRecastTime;
             this.UpperLimitOfExtensionNumericUpDown.Value = src.UpperLimitOfExtension;
             this.WarningTimeNumericUpDown.Value = (decimal)src.WarningTime;
@@ -726,11 +726,11 @@
 
             this.OverSoundComboBox.SelectedValue = src.OverSound;
             this.OverTextToSpeakTextBox.Text = src.OverTextToSpeak;
-            this.OverTimeNumericUpDown.Value = src.OverTime;
+            this.OverTimeNumericUpDown.Value = (decimal)src.OverTime;
 
             this.BeforeSoundComboBox.SelectedValue = src.BeforeSound;
             this.BeforeTextToSpeakTextBox.Text = src.BeforeTextToSpeak;
-            this.BeforeTimeNumericUpDown.Value = src.BeforeTime;
+            this.BeforeTimeNumericUpDown.Value = (decimal)src.BeforeTime;
 
             this.TimeupSoundComboBox.SelectedValue = src.TimeupSound;
             this.TimeupTextToSpeakTextBox.Text = src.TimeupTextToSpeak;

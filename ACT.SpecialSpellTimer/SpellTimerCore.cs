@@ -933,8 +933,8 @@
                                     // 効果時間を決定する
                                     // グループ "duration" をキャプチャーしていた場合は効果時間を置換する
                                     var durationAsText = match.Groups["duration"].Value;
-                                    long duration;
-                                    if (!long.TryParse(durationAsText, out duration))
+                                    double duration;
+                                    if (!double.TryParse(durationAsText, out duration))
                                     {
                                         duration = targetSpell.RecastTime;
                                     }
@@ -974,7 +974,7 @@
                     {
                         var keywords = new string[] { spell.KeywordForExtendReplaced1, spell.KeywordForExtendReplaced2 };
                         var regexes = new Regex[] { spell.RegexForExtend1, spell.RegexForExtend2 };
-                        var timeToExtends = new long[] { spell.RecastTimeExtending1, spell.RecastTimeExtending2 };
+                        var timeToExtends = new double[] { spell.RecastTimeExtending1, spell.RecastTimeExtending2 };
 
                         for (int i = 0; i < 2; i++)
                         {

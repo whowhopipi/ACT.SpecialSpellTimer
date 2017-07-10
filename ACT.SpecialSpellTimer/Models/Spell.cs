@@ -123,7 +123,9 @@
 
         public string BeforeTextToSpeak { get; set; }
 
-        public long BeforeTime { get; set; }
+        public double BeforeTime { get; set; }
+
+        public bool ChangeFontColorsWhenWarning { get; set; }
 
         [XmlIgnore]
         public DateTime CompleteScheduledTime { get; set; }
@@ -144,22 +146,10 @@
 
         public string FontOutlineColor { get; set; }
 
-        public string WarningFontColor { get; set; }
-
-        public string WarningFontOutlineColor { get; set; }
-
         public float FontSize { get; set; }
-
         public int FontStyle { get; set; }
-
         public Guid guid { get; set; }
-
         public bool HideSpellName { get; set; }
-
-        public float WarningTime { get; set; }
-
-        public bool ChangeFontColorsWhenWarning { get; set; }
-
         public long ID { get; set; }
 
         /// <summary>インスタンス化されたスペルか？</summary>
@@ -167,13 +157,9 @@
         public bool IsInstance { get; set; }
 
         public bool IsReverse { get; set; }
-
         public string JobFilter { get; set; }
-
         public string Keyword { get; set; }
-
         public string KeywordForExtend1 { get; set; }
-
         public string KeywordForExtend2 { get; set; }
 
         [XmlIgnore]
@@ -191,30 +177,20 @@
         public string MatchedLog { get; set; }
 
         public string MatchSound { get; set; }
-
         public string MatchTextToSpeak { get; set; }
 
         [XmlIgnore]
         public bool OverDone { get; set; }
 
         public bool OverlapRecastTime { get; set; }
-
         public string OverSound { get; set; }
-
         public string OverTextToSpeak { get; set; }
-
-        public long OverTime { get; set; }
-
+        public double OverTime { get; set; }
         public string Panel { get; set; }
-
         public bool ProgressBarVisible { get; set; }
-
-        public long RecastTime { get; set; }
-
-        public long RecastTimeExtending1 { get; set; }
-
-        public long RecastTimeExtending2 { get; set; }
-
+        public double RecastTime { get; set; }
+        public double RecastTimeExtending1 { get; set; }
+        public double RecastTimeExtending2 { get; set; }
         public bool ReduceIconBrightness { get; set; }
 
         [XmlIgnore]
@@ -238,11 +214,8 @@
         public string RegexPattern { get; set; }
 
         public bool RepeatEnabled { get; set; }
-
         public string SpellIcon { get; set; }
-
         public int SpellIconSize { get; set; }
-
         public string SpellTitle { get; set; }
 
         [XmlIgnore]
@@ -253,16 +226,13 @@
         public string TargetName { get; set; }
 
         public Guid[] TimersMustRunningForStart { get; set; }
-
         public Guid[] TimersMustStoppingForStart { get; set; }
 
         [XmlIgnore]
         public bool TimeupDone { get; set; }
 
         public bool TimeupHide { get; set; }
-
         public string TimeupSound { get; set; }
-
         public string TimeupTextToSpeak { get; set; }
 
         /// <summary>インスタンス化する</summary>
@@ -270,7 +240,10 @@
         public bool ToInstance { get; set; }
 
         public long UpperLimitOfExtension { get; set; }
+        public string WarningFontColor { get; set; }
 
+        public string WarningFontOutlineColor { get; set; }
+        public float WarningTime { get; set; }
         public string ZoneFilter { get; set; }
 
         public void Dispose()

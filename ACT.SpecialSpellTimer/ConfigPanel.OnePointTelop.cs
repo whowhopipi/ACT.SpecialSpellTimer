@@ -218,8 +218,8 @@
             this.TelopKeywordTextBox.Text = src.Keyword;
             this.TelopKeywordToHideTextBox.Text = src.KeywordToHide;
             this.TelopRegexEnabledCheckBox.Checked = src.RegexEnabled;
-            this.TelopDelayNumericUpDown.Value = src.Delay;
-            this.DisplayTimeNumericUpDown.Value = src.DisplayTime;
+            this.TelopDelayNumericUpDown.Value = (decimal)src.Delay;
+            this.DisplayTimeNumericUpDown.Value = (decimal)src.DisplayTime;
             this.EnabledAddMessageCheckBox.Checked = src.AddMessageEnabled;
             this.TelopProgressBarEnabledCheckBox.Checked = src.ProgressBarEnabled;
 

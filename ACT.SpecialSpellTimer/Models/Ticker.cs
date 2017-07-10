@@ -60,7 +60,7 @@
 
         public string BackgroundColor { get; set; }
 
-        public long Delay { get; set; }
+        public double Delay { get; set; }
 
         [XmlIgnore]
         public bool Delayed { get; set; }
@@ -69,7 +69,7 @@
 
         public string DelayTextToSpeak { get; set; }
 
-        public long DisplayTime { get; set; }
+        public double DisplayTime { get; set; }
 
         public bool Enabled { get; set; }
 
