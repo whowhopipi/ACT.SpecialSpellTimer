@@ -1393,6 +1393,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   ACT本体に &quot;end&quot; を通知する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string NotifyToACTCheckBox {
+            get {
+                return ResourceManager.GetString("NotifyToACTCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   No に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string NumberHeader {

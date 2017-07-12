@@ -1193,4 +1193,8 @@
     <value>テキストのアウトライン増幅率</value>
     <comment>Text outline thickness rate</comment>
   </data>
+  <data name="NotifyToACTCheckBox" xml:space="preserve">
+    <value>ACT本体に "end" を通知する</value>
+    <comment>Notify "end" to ACT.</comment>
+  </data>
 </root>

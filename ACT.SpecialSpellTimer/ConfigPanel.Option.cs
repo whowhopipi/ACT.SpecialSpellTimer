@@ -50,6 +50,7 @@
             Settings.Default.SaveLogFile = this.SaveLogTextBox.Text;
 
             Settings.Default.ResetOnWipeOut = this.ResetOnWipeOutCheckBox.Checked;
+            Settings.Default.WipeoutNotifyToACT = this.NotifyToACTCheckBox.Checked;
             Settings.Default.SimpleRegex = this.SimpleRegexCheckBox.Checked;
             Settings.Default.RemoveTooltipSymbols = this.RemoveTooltipSymbolsCheckBox.Checked;
             Settings.Default.DetectPacketDump = this.DetectPacketDumpcheckBox.Checked;
@@ -235,6 +236,7 @@
             this.SaveLogTextBox.Text = Settings.Default.SaveLogFile;
 
             this.ResetOnWipeOutCheckBox.Checked = Settings.Default.ResetOnWipeOut;
+            this.NotifyToACTCheckBox.Checked = Settings.Default.WipeoutNotifyToACT;
             this.SimpleRegexCheckBox.Checked = Settings.Default.SimpleRegex;
             this.RemoveTooltipSymbolsCheckBox.Checked = Settings.Default.RemoveTooltipSymbols;
             this.DetectPacketDumpcheckBox.Checked = Settings.Default.DetectPacketDump;

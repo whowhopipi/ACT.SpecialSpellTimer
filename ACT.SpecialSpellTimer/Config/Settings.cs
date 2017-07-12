@@ -184,6 +184,8 @@ namespace ACT.SpecialSpellTimer.Config
         public double UpdateCheckInterval { get; set; }
         public bool UseOtherThanFFXIV { get; set; }
 
+        public bool WipeoutNotifyToACT { get; set; }
+
         #endregion Data
 
         #region Load Save
@@ -297,6 +299,7 @@ namespace ACT.SpecialSpellTimer.Config
             DQXUtilityEnabled = false,
             DQXPlayerName = string.Empty,
             ResetOnWipeOut = true,
+            WipeoutNotifyToACT = true,
             SimpleRegex = false,
             DetectPacketDump = false,
             TextBlurRate = 1.2d,

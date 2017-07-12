@@ -298,6 +298,7 @@
             this.OverlayForceVisibleCheckBox = new System.Windows.Forms.CheckBox();
             this.HideWhenNotActiceCheckBox = new System.Windows.Forms.CheckBox();
             this.tabDetailOptions = new System.Windows.Forms.TabPage();
+            this.NotifyToACTCheckBox = new System.Windows.Forms.CheckBox();
             this.label23 = new System.Windows.Forms.Label();
             this.AutoSortCheckBox = new System.Windows.Forms.CheckBox();
             this.TimeOfHideNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -3365,6 +3366,7 @@
             // 
             this.tabDetailOptions.AutoScroll = true;
             this.tabDetailOptions.BackColor = System.Drawing.Color.White;
+            this.tabDetailOptions.Controls.Add(this.NotifyToACTCheckBox);
             this.tabDetailOptions.Controls.Add(this.label23);
             this.tabDetailOptions.Controls.Add(this.AutoSortCheckBox);
             this.tabDetailOptions.Controls.Add(this.TimeOfHideNumericUpDown);
@@ -3408,6 +3410,16 @@
             this.tabDetailOptions.Size = new System.Drawing.Size(1063, 708);
             this.tabDetailOptions.TabIndex = 1;
             this.tabDetailOptions.Text = "tabDetailOptions";
+            // 
+            // NotifyToACTCheckBox
+            // 
+            this.NotifyToACTCheckBox.AutoSize = true;
+            this.NotifyToACTCheckBox.Location = new System.Drawing.Point(360, 266);
+            this.NotifyToACTCheckBox.Name = "NotifyToACTCheckBox";
+            this.NotifyToACTCheckBox.Size = new System.Drawing.Size(143, 16);
+            this.NotifyToACTCheckBox.TabIndex = 73;
+            this.NotifyToACTCheckBox.Text = "NotifyToACTCheckBox";
+            this.NotifyToACTCheckBox.UseVisualStyleBackColor = true;
             // 
             // label23
             // 
@@ -4544,5 +4556,6 @@
         private System.Windows.Forms.Label label106;
         private System.Windows.Forms.NumericUpDown TextBlurRateNumericUpDown;
         private System.Windows.Forms.NumericUpDown TextOutlineThicknessRateNumericUpDown;
+        private System.Windows.Forms.CheckBox NotifyToACTCheckBox;
     }
 }

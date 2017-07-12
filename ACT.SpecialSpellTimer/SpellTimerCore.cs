@@ -1303,6 +1303,12 @@
                     // テロップのカウントをリセットする
                     OnePointTelopTable.Default.ResetCount();
 
+                    // ACT本体に戦闘終了を通知する
+                    if (Settings.Default.WipeoutNotifyToACT)
+                    {
+                        ActGlobals.oFormActMain.ActCommands("end");
+                    }
+
                     this.LastWipeOutDateTime = DateTime.Now;
                 }
             }
