@@ -1336,6 +1336,9 @@
                 return;
             }
 
+            // 全滅によるリセットを判定する
+            var wipeoutTask = Task.Run(() => this.ResetCountAtRestart());
+
             if (this.LogBuffer.NonEmpty())
             {
                 // ログを取り出す
@@ -1362,8 +1365,7 @@
                 }
             }
 
-            // 全滅によるリセットを判定する
-            this.ResetCountAtRestart();
+            wipeoutTask.Wait();
 
             if (!existsLog)
             {
