@@ -12,6 +12,7 @@
     using System.Threading.Tasks;
 
     using ACT.SpecialSpellTimer.Config;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Utility;
     using ACT.SpecialSpellTimer.Views;
@@ -171,6 +172,9 @@
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
 
+            // FFXIVのスキャンを開始する
+            FFXIV.Instance.Start();
+
             // RefreshWindowタイマを開始する
             this.RefreshWindowTimer = new System.Windows.Threading.DispatcherTimer()
             {
@@ -319,6 +323,9 @@
                     this.logPoller = null;
                 }
             }
+
+            // FFXIVのスキャンを停止する
+            FFXIV.Instance.End();
 
             // 全てのPanelを閉じる
             this.ClosePanels();
@@ -1197,7 +1204,7 @@
                         if ((DateTime.Now - this.LastFFXIVProcessDateTime).TotalSeconds >= 5.0d)
                         {
                             // FF14が起動していない？
-                            if (FF14PluginHelper.GetFFXIVProcess == null)
+                            if (FFXIV.Instance.Process == null)
                             {
                                 if (!Settings.Default.OverlayForceVisible)
                                 {
@@ -1270,8 +1277,8 @@
                 return;
             }
 
-            // Combatantsを頻繁に取得したくないので5秒に1回だけ判定する
-            if ((DateTime.Now - this.LastCheckWipeOutDateTime).TotalSeconds <= 5d)
+            // 頻繁に判定する必要がないので1秒に1回だけ判定する
+            if ((DateTime.Now - this.LastCheckWipeOutDateTime).TotalSeconds <= 1d)
             {
                 this.LastCheckWipeOutDateTime = DateTime.Now;
                 return;
@@ -1279,7 +1286,7 @@
 
             this.LastCheckWipeOutDateTime = DateTime.Now;
 
-            var combatants = FF14PluginHelper.GetCombatantListParty();
+            var combatants = FFXIV.Instance.GetPartyList();
 
             if (combatants == null ||
                 combatants.Count < 1)

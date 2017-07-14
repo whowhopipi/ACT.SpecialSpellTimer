@@ -84,6 +84,11 @@
     <Compile Include="DQXUtility.cs" />
     <Compile Include="FF14PluginHelper.cs" />
     <Compile Include="FF14PluginHelper.Extension.cs" />
+    <Compile Include="FFXIVHelper\Combatant.cs" />
+    <Compile Include="FFXIVHelper\FFXIV.cs" />
+    <Compile Include="FFXIVHelper\MobType.cs" />
+    <Compile Include="FFXIVHelper\Skill.cs" />
+    <Compile Include="FFXIVHelper\Zone.cs" />
     <Compile Include="Image\IconController.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="LogBuffer.cs" />

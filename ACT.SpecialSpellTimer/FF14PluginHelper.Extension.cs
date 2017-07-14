@@ -1,4 +1,5 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿#if false
+namespace ACT.SpecialSpellTimer
 {
     using System;
     using System.Collections.Generic;
@@ -116,3 +117,4 @@
         }
     }
 }
+#endif

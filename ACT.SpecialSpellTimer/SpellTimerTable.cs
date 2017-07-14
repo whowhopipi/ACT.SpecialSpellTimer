@@ -10,6 +10,7 @@
     using System.Xml.Serialization;
 
     using ACT.SpecialSpellTimer.Config;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -119,8 +120,8 @@
                     select
                     x;
 
-                var player = FF14PluginHelper.GetPlayer();
-                var currentZoneID = FF14PluginHelper.GetCurrentZoneID();
+                var player = FFXIV.Instance.GetPlayer();
+                var currentZoneID = FFXIV.Instance.GetCurrentZoneID();
 
                 var spellsFilteredJob = new List<SpellTimer>();
                 foreach (var spell in spells)

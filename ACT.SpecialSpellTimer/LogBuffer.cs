@@ -13,6 +13,7 @@
     using System.Threading.Tasks;
 
     using ACT.SpecialSpellTimer.Config;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -353,18 +354,7 @@
         /// <returns>ログ行の配列</returns>
         public IReadOnlyList<string> GetLogLines()
         {
-            var playerRefreshed = false;
             var partyRefreshed = false;
-
-            // 最後のログから1min間が空いた？
-            if ((DateTime.Now - this.lastLogineTimestamp).TotalMinutes >= 1.0d)
-            {
-                FF14PluginHelper.RefreshPlayer();
-                playerRefreshed = true;
-
-                RefreshPartyList();
-                partyRefreshed = true;
-            }
 
             if (logInfoQueue.IsEmpty)
             {
@@ -398,12 +388,6 @@
                         if (IsJobChanged(logLine))
                         {
                             jobChanged = true;
-                            if (!playerRefreshed)
-                            {
-                                FF14PluginHelper.RefreshPlayer();
-                                playerRefreshed = true;
-                            }
-
                             if (!partyRefreshed)
                             {
                                 RefreshPartyList();
@@ -424,7 +408,7 @@
                     if (!(summoned && zoneChanged))
                     {
                         // ペットIDのCacheを更新する
-                        var player = FF14PluginHelper.GetPlayer();
+                        var player = FFXIV.Instance.GetPlayer();
                         if (player != null)
                         {
                             var job = player.AsJob();
@@ -652,7 +636,7 @@
                 return keyword;
             }
 
-            var player = FF14PluginHelper.GetPlayer();
+            var player = FFXIV.Instance.GetPlayer();
             if (player != null)
             {
                 keyword = keyword.Replace("<me>", player.Name.Trim());
@@ -692,7 +676,7 @@
         public static void RefreshPartyList()
         {
             // プレイヤー情報を取得する
-            var player = FF14PluginHelper.GetPlayer();
+            var player = FFXIV.Instance.GetPlayer();
             if (player == null)
             {
                 return;
@@ -704,7 +688,7 @@
                 Debug.WriteLine("PT: Refresh");
 #endif
                 // PTメンバの名前を記録しておく
-                var combatants = FF14PluginHelper.GetCombatantListParty();
+                var combatants = new List<Combatant>(FFXIV.Instance.GetPartyList());
 
                 // FF14内部のPTメンバ自動ソート順で並び替える
                 var sorted =

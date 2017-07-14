@@ -7,7 +7,7 @@
     using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
-
+    using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -121,8 +121,8 @@
                     select
                     x;
 
-                var player = FF14PluginHelper.GetPlayer();
-                var currentZoneID = FF14PluginHelper.GetCurrentZoneID();
+                var player = FFXIV.Instance.GetPlayer();
+                var currentZoneID = FFXIV.Instance.GetCurrentZoneID();
 
                 var spellsFilteredJob = new List<OnePointTelop>();
                 foreach (var spell in spells)

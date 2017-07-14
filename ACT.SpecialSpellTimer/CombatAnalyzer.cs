@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
 
     using ACT.SpecialSpellTimer.Config;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Utility;
     using Advanced_Combat_Tracker;
 
@@ -350,7 +351,7 @@
             var names = new List<string>();
 
             // プレイヤ情報とパーティリストを取得する
-            var player = FF14PluginHelper.GetPlayer();
+            var player = FFXIV.Instance.GetPlayer();
             var ptlist = LogBuffer.PartyList;
 
             if (player != null)

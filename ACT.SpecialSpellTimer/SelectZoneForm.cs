@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows.Forms;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
 
     /// <summary>
     /// ゾーン選択Form
@@ -53,7 +54,7 @@
             var items = this.ZoneFilter.Split(',');
 
             this.ZonesCheckedListBox.Items.Clear();
-            foreach (var item in FF14PluginHelper.GetZoneList())
+            foreach (var item in FFXIV.Instance.ZoneList)
             {
                 this.ZonesCheckedListBox.Items.Add(
                     item,

@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Media;
     using System.Text.RegularExpressions;
-
     using ACT.SpecialSpellTimer.Utility;
 
     /// <summary>
@@ -80,11 +79,6 @@
 
                             case "telops":
                                 OnePointTelopController.CloseTelops();
-                                commandDone = true;
-                                break;
-
-                            case "me":
-                                FF14PluginHelper.RefreshPlayer();
                                 commandDone = true;
                                 break;
 

@@ -101,7 +101,6 @@
             SpellTimerCore.Default.ClosePanels();
             OnePointTelopController.CloseTelops();
 
-            FF14PluginHelper.RefreshPlayer();
             LogBuffer.RefreshPartyList();
             LogBuffer.RefreshPetID();
 
@@ -276,7 +275,6 @@
                 SpellTimerCore.Default.ClosePanels();
                 OnePointTelopController.CloseTelops();
 
-                FF14PluginHelper.RefreshPlayer();
                 LogBuffer.RefreshPartyList();
                 LogBuffer.RefreshPetID();
 

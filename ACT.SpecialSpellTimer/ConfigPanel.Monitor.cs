@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
 
     /// <summary>
     /// Configパネル モニター
@@ -66,7 +67,7 @@
                 return;
             }
 
-            var player = FF14PluginHelper.GetPlayer();
+            var player = FFXIV.Instance.GetPlayer();
             RefreshPlaceholders(
                 player != null ? player.Name : "",
                 LogBuffer.PartyList,
