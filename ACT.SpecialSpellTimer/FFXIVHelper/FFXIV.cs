@@ -269,7 +269,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             var paryIDs = default(List<uint>);
 
-            lock (this.currentPartyIDList)
+            lock (this.currentPartyIDListLock)
             {
                 paryIDs = new List<uint>(this.currentPartyIDList);
             }
@@ -350,7 +350,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             var partyList = pluginScancombat.GetCurrentPartyList(
                 out int partyCount) as List<uint>;
 
-            lock (this.currentPartyIDList)
+            lock (this.currentPartyIDListLock)
             {
                 this.currentPartyIDList = partyList;
             }
