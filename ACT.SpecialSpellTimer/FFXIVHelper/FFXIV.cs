@@ -40,7 +40,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         private object currentPartyIDListLock = new object();
 
 #if false
-        // とりあえずはリストを直接外部に後悔しないことにする
+        // とりあえずはリストを直接外部に公開しないことにする
         public IReadOnlyDictionary<uint, Combatant> CombatantDictionary => this.combatantDictionary;
         public IReadOnlyList<Combatant> CombatantList => this.combatantList;
         public object CombatantListLock => this.combatantListLock;
@@ -79,11 +79,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private dynamic pluginScancombat;
 
-        /// <summary>
-        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
-        /// </summary>
-        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
-
         public bool IsAvalable
         {
             get
@@ -103,6 +98,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public Process Process => (Process)this.pluginConfig?.Process;
 
         public IReadOnlyList<Zone> ZoneList => this.zoneList;
+
+        /// <summary>
+        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
+        /// </summary>
+        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
 
         /// <summary>
         /// ACTプラグインアセンブリ
