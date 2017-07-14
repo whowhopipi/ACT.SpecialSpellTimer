@@ -36,6 +36,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         private List<uint> currentPartyIDList = new List<uint>();
         private object currentPartyIDListLock = new object();
 
+        private readonly IReadOnlyList<Combatant> EmptyCombatantList = new List<Combatant>();
+
         /// <summary>
         /// FFXIV_ACT_Plugin
         /// </summary>
@@ -173,6 +175,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public IReadOnlyList<Combatant> GetCombatantList()
         {
+            if (this.combatantList == null)
+            {
+                return this.EmptyCombatantList;
+            }
+
             lock (this.combatantListLock)
             {
                 return new List<Combatant>(this.combatantList);
@@ -190,6 +197,13 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public IReadOnlyList<Combatant> GetPartyList()
         {
             var combatants = this.GetCombatantList();
+
+            if (combatants == null ||
+                combatants.Count < 1)
+            {
+                return this.EmptyCombatantList;
+            }
+
             var paryIDs = default(List<uint>);
 
             lock (this.currentPartyIDList)
