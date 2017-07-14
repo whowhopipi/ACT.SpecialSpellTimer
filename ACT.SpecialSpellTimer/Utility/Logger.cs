@@ -136,7 +136,7 @@
 
             lock (lockObject)
             {
-                var directoryName = logFile;
+                var directoryName = Path.GetDirectoryName(logFile);
                 if (!Directory.Exists(directoryName))
                 {
                     Directory.CreateDirectory(directoryName);
