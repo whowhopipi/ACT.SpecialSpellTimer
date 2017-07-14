@@ -52,6 +52,7 @@
     /// </summary>
     public enum JobRoles
     {
+        Unknown = 0,
         Tank = 10,
         Healer = 20,
         DPS = 30,
@@ -147,7 +148,7 @@
         /// ジョブIDをキーに持つ辞書
         /// </summary>
         public IReadOnlyDictionary<int, Job> JobDictionary
-            => (this.jobDictionary ?? 
+            => (this.jobDictionary ??
             (this.jobDictionary = jobList.ToDictionary(x => x.JobId, x => x)));
 
         /// <summary>
@@ -214,9 +215,9 @@
             const int SCH = (int)JobIds.SCH;
             const int SMN = (int)JobIds.SMN;
 
-            return 
-                this.JobId == ARC || 
-                this.JobId == SCH || 
+            return
+                this.JobId == ARC ||
+                this.JobId == SCH ||
                 this.JobId == SMN;
         }
 
