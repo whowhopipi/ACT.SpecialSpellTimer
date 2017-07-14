@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -27,7 +28,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #endregion Singleton
 
-        private IReadOnlyList<Zone> zoneList;
+        #region Combatants
+
+        private readonly IReadOnlyList<Combatant> EmptyCombatantList = new List<Combatant>();
 
         private IReadOnlyDictionary<uint, Combatant> combatantDictionary;
         private IReadOnlyList<Combatant> combatantList;
@@ -36,7 +39,25 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         private List<uint> currentPartyIDList = new List<uint>();
         private object currentPartyIDListLock = new object();
 
-        private readonly IReadOnlyList<Combatant> EmptyCombatantList = new List<Combatant>();
+#if false
+        // とりあえずはリストを直接外部に後悔しないことにする
+        public IReadOnlyDictionary<uint, Combatant> CombatantDictionary => this.combatantDictionary;
+        public IReadOnlyList<Combatant> CombatantList => this.combatantList;
+        public object CombatantListLock => this.combatantListLock;
+
+        public IReadOnlyCollection<uint> CurrentPartyIDList => this.currentPartyIDList;
+        public object CurrentPartyIDListLock => this.currentPartyIDListLock;
+#endif
+
+        #endregion Combatants
+
+        #region Resources
+
+        private IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
+        private IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
+        private IReadOnlyList<Zone> zoneList = new List<Zone>();
+
+        #endregion Resources
 
         /// <summary>
         /// FFXIV_ACT_Plugin
@@ -63,18 +84,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
 
-        public IReadOnlyList<Zone> ZoneList => this.zoneList;
-
-#if false
-        // とりあえずはリストを直接外部に後悔しないことにする
-        public IReadOnlyDictionary<uint, Combatant> CombatantDictionary => this.combatantDictionary;
-        public IReadOnlyList<Combatant> CombatantList => this.combatantList;
-        public object CombatantListLock => this.combatantListLock;
-
-        public IReadOnlyCollection<uint> CurrentPartyIDList => this.currentPartyIDList;
-        public object CurrentPartyIDListLock => this.currentPartyIDListLock;
-#endif
-
         public bool IsAvalable
         {
             get
@@ -93,6 +102,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public Process Process => (Process)this.pluginConfig?.Process;
 
+        public IReadOnlyList<Zone> ZoneList => this.zoneList;
+
         /// <summary>
         /// ACTプラグインアセンブリ
         /// </summary>
@@ -100,6 +111,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #region Start/End
 
+        private double scanFFXIVDurationAvg;
         private Task scanFFXIVTask;
         private bool scanFFXIVTaskRunning;
         private Task task;
@@ -133,7 +145,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                     try
                     {
                         this.Attach();
-                        this.GetZoneList();
+                        this.LoadZoneList();
+                        this.LoadSkillList();
+                        this.LoadBuffList();
                     }
                     catch (Exception ex)
                     {
@@ -152,10 +166,44 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             {
                 while (this.scanFFXIVTaskRunning)
                 {
+                    var interval = (int)Settings.Default.LogPollSleepInterval;
+
                     try
                     {
+                        if (!this.IsAvalable)
+                        {
+                            Thread.Sleep(5000);
+                            continue;
+                        }
+
+                        var sw = Stopwatch.StartNew();
+
+                        // CombatantとパーティIDリストを更新する
                         this.RefreshCombatantList();
                         this.RefreshCurrentPartyIDList();
+
+                        sw.Stop();
+                        var duration = sw.ElapsedMilliseconds;
+
+                        // 処理時間の平均値を算出する
+                        this.scanFFXIVDurationAvg =
+                            (this.scanFFXIVDurationAvg + duration) /
+                            (this.scanFFXIVDurationAvg != 0 ? 2 : 1);
+
+#if DEBUG
+                        Debug.WriteLine($"Scan FFXIV duration {this.scanFFXIVDurationAvg:N1} ms");
+#endif
+
+                        // 待機時間の補正率を算出する
+                        var correctionRate = 1.0d;
+                        if (this.scanFFXIVDurationAvg != 0 &&
+                            duration != 0)
+                        {
+                            correctionRate = duration / this.scanFFXIVDurationAvg;
+                        }
+
+                        // 待機時間を補正する
+                        interval = (int)(interval * correctionRate);
                     }
                     catch (Exception ex)
                     {
@@ -163,7 +211,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                         Thread.Sleep(5000);
                     }
 
-                    Thread.Sleep((int)Settings.Default.LogPollSleepInterval);
+                    Thread.Sleep(interval);
                 }
             });
 
@@ -186,17 +234,27 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
         }
 
-        public Combatant GetPlayer()
+        public int GetCurrentZoneID()
         {
-            if (this.combatantList == null)
+            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
+            if (string.IsNullOrEmpty(currentZoneName) ||
+                currentZoneName == "Unknown Zone")
             {
-                return null;
+                return 0;
             }
 
-            lock (this.combatantListLock)
+            if (this.zoneList == null ||
+                this.zoneList.Count < 1)
             {
-                return this.combatantList.FirstOrDefault();
+                return 0;
             }
+
+            var foundZone = zoneList.AsParallel()
+                .FirstOrDefault(zone =>
+                    string.Equals(
+                        zone.Name, currentZoneName,
+                        StringComparison.OrdinalIgnoreCase));
+            return foundZone != null ? foundZone.ID : 0;
         }
 
         public IReadOnlyList<Combatant> GetPartyList()
@@ -224,6 +282,19 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 x;
 
             return new List<Combatant>(q);
+        }
+
+        public Combatant GetPlayer()
+        {
+            if (this.combatantList == null)
+            {
+                return null;
+            }
+
+            lock (this.combatantListLock)
+            {
+                return this.combatantList.FirstOrDefault();
+            }
         }
 
         public void RefreshCombatantList()
@@ -309,6 +380,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                     item.lblPluginStatus.Text.ToUpper() == "FFXIV Plugin Started.".ToUpper())
                 {
                     this.plugin = item.pluginObj;
+                    Logger.Write("attached ffxiv plugin.");
                     break;
                 }
             }
@@ -355,68 +427,168 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                     "ScanCombatants",
                     BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
                 this.pluginScancombat = fi.GetValue(this.pluginConfig);
+
+                Logger.Write("attached ffxiv plugin ScanCombatants.");
             }
         }
 
-        public int GetCurrentZoneID()
+        private void LoadBuffList()
         {
-            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-            if (string.IsNullOrEmpty(currentZoneName) ||
-                currentZoneName == "Unknown Zone")
+            if (this.buffList.Any())
             {
-                return 0;
+                return;
             }
 
-            if (this.zoneList == null ||
-                this.zoneList.Count < 1)
+            if (this.plugin == null)
             {
-                return 0;
+                return;
             }
 
-            var foundZone = zoneList.AsParallel()
-                .FirstOrDefault(zone =>
-                    string.Equals(
-                        zone.Name, currentZoneName,
-                        StringComparison.OrdinalIgnoreCase));
-            return foundZone != null ? foundZone.ID : 0;
+            var asm = this.plugin.GetType().Assembly;
+
+            var language = Settings.Default.Language;
+            var resourcesName = $"FFXIV_ACT_Plugin.Resources.BuffList_{language.ToUpper()}.txt";
+
+            using (var st = asm.GetManifestResourceStream(resourcesName))
+            {
+                if (st == null)
+                {
+                    return;
+                }
+
+                var newList = new Dictionary<int, Buff>();
+
+                using (var sr = new StreamReader(st))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        var line = sr.ReadLine();
+                        if (!string.IsNullOrWhiteSpace(line))
+                        {
+                            var values = line.Split('|');
+                            if (values.Length >= 2)
+                            {
+                                var buff = new Buff()
+                                {
+                                    ID = int.Parse(values[0], NumberStyles.HexNumber),
+                                    Name = values[1].Trim()
+                                };
+
+                                newList.Add(buff.ID, buff);
+                            }
+                        }
+                    }
+                }
+
+                this.buffList = newList;
+                Logger.Write("buff list loaded.");
+            }
         }
 
-        private void GetZoneList()
+        private void LoadSkillList()
         {
-            if (this.zoneList != null &&
-                this.zoneList.Count > 0)
+            if (this.skillList.Any())
+            {
+                return;
+            }
+
+            if (this.plugin == null)
+            {
+                return;
+            }
+
+            var asm = this.plugin.GetType().Assembly;
+
+            var language = Settings.Default.Language;
+            var resourcesName = $"FFXIV_ACT_Plugin.Resources.SkillList_{language.ToUpper()}.txt";
+
+            using (var st = asm.GetManifestResourceStream(resourcesName))
+            {
+                if (st == null)
+                {
+                    return;
+                }
+
+                var newList = new Dictionary<int, Skill>();
+
+                using (var sr = new StreamReader(st))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        var line = sr.ReadLine();
+                        if (!string.IsNullOrWhiteSpace(line))
+                        {
+                            var values = line.Split('|');
+                            if (values.Length >= 2)
+                            {
+                                var skill = new Skill()
+                                {
+                                    ID = int.Parse(values[0], NumberStyles.HexNumber),
+                                    Name = values[1].Trim()
+                                };
+
+                                newList.Add(skill.ID, skill);
+                            }
+                        }
+                    }
+                }
+
+                this.skillList = newList;
+                Logger.Write("skill list loaded.");
+            }
+        }
+
+        private void LoadZoneList()
+        {
+            if (this.zoneList.Any())
+            {
+                return;
+            }
+
+            if (this.plugin == null)
             {
                 return;
             }
 
             var newList = new List<Zone>();
 
-            var t = plugin.GetType().Module.Assembly.GetType("FFXIV_ACT_Plugin.Resources.ZoneList");
-            var obj = t.GetField("_instance", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-            var s = t.GetField("_Zones", BindingFlags.NonPublic | BindingFlags.Instance).ReflectedType;
-            IDictionary zonelist = (IDictionary)t.GetField("_Zones", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj);
-            var listType = zonelist.GetType();
-            var GetEnumeratorMethod = listType.GetMethod("GetEnumerator", BindingFlags.Public | BindingFlags.Instance);
-            var ClearMethod = listType.GetMethod("Clear", BindingFlags.Public | BindingFlags.Instance);
-            var AddMethod = listType.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
-            var zoneType = AddMethod.GetParameters()[1].ParameterType;
+            var asm = this.plugin.GetType().Assembly;
 
-            var idField = zoneType.GetField("id", BindingFlags.Public | BindingFlags.Instance);
-            var nameField = zoneType.GetField("name", BindingFlags.Public | BindingFlags.Instance);
+            var language = "EN";
+            var resourcesName = $"FFXIV_ACT_Plugin.Resources.ZoneList_{language.ToUpper()}.txt";
 
-            foreach (DictionaryEntry entry in zonelist)
+            using (var st = asm.GetManifestResourceStream(resourcesName))
             {
-                var zone = entry.Value;
-                newList.Add(new Zone()
+                if (st == null)
                 {
-                    ID = (int)idField.GetValue(zone),
-                    Name = (string)nameField.GetValue(zone)
-                });
+                    return;
+                }
+
+                using (var sr = new StreamReader(st))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        var line = sr.ReadLine();
+                        if (!string.IsNullOrWhiteSpace(line))
+                        {
+                            var values = line.Split('|');
+                            if (values.Length >= 2)
+                            {
+                                var zone = new Zone()
+                                {
+                                    ID = int.Parse(values[0]),
+                                    Name = values[1].Trim()
+                                };
+
+                                newList.Add(zone);
+                            }
+                        }
+                    }
+                }
+
+                this.zoneList = newList;
+                Logger.Write("zone list loaded.");
             }
-
-            newList = newList.OrderBy(x => x.ID).ToList();
-
-            this.zoneList = newList;
         }
     }
 }

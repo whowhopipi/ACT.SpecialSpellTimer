@@ -84,6 +84,7 @@
     <Compile Include="DQXUtility.cs" />
     <Compile Include="FF14PluginHelper.cs" />
     <Compile Include="FF14PluginHelper.Extension.cs" />
+    <Compile Include="FFXIVHelper\Buff.cs" />
     <Compile Include="FFXIVHelper\Combatant.cs" />
     <Compile Include="FFXIVHelper\FFXIV.cs" />
     <Compile Include="FFXIVHelper\MobType.cs" />
