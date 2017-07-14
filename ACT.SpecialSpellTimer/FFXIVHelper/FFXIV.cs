@@ -188,6 +188,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public Combatant GetPlayer()
         {
+            if (this.combatantList == null)
+            {
+                return null;
+            }
+
             lock (this.combatantListLock)
             {
                 return this.combatantList.FirstOrDefault();
