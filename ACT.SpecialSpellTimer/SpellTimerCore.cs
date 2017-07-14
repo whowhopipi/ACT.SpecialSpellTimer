@@ -33,11 +33,6 @@
         private static SpellTimerCore instance;
 
         /// <summary>
-        /// 最後に全滅を判定した日時
-        /// </summary>
-        private DateTime LastCheckWipeOutDateTime = DateTime.MinValue;
-
-        /// <summary>
         /// 最後にFF14プロセスをチェックした時間
         /// </summary>
         private DateTime LastFFXIVProcessDateTime;
@@ -1277,15 +1272,6 @@
                 return;
             }
 
-            // 頻繁に判定する必要がないので1秒に1回だけ判定する
-            if ((DateTime.Now - this.LastCheckWipeOutDateTime).TotalSeconds <= 1d)
-            {
-                this.LastCheckWipeOutDateTime = DateTime.Now;
-                return;
-            }
-
-            this.LastCheckWipeOutDateTime = DateTime.Now;
-
             var combatants = FFXIV.Instance.GetPartyList();
 
             if (combatants == null ||
@@ -1373,7 +1359,7 @@
             }
         }
 
-        #region NativeMethods
+#region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -1395,6 +1381,6 @@
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-        #endregion NativeMethods
+#endregion NativeMethods
     }
 }
