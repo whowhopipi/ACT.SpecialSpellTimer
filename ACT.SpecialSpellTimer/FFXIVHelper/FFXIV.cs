@@ -234,6 +234,20 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
         }
 
+        public IReadOnlyDictionary<uint, Combatant> GetCombatantDictionaly()
+        {
+            if (this.combatantDictionary == null)
+            {
+                return null;
+            }
+
+            lock (this.combatantListLock)
+            {
+                return new Dictionary<uint, Combatant>(
+                    (Dictionary<uint, Combatant>)this.combatantDictionary);
+            }
+        }
+
         public int GetCurrentZoneID()
         {
             var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
@@ -259,7 +273,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public IReadOnlyList<Combatant> GetPartyList()
         {
-            var combatants = this.GetCombatantList();
+            var combatants = this.GetCombatantDictionaly();
 
             if (combatants == null ||
                 combatants.Count < 1)
@@ -267,21 +281,21 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 return this.EmptyCombatantList;
             }
 
-            var paryIDs = default(List<uint>);
+            var partyIDs = default(List<uint>);
 
             lock (this.currentPartyIDListLock)
             {
-                paryIDs = new List<uint>(this.currentPartyIDList);
+                partyIDs = new List<uint>(this.currentPartyIDList);
             }
 
-            var q =
-                from x in combatants
+            var partyList = (
+                from id in partyIDs
                 where
-                paryIDs.Any(y => y == x.ID)
+                combatants.ContainsKey(id)
                 select
-                x;
+                combatants[id]).ToList();
 
-            return new List<Combatant>(q);
+            return partyList;
         }
 
         public Combatant GetPlayer()

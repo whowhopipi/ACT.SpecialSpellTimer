@@ -240,6 +240,13 @@ namespace ACT.SpecialSpellTimer.Config
         {
             lock (this.locker)
             {
+                var directoryName = Path.GetDirectoryName(this.FileName);
+
+                if (!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+
                 using (var xw = XmlWriter.Create(
                     this.FileName,
                     this.XmlWriterSettings))

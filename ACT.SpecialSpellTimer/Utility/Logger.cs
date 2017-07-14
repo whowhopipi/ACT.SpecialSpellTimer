@@ -136,6 +136,12 @@
 
             lock (lockObject)
             {
+                var directoryName = logFile;
+                if (!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+
                 var lines = new StringBuilder();
                 string line;
                 while (fileBuf.TryDequeue(out line))
