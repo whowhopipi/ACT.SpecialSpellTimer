@@ -19,15 +19,9 @@
         private static volatile ConcurrentQueue<string> bufferForFile;
         private static Timer flushTimer;
 
-        private static string logFile
-        {
-            get
-            {
-                return Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                        @"anoyetta\ACT\ACT.SpecialSpellTimer." + DateTime.Now.ToString("yyyy-MM") + ".log");
-            }
-        }
+        private static string LogFile => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            @"anoyetta\ACT\ACT.SpecialSpellTimer." + DateTime.Now.ToString("yyyy-MM") + ".log");
 
         /// <summary>
         /// ログを書き込む
@@ -76,7 +70,10 @@
                 buffer = new ConcurrentQueue<LogItem>();
                 bufferForFile = new ConcurrentQueue<string>();
                 if (flushTimer != null)
+                {
                     flushTimer.Dispose();
+                }
+
                 flushTimer = new Timer(ignoreState => Flush(), null, dueTime, period);
             }
         }
@@ -88,12 +85,17 @@
                 lock (lockObject)
                 {
                     if (flushTimer != null)
+                    {
                         flushTimer.Dispose();
+                    }
+
                     flushTimer = null;
 
                     LogItem item;
                     while (buffer.TryDequeue(out item))
+                    {
                         bufferForFile.Enqueue(item.ToString());
+                    }
 
                     Flush();
 
@@ -109,13 +111,17 @@
         public static void Update()
         {
             if (SpecialSpellTimerPlugin.ConfigPanel == null)
+            {
                 return;
+            }
 
             var buf = buffer;
             var fileBuf = bufferForFile;
 
             if (buf == null || fileBuf == null || buf.IsEmpty)
+            {
                 return;
+            }
 
             LogItem item;
             while (buf.TryDequeue(out item))
@@ -129,7 +135,9 @@
                 catch (Exception ex)
                 {
                     if (!line.Contains("ConfigPanel.AppendLog failed."))
+                    {
                         Write("ConfigPanel.AppendLog failed.", ex);
+                    }
                 }
             }
         }
@@ -138,11 +146,13 @@
         {
             var fileBuf = bufferForFile;
             if (fileBuf == null || fileBuf.IsEmpty)
+            {
                 return;
+            }
 
             lock (lockObject)
             {
-                var directoryName = Path.GetDirectoryName(logFile);
+                var directoryName = Path.GetDirectoryName(LogFile);
                 if (!Directory.Exists(directoryName))
                 {
                     Directory.CreateDirectory(directoryName);
@@ -151,10 +161,13 @@
                 var lines = new StringBuilder();
                 string line;
                 while (fileBuf.TryDequeue(out line))
+                {
                     lines.AppendLine(line);
+                }
+
                 try
                 {
-                    File.AppendAllText(logFile, lines.ToString(), new UTF8Encoding(false));
+                    File.AppendAllText(LogFile, lines.ToString(), new UTF8Encoding(false));
                 }
                 catch (Exception)
                 {
