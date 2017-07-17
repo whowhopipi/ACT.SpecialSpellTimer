@@ -164,10 +164,9 @@
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
-            Logger.Begin();
-
             try
             {
+                Logger.Begin();
                 Logger.Write("Plugin Start.");
 
                 // 設定ファイルを読み込む

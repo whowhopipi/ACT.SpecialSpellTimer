@@ -18,16 +18,16 @@
         public volatile bool UpdateDone;
 
         [XmlIgnore]
-        private Timer beforeSoundTimer;
+        private Timer beforeSoundTimer = new Timer();
 
         [XmlIgnore]
-        private Timer garbageInstanceTimer;
+        private Timer garbageInstanceTimer = new Timer();
 
         [XmlIgnore]
-        private Timer overSoundTimer;
+        private Timer overSoundTimer = new Timer();
 
         [XmlIgnore]
-        private Timer timeupSoundTimer;
+        private Timer timeupSoundTimer = new Timer();
 
         public SpellTimer()
         {
@@ -285,6 +285,12 @@
         public void StartBeforeSoundTimer()
         {
             var timer = this.beforeSoundTimer;
+
+            if (timer == null)
+            {
+                return;
+            }
+
             if (timer.Enabled)
             {
                 timer.Stop();
@@ -325,6 +331,12 @@
         public void StartGarbageInstanceTimer()
         {
             var timer = this.garbageInstanceTimer;
+
+            if (timer == null)
+            {
+                return;
+            }
+
             if (timer.Enabled)
             {
                 timer.Stop();
@@ -345,6 +357,12 @@
         public void StartOverSoundTimer()
         {
             var timer = this.overSoundTimer;
+
+            if (timer == null)
+            {
+                return;
+            }
+
             if (timer.Enabled)
             {
                 timer.Stop();
@@ -391,6 +409,12 @@
         public void StartTimeupSoundTimer()
         {
             var timer = this.timeupSoundTimer;
+
+            if (timer == null)
+            {
+                return;
+            }
+
             if (timer.Enabled)
             {
                 timer.Stop();

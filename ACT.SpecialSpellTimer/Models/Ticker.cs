@@ -165,6 +165,12 @@
         public void StartDelayedSoundTimer()
         {
             var timer = this.delayedSoundTimer;
+
+            if (timer == null)
+            {
+                return;
+            }
+
             if (timer.Enabled)
             {
                 timer.Stop();

@@ -83,20 +83,26 @@
 
         public static void End()
         {
-            lock (lockObject)
+            try
             {
-                if (flushTimer != null)
-                    flushTimer.Dispose();
-                flushTimer = null;
+                lock (lockObject)
+                {
+                    if (flushTimer != null)
+                        flushTimer.Dispose();
+                    flushTimer = null;
 
-                LogItem item;
-                while (buffer.TryDequeue(out item))
-                    bufferForFile.Enqueue(item.ToString());
+                    LogItem item;
+                    while (buffer.TryDequeue(out item))
+                        bufferForFile.Enqueue(item.ToString());
 
-                Flush();
+                    Flush();
 
-                buffer = null;
-                bufferForFile = null;
+                    buffer = null;
+                    bufferForFile = null;
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 

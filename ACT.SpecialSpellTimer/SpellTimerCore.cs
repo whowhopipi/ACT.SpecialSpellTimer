@@ -1299,7 +1299,10 @@
                     // ACT本体に戦闘終了を通知する
                     if (Settings.Default.WipeoutNotifyToACT)
                     {
-                        ActGlobals.oFormActMain.ActCommands("end");
+                        ActInvoker.Invoke(() =>
+                        {
+                            ActGlobals.oFormActMain.ActCommands("end");
+                        });
                     }
 
                     this.LastWipeOutDateTime = DateTime.Now;
@@ -1323,7 +1326,7 @@
             }
 
             // 全滅によるリセットを判定する
-            var wipeoutTask = Task.Run(() => this.ResetCountAtRestart());
+            var task = Task.Run(() => this.ResetCountAtRestart());
 
             if (this.LogBuffer.NonEmpty())
             {
@@ -1351,7 +1354,7 @@
                 }
             }
 
-            wipeoutTask.Wait();
+            task.Wait();
 
             if (!existsLog)
             {
