@@ -289,7 +289,7 @@ namespace ACT.SpecialSpellTimer.Config
             ReduceIconBrightness = 55,
             Opacity = 10,
             MaxFPS = 60,
-            Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold),
+            Font = new Font("Arial", 9.75F, FontStyle.Bold),
             OverlayVisible = true,
             AutoSortEnabled = true,
             ClickThroughEnabled = false,

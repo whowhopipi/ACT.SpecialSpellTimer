@@ -9,7 +9,7 @@ namespace ACT.SpecialSpellTimer.Config
     {
         private const char FontSerializationDelimiter = ',';
 
-        private static readonly Font DefaultFont = new Font("Microsoft Sans Serif", 9.75f);
+        private static readonly Font DefaultFont = new Font("Arial", 9.75f);
 
         public static Font FromString(
             string value)
