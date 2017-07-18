@@ -263,8 +263,13 @@
             if (File.Exists(file))
             {
                 var backupFile = Path.Combine(
-                    Path.GetDirectoryName(file),
+                    Path.Combine(Path.GetDirectoryName(file), "backup"),
                     Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
+
+                if (!Directory.Exists(Path.GetDirectoryName(backupFile)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(backupFile));
+                }
 
                 File.Copy(
                     file,
