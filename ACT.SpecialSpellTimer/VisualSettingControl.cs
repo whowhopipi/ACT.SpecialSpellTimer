@@ -35,14 +35,19 @@
         private VisualSettingControlBackgoundColorForm alphaDialog = new VisualSettingControlBackgoundColorForm();
         private Color backgroundColor;
         private bool barEnabled;
-        private FontInfo fontInfo;
+        private FontInfo fontInfo = FontInfo.DefaultFont;
 
         public VisualSettingControl()
         {
             this.InitializeComponent();
 
             this.components.Add(this.alphaDialog);
-            this.SetFontInfo(Settings.Default.Font.ToFontInfo());
+
+            if (Settings.Default.Font != null)
+            {
+                this.SetFontInfo(Settings.Default.Font.ToFontInfo());
+            }
+
             this.FontColor = Settings.Default.FontColor;
             this.FontOutlineColor = Settings.Default.FontOutlineColor;
             this.WarningFontColor = Settings.Default.WarningFontColor;
@@ -51,7 +56,7 @@
             this.BarOutlineColor = Settings.Default.ProgressBarOutlineColor;
             this.BarSize = Settings.Default.ProgressBarSize;
 
-            this.SpellIcon = "";
+            this.SpellIcon = string.Empty;
 
             this.BarEnabled = true;
 

@@ -2,32 +2,46 @@
 using System.ComponentModel;
 using System.Drawing;
 
+using ACT.SpecialSpellTimer.Utility;
+
 namespace ACT.SpecialSpellTimer.Config
 {
     [TypeConverter(typeof(FontConverter))]
     public static class FontSerializationHelper
     {
-        private const char FontSerializationDelimiter = ',';
-
-        private static readonly Font DefaultFont = new Font("Arial", 9.75f);
+        private const char FontSerializationDelimiter = ':';
 
         public static Font FromString(
             string value)
         {
+            var f = FontInfo.DefaultFont.ToFontForWindowsForm();
+
             if (string.IsNullOrEmpty(value))
             {
-                return DefaultFont;
+                return f;
             }
 
-            var parts = value.Split(FontSerializationDelimiter);
-            return new Font(
-                parts[0],
-                float.Parse(parts[1]),
-                (FontStyle)Enum.Parse(typeof(FontStyle), parts[2]),
-                (GraphicsUnit)Enum.Parse(typeof(GraphicsUnit), parts[3]),
-                byte.Parse(parts[4]),
-                bool.Parse(parts[5])
-            );
+            try
+            {
+                var parts = value.Split(FontSerializationDelimiter);
+
+                if (parts.Length >= 6)
+                {
+                    f = new Font(
+                        parts[0],
+                        float.Parse(parts[1]),
+                        (FontStyle)Enum.Parse(typeof(FontStyle), parts[2]),
+                        (GraphicsUnit)Enum.Parse(typeof(GraphicsUnit), parts[3]),
+                        byte.Parse(parts[4]),
+                        bool.Parse(parts[5]));
+                }
+            }
+            catch (Exception)
+            {
+                f = FontInfo.DefaultFont.ToFontForWindowsForm();
+            }
+
+            return f;
         }
 
         public static string ToString(

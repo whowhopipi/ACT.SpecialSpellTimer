@@ -278,6 +278,13 @@
     [Serializable]
     public class FontInfo
     {
+        public static readonly FontInfo DefaultFont = new FontInfo(
+            new FontFamily("Arial"),
+            11.25,
+            FontStyles.Normal,
+            FontWeights.Bold,
+            FontStretches.Normal);
+
         [XmlIgnore]
         private static Dictionary<string, FontFamily> fontFamilyDictionary = new Dictionary<string, FontFamily>();
 
@@ -448,12 +455,26 @@
         private static FontFamily GetFontFamily(
             string source)
         {
-            if (!fontFamilyDictionary.ContainsKey(source))
+            var sourceName = source;
+
+            if (!fontFamilyDictionary.ContainsKey(sourceName))
             {
-                fontFamilyDictionary[source] = new FontFamily(source);
+                FontFamily f;
+
+                try
+                {
+                    f = new FontFamily(sourceName);
+                }
+                catch (Exception)
+                {
+                    f = FontInfo.DefaultFont.Family;
+                    sourceName = f.Source;
+                }
+
+                fontFamilyDictionary[sourceName] = f;
             }
 
-            return fontFamilyDictionary[source];
+            return fontFamilyDictionary[sourceName];
         }
     }
 }
