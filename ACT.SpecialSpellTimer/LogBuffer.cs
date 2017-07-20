@@ -362,6 +362,9 @@ namespace ACT.SpecialSpellTimer
                 return EMPTY_STRING_LIST;
             }
 
+            // プレイヤー情報を取得する
+            var player = FFXIV.Instance.GetPlayer();
+
             var list = new List<string>(logInfoQueue.Count);
             var partyChanged = false;
             var jobChanged = false;
@@ -410,7 +413,6 @@ namespace ACT.SpecialSpellTimer
                     if (!(summoned && zoneChanged))
                     {
                         // ペットIDのCacheを更新する
-                        var player = FFXIV.Instance.GetPlayer();
                         if (player != null)
                         {
                             var job = player.AsJob();
