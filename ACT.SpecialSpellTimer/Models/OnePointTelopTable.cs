@@ -19,7 +19,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        private static OnePointTelopTable instance;
+        private static OnePointTelopTable instance = new OnePointTelopTable();
 
         /// <summary>
         /// データテーブル
@@ -37,18 +37,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        public static OnePointTelopTable Default
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new OnePointTelopTable();
-                }
-
-                return instance;
-            }
-        }
+        public static OnePointTelopTable Default => instance;
 
         /// <summary>
         /// デフォルトのファイル

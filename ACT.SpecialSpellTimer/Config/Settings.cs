@@ -15,6 +15,8 @@ namespace ACT.SpecialSpellTimer.Config
     {
         #region Singleton
 
+        private static object singletonLocker = new object();
+
         private static Settings instance;
 
         public static Settings Default
@@ -27,9 +29,12 @@ namespace ACT.SpecialSpellTimer.Config
                     return DefaultSettings;
                 }
 #endif
-                if (instance == null)
+                lock (singletonLocker)
                 {
-                    instance = new Settings();
+                    if (instance == null)
+                    {
+                        instance = new Settings();
+                    }
                 }
 
                 return instance;

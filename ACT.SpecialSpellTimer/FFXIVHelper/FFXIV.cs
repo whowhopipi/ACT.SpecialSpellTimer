@@ -18,13 +18,13 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
     {
         #region Singleton
 
-        private static FFXIV instance;
+        private static FFXIV instance = new FFXIV();
 
         private FFXIV()
         {
         }
 
-        public static FFXIV Instance => (instance ?? (instance = new FFXIV()));
+        public static FFXIV Instance => instance;
 
         #endregion Singleton
 

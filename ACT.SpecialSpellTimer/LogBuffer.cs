@@ -355,8 +355,6 @@ namespace ACT.SpecialSpellTimer
         /// <returns>ログ行の配列</returns>
         public IReadOnlyList<string> GetLogLines()
         {
-            var partyRefreshed = false;
-
             if (logInfoQueue.IsEmpty)
             {
                 return EMPTY_STRING_LIST;
@@ -365,12 +363,23 @@ namespace ACT.SpecialSpellTimer
             // プレイヤー情報を取得する
             var player = FFXIV.Instance.GetPlayer();
 
+            // プレイヤーが召喚士か？
+            var palyerIsSummoner = false;
+
+            if (player != null)
+            {
+                var job = player.AsJob();
+                if (job != null)
+                {
+                    palyerIsSummoner = job.IsSummoner();
+                }
+            }
+
             var list = new List<string>(logInfoQueue.Count);
             var partyChanged = false;
-            var jobChanged = false;
+            var partyChangedAtDQX = false;
             var summoned = false;
             var zoneChanged = false;
-            var partyChangedAtDQX = false;
 
             LogLineEventArgs logInfo;
             while (logInfoQueue.TryDequeue(out logInfo))
@@ -386,21 +395,6 @@ namespace ACT.SpecialSpellTimer
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
                 {
-#if false
-                    // ジョブに変化あり？
-                    if (!jobChanged)
-                    {
-                        if (IsJobChanged(logLine))
-                        {
-                            jobChanged = true;
-                            if (!partyRefreshed)
-                            {
-                                RefreshPartyList();
-                                partyRefreshed = true;
-                            }
-                        }
-                    }
-#endif
                     // パーティに変化あり
                     if (!partyChanged)
                     {
@@ -413,24 +407,17 @@ namespace ACT.SpecialSpellTimer
                     if (!(summoned && zoneChanged))
                     {
                         // ペットIDのCacheを更新する
-                        if (player != null)
+                        if (palyerIsSummoner)
                         {
-                            var job = player.AsJob();
-                            if (job != null)
+                            if (logLine.Contains(player.Name + "の「サモン") ||
+                                logLine.Contains("You cast Summon"))
                             {
-                                if (player.AsJob().IsSummoner())
-                                {
-                                    if (logLine.Contains(player.Name + "の「サモン") ||
-                                        logLine.Contains("You cast Summon"))
-                                    {
-                                        summoned = true;
-                                    }
+                                summoned = true;
+                            }
 
-                                    if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
-                                    {
-                                        zoneChanged = true;
-                                    }
-                                }
+                            if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
+                            {
+                                zoneChanged = true;
                             }
                         }
                     }
