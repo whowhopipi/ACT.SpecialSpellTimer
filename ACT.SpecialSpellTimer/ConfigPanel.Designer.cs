@@ -367,6 +367,7 @@
             this.LogTabPage = new System.Windows.Forms.TabPage();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.label89 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -1868,6 +1869,7 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.panel6);
             this.tabPage1.Controls.Add(this.TelopTitleTextBox);
             this.tabPage1.Controls.Add(this.TelopMessageTextBox);
             this.tabPage1.Controls.Add(this.TelopKeywordTextBox);
@@ -4115,6 +4117,13 @@
             this.label89.TabIndex = 43;
             this.label89.Text = "LogLabel";
             // 
+            // panel6
+            // 
+            this.panel6.Location = new System.Drawing.Point(6, 433);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(529, 68);
+            this.panel6.TabIndex = 76;
+            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -4557,5 +4566,6 @@
         private System.Windows.Forms.NumericUpDown TextBlurRateNumericUpDown;
         private System.Windows.Forms.NumericUpDown TextOutlineThicknessRateNumericUpDown;
         private System.Windows.Forms.CheckBox NotifyToACTCheckBox;
+        private System.Windows.Forms.Panel panel6;
     }
 }

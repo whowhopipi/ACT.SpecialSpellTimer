@@ -152,7 +152,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in newList.AsParallel())
+            foreach (var spell in newList)
             {
                 if (string.IsNullOrEmpty(spell.KeywordReplaced))
                 {
@@ -235,7 +235,7 @@ namespace ACT.SpecialSpellTimer.Models
                 }
             }
 
-            lock (this.spellList)
+            lock (this.spellListLocker)
             {
                 this.spellList = newList;
             }
@@ -302,7 +302,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in newList.AsParallel())
+            foreach (var spell in newList)
             {
                 if (string.IsNullOrWhiteSpace(spell.KeywordReplaced))
                 {
