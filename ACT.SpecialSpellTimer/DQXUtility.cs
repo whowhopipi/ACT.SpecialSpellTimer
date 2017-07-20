@@ -1,12 +1,13 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Utility;
-
     /// <summary>
     /// DQX向けの便利機能
     /// </summary>

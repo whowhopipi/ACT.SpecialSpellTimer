@@ -55,6 +55,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         private IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
         private IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
+        private IReadOnlyDictionary<string, Zone> zoneHash = new Dictionary<string, Zone>();
         private IReadOnlyList<Zone> zoneList = new List<Zone>();
 
         #endregion Resources
@@ -221,19 +222,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #endregion Start/End
 
-        public IReadOnlyList<Combatant> GetCombatantList()
-        {
-            if (this.combatantList == null)
-            {
-                return this.EmptyCombatantList;
-            }
-
-            lock (this.combatantListLock)
-            {
-                return new List<Combatant>(this.combatantList);
-            }
-        }
-
         public IReadOnlyDictionary<uint, Combatant> GetCombatantDictionaly()
         {
             if (this.combatantDictionary == null)
@@ -248,6 +236,19 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
         }
 
+        public IReadOnlyList<Combatant> GetCombatantList()
+        {
+            if (this.combatantList == null)
+            {
+                return this.EmptyCombatantList;
+            }
+
+            lock (this.combatantListLock)
+            {
+                return new List<Combatant>(this.combatantList);
+            }
+        }
+
         public int GetCurrentZoneID()
         {
             var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
@@ -257,18 +258,14 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 return 0;
             }
 
-            if (this.zoneList == null ||
-                this.zoneList.Count < 1)
+            if (this.zoneHash == null ||
+                this.zoneHash.Count < 1 ||
+                !this.zoneHash.ContainsKey(currentZoneName))
             {
                 return 0;
             }
 
-            var foundZone = zoneList.AsParallel()
-                .FirstOrDefault(zone =>
-                    string.Equals(
-                        zone.Name, currentZoneName,
-                        StringComparison.OrdinalIgnoreCase));
-            return foundZone != null ? foundZone.ID : 0;
+            return this.zoneHash[currentZoneName].ID;
         }
 
         public IReadOnlyList<Combatant> GetPartyList()
@@ -565,6 +562,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
 
             var newList = new List<Zone>();
+            var newHash = new Dictionary<string, Zone>();
 
             var asm = this.plugin.GetType().Assembly;
 
@@ -595,12 +593,14 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                                 };
 
                                 newList.Add(zone);
+                                newHash.Add(zone.Name, zone);
                             }
                         }
                     }
                 }
 
                 this.zoneList = newList;
+                this.zoneHash = newHash;
                 Logger.Write("zone list loaded.");
             }
         }

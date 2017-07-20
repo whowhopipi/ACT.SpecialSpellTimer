@@ -1,10 +1,12 @@
-﻿namespace ACT.SpecialSpellTimer
-{
-    using System.Collections.Generic;
-    using System.Media;
-    using System.Text.RegularExpressions;
-    using ACT.SpecialSpellTimer.Utility;
+﻿using System.Collections.Generic;
+using System.Media;
+using System.Text.RegularExpressions;
 
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer
+{
     /// <summary>
     /// テキストコマンド Controller
     /// </summary>

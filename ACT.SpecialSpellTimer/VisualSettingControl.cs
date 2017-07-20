@@ -1,19 +1,20 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Windows.Forms;
+using System.Xml.Serialization;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Image;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Drawing;
-    using System.Drawing.Drawing2D;
-    using System.Drawing.Text;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using System.Windows.Forms;
-    using System.Xml.Serialization;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Image;
-    using ACT.SpecialSpellTimer.Utility;
-
     [Serializable]
     public class ColorSet
     {

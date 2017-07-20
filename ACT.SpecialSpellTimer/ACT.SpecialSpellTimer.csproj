@@ -94,9 +94,10 @@
     <Compile Include="Job.cs" />
     <Compile Include="LogBuffer.cs" />
     <Compile Include="Models\Spell.cs" />
+    <Compile Include="Models\TableCompiler.cs" />
     <Compile Include="Models\Ticker.cs" />
     <Compile Include="OnePointTelopController.cs" />
-    <Compile Include="OnePointTelopTable.cs" />
+    <Compile Include="Models\OnePointTelopTable.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
@@ -144,7 +145,7 @@
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpellTimerCore.cs" />
-    <Compile Include="SpellTimerDataSet.Designer.cs">
+    <Compile Include="Models\SpellTimerDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
@@ -187,7 +188,7 @@
     <Compile Include="Views\SpellTimerListWindow.xaml.cs">
       <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SpellTimerTable.cs" />
+    <Compile Include="Models\SpellTimerTable.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="Utility\ColorUtility.cs" />
     <Compile Include="Utility\FontUtility.cs" />
@@ -281,15 +282,15 @@
     <Compile Include="ConfigPanel.DQXOption.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <None Include="SpellTimerDataSet.xsc">
+    <None Include="Models\SpellTimerDataSet.xsc">
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
     </None>
-    <None Include="SpellTimerDataSet.xsd">
+    <None Include="Models\SpellTimerDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>SpellTimerDataSet.Designer.cs</LastGenOutput>
     </None>
-    <None Include="SpellTimerDataSet.xss">
+    <None Include="Models\SpellTimerDataSet.xss">
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
     </None>
   </ItemGroup>

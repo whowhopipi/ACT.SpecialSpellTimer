@@ -1,22 +1,23 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.FFXIVHelper;
-    using ACT.SpecialSpellTimer.Utility;
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// ログのバッファ
     /// </summary>
