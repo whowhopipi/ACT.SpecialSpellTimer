@@ -73,7 +73,7 @@ FF14が内部のオブジェクトに割当てている一意なIDに置換さ�
 パーティ内の特定のジョブの誰か、または特定のジョブのｎ番目のメンバーにマッチします。<br />
 ただし、&lt;JOB&gt;は正規表現をONにしないと使えません。<br />
 <br />
-ex. パーティメンバーの下記のとき・・・<br />
+ex. パーティメンバーが下記のとき・・・<br />
 Taro Paradin (ナイト)<br />
 Jiro Paradin (ナイト)<br />
 <br />
@@ -86,6 +86,43 @@ Jiro Paradin (ナイト)<br />
 ※ただし、パーティメンバ代名詞を有効にしていないと動作しません。<br />
 </td>
 </tr>
+
+<tr>
+<td>&lt;ROLE&gt;</td>
+<td>
+パーティ内の特定のロールの誰かにマッチします。<br />
+ただし、&lt;ROLE&gt;は正規表現をONにしないと使えません。<br />
+<br />
+ex. パーティメンバーが下記のとき・・・<br />
+Taro Yamada (ナイト)<br />
+Jiro Sato (戦士)<br />
+Sabro Suzuki (白魔道士)<br />
+Shiro Honda (学者)<br />
+Goro Toyota (モンク)<br />
+Rokuro Nissan (竜騎士)<br />
+Shichiro Mazda (吟遊詩人)<br />
+Hachiro Mitsuoka (黒魔道士)<br />
+<br />
+&lt;TANK&gt; → Taro Yamada または Jiro Sato にマッチする<br />
+&lt;HEALER&gt; → Sabro Suzuki または Sabro Suzuki にマッチする<br />
+&lt;DPS&gt; → Goro Toyota または Rokuro Nissan または Shichiro Mazda または Hachiro Mitsuoka にマッチする<br />
+&lt;MELEE&gt; → Goro Toyota または Rokuro Nissan にマッチする<br />
+&lt;RANGE&gt; → Shichiro Mazda にマッチする<br />
+&lt;MAGIC&gt; → Hachiro Mitsuoka にマッチする<br />
+<br />
+&lt;TANK&gt; は正規表現の (?&lt;TANKs&gt;Taro Yamada|Jiro Sato) に置換わってマッチングされます。<br />
+ex.<br />
+&lt;TANK&gt → (?&lt;TANKs&gt;Taro Yamada|Jiro Sato)<br />
+&lt;HEALER&gt → (?&lt;HEALERs&gt;Sabro Suzuki|Sabro Suzuki)<br />
+&lt;DPS&gt → (?&lt;DPSs&gt;Goro Toyota|Rokuro Nissan|Shichiro Mazda|Hachiro Mitsuoka)<br />
+&lt;MELEE&gt → (?&lt;MELEEs&gt;Goro Toyota|Rokuro Nissan)<br />
+&lt;RANGE&gt → (?&lt;RANGEs&gt;Shichiro Mazda)<br />
+&lt;MAGIC&gt → (?&lt;MAGICs&gt;Hachiro Mitsuoka)<br />
+<br />
+※ただし、パーティメンバ代名詞を有効にしていないと動作しません。<br />
+</td>
+</tr>
+
 </table>
   
 6) 俺の歌を聞かせたい    
