@@ -152,7 +152,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in newList)
+            foreach (var spell in newList.AsParallel())
             {
                 if (string.IsNullOrEmpty(spell.KeywordReplaced))
                 {
@@ -302,7 +302,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in newList)
+            foreach (var spell in newList.AsParallel())
             {
                 if (string.IsNullOrWhiteSpace(spell.KeywordReplaced))
                 {
@@ -366,10 +366,25 @@ namespace ACT.SpecialSpellTimer.Models
 
         private void DoWork()
         {
+            var previousPlayer = new Combatant();
+
             while (this.workerRunning)
             {
                 try
                 {
+                    var player = FFXIV.Instance.GetPlayer();
+                    if (player != null)
+                    {
+                        // 名前かジョブが違う？
+                        if (previousPlayer.Name != player.Name ||
+                            previousPlayer.Job != player.Job)
+                        {
+                            LogBuffer.RefreshPartyList();
+                        }
+
+                        previousPlayer = player;
+                    }
+
                     this.CompileSpells();
                     this.CompileTickers();
                 }

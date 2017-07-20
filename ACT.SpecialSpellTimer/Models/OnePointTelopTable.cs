@@ -122,9 +122,6 @@ namespace ACT.SpecialSpellTimer.Models
                 item.KeywordReplaced = string.Empty;
                 item.KeywordToHideReplaced = string.Empty;
             }
-
-            // 即座にスペルをコンパイルし直す
-            TableCompiler.Instance.CompileTickers();
         }
 
         /// <summary>

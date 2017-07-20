@@ -80,6 +80,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private dynamic pluginScancombat;
 
+        /// <summary>
+        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
+        /// </summary>
+        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
+
         public bool IsAvalable
         {
             get
@@ -99,11 +104,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public Process Process => (Process)this.pluginConfig?.Process;
 
         public IReadOnlyList<Zone> ZoneList => this.zoneList;
-
-        /// <summary>
-        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
-        /// </summary>
-        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
 
         /// <summary>
         /// ACTプラグインアセンブリ
@@ -682,7 +682,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                                 };
 
                                 newList.Add(zone);
-                                newHash.Add(zone.Name, zone);
+
+                                if (!newHash.ContainsKey(zone.Name))
+                                {
+                                    newHash.Add(zone.Name, zone);
+                                }
                             }
                         }
                     }

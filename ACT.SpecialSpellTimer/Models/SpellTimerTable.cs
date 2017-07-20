@@ -118,9 +118,6 @@ namespace ACT.SpecialSpellTimer.Models
                 item.KeywordForExtendReplaced1 = string.Empty;
                 item.KeywordForExtendReplaced2 = string.Empty;
             }
-
-            // コンパイルしなおす
-            TableCompiler.Instance.CompileSpells();
         }
 
         /// <summary>

@@ -383,6 +383,7 @@ namespace ACT.SpecialSpellTimer
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
                 {
+#if false
                     // ジョブに変化あり？
                     if (!jobChanged)
                     {
@@ -396,7 +397,7 @@ namespace ACT.SpecialSpellTimer
                             }
                         }
                     }
-
+#endif
                     // パーティに変化あり
                     if (!partyChanged)
                     {

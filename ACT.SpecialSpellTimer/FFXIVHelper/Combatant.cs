@@ -7,7 +7,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public int CastBuffID;
         public float CastDurationCurrent;
         public float CastDurationMax;
-        public string CastSkillName;
+        public string CastSkillName = string.Empty;
         public uint CastTargetID;
         public int CurrentCP;
         public int CurrentGP;
@@ -23,18 +23,13 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public int MaxHP;
         public int MaxMP;
         public int MaxTP;
-        public string Name;
+        public string Name = string.Empty;
         public int Order;
         public uint OwnerID;
         public float PosX;
         public float PosY;
         public float PosZ;
         public byte type;
-
-        public Job AsJob()
-        {
-            return SpecialSpellTimer.Job.Instance.FromId(Job);
-        }
 
         public double CurrentCastRate =>
             this.CastDurationMax == 0 ?
@@ -57,6 +52,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public MobType MobType => (MobType)this.type;
 
         public Combatant Player { get; set; }
+
+        public Job AsJob()
+        {
+            return SpecialSpellTimer.Job.Instance.FromId(Job);
+        }
 
         public double GetDistance(Combatant target) =>
             (double)Math.Sqrt(
