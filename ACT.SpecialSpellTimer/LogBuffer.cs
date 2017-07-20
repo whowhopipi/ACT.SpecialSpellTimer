@@ -760,6 +760,23 @@ namespace ACT.SpecialSpellTimer
                     newList.Add(oldValue.ToUpper(), newValue);
                 }
 
+                // ロールによるプレースホルダを登録する
+                // ex. <TANK>   -> (?<TANKs>Taro Paladin|Jiro Paladin)
+                // ex. <HEALER> -> (?<HEALERs>Taro Paladin|Jiro Paladin)
+                // ex. <DPS>    -> (?<DPSs>Taro Paladin|Jiro Paladin)
+                // ex. <MELEE>  -> (?<MELEEs>Taro Paladin|Jiro Paladin)
+                // ex. <RANGE>  -> (?<RANGEs>Taro Paladin|Jiro Paladin)
+                // ex. <MAGIC>  -> (?<MAGICs>Taro Paladin|Jiro Paladin)
+                var partyListByRole = FFXIV.Instance.GetPatryListByRole();
+                foreach (var role in partyListByRole)
+                {
+                    var names = string.Join("|", role.Combatants.Select(x => x.Name).ToArray());
+                    var oldValue = $"<{role.RoleLabel}>";
+                    var newValue = $"(?<{role.RoleLabel}s>{names})";
+
+                    newList.Add(oldValue.ToUpper(), newValue);
+                }
+
                 placeholderToJobNameDictionaly = newList;
             }
             else

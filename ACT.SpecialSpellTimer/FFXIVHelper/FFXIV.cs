@@ -80,6 +80,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private dynamic pluginScancombat;
 
+        /// <summary>
+        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
+        /// </summary>
+        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
+
         public bool IsAvalable
         {
             get
@@ -99,11 +104,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public Process Process => (Process)this.pluginConfig?.Process;
 
         public IReadOnlyList<Zone> ZoneList => this.zoneList;
-
-        /// <summary>
-        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
-        /// </summary>
-        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
 
         /// <summary>
         /// ACTプラグインアセンブリ
@@ -293,6 +293,95 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 combatants[id]).ToList();
 
             return partyList;
+        }
+
+        /// <summary>
+        /// パーティをロールで分類して取得する
+        /// </summary>
+        /// <returns>
+        /// ロールで分類したパーティリスト</returns>
+        public IReadOnlyList<(JobRoles RoleType, string RoleLabel, IReadOnlyList<Combatant> Combatants)> GetPatryListByRole()
+        {
+            var list = new List<(JobRoles RoleType, string RoleLabel, IReadOnlyList<Combatant> Combatants)>();
+
+            var partyList = this.GetPartyList();
+
+            var tanks = partyList
+                .Where(x => x.AsJob().Role == JobRoles.Tank)
+                .ToList();
+
+            var dpses = partyList
+                .Where(x =>
+                    x.AsJob().Role == JobRoles.MeleeDPS ||
+                    x.AsJob().Role == JobRoles.RangeDPS ||
+                    x.AsJob().Role == JobRoles.MagicDPS)
+                .ToList();
+
+            var melees = partyList
+                .Where(x => x.AsJob().Role == JobRoles.MeleeDPS)
+                .ToList();
+
+            var ranges = partyList
+                .Where(x => x.AsJob().Role == JobRoles.RangeDPS)
+                .ToList();
+
+            var magics = partyList
+                .Where(x => x.AsJob().Role == JobRoles.MagicDPS)
+                .ToList();
+
+            var healers = partyList
+                .Where(x => x.AsJob().Role == JobRoles.Healer)
+                .ToList();
+
+            if (tanks.Any())
+            {
+                list.Add((
+                    JobRoles.Tank,
+                    "TANK",
+                    tanks));
+            }
+
+            if (dpses.Any())
+            {
+                list.Add((
+                    JobRoles.DPS,
+                    "DPS",
+                    dpses));
+            }
+
+            if (melees.Any())
+            {
+                list.Add((
+                    JobRoles.MeleeDPS,
+                    "MELEE",
+                    melees));
+            }
+
+            if (ranges.Any())
+            {
+                list.Add((
+                    JobRoles.RangeDPS,
+                    "RANGE",
+                    ranges));
+            }
+
+            if (magics.Any())
+            {
+                list.Add((
+                    JobRoles.MagicDPS,
+                    "MAGIC",
+                    magics));
+            }
+
+            if (healers.Any())
+            {
+                list.Add((
+                    JobRoles.Healer,
+                    "HEALER",
+                    healers));
+            }
+
+            return list;
         }
 
         public Combatant GetPlayer()
