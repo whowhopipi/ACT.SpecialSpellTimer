@@ -13,7 +13,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 唯一のinstance
         /// </summary>
-        private static PanelSettings instance;
+        private static PanelSettings instance = new PanelSettings();
 
         /// <summary>
         /// Panel設定データテーブル
@@ -23,18 +23,11 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 唯一のinstance
         /// </summary>
-        public static PanelSettings Default
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new PanelSettings();
-                    instance.Load();
-                }
+        public static PanelSettings Default => instance;
 
-                return instance;
-            }
+        public PanelSettings()
+        {
+            this.Load();
         }
 
         /// <summary>
@@ -57,13 +50,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// Panel設定データテーブル
         /// </summary>
-        public SpellTimerDataSet.PanelSettingsDataTable SettingsTable
-        {
-            get
-            {
-                return this.settingsTable;
-            }
-        }
+        public SpellTimerDataSet.PanelSettingsDataTable SettingsTable => settingsTable;
 
         /// <summary>
         /// テーブルファイルをバックアップする
@@ -75,8 +62,13 @@ namespace ACT.SpecialSpellTimer
             if (File.Exists(file))
             {
                 var backupFile = Path.Combine(
-                    Path.GetDirectoryName(file),
+                    Path.Combine(Path.GetDirectoryName(file), "backup"),
                     Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
+
+                if (!Directory.Exists(Path.GetDirectoryName(backupFile)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(backupFile));
+                }
 
                 File.Copy(
                     file,
@@ -84,7 +76,8 @@ namespace ACT.SpecialSpellTimer
                     true);
 
                 // 古いバックアップを消す
-                foreach (var bak in Directory.GetFiles(Path.GetDirectoryName(file), "*.bak"))
+                foreach (var bak in 
+                    Directory.GetFiles(Path.GetDirectoryName(backupFile), "*.bak"))
                 {
                     var timeStamp = File.GetCreationTime(bak);
                     if ((DateTime.Now - timeStamp).TotalDays >= 3.0d)

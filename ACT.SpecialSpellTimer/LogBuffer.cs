@@ -258,7 +258,7 @@ namespace ACT.SpecialSpellTimer
         /// <returns>ログ行の配列</returns>
         public IReadOnlyList<string> GetLogLines()
         {
-            if (!this.logInfoQueue.IsEmpty)
+            if (this.logInfoQueue.IsEmpty)
             {
                 return EmptyLogLineList;
             }

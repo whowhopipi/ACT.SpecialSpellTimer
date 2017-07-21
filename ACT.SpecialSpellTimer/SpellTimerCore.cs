@@ -151,12 +151,11 @@ namespace ACT.SpecialSpellTimer
             this.LogBuffer = new LogBuffer();
 
             // RefreshWindowタイマを開始する
-            this.refreshWindowTimer = new System.Windows.Threading.DispatcherTimer()
-            {
-                Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval)
-            };
-
+            this.refreshWindowTimer =
+                new System.Windows.Threading.DispatcherTimer(
+                    System.Windows.Threading.DispatcherPriority.Render);
             this.refreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
+            this.refreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
             this.refreshWindowTimer.Start();
 
             // ログ監視タイマを開始する
@@ -1129,7 +1128,8 @@ namespace ACT.SpecialSpellTimer
             {
                 if (Interlocked.CompareExchange(ref settingsIsValid, VALID, INVALID) == INVALID)
                 {
-                    this.refreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
+                    this.refreshWindowTimer.Interval = 
+                        TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
                 }
 
                 if (this.refreshWindowTimer != null &&
@@ -1138,14 +1138,14 @@ namespace ACT.SpecialSpellTimer
                     Logger.Update();
 
                     // 有効なスペルとテロップのリストを取得する
-                    var spellTask = Task.Run(() => TableCompiler.Instance.SpellList);
-                    var telopTask = Task.Run(() => TableCompiler.Instance.TickerList);
+                    var spells = TableCompiler.Instance.SpellList;
+                    var telops = TableCompiler.Instance.TickerList;
 
-                    if ((DateTime.Now.Second % 5) == 0)
+                    if ((DateTime.Now.Second % 30) == 0)
                     {
                         // 不要なWindowを閉じる
-                        OnePointTelopController.GarbageWindows(telopTask.Result);
-                        this.GarbageSpellPanelWindows(spellTask.Result);
+                        OnePointTelopController.GarbageWindows(telops);
+                        this.GarbageSpellPanelWindows(spells);
                     }
 
                     if (ActGlobals.oFormActMain == null)
@@ -1196,18 +1196,11 @@ namespace ACT.SpecialSpellTimer
                         }
                     }
 
-                    var app = System.Windows.Application.Current;
-
                     // テロップWindowを表示する
-                    var op1 = app.Dispatcher.BeginInvoke(
-                        (Action)(() => OnePointTelopController.RefreshTelopWindows(telopTask.Result)));
+                    OnePointTelopController.RefreshTelopWindows(telops);
 
                     // スペルWindowを表示する
-                    var op2 = app.Dispatcher.BeginInvoke(
-                        (Action)(() => this.RefreshSpellPanelWindows(spellTask.Result)));
-
-                    op1.Wait();
-                    op2.Wait();
+                    this.RefreshSpellPanelWindows(spells);
                 }
             }
             finally
@@ -1350,7 +1343,7 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-        #region NativeMethods
+#region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -1372,6 +1365,6 @@ namespace ACT.SpecialSpellTimer
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-        #endregion NativeMethods
+#endregion NativeMethods
     }
 }

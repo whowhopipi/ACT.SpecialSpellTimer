@@ -1,11 +1,12 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Text;
+using System.Windows.Forms;
+using System.Linq;
+
+using ACT.SpecialSpellTimer.Models;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Text;
-    using System.Windows.Forms;
-
-    using ACT.SpecialSpellTimer.Models;
-
     /// <summary>
     /// Configパネル モニター
     /// </summary>
@@ -68,13 +69,16 @@
                     this.PlaceholderListView.Visible = false;
                     this.PlaceholderListView.SuspendLayout();
 
-                    foreach (var ph in placeholders)
+                    this.PlaceholderListView.Items.Clear();
+
+                    foreach (var ph in placeholders
+                        .OrderBy(x =>x.Type))
                     {
                         var values = new string[]
                         {
-                        ph.Placeholder,
-                        ph.ReplaceString,
-                        Enum.GetName(typeof(PlaceholderTypes), ph.Type)
+                            ph.Placeholder,
+                            ph.ReplaceString,
+                            Enum.GetName(typeof(PlaceholderTypes), ph.Type)
                         };
 
                         this.PlaceholderListView.Items.Add(new ListViewItem(values));

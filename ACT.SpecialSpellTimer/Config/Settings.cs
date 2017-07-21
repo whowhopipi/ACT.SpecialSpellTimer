@@ -293,7 +293,7 @@ namespace ACT.SpecialSpellTimer.Config
             CombatLogBufferSize = 30000,
             ReduceIconBrightness = 55,
             Opacity = 10,
-            MaxFPS = 60,
+            MaxFPS = 30,
             Font = FontInfo.DefaultFont.ToFontForWindowsForm(),
             OverlayVisible = true,
             AutoSortEnabled = true,

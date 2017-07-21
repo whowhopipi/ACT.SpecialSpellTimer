@@ -282,30 +282,46 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void RecompileSpells()
         {
-            var rawTable = new List<SpellTimer>(SpellTimerTable.Table);
-            foreach (var spell in rawTable.AsParallel())
+            lock (this)
             {
-                spell.KeywordReplaced = string.Empty;
-                spell.KeywordForExtendReplaced1 = string.Empty;
-                spell.KeywordForExtendReplaced2 = string.Empty;
+                var rawTable = new List<SpellTimer>(SpellTimerTable.Table);
+                foreach (var spell in rawTable.AsParallel())
+                {
+                    spell.KeywordReplaced = string.Empty;
+                    spell.KeywordForExtendReplaced1 = string.Empty;
+                    spell.KeywordForExtendReplaced2 = string.Empty;
+                    spell.Regex = null;
+                    spell.RegexPattern = string.Empty;
+                    spell.RegexForExtend1 = null;
+                    spell.RegexForExtendPattern1 = string.Empty;
+                    spell.RegexForExtend2 = null;
+                    spell.RegexForExtendPattern2 = string.Empty;
+                }
+
+                this.CompileSpells();
+
+                // スペルタイマの描画済みフラグを落とす
+                SpellTimerTable.ClearUpdateFlags();
             }
-
-            this.CompileSpells();
-
-            // スペルタイマの描画済みフラグを落とす
-            SpellTimerTable.ClearUpdateFlags();
         }
 
         public void RecompileTickers()
         {
-            var rawTable = new List<OnePointTelop>(OnePointTelopTable.Default.Table);
-            foreach (var spell in rawTable.AsParallel())
+            lock (this)
             {
-                spell.KeywordReplaced = string.Empty;
-                spell.KeywordToHideReplaced = string.Empty;
-            }
+                var rawTable = new List<OnePointTelop>(OnePointTelopTable.Default.Table);
+                foreach (var spell in rawTable.AsParallel())
+                {
+                    spell.KeywordReplaced = string.Empty;
+                    spell.KeywordToHideReplaced = string.Empty;
+                    spell.Regex = null;
+                    spell.RegexPattern = string.Empty;
+                    spell.RegexToHide = null;
+                    spell.RegexPatternToHide = string.Empty;
+                }
 
-            this.CompileTickers();
+                this.CompileTickers();
+            }
         }
 
         private void DoWork()
@@ -340,8 +356,8 @@ namespace ACT.SpecialSpellTimer.Models
                         isPartyChanged ||
                         isZoneChanged)
                     {
-                        this.CompileSpells();
-                        this.CompileTickers();
+                        this.RecompileSpells();
+                        this.RecompileTickers();
                     }
                 }
                 catch (ThreadAbortException)
@@ -390,9 +406,9 @@ namespace ACT.SpecialSpellTimer.Models
             if (forceUpdate ||
                 string.IsNullOrEmpty(destinationKeyword))
             {
-                var newKeyword = string.Empty;
-                newKeyword = replace(sourceKeyword);
-                newKeyword = DQXUtility.MakeKeyword(sourceKeyword);
+                var newKeyword = sourceKeyword;
+                newKeyword = replace(newKeyword);
+                newKeyword = DQXUtility.MakeKeyword(newKeyword);
 
                 return newKeyword;
             }
@@ -403,23 +419,25 @@ namespace ACT.SpecialSpellTimer.Models
         private (Regex newRegex, string newPattern) GetRegex(
             Regex destinationRegex,
             string destinationPattern,
-            string sourcePattern)
+            string sourceKeyword)
         {
-            (Regex newRegex, string newPattern) r = (destinationRegex, destinationPattern);
+            var newRegex= destinationRegex;
+            var newPattern = destinationPattern;
+
+            var sourcePattern = sourceKeyword.ToRegexPattern();
 
             if (!string.IsNullOrEmpty(sourcePattern))
             {
-                var newPattern = sourcePattern.ToRegexPattern();
-
                 if (destinationRegex == null ||
-                    destinationPattern != newPattern)
+                    string.IsNullOrEmpty(destinationPattern) ||
+                    destinationPattern != sourcePattern)
                 {
-                    r.newRegex = newPattern.ToRegex();
-                    r.newPattern = newPattern;
+                    newRegex = sourcePattern.ToRegex();
+                    newPattern = sourcePattern;
                 }
             }
 
-            return r;
+            return (newRegex, newPattern);
         }
 
         private void RefreshCombatants()
