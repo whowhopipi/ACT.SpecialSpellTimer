@@ -379,6 +379,12 @@ namespace ACT.SpecialSpellTimer
             {
                 lock (this.fileOutputLogBuffer)
                 {
+                    var dir = Path.GetDirectoryName(Settings.Default.SaveLogFile);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+
                     File.AppendAllText(
                         Settings.Default.SaveLogFile,
                         this.fileOutputLogBuffer.ToString(),
