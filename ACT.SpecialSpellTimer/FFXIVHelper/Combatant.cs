@@ -54,7 +54,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public Job AsJob()
         {
-            return SpecialSpellTimer.Job.Instance.FromId(Job);
+            return SpecialSpellTimer.Job.Instance.FromId(this.Job);
         }
 
         public double GetDistance(Combatant target) =>

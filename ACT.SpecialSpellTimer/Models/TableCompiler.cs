@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
@@ -37,8 +38,13 @@ namespace ACT.SpecialSpellTimer.Models
         {
             this.workerRunning = true;
 
+            this.CompileSpells();
+            this.CompileTickers();
+
             this.worker = new Thread(this.DoWork);
             this.worker.Start();
+
+            Logger.Write("start spell compiler.");
         }
 
         public void End()
@@ -55,6 +61,8 @@ namespace ACT.SpecialSpellTimer.Models
 
                 this.worker = null;
             }
+
+            Logger.Write("end spell compiler.");
         }
 
         #endregion Begin / End
@@ -109,6 +117,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                 // ジョブフィルタをかける
                 if (this.player == null ||
+                    this.player.ID == 0 ||
                     string.IsNullOrEmpty(spell.JobFilter))
                 {
                     enabledByJob = true;
@@ -143,18 +152,16 @@ namespace ACT.SpecialSpellTimer.Models
             // 元のリストの複製を得る
             var sourceList = new List<SpellTimer>(SpellTimerTable.Table);
 
-            var q =
+            var query =
                 from x in sourceList
                 where
                 x.Enabled &&
                 filter(x)
-                orderby
-                x.DisplayNo
                 select
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in q.AsParallel())
+            foreach (var spell in query.AsParallel())
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
@@ -185,7 +192,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.spellListLocker)
             {
-                this.spellList = new List<SpellTimer>(q);
+                this.spellList = new List<SpellTimer>(query);
             }
         }
 
@@ -200,6 +207,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                 // ジョブフィルタをかける
                 if (this.player == null ||
+                    this.player.ID == 0 ||
                     string.IsNullOrWhiteSpace(spell.JobFilter))
                 {
                     enabledByJob = true;
@@ -234,18 +242,16 @@ namespace ACT.SpecialSpellTimer.Models
             // 元のリストの複製を得る
             var sourceList = new List<OnePointTelop>(OnePointTelopTable.Default.Table);
 
-            var q =
+            var query =
                 from x in sourceList
                 where
                 x.Enabled &&
                 filter(x)
-                orderby
-                x.MatchDateTime ascending
                 select
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in q.AsParallel())
+            foreach (var spell in query.AsParallel())
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
@@ -270,7 +276,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.tickerListLocker)
             {
-                this.tickerList = new List<OnePointTelop>(q);
+                this.tickerList = new List<OnePointTelop>(query);
             }
         }
 

@@ -120,9 +120,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public void End()
         {
+            this.scanFFXIVTaskRunning = false;
+            this.taskRunning = false;
+
             if (this.task != null)
             {
-                this.taskRunning = false;
                 this.task.Wait();
                 this.task.Dispose();
                 this.task = null;
@@ -130,7 +132,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (this.scanFFXIVTask != null)
             {
-                this.scanFFXIVTaskRunning = false;
                 this.scanFFXIVTask.Wait();
                 this.scanFFXIVTask.Dispose();
                 this.scanFFXIVTask = null;

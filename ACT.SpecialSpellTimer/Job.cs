@@ -69,14 +69,9 @@
     public class Job
     {
         /// <summary>
-        /// インスタンス
-        /// </summary>
-        private static Job instance;
-
-        /// <summary>
         /// ジョブリスト
         /// </summary>
-        private static Job[] jobList = new Job[]
+        private readonly static Job[] jobList = new Job[]
         {
             new Job(JobIds.GLD, JobRoles.Tank),
             new Job(JobIds.PUG, JobRoles.MeleeDPS),
@@ -115,6 +110,13 @@
             new Job(JobIds.RDM, JobRoles.MagicDPS),
         };
 
+        private readonly static Job UnkownJob = new Job(0, JobRoles.Unknown);
+
+        /// <summary>
+        /// インスタンス
+        /// </summary>
+        private static Job instance = new Job();
+
         /// <summary>
         /// ジョブIDによる辞書
         /// </summary>
@@ -125,6 +127,7 @@
         /// </summary>
         private Job()
         {
+            this.jobDictionary = jobList.ToDictionary(x => x.JobId, x => x);
         }
 
         /// <summary>
@@ -142,14 +145,12 @@
         /// <summary>
         /// インスタンス
         /// </summary>
-        public static Job Instance => (instance ?? (instance = new Job()));
+        public static Job Instance => instance;
 
         /// <summary>
         /// ジョブIDをキーに持つ辞書
         /// </summary>
-        public IReadOnlyDictionary<int, Job> JobDictionary
-            => (this.jobDictionary ??
-            (this.jobDictionary = jobList.ToDictionary(x => x.JobId, x => x)));
+        public IReadOnlyDictionary<int, Job> JobDictionary => this.jobDictionary;
 
         /// <summary>
         /// JobId
@@ -184,7 +185,7 @@
             }
             else
             {
-                return null;
+                return UnkownJob;
             }
         }
 

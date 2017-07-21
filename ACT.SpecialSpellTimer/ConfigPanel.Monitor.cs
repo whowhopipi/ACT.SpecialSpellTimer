@@ -1,6 +1,7 @@
 ﻿namespace ACT.SpecialSpellTimer
 {
     using System;
+    using System.Text;
     using System.Windows.Forms;
 
     using ACT.SpecialSpellTimer.Models;
@@ -10,6 +11,7 @@
     /// </summary>
     public partial class ConfigPanel
     {
+        private StringBuilder logBuffer = new StringBuilder();
         private Timer updatePlaceholderTimer = new Timer();
         private bool LogTabSelected => this.TabControl.SelectedTab == this.LogTabPage;
 
@@ -24,6 +26,8 @@
             {
                 this.LogTextBox.AppendText(text + Environment.NewLine);
             });
+
+            this.logBuffer.AppendLine(text);
         }
 
         /// <summary>
@@ -45,6 +49,12 @@
             };
 
             this.updatePlaceholderTimer.Start();
+
+            if (string.IsNullOrEmpty(this.LogTextBox.Text) &&
+                this.logBuffer.Length > 0)
+            {
+                this.LogTextBox.AppendText(this.logBuffer.ToString());
+            }
         }
 
         public void UpdatePlaceholder()
@@ -68,6 +78,14 @@
                         };
 
                         this.PlaceholderListView.Items.Add(new ListViewItem(values));
+                    }
+
+                    if (placeholders.Count > 0)
+                    {
+                        for (int i = 0; i < this.PlaceholderListView.Columns.Count; i++)
+                        {
+                            this.CombatLogListView.AutoResizeColumn(i, ColumnHeaderAutoResizeStyle.ColumnContent);
+                        }
                     }
                 }
                 finally
