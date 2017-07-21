@@ -102,18 +102,6 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         /// <summary>
-        /// 置換後のキーワードをクリアする
-        /// </summary>
-        public void ClearReplacedKeywords()
-        {
-            foreach (var item in this.Table)
-            {
-                item.KeywordReplaced = string.Empty;
-                item.KeywordToHideReplaced = string.Empty;
-            }
-        }
-
-        /// <summary>
         /// 指定されたGuidを持つOnePointTelopを取得する
         /// </summary>
         /// <param name="guid">Guid</param>

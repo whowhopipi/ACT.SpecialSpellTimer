@@ -108,19 +108,6 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         /// <summary>
-        /// 置換後のキーワードをクリアする
-        /// </summary>
-        public static void ClearReplacedKeywords()
-        {
-            foreach (var item in Table)
-            {
-                item.KeywordReplaced = string.Empty;
-                item.KeywordForExtendReplaced1 = string.Empty;
-                item.KeywordForExtendReplaced2 = string.Empty;
-            }
-        }
-
-        /// <summary>
         /// スペルの描画済みフラグをクリアする
         /// </summary>
         public static void ClearUpdateFlags()

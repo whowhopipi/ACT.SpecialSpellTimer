@@ -107,18 +107,20 @@
 
             public static RECT FromXYWH(int x, int y, int width, int height)
             {
-                return new RECT(x,
-                                y,
-                                x + width,
-                                y + height);
+                return new RECT(
+                    x,
+                    y,
+                    x + width,
+                    y + height);
             }
 
             public static RECT FromRectangle(Rectangle rect)
             {
-                return new RECT(rect.Left,
-                                 rect.Top,
-                                 rect.Right,
-                                 rect.Bottom);
+                return new RECT(
+                    rect.Left,
+                    rect.Top,
+                    rect.Right,
+                    rect.Bottom);
             }
         }
 

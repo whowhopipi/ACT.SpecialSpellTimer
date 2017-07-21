@@ -37,10 +37,13 @@
             this.ToolTip.SetToolTip(this.TelopMessageTextBox, Utility.Translate.Get("TelopMessageExplanationTooltip"));
             this.ToolTip.SetToolTip(this.label46, Utility.Translate.Get("TelopMessageExplanationTooltip"));
 
-            // 戦闘分析用のListViewのダブルバッファリングを有効にする
+            // ListViewのダブルバッファリングを有効にする
             typeof(ListView)
                 .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(this.CombatLogListView, true, null);
+            typeof(ListView)
+                .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(this.PlaceholderListView, true, null);
 
             // パネルの詳細用グループボックスの場所を決める
 
@@ -222,7 +225,7 @@
                     nr.RegexPattern = string.Empty;
                     SpellTimerTable.Table.Add(nr);
 
-                    SpellTimerTable.ClearReplacedKeywords();
+                    TableCompiler.Instance.RecompileSpells();
                     SpellTimerTable.RemoveAllInstanceSpells();
                     SpellTimerTable.Save();
                 });
@@ -408,7 +411,7 @@
                 }
 
                 // キャッシュを無効にする
-                SpellTimerTable.ClearReplacedKeywords();
+                TableCompiler.Instance.RecompileSpells();
 
                 // スペルの有効・無効が変化した際に、標準のスペルタイマーに反映する
                 SpellTimerCore.Default.ApplyToNormalSpellTimer();
@@ -512,7 +515,7 @@
             this.LoadCombatAnalyzer();
 
             // モニタタブのロードを呼ぶ
-            this.LoadMonitorTab();
+            this.LoadLogTab();
         }
 
         /// <summary>
@@ -530,7 +533,7 @@
                     if (src != null)
                     {
                         SpellTimerTable.Table.Remove(src);
-                        SpellTimerTable.ClearReplacedKeywords();
+                        TableCompiler.Instance.RecompileSpells();
                         SpellTimerTable.RemoveAllInstanceSpells();
                         SpellTimerTable.Save();
 
@@ -993,7 +996,7 @@
                             s.BackgroundColor = src.BackgroundColor;
                         }
 
-                        SpellTimerTable.ClearReplacedKeywords();
+                        TableCompiler.Instance.RecompileSpells();
 
                         SpellTimerTable.Save();
                         this.LoadSpellTimerTable();

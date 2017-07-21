@@ -223,15 +223,8 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
-            // 置換後のマッチングキーワードを消去する
-            SpellTimerTable.ClearReplacedKeywords();
-            OnePointTelopTable.Default.ClearReplacedKeywords();
-
-            // スペルタイマーの再描画を行う
-            SpellTimerTable.ClearUpdateFlags();
-
-            // モニタタブの情報を無効にする
-            SpecialSpellTimerPlugin.ConfigPanel.InvalidatePlaceholders();
+            TableCompiler.Instance.RecompileSpells();
+            TableCompiler.Instance.RecompileTickers();
         }
     }
 }

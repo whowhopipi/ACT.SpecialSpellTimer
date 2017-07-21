@@ -116,7 +116,7 @@
                 }
 
                 // キャッシュを無効にする
-                OnePointTelopTable.Default.ClearReplacedKeywords();
+                TableCompiler.Instance.RecompileTickers();
 
                 // テロップの有効・無効が変化した際に、標準のスペルタイマーに反映する
                 SpellTimerCore.Default.ApplyToNormalSpellTimer();
@@ -353,7 +353,7 @@
 
                 OnePointTelopTable.Default.Table.Add(nr);
 
-                OnePointTelopTable.Default.ClearReplacedKeywords();
+                TableCompiler.Instance.RecompileTickers();
                 OnePointTelopTable.Default.Save();
             });
 
@@ -428,7 +428,7 @@
                     if (src != null)
                     {
                         OnePointTelopTable.Default.Table.Remove(src);
-                        OnePointTelopTable.Default.ClearReplacedKeywords();
+                        TableCompiler.Instance.RecompileTickers();
                         OnePointTelopTable.Default.Save();
 
                         OnePointTelopController.CloseTelops();
@@ -547,7 +547,7 @@
                             src.Top);
                     }
 
-                    OnePointTelopTable.Default.ClearReplacedKeywords();
+                    TableCompiler.Instance.RecompileTickers();
                     OnePointTelopTable.Default.Save();
                     this.LoadTelopTable();
 

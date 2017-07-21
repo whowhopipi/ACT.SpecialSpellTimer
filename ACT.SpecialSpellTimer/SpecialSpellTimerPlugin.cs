@@ -102,8 +102,11 @@ namespace ACT.SpecialSpellTimer
             SpellTimerCore.Default.ClosePanels();
             OnePointTelopController.CloseTelops();
 
-            LogBuffer.RefreshPartyList();
-            LogBuffer.RefreshPetID();
+            TableCompiler.Instance.RefreshPlayerPlacceholder();
+            TableCompiler.Instance.RefreshPartyPlaceholders();
+            TableCompiler.Instance.RefreshPetPlaceholder();
+            TableCompiler.Instance.RecompileSpells();
+            TableCompiler.Instance.RecompileTickers();
 
             if (Settings.Default.OverlayVisible)
             {
@@ -230,7 +233,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="sender">イベント発生元</param>
         /// <param name="e">イベント引数</param>
-        private void oFormActMain_Resize(object sender, EventArgs e)
+        private void FormActMain_Resize(object sender, EventArgs e)
         {
             SwitchVisibleButton.Location = new Point(
                 ActGlobals.oFormActMain.Width - 533,
@@ -244,7 +247,7 @@ namespace ACT.SpecialSpellTimer
         {
             if (SwitchVisibleButton != null)
             {
-                ActGlobals.oFormActMain.Resize -= this.oFormActMain_Resize;
+                ActGlobals.oFormActMain.Resize -= this.FormActMain_Resize;
                 ActGlobals.oFormActMain.Controls.Remove(SwitchVisibleButton);
             }
         }
@@ -284,8 +287,11 @@ namespace ACT.SpecialSpellTimer
                 SpellTimerCore.Default.ClosePanels();
                 OnePointTelopController.CloseTelops();
 
-                LogBuffer.RefreshPartyList();
-                LogBuffer.RefreshPetID();
+                TableCompiler.Instance.RefreshPlayerPlacceholder();
+                TableCompiler.Instance.RefreshPartyPlaceholders();
+                TableCompiler.Instance.RefreshPetPlaceholder();
+                TableCompiler.Instance.RecompileSpells();
+                TableCompiler.Instance.RecompileTickers();
 
                 if (Settings.Default.OverlayVisible)
                 {
@@ -298,11 +304,11 @@ namespace ACT.SpecialSpellTimer
 
             changeColor(SwitchVisibleButton);
 
-            ActGlobals.oFormActMain.Resize += this.oFormActMain_Resize;
+            ActGlobals.oFormActMain.Resize += this.FormActMain_Resize;
             ActGlobals.oFormActMain.Controls.Add(SwitchVisibleButton);
             ActGlobals.oFormActMain.Controls.SetChildIndex(SwitchVisibleButton, 1);
 
-            this.oFormActMain_Resize(this, null);
+            this.FormActMain_Resize(this, null);
         }
 
         /// <summary>

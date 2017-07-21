@@ -261,7 +261,7 @@
         {
             this.EndPoller();
 
-            ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
+            ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
             this.CurrentCombatLogList.Clear();
             Logger.Write("end combat analyze.");
         }
@@ -294,7 +294,7 @@
                 this.StartPoller();
             }
 
-            ActGlobals.oFormActMain.OnLogLineRead += this.oFormActMain_OnLogLineRead;
+            ActGlobals.oFormActMain.OnLogLineRead += this.FormActMain_OnLogLineRead;
             Logger.Write("start combat analyze.");
         }
 
@@ -343,36 +343,11 @@
         }
 
         /// <summary>
-        /// 分析用のキーワードを取得する
-        /// </summary>
-        /// <returns>キーワードコレクション</returns>
-        private IReadOnlyCollection<string> GetPartyMemberNames()
-        {
-            var names = new List<string>();
-
-            // プレイヤ情報とパーティリストを取得する
-            var player = FFXIV.Instance.GetPlayer();
-            var ptlist = LogBuffer.PartyList;
-
-            if (player != null)
-            {
-                names.Add(player.Name);
-            }
-
-            if (ptlist != null)
-            {
-                names.AddRange(ptlist);
-            }
-
-            return names;
-        }
-
-        /// <summary>
         /// ログを1行読取った
         /// </summary>
         /// <param name="isImport">Importか？</param>
         /// <param name="logInfo">ログ情報</param>
-        private void oFormActMain_OnLogLineRead(
+        private void FormActMain_OnLogLineRead(
             bool isImport,
             LogLineEventArgs logInfo)
         {
@@ -392,6 +367,31 @@
                     "catch exception at Combat Analyzer OnLogLineRead.\n" +
                     ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// 分析用のキーワードを取得する
+        /// </summary>
+        /// <returns>キーワードコレクション</returns>
+        private IReadOnlyCollection<string> GetPartyMemberNames()
+        {
+            var names = new List<string>();
+
+            // プレイヤ情報とパーティリストを取得する
+            var player = FFXIV.Instance.GetPlayer();
+            var ptlist = FFXIV.Instance.GetPartyList();
+
+            if (player != null)
+            {
+                names.Add(player.Name);
+            }
+
+            if (ptlist != null)
+            {
+                names.AddRange(ptlist.Select(x => x.Name));
+            }
+
+            return names;
         }
 
         /// <summary>

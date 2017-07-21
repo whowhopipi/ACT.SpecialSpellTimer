@@ -1,23 +1,23 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+using ACT.SpecialSpellTimer.Views;
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.FFXIVHelper;
-    using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Utility;
-    using ACT.SpecialSpellTimer.Views;
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// SpellTimerの中核
     /// </summary>
@@ -30,7 +30,7 @@
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        private static SpellTimerCore instance;
+        private static SpellTimerCore instance = new SpellTimerCore();
 
         /// <summary>
         /// 最後にFF14プロセスをチェックした時間
@@ -76,37 +76,12 @@
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        public static SpellTimerCore Default
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new SpellTimerCore();
-#if DEBUG
-                    Debug.WriteLine("SpellTimerCore");
-#endif
-                }
-
-                return instance;
-            }
-        }
-
-#if false
-        /// <summary>
-        /// Refreshタイマ
-        /// </summary>
-        private System.Windows.Forms.Timer RefreshTimer;
-#endif
+        public static SpellTimerCore Default => instance;
 
         /// <summary>
         /// SpellTimerのPanelリスト
         /// </summary>
-        private List<SpellTimerListWindow> SpellTimerPanels
-        {
-            get;
-            set;
-        }
+        private List<SpellTimerListWindow> SpellTimerPanels { get; set; }
 
         /// <summary>
         /// Panelをアクティブ化する
@@ -160,6 +135,12 @@
         /// </summary>
         public void Begin()
         {
+            // FFXIVのスキャンを開始する
+            FFXIV.Instance.Start();
+
+            // テーブルコンパイラを開始する
+            TableCompiler.Instance.Begin();
+
             // 戦闘分析を初期化する
             CombatAnalyzer.Default.Initialize();
 
@@ -168,12 +149,6 @@
 
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
-
-            // テーブルコンパイラを開始する
-            TableCompiler.Instance.Begin();
-
-            // FFXIVのスキャンを開始する
-            FFXIV.Instance.Start();
 
             // RefreshWindowタイマを開始する
             this.refreshWindowTimer = new System.Windows.Threading.DispatcherTimer()
@@ -297,17 +272,17 @@
                 this.LogBuffer = null;
             }
 
-            // 監視を開放する
+            // Viewの描画を開放する
             if (this.refreshWindowTimer != null)
             {
                 this.refreshWindowTimer.Stop();
                 this.refreshWindowTimer = null;
             }
 
+            // 監視を開放する
             if (this.logPoller != null)
             {
                 this.logPoller.Join(TimeSpan.FromSeconds(5));
-
                 if (this.logPoller.IsAlive)
                 {
                     this.logPoller.Abort();
@@ -316,20 +291,20 @@
                 this.logPoller = null;
             }
 
-            // FFXIVのスキャンを停止する
-            FFXIV.Instance.End();
-
             // 全てのPanelを閉じる
             this.ClosePanels();
             OnePointTelopController.CloseTelops();
-
-            // テーブルコンパイラを停止する
-            TableCompiler.Instance.End();
 
             // 設定を保存する
             Settings.Default.Save();
             SpellTimerTable.Save();
             OnePointTelopTable.Default.Save();
+
+            // テーブルコンパイラを停止する
+            TableCompiler.Instance.End();
+
+            // FFXIVのスキャンを停止する
+            FFXIV.Instance.End();
 
             // instanceを初期化する
             instance = null;
@@ -1162,11 +1137,6 @@
                 {
                     Logger.Update();
 
-                    if (SpecialSpellTimerPlugin.ConfigPanel != null)
-                    {
-                        SpecialSpellTimerPlugin.ConfigPanel.UpdateMonitor();
-                    }
-
                     // 有効なスペルとテロップのリストを取得する
                     var spellTask = Task.Run(() => TableCompiler.Instance.SpellList);
                     var telopTask = Task.Run(() => TableCompiler.Instance.TickerList);
@@ -1311,10 +1281,7 @@
                 {
                     Logger.Write("Party was wiped out. Reset spells and tickers.");
 
-                    // スペルのカウントをリセットする
                     SpellTimerTable.ResetCount();
-
-                    // テロップのカウントをリセットする
                     OnePointTelopTable.Default.ResetCount();
 
                     // ACT本体に戦闘終了を通知する
@@ -1349,7 +1316,7 @@
             // 全滅によるリセットを判定する
             var resetTask = Task.Run(() => this.ResetCountAtRestart());
 
-            if (this.LogBuffer.NonEmpty())
+            if (!this.LogBuffer.IsEmpty)
             {
                 // ログを取り出す
                 var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());

@@ -50,7 +50,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.GetHorizontalDistance(this.Player) : 0;
 
         public MobType MobType => (MobType)this.type;
-
         public Combatant Player { get; set; }
 
         public Job AsJob()

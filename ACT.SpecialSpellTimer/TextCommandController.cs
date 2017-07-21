@@ -85,12 +85,17 @@ namespace ACT.SpecialSpellTimer
                                 break;
 
                             case "pt":
-                                LogBuffer.RefreshPartyList();
+                                TableCompiler.Instance.RefreshPlayerPlacceholder();
+                                TableCompiler.Instance.RefreshPartyPlaceholders();
+                                TableCompiler.Instance.RecompileSpells();
+                                TableCompiler.Instance.RecompileTickers();
                                 commandDone = true;
                                 break;
 
                             case "pet":
-                                LogBuffer.RefreshPetID();
+                                TableCompiler.Instance.RefreshPetPlaceholder();
+                                TableCompiler.Instance.RecompileSpells();
+                                TableCompiler.Instance.RecompileTickers();
                                 commandDone = true;
                                 break;
                         }
@@ -159,7 +164,7 @@ namespace ACT.SpecialSpellTimer
                                     windowname.Trim() != string.Empty &&
                                     valueAsText.Trim() != string.Empty)
                                 {
-                                    LogBuffer.SetCustomPlaceholder(windowname.Trim(), valueAsText.Trim());
+                                    TableCompiler.Instance.SetCustomPlaceholder(windowname.Trim(), valueAsText.Trim());
 
                                     commandDone = true;
                                 }
@@ -175,13 +180,13 @@ namespace ACT.SpecialSpellTimer
                             case "placeholder":
                                 if (windowname.Trim().ToLower() == "all")
                                 {
-                                    LogBuffer.ClearCustomPlaceholderAll();
+                                    TableCompiler.Instance.ClearCustomPlaceholderAll();
 
                                     commandDone = true;
                                 }
                                 else if (windowname.Trim() != string.Empty)
                                 {
-                                    LogBuffer.ClearCustomPlaceholder(windowname.Trim());
+                                    TableCompiler.Instance.ClearCustomPlaceholder(windowname.Trim());
 
                                     commandDone = true;
                                 }

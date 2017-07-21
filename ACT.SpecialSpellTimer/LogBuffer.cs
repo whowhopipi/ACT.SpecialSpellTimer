@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -23,98 +21,16 @@ namespace ACT.SpecialSpellTimer
     /// </summary>
     public class LogBuffer : IDisposable
     {
-        #region private static fields
-
         /// <summary>
-        /// 空の文字列リスト
+        /// 空のログリスト
         /// </summary>
-        private static readonly IReadOnlyList<string> EMPTY_STRING_LIST =
-            new List<string>();
-
-        /// <summary>
-        /// 空の(文字列 -&gt; 文字列)マップ
-        /// </summary>
-        private static readonly IReadOnlyDictionary<string, string> EMPTY_STRING_PAIR_MAP =
-            new Dictionary<string, string>();
-
-        /// <summary>
-        /// ペットID更新ロックオブジェクト
-        /// </summary>
-        private static readonly object lockPetidObject = new object();
-
-        /// <summary>
-        /// パーティ変更をチェックするワードパターン
-        /// </summary>
-        private static readonly IReadOnlyCollection<IReadOnlyCollection<string>> PARTY_CHANGED_WORDS =
-            new List<IReadOnlyCollection<string>>
-            {
-                new List<string> { "パーティを解散しました。" },
-                new List<string> { "がパーティに参加しました。" },
-                new List<string> { "がパーティから離脱しました。" },
-                new List<string> { "をパーティから離脱させました。" },
-                new List<string> { "の攻略を開始した。" },
-                new List<string> { "の攻略を終了した。" },
-                new List<string> { "You join ", "'s party." },
-                new List<string> { "You left the party." },
-                new List<string> { "You dissolve the party." },
-                new List<string> { "The party has been disbanded." },
-                new List<string> { "joins the party." },
-                new List<string> { "has left the party." },
-                new List<string> { "was removed from the party." },
-            };
-
-        /// <summary> パーティ名プレースホルダーのキャッシュ "<2>" ～ "<8>" </summary>
-        private static readonly IReadOnlyList<string> PARTY_PLACEHOLDERS =
-            Enumerable.Range(2, 7).Select(ordinal => "<" + ordinal + ">").ToList();
+        private static readonly List<string> EmptyLogLineList = new List<string>();
 
         /// <summary>
         /// ツールチップ文字除去するための正規表現
         /// </summary>
         private static readonly Regex TooltipCharsRegex =
             new Regex(@".\u0001\u0001\uFFFD", RegexOptions.Compiled);
-
-        /// <summary>
-        /// ペットのID
-        /// </summary>
-        private static volatile string currentPetId = string.Empty;
-
-        /// <summary>
-        /// 現在のパーティメンバー名リストのキャッシュ
-        /// </summary>
-        private static volatile IReadOnlyList<string> partyList = EMPTY_STRING_LIST;
-
-        /// <summary>
-        /// ペットのIDを取得したゾーン
-        /// </summary>
-        private static volatile string petIdCheckedZone = string.Empty;
-
-        /// <summary>
-        /// ジョブ名プレースホルダー -&gt; プレイヤー名
-        /// </summary>
-        private static volatile IReadOnlyDictionary<string, string> placeholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
-
-        /// <summary>
-        /// パーティメンバの代名詞が有効か？
-        /// </summary>
-        private static bool EnabledPartyMemberPlaceHolder => Settings.Default.EnabledPartyMemberPlaceholder;
-
-        #endregion private static fields
-
-        #region public static properties
-
-        /// <summary>
-        /// パーティメンバー名
-        /// </summary>
-        public static IReadOnlyList<string> PartyList => partyList;
-
-        /// <summary>
-        /// ジョブ代名詞による置換文字列セットのリスト
-        /// </summary>
-        public static IReadOnlyDictionary<string, string> PlaceholderToJobNameDictionaly => placeholderToJobNameDictionaly;
-
-        #endregion public static properties
-
-        #region private fields
 
         /// <summary>
         /// ログファイル出力用のバッファ
@@ -135,13 +51,6 @@ namespace ACT.SpecialSpellTimer
         /// 最後のログのタイムスタンプ
         /// </summary>
         private DateTime lastLogineTimestamp;
-
-        /// <summary>
-        /// 現在走っているゾーン/ペットID情報更新タスクのキャンセルトークンソース
-        /// </summary>
-        private volatile CancellationTokenSource petIdRefreshTaskCancelTokenSource;
-
-        #endregion private fields
 
         #region コンストラクター/デストラクター/Dispose
 
@@ -184,15 +93,7 @@ namespace ACT.SpecialSpellTimer
             ActGlobals.oFormActMain.BeforeLogLineRead -= this.OnBeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
 
-            LogLineEventArgs ignore;
-            while (logInfoQueue.TryDequeue(out ignore)) ;
-
             this.FlushLogFile();
-
-            partyList = EMPTY_STRING_LIST;
-            placeholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
-            currentPetId = string.Empty;
-            petIdCheckedZone = string.Empty;
 
             GC.SuppressFinalize(this);
         }
@@ -349,15 +250,17 @@ namespace ACT.SpecialSpellTimer
 
         #region ログ処理
 
+        public bool IsEmpty => this.logInfoQueue.IsEmpty;
+
         /// <summary>
         /// ログ行を返す
         /// </summary>
         /// <returns>ログ行の配列</returns>
         public IReadOnlyList<string> GetLogLines()
         {
-            if (logInfoQueue.IsEmpty)
+            if (!this.logInfoQueue.IsEmpty)
             {
-                return EMPTY_STRING_LIST;
+                return EmptyLogLineList;
             }
 
             // プレイヤー情報を取得する
@@ -365,7 +268,6 @@ namespace ACT.SpecialSpellTimer
 
             // プレイヤーが召喚士か？
             var palyerIsSummoner = false;
-
             if (player != null)
             {
                 var job = player.AsJob();
@@ -376,13 +278,11 @@ namespace ACT.SpecialSpellTimer
             }
 
             var list = new List<string>(logInfoQueue.Count);
-            var partyChanged = false;
             var partyChangedAtDQX = false;
             var summoned = false;
-            var zoneChanged = false;
 
-            LogLineEventArgs logInfo;
-            while (logInfoQueue.TryDequeue(out logInfo))
+            while (logInfoQueue.TryDequeue(
+                out LogLineEventArgs logInfo))
             {
                 var logLine = logInfo.logLine.Trim();
 
@@ -395,16 +295,7 @@ namespace ACT.SpecialSpellTimer
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
                 {
-                    // パーティに変化あり
-                    if (!partyChanged)
-                    {
-                        if (IsPartyChanged(logLine))
-                        {
-                            partyChanged = true;
-                        }
-                    }
-
-                    if (!(summoned && zoneChanged))
+                    if (!summoned)
                     {
                         // ペットIDのCacheを更新する
                         if (palyerIsSummoner)
@@ -413,11 +304,6 @@ namespace ACT.SpecialSpellTimer
                                 logLine.Contains("You cast Summon"))
                             {
                                 summoned = true;
-                            }
-
-                            if (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
-                            {
-                                zoneChanged = true;
                             }
                         }
                     }
@@ -436,108 +322,24 @@ namespace ACT.SpecialSpellTimer
                 this.AppendLogFile(logLine);
             }
 
-            if (partyChanged)
-            {
-                Task.Run(async () =>
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(5));
-                    RefreshPartyList();
-                });
-            }
-
             if (partyChangedAtDQX)
             {
-                Task.Run(async () =>
+                Task.Run(() =>
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
                     DQXUtility.RefeshKeywords();
                 });
             }
 
             if (summoned)
             {
-                Task.Run(async () =>
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(5));
-                    RefreshPetID();
-                });
-            }
-
-            if (zoneChanged)
-            {
-                var oldSource = petIdRefreshTaskCancelTokenSource;
-                if (oldSource != null)
-                {
-                    lock (oldSource)
-                    {
-                        if (!oldSource.IsCancellationRequested)
-                        {
-                            try
-                            {
-                                oldSource.Cancel();
-                            }
-                            catch { }
-                        }
-                    }
-                }
-
-                var newSource = petIdRefreshTaskCancelTokenSource = new CancellationTokenSource();
-                var token = newSource.Token;
-                var count = 0;
-
-                Task.Run(async () =>
-                {
-                    while (petIdCheckedZone != ActGlobals.oFormActMain.CurrentZone)
-                    {
-                        await Task.Delay(TimeSpan.FromSeconds(15));
-
-                        RefreshPetID();
-                        count++;
-
-                        if (count >= 6)
-                        {
-                            return;
-                        }
-                    }
-                }, token);
+                TableCompiler.Instance.RefreshPetPlaceholder();
             }
 
             // ログのタイムスタンプを記録する
             this.lastLogineTimestamp = DateTime.Now;
 
             return list;
-        }
-
-        /// <summary>
-        /// バッファーにログがない場合 true
-        /// </summary>
-        /// <returns>バッファーにログがない場合 true</returns>
-        public bool NonEmpty()
-        {
-            return !logInfoQueue.IsEmpty;
-        }
-
-        /// <summary>
-        /// ジョブが変更されたか？
-        /// </summary>
-        /// <param name="logLine">ログ行</param>
-        /// <returns>bool</returns>
-        private static bool IsJobChanged(string logLine)
-        {
-            return
-                logLine.Contains("にチェンジした。") ||
-                logLine.Contains("You change to ");
-        }
-
-        /// <summary>
-        /// パーティが変更されたか？
-        /// </summary>
-        /// <param name="logLine">ログ行</param>
-        /// <returns>bool</returns>
-        private static bool IsPartyChanged(string logLine)
-        {
-            return PARTY_CHANGED_WORDS.AsParallel()
-                .Any(words => words.Any(word => logLine.Contains(word)));
         }
 
         #endregion ログ処理
@@ -554,7 +356,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="logLine">追記するログ</param>
         private void AppendLogFile(string logLine)
         {
-            if (SaveLogEnabled)
+            if (this.SaveLogEnabled)
             {
                 lock (this.fileOutputLogBuffer)
                 {
@@ -573,344 +375,20 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private void FlushLogFile()
         {
-            if (SaveLogEnabled)
+            if (this.SaveLogEnabled)
             {
                 lock (this.fileOutputLogBuffer)
                 {
-                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
-                    {
-                        File.AppendAllText(
-                            Settings.Default.SaveLogFile,
-                            this.fileOutputLogBuffer.ToString(),
-                            new UTF8Encoding(false));
+                    File.AppendAllText(
+                        Settings.Default.SaveLogFile,
+                        this.fileOutputLogBuffer.ToString(),
+                        new UTF8Encoding(false));
 
-                        this.fileOutputLogBuffer.Clear();
-                    }
+                    this.fileOutputLogBuffer.Clear();
                 }
             }
         }
 
         #endregion private 生ログのファイル書き出し機能
-
-        #region public static キーワードの代名詞を実際の値に置換
-
-        /// <summary>
-        /// マッチングキーワードを生成する
-        /// </summary>
-        /// <param name="keyword">元のキーワード</param>
-        /// <returns>生成したキーワード</returns>
-        public static string MakeKeyword(string keyword)
-        {
-            if (string.IsNullOrEmpty(keyword))
-            {
-                return string.Empty;
-            }
-
-            keyword = keyword.Trim();
-
-            if (keyword.Length == 0 ||
-                !keyword.Contains("<") ||
-                !keyword.Contains(">"))
-            {
-                return keyword;
-            }
-
-            // カスタムプレスホルダを置換する
-            keyword = ReplaceCustomPlaceholders(keyword);
-
-            // 対DQX用のキーワードを置換する
-            keyword = DQXUtility.MakeKeyword(keyword);
-
-            // FFXIV以外での使用？
-            if (Settings.Default.UseOtherThanFFXIV)
-            {
-                return keyword;
-            }
-
-            var player = FFXIV.Instance.GetPlayer();
-            if (player != null)
-            {
-                keyword = keyword.Replace("<me>", player.Name.Trim());
-            }
-
-            if (EnabledPartyMemberPlaceHolder && PartyList.Any())
-            {
-                foreach (var t in PartyList.Zip(PARTY_PLACEHOLDERS,
-                    (name, placeholder) => Tuple.Create(placeholder, name)))
-                {
-                    keyword = keyword.Replace(t.Item1, t.Item2);
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(currentPetId))
-            {
-                keyword = keyword.Replace("<petid>", currentPetId);
-            }
-
-            // ジョブ名プレースホルダを置換する
-            // ex. <PLD>, <PLD1> ...
-            foreach (var replacement in PlaceholderToJobNameDictionaly)
-            {
-                keyword = keyword.Replace(replacement.Key, replacement.Value);
-            }
-
-            return keyword;
-        }
-
-        #endregion public static キーワードの代名詞を実際の値に置換
-
-        #region public static 状態更新指示
-
-        /// <summary>
-        /// パーティリストを更新する
-        /// </summary>
-        public static void RefreshPartyList()
-        {
-            // プレイヤー情報を取得する
-            var player = FFXIV.Instance.GetPlayer();
-            if (player == null)
-            {
-                return;
-            }
-
-            if (EnabledPartyMemberPlaceHolder)
-            {
-#if DEBUG
-                Debug.WriteLine("PT: Refresh");
-#endif
-                // PTメンバの名前を記録しておく
-                var combatants = new List<Combatant>(FFXIV.Instance.GetPartyList());
-
-                // FF14内部のPTメンバ自動ソート順で並び替える
-                var sorted =
-                    from x in combatants
-                    join y in Job.Instance.JobList on
-                        x.Job equals y.JobId
-                    where
-                    x.ID != player.ID
-                    orderby
-                    y.Role,
-                    x.Job,
-                    x.ID descending
-                    select
-                    x.Name.Trim();
-
-                partyList = new List<string>(sorted);
-
-                // パーティメンバが空だったら自分を補完しておく
-                if (!combatants.Any())
-                {
-                    combatants.Add(player);
-                }
-
-                var newList = new Dictionary<string, string>();
-
-                // ジョブ名によるプレースホルダを登録する
-                foreach (var job in Job.Instance.JobList)
-                {
-                    // このジョブに該当するパーティメンバを抽出する
-                    var combatantsByJob = (
-                        from x in combatants
-                        where
-                        x.Job == job.JobId
-                        orderby
-                        x.ID == player.ID ? 0 : 1,
-                        x.ID descending
-                        select
-                        x).ToArray();
-
-                    if (!combatantsByJob.Any())
-                    {
-                        continue;
-                    }
-
-                    // <JOBn>形式を置換する
-                    // ex. <PLD1> → Taro Paladin
-                    // ex. <PLD2> → Jiro Paladin
-                    for (int i = 0; i < combatantsByJob.Length; i++)
-                    {
-                        var placeholder = string.Format(
-                            "<{0}{1}>",
-                            job.JobName,
-                            i + 1);
-
-                        newList.Add(placeholder.ToUpper(), combatantsByJob[i].Name);
-                    }
-
-                    // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする
-                    // また、グループ名にはジョブの略称を設定する
-                    // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
-                    var names = string.Join("|", combatantsByJob.Select(x => x.Name).ToArray());
-                    var oldValue = string.Format("<{0}>", job.JobName);
-                    var newValue = string.Format(
-                        "(?<{0}s>{1})",
-                        job.JobName.ToUpper(),
-                        names);
-
-                    newList.Add(oldValue.ToUpper(), newValue);
-                }
-
-                // ロールによるプレースホルダを登録する
-                // ex. <TANK>   -> (?<TANKs>Taro Paladin|Jiro Paladin)
-                // ex. <HEALER> -> (?<HEALERs>Taro Paladin|Jiro Paladin)
-                // ex. <DPS>    -> (?<DPSs>Taro Paladin|Jiro Paladin)
-                // ex. <MELEE>  -> (?<MELEEs>Taro Paladin|Jiro Paladin)
-                // ex. <RANGE>  -> (?<RANGEs>Taro Paladin|Jiro Paladin)
-                // ex. <MAGIC>  -> (?<MAGICs>Taro Paladin|Jiro Paladin)
-                var partyListByRole = FFXIV.Instance.GetPatryListByRole();
-                foreach (var role in partyListByRole)
-                {
-                    var names = string.Join("|", role.Combatants.Select(x => x.Name).ToArray());
-                    var oldValue = $"<{role.RoleLabel}>";
-                    var newValue = $"(?<{role.RoleLabel}s>{names})";
-
-                    newList.Add(oldValue.ToUpper(), newValue);
-                }
-
-                placeholderToJobNameDictionaly = newList;
-            }
-            else
-            {
-                partyList = EMPTY_STRING_LIST;
-                placeholderToJobNameDictionaly = EMPTY_STRING_PAIR_MAP;
-            }
-
-            // 置換後のマッチングキーワードを消去する
-            SpellTimerTable.ClearReplacedKeywords();
-            OnePointTelopTable.Default.ClearReplacedKeywords();
-
-            // スペルタイマーの再描画を行う
-            SpellTimerTable.ClearUpdateFlags();
-
-            // モニタタブの情報を無効にする
-            SpecialSpellTimerPlugin.ConfigPanel.InvalidatePlaceholders();
-        }
-
-        /// <summary>
-        /// ペットIDを更新する
-        /// </summary>
-        public static void RefreshPetID()
-        {
-            lock (lockPetidObject)
-            {
-                if (petIdCheckedZone == ActGlobals.oFormActMain.CurrentZone)
-                {
-                    return;
-                }
-
-                // Combatantリストを取得する
-                var combatants = FFXIV.Instance.GetCombatantList();
-
-                if (combatants != null && combatants.Count > 0)
-                {
-                    var pet = (
-                        from x in combatants
-                        where
-                        x.OwnerID == combatants[0].ID &&
-                        (
-                            x.Name.Contains("フェアリー・") ||
-                            x.Name.Contains("・エギ") ||
-                            x.Name.Contains("カーバンクル・")
-                        )
-                        select
-                        x).FirstOrDefault();
-
-                    if (pet != null)
-                    {
-                        currentPetId = Convert.ToString((long)((ulong)pet.ID), 16).ToUpper();
-                        petIdCheckedZone = ActGlobals.oFormActMain.CurrentZone;
-
-                        // 置換後のマッチングキーワードを消去する
-                        SpellTimerTable.ClearReplacedKeywords();
-                        OnePointTelopTable.Default.ClearReplacedKeywords();
-                    }
-                }
-            }
-        }
-
-        #endregion public static 状態更新指示
-
-        #region public static カスタムプレースホルダー
-
-        /// <summary>
-        /// カスタム代名詞による置換文字列のセット
-        /// </summary>
-        private static readonly ConcurrentDictionary<string, string> customPlaceholders =
-            new ConcurrentDictionary<string, string>();
-
-        /// <summary>
-        /// カスタムプレースホルダーを削除する
-        /// <param name="name">削除するプレースホルダーの名称</param>
-        /// </summary>
-        public static void ClearCustomPlaceholder(string name)
-        {
-            string beforeValue;
-            customPlaceholders.TryRemove(
-                ToCustomPlaceholderKey(name),
-                out beforeValue);
-
-            // 置換後のマッチングキーワードを消去する
-            SpellTimerTable.ClearReplacedKeywords();
-            OnePointTelopTable.Default.ClearReplacedKeywords();
-        }
-
-        /// <summary>
-        /// カスタムプレースホルダーを全て削除する
-        /// </summary>
-        public static void ClearCustomPlaceholderAll()
-        {
-            customPlaceholders.Clear();
-
-            // 置換後のマッチングキーワードを消去する
-            SpellTimerTable.ClearReplacedKeywords();
-            OnePointTelopTable.Default.ClearReplacedKeywords();
-        }
-
-        /// <summary>
-        /// カスタムプレースホルダーに追加する
-        /// </summary>
-        /// <param name="name">追加するプレースホルダーの名称</param>
-        /// <paramname="value">置換する文字列</param>
-        public static void SetCustomPlaceholder(string name, string value)
-        {
-            customPlaceholders.AddOrUpdate(
-                ToCustomPlaceholderKey(name),
-                value,
-                (key, oldValue) => value);
-
-            // 置換後のマッチングキーワードを消去する
-            SpellTimerTable.ClearReplacedKeywords();
-            OnePointTelopTable.Default.ClearReplacedKeywords();
-        }
-
-        /// <summary>
-        /// カスタムプレースホルダを置換する
-        /// ex. <C1>, <C2> <focus> <ターゲット>...
-        /// </summary>
-        private static string ReplaceCustomPlaceholders(string keyword)
-        {
-            if (string.IsNullOrEmpty(keyword))
-            {
-                return keyword;
-            }
-
-            var ret = keyword;
-            foreach (var p in customPlaceholders)
-            {
-                ret = ret.Replace(p.Key, p.Value);
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// カスタム代名詞辞書のキーを作る
-        /// </summary>
-        private static string ToCustomPlaceholderKey(string name)
-        {
-            return "<" + name + ">";
-        }
-
-        #endregion public static カスタムプレースホルダー
     }
 }
