@@ -153,7 +153,7 @@ namespace ACT.SpecialSpellTimer
             // RefreshWindowタイマを開始する
             this.refreshWindowTimer =
                 new System.Windows.Threading.DispatcherTimer(
-                    System.Windows.Threading.DispatcherPriority.Render);
+                    System.Windows.Threading.DispatcherPriority.Background);
             this.refreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
             this.refreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
             this.refreshWindowTimer.Start();
