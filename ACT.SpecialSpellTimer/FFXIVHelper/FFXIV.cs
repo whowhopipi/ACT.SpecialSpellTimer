@@ -506,10 +506,14 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 var settings = this.pluginLogParse.Settings;
                 if (settings != null)
                 {
-                    fi = this.plugin.GetType().GetField(
+                    fi = settings.GetType().GetField(
                         "CombatantHistory",
-                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                    this.pluginCombatantHistory = fi.GetValue(settings);
+                    BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+
+                    if (fi != null)
+                    {
+                        this.pluginCombatantHistory = fi.GetValue(settings);
+                    }
                 }
             }
 
