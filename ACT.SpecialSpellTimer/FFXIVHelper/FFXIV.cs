@@ -66,9 +66,19 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         private dynamic plugin;
 
         /// <summary>
+        /// FFXIV_ACT_Plugin.Parse.CombatantHistory
+        /// </summary>
+        private dynamic pluginCombatantHistory;
+
+        /// <summary>
         /// FFXIV_ACT_Plugin.MemoryScanSettings
         /// </summary>
         private dynamic pluginConfig;
+
+        /// <summary>
+        /// FFXIV_ACT_Plugin.Parse.LogParse
+        /// </summary>
+        private dynamic pluginLogParse;
 
         /// <summary>
         /// FFXIV_ACT_Plugin.Memory.Memory
@@ -80,11 +90,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private dynamic pluginScancombat;
 
-        /// <summary>
-        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
-        /// </summary>
-        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
-
         public bool IsAvalable
         {
             get
@@ -92,7 +97,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 if (!ActGlobals.oFormActMain.Visible ||
                     this.plugin == null ||
                     this.Process == null ||
-                    this.pluginScancombat == null)
+                    this.pluginScancombat == null ||
+                    this.pluginCombatantHistory == null)
                 {
                     return false;
                 }
@@ -104,6 +110,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public Process Process => (Process)this.pluginConfig?.Process;
 
         public IReadOnlyList<Zone> ZoneList => this.zoneList;
+
+        /// <summary>
+        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
+        /// </summary>
+        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
 
         /// <summary>
         /// ACTプラグインアセンブリ
@@ -252,21 +263,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public int GetCurrentZoneID()
         {
-            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-            if (string.IsNullOrEmpty(currentZoneName) ||
-                currentZoneName == "Unknown Zone")
-            {
-                return 0;
-            }
-
-            if (this.zoneHash == null ||
-                this.zoneHash.Count < 1 ||
-                !this.zoneHash.ContainsKey(currentZoneName))
-            {
-                return 0;
-            }
-
-            return this.zoneHash[currentZoneName].ID;
+            return this.pluginCombatantHistory?.CurrentZoneID ?? 0;
         }
 
         public IReadOnlyList<Combatant> GetPartyList()
@@ -495,6 +492,26 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
 
             FieldInfo fi;
+
+            if (this.pluginLogParse == null)
+            {
+                fi = this.plugin.GetType().GetField(
+                    "_LogParse",
+                    BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                this.pluginLogParse = fi.GetValue(this.plugin);
+            }
+
+            if (this.pluginCombatantHistory == null)
+            {
+                var settings = this.pluginLogParse.Settings;
+                if (settings != null)
+                {
+                    fi = this.plugin.GetType().GetField(
+                        "CombatantHistory",
+                        BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                    this.pluginCombatantHistory = fi.GetValue(settings);
+                }
+            }
 
             if (this.pluginMemory == null)
             {

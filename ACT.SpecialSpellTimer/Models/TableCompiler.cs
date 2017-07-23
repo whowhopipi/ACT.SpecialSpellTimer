@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
-using Advanced_Combat_Tracker;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -421,7 +420,7 @@ namespace ACT.SpecialSpellTimer.Models
             string destinationPattern,
             string sourceKeyword)
         {
-            var newRegex= destinationRegex;
+            var newRegex = destinationRegex;
             var newPattern = destinationPattern;
 
             var sourcePattern = sourceKeyword.ToRegexPattern();
@@ -467,7 +466,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         private IReadOnlyList<Combatant> previousParty = new List<Combatant>();
         private Combatant previousPlayer = new Combatant();
-        private string previousZoneName = string.Empty;
+        private int previousZoneID = 0;
 
         public bool IsPartyChanged()
         {
@@ -521,16 +520,13 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var r = false;
 
-            var zoneName = ActGlobals.oFormActMain.CurrentZone;
-            if (zoneName != null)
+            var zoneID = FFXIV.Instance.GetCurrentZoneID();
+            if (this.previousZoneID != zoneID)
             {
-                if (this.previousZoneName != zoneName)
-                {
-                    r = true;
-                }
-
-                this.previousZoneName = zoneName;
+                r = true;
             }
+
+            this.previousZoneID = zoneID;
 
             return r;
         }
