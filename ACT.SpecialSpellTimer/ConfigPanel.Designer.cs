@@ -316,13 +316,13 @@
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.label89 = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.LogTextBox = new System.Windows.Forms.TextBox();
             this.PlaceholderListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.LogTextBox = new System.Windows.Forms.TextBox();
+            this.label89 = new System.Windows.Forms.Label();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -3562,17 +3562,6 @@
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // label89
-            // 
-            this.label89.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label89.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label89.Location = new System.Drawing.Point(2, 2);
-            this.label89.Name = "label89";
-            this.label89.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.label89.Size = new System.Drawing.Size(1061, 24);
-            this.label89.TabIndex = 43;
-            this.label89.Text = "LogLabel";
-            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3590,20 +3579,6 @@
             this.splitContainer3.Size = new System.Drawing.Size(1061, 801);
             this.splitContainer3.SplitterDistance = 400;
             this.splitContainer3.TabIndex = 45;
-            // 
-            // LogTextBox
-            // 
-            this.LogTextBox.BackColor = System.Drawing.Color.White;
-            this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogTextBox.Location = new System.Drawing.Point(0, 0);
-            this.LogTextBox.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.LogTextBox.Multiline = true;
-            this.LogTextBox.Name = "LogTextBox";
-            this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.LogTextBox.Size = new System.Drawing.Size(1061, 397);
-            this.LogTextBox.TabIndex = 43;
             // 
             // PlaceholderListView
             // 
@@ -3636,6 +3611,31 @@
             // 
             this.columnHeader3.Text = "__Type";
             this.columnHeader3.Width = 100;
+            // 
+            // LogTextBox
+            // 
+            this.LogTextBox.BackColor = System.Drawing.Color.White;
+            this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LogTextBox.Location = new System.Drawing.Point(0, 0);
+            this.LogTextBox.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
+            this.LogTextBox.Multiline = true;
+            this.LogTextBox.Name = "LogTextBox";
+            this.LogTextBox.ReadOnly = true;
+            this.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.LogTextBox.Size = new System.Drawing.Size(1061, 397);
+            this.LogTextBox.TabIndex = 43;
+            // 
+            // label89
+            // 
+            this.label89.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.label89.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label89.Location = new System.Drawing.Point(2, 2);
+            this.label89.Name = "label89";
+            this.label89.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.label89.Size = new System.Drawing.Size(1061, 24);
+            this.label89.TabIndex = 43;
+            this.label89.Text = "__DEBUG Info";
             // 
             // ConfigPanel
             // 
