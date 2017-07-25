@@ -23,7 +23,19 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public int MaxHP;
         public int MaxMP;
         public int MaxTP;
+
+        /// <summary>フルネーム</summary>
         public string Name = string.Empty;
+
+        /// <summary>イニシャル Naoki Y.</summary>
+        public string NameFI = string.Empty;
+
+        /// <summary>イニシャル N. Yoshida</summary>
+        public string NameIF = string.Empty;
+
+        /// <summary>イニシャル N. Y.</summary>
+        public string NameII = string.Empty;
+
         public int Order;
         public uint OwnerID;
         public float PosX;
@@ -50,6 +62,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.GetHorizontalDistance(this.Player) : 0;
 
         public MobType MobType => (MobType)this.type;
+
         public Combatant Player { get; set; }
 
         public Job AsJob()
@@ -67,5 +80,48 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             (double)Math.Sqrt(
                 Math.Pow(this.PosX - target.PosX, 2) +
                 Math.Pow(this.PosY - target.PosY, 2));
+
+        public string GetName(
+            NameMode mode)
+        {
+            switch (mode)
+            {
+                case NameMode.FullName:
+                    return this.Name;
+
+                case NameMode.FullInitial:
+                    return !string.IsNullOrEmpty(this.NameFI) ? this.NameFI : this.Name;
+
+                case NameMode.InitialFull:
+                    return !string.IsNullOrEmpty(this.NameIF) ? this.NameIF : this.Name;
+
+                case NameMode.InitialInitial:
+                    return !string.IsNullOrEmpty(this.NameII) ? this.NameII : this.Name;
+
+                default:
+                    return this.Name;
+            }
+        }
+
+        public void SetName(
+            string fullName)
+        {
+            this.Name = fullName.Trim();
+
+            if (this.MobType != MobType.Player)
+            {
+                return;
+            }
+
+            var blocks = this.Name.Split(' ');
+            if (blocks.Length < 2)
+            {
+                return;
+            }
+
+            this.NameFI = $"{blocks[0]} {blocks[1].Substring(0, 1)}.";
+            this.NameIF = $"{blocks[0].Substring(0, 1)}. {blocks[1]}";
+            this.NameFI = $"{blocks[0].Substring(0, 1)}. {blocks[1].Substring(0, 1)}.";
+        }
     }
 }

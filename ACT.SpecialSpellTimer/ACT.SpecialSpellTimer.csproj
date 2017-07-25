@@ -86,6 +86,7 @@
     <Compile Include="FFXIVHelper\Combatant.cs" />
     <Compile Include="FFXIVHelper\FFXIV.cs" />
     <Compile Include="FFXIVHelper\MobType.cs" />
+    <Compile Include="FFXIVHelper\NameMode.cs" />
     <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="FFXIVHelper\Skill.cs" />
     <Compile Include="FFXIVHelper\Zone.cs" />
