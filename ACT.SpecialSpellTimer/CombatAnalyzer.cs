@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 
@@ -385,12 +385,12 @@ namespace ACT.SpecialSpellTimer
 
             if (player != null)
             {
-                names.Add(player.Name);
+                names.Add(player.Name.ChangeNameStyle());
             }
 
             if (ptlist != null)
             {
-                names.AddRange(ptlist.Select(x => x.Name));
+                names.AddRange(ptlist.Select(x => x.Name.ChangeNameStyle()));
             }
 
             return names;
