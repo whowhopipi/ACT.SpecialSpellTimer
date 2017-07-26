@@ -286,7 +286,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <Compile Include="ConfigPanel.DQXOption.cs">
       <SubType>UserControl</SubType>
     </Compile>
