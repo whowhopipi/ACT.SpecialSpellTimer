@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-
+using System.Collections.Generic;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 
@@ -59,6 +59,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Singleton
 
+        private List<PCName> names = new List<PCName>();
+
         /// <summary>Naoki Y.をキーにした辞書</summary>
         private ConcurrentDictionary<string, PCName> namesByFI = new ConcurrentDictionary<string, PCName>();
 
@@ -86,6 +88,8 @@ namespace ACT.SpecialSpellTimer.Models
                 NameIF = combatant.NameIF,
                 NameII = combatant.NameII
             };
+
+            this.names.Add(pcName);
 
             this.namesByFull.TryAdd(pcName.Name, pcName);
             this.namesByFI.TryAdd(pcName.NameFI, pcName);
@@ -132,6 +136,39 @@ namespace ACT.SpecialSpellTimer.Models
             this.namesByFI.Clear();
             this.namesByIF.Clear();
             this.namesByII.Clear();
+        }
+
+        public string ReplaceFullNameToInitial(
+            string logLine)
+        {
+            if (Settings.Default.PCNameInitialOnLogStyle ==
+                NameStyles.FullName)
+            {
+                return logLine;
+            }
+
+            var names = this.names.ToArray();
+
+            var replaced = logLine;
+            foreach (var name in names)
+            {
+                switch (Settings.Default.PCNameInitialOnLogStyle)
+                {
+                    case NameStyles.FullInitial:
+                        replaced = replaced.Replace(name.Name, name.NameFI);
+                        break;
+
+                    case NameStyles.InitialFull:
+                        replaced = replaced.Replace(name.Name, name.NameIF);
+                        break;
+
+                    case NameStyles.InitialInitial:
+                        replaced = replaced.Replace(name.Name, name.NameII);
+                        break;
+                }
+            }
+
+            return replaced;
         }
 
         public string Replace(

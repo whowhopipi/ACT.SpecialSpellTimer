@@ -121,7 +121,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             this.NameFI = $"{blocks[0]} {blocks[1].Substring(0, 1)}.";
             this.NameIF = $"{blocks[0].Substring(0, 1)}. {blocks[1]}";
-            this.NameFI = $"{blocks[0].Substring(0, 1)}. {blocks[1].Substring(0, 1)}.";
+            this.NameII = $"{blocks[0].Substring(0, 1)}. {blocks[1].Substring(0, 1)}.";
         }
     }
 }

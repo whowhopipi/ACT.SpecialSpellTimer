@@ -292,6 +292,9 @@ namespace ACT.SpecialSpellTimer
                     logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
                 }
 
+                // ログ中のPCのフルネームを置換する
+                logLine = PCNameDictionary.Instance.ReplaceFullNameToInitial(logLine);
+
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
                 {
