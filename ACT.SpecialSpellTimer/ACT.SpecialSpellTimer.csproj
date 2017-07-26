@@ -127,7 +127,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings-JP.resx</DependentUpon>
     </Compile>
-    <Compile Include="resources\strings\Strings-KR.Designer.cs" />
+    <Compile Include="resources\strings\Strings-KR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings-KR.resx</DependentUpon>
+    </Compile>
     <Compile Include="SetConditionForm.cs">
       <SubType>Form</SubType>
     </Compile>
