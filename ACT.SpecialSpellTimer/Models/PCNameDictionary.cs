@@ -40,19 +40,19 @@ namespace ACT.SpecialSpellTimer.Models
 
         private static PCNameDictionary instance = new PCNameDictionary();
 
-        public static PCNameDictionary Instance => instance;
-
         private PCNameDictionary()
         {
         }
 
-        #endregion Singleton
+        public static PCNameDictionary Instance => instance;
 
-        /// <summary>フルネームをキーにした辞書</summary>
-        private ConcurrentDictionary<string, PCName> namesByFull = new ConcurrentDictionary<string, PCName>();
+        #endregion Singleton
 
         /// <summary>Naoki Y.をキーにした辞書</summary>
         private ConcurrentDictionary<string, PCName> namesByFI = new ConcurrentDictionary<string, PCName>();
+
+        /// <summary>フルネームをキーにした辞書</summary>
+        private ConcurrentDictionary<string, PCName> namesByFull = new ConcurrentDictionary<string, PCName>();
 
         /// <summary>N. Yoshidaをキーにした辞書</summary>
         private ConcurrentDictionary<string, PCName> namesByIF = new ConcurrentDictionary<string, PCName>();
@@ -113,6 +113,14 @@ namespace ACT.SpecialSpellTimer.Models
                 default:
                     return name;
             }
+        }
+
+        public void Clear()
+        {
+            this.namesByFull.Clear();
+            this.namesByFI.Clear();
+            this.namesByIF.Clear();
+            this.namesByII.Clear();
         }
 
         public string Replace(

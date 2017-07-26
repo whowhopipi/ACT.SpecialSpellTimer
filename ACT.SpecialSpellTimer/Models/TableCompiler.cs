@@ -335,6 +335,15 @@ namespace ACT.SpecialSpellTimer.Models
                     var isPartyChanged = this.IsPartyChanged();
                     var isZoneChanged = this.IsZoneChanged();
 
+                    if (isZoneChanged)
+                    {
+                        this.RefreshPetPlaceholder();
+
+                        // 名前辞書を開放しておく
+                        // 無限に蓄積してしまうため
+                        PCNameDictionary.Instance.Clear();
+                    }
+
                     if (isPlayerChanged)
                     {
                         this.RefreshPlayerPlacceholder();
@@ -343,11 +352,6 @@ namespace ACT.SpecialSpellTimer.Models
                     if (isPartyChanged)
                     {
                         this.RefreshPartyPlaceholders();
-                        this.RefreshPetPlaceholder();
-                    }
-
-                    if (isZoneChanged)
-                    {
                         this.RefreshPetPlaceholder();
                     }
 
