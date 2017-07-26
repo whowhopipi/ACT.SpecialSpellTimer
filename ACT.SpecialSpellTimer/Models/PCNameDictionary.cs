@@ -30,7 +30,18 @@ namespace ACT.SpecialSpellTimer.Models
         public static string ReplaceName(
             this string name)
         {
-            return PCNameDictionaryExtensions.ReplaceName(name, Settings.Default.PCNameInitialOnDisplayStyle);
+            var r = name;
+
+            // ログと表示設定が異なるならば置換する
+            if (Settings.Default.PCNameInitialOnDisplayStyle !=
+                Settings.Default.PCNameInitialOnLogStyle)
+            {
+                r = PCNameDictionaryExtensions.ReplaceName(
+                    r,
+                    Settings.Default.PCNameInitialOnDisplayStyle);
+            }
+
+            return r;
         }
     }
 
