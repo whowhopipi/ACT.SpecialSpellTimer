@@ -5,6 +5,7 @@
     using System.Linq;
 
     using ACT.SpecialSpellTimer.Config;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -184,7 +185,7 @@
                                     var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
 
                                     // PC名を置換する
-                                    messageReplaced = messageReplaced.ReplaceName();
+                                    messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
 
                                     if (!telop.AddMessageEnabled)
                                     {
@@ -220,7 +221,7 @@
                                 messageReplaced = match.Result(messageReplaced);
 
                                 // PC名を置換する
-                                messageReplaced = messageReplaced.ReplaceName();
+                                messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
 
                                 if (!telop.AddMessageEnabled)
                                 {

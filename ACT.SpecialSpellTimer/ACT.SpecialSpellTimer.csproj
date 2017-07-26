@@ -93,14 +93,12 @@
     <Compile Include="FFXIVHelper\FFXIV.cs" />
     <Compile Include="FFXIVHelper\MobType.cs" />
     <Compile Include="FFXIVHelper\NameStyles.cs" />
-    <Compile Include="Models\PCName.cs" />
-    <Compile Include="Models\PCNameDictionary.cs" />
-    <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="FFXIVHelper\Skill.cs" />
     <Compile Include="FFXIVHelper\Zone.cs" />
     <Compile Include="Image\IconController.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="LogBuffer.cs" />
+    <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="Models\Spell.cs" />
     <Compile Include="Models\TableCompiler.cs" />
     <Compile Include="Models\Ticker.cs" />

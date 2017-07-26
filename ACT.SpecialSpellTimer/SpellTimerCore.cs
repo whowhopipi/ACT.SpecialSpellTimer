@@ -855,7 +855,7 @@ namespace ACT.SpecialSpellTimer
                                     var replacedTitle = ConditionUtility.GetReplacedTitle(targetSpell);
 
                                     // PC名を置換する
-                                    replacedTitle = replacedTitle.ReplaceName();
+                                    replacedTitle = FFXIV.Instance.ReplacePartyMemberName(replacedTitle);
 
                                     targetSpell.SpellTitleReplaced = replacedTitle;
                                     targetSpell.MatchDateTime = DateTime.Now;
@@ -892,7 +892,7 @@ namespace ACT.SpecialSpellTimer
                                     var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
 
                                     // PC名を置換する
-                                    replacedTitle = replacedTitle.ReplaceName();
+                                    replacedTitle = FFXIV.Instance.ReplacePartyMemberName(replacedTitle);
 
                                     // インスタンス化する？
                                     if (spell.ToInstance)

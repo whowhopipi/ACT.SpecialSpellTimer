@@ -36,6 +36,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// <summary>イニシャル N. Y.</summary>
         public string NameII = string.Empty;
 
+        public string Names => 
+            $"{this.Name}|{this.NameFI}|{this.NameIF}|{this.NameII}";
+
         public int Order;
         public uint OwnerID;
         public float PosX;

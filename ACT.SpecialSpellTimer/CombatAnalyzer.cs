@@ -385,12 +385,18 @@ namespace ACT.SpecialSpellTimer
 
             if (player != null)
             {
-                names.Add(player.Name.ChangeNameStyle());
+                names.Add(player.Name);
+                names.Add(player.NameFI);
+                names.Add(player.NameIF);
+                names.Add(player.NameII);
             }
 
             if (ptlist != null)
             {
-                names.AddRange(ptlist.Select(x => x.Name.ChangeNameStyle()));
+                names.AddRange(ptlist.Select(x => x.Name));
+                names.AddRange(ptlist.Select(x => x.NameFI));
+                names.AddRange(ptlist.Select(x => x.NameIF));
+                names.AddRange(ptlist.Select(x => x.NameII));
             }
 
             return names;

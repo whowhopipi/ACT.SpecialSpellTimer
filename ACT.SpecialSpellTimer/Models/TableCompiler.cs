@@ -338,10 +338,6 @@ namespace ACT.SpecialSpellTimer.Models
                     if (isZoneChanged)
                     {
                         this.RefreshPetPlaceholder();
-
-                        // 名前辞書を開放しておく
-                        // 無限に蓄積してしまうため
-                        PCNameDictionary.Instance.Clear();
                     }
 
                     if (isPlayerChanged)
@@ -588,7 +584,12 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 newList.Add((
                     $"<{index}>",
-                    combatant.Name.ChangeNameStyle(),
+                    combatant.Name,
+                    PlaceholderTypes.Party));
+
+                newList.Add((
+                    $"<{index}ex>",
+                    $"(?<{index}exs>{combatant.Names})",
                     PlaceholderTypes.Party));
 
                 index++;
@@ -619,16 +620,16 @@ namespace ACT.SpecialSpellTimer.Models
                 for (int i = 0; i < combatantsByJob.Length; i++)
                 {
                     newList.Add((
-                        $"<{job.JobName}{i + 1}>".ToUpper(),
-                        combatantsByJob[i].Name.ChangeNameStyle(),
+                        $"<{job.JobName.ToUpper()}{i + 1}>",
+                        $"(?<{job.JobName.ToUpper()}{i + 1}s>{ combatantsByJob[i].Names})",
                         PlaceholderTypes.Party));
                 }
 
                 // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする
                 // また、グループ名にはジョブの略称を設定する
                 // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
-                var names = string.Join("|", combatantsByJob.Select(x => x.Name.ChangeNameStyle()).ToArray());
-                var oldValue = $"<{job.JobName}>";
+                var names = string.Join("|", combatantsByJob.Select(x => x.Names).ToArray());
+                var oldValue = $"<{job.JobName.ToUpper()}>";
                 var newValue = $"(?<{job.JobName.ToUpper()}s>{names})";
 
                 newList.Add((
@@ -647,7 +648,7 @@ namespace ACT.SpecialSpellTimer.Models
             var partyListByRole = FFXIV.Instance.GetPatryListByRole();
             foreach (var role in partyListByRole)
             {
-                var names = string.Join("|", role.Combatants.Select(x => x.Name.ChangeNameStyle()).ToArray());
+                var names = string.Join("|", role.Combatants.Select(x => x.Names).ToArray());
                 var oldValue = $"<{role.RoleLabel}>";
                 var newValue = $"(?<{role.RoleLabel}s>{names})";
 
@@ -746,7 +747,12 @@ namespace ACT.SpecialSpellTimer.Models
                 this.placeholderList.RemoveAll(x => x.Type == PlaceholderTypes.Me);
                 this.placeholderList.Add((
                     "<me>",
-                    this.player.Name.ChangeNameStyle(),
+                    this.player.Name,
+                    PlaceholderTypes.Me));
+
+                this.placeholderList.Add((
+                    "<mex>",
+                    $"(?<mexs>{this.player.Names})",
                     PlaceholderTypes.Me));
             }
         }
