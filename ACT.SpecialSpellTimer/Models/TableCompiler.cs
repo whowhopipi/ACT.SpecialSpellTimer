@@ -584,7 +584,7 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 newList.Add((
                     $"<{index}>",
-                    combatant.Name,
+                    combatant.Name.ChangeNameStyle(),
                     PlaceholderTypes.Party));
 
                 index++;
@@ -614,21 +614,16 @@ namespace ACT.SpecialSpellTimer.Models
                 // ex. <PLD2> → Jiro Paladin
                 for (int i = 0; i < combatantsByJob.Length; i++)
                 {
-                    var placeholder = string.Format(
-                        "<{0}{1}>",
-                        job.JobName,
-                        i + 1);
-
                     newList.Add((
-                        placeholder.ToUpper(),
-                        combatantsByJob[i].Name,
+                        $"<{job.JobName}{i + 1}>".ToUpper(),
+                        combatantsByJob[i].Name.ChangeNameStyle(),
                         PlaceholderTypes.Party));
                 }
 
                 // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする
                 // また、グループ名にはジョブの略称を設定する
                 // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
-                var names = string.Join("|", combatantsByJob.Select(x => x.Name).ToArray());
+                var names = string.Join("|", combatantsByJob.Select(x => x.Name.ChangeNameStyle()).ToArray());
                 var oldValue = $"<{job.JobName}>";
                 var newValue = $"(?<{job.JobName.ToUpper()}s>{names})";
 
@@ -648,7 +643,7 @@ namespace ACT.SpecialSpellTimer.Models
             var partyListByRole = FFXIV.Instance.GetPatryListByRole();
             foreach (var role in partyListByRole)
             {
-                var names = string.Join("|", role.Combatants.Select(x => x.Name).ToArray());
+                var names = string.Join("|", role.Combatants.Select(x => x.Name.ChangeNameStyle()).ToArray());
                 var oldValue = $"<{role.RoleLabel}>";
                 var newValue = $"(?<{role.RoleLabel}s>{names})";
 
@@ -747,7 +742,7 @@ namespace ACT.SpecialSpellTimer.Models
                 this.placeholderList.RemoveAll(x => x.Type == PlaceholderTypes.Me);
                 this.placeholderList.Add((
                     "<me>",
-                    this.player.Name,
+                    this.player.Name.ChangeNameStyle(),
                     PlaceholderTypes.Me));
             }
         }

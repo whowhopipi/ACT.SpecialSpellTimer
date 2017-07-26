@@ -182,6 +182,10 @@
                                     keyword.ToUpper()))
                                 {
                                     var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+
+                                    // PC名を置換する
+                                    messageReplaced = messageReplaced.ReplaceName();
+
                                     if (!telop.AddMessageEnabled)
                                     {
                                         telop.MessageReplaced = messageReplaced;
@@ -213,15 +217,20 @@
                             if (match.Success)
                             {
                                 var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+                                messageReplaced = match.Result(messageReplaced);
+
+                                // PC名を置換する
+                                messageReplaced = messageReplaced.ReplaceName();
+
                                 if (!telop.AddMessageEnabled)
                                 {
-                                    telop.MessageReplaced = match.Result(messageReplaced);
+                                    telop.MessageReplaced = messageReplaced;
                                 }
                                 else
                                 {
                                     telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
-                                        match.Result(messageReplaced) :
-                                        Environment.NewLine + match.Result(messageReplaced);
+                                        messageReplaced :
+                                        Environment.NewLine + messageReplaced;
                                 }
 
                                 telop.MatchDateTime = DateTime.Now;

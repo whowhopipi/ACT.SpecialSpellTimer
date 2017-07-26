@@ -854,6 +854,9 @@ namespace ACT.SpecialSpellTimer
                                     // スペル名（表示テキスト）を置換する
                                     var replacedTitle = ConditionUtility.GetReplacedTitle(targetSpell);
 
+                                    // PC名を置換する
+                                    replacedTitle = replacedTitle.ReplaceName();
+
                                     targetSpell.SpellTitleReplaced = replacedTitle;
                                     targetSpell.MatchDateTime = DateTime.Now;
                                     targetSpell.UpdateDone = false;
@@ -887,6 +890,9 @@ namespace ACT.SpecialSpellTimer
 
                                     // スペル名（表示テキスト）を置換する
                                     var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
+
+                                    // PC名を置換する
+                                    replacedTitle = replacedTitle.ReplaceName();
 
                                     // インスタンス化する？
                                     if (spell.ToInstance)

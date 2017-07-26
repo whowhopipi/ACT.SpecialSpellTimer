@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -13,11 +14,23 @@ namespace ACT.SpecialSpellTimer.Models
             return PCNameDictionary.Instance.ChangeStyle(name, style);
         }
 
+        public static string ChangeNameStyle(
+            this string name)
+        {
+            return PCNameDictionaryExtensions.ChangeNameStyle(name, Settings.Default.PCNameInitialOnLogStyle);
+        }
+
         public static string ReplaceName(
             this string name,
             NameStyles style)
         {
             return PCNameDictionary.Instance.Replace(name, style);
+        }
+
+        public static string ReplaceName(
+            this string name)
+        {
+            return PCNameDictionaryExtensions.ReplaceName(name, Settings.Default.PCNameInitialOnDisplayStyle);
         }
     }
 

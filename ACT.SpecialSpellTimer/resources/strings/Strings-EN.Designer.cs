@@ -817,6 +817,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   FFXIV log style に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string FFXIVLogStylesGroupBox {
+            get {
+                return ResourceManager.GetString("FFXIVLogStylesGroupBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Fix spell position に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string FixedPositionSpell {
@@ -1452,6 +1461,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string OverlapRecastTimeCheckBox {
             get {
                 return ResourceManager.GetString("OverlapRecastTimeCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Display style with overlay に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string OverlayDisplayStylesGroupBox {
+            get {
+                return ResourceManager.GetString("OverlayDisplayStylesGroupBox", resourceCulture);
             }
         }
         
