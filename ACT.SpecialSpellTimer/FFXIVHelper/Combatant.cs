@@ -36,14 +36,16 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// <summary>イニシャル N. Y.</summary>
         public string NameII = string.Empty;
 
-        public string Names => 
-            $"{this.Name}|{this.NameFI}|{this.NameIF}|{this.NameII}";
-
         public int Order;
+
         public uint OwnerID;
+
         public float PosX;
+
         public float PosY;
+
         public float PosZ;
+
         public byte type;
 
         public double CurrentCastRate =>
@@ -65,6 +67,12 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.GetHorizontalDistance(this.Player) : 0;
 
         public MobType MobType => (MobType)this.type;
+
+        public string Names =>
+            $"{this.Name}|{this.NameFI}|{this.NameIF}|{this.NameII}";
+
+        public string NamesRegex =>
+            this.Names.Replace(@".", @"\.");
 
         public Combatant Player { get; set; }
 

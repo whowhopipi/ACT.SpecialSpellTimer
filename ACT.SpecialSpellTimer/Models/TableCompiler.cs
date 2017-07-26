@@ -589,7 +589,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                 newList.Add((
                     $"<{index}ex>",
-                    $"(?<{index}exs>{combatant.Names})",
+                    $"(?<_{index}ex>{combatant.NamesRegex})",
                     PlaceholderTypes.Party));
 
                 index++;
@@ -621,16 +621,16 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     newList.Add((
                         $"<{job.JobName.ToUpper()}{i + 1}>",
-                        $"(?<{job.JobName.ToUpper()}{i + 1}s>{ combatantsByJob[i].Names})",
+                        $"(?<_{job.JobName.ToUpper()}{i + 1}>{ combatantsByJob[i].NamesRegex})",
                         PlaceholderTypes.Party));
                 }
 
                 // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする
                 // また、グループ名にはジョブの略称を設定する
                 // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
-                var names = string.Join("|", combatantsByJob.Select(x => x.Names).ToArray());
+                var names = string.Join("|", combatantsByJob.Select(x => x.NamesRegex).ToArray());
                 var oldValue = $"<{job.JobName.ToUpper()}>";
-                var newValue = $"(?<{job.JobName.ToUpper()}s>{names})";
+                var newValue = $"(?<_{job.JobName.ToUpper()}>{names})";
 
                 newList.Add((
                     oldValue.ToUpper(),
@@ -648,9 +648,9 @@ namespace ACT.SpecialSpellTimer.Models
             var partyListByRole = FFXIV.Instance.GetPatryListByRole();
             foreach (var role in partyListByRole)
             {
-                var names = string.Join("|", role.Combatants.Select(x => x.Names).ToArray());
+                var names = string.Join("|", role.Combatants.Select(x => x.NamesRegex).ToArray());
                 var oldValue = $"<{role.RoleLabel}>";
-                var newValue = $"(?<{role.RoleLabel}s>{names})";
+                var newValue = $"(?<_{role.RoleLabel}>{names})";
 
                 newList.Add((
                     oldValue.ToUpper(),
@@ -752,7 +752,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                 this.placeholderList.Add((
                     "<mex>",
-                    $"(?<mexs>{this.player.Names})",
+                    $"(?<_mex>{this.player.NamesRegex})",
                     PlaceholderTypes.Me));
             }
         }

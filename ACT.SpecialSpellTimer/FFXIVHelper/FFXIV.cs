@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 
@@ -267,46 +266,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             return this.pluginCombatantHistory?.CurrentZoneID ?? 0;
         }
 
-        /// <summary>
-        /// 文中に含まれるパーティメンバの名前を設定した形式に置換する
-        /// </summary>
-        /// <param name="text">置換対象のテキスト</param>
-        /// <returns>
-        /// 置換後のテキスト</returns>
-        public string ReplacePartyMemberName(
-            string text)
-        {
-            var r = text;
-
-            var party = this.GetPartyList();
-
-            foreach (var pc in party)
-            {
-                switch (Settings.Default.PCNameInitialOnDisplayStyle)
-                {
-                    case NameStyles.FullName:
-                        r = r.Replace(pc.NameFI, pc.Name);
-                        r = r.Replace(pc.NameIF, pc.Name);
-                        r = r.Replace(pc.NameII, pc.Name);
-                        break;
-
-                    case NameStyles.FullInitial:
-                        r = r.Replace(pc.Name, pc.NameFI);
-                        break;
-
-                    case NameStyles.InitialFull:
-                        r = r.Replace(pc.Name, pc.NameIF);
-                        break;
-
-                    case NameStyles.InitialInitial:
-                        r = r.Replace(pc.Name, pc.NameII);
-                        break;
-                }
-            }
-
-            return r;
-        }
-
         public IReadOnlyList<Combatant> GetPartyList()
         {
             var combatants = this.GetCombatantDictionaly();
@@ -470,10 +429,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 // 名前を登録する
                 // TYPEによって分岐するため先にTYPEを設定しておくこと
                 combatant.SetName((string)item.Name);
-#if false
-                // 名前辞書に登録する
-                PCNameDictionary.Instance.Add(combatant);
-#endif
+
                 newList.Add(combatant);
                 newDictionary.Add(combatant.ID, combatant);
             }
@@ -499,6 +455,46 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             {
                 this.currentPartyIDList = partyList;
             }
+        }
+
+        /// <summary>
+        /// 文中に含まれるパーティメンバの名前を設定した形式に置換する
+        /// </summary>
+        /// <param name="text">置換対象のテキスト</param>
+        /// <returns>
+        /// 置換後のテキスト</returns>
+        public string ReplacePartyMemberName(
+            string text)
+        {
+            var r = text;
+
+            var party = this.GetPartyList();
+
+            foreach (var pc in party)
+            {
+                switch (Settings.Default.PCNameInitialOnDisplayStyle)
+                {
+                    case NameStyles.FullName:
+                        r = r.Replace(pc.NameFI, pc.Name);
+                        r = r.Replace(pc.NameIF, pc.Name);
+                        r = r.Replace(pc.NameII, pc.Name);
+                        break;
+
+                    case NameStyles.FullInitial:
+                        r = r.Replace(pc.Name, pc.NameFI);
+                        break;
+
+                    case NameStyles.InitialFull:
+                        r = r.Replace(pc.Name, pc.NameIF);
+                        break;
+
+                    case NameStyles.InitialInitial:
+                        r = r.Replace(pc.Name, pc.NameII);
+                        break;
+                }
+            }
+
+            return r;
         }
 
         private void Attach()
