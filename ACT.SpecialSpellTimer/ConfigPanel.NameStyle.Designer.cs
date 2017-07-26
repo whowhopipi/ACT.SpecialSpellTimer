@@ -168,6 +168,7 @@
             this.FFXIVLogStylesGroupBox.Controls.Add(this.FFXIVLogStyle1RadioButton);
             this.FFXIVLogStylesGroupBox.Controls.Add(this.FFXIVLogStyle3RadioButton);
             this.FFXIVLogStylesGroupBox.Controls.Add(this.FFXIVLogStyle2RadioButton);
+            this.FFXIVLogStylesGroupBox.Enabled = false;
             this.FFXIVLogStylesGroupBox.Location = new System.Drawing.Point(22, 21);
             this.FFXIVLogStylesGroupBox.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.FFXIVLogStylesGroupBox.Name = "FFXIVLogStylesGroupBox";
