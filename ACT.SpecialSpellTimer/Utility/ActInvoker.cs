@@ -1,10 +1,9 @@
-﻿namespace ACT.SpecialSpellTimer.Utility
+﻿using System;
+
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer.Utility
 {
-    using System;
-    using System.Windows.Forms;
-
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// ActInvoker
     /// </summary>
@@ -18,19 +17,14 @@
         {
             if (ActGlobals.oFormActMain != null &&
                 ActGlobals.oFormActMain.IsHandleCreated &&
-                !ActGlobals.oFormActMain.IsDisposed)
+                !ActGlobals.oFormActMain.IsDisposed &&
+                ActGlobals.oFormActMain.InvokeRequired)
             {
-                if (ActGlobals.oFormActMain.InvokeRequired)
-                {
-                    ActGlobals.oFormActMain.Invoke((MethodInvoker)delegate
-                    {
-                        action();
-                    });
-                }
-                else
-                {
-                    action();
-                }
+                ActGlobals.oFormActMain.Invoke(action);
+            }
+            else
+            {
+                action();
             }
         }
     }

@@ -1,23 +1,24 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Image;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Windows.Forms;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Image;
-    using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Sound;
-    using ACT.SpecialSpellTimer.Utility;
-
     /// <summary>
     /// 設定Panel
     /// </summary>
-    public partial class ConfigPanel : UserControl
+    public partial class ConfigPanel :
+        UserControl
     {
         /// <summary>
         /// コンストラクタ
