@@ -260,9 +260,10 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void Denitialize()
         {
+            ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
+
             this.EndPoller();
 
-            ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
             this.CurrentCombatLogList.Clear();
             Logger.Write("end combat analyze.");
         }
