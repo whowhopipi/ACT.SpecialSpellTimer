@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
@@ -339,8 +340,7 @@ namespace ACT.SpecialSpellTimer
         {
             while (!this.logInfoQueue.IsEmpty)
             {
-                LogLineEventArgs l;
-                this.logInfoQueue.TryDequeue(out l);
+                this.logInfoQueue.TryDequeue(out LogLineEventArgs l);
             }
         }
 
@@ -633,8 +633,7 @@ namespace ACT.SpecialSpellTimer
                     {
                         Thread.Sleep(0);
 
-                        LogLineEventArgs log = null;
-                        this.logInfoQueue.TryDequeue(out log);
+                        this.logInfoQueue.TryDequeue(out LogLineEventArgs log);
 
                         if (log == null)
                         {
