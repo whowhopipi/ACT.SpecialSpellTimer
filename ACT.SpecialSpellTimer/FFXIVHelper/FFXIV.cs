@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 
@@ -418,7 +419,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 combatant.ID = (uint)item.ID;
                 combatant.OwnerID = (uint)item.OwnerID;
                 combatant.Job = (int)item.Job;
-                combatant.Name = (string)item.Name;
                 combatant.type = (byte)item.type;
                 combatant.Level = (int)item.Level;
                 combatant.CurrentHP = (int)item.CurrentHP;
@@ -426,6 +426,13 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 combatant.CurrentMP = (int)item.CurrentMP;
                 combatant.MaxMP = (int)item.MaxMP;
                 combatant.CurrentTP = (int)item.CurrentTP;
+
+                // 名前を登録する
+                // TYPEによって分岐するため先にTYPEを設定しておくこと
+                combatant.SetName((string)item.Name);
+
+                // 名前辞書に登録する
+                PCNameDictionary.Instance.Add(combatant);
 
                 newList.Add(combatant);
                 newDictionary.Add(combatant.ID, combatant);

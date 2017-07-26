@@ -26,6 +26,11 @@
         {
             this.InitializeComponent();
 
+            // PC名設定タブの中身を設定する
+            this.NameStyleTabPage.Controls.Add(ConfigPanelNameStyle.Instance);
+            ConfigPanelNameStyle.Instance.Dock = DockStyle.Fill;
+
+            // 翻訳する
             Translate.TranslateControls(this);
 
             this.LanguageComboBox.Items.AddRange(Utility.Language.GetLanguageList());
@@ -44,8 +49,6 @@
             typeof(ListView)
                 .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(this.PlaceholderListView, true, null);
-
-            // パネルの詳細用グループボックスの場所を決める
 
             // インスタンス化に伴う正規表現のON/OFFを制限する
             this.ToInstanceCheckBox.CheckedChanged += (s, e) =>

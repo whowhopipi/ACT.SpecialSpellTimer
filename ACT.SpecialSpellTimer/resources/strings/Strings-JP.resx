@@ -1197,4 +1197,8 @@
     <value>ACT本体に "end" を通知する</value>
     <comment>Notify "end" to ACT.</comment>
   </data>
+  <data name="NameStyleTabPage" xml:space="preserve">
+    <value>PC名のスタイル</value>
+    <comment>PC Name styles</comment>
+  </data>
 </root>

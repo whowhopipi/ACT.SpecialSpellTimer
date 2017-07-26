@@ -1312,6 +1312,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   PC名のスタイル に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string NameStyleTabPage {
+            get {
+                return ResourceManager.GetString("NameStyleTabPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   New Telop に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string NewTelop {

@@ -1,6 +1,6 @@
 ﻿namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
-    public enum NameMode
+    public enum NameStyles
     {
         /// <summary>0: Naoki Yoshida 形式</summary>
         FullName = 0,

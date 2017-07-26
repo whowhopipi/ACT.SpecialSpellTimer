@@ -82,20 +82,20 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 Math.Pow(this.PosY - target.PosY, 2));
 
         public string GetName(
-            NameMode mode)
+            NameStyles style)
         {
-            switch (mode)
+            switch (style)
             {
-                case NameMode.FullName:
+                case NameStyles.FullName:
                     return this.Name;
 
-                case NameMode.FullInitial:
+                case NameStyles.FullInitial:
                     return !string.IsNullOrEmpty(this.NameFI) ? this.NameFI : this.Name;
 
-                case NameMode.InitialFull:
+                case NameStyles.InitialFull:
                     return !string.IsNullOrEmpty(this.NameIF) ? this.NameIF : this.Name;
 
-                case NameMode.InitialInitial:
+                case NameStyles.InitialInitial:
                     return !string.IsNullOrEmpty(this.NameII) ? this.NameII : this.Name;
 
                 default:

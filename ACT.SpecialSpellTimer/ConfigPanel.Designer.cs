@@ -223,6 +223,7 @@
             this.AnalyzeCombatButton = new System.Windows.Forms.Button();
             this.CombatAnalyzingLabel = new System.Windows.Forms.Label();
             this.lblCombatAnalyzer = new System.Windows.Forms.Label();
+            this.NameStyleTabPage = new System.Windows.Forms.TabPage();
             this.OptionTabPage = new System.Windows.Forms.TabPage();
             this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.TabControlExtHoriz();
             this.tabOverlayOptions = new System.Windows.Forms.TabPage();
@@ -494,6 +495,7 @@
             this.TabControl.Controls.Add(this.SpecialSpellTabPage);
             this.TabControl.Controls.Add(this.OnPointTelopTabPage);
             this.TabControl.Controls.Add(this.CombatAnalyzerTabPage);
+            this.TabControl.Controls.Add(this.NameStyleTabPage);
             this.TabControl.Controls.Add(this.OptionTabPage);
             this.TabControl.Controls.Add(this.DQXOptionTabPage);
             this.TabControl.Controls.Add(this.LogTabPage);
@@ -2526,6 +2528,16 @@
             this.lblCombatAnalyzer.Text = "lblCombatAnalyzer";
             this.lblCombatAnalyzer.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // NameStyleTabPage
+            // 
+            this.NameStyleTabPage.Location = new System.Drawing.Point(264, 4);
+            this.NameStyleTabPage.Name = "NameStyleTabPage";
+            this.NameStyleTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.NameStyleTabPage.Size = new System.Drawing.Size(1065, 829);
+            this.NameStyleTabPage.TabIndex = 7;
+            this.NameStyleTabPage.Text = "NameStyleTabPage";
+            this.NameStyleTabPage.UseVisualStyleBackColor = true;
+            // 
             // OptionTabPage
             // 
             this.OptionTabPage.BackColor = System.Drawing.Color.White;
@@ -4036,5 +4048,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.TextBox LogTextBox;
+        private System.Windows.Forms.TabPage NameStyleTabPage;
     }
 }

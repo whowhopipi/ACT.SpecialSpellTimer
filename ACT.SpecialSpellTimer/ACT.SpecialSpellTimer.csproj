@@ -73,6 +73,12 @@
     <Compile Include="ConfigPanel.Monitor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ConfigPanel.NameStyle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfigPanel.NameStyle.Designer.cs">
+      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfigPanel.OnePointTelop.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -86,7 +92,9 @@
     <Compile Include="FFXIVHelper\Combatant.cs" />
     <Compile Include="FFXIVHelper\FFXIV.cs" />
     <Compile Include="FFXIVHelper\MobType.cs" />
-    <Compile Include="FFXIVHelper\NameMode.cs" />
+    <Compile Include="FFXIVHelper\NameStyles.cs" />
+    <Compile Include="Models\PCName.cs" />
+    <Compile Include="Models\PCNameDictionary.cs" />
     <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="FFXIVHelper\Skill.cs" />
     <Compile Include="FFXIVHelper\Zone.cs" />
@@ -295,6 +303,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ConfigPanel.NameStyle.resx">
+      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfigPanel.resx">
       <DependentUpon>ConfigPanel.cs</DependentUpon>
       <SubType>Designer</SubType>

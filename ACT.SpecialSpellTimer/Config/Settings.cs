@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-
+using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 
@@ -188,8 +188,10 @@ namespace ACT.SpecialSpellTimer.Config
         public double TimeOfHideSpell { get; set; }
         public double UpdateCheckInterval { get; set; }
         public bool UseOtherThanFFXIV { get; set; }
-
         public bool WipeoutNotifyToACT { get; set; }
+
+        public NameStyles PCNameInitialOnLogStyle { get; set; } = NameStyles.FullName;
+        public NameStyles PCNameInitialOnDisplayStyle { get; set; } = NameStyles.FullName;
 
         #endregion Data
 
@@ -309,13 +311,16 @@ namespace ACT.SpecialSpellTimer.Config
             HideWhenNotActive = false,
             UseOtherThanFFXIV = false,
             DQXUtilityEnabled = false,
-            DQXPlayerName = string.Empty,
+            DQXPlayerName = "トンヌラ",
             ResetOnWipeOut = true,
             WipeoutNotifyToACT = true,
-            SimpleRegex = false,
+            RemoveTooltipSymbols = true,
+            SimpleRegex = true,
             DetectPacketDump = false,
             TextBlurRate = 1.2d,
             TextOutlineThicknessRate = 1.0d,
+            PCNameInitialOnLogStyle = NameStyles.FullName,
+            PCNameInitialOnDisplayStyle = NameStyles.FullName,
         };
 
         /// <summary>
