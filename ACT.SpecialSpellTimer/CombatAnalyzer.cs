@@ -1,18 +1,18 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.FFXIVHelper;
-    using ACT.SpecialSpellTimer.Utility;
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// 分析キーワードの分類
     /// </summary>
@@ -109,6 +109,20 @@
     /// </summary>
     public class CombatAnalyzer
     {
+        #region Singleton
+
+        /// <summary>
+        /// シングルトンInstance
+        /// </summary>
+        private static CombatAnalyzer instance = new CombatAnalyzer();
+
+        /// <summary>
+        /// シングルトンInstance
+        /// </summary>
+        public static CombatAnalyzer Default => instance;
+
+        #endregion Singleton
+
         private static readonly Regex ActionRegex = new Regex(
             @"\[.+?\] 00:2[89a]..:(?<actor>.+?)の「(?<skill>.+?)」$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
@@ -144,11 +158,6 @@
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         /// <summary>
-        /// シングルトンInstance
-        /// </summary>
-        private static CombatAnalyzer instance;
-
-        /// <summary>
         /// ログ一時バッファ
         /// </summary>
         private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
@@ -167,14 +176,6 @@
         /// ログ格納スレッド
         /// </summary>
         private Thread storeLogThread;
-
-        /// <summary>
-        /// シングルトンInstance
-        /// </summary>
-        public static CombatAnalyzer Default
-        {
-            get { return (instance ?? (instance = new CombatAnalyzer())); }
-        }
 
         /// <summary>
         /// 戦闘ログのリスト
