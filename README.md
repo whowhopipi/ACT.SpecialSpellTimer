@@ -137,7 +137,7 @@ Hachiro Mitsuoka (黒魔道士)<br />
 &lt;RANGE&gt; → Shichiro Mazda にマッチする<br />
 &lt;MAGIC&gt; → Hachiro Mitsuoka にマッチする<br />
 <br />
-&lt;TANK&gt; は正規表現の (?&lt;TANKs&gt;Taro Yamada|Jiro Sato) に置換わってマッチングされます。<br />
+&lt;TANK&gt; は正規表現の (?&lt;_TANK&gt;Taro Yamada|Jiro Sato) に置換わってマッチングされます。<br />
 ex.<br />
 &lt;TANK&gt → (?&lt;_TANK&gt;Taro Yamada|Jiro Sato)<br />
 &lt;HEALER&gt → (?&lt;_HEALER&gt;Sabro Suzuki|Sabro Suzuki)<br />
