@@ -52,7 +52,7 @@ ACTが吐き出すログには上記のような独自のログがあります
 正規表現をONにしてください。<br />
 <br />
 ex. プレイヤーが Naoki Yoshida の例<br />
-(?<_mex>Naoki Yoshida|Naoki Y\.|N\. Yoshida|N.\ Y\.)<br />
+(?<_mex>Naoki Yoshida|Naoki Y\.|N\. Yoshida|N\. Y\.)<br />
 に置換わってマッチングされます。
 </td>
 </tr>
@@ -64,7 +64,7 @@ ex. プレイヤーが Naoki Yoshida の例<br />
 正規表現とパーティメンバ代名詞の両方をONにしてください。<br />
 <br />
 ex. パーティリストの2番目が Naoki Yoshida の例<br />
-(?<_2ex>Naoki Yoshida|Naoki Y\.|N\. Yoshida|N.\ Y\.)<br />
+(?<_2ex>Naoki Yoshida|Naoki Y\.|N\. Yoshida|N\. Y\.)<br />
 に置換わってマッチングされます。
 </td>
 </tr>
@@ -107,7 +107,7 @@ Jiro Paradin (ナイト)<br />
 &lt;PLD2&gt; → Jiro Paradin にマッチする<br />
 &lt;PLD&gt; → Taro Paradin または Jiro Paradin にマッチする<br />
 <br />
-&lt;PLD1&gt; は正規表現の (?&lt;_PLD1&gt;Taro Paladin|Taro P.|～省略) に置換わってマッチングされます。<br />
+&lt;PLD1&gt; は正規表現の (?&lt;_PLD1&gt;Taro Paladin|Taro P\.|～省略) に置換わってマッチングされます。<br />
 &lt;PLD&gt; は正規表現の (?&lt;_PLD&gt;Taro Paladin|Jiro Paladin|～省略) に置換わってマッチングされます。<br />
 <br />
 </td>
