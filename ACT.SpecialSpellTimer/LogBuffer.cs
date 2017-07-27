@@ -27,10 +27,11 @@ namespace ACT.SpecialSpellTimer
         private static readonly List<string> EmptyLogLineList = new List<string>();
 
         /// <summary>
-        /// ツールチップ文字除去するための正規表現
+        /// ツールチップ文字を除去するための正規表現
         /// </summary>
         private static readonly Regex TooltipCharsRegex =
-            new Regex(@".\u0001\u0001\uFFFD", RegexOptions.Compiled);
+            new Regex(@"(.\u0001\u0001\uFFFD|u001E)",
+                RegexOptions.Compiled);
 
         /// <summary>
         /// ログファイル出力用のバッファ
