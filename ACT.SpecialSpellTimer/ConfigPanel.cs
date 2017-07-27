@@ -34,14 +34,14 @@ namespace ACT.SpecialSpellTimer
             // 翻訳する
             Translate.TranslateControls(this);
 
-            this.LanguageComboBox.Items.AddRange(Utility.Language.GetLanguageList());
+            this.LanguageComboBox.Items.AddRange(Language.GetLanguageList());
 
-            this.ToolTip.SetToolTip(this.KeywordTextBox, Utility.Translate.Get("MatchingKeywordExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.RegexEnabledCheckBox, Utility.Translate.Get("RegularExpressionExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.TelopRegexEnabledCheckBox, Utility.Translate.Get("RegularExpressionExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.TelopKeywordTextBox, Utility.Translate.Get("MatchingKeywordExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.TelopMessageTextBox, Utility.Translate.Get("TelopMessageExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.label46, Utility.Translate.Get("TelopMessageExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.KeywordTextBox, Translate.Get("MatchingKeywordExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.RegexEnabledCheckBox, Translate.Get("RegularExpressionExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.TelopRegexEnabledCheckBox, Translate.Get("RegularExpressionExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.TelopKeywordTextBox, Translate.Get("MatchingKeywordExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.TelopMessageTextBox, Translate.Get("TelopMessageExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.label46, Translate.Get("TelopMessageExplanationTooltip"));
 
             // ListViewのダブルバッファリングを有効にする
             typeof(ListView)
