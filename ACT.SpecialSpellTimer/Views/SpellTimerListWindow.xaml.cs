@@ -185,6 +185,16 @@
                         x;
                 }
             }
+            else
+            {
+                // 固定の表示順でソートする
+                spells =
+                    from x in spells
+                    orderby
+                    x.DisplayNo
+                    select
+                    x;
+            }
 
             // Brushを生成する
             if (spells.Count() > 0)

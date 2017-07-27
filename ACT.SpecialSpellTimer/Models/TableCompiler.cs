@@ -191,7 +191,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.spellListLocker)
             {
-                this.spellList = new List<SpellTimer>(query.OrderBy(x => x.DisplayNo));
+                this.spellList = new List<SpellTimer>(query);
             }
         }
 
@@ -275,7 +275,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.tickerListLocker)
             {
-                this.tickerList = new List<OnePointTelop>(query.OrderBy(x => x.MatchDateTime));
+                this.tickerList = new List<OnePointTelop>(query.OrderByDescending(x => x.MatchDateTime));
             }
         }
 
