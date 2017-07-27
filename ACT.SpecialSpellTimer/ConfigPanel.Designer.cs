@@ -3600,6 +3600,7 @@
             this.columnHeader2,
             this.columnHeader3});
             this.PlaceholderListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PlaceholderListView.FullRowSelect = true;
             this.PlaceholderListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.PlaceholderListView.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.PlaceholderListView.Location = new System.Drawing.Point(0, 0);
