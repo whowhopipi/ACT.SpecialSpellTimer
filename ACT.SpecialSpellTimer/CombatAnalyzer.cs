@@ -1,18 +1,19 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.FFXIVHelper;
-    using ACT.SpecialSpellTimer.Utility;
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// 分析キーワードの分類
     /// </summary>
@@ -109,6 +110,20 @@
     /// </summary>
     public class CombatAnalyzer
     {
+        #region Singleton
+
+        /// <summary>
+        /// シングルトンInstance
+        /// </summary>
+        private static CombatAnalyzer instance = new CombatAnalyzer();
+
+        /// <summary>
+        /// シングルトンInstance
+        /// </summary>
+        public static CombatAnalyzer Default => instance;
+
+        #endregion Singleton
+
         private static readonly Regex ActionRegex = new Regex(
             @"\[.+?\] 00:2[89a]..:(?<actor>.+?)の「(?<skill>.+?)」$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
@@ -144,11 +159,6 @@
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         /// <summary>
-        /// シングルトンInstance
-        /// </summary>
-        private static CombatAnalyzer instance;
-
-        /// <summary>
         /// ログ一時バッファ
         /// </summary>
         private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
@@ -167,14 +177,6 @@
         /// ログ格納スレッド
         /// </summary>
         private Thread storeLogThread;
-
-        /// <summary>
-        /// シングルトンInstance
-        /// </summary>
-        public static CombatAnalyzer Default
-        {
-            get { return (instance ?? (instance = new CombatAnalyzer())); }
-        }
 
         /// <summary>
         /// 戦闘ログのリスト
@@ -259,9 +261,10 @@
         /// </summary>
         public void Denitialize()
         {
+            ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
+
             this.EndPoller();
 
-            ActGlobals.oFormActMain.OnLogLineRead -= this.oFormActMain_OnLogLineRead;
             this.CurrentCombatLogList.Clear();
             Logger.Write("end combat analyze.");
         }
@@ -294,7 +297,7 @@
                 this.StartPoller();
             }
 
-            ActGlobals.oFormActMain.OnLogLineRead += this.oFormActMain_OnLogLineRead;
+            ActGlobals.oFormActMain.OnLogLineRead += this.FormActMain_OnLogLineRead;
             Logger.Write("start combat analyze.");
         }
 
@@ -337,34 +340,8 @@
         {
             while (!this.logInfoQueue.IsEmpty)
             {
-                LogLineEventArgs l;
-                this.logInfoQueue.TryDequeue(out l);
+                this.logInfoQueue.TryDequeue(out LogLineEventArgs l);
             }
-        }
-
-        /// <summary>
-        /// 分析用のキーワードを取得する
-        /// </summary>
-        /// <returns>キーワードコレクション</returns>
-        private IReadOnlyCollection<string> GetPartyMemberNames()
-        {
-            var names = new List<string>();
-
-            // プレイヤ情報とパーティリストを取得する
-            var player = FFXIV.Instance.GetPlayer();
-            var ptlist = LogBuffer.PartyList;
-
-            if (player != null)
-            {
-                names.Add(player.Name);
-            }
-
-            if (ptlist != null)
-            {
-                names.AddRange(ptlist);
-            }
-
-            return names;
         }
 
         /// <summary>
@@ -372,7 +349,7 @@
         /// </summary>
         /// <param name="isImport">Importか？</param>
         /// <param name="logInfo">ログ情報</param>
-        private void oFormActMain_OnLogLineRead(
+        private void FormActMain_OnLogLineRead(
             bool isImport,
             LogLineEventArgs logInfo)
         {
@@ -392,6 +369,37 @@
                     "catch exception at Combat Analyzer OnLogLineRead.\n" +
                     ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// 分析用のキーワードを取得する
+        /// </summary>
+        /// <returns>キーワードコレクション</returns>
+        private IReadOnlyCollection<string> GetPartyMemberNames()
+        {
+            var names = new List<string>();
+
+            // プレイヤ情報とパーティリストを取得する
+            var player = FFXIV.Instance.GetPlayer();
+            var ptlist = FFXIV.Instance.GetPartyList();
+
+            if (player != null)
+            {
+                names.Add(player.Name);
+                names.Add(player.NameFI);
+                names.Add(player.NameIF);
+                names.Add(player.NameII);
+            }
+
+            if (ptlist != null)
+            {
+                names.AddRange(ptlist.Select(x => x.Name));
+                names.AddRange(ptlist.Select(x => x.NameFI));
+                names.AddRange(ptlist.Select(x => x.NameIF));
+                names.AddRange(ptlist.Select(x => x.NameII));
+            }
+
+            return names;
         }
 
         /// <summary>
@@ -631,8 +639,7 @@
                     {
                         Thread.Sleep(0);
 
-                        LogLineEventArgs log = null;
-                        this.logInfoQueue.TryDequeue(out log);
+                        this.logInfoQueue.TryDequeue(out LogLineEventArgs log);
 
                         if (log == null)
                         {

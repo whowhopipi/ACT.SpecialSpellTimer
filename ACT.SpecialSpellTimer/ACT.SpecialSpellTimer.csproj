@@ -73,6 +73,12 @@
     <Compile Include="ConfigPanel.Monitor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ConfigPanel.NameStyle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfigPanel.NameStyle.Designer.cs">
+      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfigPanel.OnePointTelop.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -82,21 +88,22 @@
     <Compile Include="Config\FontSerializationHelper.cs" />
     <Compile Include="Config\SerializableSize.cs" />
     <Compile Include="DQXUtility.cs" />
-    <Compile Include="FF14PluginHelper.cs" />
-    <Compile Include="FF14PluginHelper.Extension.cs" />
     <Compile Include="FFXIVHelper\Buff.cs" />
     <Compile Include="FFXIVHelper\Combatant.cs" />
     <Compile Include="FFXIVHelper\FFXIV.cs" />
     <Compile Include="FFXIVHelper\MobType.cs" />
+    <Compile Include="FFXIVHelper\NameStyles.cs" />
     <Compile Include="FFXIVHelper\Skill.cs" />
     <Compile Include="FFXIVHelper\Zone.cs" />
     <Compile Include="Image\IconController.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="LogBuffer.cs" />
+    <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="Models\Spell.cs" />
+    <Compile Include="Models\TableCompiler.cs" />
     <Compile Include="Models\Ticker.cs" />
     <Compile Include="OnePointTelopController.cs" />
-    <Compile Include="OnePointTelopTable.cs" />
+    <Compile Include="Models\OnePointTelopTable.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
@@ -118,7 +125,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings-JP.resx</DependentUpon>
     </Compile>
-    <Compile Include="resources\strings\Strings-KR.Designer.cs" />
+    <Compile Include="resources\strings\Strings-KR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings-KR.resx</DependentUpon>
+    </Compile>
     <Compile Include="SetConditionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,7 +155,7 @@
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpellTimerCore.cs" />
-    <Compile Include="SpellTimerDataSet.Designer.cs">
+    <Compile Include="Models\SpellTimerDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
@@ -187,7 +198,7 @@
     <Compile Include="Views\SpellTimerListWindow.xaml.cs">
       <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SpellTimerTable.cs" />
+    <Compile Include="Models\SpellTimerTable.cs" />
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="Utility\ColorUtility.cs" />
     <Compile Include="Utility\FontUtility.cs" />
@@ -277,23 +288,25 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <Compile Include="ConfigPanel.DQXOption.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <None Include="SpellTimerDataSet.xsc">
+    <None Include="Models\SpellTimerDataSet.xsc">
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
     </None>
-    <None Include="SpellTimerDataSet.xsd">
+    <None Include="Models\SpellTimerDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>SpellTimerDataSet.Designer.cs</LastGenOutput>
     </None>
-    <None Include="SpellTimerDataSet.xss">
+    <None Include="Models\SpellTimerDataSet.xss">
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ConfigPanel.NameStyle.resx">
+      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfigPanel.resx">
       <DependentUpon>ConfigPanel.cs</DependentUpon>
       <SubType>Designer</SubType>

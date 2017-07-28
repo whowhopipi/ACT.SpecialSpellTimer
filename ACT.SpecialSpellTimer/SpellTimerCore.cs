@@ -1,23 +1,23 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+using ACT.SpecialSpellTimer.Views;
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.FFXIVHelper;
-    using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Utility;
-    using ACT.SpecialSpellTimer.Views;
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// SpellTimerの中核
     /// </summary>
@@ -30,7 +30,7 @@
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        private static SpellTimerCore instance;
+        private static SpellTimerCore instance = new SpellTimerCore();
 
         /// <summary>
         /// 最後にFF14プロセスをチェックした時間
@@ -57,10 +57,12 @@
         /// </summary>
         private Thread logPoller;
 
+        private volatile bool refreshWindowExcuting = false;
+
         /// <summary>
         /// RefreshWindowタイマ
         /// </summary>
-        private System.Windows.Threading.DispatcherTimer RefreshWindowTimer;
+        private System.Windows.Threading.DispatcherTimer refreshWindowTimer;
 
         private volatile bool running = false;
 
@@ -74,37 +76,12 @@
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        public static SpellTimerCore Default
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new SpellTimerCore();
-#if DEBUG
-                    Debug.WriteLine("SpellTimerCore");
-#endif
-                }
-
-                return instance;
-            }
-        }
-
-#if false
-        /// <summary>
-        /// Refreshタイマ
-        /// </summary>
-        private System.Windows.Forms.Timer RefreshTimer;
-#endif
+        public static SpellTimerCore Default => instance;
 
         /// <summary>
         /// SpellTimerのPanelリスト
         /// </summary>
-        private List<SpellTimerListWindow> SpellTimerPanels
-        {
-            get;
-            set;
-        }
+        private List<SpellTimerListWindow> SpellTimerPanels { get; set; }
 
         /// <summary>
         /// Panelをアクティブ化する
@@ -158,6 +135,12 @@
         /// </summary>
         public void Begin()
         {
+            // FFXIVのスキャンを開始する
+            FFXIV.Instance.Start();
+
+            // テーブルコンパイラを開始する
+            TableCompiler.Instance.Begin();
+
             // 戦闘分析を初期化する
             CombatAnalyzer.Default.Initialize();
 
@@ -167,21 +150,16 @@
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
 
-            // FFXIVのスキャンを開始する
-            FFXIV.Instance.Start();
-
             // RefreshWindowタイマを開始する
-            this.RefreshWindowTimer = new System.Windows.Threading.DispatcherTimer()
-            {
-                Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval)
-            };
-
-            this.RefreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
-            this.RefreshWindowTimer.Start();
-
-            this.running = true;
+            this.refreshWindowTimer =
+                new System.Windows.Threading.DispatcherTimer(
+                    System.Windows.Threading.DispatcherPriority.Background);
+            this.refreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
+            this.refreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
+            this.refreshWindowTimer.Start();
 
             // ログ監視タイマを開始する
+            this.running = true;
             this.logPoller = new Thread(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(5));
@@ -293,34 +271,24 @@
                 this.LogBuffer = null;
             }
 
-            // 監視を開放する
-            if (this.RefreshWindowTimer != null)
+            // Viewの描画を開放する
+            if (this.refreshWindowTimer != null)
             {
-                this.RefreshWindowTimer.Stop();
-                this.RefreshWindowTimer = null;
+                this.refreshWindowTimer.Stop();
+                this.refreshWindowTimer = null;
             }
 
+            // 監視を開放する
             if (this.logPoller != null)
             {
+                this.logPoller.Join(TimeSpan.FromSeconds(5));
                 if (this.logPoller.IsAlive)
                 {
-                    try
-                    {
-                        if (!this.logPoller.Join(TimeSpan.FromSeconds(5)))
-                        {
-                            this.logPoller.Abort();
-                        }
-                    }
-                    catch
-                    {
-                    }
-
-                    this.logPoller = null;
+                    this.logPoller.Abort();
                 }
-            }
 
-            // FFXIVのスキャンを停止する
-            FFXIV.Instance.End();
+                this.logPoller = null;
+            }
 
             // 全てのPanelを閉じる
             this.ClosePanels();
@@ -330,6 +298,12 @@
             Settings.Default.Save();
             SpellTimerTable.Save();
             OnePointTelopTable.Default.Save();
+
+            // テーブルコンパイラを停止する
+            TableCompiler.Instance.End();
+
+            // FFXIVのスキャンを停止する
+            FFXIV.Instance.End();
 
             // instanceを初期化する
             instance = null;
@@ -880,6 +854,9 @@
                                     // スペル名（表示テキスト）を置換する
                                     var replacedTitle = ConditionUtility.GetReplacedTitle(targetSpell);
 
+                                    // PC名を置換する
+                                    replacedTitle = FFXIV.Instance.ReplacePartyMemberName(replacedTitle);
+
                                     targetSpell.SpellTitleReplaced = replacedTitle;
                                     targetSpell.MatchDateTime = DateTime.Now;
                                     targetSpell.UpdateDone = false;
@@ -913,6 +890,9 @@
 
                                     // スペル名（表示テキスト）を置換する
                                     var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
+
+                                    // PC名を置換する
+                                    replacedTitle = FFXIV.Instance.ReplacePartyMemberName(replacedTitle);
 
                                     // インスタンス化する？
                                     if (spell.ToInstance)
@@ -1145,14 +1125,7 @@
             }
         }
 
-        /// <summary>
-        /// RefreshWindowTimerOnTick
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void RefreshWindowTimerOnTick(
-            object sender,
-            EventArgs e)
+        private void RefreshWindowCore()
         {
 #if DEBUG
             var sw = Stopwatch.StartNew();
@@ -1161,28 +1134,24 @@
             {
                 if (Interlocked.CompareExchange(ref settingsIsValid, VALID, INVALID) == INVALID)
                 {
-                    this.RefreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
+                    this.refreshWindowTimer.Interval = 
+                        TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
                 }
 
-                if (this.RefreshWindowTimer != null &&
-                    this.RefreshWindowTimer.IsEnabled)
+                if (this.refreshWindowTimer != null &&
+                    this.refreshWindowTimer.IsEnabled)
                 {
                     Logger.Update();
 
-                    if (SpecialSpellTimerPlugin.ConfigPanel != null)
-                    {
-                        SpecialSpellTimerPlugin.ConfigPanel.UpdateMonitor();
-                    }
-
                     // 有効なスペルとテロップのリストを取得する
-                    var spellArray = SpellTimerTable.EnabledTable;
-                    var telopArray = OnePointTelopTable.Default.EnabledTable;
+                    var spells = TableCompiler.Instance.SpellList;
+                    var telops = TableCompiler.Instance.TickerList;
 
-                    if ((DateTime.Now.Second % 5) == 0)
+                    if ((DateTime.Now.Second % 30) == 0)
                     {
                         // 不要なWindowを閉じる
-                        OnePointTelopController.GarbageWindows(telopArray);
-                        this.GarbageSpellPanelWindows(spellArray);
+                        OnePointTelopController.GarbageWindows(telops);
+                        this.GarbageSpellPanelWindows(spells);
                     }
 
                     if (ActGlobals.oFormActMain == null)
@@ -1234,15 +1203,11 @@
                     }
 
                     // テロップWindowを表示する
-                    OnePointTelopController.RefreshTelopWindows(telopArray);
+                    OnePointTelopController.RefreshTelopWindows(telops);
 
                     // スペルWindowを表示する
-                    this.RefreshSpellPanelWindows(spellArray);
+                    this.RefreshSpellPanelWindows(spells);
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Write(Translate.Get("SpellTimerRefreshError"), ex);
             }
             finally
             {
@@ -1252,6 +1217,31 @@
                     DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
                     "◎RefreshWindow " + sw.Elapsed.TotalMilliseconds.ToString("N4") + "ms");
 #endif
+            }
+        }
+
+        /// <summary>
+        /// RefreshWindowTimerOnTick
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void RefreshWindowTimerOnTick(
+            object sender,
+            EventArgs e)
+        {
+            try
+            {
+                if (this.refreshWindowExcuting)
+                {
+                    return;
+                }
+
+                this.refreshWindowExcuting = true;
+                this.RefreshWindowCore();
+            }
+            finally
+            {
+                this.refreshWindowExcuting = false;
             }
         }
 
@@ -1290,10 +1280,7 @@
                 {
                     Logger.Write("Party was wiped out. Reset spells and tickers.");
 
-                    // スペルのカウントをリセットする
                     SpellTimerTable.ResetCount();
-
-                    // テロップのカウントをリセットする
                     OnePointTelopTable.Default.ResetCount();
 
                     // ACT本体に戦闘終了を通知する
@@ -1326,27 +1313,27 @@
             }
 
             // 全滅によるリセットを判定する
-            var task = Task.Run(() => this.ResetCountAtRestart());
+            var resetTask = Task.Run(() => this.ResetCountAtRestart());
 
-            if (this.LogBuffer.NonEmpty())
+            if (!this.LogBuffer.IsEmpty)
             {
                 // ログを取り出す
-                var logLines = Task.Run(() => this.LogBuffer.GetLogLines());
+                var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
 
                 // 有効なスペルとテロップのリストを取得する
-                var spellArray = Task.Run(() => SpellTimerTable.EnabledTable);
-                var telopArray = Task.Run(() => OnePointTelopTable.Default.EnabledTable);
+                var spellTask = Task.Run(() => TableCompiler.Instance.SpellList);
+                var telopTask = Task.Run(() => TableCompiler.Instance.TickerList);
 
-                if (logLines.Result.Count > 0)
+                if (logsTask.Result.Count > 0)
                 {
                     // テロップとマッチングする
-                    var t1 = Task.Run(() => OnePointTelopController.Match(telopArray.Result, logLines.Result));
+                    var t1 = Task.Run(() => OnePointTelopController.Match(telopTask.Result, logsTask.Result));
 
                     // スペルリストとマッチングする
-                    var t2 = Task.Run(() => this.MatchSpells(spellArray.Result, logLines.Result));
+                    var t2 = Task.Run(() => this.MatchSpells(spellTask.Result, logsTask.Result));
 
                     // コマンドとマッチングする
-                    var t3 = Task.Run(() => TextCommandController.MatchCommand(logLines.Result));
+                    var t3 = Task.Run(() => TextCommandController.MatchCommand(logsTask.Result));
 
                     Task.WaitAll(t1, t2, t3);
 
@@ -1354,7 +1341,7 @@
                 }
             }
 
-            task.Wait();
+            resetTask.Wait();
 
             if (!existsLog)
             {

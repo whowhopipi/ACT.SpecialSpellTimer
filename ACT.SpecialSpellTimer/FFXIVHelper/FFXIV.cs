@@ -18,13 +18,13 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
     {
         #region Singleton
 
-        private static FFXIV instance;
+        private static FFXIV instance = new FFXIV();
 
         private FFXIV()
         {
         }
 
-        public static FFXIV Instance => (instance ?? (instance = new FFXIV()));
+        public static FFXIV Instance => instance;
 
         #endregion Singleton
 
@@ -55,6 +55,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         private IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
         private IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
+        private IReadOnlyDictionary<string, Zone> zoneHash = new Dictionary<string, Zone>();
         private IReadOnlyList<Zone> zoneList = new List<Zone>();
 
         #endregion Resources
@@ -65,9 +66,19 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         private dynamic plugin;
 
         /// <summary>
+        /// FFXIV_ACT_Plugin.Parse.CombatantHistory
+        /// </summary>
+        private dynamic pluginCombatantHistory;
+
+        /// <summary>
         /// FFXIV_ACT_Plugin.MemoryScanSettings
         /// </summary>
         private dynamic pluginConfig;
+
+        /// <summary>
+        /// FFXIV_ACT_Plugin.Parse.LogParse
+        /// </summary>
+        private dynamic pluginLogParse;
 
         /// <summary>
         /// FFXIV_ACT_Plugin.Memory.Memory
@@ -86,7 +97,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 if (!ActGlobals.oFormActMain.Visible ||
                     this.plugin == null ||
                     this.Process == null ||
-                    this.pluginScancombat == null)
+                    this.pluginScancombat == null ||
+                    this.pluginCombatantHistory == null)
                 {
                     return false;
                 }
@@ -119,9 +131,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public void End()
         {
+            this.scanFFXIVTaskRunning = false;
+            this.taskRunning = false;
+
             if (this.task != null)
             {
-                this.taskRunning = false;
                 this.task.Wait();
                 this.task.Dispose();
                 this.task = null;
@@ -129,7 +143,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (this.scanFFXIVTask != null)
             {
-                this.scanFFXIVTaskRunning = false;
                 this.scanFFXIVTask.Wait();
                 this.scanFFXIVTask.Dispose();
                 this.scanFFXIVTask = null;
@@ -221,19 +234,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #endregion Start/End
 
-        public IReadOnlyList<Combatant> GetCombatantList()
-        {
-            if (this.combatantList == null)
-            {
-                return this.EmptyCombatantList;
-            }
-
-            lock (this.combatantListLock)
-            {
-                return new List<Combatant>(this.combatantList);
-            }
-        }
-
         public IReadOnlyDictionary<uint, Combatant> GetCombatantDictionaly()
         {
             if (this.combatantDictionary == null)
@@ -248,27 +248,22 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
         }
 
+        public IReadOnlyList<Combatant> GetCombatantList()
+        {
+            if (this.combatantList == null)
+            {
+                return this.EmptyCombatantList;
+            }
+
+            lock (this.combatantListLock)
+            {
+                return new List<Combatant>(this.combatantList);
+            }
+        }
+
         public int GetCurrentZoneID()
         {
-            var currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-            if (string.IsNullOrEmpty(currentZoneName) ||
-                currentZoneName == "Unknown Zone")
-            {
-                return 0;
-            }
-
-            if (this.zoneList == null ||
-                this.zoneList.Count < 1)
-            {
-                return 0;
-            }
-
-            var foundZone = zoneList.AsParallel()
-                .FirstOrDefault(zone =>
-                    string.Equals(
-                        zone.Name, currentZoneName,
-                        StringComparison.OrdinalIgnoreCase));
-            return foundZone != null ? foundZone.ID : 0;
+            return this.pluginCombatantHistory?.CurrentZoneID ?? 0;
         }
 
         public IReadOnlyList<Combatant> GetPartyList()
@@ -296,6 +291,95 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 combatants[id]).ToList();
 
             return partyList;
+        }
+
+        /// <summary>
+        /// パーティをロールで分類して取得する
+        /// </summary>
+        /// <returns>
+        /// ロールで分類したパーティリスト</returns>
+        public IReadOnlyList<(JobRoles RoleType, string RoleLabel, IReadOnlyList<Combatant> Combatants)> GetPatryListByRole()
+        {
+            var list = new List<(JobRoles RoleType, string RoleLabel, IReadOnlyList<Combatant> Combatants)>();
+
+            var partyList = this.GetPartyList();
+
+            var tanks = partyList
+                .Where(x => x.AsJob().Role == JobRoles.Tank)
+                .ToList();
+
+            var dpses = partyList
+                .Where(x =>
+                    x.AsJob().Role == JobRoles.MeleeDPS ||
+                    x.AsJob().Role == JobRoles.RangeDPS ||
+                    x.AsJob().Role == JobRoles.MagicDPS)
+                .ToList();
+
+            var melees = partyList
+                .Where(x => x.AsJob().Role == JobRoles.MeleeDPS)
+                .ToList();
+
+            var ranges = partyList
+                .Where(x => x.AsJob().Role == JobRoles.RangeDPS)
+                .ToList();
+
+            var magics = partyList
+                .Where(x => x.AsJob().Role == JobRoles.MagicDPS)
+                .ToList();
+
+            var healers = partyList
+                .Where(x => x.AsJob().Role == JobRoles.Healer)
+                .ToList();
+
+            if (tanks.Any())
+            {
+                list.Add((
+                    JobRoles.Tank,
+                    "TANK",
+                    tanks));
+            }
+
+            if (dpses.Any())
+            {
+                list.Add((
+                    JobRoles.DPS,
+                    "DPS",
+                    dpses));
+            }
+
+            if (melees.Any())
+            {
+                list.Add((
+                    JobRoles.MeleeDPS,
+                    "MELEE",
+                    melees));
+            }
+
+            if (ranges.Any())
+            {
+                list.Add((
+                    JobRoles.RangeDPS,
+                    "RANGE",
+                    ranges));
+            }
+
+            if (magics.Any())
+            {
+                list.Add((
+                    JobRoles.MagicDPS,
+                    "MAGIC",
+                    magics));
+            }
+
+            if (healers.Any())
+            {
+                list.Add((
+                    JobRoles.Healer,
+                    "HEALER",
+                    healers));
+            }
+
+            return list;
         }
 
         public Combatant GetPlayer()
@@ -334,7 +418,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 combatant.ID = (uint)item.ID;
                 combatant.OwnerID = (uint)item.OwnerID;
                 combatant.Job = (int)item.Job;
-                combatant.Name = (string)item.Name;
                 combatant.type = (byte)item.type;
                 combatant.Level = (int)item.Level;
                 combatant.CurrentHP = (int)item.CurrentHP;
@@ -342,6 +425,10 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 combatant.CurrentMP = (int)item.CurrentMP;
                 combatant.MaxMP = (int)item.MaxMP;
                 combatant.CurrentTP = (int)item.CurrentTP;
+
+                // 名前を登録する
+                // TYPEによって分岐するため先にTYPEを設定しておくこと
+                combatant.SetName((string)item.Name);
 
                 newList.Add(combatant);
                 newDictionary.Add(combatant.ID, combatant);
@@ -368,6 +455,46 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             {
                 this.currentPartyIDList = partyList;
             }
+        }
+
+        /// <summary>
+        /// 文中に含まれるパーティメンバの名前を設定した形式に置換する
+        /// </summary>
+        /// <param name="text">置換対象のテキスト</param>
+        /// <returns>
+        /// 置換後のテキスト</returns>
+        public string ReplacePartyMemberName(
+            string text)
+        {
+            var r = text;
+
+            var party = this.GetPartyList();
+
+            foreach (var pc in party)
+            {
+                switch (Settings.Default.PCNameInitialOnDisplayStyle)
+                {
+                    case NameStyles.FullName:
+                        r = r.Replace(pc.NameFI, pc.Name);
+                        r = r.Replace(pc.NameIF, pc.Name);
+                        r = r.Replace(pc.NameII, pc.Name);
+                        break;
+
+                    case NameStyles.FullInitial:
+                        r = r.Replace(pc.Name, pc.NameFI);
+                        break;
+
+                    case NameStyles.InitialFull:
+                        r = r.Replace(pc.Name, pc.NameIF);
+                        break;
+
+                    case NameStyles.InitialInitial:
+                        r = r.Replace(pc.Name, pc.NameII);
+                        break;
+                }
+            }
+
+            return r;
         }
 
         private void Attach()
@@ -408,6 +535,30 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
 
             FieldInfo fi;
+
+            if (this.pluginLogParse == null)
+            {
+                fi = this.plugin.GetType().GetField(
+                    "_LogParse",
+                    BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+                this.pluginLogParse = fi.GetValue(this.plugin);
+            }
+
+            if (this.pluginCombatantHistory == null)
+            {
+                var settings = this.pluginLogParse.Settings;
+                if (settings != null)
+                {
+                    fi = settings.GetType().GetField(
+                        "CombatantHistory",
+                    BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
+
+                    if (fi != null)
+                    {
+                        this.pluginCombatantHistory = fi.GetValue(settings);
+                    }
+                }
+            }
 
             if (this.pluginMemory == null)
             {
@@ -565,6 +716,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
 
             var newList = new List<Zone>();
+            var newHash = new Dictionary<string, Zone>();
 
             var asm = this.plugin.GetType().Assembly;
 
@@ -595,12 +747,18 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                                 };
 
                                 newList.Add(zone);
+
+                                if (!newHash.ContainsKey(zone.Name))
+                                {
+                                    newHash.Add(zone.Name, zone);
+                                }
                             }
                         }
                     }
                 }
 
                 this.zoneList = newList;
+                this.zoneHash = newHash;
                 Logger.Write("zone list loaded.");
             }
         }

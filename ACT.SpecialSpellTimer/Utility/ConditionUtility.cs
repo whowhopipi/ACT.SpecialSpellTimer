@@ -1,11 +1,11 @@
-﻿namespace ACT.SpecialSpellTimer.Utility
+﻿using System;
+using System.Text;
+using System.Text.RegularExpressions;
+
+using ACT.SpecialSpellTimer.Models;
+
+namespace ACT.SpecialSpellTimer.Utility
 {
-    using System;
-    using System.Text;
-    using System.Text.RegularExpressions;
-
-    using ACT.SpecialSpellTimer.Models;
-
     public class ConditionUtility
     {
         /// <summary>

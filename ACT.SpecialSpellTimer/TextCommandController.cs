@@ -1,10 +1,12 @@
-﻿namespace ACT.SpecialSpellTimer
-{
-    using System.Collections.Generic;
-    using System.Media;
-    using System.Text.RegularExpressions;
-    using ACT.SpecialSpellTimer.Utility;
+﻿using System.Collections.Generic;
+using System.Media;
+using System.Text.RegularExpressions;
 
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer
+{
     /// <summary>
     /// テキストコマンド Controller
     /// </summary>
@@ -83,12 +85,17 @@
                                 break;
 
                             case "pt":
-                                LogBuffer.RefreshPartyList();
+                                TableCompiler.Instance.RefreshPlayerPlacceholder();
+                                TableCompiler.Instance.RefreshPartyPlaceholders();
+                                TableCompiler.Instance.RecompileSpells();
+                                TableCompiler.Instance.RecompileTickers();
                                 commandDone = true;
                                 break;
 
                             case "pet":
-                                LogBuffer.RefreshPetID();
+                                TableCompiler.Instance.RefreshPetPlaceholder();
+                                TableCompiler.Instance.RecompileSpells();
+                                TableCompiler.Instance.RecompileTickers();
                                 commandDone = true;
                                 break;
                         }
@@ -157,7 +164,7 @@
                                     windowname.Trim() != string.Empty &&
                                     valueAsText.Trim() != string.Empty)
                                 {
-                                    LogBuffer.SetCustomPlaceholder(windowname.Trim(), valueAsText.Trim());
+                                    TableCompiler.Instance.SetCustomPlaceholder(windowname.Trim(), valueAsText.Trim());
 
                                     commandDone = true;
                                 }
@@ -173,13 +180,13 @@
                             case "placeholder":
                                 if (windowname.Trim().ToLower() == "all")
                                 {
-                                    LogBuffer.ClearCustomPlaceholderAll();
+                                    TableCompiler.Instance.ClearCustomPlaceholderAll();
 
                                     commandDone = true;
                                 }
                                 else if (windowname.Trim() != string.Empty)
                                 {
-                                    LogBuffer.ClearCustomPlaceholder(windowname.Trim());
+                                    TableCompiler.Instance.ClearCustomPlaceholder(windowname.Trim());
 
                                     commandDone = true;
                                 }

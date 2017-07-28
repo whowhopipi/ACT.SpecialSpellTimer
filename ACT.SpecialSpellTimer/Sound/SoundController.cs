@@ -1,15 +1,15 @@
-﻿namespace ACT.SpecialSpellTimer.Sound
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+
+using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer.Sound
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading.Tasks;
-
-    using ACT.SpecialSpellTimer.Utility;
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// Soundコントローラ
     /// </summary>
@@ -18,7 +18,7 @@
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        private static SoundController instance;
+        private static SoundController instance = new SoundController();
 
         /// <summary>
         /// ゆっくりをチェックしたタイムスタンプ
@@ -33,18 +33,7 @@
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        public static SoundController Default
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new SoundController();
-                }
-
-                return instance;
-            }
-        }
+        public static SoundController Default => instance;
 
         /// <summary>
         /// ゆっくりが有効かどうか？
@@ -190,15 +179,10 @@
             /// <summary>
             /// ファイル名
             /// </summary>
-            public string Name
-            {
-                get
-                {
-                    return !string.IsNullOrWhiteSpace(this.FullPath) ?
-                        Path.GetFileName(this.FullPath) :
-                        string.Empty;
-                }
-            }
+            public string Name => 
+                !string.IsNullOrWhiteSpace(this.FullPath) ?
+                Path.GetFileName(this.FullPath) :
+                string.Empty;
 
             /// <summary>
             /// ToString()

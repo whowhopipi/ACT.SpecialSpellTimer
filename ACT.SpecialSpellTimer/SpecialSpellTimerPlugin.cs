@@ -1,16 +1,17 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Utility;
-    using Advanced_Combat_Tracker;
-
     /// <summary>
     /// SpecialSpellTimer Plugin
     /// </summary>
@@ -101,8 +102,11 @@
             SpellTimerCore.Default.ClosePanels();
             OnePointTelopController.CloseTelops();
 
-            LogBuffer.RefreshPartyList();
-            LogBuffer.RefreshPetID();
+            TableCompiler.Instance.RefreshPlayerPlacceholder();
+            TableCompiler.Instance.RefreshPartyPlaceholders();
+            TableCompiler.Instance.RefreshPetPlaceholder();
+            TableCompiler.Instance.RecompileSpells();
+            TableCompiler.Instance.RecompileTickers();
 
             if (Settings.Default.OverlayVisible)
             {
@@ -169,6 +173,15 @@
                 Logger.Begin();
                 Logger.Write("Plugin Start.");
 
+                // WPFアプリケーションを開始する
+                if (System.Windows.Application.Current == null)
+                {
+                    new System.Windows.Application()
+                    {
+                        ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown
+                    };
+                }
+
                 // 設定ファイルを読み込む
                 Settings.Default.Load();
 
@@ -220,7 +233,7 @@
         /// </summary>
         /// <param name="sender">イベント発生元</param>
         /// <param name="e">イベント引数</param>
-        private void oFormActMain_Resize(object sender, EventArgs e)
+        private void FormActMain_Resize(object sender, EventArgs e)
         {
             SwitchVisibleButton.Location = new Point(
                 ActGlobals.oFormActMain.Width - 533,
@@ -234,7 +247,7 @@
         {
             if (SwitchVisibleButton != null)
             {
-                ActGlobals.oFormActMain.Resize -= this.oFormActMain_Resize;
+                ActGlobals.oFormActMain.Resize -= this.FormActMain_Resize;
                 ActGlobals.oFormActMain.Controls.Remove(SwitchVisibleButton);
             }
         }
@@ -274,8 +287,11 @@
                 SpellTimerCore.Default.ClosePanels();
                 OnePointTelopController.CloseTelops();
 
-                LogBuffer.RefreshPartyList();
-                LogBuffer.RefreshPetID();
+                TableCompiler.Instance.RefreshPlayerPlacceholder();
+                TableCompiler.Instance.RefreshPartyPlaceholders();
+                TableCompiler.Instance.RefreshPetPlaceholder();
+                TableCompiler.Instance.RecompileSpells();
+                TableCompiler.Instance.RecompileTickers();
 
                 if (Settings.Default.OverlayVisible)
                 {
@@ -288,11 +304,11 @@
 
             changeColor(SwitchVisibleButton);
 
-            ActGlobals.oFormActMain.Resize += this.oFormActMain_Resize;
+            ActGlobals.oFormActMain.Resize += this.FormActMain_Resize;
             ActGlobals.oFormActMain.Controls.Add(SwitchVisibleButton);
             ActGlobals.oFormActMain.Controls.SetChildIndex(SwitchVisibleButton, 1);
 
-            this.oFormActMain_Resize(this, null);
+            this.FormActMain_Resize(this, null);
         }
 
         /// <summary>

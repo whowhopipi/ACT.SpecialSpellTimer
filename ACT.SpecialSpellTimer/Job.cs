@@ -57,8 +57,8 @@
         Healer = 20,
         DPS = 30,
         MeleeDPS = 31,
-        RangerDPS = 32,
-        CasterDPS = 33,
+        RangeDPS = 32,
+        MagicDPS = 33,
         Crafter = 40,
         Gatherer = 50,
     }
@@ -69,27 +69,17 @@
     public class Job
     {
         /// <summary>
-        /// インスタンス
-        /// </summary>
-        private static Job instance;
-
-        /// <summary>
-        /// インスタンス
-        /// </summary>
-        public static Job Instance => (instance ?? (instance = new Job()));
-
-        /// <summary>
         /// ジョブリスト
         /// </summary>
-        private static Job[] jobList = new Job[]
+        private readonly static Job[] jobList = new Job[]
         {
             new Job(JobIds.GLD, JobRoles.Tank),
             new Job(JobIds.PUG, JobRoles.MeleeDPS),
             new Job(JobIds.MRD, JobRoles.Tank),
             new Job(JobIds.LNC, JobRoles.MeleeDPS),
-            new Job(JobIds.ARC, JobRoles.RangerDPS),
+            new Job(JobIds.ARC, JobRoles.RangeDPS),
             new Job(JobIds.CNJ, JobRoles.Healer),
-            new Job(JobIds.THM, JobRoles.CasterDPS),
+            new Job(JobIds.THM, JobRoles.MagicDPS),
             new Job(JobIds.CRP, JobRoles.Crafter),
             new Job(JobIds.BSM, JobRoles.Crafter),
             new Job(JobIds.ARM, JobRoles.Crafter),
@@ -105,26 +95,39 @@
             new Job(JobIds.MNK, JobRoles.MeleeDPS),
             new Job(JobIds.WAR, JobRoles.Tank),
             new Job(JobIds.DRG, JobRoles.MeleeDPS),
-            new Job(JobIds.BRD, JobRoles.RangerDPS),
+            new Job(JobIds.BRD, JobRoles.RangeDPS),
             new Job(JobIds.WHM, JobRoles.Healer),
-            new Job(JobIds.BLM, JobRoles.CasterDPS),
-            new Job(JobIds.ACN, JobRoles.CasterDPS),
-            new Job(JobIds.SMN, JobRoles.CasterDPS),
+            new Job(JobIds.BLM, JobRoles.MagicDPS),
+            new Job(JobIds.ACN, JobRoles.MagicDPS),
+            new Job(JobIds.SMN, JobRoles.MagicDPS),
             new Job(JobIds.SCH, JobRoles.Healer),
             new Job(JobIds.ROG, JobRoles.MeleeDPS),
             new Job(JobIds.NIN, JobRoles.MeleeDPS),
-            new Job(JobIds.MCH, JobRoles.RangerDPS),
+            new Job(JobIds.MCH, JobRoles.RangeDPS),
             new Job(JobIds.DRK, JobRoles.Tank),
             new Job(JobIds.AST, JobRoles.Healer),
             new Job(JobIds.SAM, JobRoles.MeleeDPS),
-            new Job(JobIds.RDM, JobRoles.CasterDPS),
+            new Job(JobIds.RDM, JobRoles.MagicDPS),
         };
+
+        private readonly static Job UnkownJob = new Job(0, JobRoles.Unknown);
+
+        /// <summary>
+        /// インスタンス
+        /// </summary>
+        private static Job instance = new Job();
+
+        /// <summary>
+        /// ジョブIDによる辞書
+        /// </summary>
+        private IReadOnlyDictionary<int, Job> jobDictionary;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         private Job()
         {
+            this.jobDictionary = jobList.ToDictionary(x => x.JobId, x => x);
         }
 
         /// <summary>
@@ -140,26 +143,24 @@
         }
 
         /// <summary>
-        /// ジョブIDによる辞書
+        /// インスタンス
         /// </summary>
-        private IReadOnlyDictionary<int, Job> jobDictionary;
+        public static Job Instance => instance;
 
         /// <summary>
         /// ジョブIDをキーに持つ辞書
         /// </summary>
-        public IReadOnlyDictionary<int, Job> JobDictionary
-            => (this.jobDictionary ??
-            (this.jobDictionary = jobList.ToDictionary(x => x.JobId, x => x)));
-
-        /// <summary>
-        /// ジョブの一覧
-        /// </summary>
-        public IReadOnlyList<Job> JobList => jobList;
+        public IReadOnlyDictionary<int, Job> JobDictionary => this.jobDictionary;
 
         /// <summary>
         /// JobId
         /// </summary>
         public int JobId { get; }
+
+        /// <summary>
+        /// ジョブの一覧
+        /// </summary>
+        public IReadOnlyList<Job> JobList => jobList;
 
         /// <summary>
         /// JobName
@@ -184,7 +185,7 @@
             }
             else
             {
-                return null;
+                return UnkownJob;
             }
         }
 

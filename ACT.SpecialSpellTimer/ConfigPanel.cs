@@ -1,23 +1,24 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Image;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Windows.Forms;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Image;
-    using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Sound;
-    using ACT.SpecialSpellTimer.Utility;
-
     /// <summary>
     /// 設定Panel
     /// </summary>
-    public partial class ConfigPanel : UserControl
+    public partial class ConfigPanel :
+        UserControl
     {
         /// <summary>
         /// コンストラクタ
@@ -26,23 +27,29 @@
         {
             this.InitializeComponent();
 
+            // PC名設定タブの中身を設定する
+            this.NameStyleTabPage.Controls.Add(ConfigPanelNameStyle.Instance);
+            ConfigPanelNameStyle.Instance.Dock = DockStyle.Fill;
+
+            // 翻訳する
             Translate.TranslateControls(this);
 
-            this.LanguageComboBox.Items.AddRange(Utility.Language.GetLanguageList());
+            this.LanguageComboBox.Items.AddRange(Language.GetLanguageList());
 
-            this.ToolTip.SetToolTip(this.KeywordTextBox, Utility.Translate.Get("MatchingKeywordExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.RegexEnabledCheckBox, Utility.Translate.Get("RegularExpressionExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.TelopRegexEnabledCheckBox, Utility.Translate.Get("RegularExpressionExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.TelopKeywordTextBox, Utility.Translate.Get("MatchingKeywordExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.TelopMessageTextBox, Utility.Translate.Get("TelopMessageExplanationTooltip"));
-            this.ToolTip.SetToolTip(this.label46, Utility.Translate.Get("TelopMessageExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.KeywordTextBox, Translate.Get("MatchingKeywordExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.RegexEnabledCheckBox, Translate.Get("RegularExpressionExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.TelopRegexEnabledCheckBox, Translate.Get("RegularExpressionExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.TelopKeywordTextBox, Translate.Get("MatchingKeywordExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.TelopMessageTextBox, Translate.Get("TelopMessageExplanationTooltip"));
+            this.ToolTip.SetToolTip(this.label46, Translate.Get("TelopMessageExplanationTooltip"));
 
-            // 戦闘分析用のListViewのダブルバッファリングを有効にする
+            // ListViewのダブルバッファリングを有効にする
             typeof(ListView)
                 .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(this.CombatLogListView, true, null);
-
-            // パネルの詳細用グループボックスの場所を決める
+            typeof(ListView)
+                .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(this.PlaceholderListView, true, null);
 
             // インスタンス化に伴う正規表現のON/OFFを制限する
             this.ToInstanceCheckBox.CheckedChanged += (s, e) =>
@@ -222,7 +229,7 @@
                     nr.RegexPattern = string.Empty;
                     SpellTimerTable.Table.Add(nr);
 
-                    SpellTimerTable.ClearReplacedKeywords();
+                    TableCompiler.Instance.RecompileSpells();
                     SpellTimerTable.RemoveAllInstanceSpells();
                     SpellTimerTable.Save();
                 });
@@ -408,7 +415,7 @@
                 }
 
                 // キャッシュを無効にする
-                SpellTimerTable.ClearReplacedKeywords();
+                TableCompiler.Instance.RecompileSpells();
 
                 // スペルの有効・無効が変化した際に、標準のスペルタイマーに反映する
                 SpellTimerCore.Default.ApplyToNormalSpellTimer();
@@ -512,7 +519,7 @@
             this.LoadCombatAnalyzer();
 
             // モニタタブのロードを呼ぶ
-            this.LoadMonitorTab();
+            this.LoadLogTab();
         }
 
         /// <summary>
@@ -530,7 +537,7 @@
                     if (src != null)
                     {
                         SpellTimerTable.Table.Remove(src);
-                        SpellTimerTable.ClearReplacedKeywords();
+                        TableCompiler.Instance.RecompileSpells();
                         SpellTimerTable.RemoveAllInstanceSpells();
                         SpellTimerTable.Save();
 
@@ -993,7 +1000,7 @@
                             s.BackgroundColor = src.BackgroundColor;
                         }
 
-                        SpellTimerTable.ClearReplacedKeywords();
+                        TableCompiler.Instance.RecompileSpells();
 
                         SpellTimerTable.Save();
                         this.LoadSpellTimerTable();

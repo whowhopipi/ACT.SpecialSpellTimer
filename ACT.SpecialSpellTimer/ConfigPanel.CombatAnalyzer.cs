@@ -25,14 +25,8 @@
         /// </summary>
         public bool CombatAnalyzerEnabled
         {
-            get
-            {
-                return this.CombatLogEnabledCheckBox.Checked;
-            }
-            set
-            {
-                this.CombatLogEnabledCheckBox.Checked = value;
-            }
+            get => this.CombatLogEnabledCheckBox.Checked;
+            set => this.CombatLogEnabledCheckBox.Checked = value;
         }
 
         /// <summary>

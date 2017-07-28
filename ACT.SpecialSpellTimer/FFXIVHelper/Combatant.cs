@@ -7,7 +7,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public int CastBuffID;
         public float CastDurationCurrent;
         public float CastDurationMax;
-        public string CastSkillName;
+        public string CastSkillName = string.Empty;
         public uint CastTargetID;
         public int CurrentCP;
         public int CurrentGP;
@@ -23,18 +23,30 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public int MaxHP;
         public int MaxMP;
         public int MaxTP;
-        public string Name;
-        public int Order;
-        public uint OwnerID;
-        public float PosX;
-        public float PosY;
-        public float PosZ;
-        public byte type;
 
-        public Job AsJob()
-        {
-            return SpecialSpellTimer.Job.Instance.FromId(Job);
-        }
+        /// <summary>フルネーム</summary>
+        public string Name = string.Empty;
+
+        /// <summary>イニシャル Naoki Y.</summary>
+        public string NameFI = string.Empty;
+
+        /// <summary>イニシャル N. Yoshida</summary>
+        public string NameIF = string.Empty;
+
+        /// <summary>イニシャル N. Y.</summary>
+        public string NameII = string.Empty;
+
+        public int Order;
+
+        public uint OwnerID;
+
+        public float PosX;
+
+        public float PosY;
+
+        public float PosZ;
+
+        public byte type;
 
         public double CurrentCastRate =>
             this.CastDurationMax == 0 ?
@@ -56,7 +68,18 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public MobType MobType => (MobType)this.type;
 
+        public string Names =>
+            $"{this.Name}|{this.NameFI}|{this.NameIF}|{this.NameII}";
+
+        public string NamesRegex =>
+            this.Names.Replace(@".", @"\.");
+
         public Combatant Player { get; set; }
+
+        public Job AsJob()
+        {
+            return SpecialSpellTimer.Job.Instance.FromId(this.Job);
+        }
 
         public double GetDistance(Combatant target) =>
             (double)Math.Sqrt(
@@ -68,5 +91,48 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             (double)Math.Sqrt(
                 Math.Pow(this.PosX - target.PosX, 2) +
                 Math.Pow(this.PosY - target.PosY, 2));
+
+        public string GetName(
+            NameStyles style)
+        {
+            switch (style)
+            {
+                case NameStyles.FullName:
+                    return this.Name;
+
+                case NameStyles.FullInitial:
+                    return !string.IsNullOrEmpty(this.NameFI) ? this.NameFI : this.Name;
+
+                case NameStyles.InitialFull:
+                    return !string.IsNullOrEmpty(this.NameIF) ? this.NameIF : this.Name;
+
+                case NameStyles.InitialInitial:
+                    return !string.IsNullOrEmpty(this.NameII) ? this.NameII : this.Name;
+
+                default:
+                    return this.Name;
+            }
+        }
+
+        public void SetName(
+            string fullName)
+        {
+            this.Name = fullName.Trim();
+
+            if (this.MobType != MobType.Player)
+            {
+                return;
+            }
+
+            var blocks = this.Name.Split(' ');
+            if (blocks.Length < 2)
+            {
+                return;
+            }
+
+            this.NameFI = $"{blocks[0]} {blocks[1].Substring(0, 1)}.";
+            this.NameIF = $"{blocks[0].Substring(0, 1)}. {blocks[1]}";
+            this.NameII = $"{blocks[0].Substring(0, 1)}. {blocks[1].Substring(0, 1)}.";
+        }
     }
 }

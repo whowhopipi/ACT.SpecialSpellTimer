@@ -1,10 +1,15 @@
-﻿namespace ACT.SpecialSpellTimer.Utility
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Resources;
+using System.Windows.Forms;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.resources.strings;
+
+namespace ACT.SpecialSpellTimer.Utility
 {
-    using System;
-    using System.Resources;
-
-    using ACT.SpecialSpellTimer.Config;
-
     internal class Translate
     {
         private static ResourceManager Language;
@@ -23,91 +28,121 @@
                 return name.Substring(2);
             }
 
-            int a;
-            if (int.TryParse(name, out a))
+            double a;
+            if (double.TryParse(name, out a))
             {
                 return name;
             }
 
-            String s = Language.GetString(name);
-            if (s == null)
+            var s = string.Empty;
+
+            try
             {
-                return " ";
+                s = Language.GetString(name);
+            }
+            catch (Exception)
+            {
+                s = "N/A: " + name;
+            }
+
+            if (string.IsNullOrEmpty(s))
+            {
+                s = "N/A: " + name;
             }
 
             return s.Replace("\\n", Environment.NewLine);
         }
 
-        public static System.Resources.ResourceManager GetTranslationsFor(String name)
+        public static ResourceManager GetTranslationsFor(string name)
         {
             switch (name)
             {
                 case "EN":
-                    return resources.strings.Strings_EN.ResourceManager;
+                    return Strings_EN.ResourceManager;
 
                 case "JP":
-                    return resources.strings.Strings_JP.ResourceManager;
+                    return Strings_JP.ResourceManager;
 
                 case "KR":
-                    return resources.strings.Strings_KR.ResourceManager;
+                    return Strings_KR.ResourceManager;
             }
 
             Logger.Write("Unknown language: " + Settings.Default.Language + " -> " + name);
 
-            return resources.strings.Strings_JP.ResourceManager;
+            return Strings_JP.ResourceManager;
         }
 
-        public static void TranslateControls(System.Windows.Forms.Control control)
+        public static void TranslateControls(Control control)
         {
+            var setterList = new List<Action>();
+
             try
             {
-                control.Text = Get(control.Text);
-                foreach (System.Windows.Forms.Control c in control.Controls)
+                setterList.Add(() => control.Text = Get(control.Text));
+
+                foreach (Control c in control.Controls.AsParallel())
+                {
                     TranslateControls(c);
+                }
 
                 // Controls may have a context menu, these are not controls but they do have Text.
                 if (control.ContextMenuStrip != null)
                 {
-                    foreach (System.Windows.Forms.ToolStripItem c in control.ContextMenuStrip.Items)
-                        c.Text = Get(c.Text);
-                }
-
-                // Controls that are tables may have column headers that are not controls but have Text.
-                if (control is System.Windows.Forms.ListView)
-                {
-                    System.Windows.Forms.ListView listview = (System.Windows.Forms.ListView)control;
-                    foreach (System.Windows.Forms.ColumnHeader c in listview.Columns)
-                        c.Text = Get(c.Text);
-                }
-
-                // Controls that are combo boxes have items which need translation.
-                if (control is System.Windows.Forms.ComboBox)
-                {
-                    System.Windows.Forms.ComboBox combo = (System.Windows.Forms.ComboBox)control;
-                    for (int i = 0; i < combo.Items.Count; ++i)
+                    foreach (ToolStripItem c in control.ContextMenuStrip.Items.AsParallel())
                     {
-                        if (combo.Items[i] is String)
-                            combo.Items[i] = Get((String)combo.Items[i]);
+                        setterList.Add(() => c.Text = Get(c.Text));
                     }
                 }
 
-                // Controls may have a context menu, these are not controls but they do have Text.
-                if (control is System.Windows.Forms.MenuStrip)
+                switch (control)
                 {
-                    foreach (System.Windows.Forms.ToolStripItem c in ((System.Windows.Forms.MenuStrip)control).Items)
-                        c.Text = Get(c.Text);
+                    case ListView listView:
+                        foreach (ColumnHeader c in listView.Columns.AsParallel())
+                        {
+                            setterList.Add(() => c.Text = Get(c.Text));
+                        }
+                        break;
+
+                    case ComboBox combo:
+                        for (int i = 0; i < combo.Items.Count; ++i)
+                        {
+                            if (combo.Items[i] is string)
+                            {
+                                setterList.Add(() => combo.Items[i] = Get((String)combo.Items[i]));
+                            }
+                        }
+                        break;
+
+                    case MenuStrip menu:
+                        foreach (ToolStripItem c in menu.Items.AsParallel())
+                        {
+                            setterList.Add(() => c.Text = Get(c.Text));
+                        }
+                        break;
+
+                    case ContextMenuStrip contextMenu:
+                        foreach (ToolStripItem c in contextMenu.Items.AsParallel())
+                        {
+                            setterList.Add(() => c.Text = Get(c.Text));
+                        }
+                        break;
                 }
 
-                // Controls may have a context menu, these are not controls but they do have Text.
-                if (control is System.Windows.Forms.ContextMenuStrip)
+                foreach (var action in setterList.AsParallel())
                 {
-                    foreach (System.Windows.Forms.ToolStripItem c in ((System.Windows.Forms.ContextMenuStrip)control).Items)
-                        c.Text = Get(c.Text);
+                    if (control.InvokeRequired)
+                    {
+                        control.Invoke((MethodInvoker)delegate { action(); });
+                    }
+                    else
+                    {
+                        action();
+                    }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                Debug.WriteLine(ex.ToString());
                 throw;
             }
         }

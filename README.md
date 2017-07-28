@@ -30,17 +30,42 @@ ACTが吐き出すログには上記のような独自のログがあります
 
 5) ゲーム内のプレースホルダは使えないの？  
 一部は使えるように対応しています  
+
 <table>
 <tr>
 <td>&lt;me&gt;</td>
-<td>使えます</td>
+<td>使えます。<br />ただし、イニシャルにはマッチしません。</td>
 </tr>
 
 <tr>
 <td>&lt;2&gt;～&lt;8&gt;</td>
 <td>
-使えます<br />
-※ただしオプションで有効にする必要あり
+使えます。<br />ただし、イニシャルにはマッチしません。<br />
+オプションにてパーティメンバ代名詞をONにしてください。
+</td>
+</tr>
+
+<tr>
+<td>&lt;mex&gt;</td>
+<td>
+&lt;me&gt;の拡張版です。フルネーム、イニシャルを問わずプレイヤーにマッチします。<br />
+正規表現をONにしてください。<br />
+<br />
+ex. プレイヤーが Naoki Yoshida の例<br />
+(?<_mex>Naoki Yoshida|Naoki Y\.|N\. Yoshida|N\. Y\.)<br />
+に置換わってマッチングされます。
+</td>
+</tr>
+
+<tr>
+<td>&lt;2ex&gt;～&lt;8ex&gt;</td>
+<td>
+&lt;2&gt;～&lt;8&gt;の拡張版です。フルネーム、イニシャルを問わずプレイヤーにマッチします。<br />
+正規表現とパーティメンバ代名詞の両方をONにしてください。<br />
+<br />
+ex. パーティリストの2番目が Naoki Yoshida の例<br />
+(?<_2ex>Naoki Yoshida|Naoki Y\.|N\. Yoshida|N\. Y\.)<br />
+に置換わってマッチングされます。
 </td>
 </tr>
 
@@ -71,9 +96,10 @@ FF14が内部のオブジェクトに割当てている一意なIDに置換さ�
 <td>&lt;JOB&gt;, &lt;JOBn&gt;</td>
 <td>
 パーティ内の特定のジョブの誰か、または特定のジョブのｎ番目のメンバーにマッチします。<br />
-ただし、&lt;JOB&gt;は正規表現をONにしないと使えません。<br />
+フルネーム、イニシャルを問わずマッチします。<br />
+正規表現とパーティメンバ代名詞の両方をONにしてください。<br />
 <br />
-ex. パーティメンバーの下記のとき・・・<br />
+ex. パーティメンバーが下記のとき・・・<br />
 Taro Paradin (ナイト)<br />
 Jiro Paradin (ナイト)<br />
 <br />
@@ -81,14 +107,54 @@ Jiro Paradin (ナイト)<br />
 &lt;PLD2&gt; → Jiro Paradin にマッチする<br />
 &lt;PLD&gt; → Taro Paradin または Jiro Paradin にマッチする<br />
 <br />
-&lt;PLD&gt; は正規表現の (?&lt;PLDs&gt;Taro Paladin|Jiro Paladin) に置換わってマッチングされます。<br />
+&lt;PLD1&gt; は正規表現の (?&lt;_PLD1&gt;Taro Paladin|Taro P\.|～省略) に置換わってマッチングされます。<br />
+&lt;PLD&gt; は正規表現の (?&lt;_PLD&gt;Taro Paladin|Jiro Paladin|～省略) に置換わってマッチングされます。<br />
 <br />
-※ただし、パーティメンバ代名詞を有効にしていないと動作しません。<br />
 </td>
 </tr>
+
+<tr>
+<td>&lt;ROLE&gt;</td>
+<td>
+パーティ内の特定のロールの誰かにマッチします。<br />
+フルネーム、イニシャルを問わずマッチします。<br />
+正規表現とパーティメンバ代名詞の両方をONにしてください。<br />
+<br />
+ex. パーティメンバーが下記のとき・・・<br />
+Taro Yamada (ナイト)<br />
+Jiro Sato (戦士)<br />
+Sabro Suzuki (白魔道士)<br />
+Shiro Honda (学者)<br />
+Goro Toyota (モンク)<br />
+Rokuro Nissan (竜騎士)<br />
+Shichiro Mazda (吟遊詩人)<br />
+Hachiro Mitsuoka (黒魔道士)<br />
+<br />
+&lt;TANK&gt; → Taro Yamada または Jiro Sato にマッチする<br />
+&lt;HEALER&gt; → Sabro Suzuki または Sabro Suzuki にマッチする<br />
+&lt;DPS&gt; → Goro Toyota または Rokuro Nissan または Shichiro Mazda または Hachiro Mitsuoka にマッチする<br />
+&lt;MELEE&gt; → Goro Toyota または Rokuro Nissan にマッチする<br />
+&lt;RANGE&gt; → Shichiro Mazda にマッチする<br />
+&lt;MAGIC&gt; → Hachiro Mitsuoka にマッチする<br />
+<br />
+&lt;TANK&gt; は正規表現の (?&lt;_TANK&gt;Taro Yamada|Jiro Sato) に置換わってマッチングされます。<br />
+ex.<br />
+&lt;TANK&gt → (?&lt;_TANK&gt;Taro Yamada|Jiro Sato)<br />
+&lt;HEALER&gt → (?&lt;_HEALER&gt;Sabro Suzuki|Sabro Suzuki)<br />
+&lt;DPS&gt → (?&lt;_DPS&gt;Goro Toyota|Rokuro Nissan|Shichiro Mazda|Hachiro Mitsuoka)<br />
+&lt;MELEE&gt → (?&lt;_MELEE&gt;Goro Toyota|Rokuro Nissan)<br />
+&lt;RANGE&gt → (?&lt;_RANGE&gt;Shichiro Mazda)<br />
+&lt;MAGIC&gt → (?&lt;_MAGIC&gt;Hachiro Mitsuoka)<br />
+<br />
+</td>
+</tr>
+
 </table>
-  
-6) 俺の歌を聞かせたい    
+各種プレースホルダの詳細はゲーム実行中に Log タブで確認出来ます。    
+<br />
+<br />
+
+6. 俺の歌を聞かせたい  
 resources/wav にwaveファイルを投入するとスペスペで使用できるようになります  
 
 テキストコマンド

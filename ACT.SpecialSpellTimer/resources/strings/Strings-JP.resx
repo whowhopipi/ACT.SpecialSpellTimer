@@ -1197,4 +1197,16 @@
     <value>ACT本体に "end" を通知する</value>
     <comment>Notify "end" to ACT.</comment>
   </data>
+  <data name="NameStyleTabPage" xml:space="preserve">
+    <value>PC名のスタイル</value>
+    <comment>PC Name styles</comment>
+  </data>
+  <data name="FFXIVLogStylesGroupBox" xml:space="preserve">
+    <value>FFXIVのログのスタイル</value>
+    <comment>FFXIV log style</comment>
+  </data>
+  <data name="OverlayDisplayStylesGroupBox" xml:space="preserve">
+    <value>オーバーレイでの表示スタイル</value>
+    <comment>Display style with overlay</comment>
+  </data>
 </root>

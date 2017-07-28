@@ -5,6 +5,7 @@
     using System.Linq;
 
     using ACT.SpecialSpellTimer.Config;
+    using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Models;
     using ACT.SpecialSpellTimer.Sound;
     using ACT.SpecialSpellTimer.Utility;
@@ -182,6 +183,10 @@
                                     keyword.ToUpper()))
                                 {
                                     var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+
+                                    // PC名を置換する
+                                    messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
+
                                     if (!telop.AddMessageEnabled)
                                     {
                                         telop.MessageReplaced = messageReplaced;
@@ -213,15 +218,20 @@
                             if (match.Success)
                             {
                                 var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+                                messageReplaced = match.Result(messageReplaced);
+
+                                // PC名を置換する
+                                messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
+
                                 if (!telop.AddMessageEnabled)
                                 {
-                                    telop.MessageReplaced = match.Result(messageReplaced);
+                                    telop.MessageReplaced = messageReplaced;
                                 }
                                 else
                                 {
                                     telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
-                                        match.Result(messageReplaced) :
-                                        Environment.NewLine + match.Result(messageReplaced);
+                                        messageReplaced :
+                                        Environment.NewLine + messageReplaced;
                                 }
 
                                 telop.MatchDateTime = DateTime.Now;
