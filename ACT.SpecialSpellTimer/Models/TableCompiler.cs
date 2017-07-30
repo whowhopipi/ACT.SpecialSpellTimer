@@ -483,11 +483,12 @@ namespace ACT.SpecialSpellTimer.Models
             }
             else
             {
-                // 前のパーティと名前が一致するか検証する
+                // 前のパーティと名前とジョブが一致するか検証する
                 var count = party
                     .Where(x =>
                         this.previousParty.Any(y =>
-                            y.Name == x.Name))
+                            y.Name == x.Name &&
+                            y.Job == x.Job))
                     .Count();
 
                 if (party.Count != count)
