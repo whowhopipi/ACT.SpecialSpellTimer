@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -164,6 +165,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="pluginScreenSpace">Pluginタブ</param>
         /// <param name="pluginStatusText">Pluginステータスラベル</param>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         void IActPluginV1.InitPlugin(
             TabPage pluginScreenSpace,
             Label pluginStatusText)
