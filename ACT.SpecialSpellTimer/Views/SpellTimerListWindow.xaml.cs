@@ -420,7 +420,7 @@
         private void SpellTimerListWindow_Loaded(object sender, RoutedEventArgs e)
         {
             // Panelの位置を復元する
-            var setting = PanelSettings.Default.SettingsTable
+            var setting = PanelSettings.Instance.SettingsTable
                 .Where(x => x.PanelName == this.PanelName)
                 .FirstOrDefault();
 

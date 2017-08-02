@@ -211,7 +211,12 @@ namespace ACT.SpecialSpellTimer
                 // 設定ファイルのバックアップを作成する
                 SpellTimerTable.Instance.Backup();
                 OnePointTelopTable.Instance.Backup();
-                PanelSettings.Default.Backup();
+                PanelSettings.Instance.Backup();
+
+                // 設定ファイルを読み込む
+                SpellTimerTable.Instance.Load();
+                OnePointTelopTable.Instance.Load();
+                PanelSettings.Instance.Load();
 
                 // 本体を開始する
                 SpellTimerCore.Default.Begin();

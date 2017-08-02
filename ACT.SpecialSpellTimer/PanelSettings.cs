@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 
@@ -18,34 +19,19 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// Panel設定データテーブル
         /// </summary>
-        private SpellTimerDataSet.PanelSettingsDataTable settingsTable = new SpellTimerDataSet.PanelSettingsDataTable();
+        private volatile SpellTimerDataSet.PanelSettingsDataTable settingsTable = new SpellTimerDataSet.PanelSettingsDataTable();
 
         /// <summary>
         /// 唯一のinstance
         /// </summary>
-        public static PanelSettings Default => instance;
-
-        public PanelSettings()
-        {
-            this.Load();
-        }
+        public static PanelSettings Instance => instance;
 
         /// <summary>
         /// デフォルトのファイル
         /// </summary>
-        public string DefaultFile
-        {
-            get
-            {
-                var r = string.Empty;
-
-                r = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    @"anoyetta\ACT\ACT.SpecialSpellTimer.Panels.xml");
-
-                return r;
-            }
-        }
+        public string DefaultFile => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            @"anoyetta\ACT\ACT.SpecialSpellTimer.Panels.xml");
 
         /// <summary>
         /// Panel設定データテーブル
@@ -76,7 +62,7 @@ namespace ACT.SpecialSpellTimer
                     true);
 
                 // 古いバックアップを消す
-                foreach (var bak in 
+                foreach (var bak in
                     Directory.GetFiles(Path.GetDirectoryName(backupFile), "*.bak"))
                 {
                     var timeStamp = File.GetCreationTime(bak);

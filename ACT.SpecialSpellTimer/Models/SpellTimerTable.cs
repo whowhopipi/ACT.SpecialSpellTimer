@@ -36,11 +36,6 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         private volatile List<SpellTimer> table = new List<SpellTimer>();
 
-        public SpellTimerTable()
-        {
-            this.Load();
-        }
-
         /// <summary>
         /// デフォルトのファイル
         /// </summary>

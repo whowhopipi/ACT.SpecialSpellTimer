@@ -28,14 +28,6 @@ namespace ACT.SpecialSpellTimer.Models
         private volatile List<OnePointTelop> table = new List<OnePointTelop>();
 
         /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public OnePointTelopTable()
-        {
-            this.Load();
-        }
-
-        /// <summary>
         /// デフォルトのファイル
         /// </summary>
         public string DefaultFile =>

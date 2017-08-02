@@ -222,7 +222,7 @@ namespace ACT.SpecialSpellTimer
                     foreach (var panel in this.SpellTimerPanels)
                     {
                         var setting = (
-                            from x in PanelSettings.Default.SettingsTable
+                            from x in PanelSettings.Instance.SettingsTable
                             where
                             x.PanelName == panel.PanelName
                             select
@@ -230,8 +230,8 @@ namespace ACT.SpecialSpellTimer
 
                         if (setting == null)
                         {
-                            setting = PanelSettings.Default.SettingsTable.NewPanelSettingsRow();
-                            PanelSettings.Default.SettingsTable.AddPanelSettingsRow(setting);
+                            setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
+                            PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
                         }
 
                         setting.PanelName = panel.PanelName;
@@ -241,7 +241,7 @@ namespace ACT.SpecialSpellTimer
 
                     if (this.SpellTimerPanels.Count > 0)
                     {
-                        PanelSettings.Default.Save();
+                        PanelSettings.Instance.Save();
                     }
 
                     foreach (var panel in this.SpellTimerPanels)
@@ -370,7 +370,7 @@ namespace ACT.SpecialSpellTimer
                 }
                 else
                 {
-                    var panelSettings = PanelSettings.Default.SettingsTable
+                    var panelSettings = PanelSettings.Instance.SettingsTable
                         .Where(x => x.PanelName == panelName)
                         .FirstOrDefault();
 
@@ -445,7 +445,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     foreach (var panel in this.SpellTimerPanels)
                     {
-                        var setting = PanelSettings.Default.SettingsTable
+                        var setting = PanelSettings.Instance.SettingsTable
                             .Where(x => x.PanelName == panel.PanelName)
                             .FirstOrDefault();
 
@@ -548,7 +548,7 @@ namespace ACT.SpecialSpellTimer
                     panel.Top = top;
                 }
 
-                var panelSettings = PanelSettings.Default.SettingsTable
+                var panelSettings = PanelSettings.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
 
@@ -684,7 +684,7 @@ namespace ACT.SpecialSpellTimer
         {
             if (this.SpellTimerPanels != null)
             {
-                return PanelSettings.Default.SettingsTable
+                return PanelSettings.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
             }
@@ -706,7 +706,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     // パネルの位置を保存する
                     var setting = (
-                        from x in PanelSettings.Default.SettingsTable
+                        from x in PanelSettings.Instance.SettingsTable
                         where
                         x.PanelName == panel.PanelName
                         select
@@ -714,8 +714,8 @@ namespace ACT.SpecialSpellTimer
 
                     if (setting == null)
                     {
-                        setting = PanelSettings.Default.SettingsTable.NewPanelSettingsRow();
-                        PanelSettings.Default.SettingsTable.AddPanelSettingsRow(setting);
+                        setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
+                        PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
                     }
 
                     setting.PanelName = panel.PanelName;
@@ -725,7 +725,7 @@ namespace ACT.SpecialSpellTimer
                     // 毎分0秒の時保存する
                     if (DateTime.Now.Second == 0)
                     {
-                        PanelSettings.Default.Save();
+                        PanelSettings.Instance.Save();
                     }
 
                     // スペルリストに存在しないパネルを閉じる
