@@ -306,11 +306,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (lockObject)
             {
-                var collection = table.Where(x => x.IsInstance);
-                foreach (var item in collection)
-                {
-                    this.table.Remove(item);
-                }
+                this.table.RemoveAll(x => x.IsInstance);
             }
         }
 
