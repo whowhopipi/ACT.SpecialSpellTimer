@@ -150,6 +150,11 @@ namespace ACT.SpecialSpellTimer
 
                 lock (this.logBuffer)
                 {
+                    if (this.logBuffer.Length <= 0)
+                    {
+                        return;
+                    }
+
                     File.AppendAllText(
                         this.OutputFile,
                         this.logBuffer.ToString(),
