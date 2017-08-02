@@ -20,7 +20,7 @@
         /// <summary>
         /// テロップWindowのリスト
         /// </summary>
-        private static Dictionary<long, OnePointTelopWindow> telopWindowList = new Dictionary<long, OnePointTelopWindow>();
+        private volatile static Dictionary<long, OnePointTelopWindow> telopWindowList = new Dictionary<long, OnePointTelopWindow>();
 
         /// <summary>
         /// テロップをActive化する

@@ -40,7 +40,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 最後のアクティブWindowの状態
         /// </summary>
-        private bool LastStateOfActiveWindow;
+        private volatile bool LastStateOfActiveWindow;
 
         /// <summary>
         /// 最後に全滅した日時
