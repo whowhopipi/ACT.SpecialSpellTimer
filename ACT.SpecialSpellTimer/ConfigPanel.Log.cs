@@ -21,7 +21,9 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
-        public Func<bool> IsLogTabActive { get; set; }
+        public Func<bool> IsLogTabActiveDelegate { get; set; }
+
+        public bool IsLogTabActive => this.IsLogTabActiveDelegate?.Invoke() ?? false;
 
         public ConfigPanelLog()
         {
@@ -45,7 +47,7 @@ namespace ACT.SpecialSpellTimer
             object sender,
             EventArgs e)
         {
-            if (!(this.IsLogTabActive?.Invoke() ?? false))
+            if (!this.IsLogTabActive)
             {
                 return;
             }
@@ -153,7 +155,7 @@ namespace ACT.SpecialSpellTimer
             this.updatePlaceholderTimer.Interval = 8000;
             this.updatePlaceholderTimer.Tick += (s, e) =>
             {
-                if (!(this.IsLogTabActive?.Invoke() ?? false))
+                if (!this.IsLogTabActive)
                 {
                     return;
                 }

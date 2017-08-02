@@ -34,7 +34,7 @@ namespace ACT.SpecialSpellTimer
             // ログタブの中身を設定する
             this.LogTabPage.Controls.Add(ConfigPanelLog.Instance);
             ConfigPanelLog.Instance.Dock = DockStyle.Fill;
-            ConfigPanelLog.Instance.IsLogTabActive = () => this.TabControl.SelectedTab == this.LogTabPage;
+            ConfigPanelLog.Instance.IsLogTabActiveDelegate = () => this.TabControl.SelectedTab == this.LogTabPage;
 
             // 翻訳する
             Translate.TranslateControls(this);
