@@ -217,6 +217,12 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
                         // 待機時間を補正する
                         interval = (int)(interval * correctionRate);
+
+                        // ただし極端に短くしない
+                        if (interval < 10)
+                        {
+                            interval = 10;
+                        }
                     }
                     catch (Exception ex)
                     {
