@@ -79,19 +79,19 @@
             // SpellMustStoppingTreeView
             // 
             this.SpellMustStoppingTreeView.CheckBoxes = true;
-            this.SpellMustStoppingTreeView.Location = new System.Drawing.Point(244, 41);
+            this.SpellMustStoppingTreeView.Location = new System.Drawing.Point(244, 53);
             this.SpellMustStoppingTreeView.Name = "SpellMustStoppingTreeView";
             this.SpellMustStoppingTreeView.ShowNodeToolTips = true;
-            this.SpellMustStoppingTreeView.Size = new System.Drawing.Size(230, 435);
+            this.SpellMustStoppingTreeView.Size = new System.Drawing.Size(230, 423);
             this.SpellMustStoppingTreeView.TabIndex = 1;
             // 
             // SpellMustRunningTreeView
             // 
             this.SpellMustRunningTreeView.CheckBoxes = true;
-            this.SpellMustRunningTreeView.Location = new System.Drawing.Point(6, 41);
+            this.SpellMustRunningTreeView.Location = new System.Drawing.Point(6, 53);
             this.SpellMustRunningTreeView.Name = "SpellMustRunningTreeView";
             this.SpellMustRunningTreeView.ShowNodeToolTips = true;
-            this.SpellMustRunningTreeView.Size = new System.Drawing.Size(230, 435);
+            this.SpellMustRunningTreeView.Size = new System.Drawing.Size(230, 423);
             this.SpellMustRunningTreeView.TabIndex = 0;
             // 
             // groupBox2
@@ -128,19 +128,19 @@
             // TelopMustStoppingTreeView
             // 
             this.TelopMustStoppingTreeView.CheckBoxes = true;
-            this.TelopMustStoppingTreeView.Location = new System.Drawing.Point(244, 41);
+            this.TelopMustStoppingTreeView.Location = new System.Drawing.Point(244, 53);
             this.TelopMustStoppingTreeView.Name = "TelopMustStoppingTreeView";
             this.TelopMustStoppingTreeView.ShowNodeToolTips = true;
-            this.TelopMustStoppingTreeView.Size = new System.Drawing.Size(230, 435);
+            this.TelopMustStoppingTreeView.Size = new System.Drawing.Size(230, 423);
             this.TelopMustStoppingTreeView.TabIndex = 1;
             // 
             // TelopMustRunningTreeView
             // 
             this.TelopMustRunningTreeView.CheckBoxes = true;
-            this.TelopMustRunningTreeView.Location = new System.Drawing.Point(6, 41);
+            this.TelopMustRunningTreeView.Location = new System.Drawing.Point(6, 53);
             this.TelopMustRunningTreeView.Name = "TelopMustRunningTreeView";
             this.TelopMustRunningTreeView.ShowNodeToolTips = true;
-            this.TelopMustRunningTreeView.Size = new System.Drawing.Size(230, 435);
+            this.TelopMustRunningTreeView.Size = new System.Drawing.Size(230, 423);
             this.TelopMustRunningTreeView.TabIndex = 0;
             // 
             // CloseButton
@@ -176,8 +176,8 @@
             // 
             // SetConditionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1008, 547);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.OKButton);

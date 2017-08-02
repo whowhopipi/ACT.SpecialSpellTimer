@@ -49,7 +49,7 @@
             this.ZonesCheckedListBox.Location = new System.Drawing.Point(12, 12);
             this.ZonesCheckedListBox.MultiColumn = true;
             this.ZonesCheckedListBox.Name = "ZonesCheckedListBox";
-            this.ZonesCheckedListBox.Size = new System.Drawing.Size(1060, 504);
+            this.ZonesCheckedListBox.Size = new System.Drawing.Size(920, 476);
             this.ZonesCheckedListBox.TabIndex = 0;
             this.ZonesCheckedListBox.ThreeDCheckBoxes = true;
             // 
@@ -57,7 +57,7 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(872, 540);
+            this.OKButton.Location = new System.Drawing.Point(732, 520);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(97, 28);
             this.OKButton.TabIndex = 1;
@@ -68,7 +68,7 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(975, 540);
+            this.CloseButton.Location = new System.Drawing.Point(835, 520);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(97, 28);
             this.CloseButton.TabIndex = 2;
@@ -78,7 +78,7 @@
             // AllONButton
             // 
             this.AllONButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AllONButton.Location = new System.Drawing.Point(12, 540);
+            this.AllONButton.Location = new System.Drawing.Point(12, 520);
             this.AllONButton.Name = "AllONButton";
             this.AllONButton.Size = new System.Drawing.Size(75, 28);
             this.AllONButton.TabIndex = 3;
@@ -88,7 +88,7 @@
             // AllOFFButton
             // 
             this.AllOFFButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AllOFFButton.Location = new System.Drawing.Point(93, 540);
+            this.AllOFFButton.Location = new System.Drawing.Point(93, 520);
             this.AllOFFButton.Name = "AllOFFButton";
             this.AllOFFButton.Size = new System.Drawing.Size(75, 28);
             this.AllOFFButton.TabIndex = 4;
@@ -98,15 +98,16 @@
             // SelectZoneForm
             // 
             this.AcceptButton = this.OKButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(1084, 581);
+            this.ClientSize = new System.Drawing.Size(944, 561);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.AllONButton);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.ZonesCheckedListBox);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -40,10 +40,9 @@
             // 
             this.TojiruButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.TojiruButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.TojiruButton.Location = new System.Drawing.Point(128, 88);
-            this.TojiruButton.Margin = new System.Windows.Forms.Padding(4);
+            this.TojiruButton.Location = new System.Drawing.Point(137, 66);
             this.TojiruButton.Name = "TojiruButton";
-            this.TojiruButton.Size = new System.Drawing.Size(100, 31);
+            this.TojiruButton.Size = new System.Drawing.Size(75, 23);
             this.TojiruButton.TabIndex = 2;
             this.TojiruButton.Text = "CancelButton";
             this.TojiruButton.UseVisualStyleBackColor = true;
@@ -52,10 +51,9 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(20, 88);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(4);
+            this.OKButton.Location = new System.Drawing.Point(56, 66);
             this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(100, 31);
+            this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 1;
             this.OKButton.Text = "OKButton";
             this.OKButton.UseVisualStyleBackColor = true;
@@ -68,15 +66,14 @@
             0,
             0,
             0});
-            this.OpacityNumericUpDown.Location = new System.Drawing.Point(16, 23);
-            this.OpacityNumericUpDown.Margin = new System.Windows.Forms.Padding(4);
+            this.OpacityNumericUpDown.Location = new System.Drawing.Point(12, 17);
             this.OpacityNumericUpDown.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
             this.OpacityNumericUpDown.Name = "OpacityNumericUpDown";
-            this.OpacityNumericUpDown.Size = new System.Drawing.Size(72, 22);
+            this.OpacityNumericUpDown.Size = new System.Drawing.Size(54, 19);
             this.OpacityNumericUpDown.TabIndex = 0;
             this.OpacityNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.OpacityNumericUpDown.ThousandsSeparator = true;
@@ -89,19 +86,17 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(96, 25);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(72, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(127, 17);
+            this.label1.Size = new System.Drawing.Size(102, 12);
             this.label1.TabIndex = 3;
             this.label1.Text = "OpacityDescription";
             // 
             // AlphaRateLabel
             // 
-            this.AlphaRateLabel.Location = new System.Drawing.Point(17, 48);
-            this.AlphaRateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.AlphaRateLabel.Location = new System.Drawing.Point(13, 36);
             this.AlphaRateLabel.Name = "AlphaRateLabel";
-            this.AlphaRateLabel.Size = new System.Drawing.Size(57, 32);
+            this.AlphaRateLabel.Size = new System.Drawing.Size(43, 24);
             this.AlphaRateLabel.TabIndex = 4;
             this.AlphaRateLabel.Text = "__100%";
             this.AlphaRateLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -109,17 +104,16 @@
             // VisualSettingControlBackgoundColorForm
             // 
             this.AcceptButton = this.OKButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.TojiruButton;
-            this.ClientSize = new System.Drawing.Size(244, 135);
+            this.ClientSize = new System.Drawing.Size(224, 101);
             this.Controls.Add(this.AlphaRateLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.OpacityNumericUpDown);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.TojiruButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "VisualSettingControlBackgoundColorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "BackgroundColorAlphaTitle";
