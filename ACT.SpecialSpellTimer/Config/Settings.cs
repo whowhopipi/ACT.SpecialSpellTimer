@@ -181,6 +181,7 @@ namespace ACT.SpecialSpellTimer.Config
         public bool ResetOnWipeOut { get; set; }
         public bool SaveLogEnabled { get; set; }
         public string SaveLogFile { get; set; }
+        public string SaveLogDirectory { get; set; }
         public bool SimpleRegex { get; set; }
         public bool TelopAlwaysVisible { get; set; }
         public double TextBlurRate { get; set; }
@@ -287,7 +288,6 @@ namespace ACT.SpecialSpellTimer.Config
             NotifyNormalSpellTimerPrefix = "spespe_",
             ReadyText = "Ready",
             OverText = "Over",
-            SaveLogFile = string.Empty,
             TimeOfHideSpell = 0.0d,
             PlayerInfoRefreshInterval = 3.0d,
             LogPollSleepInterval = 10,
@@ -308,6 +308,8 @@ namespace ACT.SpecialSpellTimer.Config
             EnabledSpellTimerNoDecimal = false,
             EnabledNotifyNormalSpellTimer = false,
             SaveLogEnabled = false,
+            SaveLogFile = string.Empty,
+            SaveLogDirectory = string.Empty,
             HideWhenNotActive = false,
             UseOtherThanFFXIV = false,
             DQXUtilityEnabled = false,

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,11 +30,6 @@ namespace ACT.SpecialSpellTimer
         private static readonly Regex TooltipCharsRegex =
             new Regex(@"(.\u0001\u0001\uFFFD|u001E)",
                 RegexOptions.Compiled);
-
-        /// <summary>
-        /// ログファイル出力用のバッファ
-        /// </summary>
-        private readonly StringBuilder fileOutputLogBuffer = new StringBuilder();
 
         /// <summary>
         /// 内部バッファ
@@ -71,6 +64,9 @@ namespace ACT.SpecialSpellTimer
 
             // LogLineReadイベントを登録する
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
+
+            // 生ログの書き出しバッファを開始する
+            ChatLogWorker.Instance.Begin();
         }
 
         /// <summary>
@@ -94,7 +90,8 @@ namespace ACT.SpecialSpellTimer
             ActGlobals.oFormActMain.BeforeLogLineRead -= this.OnBeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
 
-            this.FlushLogFile();
+            // 生ログの書き出しバッファを停止する
+            ChatLogWorker.Instance.End();
 
             GC.SuppressFinalize(this);
         }
@@ -320,7 +317,7 @@ namespace ACT.SpecialSpellTimer
                 list.Add(logLine);
 
                 // ログファイルに出力する
-                this.AppendLogFile(logLine);
+                ChatLogWorker.Instance.AppendLine(logLine);
             }
 
             if (partyChangedAtDQX)
@@ -344,58 +341,5 @@ namespace ACT.SpecialSpellTimer
         }
 
         #endregion ログ処理
-
-        #region private 生ログのファイル書き出し機能
-
-        private bool SaveLogEnabled =>
-            Settings.Default.SaveLogEnabled &&
-            !string.IsNullOrWhiteSpace(Settings.Default.SaveLogFile);
-
-        /// <summary>
-        /// ログを追記する
-        /// </summary>
-        /// <param name="logLine">追記するログ</param>
-        private void AppendLogFile(string logLine)
-        {
-            if (this.SaveLogEnabled)
-            {
-                lock (this.fileOutputLogBuffer)
-                {
-                    this.fileOutputLogBuffer.AppendLine(logLine);
-
-                    if (this.fileOutputLogBuffer.Length >= (5 * 1024))
-                    {
-                        this.FlushLogFile();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// ログファイルをフラッシュする
-        /// </summary>
-        private void FlushLogFile()
-        {
-            if (this.SaveLogEnabled)
-            {
-                lock (this.fileOutputLogBuffer)
-                {
-                    var dir = Path.GetDirectoryName(Settings.Default.SaveLogFile);
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    File.AppendAllText(
-                        Settings.Default.SaveLogFile,
-                        this.fileOutputLogBuffer.ToString(),
-                        new UTF8Encoding(false));
-
-                    this.fileOutputLogBuffer.Clear();
-                }
-            }
-        }
-
-        #endregion private 生ログのファイル書き出し機能
     }
 }
