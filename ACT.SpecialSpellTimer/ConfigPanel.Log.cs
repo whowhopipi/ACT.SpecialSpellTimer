@@ -21,9 +21,8 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
-        public Func<bool> IsLogTabActiveDelegate { get; set; }
-
-        public bool IsLogTabActive => this.IsLogTabActiveDelegate?.Invoke() ?? false;
+        private StringBuilder logBuffer = new StringBuilder();
+        private Timer updatePlaceholderTimer = new Timer();
 
         public ConfigPanelLog()
         {
@@ -40,91 +39,8 @@ namespace ACT.SpecialSpellTimer
             TableCompiler.Instance.OnTableChanged += this.TableCompilerOnTableChanged;
         }
 
-        private StringBuilder logBuffer = new StringBuilder();
-        private Timer updatePlaceholderTimer = new Timer();
-
-        private async void TableCompilerOnTableChanged(
-            object sender,
-            EventArgs e)
-        {
-            if (!this.IsLogTabActive)
-            {
-                return;
-            }
-
-            var listItems = new List<ListViewItem>();
-
-            await Task.Run(() =>
-            {
-                var spells = 
-                    from s in TableCompiler.Instance.SpellList
-                    orderby
-                    s.Panel,
-                    s.DisplayNo
-                    select
-                    s;
-
-                foreach (var x in spells)
-                {
-                    var values = new string[]
-                    {
-                        "Spell",
-                        x.SpellTitle,
-                        !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
-                        x.RegexEnabled.ToString()
-                    };
-
-                    listItems.Add(new ListViewItem(values));
-                }
-
-                var tickers = TableCompiler.Instance.TickerList;
-
-                foreach (var x in tickers)
-                {
-                    var values = new string[]
-                    {
-                        "Ticker",
-                        x.Title,
-                        !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
-                        x.RegexEnabled.ToString()
-                    };
-
-                    listItems.Add(new ListViewItem(values));
-                }
-            });
-
-            void refresh()
-            {
-                try
-                {
-                    this.SpellsListView.SuspendLayout();
-
-                    this.SpellsListView.Items.Clear();
-                    this.SpellsListView.Items.AddRange(listItems.ToArray());
-
-                    if (this.SpellsListView.Items.Count > 0)
-                    {
-                        for (int i = 0; i < this.SpellsListView.Columns.Count; i++)
-                        {
-                            this.SpellsListView.AutoResizeColumn(i, ColumnHeaderAutoResizeStyle.ColumnContent);
-                        }
-                    }
-                }
-                finally
-                {
-                    this.SpellsListView.ResumeLayout();
-                }
-            }
-
-            if (this.InvokeRequired)
-            {
-                this.Invoke((Action)refresh);
-            }
-            else
-            {
-                refresh();
-            }
-        }
+        public bool IsLogTabActive => this.IsLogTabActiveDelegate?.Invoke() ?? false;
+        public Func<bool> IsLogTabActiveDelegate { get; set; }
 
         /// <summary>
         /// ログを追加する
@@ -218,6 +134,90 @@ namespace ACT.SpecialSpellTimer
                 finally
                 {
                     this.PlaceholderListView.ResumeLayout();
+                }
+            }
+
+            if (this.InvokeRequired)
+            {
+                this.Invoke((Action)refresh);
+            }
+            else
+            {
+                refresh();
+            }
+        }
+
+        private async void TableCompilerOnTableChanged(
+                                    object sender,
+            EventArgs e)
+        {
+            if (!this.IsLogTabActive)
+            {
+                return;
+            }
+
+            var listItems = new List<ListViewItem>();
+
+            await Task.Run(() =>
+            {
+                var spells =
+                    from s in TableCompiler.Instance.SpellList
+                    orderby
+                    s.Panel,
+                    s.DisplayNo,
+                    s.ID
+                    select
+                    s;
+
+                foreach (var x in spells)
+                {
+                    var values = new string[]
+                    {
+                        "Spell",
+                        x.SpellTitle,
+                        !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
+                        x.RegexEnabled.ToString()
+                    };
+
+                    listItems.Add(new ListViewItem(values));
+                }
+
+                var tickers = TableCompiler.Instance.TickerList;
+
+                foreach (var x in tickers)
+                {
+                    var values = new string[]
+                    {
+                        "Ticker",
+                        x.Title,
+                        !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
+                        x.RegexEnabled.ToString()
+                    };
+
+                    listItems.Add(new ListViewItem(values));
+                }
+            });
+
+            void refresh()
+            {
+                try
+                {
+                    this.SpellsListView.SuspendLayout();
+
+                    this.SpellsListView.Items.Clear();
+                    this.SpellsListView.Items.AddRange(listItems.ToArray());
+
+                    if (this.SpellsListView.Items.Count > 0)
+                    {
+                        for (int i = 0; i < this.SpellsListView.Columns.Count; i++)
+                        {
+                            this.SpellsListView.AutoResizeColumn(i, ColumnHeaderAutoResizeStyle.ColumnContent);
+                        }
+                    }
+                }
+                finally
+                {
+                    this.SpellsListView.ResumeLayout();
                 }
             }
 

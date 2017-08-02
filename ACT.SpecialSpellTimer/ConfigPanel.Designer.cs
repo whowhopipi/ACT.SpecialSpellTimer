@@ -41,7 +41,6 @@
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
-            this.SaveLogFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.TabControl = new ACT.SpecialSpellTimer.TabControlExt();
             this.SpecialSpellTabPage = new System.Windows.Forms.TabPage();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -317,6 +316,7 @@
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
+            this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -470,12 +470,6 @@
             this.EnabledSpellTimerNoDecimal.TabIndex = 42;
             this.EnabledSpellTimerNoDecimal.Text = "Enabled";
             this.EnabledSpellTimerNoDecimal.UseVisualStyleBackColor = true;
-            // 
-            // SaveLogFileDialog
-            // 
-            this.SaveLogFileDialog.DefaultExt = "log";
-            this.SaveLogFileDialog.Filter = "Log files (*.log)|*.log|Text files (*.txt)|*.txt|All files (*.*)|*.*";
-            this.SaveLogFileDialog.RestoreDirectory = true;
             // 
             // TabControl
             // 
@@ -822,7 +816,7 @@
             // WarningTimeCheckBox
             // 
             this.WarningTimeCheckBox.AutoSize = true;
-            this.WarningTimeCheckBox.Location = new System.Drawing.Point(210, 390);
+            this.WarningTimeCheckBox.Location = new System.Drawing.Point(242, 389);
             this.WarningTimeCheckBox.Name = "WarningTimeCheckBox";
             this.WarningTimeCheckBox.Size = new System.Drawing.Size(141, 16);
             this.WarningTimeCheckBox.TabIndex = 76;
@@ -3741,7 +3735,6 @@
         private System.Windows.Forms.CheckBox SaveLogCheckBox;
         private System.Windows.Forms.TextBox SaveLogTextBox;
         private System.Windows.Forms.Label label67;
-        private System.Windows.Forms.SaveFileDialog SaveLogFileDialog;
         private System.Windows.Forms.CheckBox HideWhenNotActiceCheckBox;
         private System.Windows.Forms.Label label90;
         private System.Windows.Forms.Label label92;
@@ -3947,5 +3940,6 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.TabPage NameStyleTabPage;
         private System.Windows.Forms.TabPage LogTabPage;
+        private System.Windows.Forms.FolderBrowserDialog FolderBrowserDialog;
     }
 }

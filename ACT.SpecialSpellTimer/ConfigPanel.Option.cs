@@ -47,7 +47,7 @@
             Settings.Default.OverText = this.OverTextBox.Text;
 
             Settings.Default.SaveLogEnabled = this.SaveLogCheckBox.Checked;
-            Settings.Default.SaveLogFile = this.SaveLogTextBox.Text;
+            Settings.Default.SaveLogDirectory = this.SaveLogTextBox.Text;
 
             Settings.Default.ResetOnWipeOut = this.ResetOnWipeOutCheckBox.Checked;
             Settings.Default.WipeoutNotifyToACT = this.NotifyToACTCheckBox.Checked;
@@ -148,12 +148,12 @@
             {
                 if (!string.IsNullOrWhiteSpace(this.SaveLogTextBox.Text))
                 {
-                    this.SaveLogFileDialog.FileName = this.SaveLogTextBox.Text;
+                    this.FolderBrowserDialog.SelectedPath = this.SaveLogTextBox.Text;
                 }
 
-                if (this.SaveLogFileDialog.ShowDialog(this) == DialogResult.OK)
+                if (this.FolderBrowserDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    this.SaveLogTextBox.Text = this.SaveLogFileDialog.FileName;
+                    this.SaveLogTextBox.Text = this.FolderBrowserDialog.SelectedPath;
                 }
             };
 
@@ -233,7 +233,7 @@
             this.OverTextBox.Text = Settings.Default.OverText;
 
             this.SaveLogCheckBox.Checked = Settings.Default.SaveLogEnabled;
-            this.SaveLogTextBox.Text = Settings.Default.SaveLogFile;
+            this.SaveLogTextBox.Text = Settings.Default.SaveLogDirectory;
 
             this.ResetOnWipeOutCheckBox.Checked = Settings.Default.ResetOnWipeOut;
             this.NotifyToACTCheckBox.Checked = Settings.Default.WipeoutNotifyToACT;

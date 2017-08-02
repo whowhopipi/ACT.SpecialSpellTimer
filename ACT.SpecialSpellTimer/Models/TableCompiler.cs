@@ -66,20 +66,19 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Begin / End
 
-        public event EventHandler OnTableChanged;
-
         private List<Combatant> partyList = new List<Combatant>();
+
         private Combatant player = new Combatant();
 
         private List<SpellTimer> spellList = new List<SpellTimer>();
+
         private object spellListLocker = new object();
+
         private List<OnePointTelop> tickerList = new List<OnePointTelop>();
+
         private object tickerListLocker = new object();
 
-        public void RaiseTableChenged()
-        {
-            this.OnTableChanged?.Invoke(this, new EventArgs());
-        }
+        public event EventHandler OnTableChanged;
 
         public List<SpellTimer> SpellList
         {
@@ -163,6 +162,10 @@ namespace ACT.SpecialSpellTimer.Models
                 where
                 x.Enabled &&
                 filter(x)
+                orderby
+                x.Panel,
+                x.DisplayNo,
+                x.ID
                 select
                 x;
 
@@ -255,6 +258,9 @@ namespace ACT.SpecialSpellTimer.Models
                 where
                 x.Enabled &&
                 filter(x)
+                orderby
+                x.MatchDateTime descending,
+                x.ID
                 select
                 x;
 
@@ -284,10 +290,15 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.tickerListLocker)
             {
-                this.tickerList = new List<OnePointTelop>(query.OrderByDescending(x => x.MatchDateTime));
+                this.tickerList = new List<OnePointTelop>(query);
             }
 
             this.RaiseTableChenged();
+        }
+
+        public void RaiseTableChenged()
+        {
+            this.OnTableChanged?.Invoke(this, new EventArgs());
         }
 
         public void RecompileSpells()

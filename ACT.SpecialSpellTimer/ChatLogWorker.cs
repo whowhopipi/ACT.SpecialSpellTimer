@@ -24,24 +24,39 @@ namespace ACT.SpecialSpellTimer
 
         private string OutputDirectory => Settings.Default.SaveLogDirectory;
 
-        private string OutputFile { get; set; } = string.Empty;
+        private bool OutputEnabled =>
+            Settings.Default.SaveLogEnabled &&
+            !string.IsNullOrEmpty(this.OutputFile);
 
-        private bool OutputEnabled => Settings.Default.SaveLogEnabled && !string.IsNullOrEmpty(this.OutputFile);
+        private string OutputFile =>
+            !string.IsNullOrEmpty(OutputDirectory) ?
+            Path.Combine(
+                this.OutputDirectory,
+                $@"ACT.SpecialSpellTimer.Chatlog.{DateTime.Now.ToString("yyyy-MM-dd")}.log") :
+            string.Empty;
+
+        public void AppendLine(
+            string text)
+        {
+            try
+            {
+                if (!this.OutputEnabled)
+                {
+                    return;
+                }
+
+                lock (this.logBuffer)
+                {
+                    this.logBuffer.AppendLine(text);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         public void Begin()
         {
-            if (!string.IsNullOrEmpty(this.OutputDirectory))
-            {
-                if (!Directory.Exists(this.OutputDirectory))
-                {
-                    Directory.CreateDirectory(this.OutputDirectory);
-                }
-
-                this.OutputFile = Path.Combine(
-                    this.OutputDirectory,
-                    $@"ACT.SpecialSpellTimer.Chatlog.{DateTime.Now.ToString("yyyy-MM-dd")}.log");
-            }
-
             lock (this.logBuffer)
             {
                 this.logBuffer.Clear();
@@ -90,35 +105,23 @@ namespace ACT.SpecialSpellTimer
             this.Flush();
         }
 
-        public void AppendLine(
-            string text)
-        {
-            if (!this.OutputEnabled)
-            {
-                return;
-            }
-
-            try
-            {
-                lock (this.logBuffer)
-                {
-                    this.logBuffer.AppendLine(text);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
         public void Flush()
         {
-            if (!this.OutputEnabled)
-            {
-                return;
-            }
-
             try
             {
+                if (!this.OutputEnabled)
+                {
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(this.OutputDirectory))
+                {
+                    if (!Directory.Exists(this.OutputDirectory))
+                    {
+                        Directory.CreateDirectory(this.OutputDirectory);
+                    }
+                }
+
                 lock (this.logBuffer)
                 {
                     File.AppendAllText(this.OutputFile, this.logBuffer.ToString(), new UTF8Encoding(false));
