@@ -130,7 +130,7 @@
                 fileBuf.Enqueue(line);
                 try
                 {
-                    SpecialSpellTimerPlugin.ConfigPanel.AppendLog(line);
+                    ConfigPanelLog.Instance.AppendLog(line);
                 }
                 catch (Exception ex)
                 {

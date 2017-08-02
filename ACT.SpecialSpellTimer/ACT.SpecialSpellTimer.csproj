@@ -70,8 +70,11 @@
     <Compile Include="ConfigPanel.Designer.cs">
       <DependentUpon>ConfigPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConfigPanel.Monitor.cs">
+    <Compile Include="ConfigPanel.Log.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfigPanel.Log.Designer.cs">
+      <DependentUpon>ConfigPanel.Log.cs</DependentUpon>
     </Compile>
     <Compile Include="ConfigPanel.NameStyle.cs">
       <SubType>UserControl</SubType>
@@ -304,6 +307,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ConfigPanel.Log.resx">
+      <DependentUpon>ConfigPanel.Log.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfigPanel.NameStyle.resx">
       <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
     </EmbeddedResource>

@@ -54,7 +54,7 @@ namespace ACT.SpecialSpellTimer
                 }
                 catch (Exception ex)
                 {
-                    Logger.Write(Utility.Translate.Get("ACTAssemblyError"), ex);
+                    Logger.Write(Translate.Get("ACTAssemblyError"), ex);
                 }
 
                 return null;
@@ -148,11 +148,11 @@ namespace ACT.SpecialSpellTimer
             }
             catch (Exception ex)
             {
-                Logger.Write(Utility.Translate.Get("ACTPluginStopError"), ex);
-
                 ActGlobals.oFormActMain.WriteExceptionLog(
                     ex,
-                    Utility.Translate.Get("ACTPluginStopError"));
+                    "Plugin deinit error.");
+
+                Logger.Write("Plugin deinit error.", ex);
 
                 this.PluginStatusLabel.Text = "Plugin Exited Error";
             }
@@ -204,10 +204,9 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // 設定Panelを追加する
-                ConfigPanel = new ConfigPanel();
-                pluginScreenSpace.Controls.Add(ConfigPanel);
-                ConfigPanel.Size = pluginScreenSpace.Size;
-                ConfigPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right;
+                SpecialSpellTimerPlugin.ConfigPanel = new ConfigPanel();
+                pluginScreenSpace.Controls.Add(SpecialSpellTimerPlugin.ConfigPanel);
+                SpecialSpellTimerPlugin.ConfigPanel.Dock = DockStyle.Fill;
 
                 // 設定ファイルのバックアップを作成する
                 SpellTimerTable.Backup();
@@ -224,7 +223,11 @@ namespace ACT.SpecialSpellTimer
             }
             catch (Exception ex)
             {
-                Logger.Write(Utility.Translate.Get("ACTPluginStartError"), ex);
+                ActGlobals.oFormActMain.WriteExceptionLog(
+                    ex,
+                    "Plugin init error.");
+
+                Logger.Write("Plugin init error.", ex);
 
                 this.PluginStatusLabel.Text = "Plugin Initialize Error";
             }
@@ -276,7 +279,7 @@ namespace ACT.SpecialSpellTimer
             SwitchVisibleButton = new Button();
             SwitchVisibleButton.Name = "SpecialSpellTimerSwitchVisibleButton";
             SwitchVisibleButton.Size = new Size(90, 24);
-            SwitchVisibleButton.Text = Utility.Translate.Get("SupeSupe");
+            SwitchVisibleButton.Text = Translate.Get("SupeSupe");
             SwitchVisibleButton.TextAlign = ContentAlignment.MiddleCenter;
             SwitchVisibleButton.UseVisualStyleBackColor = true;
             SwitchVisibleButton.Click += (s, e) =>

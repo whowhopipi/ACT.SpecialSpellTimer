@@ -31,6 +31,11 @@ namespace ACT.SpecialSpellTimer
             this.NameStyleTabPage.Controls.Add(ConfigPanelNameStyle.Instance);
             ConfigPanelNameStyle.Instance.Dock = DockStyle.Fill;
 
+            // ログタブの中身を設定する
+            this.LogTabPage.Controls.Add(ConfigPanelLog.Instance);
+            ConfigPanelLog.Instance.Dock = DockStyle.Fill;
+            ConfigPanelLog.Instance.IsLogTabActive = () => this.TabControl.SelectedTab == this.LogTabPage;
+
             // 翻訳する
             Translate.TranslateControls(this);
 
@@ -47,9 +52,6 @@ namespace ACT.SpecialSpellTimer
             typeof(ListView)
                 .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(this.CombatLogListView, true, null);
-            typeof(ListView)
-                .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
-                .SetValue(this.PlaceholderListView, true, null);
 
             // インスタンス化に伴う正規表現のON/OFFを制限する
             this.ToInstanceCheckBox.CheckedChanged += (s, e) =>
@@ -517,9 +519,6 @@ namespace ACT.SpecialSpellTimer
 
             // 戦闘アナライザのロードメソッドを呼ぶ
             this.LoadCombatAnalyzer();
-
-            // モニタタブのロードを呼ぶ
-            this.LoadLogTab();
         }
 
         /// <summary>
