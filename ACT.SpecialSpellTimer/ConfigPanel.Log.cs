@@ -63,7 +63,7 @@ namespace ACT.SpecialSpellTimer
                     {
                         "Spell",
                         x.SpellTitle,
-                        !x.RegexEnabled ? x.KeywordReplaced : x.KeywordReplaced,
+                        !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
                         x.RegexEnabled.ToString()
                     };
 
@@ -78,7 +78,7 @@ namespace ACT.SpecialSpellTimer
                     {
                         "Ticker",
                         x.Title,
-                        !x.RegexEnabled ? x.KeywordReplaced : x.KeywordReplaced,
+                        !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
                         x.RegexEnabled.ToString()
                     };
 
@@ -173,9 +173,9 @@ namespace ACT.SpecialSpellTimer
                 {
                     var values = new string[]
                     {
-                    ph.Placeholder,
-                    ph.ReplaceString,
-                    Enum.GetName(typeof(PlaceholderTypes), ph.Type)
+                        ph.Placeholder,
+                        ph.ReplaceString,
+                        Enum.GetName(typeof(PlaceholderTypes), ph.Type)
                     };
 
                     listItems.Add(new ListViewItem(values));
