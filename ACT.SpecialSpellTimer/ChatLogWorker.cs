@@ -17,11 +17,13 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
+        private readonly TimeSpan FlushInterval = TimeSpan.FromSeconds(10);
+        private readonly Encoding UTF8Encoding = new UTF8Encoding(false);
+
         private StringBuilder logBuffer = new StringBuilder();
 
         private Thread writeThread;
         private bool writeThreadRunning;
-
         private string OutputDirectory => Settings.Default.SaveLogDirectory;
 
         private bool OutputEnabled =>
@@ -79,7 +81,7 @@ namespace ACT.SpecialSpellTimer
                     {
                     }
 
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
+                    Thread.Sleep(FlushInterval);
                 }
             });
 
@@ -124,7 +126,11 @@ namespace ACT.SpecialSpellTimer
 
                 lock (this.logBuffer)
                 {
-                    File.AppendAllText(this.OutputFile, this.logBuffer.ToString(), new UTF8Encoding(false));
+                    File.AppendAllText(
+                        this.OutputFile,
+                        this.logBuffer.ToString(),
+                        this.UTF8Encoding);
+
                     this.logBuffer.Clear();
                 }
             }
