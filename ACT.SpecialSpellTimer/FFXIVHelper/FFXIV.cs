@@ -63,32 +63,32 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// <summary>
         /// FFXIV_ACT_Plugin
         /// </summary>
-        private dynamic plugin;
+        private volatile dynamic plugin;
 
         /// <summary>
         /// FFXIV_ACT_Plugin.Parse.CombatantHistory
         /// </summary>
-        private dynamic pluginCombatantHistory;
+        private volatile dynamic pluginCombatantHistory;
 
         /// <summary>
         /// FFXIV_ACT_Plugin.MemoryScanSettings
         /// </summary>
-        private dynamic pluginConfig;
+        private volatile dynamic pluginConfig;
 
         /// <summary>
         /// FFXIV_ACT_Plugin.Parse.LogParse
         /// </summary>
-        private dynamic pluginLogParse;
+        private volatile dynamic pluginLogParse;
 
         /// <summary>
         /// FFXIV_ACT_Plugin.Memory.Memory
         /// </summary>
-        private dynamic pluginMemory;
+        private volatile dynamic pluginMemory;
 
         /// <summary>
         /// FFXIV_ACT_Plugin.Memory.ScanCombatants
         /// </summary>
-        private dynamic pluginScancombat;
+        private volatile dynamic pluginScancombat;
 
         public bool IsAvalable
         {
