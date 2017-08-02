@@ -126,10 +126,19 @@ namespace ACT.SpecialSpellTimer
         public void AppendLog(
             string text)
         {
-            this.Invoke((MethodInvoker)delegate
+            void appendLog()
             {
                 this.LogTextBox.AppendText(text + Environment.NewLine);
-            });
+            }
+
+            if (this.InvokeRequired)
+            {
+                this.Invoke((Action)appendLog);
+            }
+            else
+            {
+                appendLog();
+            }
 
             this.logBuffer.AppendLine(text);
         }
