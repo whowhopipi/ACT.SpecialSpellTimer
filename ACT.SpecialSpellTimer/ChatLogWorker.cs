@@ -20,10 +20,11 @@ namespace ACT.SpecialSpellTimer
         private readonly TimeSpan FlushInterval = TimeSpan.FromSeconds(10);
         private readonly Encoding UTF8Encoding = new UTF8Encoding(false);
 
-        private StringBuilder logBuffer = new StringBuilder();
+        private volatile StringBuilder logBuffer = new StringBuilder();
 
         private Thread writeThread;
-        private bool writeThreadRunning;
+        private volatile bool writeThreadRunning;
+
         private string OutputDirectory => Settings.Default.SaveLogDirectory;
 
         private bool OutputEnabled =>

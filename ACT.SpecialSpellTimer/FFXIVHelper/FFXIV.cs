@@ -32,11 +32,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         private readonly IReadOnlyList<Combatant> EmptyCombatantList = new List<Combatant>();
 
-        private IReadOnlyDictionary<uint, Combatant> combatantDictionary;
-        private IReadOnlyList<Combatant> combatantList;
+        private volatile IReadOnlyDictionary<uint, Combatant> combatantDictionary;
+        private volatile IReadOnlyList<Combatant> combatantList;
         private object combatantListLock = new object();
 
-        private List<uint> currentPartyIDList = new List<uint>();
+        private volatile List<uint> currentPartyIDList = new List<uint>();
         private object currentPartyIDListLock = new object();
 
 #if false
@@ -53,10 +53,10 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #region Resources
 
-        private IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
-        private IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
-        private IReadOnlyDictionary<string, Zone> zoneHash = new Dictionary<string, Zone>();
-        private IReadOnlyList<Zone> zoneList = new List<Zone>();
+        private volatile IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
+        private volatile IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
+        private volatile IReadOnlyDictionary<string, Zone> zoneHash = new Dictionary<string, Zone>();
+        private volatile IReadOnlyList<Zone> zoneList = new List<Zone>();
 
         #endregion Resources
 
@@ -90,6 +90,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private dynamic pluginScancombat;
 
+        /// <summary>
+        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
+        /// </summary>
+        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
+
         public bool IsAvalable
         {
             get
@@ -112,11 +117,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public IReadOnlyList<Zone> ZoneList => this.zoneList;
 
         /// <summary>
-        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
-        /// </summary>
-        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
-
-        /// <summary>
         /// ACTプラグインアセンブリ
         /// </summary>
         private Assembly FFXIVPluginAssembly => this.ActPlugin?.GetType()?.Assembly;
@@ -125,9 +125,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         private double scanFFXIVDurationAvg;
         private Task scanFFXIVTask;
-        private bool scanFFXIVTaskRunning;
+        private volatile bool scanFFXIVTaskRunning;
         private Task task;
-        private bool taskRunning;
+        private volatile bool taskRunning;
 
         public void End()
         {

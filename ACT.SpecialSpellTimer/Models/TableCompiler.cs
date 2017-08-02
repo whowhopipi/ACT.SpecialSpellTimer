@@ -27,7 +27,7 @@ namespace ACT.SpecialSpellTimer.Models
         private const int WorkerInterval = 5;
         private Thread worker;
 
-        private bool workerRunning;
+        private volatile bool workerRunning;
 
         #endregion Worker
 
@@ -66,15 +66,15 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Begin / End
 
-        private List<Combatant> partyList = new List<Combatant>();
+        private volatile List<Combatant> partyList = new List<Combatant>();
 
-        private Combatant player = new Combatant();
+        private volatile Combatant player = new Combatant();
 
-        private List<SpellTimer> spellList = new List<SpellTimer>();
+        private volatile List<SpellTimer> spellList = new List<SpellTimer>();
 
         private object spellListLocker = new object();
 
-        private List<OnePointTelop> tickerList = new List<OnePointTelop>();
+        private volatile List<OnePointTelop> tickerList = new List<OnePointTelop>();
 
         private object tickerListLocker = new object();
 
@@ -384,6 +384,7 @@ namespace ACT.SpecialSpellTimer.Models
                 catch (ThreadAbortException)
                 {
                     this.workerRunning = false;
+                    return;
                 }
                 catch (Exception ex)
                 {
@@ -486,9 +487,9 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region 条件の変更を判定するメソッド群
 
-        private IReadOnlyList<Combatant> previousParty = new List<Combatant>();
-        private Combatant previousPlayer = new Combatant();
-        private int previousZoneID = 0;
+        private volatile IReadOnlyList<Combatant> previousParty = new List<Combatant>();
+        private volatile Combatant previousPlayer = new Combatant();
+        private volatile int previousZoneID = 0;
 
         public bool IsPartyChanged()
         {
@@ -558,7 +559,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region プレースホルダに関するメソッド群
 
-        private List<(string Placeholder, string ReplaceString, PlaceholderTypes Type)> placeholderList =
+        private volatile List<(string Placeholder, string ReplaceString, PlaceholderTypes Type)> placeholderList =
             new List<(string Placeholder, string ReplaceString, PlaceholderTypes Type)>();
 
         public IReadOnlyList<(string Placeholder, string ReplaceString, PlaceholderTypes Type)> PlaceholderList
