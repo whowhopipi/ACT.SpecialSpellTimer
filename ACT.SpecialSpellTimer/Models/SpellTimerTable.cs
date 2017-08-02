@@ -16,68 +16,76 @@ namespace ACT.SpecialSpellTimer.Models
     /// <summary>
     /// SpellTimerテーブル
     /// </summary>
-    public static class SpellTimerTable
+    public class SpellTimerTable
     {
+        #region Singleton
+
+        private static SpellTimerTable instance = new SpellTimerTable();
+        public static SpellTimerTable Instance => instance;
+
+        #endregion Singleton
+
         private static readonly object lockObject = new object();
 
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
-        private static ConcurrentDictionary<string, SpellTimer> instanceSpells = new ConcurrentDictionary<string, SpellTimer>();
+        private volatile ConcurrentDictionary<string, SpellTimer> instanceSpells = new ConcurrentDictionary<string, SpellTimer>();
 
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        private static volatile List<SpellTimer> table;
+        private volatile List<SpellTimer> table = new List<SpellTimer>();
+
+        public SpellTimerTable()
+        {
+            this.Load();
+        }
 
         /// <summary>
         /// デフォルトのファイル
         /// </summary>
-        public static string DefaultFile
-        {
-            get
-            {
-                var r = string.Empty;
-
-                r = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    @"anoyetta\ACT\ACT.SpecialSpellTimer.Spells.xml");
-
-                return r;
-            }
-        }
+        public string DefaultFile => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            @"anoyetta\ACT\ACT.SpecialSpellTimer.Spells.xml");
 
         /// <summary>
         /// テーブルの編集中？
         /// </summary>
-        public static bool IsEditingTable { get; set; }
+        public bool IsEditingTable { get; set; }
 
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        public static List<SpellTimer> Table
-        {
-            get
-            {
-                lock (lockObject)
-                {
-                    if (table == null)
-                    {
-                        table = new List<SpellTimer>();
-                        Load();
-                    }
+        public List<SpellTimer> Table => this.table;
 
-                    return table;
-                }
+        /// <summary>
+        /// カウントをリセットする
+        /// </summary>
+        public static void ResetCount()
+        {
+            foreach (var row in TableCompiler.Instance.SpellList)
+            {
+                row.MatchDateTime = DateTime.MinValue;
+                row.UpdateDone = false;
+                row.OverDone = false;
+                row.BeforeDone = false;
+                row.TimeupDone = false;
+                row.CompleteScheduledTime = DateTime.MinValue;
+
+                row.StartOverSoundTimer();
+                row.StartBeforeSoundTimer();
+                row.StartTimeupSoundTimer();
+                row.StartGarbageInstanceTimer();
             }
         }
 
         /// <summary>
         /// テーブルファイルをバックアップする
         /// </summary>
-        public static void Backup()
+        public void Backup()
         {
-            var file = DefaultFile;
+            var file = this.DefaultFile;
 
             if (File.Exists(file))
             {
@@ -111,9 +119,9 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// スペルの描画済みフラグをクリアする
         /// </summary>
-        public static void ClearUpdateFlags()
+        public void ClearUpdateFlags()
         {
-            foreach (var item in Table)
+            foreach (var item in this.table)
             {
                 item.UpdateDone = false;
             }
@@ -125,11 +133,11 @@ namespace ACT.SpecialSpellTimer.Models
         /// <param name="spellTitle">スペル表示名</param>
         /// <param name="sourceSpell">インスタンスの元となるスペル</param>
         /// <returns>インスタンススペル</returns>
-        public static SpellTimer GetOrAddInstance(
+        public SpellTimer GetOrAddInstance(
             string spellTitle,
             SpellTimer sourceSpell)
         {
-            var instance = instanceSpells.GetOrAdd(
+            var instance = this.instanceSpells.GetOrAdd(
                 spellTitle,
                 (x) =>
                 {
@@ -213,7 +221,7 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 instance.CompleteScheduledTime = DateTime.MinValue;
 
-                instanceSpells.TryAdd(
+                this.instanceSpells.TryAdd(
                     instance.SpellTitleReplaced,
                     instance);
 
@@ -221,7 +229,7 @@ namespace ACT.SpecialSpellTimer.Models
                 lock (lockObject)
                 {
                     instance.ID = Table.Max(y => y.ID) + 1;
-                    table.Add(instance);
+                    this.table.Add(instance);
                     TableCompiler.Instance.AddInstanceSpell(instance);
                 }
             }
@@ -233,17 +241,17 @@ namespace ACT.SpecialSpellTimer.Models
         /// 指定されたGuidを持つSpellTimerを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public static SpellTimer GetSpellTimerByGuid(Guid guid)
+        public SpellTimer GetSpellTimerByGuid(Guid guid)
         {
-            return table.Where(x => x.guid == guid).FirstOrDefault();
+            return this.table.Where(x => x.guid == guid).FirstOrDefault();
         }
 
         /// <summary>
         /// 読み込む
         /// </summary>
-        public static void Load()
+        public void Load()
         {
-            Load(DefaultFile, true);
+            this.Load(this.DefaultFile, true);
         }
 
         /// <summary>
@@ -251,7 +259,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         /// <param name="file">ファイルパス</param>
         /// <param name="isClear">消去してからロードする？</param>
-        public static void Load(
+        public void Load(
             string file,
             bool isClear)
         {
@@ -259,15 +267,15 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 if (isClear)
                 {
-                    Table.Clear();
+                    this.table.Clear();
                 }
-
+#if false
                 // 旧フォーマットを置換する
                 var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
                     "DocumentElement",
                     "ArrayOfSpellTimer");
                 File.WriteAllText(file, content, new UTF8Encoding(false));
-
+#endif
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
                     try
@@ -276,7 +284,7 @@ namespace ACT.SpecialSpellTimer.Models
                         {
                             var xs = new XmlSerializer(table.GetType());
                             var data = xs.Deserialize(sr) as List<SpellTimer>;
-                            table.AddRange(data);
+                            this.table.AddRange(data);
                         }
                     }
                     catch (Exception ex)
@@ -285,23 +293,23 @@ namespace ACT.SpecialSpellTimer.Models
                     }
                 }
 
-                Reset();
+                this.Reset();
             }
         }
 
         /// <summary>
         /// インスタンス化されたスペルをすべて削除する
         /// </summary>
-        public static void RemoveAllInstanceSpells()
+        public void RemoveAllInstanceSpells()
         {
-            instanceSpells.Clear();
+            this.instanceSpells.Clear();
 
             lock (lockObject)
             {
                 var collection = table.Where(x => x.IsInstance);
                 foreach (var item in collection)
                 {
-                    table.Remove(item);
+                    this.table.Remove(item);
                 }
             }
         }
@@ -309,10 +317,10 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// スペルテーブルを初期化する
         /// </summary>
-        public static void Reset()
+        public void Reset()
         {
             var id = 0L;
-            foreach (var row in Table)
+            foreach (var row in this.table)
             {
                 id++;
                 row.ID = id;
@@ -392,42 +400,21 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         /// <summary>
-        /// カウントをリセットする
-        /// </summary>
-        public static void ResetCount()
-        {
-            foreach (var row in TableCompiler.Instance.SpellList)
-            {
-                row.MatchDateTime = DateTime.MinValue;
-                row.UpdateDone = false;
-                row.OverDone = false;
-                row.BeforeDone = false;
-                row.TimeupDone = false;
-                row.CompleteScheduledTime = DateTime.MinValue;
-
-                row.StartOverSoundTimer();
-                row.StartBeforeSoundTimer();
-                row.StartTimeupSoundTimer();
-                row.StartGarbageInstanceTimer();
-            }
-        }
-
-        /// <summary>
         /// 保存する
         /// </summary>
-        public static void Save()
+        public void Save()
         {
-            Save(DefaultFile);
+            this.Save(this.DefaultFile);
         }
 
         /// <summary>
         /// 保存する
         /// </summary>
         /// <param name="file">ファイルパス</param>
-        public static void Save(
+        public void Save(
             string file)
         {
-            if (table == null)
+            if (this.table == null)
             {
                 return;
             }
@@ -439,7 +426,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             var work = new List<SpellTimer>(
-                table.Where(x => !x.IsInstance));
+                this.table.Where(x => !x.IsInstance));
 
             foreach (var item in work)
             {
@@ -493,7 +480,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// instanceが不要になっていたらコレクションから除去する
         /// </summary>
         /// <param name="instance">インスタンス</param>
-        public static void TryRemoveInstance(
+        public void TryRemoveInstance(
             SpellTimer instance)
         {
             var ttl = Settings.Default.TimeOfHideSpell + 30;
@@ -507,12 +494,12 @@ namespace ACT.SpecialSpellTimer.Models
                     instance.StopGarbageInstanceTimer();
 
                     SpellTimer o;
-                    instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
+                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
 
                     // スペルコレクション本体から除去する
                     lock (lockObject)
                     {
-                        table.Remove(instance);
+                        this.table.Remove(instance);
                     }
 
                     instance.Dispose();

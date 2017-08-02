@@ -114,13 +114,13 @@ namespace ACT.SpecialSpellTimer
             // 設定を一旦すべて削除する
             ClearNormalSpellTimer();
 
-            var spells = SpellTimerTable.Table.Where(x => x.Enabled);
+            var spells = SpellTimerTable.Instance.Table.Where(x => x.Enabled);
             foreach (var spell in spells)
             {
                 UpdateNormalSpellTimer(spell, true);
             }
 
-            var telops = OnePointTelopTable.Default.Table.Where(x => x.Enabled);
+            var telops = OnePointTelopTable.Instance.Table.Where(x => x.Enabled);
             foreach (var telop in telops)
             {
                 UpdateNormalSpellTimerForTelop(telop, false);
@@ -296,8 +296,8 @@ namespace ACT.SpecialSpellTimer
 
             // 設定を保存する
             Settings.Default.Save();
-            SpellTimerTable.Save();
-            OnePointTelopTable.Default.Save();
+            SpellTimerTable.Instance.Save();
+            OnePointTelopTable.Instance.Save();
 
             // テーブルコンパイラを停止する
             TableCompiler.Instance.End();
@@ -899,7 +899,7 @@ namespace ACT.SpecialSpellTimer
                                     {
                                         // 同じタイトルのインスタンススペルを探す
                                         // 存在すればそれを使用して、なければ新しいインスタンスを生成する
-                                        targetSpell = SpellTimerTable.GetOrAddInstance(
+                                        targetSpell = SpellTimerTable.Instance.GetOrAddInstance(
                                             replacedTitle,
                                             spell);
 
@@ -1134,7 +1134,7 @@ namespace ACT.SpecialSpellTimer
             {
                 if (Interlocked.CompareExchange(ref settingsIsValid, VALID, INVALID) == INVALID)
                 {
-                    this.refreshWindowTimer.Interval = 
+                    this.refreshWindowTimer.Interval =
                         TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
                 }
 
@@ -1281,7 +1281,7 @@ namespace ACT.SpecialSpellTimer
                     Logger.Write("Party was wiped out. Reset spells and tickers.");
 
                     SpellTimerTable.ResetCount();
-                    OnePointTelopTable.Default.ResetCount();
+                    OnePointTelopTable.Instance.ResetCount();
 
                     // ACT本体に戦闘終了を通知する
                     if (Settings.Default.WipeoutNotifyToACT)
@@ -1349,7 +1349,7 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-#region NativeMethods
+        #region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -1371,6 +1371,6 @@ namespace ACT.SpecialSpellTimer
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-#endregion NativeMethods
+        #endregion NativeMethods
     }
 }

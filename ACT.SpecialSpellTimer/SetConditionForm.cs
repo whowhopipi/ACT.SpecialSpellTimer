@@ -104,14 +104,14 @@
         {
             treeView.Nodes.Clear();
 
-            var panels = SpellTimerTable.Table
+            var panels = SpellTimerTable.Instance.Table
                 .OrderBy(x => x.Panel)
                 .Select(x => x.Panel)
                 .Distinct();
             foreach (var panelName in panels)
             {
                 var children = new List<TreeNode>();
-                var spells = SpellTimerTable.Table
+                var spells = SpellTimerTable.Instance.Table
                     .OrderBy(x => x.DisplayNo)
                     .Where(x => x.Panel == panelName);
                 foreach (var spell in spells)
@@ -149,7 +149,7 @@
         {
             treeView.Nodes.Clear();
 
-            var telops = OnePointTelopTable.Default.Table.OrderBy(x => x.Title);
+            var telops = OnePointTelopTable.Instance.Table.OrderBy(x => x.Title);
             foreach (var telop in telops)
             {
                 var n = new TreeNode();

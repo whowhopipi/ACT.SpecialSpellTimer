@@ -155,7 +155,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // 元のリストの複製を得る
-            var sourceList = new List<SpellTimer>(SpellTimerTable.Table);
+            var sourceList = new List<SpellTimer>(SpellTimerTable.Instance.Table);
 
             var query =
                 from x in sourceList
@@ -251,7 +251,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // 元のリストの複製を得る
-            var sourceList = new List<OnePointTelop>(OnePointTelopTable.Default.Table);
+            var sourceList = new List<OnePointTelop>(OnePointTelopTable.Instance.Table);
 
             var query =
                 from x in sourceList
@@ -305,7 +305,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             lock (this)
             {
-                var rawTable = new List<SpellTimer>(SpellTimerTable.Table);
+                var rawTable = new List<SpellTimer>(SpellTimerTable.Instance.Table);
                 foreach (var spell in rawTable.AsParallel())
                 {
                     spell.KeywordReplaced = string.Empty;
@@ -322,7 +322,7 @@ namespace ACT.SpecialSpellTimer.Models
                 this.CompileSpells();
 
                 // スペルタイマの描画済みフラグを落とす
-                SpellTimerTable.ClearUpdateFlags();
+                SpellTimerTable.Instance.ClearUpdateFlags();
             }
         }
 
@@ -330,7 +330,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             lock (this)
             {
-                var rawTable = new List<OnePointTelop>(OnePointTelopTable.Default.Table);
+                var rawTable = new List<OnePointTelop>(OnePointTelopTable.Instance.Table);
                 foreach (var spell in rawTable.AsParallel())
                 {
                     spell.KeywordReplaced = string.Empty;

@@ -58,7 +58,7 @@
 
                 if (telopWindowList.Count > 0)
                 {
-                    OnePointTelopTable.Default.Save();
+                    OnePointTelopTable.Instance.Save();
                 }
 
                 telopWindowList.Clear();
@@ -122,7 +122,7 @@
                 }
                 else
                 {
-                    var telopSettings = OnePointTelopTable.Default.Table
+                    var telopSettings = OnePointTelopTable.Instance.Table
                         .Where(x => x.ID == telopID)
                         .FirstOrDefault();
 
@@ -390,7 +390,7 @@
                         }
                     }
 
-                    OnePointTelopTable.Default.Save();
+                    OnePointTelopTable.Instance.Save();
                 });
             }
         }
@@ -418,7 +418,7 @@
                     telop.Top = top;
                 }
 
-                var telopSettings = OnePointTelopTable.Default.Table
+                var telopSettings = OnePointTelopTable.Instance.Table
                     .Where(x => x.ID == telopID)
                     .FirstOrDefault();
 

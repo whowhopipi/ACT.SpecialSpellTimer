@@ -81,7 +81,7 @@ namespace ACT.SpecialSpellTimer
 
                 this.SpellTimerTreeView.Nodes.Clear();
 
-                var panels = SpellTimerTable.Table
+                var panels = SpellTimerTable.Instance.Table
                     .Where(x => !x.IsInstance)
                     .OrderBy(x => x.Panel)
                     .Select(x => x.Panel)
@@ -89,7 +89,7 @@ namespace ACT.SpecialSpellTimer
                 foreach (var panelName in panels)
                 {
                     var children = new List<TreeNode>();
-                    var spells = SpellTimerTable.Table
+                    var spells = SpellTimerTable.Instance.Table
                         .Where(x => !x.IsInstance)
                         .OrderBy(x => x.DisplayNo)
                         .Where(x => x.Panel == panelName);
@@ -116,7 +116,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // スペルの再描画を行わせる
-                SpellTimerTable.ClearUpdateFlags();
+                SpellTimerTable.Instance.ClearUpdateFlags();
 
                 // 標準のスペルタイマーへ変更を反映する
                 SpellTimerCore.Default.ApplyToNormalSpellTimer();
@@ -136,14 +136,14 @@ namespace ACT.SpecialSpellTimer
         /// <param name="e">イベント引数</param>
         private void AddButton_Click(object sender, EventArgs e)
         {
-            lock (SpellTimerTable.Table)
+            lock (SpellTimerTable.Instance.Table)
             {
                 var nr = new SpellTimer();
 
                 this.EditSpellsTableBlock(() =>
                 {
-                    nr.ID = SpellTimerTable.Table.Any() ?
-                        SpellTimerTable.Table.Max(x => x.ID) + 1 :
+                    nr.ID = SpellTimerTable.Instance.Table.Any() ?
+                        SpellTimerTable.Instance.Table.Max(x => x.ID) + 1 :
                         1;
                     nr.guid = Guid.NewGuid();
                     nr.Panel = "General";
@@ -224,16 +224,16 @@ namespace ACT.SpecialSpellTimer
                     nr.MatchDateTime = DateTime.MinValue;
                     nr.UpdateDone = false;
                     nr.Enabled = true;
-                    nr.DisplayNo = SpellTimerTable.Table.Any() ?
-                        SpellTimerTable.Table.Max(x => x.DisplayNo) + 1 :
+                    nr.DisplayNo = SpellTimerTable.Instance.Table.Any() ?
+                        SpellTimerTable.Instance.Table.Max(x => x.DisplayNo) + 1 :
                         50;
                     nr.Regex = null;
                     nr.RegexPattern = string.Empty;
-                    SpellTimerTable.Table.Add(nr);
+                    SpellTimerTable.Instance.Table.Add(nr);
 
                     TableCompiler.Instance.RecompileSpells();
-                    SpellTimerTable.RemoveAllInstanceSpells();
-                    SpellTimerTable.Save();
+                    SpellTimerTable.Instance.RemoveAllInstanceSpells();
+                    SpellTimerTable.Instance.Save();
                 });
 
                 // 新しいノードを生成する
@@ -301,11 +301,11 @@ namespace ACT.SpecialSpellTimer
             {
                 this.EditSpellsTableBlock(() =>
                 {
-                    lock (SpellTimerTable.Table)
+                    lock (SpellTimerTable.Instance.Table)
                     {
                         this.DetailGroupBox.Visible = false;
                         this.DetailPanelGroupBox.Visible = false;
-                        SpellTimerTable.Table.Clear();
+                        SpellTimerTable.Instance.Table.Clear();
                     }
 
                     this.LoadSpellTimerTable();
@@ -530,15 +530,15 @@ namespace ACT.SpecialSpellTimer
         {
             this.EditSpellsTableBlock(() =>
             {
-                lock (SpellTimerTable.Table)
+                lock (SpellTimerTable.Instance.Table)
                 {
                     var src = this.DetailGroupBox.Tag as SpellTimer;
                     if (src != null)
                     {
-                        SpellTimerTable.Table.Remove(src);
+                        SpellTimerTable.Instance.Table.Remove(src);
                         TableCompiler.Instance.RecompileSpells();
-                        SpellTimerTable.RemoveAllInstanceSpells();
-                        SpellTimerTable.Save();
+                        SpellTimerTable.Instance.RemoveAllInstanceSpells();
+                        SpellTimerTable.Instance.Save();
 
                         this.DetailGroupBox.Visible = false;
                         this.DetailPanelGroupBox.Visible = false;
@@ -579,7 +579,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="action">アクション</param>
         private void EditSpellsTableBlock(Action action)
         {
-            SpellTimerTable.IsEditingTable = true;
+            SpellTimerTable.Instance.IsEditingTable = true;
 
             try
             {
@@ -587,7 +587,7 @@ namespace ACT.SpecialSpellTimer
             }
             finally
             {
-                SpellTimerTable.IsEditingTable = false;
+                SpellTimerTable.Instance.IsEditingTable = false;
             }
         }
 
@@ -601,7 +601,7 @@ namespace ACT.SpecialSpellTimer
             this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
             if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
             {
-                SpellTimerTable.Save(
+                SpellTimerTable.Instance.Save(
                     this.SaveFileDialog.FileName);
             }
         }
@@ -647,7 +647,7 @@ namespace ACT.SpecialSpellTimer
             {
                 this.EditSpellsTableBlock(() =>
                 {
-                    SpellTimerTable.Load(
+                    SpellTimerTable.Instance.Load(
                         this.OpenFileDialog.FileName,
                         false);
 
@@ -680,13 +680,13 @@ namespace ACT.SpecialSpellTimer
             PanelSettings.Default.SettingsTable.Clear();
             PanelSettings.Default.Save();
 
-            foreach (var telop in OnePointTelopTable.Default.Table)
+            foreach (var telop in OnePointTelopTable.Instance.Table)
             {
                 telop.Left = 10.0d;
                 telop.Top = 10.0d;
             }
 
-            OnePointTelopTable.Default.Save();
+            OnePointTelopTable.Instance.Save();
 
             this.LoadSettingsOption();
             SpellTimerCore.Default.LayoutPanels();
@@ -910,7 +910,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="e">イベント引数</param>
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            lock (SpellTimerTable.Table)
+            lock (SpellTimerTable.Instance.Table)
             {
                 if (string.IsNullOrWhiteSpace(this.PanelNameTextBox.Text))
                 {
@@ -993,7 +993,7 @@ namespace ACT.SpecialSpellTimer
                         src.WarningTime = (double)this.WarningTimeNumericUpDown.Value;
                         src.ChangeFontColorsWhenWarning = this.WarningTimeCheckBox.Checked;
 
-                        var panel = SpellTimerTable.Table.Where(x => x.Panel == src.Panel);
+                        var panel = SpellTimerTable.Instance.Table.Where(x => x.Panel == src.Panel);
                         foreach (var s in panel)
                         {
                             s.BackgroundColor = src.BackgroundColor;
@@ -1001,7 +1001,7 @@ namespace ACT.SpecialSpellTimer
 
                         TableCompiler.Instance.RecompileSpells();
 
-                        SpellTimerTable.Save();
+                        SpellTimerTable.Instance.Save();
                         this.LoadSpellTimerTable();
 
                         // 一度全てのパネルを閉じる

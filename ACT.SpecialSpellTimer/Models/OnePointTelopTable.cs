@@ -16,15 +16,18 @@ namespace ACT.SpecialSpellTimer.Models
     /// </summary>
     public class OnePointTelopTable
     {
-        /// <summary>
-        /// シングルトンinstance
-        /// </summary>
+        #region Singleton
+
         private static OnePointTelopTable instance = new OnePointTelopTable();
+
+        public static OnePointTelopTable Instance => instance;
+
+        #endregion Singleton
 
         /// <summary>
         /// データテーブル
         /// </summary>
-        private readonly List<OnePointTelop> table = new List<OnePointTelop>();
+        private volatile List<OnePointTelop> table = new List<OnePointTelop>();
 
         /// <summary>
         /// コンストラクタ
@@ -35,26 +38,12 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         /// <summary>
-        /// シングルトンinstance
-        /// </summary>
-        public static OnePointTelopTable Default => instance;
-
-        /// <summary>
         /// デフォルトのファイル
         /// </summary>
-        public string DefaultFile
-        {
-            get
-            {
-                var r = string.Empty;
-
-                r = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    @"anoyetta\ACT\ACT.SpecialSpellTimer.Telops.xml");
-
-                return r;
-            }
-        }
+        public string DefaultFile =>
+            Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            @"anoyetta\ACT\ACT.SpecialSpellTimer.Telops.xml");
 
         /// <summary>
         /// テーブルの編集中？
@@ -134,13 +123,13 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     this.table.Clear();
                 }
-
+#if false
                 // 旧フォーマットを置換する
                 var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
                     "DocumentElement",
                     "ArrayOfOnePointTelop");
                 File.WriteAllText(file, content, new UTF8Encoding(false));
-
+#endif
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
                     try

@@ -483,7 +483,7 @@
 
         private void GarbageInstanceTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            SpellTimerTable.TryRemoveInstance(this);
+            SpellTimerTable.Instance.TryRemoveInstance(this);
         }
 
         private void OverSoundTimer_Elapsed(object sender, ElapsedEventArgs e)

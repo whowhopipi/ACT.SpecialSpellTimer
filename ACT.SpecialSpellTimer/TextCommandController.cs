@@ -107,7 +107,7 @@ namespace ACT.SpecialSpellTimer
                         switch (target)
                         {
                             case "spells":
-                                foreach (var spell in SpellTimerTable.Table)
+                                foreach (var spell in SpellTimerTable.Instance.Table)
                                 {
                                     if (spell.Panel.Trim().ToLower() == windowname.Trim().ToLower() ||
                                         spell.SpellTitle.Trim().ToLower() == windowname.Trim().ToLower() ||
@@ -131,7 +131,7 @@ namespace ACT.SpecialSpellTimer
                                 break;
 
                             case "telops":
-                                foreach (var telop in OnePointTelopTable.Default.Table)
+                                foreach (var telop in OnePointTelopTable.Instance.Table)
                                 {
                                     if (telop.Title.Trim().ToLower() == windowname.Trim().ToLower() ||
                                         windowname.Trim().ToLower() == "all")

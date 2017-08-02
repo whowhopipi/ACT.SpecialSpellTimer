@@ -91,13 +91,13 @@ namespace ACT.SpecialSpellTimer.Utility
             var condition = true;
             foreach (var guid in timersMustRunning)
             {
-                var spell = SpellTimerTable.GetSpellTimerByGuid(guid);
+                var spell = SpellTimerTable.Instance.GetSpellTimerByGuid(guid);
                 if (spell != null)
                 {
                     condition = condition & IsRunning(spell);
                 }
 
-                var telop = OnePointTelopTable.Default.GetOnePointTelopByGuid(guid);
+                var telop = OnePointTelopTable.Instance.GetOnePointTelopByGuid(guid);
                 if (telop != null)
                 {
                     condition = condition & IsRunning(telop);
@@ -107,13 +107,13 @@ namespace ACT.SpecialSpellTimer.Utility
             // 停止中か確認する（稼働中でなければ停止中として扱う）
             foreach (var guid in timersMustStopping)
             {
-                var spell = SpellTimerTable.GetSpellTimerByGuid(guid);
+                var spell = SpellTimerTable.Instance.GetSpellTimerByGuid(guid);
                 if (spell != null)
                 {
                     condition = condition & !IsRunning(spell);
                 }
 
-                var telop = OnePointTelopTable.Default.GetOnePointTelopByGuid(guid);
+                var telop = OnePointTelopTable.Instance.GetOnePointTelopByGuid(guid);
                 if (telop != null)
                 {
                     condition = condition & !IsRunning(telop);
@@ -176,7 +176,7 @@ namespace ACT.SpecialSpellTimer.Utility
 
             for (int i = 0; i < timers.Length; i++)
             {
-                var spell = SpellTimerTable.GetSpellTimerByGuid(timers[i]);
+                var spell = SpellTimerTable.Instance.GetSpellTimerByGuid(timers[i]);
                 if (spell != null)
                 {
                     count++;
@@ -215,7 +215,7 @@ namespace ACT.SpecialSpellTimer.Utility
 
             for (int i = 0; i < timers.Length; i++)
             {
-                var telop = OnePointTelopTable.Default.GetOnePointTelopByGuid(timers[i]);
+                var telop = OnePointTelopTable.Instance.GetOnePointTelopByGuid(timers[i]);
                 if (telop != null)
                 {
                     count++;

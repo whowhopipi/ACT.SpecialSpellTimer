@@ -209,8 +209,8 @@ namespace ACT.SpecialSpellTimer
                 SpecialSpellTimerPlugin.ConfigPanel.Dock = DockStyle.Fill;
 
                 // 設定ファイルのバックアップを作成する
-                SpellTimerTable.Backup();
-                OnePointTelopTable.Default.Backup();
+                SpellTimerTable.Instance.Backup();
+                OnePointTelopTable.Instance.Backup();
                 PanelSettings.Default.Backup();
 
                 // 本体を開始する

@@ -26,7 +26,7 @@
 
                 this.TelopTreeView.Nodes.Clear();
 
-                var telops = OnePointTelopTable.Default.Table.OrderBy(x => x.Title);
+                var telops = OnePointTelopTable.Instance.Table.OrderBy(x => x.Title);
                 foreach (var telop in telops)
                 {
                     var n = new TreeNode();
@@ -56,7 +56,7 @@
         /// <param name="action">アクション</param>
         private void EditTickersTableBlock(Action action)
         {
-            OnePointTelopTable.Default.IsEditingTable = true;
+            OnePointTelopTable.Instance.IsEditingTable = true;
 
             try
             {
@@ -64,7 +64,7 @@
             }
             finally
             {
-                OnePointTelopTable.Default.IsEditingTable = false;
+                OnePointTelopTable.Instance.IsEditingTable = false;
             }
         }
 
@@ -290,8 +290,8 @@
 
             this.EditTickersTableBlock(() =>
             {
-                nr.ID = OnePointTelopTable.Default.Table.Any() ?
-                    OnePointTelopTable.Default.Table.Max(x => x.ID) + 1 :
+                nr.ID = OnePointTelopTable.Instance.Table.Any() ?
+                    OnePointTelopTable.Instance.Table.Max(x => x.ID) + 1 :
                     1;
                 nr.guid = Guid.NewGuid();
                 nr.Title = Translate.Get("NewTelop");
@@ -351,10 +351,10 @@
                 nr.RegexToHide = null;
                 nr.RegexPatternToHide = string.Empty;
 
-                OnePointTelopTable.Default.Table.Add(nr);
+                OnePointTelopTable.Instance.Table.Add(nr);
 
                 TableCompiler.Instance.RecompileTickers();
-                OnePointTelopTable.Default.Save();
+                OnePointTelopTable.Instance.Save();
             });
 
             // 新しいノードを生成する
@@ -401,10 +401,10 @@
             {
                 this.EditTickersTableBlock(() =>
                 {
-                    lock (OnePointTelopTable.Default.Table)
+                    lock (OnePointTelopTable.Instance.Table)
                     {
                         this.TelopDetailGroupBox.Visible = false;
-                        OnePointTelopTable.Default.Table.Clear();
+                        OnePointTelopTable.Instance.Table.Clear();
                     }
 
                     OnePointTelopController.CloseTelops();
@@ -422,14 +422,14 @@
         {
             this.EditTickersTableBlock(() =>
             {
-                lock (OnePointTelopTable.Default.Table)
+                lock (OnePointTelopTable.Instance.Table)
                 {
                     var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
                     if (src != null)
                     {
-                        OnePointTelopTable.Default.Table.Remove(src);
+                        OnePointTelopTable.Instance.Table.Remove(src);
                         TableCompiler.Instance.RecompileTickers();
-                        OnePointTelopTable.Default.Save();
+                        OnePointTelopTable.Instance.Save();
 
                         OnePointTelopController.CloseTelops();
 
@@ -467,7 +467,7 @@
             this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
             if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
             {
-                OnePointTelopTable.Default.Save(
+                OnePointTelopTable.Instance.Save(
                     this.SaveFileDialog.FileName);
             }
         }
@@ -484,7 +484,7 @@
                 this.OpenFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
                 if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
                 {
-                    OnePointTelopTable.Default.Load(
+                    OnePointTelopTable.Instance.Load(
                         this.OpenFileDialog.FileName,
                         false);
 
@@ -548,7 +548,7 @@
                     }
 
                     TableCompiler.Instance.RecompileTickers();
-                    OnePointTelopTable.Default.Save();
+                    OnePointTelopTable.Instance.Save();
                     this.LoadTelopTable();
 
                     // 一度全てのテロップを閉じる
