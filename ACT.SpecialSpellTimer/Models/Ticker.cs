@@ -1,6 +1,7 @@
 ﻿namespace ACT.SpecialSpellTimer.Models
 {
     using System;
+    using System.IO;
     using System.Text.RegularExpressions;
     using System.Timers;
     using System.Xml.Serialization;
@@ -65,8 +66,6 @@
         [XmlIgnore]
         public bool Delayed { get; set; }
 
-        public string DelaySound { get; set; }
-
         public string DelayTextToSpeak { get; set; }
 
         public double DisplayTime { get; set; }
@@ -112,8 +111,6 @@
         [XmlIgnore]
         public string MatchedLog { get; set; }
 
-        public string MatchSound { get; set; }
-
         public string MatchTextToSpeak { get; set; }
 
         public string Message { get; set; }
@@ -146,6 +143,48 @@
         public double Top { get; set; }
 
         public string ZoneFilter { get; set; }
+
+        #region Soundfiles
+
+        [XmlIgnore]
+        private string delaySound = string.Empty;
+
+        [XmlIgnore]
+        private string matchSound = string.Empty;
+
+        [XmlIgnore]
+        public string DelaySound { get => this.delaySound; set => this.delaySound = value; }
+
+        [XmlElement(ElementName = "DelaySound")]
+        public string DelaySoundToFile
+        {
+            get => Path.GetFileName(this.delaySound);
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.delaySound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string MatchSound { get => this.matchSound; set => this.matchSound = value; }
+
+        [XmlElement(ElementName = "MatchSound")]
+        public string MatchSoundToFile
+        {
+            get => Path.GetFileName(this.matchSound);
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.matchSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                }
+            }
+        }
+
+        #endregion Soundfiles
 
         public void Dispose()
         {

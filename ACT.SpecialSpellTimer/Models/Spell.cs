@@ -1,6 +1,7 @@
 ﻿namespace ACT.SpecialSpellTimer.Models
 {
     using System;
+    using System.IO;
     using System.Text.RegularExpressions;
     using System.Timers;
     using System.Xml.Serialization;
@@ -119,8 +120,6 @@
         [XmlIgnore]
         public bool BeforeDone { get; set; }
 
-        public string BeforeSound { get; set; }
-
         public string BeforeTextToSpeak { get; set; }
 
         public double BeforeTime { get; set; }
@@ -176,14 +175,12 @@
         [XmlIgnore]
         public string MatchedLog { get; set; }
 
-        public string MatchSound { get; set; }
         public string MatchTextToSpeak { get; set; }
 
         [XmlIgnore]
         public bool OverDone { get; set; }
 
         public bool OverlapRecastTime { get; set; }
-        public string OverSound { get; set; }
         public string OverTextToSpeak { get; set; }
         public double OverTime { get; set; }
         public string Panel { get; set; }
@@ -232,7 +229,6 @@
         public bool TimeupDone { get; set; }
 
         public bool TimeupHide { get; set; }
-        public string TimeupSound { get; set; }
         public string TimeupTextToSpeak { get; set; }
 
         /// <summary>インスタンス化する</summary>
@@ -245,6 +241,86 @@
         public string WarningFontOutlineColor { get; set; }
         public double WarningTime { get; set; }
         public string ZoneFilter { get; set; }
+
+        #region Sound files
+
+        [XmlIgnore]
+        private string beforeSound = string.Empty;
+
+        [XmlIgnore]
+        private string matchSound = string.Empty;
+
+        [XmlIgnore]
+        private string overSound = string.Empty;
+
+        [XmlIgnore]
+        private string timeupSound = string.Empty;
+
+        [XmlIgnore]
+        public string BeforeSound { get => this.beforeSound; set => this.beforeSound = value; }
+
+        [XmlElement(ElementName = "BeforeSound")]
+        public string BeforeSoundToFile
+        {
+            get => Path.GetFileName(this.beforeSound);
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.beforeSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string MatchSound { get => this.matchSound; set => this.matchSound = value; }
+
+        [XmlElement(ElementName = "MatchSound")]
+        public string MatchSoundToFile
+        {
+            get => Path.GetFileName(this.matchSound);
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.matchSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string OverSound { get => this.overSound; set => this.overSound = value; }
+
+        [XmlElement(ElementName = "OverSound")]
+        public string OverSoundToFile
+        {
+            get => Path.GetFileName(this.overSound);
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.overSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string TimeupSound { get => this.timeupSound; set => this.timeupSound = value; }
+
+        [XmlElement(ElementName = "TimeupSound")]
+        public string TimeupSoundToFile
+        {
+            get => Path.GetFileName(this.timeupSound);
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.timeupSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                }
+            }
+        }
+
+        #endregion Sound files
 
         public void Dispose()
         {

@@ -339,6 +339,10 @@
                     continue;
                 }
 
+                // 実際のテロップの位置を取得しておく
+                telop.Left = w.Left;
+                telop.Top = w.Top;
+
                 if (telop.MatchDateTime > DateTime.MinValue)
                 {
                     var start = telop.MatchDateTime.AddSeconds(telop.Delay);
@@ -379,17 +383,6 @@
             {
                 Task.Run(() =>
                 {
-                    foreach (var telop in telops)
-                    {
-                        var w = telopWindowList.ContainsKey(telop.ID) ? telopWindowList[telop.ID] : null;
-
-                        if (w != null)
-                        {
-                            telop.Left = w.Left;
-                            telop.Top = w.Top;
-                        }
-                    }
-
                     OnePointTelopTable.Instance.Save();
                 });
             }

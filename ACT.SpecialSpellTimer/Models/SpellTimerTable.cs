@@ -8,7 +8,6 @@ using System.Text;
 using System.Xml.Serialization;
 
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -336,19 +335,6 @@ namespace ACT.SpecialSpellTimer.Models
                 row.RegexForExtendPattern2 = string.Empty;
                 row.KeywordForExtendReplaced2 = string.Empty;
 
-                row.MatchSound = !string.IsNullOrWhiteSpace(row.MatchSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(row.MatchSound)) :
-                    string.Empty;
-                row.OverSound = !string.IsNullOrWhiteSpace(row.OverSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(row.OverSound)) :
-                    string.Empty;
-                row.BeforeSound = !string.IsNullOrWhiteSpace(row.BeforeSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(row.BeforeSound)) :
-                    string.Empty;
-                row.TimeupSound = !string.IsNullOrWhiteSpace(row.TimeupSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(row.TimeupSound)) :
-                    string.Empty;
-
                 if (row.BarWidth == 0 && row.BarHeight == 0)
                 {
                     row.BarWidth = Settings.Default.ProgressBarSize.Width;
@@ -426,19 +412,6 @@ namespace ACT.SpecialSpellTimer.Models
 
             foreach (var item in work)
             {
-                item.MatchSound = !string.IsNullOrWhiteSpace(item.MatchSound) ?
-                    Path.GetFileName(item.MatchSound) :
-                    string.Empty;
-                item.OverSound = !string.IsNullOrWhiteSpace(item.OverSound) ?
-                    Path.GetFileName(item.OverSound) :
-                    string.Empty;
-                item.BeforeSound = !string.IsNullOrWhiteSpace(item.BeforeSound) ?
-                    Path.GetFileName(item.BeforeSound) :
-                    string.Empty;
-                item.TimeupSound = !string.IsNullOrWhiteSpace(item.TimeupSound) ?
-                    Path.GetFileName(item.TimeupSound) :
-                    string.Empty;
-
                 if (item.Font != null &&
                     item.Font.Family != null &&
                     !string.IsNullOrWhiteSpace(item.Font.Family.Source))
@@ -453,22 +426,6 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 var xs = new XmlSerializer(work.GetType());
                 xs.Serialize(sw, work);
-            }
-
-            foreach (var item in work)
-            {
-                item.MatchSound = !string.IsNullOrWhiteSpace(item.MatchSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(item.MatchSound)) :
-                    string.Empty;
-                item.OverSound = !string.IsNullOrWhiteSpace(item.OverSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(item.OverSound)) :
-                    string.Empty;
-                item.BeforeSound = !string.IsNullOrWhiteSpace(item.BeforeSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(item.BeforeSound)) :
-                    string.Empty;
-                item.TimeupSound = !string.IsNullOrWhiteSpace(item.TimeupSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(item.TimeupSound)) :
-                    string.Empty;
             }
         }
 

@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-
-using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -165,18 +163,12 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     row.guid = Guid.NewGuid();
                 }
+
                 row.MatchDateTime = DateTime.MinValue;
                 row.Regex = null;
                 row.RegexPattern = string.Empty;
                 row.RegexToHide = null;
                 row.RegexPatternToHide = string.Empty;
-
-                row.MatchSound = !string.IsNullOrWhiteSpace(row.MatchSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(row.MatchSound)) :
-                    string.Empty;
-                row.DelaySound = !string.IsNullOrWhiteSpace(row.DelaySound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(row.DelaySound)) :
-                    string.Empty;
 
                 if (string.IsNullOrWhiteSpace(row.BackgroundColor))
                 {
@@ -249,13 +241,6 @@ namespace ACT.SpecialSpellTimer.Models
 
             foreach (var item in table)
             {
-                item.MatchSound = !string.IsNullOrWhiteSpace(item.MatchSound) ?
-                    Path.GetFileName(item.MatchSound) :
-                    string.Empty;
-                item.DelaySound = !string.IsNullOrWhiteSpace(item.DelaySound) ?
-                    Path.GetFileName(item.DelaySound) :
-                    string.Empty;
-
                 if (item.Font != null &&
                     item.Font.Family != null &&
                     !string.IsNullOrWhiteSpace(item.Font.Family.Source))
@@ -270,16 +255,6 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 var xs = new XmlSerializer(table.GetType());
                 xs.Serialize(sw, table);
-            }
-
-            foreach (var item in table)
-            {
-                item.MatchSound = !string.IsNullOrWhiteSpace(item.MatchSound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(item.MatchSound)) :
-                    string.Empty;
-                item.DelaySound = !string.IsNullOrWhiteSpace(item.DelaySound) ?
-                    Path.Combine(SoundController.Default.WaveDirectory, Path.GetFileName(item.DelaySound)) :
-                    string.Empty;
             }
         }
     }
