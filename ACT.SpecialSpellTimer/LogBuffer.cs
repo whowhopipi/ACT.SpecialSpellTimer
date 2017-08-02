@@ -315,9 +315,6 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 list.Add(logLine);
-
-                // ログファイルに出力する
-                ChatLogWorker.Instance.AppendLine(logLine);
             }
 
             if (partyChangedAtDQX)
@@ -333,6 +330,9 @@ namespace ACT.SpecialSpellTimer
             {
                 TableCompiler.Instance.RefreshPetPlaceholder();
             }
+
+            // ログファイルに出力する
+            ChatLogWorker.Instance.AppendLines(list);
 
             // ログのタイムスタンプを記録する
             this.lastLogineTimestamp = DateTime.Now;

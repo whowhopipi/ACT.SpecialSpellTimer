@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -51,6 +52,28 @@ namespace ACT.SpecialSpellTimer
                 lock (this.logBuffer)
                 {
                     this.logBuffer.AppendLine(text);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void AppendLines(
+            List<string> logLineList)
+        {
+            try
+            {
+                if (!this.OutputEnabled)
+                {
+                    return;
+                }
+
+                lock (this.logBuffer)
+                {
+                    this.logBuffer.AppendLine(string.Join(
+                        Environment.NewLine,
+                        logLineList.ToArray()));
                 }
             }
             catch (Exception)
