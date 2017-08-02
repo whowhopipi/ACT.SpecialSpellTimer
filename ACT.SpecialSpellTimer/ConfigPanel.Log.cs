@@ -56,10 +56,15 @@ namespace ACT.SpecialSpellTimer
 
             await Task.Run(() =>
             {
-                var spells = TableCompiler.Instance.SpellList;
+                var spells = 
+                    from s in TableCompiler.Instance.SpellList
+                    orderby
+                    s.Panel,
+                    s.DisplayNo
+                    select
+                    s;
 
-                foreach (var x in spells
-                    .OrderBy(x => new { x.Panel, x.DisplayNo }))
+                foreach (var x in spells)
                 {
                     var values = new string[]
                     {
