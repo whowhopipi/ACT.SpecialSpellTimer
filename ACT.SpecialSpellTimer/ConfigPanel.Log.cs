@@ -21,7 +21,7 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
-        private StringBuilder logBuffer = new StringBuilder();
+        private volatile StringBuilder logBuffer = new StringBuilder();
         private Timer updatePlaceholderTimer = new Timer();
 
         public ConfigPanelLog()
@@ -148,7 +148,7 @@ namespace ACT.SpecialSpellTimer
         }
 
         private async void TableCompilerOnTableChanged(
-                                    object sender,
+            object sender,
             EventArgs e)
         {
             if (!this.IsLogTabActive)
