@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Threading.Tasks;
     using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Models;
@@ -326,14 +326,6 @@
                     telopWindowList.Add(telop.ID, w);
                 }
 
-                // telopの位置を保存する
-                if (DateTime.Now.Second == 0)
-                {
-                    telop.Left = w.Left;
-                    telop.Top = w.Top;
-                    OnePointTelopTable.Default.Save();
-                }
-
                 if (Settings.Default.OverlayVisible &&
                     Settings.Default.TelopAlwaysVisible)
                 {
@@ -380,6 +372,26 @@
                     w.HideOverlay();
                     telop.MessageReplaced = string.Empty;
                 }
+            }
+
+            // telopの位置を保存する
+            if (DateTime.Now.Second == 0)
+            {
+                Task.Run(() =>
+                {
+                    foreach (var telop in telops)
+                    {
+                        var w = telopWindowList.ContainsKey(telop.ID) ? telopWindowList[telop.ID] : null;
+
+                        if (w != null)
+                        {
+                            telop.Left = w.Left;
+                            telop.Top = w.Top;
+                        }
+                    }
+
+                    OnePointTelopTable.Default.Save();
+                });
             }
         }
 
