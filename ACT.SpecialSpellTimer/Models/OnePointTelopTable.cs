@@ -90,7 +90,7 @@ namespace ACT.SpecialSpellTimer.Models
                     true);
 
                 // 古いバックアップを消す
-                foreach (var bak in 
+                foreach (var bak in
                     Directory.GetFiles(Path.GetDirectoryName(backupFile), "*.bak"))
                 {
                     var timeStamp = File.GetCreationTime(bak);

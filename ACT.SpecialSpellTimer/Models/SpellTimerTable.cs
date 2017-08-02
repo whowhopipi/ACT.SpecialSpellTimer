@@ -28,7 +28,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        private static List<SpellTimer> table;
+        private static volatile List<SpellTimer> table;
 
         /// <summary>
         /// デフォルトのファイル
@@ -96,7 +96,7 @@ namespace ACT.SpecialSpellTimer.Models
                     true);
 
                 // 古いバックアップを消す
-                foreach (var bak in 
+                foreach (var bak in
                     Directory.GetFiles(Path.GetDirectoryName(backupFile), "*.bak"))
                 {
                     var timeStamp = File.GetCreationTime(bak);
