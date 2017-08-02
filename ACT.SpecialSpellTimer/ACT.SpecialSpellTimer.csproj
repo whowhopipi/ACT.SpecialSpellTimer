@@ -209,7 +209,9 @@
     <Compile Include="Utility\ColorUtility.cs" />
     <Compile Include="Utility\FontUtility.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="resources\samples\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="resources\color\サンプル灰色系.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

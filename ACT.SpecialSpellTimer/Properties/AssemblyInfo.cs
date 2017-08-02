@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("anoyetta")]
 [assembly: AssemblyProduct("ACT.SpecialSpellTimer")]
-[assembly: AssemblyCopyright("Copyright (c) 2014-2017, anoyetta")]
+[assembly: AssemblyCopyright("Copyright © 2014-2017, anoyetta")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
