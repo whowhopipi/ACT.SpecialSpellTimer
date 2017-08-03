@@ -356,6 +356,24 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>@ECHO OFF
+
+SET OUTPUTDIR=$(SolutionDir)bin\$(ConfigurationName)\
+
+IF NOT EXIST %25OUTPUTDIR%25 (
+    MKDIR %25OUTPUTDIR%25
+)
+
+DEL /Q /S %25OUTPUTDIR%25
+
+XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25*
+
+RMDIR /S /Q %25OUTPUTDIR%25locale
+DEL /Q %25OUTPUTDIR%25*.xml
+DEL /Q %25OUTPUTDIR%25*.pdb
+</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

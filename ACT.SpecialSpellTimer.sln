@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACT.SpecialSpellTimer", "ACT.SpecialSpellTimer\ACT.SpecialSpellTimer.csproj", "{EA12D333-F0ED-4524-8BAD-B986B0137EA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XIVDBDownloader", "XIVDBDownloader\XIVDBDownloader.csproj", "{C3FA9195-3381-4622-97EB-D0E1CA7C8B14}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA12D333-F0ED-4524-8BAD-B986B0137EA5} = {EA12D333-F0ED-4524-8BAD-B986B0137EA5}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
