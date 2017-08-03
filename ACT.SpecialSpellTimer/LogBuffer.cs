@@ -332,7 +332,10 @@ namespace ACT.SpecialSpellTimer
             }
 
             // ログファイルに出力する
-            ChatLogWorker.Instance.AppendLines(list);
+            Task.Run(() =>
+            {
+                ChatLogWorker.Instance.AppendLines(list);
+            });
 
             // ログのタイムスタンプを記録する
             this.lastLogineTimestamp = DateTime.Now;

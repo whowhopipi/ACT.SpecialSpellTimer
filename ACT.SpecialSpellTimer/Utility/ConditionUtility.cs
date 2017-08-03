@@ -82,7 +82,8 @@ namespace ACT.SpecialSpellTimer.Utility
             Guid[] timersMustRunning,
             Guid[] timersMustStopping)
         {
-            if (timersMustRunning.Length == 0 && timersMustStopping.Length == 0)
+            if (timersMustRunning.Length == 0 && 
+                timersMustStopping.Length == 0)
             {
                 return true;
             }
