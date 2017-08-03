@@ -87,7 +87,10 @@ namespace ACT.SpecialSpellTimer.Models
         /// <param name="guid">Guid</param>
         public OnePointTelop GetOnePointTelopByGuid(Guid guid)
         {
-            return table.Where(x => x.guid == guid).FirstOrDefault();
+            return table
+                .AsParallel()
+                .Where(x => x.guid == guid)
+                .FirstOrDefault();
         }
 
         /// <summary>

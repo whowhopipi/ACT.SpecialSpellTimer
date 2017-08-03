@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using System.Windows;
+    using System.Windows.Threading;
     using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.FFXIVHelper;
     using ACT.SpecialSpellTimer.Models;
@@ -44,26 +45,31 @@
         /// </summary>
         public static void CloseTelops()
         {
-            if (telopWindowList != null)
+            if (telopWindowList == null)
             {
-                ActInvoker.Invoke(() =>
-                {
-                    foreach (var telop in telopWindowList.Values)
-                    {
-                        telop.DataSource.Left = telop.Left;
-                        telop.DataSource.Top = telop.Top;
-
-                        telop.Close();
-                    }
-                });
-
-                if (telopWindowList.Count > 0)
-                {
-                    OnePointTelopTable.Instance.Save();
-                }
-
-                telopWindowList.Clear();
+                return;
             }
+
+            void closeTelopsCore()
+            {
+                foreach (var telop in telopWindowList.Values)
+                {
+                    telop.DataSource.Left = telop.Left;
+                    telop.DataSource.Top = telop.Top;
+                    telop.Close();
+                }
+            }
+
+            Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Background,
+                (Action)closeTelopsCore);
+
+            if (telopWindowList.Count > 0)
+            {
+                OnePointTelopTable.Instance.Save();
+            }
+
+            telopWindowList.Clear();
         }
 
         /// <summary>
@@ -73,27 +79,36 @@
         public static void GarbageWindows(
             IReadOnlyList<OnePointTelop> telops)
         {
-            // 不要になったWindowを閉じる
-            var removeWindowList = new List<OnePointTelopWindow>();
-            foreach (var window in telopWindowList.Values)
+            void removeWindows()
             {
-                if (!telops.Any(x => x.ID == window.DataSource.ID))
+                if (telopWindowList == null)
                 {
-                    removeWindowList.Add(window);
+                    return;
                 }
-            }
 
-            foreach (var window in removeWindowList)
-            {
-                ActInvoker.Invoke(() =>
+                // 不要になったWindowを閉じる
+                var removeWindowList = new List<OnePointTelopWindow>();
+                foreach (var window in telopWindowList.Values)
+                {
+                    if (!telops.Any(x => x.ID == window.DataSource.ID))
+                    {
+                        removeWindowList.Add(window);
+                    }
+                }
+
+                foreach (var window in removeWindowList)
                 {
                     window.DataSource.Left = window.Left;
                     window.DataSource.Top = window.Top;
                     window.Close();
-                });
 
-                telopWindowList.Remove(window.DataSource.ID);
+                    telopWindowList.Remove(window.DataSource.ID);
+                }
             }
+
+            Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Background,
+                (Action)removeWindows);
         }
 
         /// <summary>
@@ -143,13 +158,10 @@
         {
             if (telopWindowList != null)
             {
-                ActInvoker.Invoke(() =>
+                foreach (var telop in telopWindowList.Values)
                 {
-                    foreach (var telop in telopWindowList.Values)
-                    {
-                        telop.HideOverlay();
-                    }
-                });
+                    telop.HideOverlay();
+                }
             }
         }
 

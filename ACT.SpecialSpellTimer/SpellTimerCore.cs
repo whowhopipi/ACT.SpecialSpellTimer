@@ -8,7 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-
+using System.Windows;
+using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
@@ -152,8 +153,7 @@ namespace ACT.SpecialSpellTimer
 
             // RefreshWindowタイマを開始する
             this.refreshWindowTimer =
-                new System.Windows.Threading.DispatcherTimer(
-                    System.Windows.Threading.DispatcherPriority.Background);
+                new DispatcherTimer(DispatcherPriority.Background);
             this.refreshWindowTimer.Tick += this.RefreshWindowTimerOnTick;
             this.refreshWindowTimer.Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval);
             this.refreshWindowTimer.Start();
@@ -214,44 +214,50 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void ClosePanels()
         {
-            if (this.SpellTimerPanels != null)
+            if (this.SpellTimerPanels == null)
             {
-                ActInvoker.Invoke(() =>
-                {
-                    // Panelの位置を保存する
-                    foreach (var panel in this.SpellTimerPanels)
-                    {
-                        var setting = (
-                            from x in PanelSettings.Instance.SettingsTable
-                            where
-                            x.PanelName == panel.PanelName
-                            select
-                            x).FirstOrDefault();
-
-                        if (setting == null)
-                        {
-                            setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
-                            PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
-                        }
-
-                        setting.PanelName = panel.PanelName;
-                        setting.Left = panel.Left;
-                        setting.Top = panel.Top;
-                    }
-
-                    if (this.SpellTimerPanels.Count > 0)
-                    {
-                        PanelSettings.Instance.Save();
-                    }
-
-                    foreach (var panel in this.SpellTimerPanels)
-                    {
-                        panel.Close();
-                    }
-
-                    this.SpellTimerPanels.Clear();
-                });
+                return;
             }
+
+            void colosePanelsCore()
+            {
+                // Panelの位置を保存する
+                foreach (var panel in this.SpellTimerPanels)
+                {
+                    var setting = (
+                        from x in PanelSettings.Instance.SettingsTable
+                        where
+                        x.PanelName == panel.PanelName
+                        select
+                        x).FirstOrDefault();
+
+                    if (setting == null)
+                    {
+                        setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
+                        PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
+                    }
+
+                    setting.PanelName = panel.PanelName;
+                    setting.Left = panel.Left;
+                    setting.Top = panel.Top;
+                }
+
+                if (this.SpellTimerPanels.Count > 0)
+                {
+                    PanelSettings.Instance.Save();
+                }
+
+                foreach (var panel in this.SpellTimerPanels)
+                {
+                    panel.Close();
+                }
+
+                this.SpellTimerPanels.Clear();
+            }
+
+            Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Background,
+                (Action)colosePanelsCore);
         }
 
         /// <summary>
@@ -419,13 +425,10 @@ namespace ACT.SpecialSpellTimer
         {
             if (this.SpellTimerPanels != null)
             {
-                ActInvoker.Invoke(() =>
+                foreach (var panel in this.SpellTimerPanels)
                 {
-                    foreach (var panel in this.SpellTimerPanels)
-                    {
-                        panel.HideOverlay();
-                    }
-                });
+                    panel.HideOverlay();
+                }
             }
         }
 
@@ -696,11 +699,16 @@ namespace ACT.SpecialSpellTimer
         /// 不要なスペルタイマWindowを閉じる
         /// </summary>
         /// <param name="spells">Spell</param>
-        private void GarbageSpellPanelWindows(
+        public void GarbageSpellPanelWindows(
             IReadOnlyList<Models.SpellTimer> spells)
         {
-            if (this.SpellTimerPanels != null)
+            void removePanels()
             {
+                if (this.SpellTimerPanels == null)
+                {
+                    return;
+                }
+
                 var removeList = new List<SpellTimerListWindow>();
                 foreach (var panel in this.SpellTimerPanels)
                 {
@@ -722,11 +730,7 @@ namespace ACT.SpecialSpellTimer
                     setting.Left = panel.Left;
                     setting.Top = panel.Top;
 
-                    // 毎分0秒の時保存する
-                    if (DateTime.Now.Second == 0)
-                    {
-                        PanelSettings.Instance.Save();
-                    }
+                    PanelSettings.Instance.Save();
 
                     // スペルリストに存在しないパネルを閉じる
                     if (!spells.Any(x => x.Panel == panel.PanelName))
@@ -741,6 +745,10 @@ namespace ACT.SpecialSpellTimer
                     this.SpellTimerPanels.Remove(item);
                 }
             }
+
+            Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Background,
+                (Action)removePanels);
         }
 
         /// <summary>
@@ -1147,16 +1155,10 @@ namespace ACT.SpecialSpellTimer
                     var spells = TableCompiler.Instance.SpellList;
                     var telops = TableCompiler.Instance.TickerList;
 
-                    if ((DateTime.Now.Second % 30) == 0)
-                    {
-                        // 不要なWindowを閉じる
-                        OnePointTelopController.GarbageWindows(telops);
-                        this.GarbageSpellPanelWindows(spells);
-                    }
-
                     if (ActGlobals.oFormActMain == null)
                     {
                         this.HidePanels();
+                        OnePointTelopController.HideTelops();
 
                         Thread.Sleep(1000);
                         return;

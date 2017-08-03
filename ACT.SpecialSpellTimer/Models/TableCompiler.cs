@@ -379,6 +379,10 @@ namespace ACT.SpecialSpellTimer.Models
                     {
                         this.RecompileSpells();
                         this.RecompileTickers();
+
+                        // 不要なWindowを閉じる
+                        OnePointTelopController.GarbageWindows(this.TickerList);
+                        SpellTimerCore.Default.GarbageSpellPanelWindows(this.SpellList);
                     }
                 }
                 catch (ThreadAbortException)

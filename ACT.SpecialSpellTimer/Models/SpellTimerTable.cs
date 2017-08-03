@@ -235,9 +235,13 @@ namespace ACT.SpecialSpellTimer.Models
         /// 指定されたGuidを持つSpellTimerを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public SpellTimer GetSpellTimerByGuid(Guid guid)
+        public SpellTimer GetSpellTimerByGuid(
+            Guid guid)
         {
-            return this.table.Where(x => x.guid == guid).FirstOrDefault();
+            return this.table
+                .AsParallel()
+                .Where(x => x.guid == guid)
+                .FirstOrDefault();
         }
 
         /// <summary>
