@@ -1,5 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 
+using XIVDBDownloader.ViewModels;
+
 namespace XIVDBDownloader
 {
     /// <summary>
@@ -11,6 +13,11 @@ namespace XIVDBDownloader
         public MainWindow()
         {
             this.InitializeComponent();
+
+            this.ViewModel.View = this;
         }
+
+        /// <summary>ViewModel</summary>
+        public MainWindowViewModel ViewModel => (MainWindowViewModel)this.DataContext;
     }
 }
