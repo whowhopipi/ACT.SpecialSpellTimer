@@ -8,8 +8,12 @@
   xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
   mc:Ignorable="d"
   Title="XIVDB Downloader"
+  GlowBrush="{DynamicResource AccentColorBrush}"
+  ResizeMode="CanResizeWithGrip"
+  SaveWindowPosition="False"
+  WindowStartupLocation="CenterScreen"
   Width="800"
-  Height="600">
+  Height="450">
   <Grid>
   </Grid>
 </Controls:MetroWindow>
