@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Windows;
@@ -35,9 +34,6 @@
         /// </summary>
         public SpellTimerListWindow()
         {
-#if DEBUG
-            Debug.WriteLine("SpellList");
-#endif
             this.InitializeComponent();
 
             this.SpellTimerControls = new Dictionary<long, SpellTimerControl>();
@@ -57,9 +53,6 @@
                 if (mouse.LeftButton == MouseButtonState.Pressed)
                 {
                     this.IsDragging = true;
-#if DEBUG
-                    Debug.WriteLine("Drag On");
-#endif
                 }
             });
 
@@ -68,9 +61,6 @@
                 if (mouse.LeftButton == MouseButtonState.Released)
                 {
                     this.IsDragging = false;
-#if DEBUG
-                    Debug.WriteLine("Drag Off");
-#endif
                 }
             });
 

@@ -1,7 +1,6 @@
 ﻿namespace ACT.SpecialSpellTimer.Views
 {
     using System;
-    using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Controls;
@@ -34,9 +33,6 @@
         /// </summary>
         public OnePointTelopWindow()
         {
-#if DEBUG
-            Debug.WriteLine("Telop");
-#endif
             this.InitializeComponent();
 
             this.MessageTextBlock.Text = string.Empty;
@@ -49,9 +45,6 @@
                 if (mouse.LeftButton == MouseButtonState.Pressed)
                 {
                     this.IsDragging = true;
-#if DEBUG
-                    Debug.WriteLine("Drag On");
-#endif
                 }
             });
 
@@ -60,9 +53,6 @@
                 if (mouse.LeftButton == MouseButtonState.Released)
                 {
                     this.IsDragging = false;
-#if DEBUG
-                    Debug.WriteLine("Drag Off");
-#endif
                 }
             });
 

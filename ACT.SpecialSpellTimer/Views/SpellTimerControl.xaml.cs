@@ -1,17 +1,16 @@
-﻿namespace ACT.SpecialSpellTimer.Views
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Image;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer.Views
 {
-    using System;
-    using System.Diagnostics;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Media;
-    using System.Windows.Media.Animation;
-    using System.Windows.Media.Imaging;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Image;
-    using ACT.SpecialSpellTimer.Utility;
-
     /// <summary>
     /// SpellTimerControl
     /// </summary>
@@ -28,9 +27,6 @@
         /// </summary>
         public SpellTimerControl()
         {
-#if DEBUG
-            Debug.WriteLine("Spell");
-#endif
             this.InitializeComponent();
         }
 

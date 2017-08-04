@@ -684,6 +684,7 @@ namespace ACT.SpecialSpellTimer
                 var f = panel.First();
 
                 var w = this.spellTimerPanels
+                    .AsParallel()
                     .Where(x => x.PanelName == f.Panel)
                     .FirstOrDefault();
 
