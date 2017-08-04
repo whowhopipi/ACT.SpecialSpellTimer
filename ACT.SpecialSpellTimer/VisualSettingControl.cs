@@ -541,7 +541,7 @@ namespace ACT.SpecialSpellTimer
                     s.Font = this.GetFontInfo();
                 }
 
-                SpellTimerCore.Default.ClosePanels();
+                SpellTimerCore.Instance.ClosePanels();
                 SpellTimerTable.Instance.Save();
             };
 
@@ -553,7 +553,7 @@ namespace ACT.SpecialSpellTimer
                     s.BarHeight = this.BarSize.Height;
                 }
 
-                SpellTimerCore.Default.ClosePanels();
+                SpellTimerCore.Instance.ClosePanels();
                 SpellTimerTable.Instance.Save();
             };
 
@@ -571,7 +571,7 @@ namespace ACT.SpecialSpellTimer
                     s.BackgroundAlpha = this.backgroundColor.A;
                 }
 
-                SpellTimerCore.Default.ClosePanels();
+                SpellTimerCore.Instance.ClosePanels();
                 SpellTimerTable.Instance.Save();
             };
 

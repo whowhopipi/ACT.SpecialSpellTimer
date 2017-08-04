@@ -119,7 +119,7 @@ namespace ACT.SpecialSpellTimer
                 SpellTimerTable.Instance.ClearUpdateFlags();
 
                 // 標準のスペルタイマーへ変更を反映する
-                SpellTimerCore.Default.ApplyToNormalSpellTimer();
+                SpellTimerCore.Instance.ApplyToNormalSpellTimer();
 
                 this.SpellTimerTreeView.ExpandAll();
             }
@@ -281,7 +281,7 @@ namespace ACT.SpecialSpellTimer
             }
 
             // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.ApplyToNormalSpellTimer();
+            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace ACT.SpecialSpellTimer
                 TableCompiler.Instance.RecompileSpells();
 
                 // スペルの有効・無効が変化した際に、標準のスペルタイマーに反映する
-                SpellTimerCore.Default.ApplyToNormalSpellTimer();
+                SpellTimerCore.Instance.ApplyToNormalSpellTimer();
             };
 
             this.SelectJobButton.Click += (s1, e1) =>
@@ -570,7 +570,7 @@ namespace ACT.SpecialSpellTimer
             }
 
             // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.ApplyToNormalSpellTimer();
+            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
         }
 
         /// <summary>
@@ -689,7 +689,7 @@ namespace ACT.SpecialSpellTimer
             OnePointTelopTable.Instance.Save();
 
             this.LoadSettingsOption();
-            SpellTimerCore.Default.LayoutPanels();
+            SpellTimerCore.Instance.LayoutPanels();
         }
 
         /// <summary>
@@ -834,7 +834,7 @@ namespace ACT.SpecialSpellTimer
 
             // パネルの位置を取得する
             double left, top;
-            SpellTimerCore.Default.GetPanelLocation(
+            SpellTimerCore.Instance.GetPanelLocation(
                 panelName,
                 out left,
                 out top);
@@ -843,13 +843,13 @@ namespace ACT.SpecialSpellTimer
             this.PanelTopNumericUpDown.Value = (int)top;
 
             int margin;
-            SpellTimerCore.Default.GetSpellMargin(
+            SpellTimerCore.Instance.GetSpellMargin(
                 panelName,
                 out margin);
             this.MarginUpDown.Value = margin;
 
             bool horizontal, fixedPositionSpell;
-            SpellTimerCore.Default.GetPanelLayout(
+            SpellTimerCore.Instance.GetPanelLayout(
                 panelName,
                 out horizontal,
                 out fixedPositionSpell);
@@ -871,14 +871,14 @@ namespace ACT.SpecialSpellTimer
                     if (this.DetailPanelGroupBox.Tag != null)
                     {
                         var panelNameToUpdate = (string)this.DetailPanelGroupBox.Tag;
-                        SpellTimerCore.Default.SetPanelLocation(
+                        SpellTimerCore.Instance.SetPanelLocation(
                             panelNameToUpdate,
                             left,
                             top);
-                        SpellTimerCore.Default.SetSpellMargin(
+                        SpellTimerCore.Instance.SetSpellMargin(
                             panelNameToUpdate,
                             margin);
-                        SpellTimerCore.Default.SetPanelLayout(
+                        SpellTimerCore.Instance.SetPanelLayout(
                             panelNameToUpdate,
                             horizontal,
                             fixedPositionSpell);
@@ -899,7 +899,7 @@ namespace ACT.SpecialSpellTimer
             this.ApplySettingsOption();
 
             // Windowを一旦すべて閉じる
-            SpellTimerCore.Default.ClosePanels();
+            SpellTimerCore.Instance.ClosePanels();
             OnePointTelopController.CloseTelops();
         }
 
@@ -1005,7 +1005,7 @@ namespace ACT.SpecialSpellTimer
                         this.LoadSpellTimerTable();
 
                         // 一度全てのパネルを閉じる
-                        SpellTimerCore.Default.ClosePanels();
+                        SpellTimerCore.Instance.ClosePanels();
 
                         foreach (TreeNode root in this.SpellTimerTreeView.Nodes)
                         {

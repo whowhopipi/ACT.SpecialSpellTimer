@@ -40,7 +40,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        public static SpellTimerCore Default => instance;
+        public static SpellTimerCore Instance => instance;
 
         #endregion Singleton
 

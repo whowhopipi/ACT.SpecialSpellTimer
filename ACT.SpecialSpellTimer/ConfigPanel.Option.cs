@@ -62,13 +62,13 @@
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&
                 !this.EnabledNotifyNormalSpellTimerCheckBox.Checked)
             {
-                SpellTimerCore.Default.ClearNormalSpellTimer(true);
+                SpellTimerCore.Instance.ClearNormalSpellTimer(true);
             }
 
             Settings.Default.EnabledNotifyNormalSpellTimer = this.EnabledNotifyNormalSpellTimerCheckBox.Checked;
 
             // 標準のスペルタイマーへ設定を反映する
-            SpellTimerCore.Default.ApplyToNormalSpellTimer();
+            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
 
             // 設定を保存する
             Settings.Default.Save();
@@ -115,7 +115,7 @@
 
                 if (Settings.Default.OverlayVisible)
                 {
-                    SpellTimerCore.Default.ActivatePanels();
+                    SpellTimerCore.Instance.ActivatePanels();
                     OnePointTelopController.ActivateTelops();
                 }
             };
@@ -252,7 +252,7 @@
             this.ResetOnWipeOutCheckBox.Enabled = sw2;
 
             // 標準のスペルタイマーへ設定を反映する
-            SpellTimerCore.Default.ApplyToNormalSpellTimer();
+            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
         }
     }
 }

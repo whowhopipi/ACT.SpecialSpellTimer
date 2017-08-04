@@ -100,7 +100,7 @@ namespace ACT.SpecialSpellTimer
             Settings.Default.OverlayVisible = visible;
             Settings.Default.Save();
 
-            SpellTimerCore.Default.ClosePanels();
+            SpellTimerCore.Instance.ClosePanels();
             OnePointTelopController.CloseTelops();
 
             TableCompiler.Instance.RefreshPlayerPlacceholder();
@@ -111,7 +111,7 @@ namespace ACT.SpecialSpellTimer
 
             if (Settings.Default.OverlayVisible)
             {
-                SpellTimerCore.Default.ActivatePanels();
+                SpellTimerCore.Instance.ActivatePanels();
                 OnePointTelopController.ActivateTelops();
             }
 
@@ -137,7 +137,7 @@ namespace ACT.SpecialSpellTimer
         {
             try
             {
-                SpellTimerCore.Default.End();
+                SpellTimerCore.Instance.End();
                 this.RemoveSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Exited";
 
@@ -219,7 +219,7 @@ namespace ACT.SpecialSpellTimer
                 PanelSettings.Instance.Load();
 
                 // 本体を開始する
-                SpellTimerCore.Default.Begin();
+                SpellTimerCore.Instance.Begin();
 
                 this.SetSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Started";
@@ -294,7 +294,7 @@ namespace ACT.SpecialSpellTimer
                 Settings.Default.OverlayVisible = !Settings.Default.OverlayVisible;
                 Settings.Default.Save();
 
-                SpellTimerCore.Default.ClosePanels();
+                SpellTimerCore.Instance.ClosePanels();
                 OnePointTelopController.CloseTelops();
 
                 TableCompiler.Instance.RefreshPlayerPlacceholder();
@@ -305,7 +305,7 @@ namespace ACT.SpecialSpellTimer
 
                 if (Settings.Default.OverlayVisible)
                 {
-                    SpellTimerCore.Default.ActivatePanels();
+                    SpellTimerCore.Instance.ActivatePanels();
                     OnePointTelopController.ActivateTelops();
                 }
 

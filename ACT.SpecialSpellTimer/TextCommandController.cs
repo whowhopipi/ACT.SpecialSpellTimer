@@ -75,7 +75,7 @@ namespace ACT.SpecialSpellTimer
                         switch (target)
                         {
                             case "spells":
-                                SpellTimerCore.Default.ClosePanels();
+                                SpellTimerCore.Instance.ClosePanels();
                                 commandDone = true;
                                 break;
 

@@ -385,7 +385,7 @@ namespace ACT.SpecialSpellTimer.Models
                         if (!Settings.Default.OverlayForceVisible)
                         {
                             OnePointTelopController.GarbageWindows(this.TickerList);
-                            SpellTimerCore.Default.GarbageSpellPanelWindows(this.SpellList);
+                            SpellTimerCore.Instance.GarbageSpellPanelWindows(this.SpellList);
                         }
                     }
                 }

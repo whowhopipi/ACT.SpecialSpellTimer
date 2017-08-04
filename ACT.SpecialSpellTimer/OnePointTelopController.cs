@@ -128,8 +128,8 @@ namespace ACT.SpecialSpellTimer
                         // ディレイサウンドをスタートさせる
                         telop.StartDelayedSoundTimer();
 
-                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
+                        SpellTimerCore.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellTimerCore.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
 
                         return;
                     }
@@ -161,8 +161,8 @@ namespace ACT.SpecialSpellTimer
 
                     if (matched)
                     {
-                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
+                        SpellTimerCore.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellTimerCore.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
                     }
                 });   // end loop telops
             }

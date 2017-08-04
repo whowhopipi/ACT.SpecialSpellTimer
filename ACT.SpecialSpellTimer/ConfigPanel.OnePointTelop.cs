@@ -40,7 +40,7 @@
                 }
 
                 // 標準のスペルタイマーへ変更を反映する
-                SpellTimerCore.Default.ApplyToNormalSpellTimer();
+                SpellTimerCore.Instance.ApplyToNormalSpellTimer();
 
                 this.TelopTreeView.ExpandAll();
             }
@@ -119,7 +119,7 @@
                 TableCompiler.Instance.RecompileTickers();
 
                 // テロップの有効・無効が変化した際に、標準のスペルタイマーに反映する
-                SpellTimerCore.Default.ApplyToNormalSpellTimer();
+                SpellTimerCore.Instance.ApplyToNormalSpellTimer();
             };
 
             this.TelopTreeView.AfterSelect += (s1, e1) =>
@@ -381,7 +381,7 @@
                 Button.DefaultForeColor;
 
             // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.ApplyToNormalSpellTimer();
+            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
         }
 
         /// <summary>
@@ -454,7 +454,7 @@
             }
 
             // 標準のスペルタイマーへ変更を反映する
-            SpellTimerCore.Default.ApplyToNormalSpellTimer();
+            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
         }
 
         /// <summary>

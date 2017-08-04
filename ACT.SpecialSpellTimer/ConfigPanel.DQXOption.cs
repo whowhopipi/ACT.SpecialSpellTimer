@@ -18,7 +18,7 @@
             this.SaveSettingsDQXOption();
 
             // Windowを一旦すべて閉じる
-            SpellTimerCore.Default.ClosePanels();
+            SpellTimerCore.Instance.ClosePanels();
             OnePointTelopController.CloseTelops();
         }
 
