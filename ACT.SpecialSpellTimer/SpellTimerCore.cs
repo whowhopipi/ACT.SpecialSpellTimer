@@ -66,7 +66,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログバッファ
         /// </summary>
-        private volatile LogBuffer LogBuffer = new LogBuffer();
+        private volatile LogBuffer LogBuffer;
 
         /// <summary>
         /// SpellTimerのPanelリスト
@@ -82,6 +82,9 @@ namespace ACT.SpecialSpellTimer
         {
             // FFXIVのスキャンを開始する
             FFXIV.Instance.Start();
+
+            // ログバッファを生成する
+            this.LogBuffer = new LogBuffer();
 
             // テーブルコンパイラを開始する
             TableCompiler.Instance.Begin();
