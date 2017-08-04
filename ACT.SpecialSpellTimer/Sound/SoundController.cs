@@ -25,11 +25,6 @@ namespace ACT.SpecialSpellTimer.Sound
         #endregion Singleton
 
         /// <summary>
-        /// ゆっくりをチェックしたタイムスタンプ
-        /// </summary>
-        private DateTime checkedYukkuriTimeStamp = DateTime.MinValue;
-
-        /// <summary>
         /// ゆっくりが有効かどうか？
         /// </summary>
         private volatile bool enabledYukkuri = false;
