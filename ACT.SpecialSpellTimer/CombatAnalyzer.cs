@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
-using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 
@@ -171,7 +170,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// スレッド稼働中？
         /// </summary>
-        private bool isRunning;
+        private volatile bool isRunning;
 
         /// <summary>
         /// ログ格納スレッド
@@ -278,7 +277,12 @@ namespace ACT.SpecialSpellTimer
 
             if (this.storeLogThread != null)
             {
-                this.storeLogThread.Join();
+                this.storeLogThread.Join(1);
+                if (this.storeLogThread.IsAlive)
+                {
+                    this.storeLogThread.Abort();
+                }
+
                 this.storeLogThread = null;
             }
 
@@ -308,6 +312,8 @@ namespace ACT.SpecialSpellTimer
         {
             this.ClearLogInfoQueue();
 
+            this.isRunning = true;
+
             this.storeLogThread = new Thread(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
@@ -329,7 +335,7 @@ namespace ACT.SpecialSpellTimer
                 }
             });
 
-            this.isRunning = true;
+            this.storeLogThread.Priority = ThreadPriority.Lowest;
             this.storeLogThread.Start();
         }
 
@@ -681,6 +687,7 @@ namespace ACT.SpecialSpellTimer
                 catch (ThreadAbortException)
                 {
                     this.isRunning = false;
+                    break;
                 }
                 catch (Exception ex)
                 {
