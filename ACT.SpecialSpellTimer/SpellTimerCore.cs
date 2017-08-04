@@ -48,10 +48,13 @@ namespace ACT.SpecialSpellTimer
 
         private Thread backgroudThread;
         private volatile bool backgroundThreadRunning = false;
+
         private Thread detectLogsThread;
         private volatile bool detectLogsThreadRunning = false;
-        private Thread refreshOverlaysThread;
+
         private volatile bool refreshOverlaysThreadRunning = false;
+        private Thread refreshSpellOverlaysThread;
+        private Thread refreshTickerOverlaysThread;
 
         #endregion Thread
 
@@ -100,38 +103,8 @@ namespace ACT.SpecialSpellTimer
             // サウンドコントローラを開始する
             SoundController.Instance.Begin();
 
-            // Window更新スレッドを開始する
-            this.refreshOverlaysThreadRunning = true;
-            this.refreshOverlaysThread = new Thread(() =>
-            {
-                Logger.Write("start refresh overlays.");
-
-                while (this.refreshOverlaysThreadRunning)
-                {
-                    try
-                    {
-                        Application.Current.Dispatcher.Invoke(
-                            (Action)this.RefreshOverlaysCore,
-                            DispatcherPriority.Normal);
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        this.detectLogsThreadRunning = false;
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("refresh overlays error:", ex);
-                    }
-
-                    Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval));
-                }
-
-                Logger.Write("end refresh overlays.");
-            });
-
-            this.refreshOverlaysThread.Priority = ThreadPriority.AboveNormal;
-            this.refreshOverlaysThread.Start();
+            // Overlayの更新スレッドを開始する
+            this.BeginOverlaysThread();
 
             // ログ監視タイマを開始する
             this.detectLogsThreadRunning = true;
@@ -192,6 +165,79 @@ namespace ACT.SpecialSpellTimer
             this.backgroudThread.Start();
         }
 
+        public void BeginOverlaysThread()
+        {
+            // Overlay更新スレッドを開始する
+            this.refreshOverlaysThreadRunning = true;
+
+            // スペルのスレッドを開始する
+            this.refreshSpellOverlaysThread = new Thread(() =>
+            {
+                Logger.Write("start refresh spell overlays.");
+
+                while (this.refreshOverlaysThreadRunning)
+                {
+                    try
+                    {
+                        Application.Current.Dispatcher.Invoke(
+                            (Action)this.RefreshSpellOverlaysCore,
+                            DispatcherPriority.Normal);
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        this.detectLogsThreadRunning = false;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write("refresh spell overlays error:", ex);
+                    }
+
+                    Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval));
+                }
+
+                Logger.Write("end refresh spell overlays.");
+            })
+            {
+                Priority = ThreadPriority.AboveNormal
+            };
+
+            // テロップのスレッドを開始する
+            this.refreshTickerOverlaysThread = new Thread(() =>
+            {
+                Logger.Write("start refresh ticker overlays.");
+
+                while (this.refreshOverlaysThreadRunning)
+                {
+                    try
+                    {
+                        Application.Current.Dispatcher.Invoke(
+                            (Action)this.RefreshTickerOverlaysCore,
+                            DispatcherPriority.Normal);
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        this.detectLogsThreadRunning = false;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write("refresh ticker overlays error:", ex);
+                    }
+
+                    Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval));
+                }
+
+                Logger.Write("end refresh ticker overlays.");
+            })
+            {
+                Priority = ThreadPriority.AboveNormal
+            };
+
+            this.refreshSpellOverlaysThread.Start();
+            this.refreshTickerOverlaysThread.Start();
+        }
+
         /// <summary>
         /// 終了する
         /// </summary>
@@ -204,16 +250,28 @@ namespace ACT.SpecialSpellTimer
             // 戦闘分析を開放する
             CombatAnalyzer.Default.Denitialize();
 
-            // Overlayの更新を開放する
-            if (this.refreshOverlaysThread != null)
+            // スペルのOverlayの更新を開放する
+            if (this.refreshSpellOverlaysThread != null)
             {
-                this.refreshOverlaysThread.Join(TimeSpan.FromSeconds(0.5));
-                if (this.refreshOverlaysThread.IsAlive)
+                this.refreshSpellOverlaysThread.Join(TimeSpan.FromSeconds(0.5));
+                if (this.refreshSpellOverlaysThread.IsAlive)
                 {
-                    this.refreshOverlaysThread.Abort();
+                    this.refreshSpellOverlaysThread.Abort();
                 }
 
-                this.refreshOverlaysThread = null;
+                this.refreshSpellOverlaysThread = null;
+            }
+
+            // テロップのOverlayの更新を開放する
+            if (this.refreshTickerOverlaysThread != null)
+            {
+                this.refreshTickerOverlaysThread.Join(TimeSpan.FromSeconds(0.5));
+                if (this.refreshTickerOverlaysThread.IsAlive)
+                {
+                    this.refreshTickerOverlaysThread.Abort();
+                }
+
+                this.refreshTickerOverlaysThread = null;
             }
 
             // ログ監視を開放する
@@ -349,7 +407,7 @@ namespace ACT.SpecialSpellTimer
             Thread.Sleep(interval);
         }
 
-        private void RefreshOverlaysCore()
+        private void RefreshSpellOverlaysCore()
         {
 #if DEBUG
             var sw = Stopwatch.StartNew();
@@ -358,12 +416,10 @@ namespace ACT.SpecialSpellTimer
             {
                 // 有効なスペルとテロップのリストを取得する
                 var spells = TableCompiler.Instance.SpellList;
-                var telops = TableCompiler.Instance.TickerList;
 
                 if (ActGlobals.oFormActMain == null)
                 {
                     this.HidePanels();
-                    OnePointTelopController.HideTelops();
 
                     Thread.Sleep(1000);
                     return;
@@ -375,7 +431,6 @@ namespace ACT.SpecialSpellTimer
                     !Settings.Default.OverlayForceVisible)
                 {
                     this.ClosePanels();
-                    OnePointTelopController.CloseTelops();
                     return;
                 }
 
@@ -383,7 +438,6 @@ namespace ACT.SpecialSpellTimer
                 if (!Settings.Default.OverlayVisible)
                 {
                     this.HidePanels();
-                    OnePointTelopController.HideTelops();
                     return;
                 }
 
@@ -392,15 +446,69 @@ namespace ACT.SpecialSpellTimer
                     !this.isFFXIVActive)
                 {
                     this.HidePanels();
+                    return;
+                }
+
+                // スペルWindowを表示する
+                this.RefreshSpellOverlays(spells);
+            }
+            finally
+            {
+#if DEBUG
+                sw.Stop();
+#if false
+                Debug.WriteLine(
+                    DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
+                    "◎RefreshWindow " + sw.Elapsed.TotalMilliseconds.ToString("N4") + "ms");
+#endif
+#endif
+            }
+        }
+
+        private void RefreshTickerOverlaysCore()
+        {
+#if DEBUG
+            var sw = Stopwatch.StartNew();
+#endif
+            try
+            {
+                // 有効なスペルとテロップのリストを取得する
+                var telops = TableCompiler.Instance.TickerList;
+
+                if (ActGlobals.oFormActMain == null)
+                {
+                    OnePointTelopController.HideTelops();
+
+                    Thread.Sleep(1000);
+                    return;
+                }
+
+                // FFXIVでの使用？
+                if (!Settings.Default.UseOtherThanFFXIV &&
+                    !this.existFFXIVProcess &&
+                    !Settings.Default.OverlayForceVisible)
+                {
+                    OnePointTelopController.CloseTelops();
+                    return;
+                }
+
+                // オーバーレイが非表示？
+                if (!Settings.Default.OverlayVisible)
+                {
+                    OnePointTelopController.HideTelops();
+                    return;
+                }
+
+                // 非アクティブのとき非表示にする？
+                if (Settings.Default.HideWhenNotActive &&
+                    !this.isFFXIVActive)
+                {
                     OnePointTelopController.HideTelops();
                     return;
                 }
 
                 // テロップWindowを表示する
                 OnePointTelopController.RefreshTelopOverlays(telops);
-
-                // スペルWindowを表示する
-                this.RefreshSpellOverlays(spells);
             }
             finally
             {
