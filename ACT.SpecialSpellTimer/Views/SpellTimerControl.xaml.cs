@@ -168,25 +168,26 @@ namespace ACT.SpecialSpellTimer.Views
         public void Refresh()
         {
             // アイコンの不透明度を設定する
-            var image = this.SpellIconImage;
+            var opacity = 1.0;
             if (this.ReduceIconBrightness)
             {
                 if (this.RecastTime > 0)
                 {
-                    image.Opacity = this.IsReverse ?
+                    opacity = this.IsReverse ?
                         1.0 :
                         ((double)Settings.Default.ReduceIconBrightness / 100d);
                 }
                 else
                 {
-                    image.Opacity = this.IsReverse ?
+                    opacity = this.IsReverse ?
                         ((double)Settings.Default.ReduceIconBrightness / 100d) :
                         1.0;
                 }
             }
-            else
+
+            if (this.SpellIconImage.Opacity != opacity)
             {
-                image.Opacity = 1.0;
+                this.SpellIconImage.Opacity = opacity;
             }
 
             // リキャスト時間を描画する
