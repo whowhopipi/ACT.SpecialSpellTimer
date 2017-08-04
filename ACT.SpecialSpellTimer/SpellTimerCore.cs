@@ -274,6 +274,12 @@ namespace ACT.SpecialSpellTimer
 
             // FFXIV及びACTがアクティブか取得する
             this.isFFXIVActive = this.IsActive();
+
+            // テロップの位置を保存するためテロップテーブルを保存する
+            Task.Run(() =>
+            {
+                OnePointTelopTable.Instance.Save();
+            });
         }
 
         /// <summary>
@@ -377,10 +383,10 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // テロップWindowを表示する
-                OnePointTelopController.RefreshTelopWindows(telops);
+                OnePointTelopController.RefreshTelopOverlays(telops);
 
                 // スペルWindowを表示する
-                this.RefreshSpellPanelWindows(spells);
+                this.RefreshSpellOverlays(spells);
             }
             finally
             {
@@ -649,7 +655,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spells">
         /// 対象のスペル</param>
-        private void RefreshSpellPanelWindows(
+        private void RefreshSpellOverlays(
             IReadOnlyList<Models.SpellTimer> spells)
         {
             var spellsGroupByPanel =

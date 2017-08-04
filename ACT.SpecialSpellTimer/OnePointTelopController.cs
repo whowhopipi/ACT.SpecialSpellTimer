@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -22,7 +21,237 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// テロップWindowのリスト
         /// </summary>
-        private volatile static Dictionary<long, OnePointTelopWindow> telopWindowList = new Dictionary<long, OnePointTelopWindow>();
+        private volatile static Dictionary<long, OnePointTelopWindow> telopWindowList =
+            new Dictionary<long, OnePointTelopWindow>();
+
+        /// <summary>
+        /// ログとマッチングする
+        /// </summary>
+        /// <param name="telops">Telops</param>
+        /// <param name="logLines">ログ行</param>
+        public static void Match(
+            IReadOnlyList<OnePointTelop> telops,
+            IReadOnlyList<string> logLines)
+        {
+            foreach (var log in logLines)
+            {
+                telops.AsParallel().ForAll(telop =>
+                {
+                    var matched = false;
+
+                    var regex = telop.Regex;
+                    var regexToHide = telop.RegexToHide;
+
+                    // 開始条件を確認する
+                    if (ConditionUtility.CheckConditionsForTelop(telop))
+                    {
+                        // 通常マッチ
+                        if (regex == null)
+                        {
+                            var keyword = telop.KeywordReplaced;
+                            if (!string.IsNullOrWhiteSpace(keyword))
+                            {
+                                if (log.ToUpper().Contains(
+                                    keyword.ToUpper()))
+                                {
+                                    var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+
+                                    // PC名を置換する
+                                    messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
+
+                                    if (!telop.AddMessageEnabled)
+                                    {
+                                        telop.MessageReplaced = messageReplaced;
+                                    }
+                                    else
+                                    {
+                                        telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
+                                            messageReplaced :
+                                            Environment.NewLine + messageReplaced;
+                                    }
+
+                                    telop.MatchDateTime = DateTime.Now;
+                                    telop.Delayed = false;
+                                    telop.MatchedLog = log;
+                                    telop.ForceHide = false;
+
+                                    SoundController.Instance.Play(telop.MatchSound);
+                                    SoundController.Instance.Play(telop.MatchTextToSpeak);
+
+                                    matched = true;
+                                }
+                            }
+                        }
+
+                        // 正規表現マッチ
+                        else
+                        {
+                            var match = regex.Match(log);
+                            if (match.Success)
+                            {
+                                var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+                                messageReplaced = match.Result(messageReplaced);
+
+                                // PC名を置換する
+                                messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
+
+                                if (!telop.AddMessageEnabled)
+                                {
+                                    telop.MessageReplaced = messageReplaced;
+                                }
+                                else
+                                {
+                                    telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
+                                        messageReplaced :
+                                        Environment.NewLine + messageReplaced;
+                                }
+
+                                telop.MatchDateTime = DateTime.Now;
+                                telop.Delayed = false;
+                                telop.MatchedLog = log;
+                                telop.ForceHide = false;
+
+                                SoundController.Instance.Play(telop.MatchSound);
+                                if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
+                                {
+                                    var tts = match.Result(telop.MatchTextToSpeak);
+                                    SoundController.Instance.Play(tts);
+                                }
+
+                                matched = true;
+                            }
+                        }
+                    }
+
+                    if (matched)
+                    {
+                        // ディレイサウンドをスタートさせる
+                        telop.StartDelayedSoundTimer();
+
+                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
+
+                        return;
+                    }
+
+                    // 通常マッチ(強制非表示)
+                    if (regexToHide == null)
+                    {
+                        var keyword = telop.KeywordToHideReplaced;
+                        if (!string.IsNullOrWhiteSpace(keyword))
+                        {
+                            if (log.ToUpper().Contains(
+                                keyword.ToUpper()))
+                            {
+                                telop.ForceHide = true;
+                                matched = true;
+                            }
+                        }
+                    }
+
+                    // 正規表現マッチ(強制非表示)
+                    else
+                    {
+                        if (regexToHide.IsMatch(log))
+                        {
+                            telop.ForceHide = true;
+                            matched = true;
+                        }
+                    }
+
+                    if (matched)
+                    {
+                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
+                    }
+                });   // end loop telops
+            }
+        }
+
+        /// <summary>
+        /// Windowをリフレッシュする
+        /// </summary>
+        /// <param name="telop">テロップ</param>
+        public static void RefreshTelopOverlays(
+            IReadOnlyList<OnePointTelop> telops)
+        {
+            foreach (var telop in telops)
+            {
+                var w = telopWindowList.ContainsKey(telop.ID) ? telopWindowList[telop.ID] : null;
+                if (w == null)
+                {
+                    w = new OnePointTelopWindow()
+                    {
+                        Title = "OnePointTelop - " + telop.Title,
+                        DataSource = telop
+                    };
+
+                    if (Settings.Default.ClickThroughEnabled)
+                    {
+                        w.ToTransparentWindow();
+                    }
+
+                    w.Opacity = 0;
+                    w.Topmost = false;
+                    w.Show();
+
+                    telopWindowList.Add(telop.ID, w);
+                }
+
+                if (Settings.Default.OverlayVisible &&
+                    Settings.Default.TelopAlwaysVisible)
+                {
+                    // ドラッグ中じゃない？
+                    if (!w.IsDragging)
+                    {
+                        w.Refresh();
+                        w.ShowOverlay();
+                    }
+
+                    continue;
+                }
+
+                // 実際のテロップの位置を取得しておく
+                telop.Left = w.Left;
+                telop.Top = w.Top;
+
+                if (telop.MatchDateTime > DateTime.MinValue)
+                {
+                    var start = telop.MatchDateTime.AddSeconds(telop.Delay);
+                    var end = telop.MatchDateTime.AddSeconds(telop.Delay + telop.DisplayTime);
+
+                    if (start <= DateTime.Now && DateTime.Now <= end)
+                    {
+                        w.Refresh();
+                        w.ShowOverlay();
+                    }
+                    else
+                    {
+                        w.HideOverlay();
+
+                        if (DateTime.Now > end)
+                        {
+                            telop.MatchDateTime = DateTime.MinValue;
+                            telop.MessageReplaced = string.Empty;
+                        }
+                    }
+
+                    if (telop.ForceHide)
+                    {
+                        w.HideOverlay();
+                        telop.MatchDateTime = DateTime.MinValue;
+                        telop.MessageReplaced = string.Empty;
+                    }
+                }
+                else
+                {
+                    w.HideOverlay();
+                    telop.MessageReplaced = string.Empty;
+                }
+            }
+        }
+
+        #region Overlays Controller
 
         /// <summary>
         /// テロップをActive化する
@@ -173,242 +402,6 @@ namespace ACT.SpecialSpellTimer
         }
 
         /// <summary>
-        /// ログとマッチングする
-        /// </summary>
-        /// <param name="telops">Telops</param>
-        /// <param name="logLines">ログ行</param>
-        public static void Match(
-            IReadOnlyList<OnePointTelop> telops,
-            IReadOnlyList<string> logLines)
-        {
-            foreach (var log in logLines)
-            {
-                telops.AsParallel().ForAll(telop =>
-                {
-                    var matched = false;
-
-                    var regex = telop.Regex;
-                    var regexToHide = telop.RegexToHide;
-
-                    // 開始条件を確認する
-                    if (ConditionUtility.CheckConditionsForTelop(telop))
-                    {
-                        // 通常マッチ
-                        if (regex == null)
-                        {
-                            var keyword = telop.KeywordReplaced;
-                            if (!string.IsNullOrWhiteSpace(keyword))
-                            {
-                                if (log.ToUpper().Contains(
-                                    keyword.ToUpper()))
-                                {
-                                    var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
-
-                                    // PC名を置換する
-                                    messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
-
-                                    if (!telop.AddMessageEnabled)
-                                    {
-                                        telop.MessageReplaced = messageReplaced;
-                                    }
-                                    else
-                                    {
-                                        telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
-                                            messageReplaced :
-                                            Environment.NewLine + messageReplaced;
-                                    }
-
-                                    telop.MatchDateTime = DateTime.Now;
-                                    telop.Delayed = false;
-                                    telop.MatchedLog = log;
-                                    telop.ForceHide = false;
-
-                                    SoundController.Instance.Play(telop.MatchSound);
-                                    SoundController.Instance.Play(telop.MatchTextToSpeak);
-
-                                    matched = true;
-                                }
-                            }
-                        }
-
-                        // 正規表現マッチ
-                        else
-                        {
-                            var match = regex.Match(log);
-                            if (match.Success)
-                            {
-                                var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
-                                messageReplaced = match.Result(messageReplaced);
-
-                                // PC名を置換する
-                                messageReplaced = FFXIV.Instance.ReplacePartyMemberName(messageReplaced);
-
-                                if (!telop.AddMessageEnabled)
-                                {
-                                    telop.MessageReplaced = messageReplaced;
-                                }
-                                else
-                                {
-                                    telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
-                                        messageReplaced :
-                                        Environment.NewLine + messageReplaced;
-                                }
-
-                                telop.MatchDateTime = DateTime.Now;
-                                telop.Delayed = false;
-                                telop.MatchedLog = log;
-                                telop.ForceHide = false;
-
-                                SoundController.Instance.Play(telop.MatchSound);
-                                if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
-                                {
-                                    var tts = match.Result(telop.MatchTextToSpeak);
-                                    SoundController.Instance.Play(tts);
-                                }
-
-                                matched = true;
-                            }
-                        }
-                    }
-
-                    if (matched)
-                    {
-                        // ディレイサウンドをスタートさせる
-                        telop.StartDelayedSoundTimer();
-
-                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
-
-                        return;
-                    }
-
-                    // 通常マッチ(強制非表示)
-                    if (regexToHide == null)
-                    {
-                        var keyword = telop.KeywordToHideReplaced;
-                        if (!string.IsNullOrWhiteSpace(keyword))
-                        {
-                            if (log.ToUpper().Contains(
-                                keyword.ToUpper()))
-                            {
-                                telop.ForceHide = true;
-                                matched = true;
-                            }
-                        }
-                    }
-
-                    // 正規表現マッチ(強制非表示)
-                    else
-                    {
-                        if (regexToHide.IsMatch(log))
-                        {
-                            telop.ForceHide = true;
-                            matched = true;
-                        }
-                    }
-
-                    if (matched)
-                    {
-                        SpellTimerCore.Default.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Default.NotifyNormalSpellTimerForTelop(telop.Title);
-                    }
-                });   // end loop telops
-            }
-        }
-
-        /// <summary>
-        /// Windowをリフレッシュする
-        /// </summary>
-        /// <param name="telop">テロップ</param>
-        public static void RefreshTelopWindows(
-            IReadOnlyList<OnePointTelop> telops)
-        {
-            foreach (var telop in telops)
-            {
-                var w = telopWindowList.ContainsKey(telop.ID) ? telopWindowList[telop.ID] : null;
-                if (w == null)
-                {
-                    w = new OnePointTelopWindow()
-                    {
-                        Title = "OnePointTelop - " + telop.Title,
-                        DataSource = telop
-                    };
-
-                    if (Settings.Default.ClickThroughEnabled)
-                    {
-                        w.ToTransparentWindow();
-                    }
-
-                    w.Opacity = 0;
-                    w.Topmost = false;
-                    w.Show();
-
-                    telopWindowList.Add(telop.ID, w);
-                }
-
-                if (Settings.Default.OverlayVisible &&
-                    Settings.Default.TelopAlwaysVisible)
-                {
-                    // ドラッグ中じゃない？
-                    if (!w.IsDragging)
-                    {
-                        w.Refresh();
-                        w.ShowOverlay();
-                    }
-
-                    continue;
-                }
-
-                // 実際のテロップの位置を取得しておく
-                telop.Left = w.Left;
-                telop.Top = w.Top;
-
-                if (telop.MatchDateTime > DateTime.MinValue)
-                {
-                    var start = telop.MatchDateTime.AddSeconds(telop.Delay);
-                    var end = telop.MatchDateTime.AddSeconds(telop.Delay + telop.DisplayTime);
-
-                    if (start <= DateTime.Now && DateTime.Now <= end)
-                    {
-                        w.Refresh();
-                        w.ShowOverlay();
-                    }
-                    else
-                    {
-                        w.HideOverlay();
-
-                        if (DateTime.Now > end)
-                        {
-                            telop.MatchDateTime = DateTime.MinValue;
-                            telop.MessageReplaced = string.Empty;
-                        }
-                    }
-
-                    if (telop.ForceHide)
-                    {
-                        w.HideOverlay();
-                        telop.MatchDateTime = DateTime.MinValue;
-                        telop.MessageReplaced = string.Empty;
-                    }
-                }
-                else
-                {
-                    w.HideOverlay();
-                    telop.MessageReplaced = string.Empty;
-                }
-            }
-
-            // telopの位置を保存する
-            if (DateTime.Now.Second == 0)
-            {
-                Task.Run(() =>
-                {
-                    OnePointTelopTable.Instance.Save();
-                });
-            }
-        }
-
-        /// <summary>
         /// 位置を設定する
         /// </summary>
         /// <param name="telopID">設定するテロップのID</param>
@@ -444,5 +437,7 @@ namespace ACT.SpecialSpellTimer
                 }
             }
         }
+
+        #endregion Overlays Controller
     }
 }
