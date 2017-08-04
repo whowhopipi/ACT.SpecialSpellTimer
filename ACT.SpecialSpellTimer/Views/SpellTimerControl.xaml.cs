@@ -300,7 +300,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // アイコンを描画する
             var image = this.SpellIconImage;
-            var iconFile = IconController.Default.getIconFile(this.SpellIcon);
+            var iconFile = IconController.Instance.GetIconFile(this.SpellIcon);
             if (image.Source == null &&
                 iconFile != null)
             {

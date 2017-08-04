@@ -1,32 +1,19 @@
-﻿namespace ACT.SpecialSpellTimer.Image
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
+namespace ACT.SpecialSpellTimer.Image
+{
     public class IconController
     {
-        /// <summary>
-        /// シングルトンinstance
-        /// </summary>
-        private static IconController instance;
+        #region Singleton
 
-        /// <summary>
-        /// シングルトンinstance
-        /// </summary>
-        public static IconController Default
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new IconController();
-                }
+        private static IconController instance = new IconController();
 
-                return instance;
-            }
-        }
+        public static IconController Instance => instance;
+
+        #endregion Singleton
 
         public string IconDirectory
         {
@@ -82,9 +69,10 @@
             return list.ToArray();
         }
 
-        public IconFile getIconFile(String relativePath)
+        public IconFile GetIconFile(String relativePath)
         {
-            if (relativePath == string.Empty || relativePath == null)
+            if (relativePath == string.Empty ||
+                relativePath == null)
             {
                 return null;
             }

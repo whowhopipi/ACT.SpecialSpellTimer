@@ -233,7 +233,7 @@ namespace ACT.SpecialSpellTimer
                 var hasIcon = false;
                 if (this.BarEnabled)
                 {
-                    var spellIcon = IconController.Default.getIconFile(this.SpellIcon);
+                    var spellIcon = IconController.Instance.GetIconFile(this.SpellIcon);
                     if (spellIcon != null)
                     {
                         var image = System.Drawing.Image.FromFile(spellIcon.FullPath);
