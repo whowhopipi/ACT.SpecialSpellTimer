@@ -59,6 +59,11 @@ namespace ACT.SpecialSpellTimer
         private volatile bool isFFXIVActive;
 
         /// <summary>
+        /// 最後にテロップテーブルを保存した日時
+        /// </summary>
+        private DateTime lastSaveTickerTableDateTime = DateTime.Now;
+
+        /// <summary>
         /// 最後に全滅した日時
         /// </summary>
         private DateTime lastWipeOutDateTime = DateTime.MinValue;
@@ -279,10 +284,16 @@ namespace ACT.SpecialSpellTimer
             this.isFFXIVActive = this.IsActive();
 
             // テロップの位置を保存するためテロップテーブルを保存する
-            Task.Run(() =>
+            if ((DateTime.Now - this.lastSaveTickerTableDateTime).TotalMinutes >= 1)
             {
-                OnePointTelopTable.Instance.Save();
-            });
+                this.lastSaveTickerTableDateTime = DateTime.Now;
+
+                Task.Run(() =>
+                {
+                    OnePointTelopTable.Instance.Save();
+                    Debug.WriteLine("●Save telop table.");
+                });
+            }
         }
 
         /// <summary>
@@ -395,9 +406,11 @@ namespace ACT.SpecialSpellTimer
             {
 #if DEBUG
                 sw.Stop();
+#if false
                 Debug.WriteLine(
                     DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
                     "◎RefreshWindow " + sw.Elapsed.TotalMilliseconds.ToString("N4") + "ms");
+#endif
 #endif
             }
         }

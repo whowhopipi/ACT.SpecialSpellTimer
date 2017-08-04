@@ -175,7 +175,8 @@ namespace ACT.SpecialSpellTimer
         public static void RefreshTelopOverlays(
             IReadOnlyList<OnePointTelop> telops)
         {
-            foreach (var telop in telops)
+            void refreshTelop(
+                OnePointTelop telop)
             {
                 var w = telopWindowList.ContainsKey(telop.ID) ? telopWindowList[telop.ID] : null;
                 if (w == null)
@@ -208,7 +209,7 @@ namespace ACT.SpecialSpellTimer
                         w.ShowOverlay();
                     }
 
-                    continue;
+                    return;
                 }
 
                 // 実際のテロップの位置を取得しておく
@@ -248,6 +249,11 @@ namespace ACT.SpecialSpellTimer
                     w.HideOverlay();
                     telop.MessageReplaced = string.Empty;
                 }
+            }
+
+            foreach (var telop in telops)
+            {
+                refreshTelop(telop);
             }
         }
 

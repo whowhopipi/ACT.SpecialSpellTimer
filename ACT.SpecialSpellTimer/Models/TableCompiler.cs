@@ -171,7 +171,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in query.AsParallel())
+            foreach (var spell in query)
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
@@ -266,7 +266,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in query.AsParallel())
+            foreach (var spell in query)
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
