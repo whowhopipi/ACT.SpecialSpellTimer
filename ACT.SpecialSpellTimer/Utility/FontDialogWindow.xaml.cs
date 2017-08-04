@@ -66,7 +66,7 @@
         }
 
         internal static void SetFontInfo(
-                            this OutlineTextBlock control,
+            this OutlineTextBlock control,
             FontInfo fontInfo)
         {
             if (control.GetFontInfo().ToString() != fontInfo.ToString())

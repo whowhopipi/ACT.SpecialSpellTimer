@@ -38,7 +38,13 @@
       Grid.ColumnSpan="3"
       Margin="0,2,0,10"
       VerticalAlignment="Top">
-      <Rectangle x:Name="BarBackRectangle" />
+
+      <Rectangle
+        x:Name="BarBackRectangle"
+        RadiusX="2"
+        RadiusY="2"
+        Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}" />
+
       <Canvas>
         <Canvas.Effect>
           <DropShadowEffect
@@ -55,10 +61,21 @@
               ScaleX="0.0"
               ScaleY="1.0" />
           </Canvas.RenderTransform>
-          <Rectangle x:Name="BarRectangle" />
+
+          <Rectangle
+            x:Name="BarRectangle"
+            RadiusX="2"
+            RadiusY="2" />
         </Canvas>
       </Canvas>
-      <Rectangle x:Name="BarOutlineRectangle" />
+
+      <Rectangle
+        x:Name="BarOutlineRectangle"
+        StrokeThickness="1"
+        RadiusX="2"
+        RadiusY="2"
+        Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}"
+        Width="{Binding ElementName=BarRectangle, Path=Width, Mode=OneWay}" />
     </Canvas>
 
     <DockPanel

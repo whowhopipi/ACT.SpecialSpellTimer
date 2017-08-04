@@ -206,7 +206,10 @@ namespace ACT.SpecialSpellTimer
                     if (!w.IsDragging)
                     {
                         w.Refresh();
-                        w.ShowOverlay();
+                        if (w.ShowOverlay())
+                        {
+                            w.StartProgressBar();
+                        }
                     }
 
                     return;
@@ -224,7 +227,10 @@ namespace ACT.SpecialSpellTimer
                     if (start <= DateTime.Now && DateTime.Now <= end)
                     {
                         w.Refresh();
-                        w.ShowOverlay();
+                        if (w.ShowOverlay())
+                        {
+                            w.StartProgressBar();
+                        }
                     }
                     else
                     {

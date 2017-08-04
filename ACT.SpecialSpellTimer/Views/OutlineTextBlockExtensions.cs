@@ -33,7 +33,12 @@ namespace ACT.SpecialSpellTimer.Views
                 textOutlineThicknessGain = Settings.Default.TextOutlineThicknessRate;
             }
 
-            t.StrokeThickness = thickness * textOutlineThicknessGain;
+            var newThickness = thickness * textOutlineThicknessGain;
+
+            if (t.StrokeThickness != newThickness)
+            {
+                t.StrokeThickness = newThickness;
+            }
         }
     }
 }

@@ -28,7 +28,6 @@
         Width="{Binding ActualWidth, ElementName=BackgroundColorGrid}"
         Height="{Binding ActualHeight, ElementName=BackgroundColorGrid}"
         Margin="0,0,0,0"
-        Fill="Transparent"
         RadiusX="8"
         RadiusY="8" />
     </Canvas>
@@ -47,12 +46,21 @@
         Name="ProgressBarCanvas"
         Grid.Row="1"
         Grid.Column="0"
-        Margin="0,0,0,0"
+        Margin="0,0,0,12"
         HorizontalAlignment="Left"
         VerticalAlignment="Top">
-        <Rectangle x:Name="BarBackRectangle" />
 
-        <Rectangle x:Name="BarRectangle">
+        <Rectangle
+          x:Name="BarBackRectangle"
+          RadiusX="2"
+          RadiusY="2"
+          Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}" />
+
+        <Rectangle
+          x:Name="BarRectangle"
+          RadiusX="2"
+          RadiusY="2">
+
           <Rectangle.Effect>
             <DropShadowEffect
               x:Name="BarEffect"
@@ -62,7 +70,13 @@
           </Rectangle.Effect>
         </Rectangle>
 
-        <Rectangle x:Name="BarOutlineRectangle" />
+        <Rectangle
+          x:Name="BarOutlineRectangle"
+          RadiusX="2"
+          RadiusY="2"
+          StrokeThickness="1"
+          Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}"
+          Width="{Binding ElementName=BarRectangle, Path=Width, Mode=OneWay}" />
       </Canvas>
 
       <local:OutlineTextBlock

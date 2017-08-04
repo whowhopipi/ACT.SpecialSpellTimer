@@ -1,18 +1,18 @@
-﻿namespace ACT.SpecialSpellTimer.Views
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer.Views
 {
-    using System;
-    using System.Runtime.InteropServices;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Input;
-    using System.Windows.Interop;
-    using System.Windows.Media;
-    using System.Windows.Threading;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Utility;
-
     /// <summary>
     /// ワンポイントテロップWindow
     /// </summary>
@@ -62,16 +62,15 @@
             this.MessageTextBlock.MouseUp += (s1, e1) => this.DragOff(e1);
             this.ProgressBarCanvas.MouseDown += (s1, e1) => this.DragOn(e1);
             this.ProgressBarCanvas.MouseUp += (s1, e1) => this.DragOff(e1);
+
+            // アニメーションを準備する
+            this.SetupAnimation();
         }
 
         /// <summary>
         /// 表示するデータソース
         /// </summary>
-        public OnePointTelop DataSource
-        {
-            get;
-            set;
-        }
+        public OnePointTelop DataSource { get; set; }
 
         /// <summary>
         /// ドラッグ中か？
@@ -172,95 +171,47 @@
             message = message.Replace("{COUNT}", countAsText);
             message = message.Replace("{COUNT0}", count0AsText);
 
-            if (this.MessageTextBlock.Text != message)
-            {
-                this.MessageTextBlock.Text = message;
-
-                this.MessageTextBlock.SetFontInfo(this.DataSource.Font);
-                this.MessageTextBlock.Fill = this.FontBrush;
-                this.MessageTextBlock.Stroke = this.FontOutlineBrush;
-                this.MessageTextBlock.SetAutoStrokeThickness();
-            }
+            // テキストブロックにセットする
+            var textBlock = this.MessageTextBlock;
+            if (textBlock.Text != message) textBlock.Text = message;
+            if (textBlock.Fill != this.FontBrush) textBlock.Fill = this.FontBrush;
+            if (textBlock.Stroke != this.FontOutlineBrush) textBlock.Stroke = this.FontOutlineBrush;
+            textBlock.SetFontInfo(this.DataSource.Font);
+            textBlock.SetAutoStrokeThickness();
 
             // プログレスバーを表示しない？
             if (!this.DataSource.ProgressBarEnabled ||
                 this.DataSource.DisplayTime <= 0)
             {
                 this.ProgressBarCanvas.Visibility = Visibility.Collapsed;
-                return;
             }
+        }
 
-            // 残り表示時間の率を算出する
-            var progress = 1.0d;
-            if (this.DataSource.MatchDateTime > DateTime.MinValue)
-            {
-                // 表示の残り時間を求める
-                var displayTimeRemain = (
-                    this.DataSource.MatchDateTime.AddSeconds(this.DataSource.Delay + this.DataSource.DisplayTime) -
-                    DateTime.Now).TotalSeconds;
+        private void InitializeProgressBar()
+        {
+            // アニメーションを停止させる
+            this.BarRectangle.BeginAnimation(
+                Rectangle.WidthProperty,
+                null);
 
-                if (displayTimeRemain < 0.0d)
-                {
-                    displayTimeRemain = 0.0d;
-                }
+            var baseHeight = Settings.Default.ProgressBarSize.Height;
+            var baseWidth = this.MessageTextBlock.ActualWidth;
 
-                // 率を求める
-                if (this.DataSource.DisplayTime > 0)
-                {
-                    progress = displayTimeRemain / this.DataSource.DisplayTime;
-                }
-            }
+            var barRect = this.BarRectangle;
+            if (barRect.Fill != this.BarBrush) barRect.Fill = this.BarBrush;
+            if (barRect.Width != baseWidth) barRect.Width = baseWidth;
+            if (barRect.Height != baseHeight) barRect.Height = baseHeight;
 
-            // 常に表示するときは100%表示
-            if (Settings.Default.TelopAlwaysVisible)
-            {
-                progress = 1.0d;
-            }
+            var backRect = this.BarBackRectangle;
+            if (backRect.Fill != this.BarBackBrush) backRect.Fill = this.BarBackBrush;
+            if (backRect.Width != baseWidth) backRect.Width = baseWidth;
 
-            if (progress > 0.0d)
-            {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    var barRect = this.BarRectangle;
-                    barRect.Stroke = this.BarBrush;
-                    barRect.Fill = this.BarBrush;
-                    barRect.Width = this.MessageTextBlock.ActualWidth * progress;
-                    barRect.Height = Settings.Default.ProgressBarSize.Height;
-                    barRect.RadiusX = 2.0d;
-                    barRect.RadiusY = 2.0d;
-                    Canvas.SetLeft(barRect, 0);
-                    Canvas.SetTop(barRect, 0);
+            var outlineRect = this.BarOutlineRectangle;
+            if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
 
-                    var backRect = this.BarBackRectangle;
-                    backRect.Stroke = this.BarBackBrush;
-                    backRect.Fill = this.BarBackBrush;
-                    backRect.Width = this.MessageTextBlock.ActualWidth;
-                    backRect.Height = Settings.Default.ProgressBarSize.Height;
-                    backRect.RadiusX = 2.0d;
-                    backRect.RadiusY = 2.0d;
-                    Canvas.SetLeft(backRect, 0);
-                    Canvas.SetTop(backRect, 0);
-
-                    var outlineRect = this.BarOutlineRectangle;
-                    outlineRect.Stroke = this.BarOutlineBrush;
-                    outlineRect.StrokeThickness = 1.0d;
-                    outlineRect.Width = this.MessageTextBlock.ActualWidth;
-                    outlineRect.Height = Settings.Default.ProgressBarSize.Height;
-                    outlineRect.RadiusX = 2.0d;
-                    outlineRect.RadiusY = 2.0d;
-                    Canvas.SetLeft(outlineRect, 0);
-                    Canvas.SetTop(outlineRect, 0);
-
-                    // バーのエフェクトの色を設定する
-                    this.BarEffect.Color = this.BarBrush.Color.ChangeBrightness(1.05d);
-
-                    this.ProgressBarCanvas.Width = backRect.Width;
-                    this.ProgressBarCanvas.Height = backRect.Height;
-                }),
-                DispatcherPriority.Loaded);
-
-                this.ProgressBarCanvas.Visibility = Visibility.Visible;
-            }
+            // バーのエフェクトの色を設定する
+            var barEffectColor = this.BarBrush.Color.ChangeBrightness(1.05d);
+            if (this.BarEffect.Color != barEffectColor) this.BarEffect.Color = barEffectColor;
         }
 
         /// <summary>
@@ -278,6 +229,52 @@
 
             this.Refresh();
         }
+
+        #region Animation
+
+        private DoubleAnimationUsingKeyFrames animation = new DoubleAnimationUsingKeyFrames();
+        private LinearDoubleKeyFrame keyframe1 = new LinearDoubleKeyFrame();
+
+        public void StartProgressBar()
+        {
+            if (this.DataSource == null ||
+                !this.DataSource.ProgressBarEnabled)
+            {
+                this.ProgressBarCanvas.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            this.InitializeProgressBar();
+            this.ProgressBarCanvas.Visibility = Visibility.Visible;
+
+            var matchDateTime = this.DataSource.MatchDateTime;
+            if (matchDateTime <= DateTime.MinValue)
+            {
+                matchDateTime = DateTime.Now;
+            }
+
+            var timeToHide = matchDateTime.AddSeconds(
+                this.DataSource.Delay + this.DataSource.DisplayTime);
+
+            var timeToLive = (timeToHide - DateTime.Now).TotalMilliseconds;
+
+            if (timeToLive >= 0)
+            {
+                this.keyframe1.Value = 0;
+                this.keyframe1.KeyTime = TimeSpan.FromMilliseconds(timeToLive);
+
+                this.BarRectangle.BeginAnimation(
+                    Rectangle.WidthProperty,
+                    this.animation);
+            }
+        }
+
+        private void SetupAnimation()
+        {
+            this.animation.KeyFrames.Add(this.keyframe1);
+        }
+
+        #endregion Animation
 
         #region フォーカスを奪わない対策
 

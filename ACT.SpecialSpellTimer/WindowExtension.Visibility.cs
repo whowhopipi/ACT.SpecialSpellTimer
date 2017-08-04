@@ -50,10 +50,13 @@
         public static void HideOverlay(
             this Window x)
         {
-            if (x.Opacity > 0d)
+            lock (x)
             {
-                x.Opacity = 0d;
-                x.Topmost = false;
+                if (x.Opacity > 0d)
+                {
+                    x.Opacity = 0d;
+                    x.Topmost = false;
+                }
             }
         }
 
@@ -61,19 +64,27 @@
         /// オーバーレイとして表示する
         /// </summary>
         /// <param name="x">Window</param>
-        public static void ShowOverlay(
+        public static bool ShowOverlay(
             this Window x)
         {
-            if (x.Opacity <= 0d)
+            lock (x)
             {
-                var targetOpacity = (100d - Settings.Default.Opacity) / 100d;
+                var changed = false;
 
-                if (x.Opacity != targetOpacity)
+                if (x.Opacity <= 0d)
                 {
-                    x.Opacity = targetOpacity;
+                    var targetOpacity = (100d - Settings.Default.Opacity) / 100d;
+
+                    if (x.Opacity != targetOpacity)
+                    {
+                        x.Opacity = targetOpacity;
+                        changed = true;
+                    }
+
+                    x.Topmost = true;
                 }
 
-                x.Topmost = true;
+                return changed;
             }
         }
 

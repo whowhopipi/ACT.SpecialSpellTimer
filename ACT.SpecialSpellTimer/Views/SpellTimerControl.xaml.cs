@@ -17,12 +17,6 @@ namespace ACT.SpecialSpellTimer.Views
     public partial class SpellTimerControl : UserControl
     {
         /// <summary>
-        /// リキャスト秒数の書式
-        /// </summary>
-        private static string recastTimeFormat =
-            Settings.Default.EnabledSpellTimerNoDecimal ? "N0" : "N1";
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         public SpellTimerControl()
@@ -118,13 +112,10 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// スペル表示領域の幅
         /// </summary>
-        public int SpellWidth
-        {
-            get
-            {
-                return BarWidth > SpellIconSize ? BarWidth : SpellIconSize;
-            }
-        }
+        public int SpellWidth =>
+            this.BarWidth > this.SpellIconSize ?
+            this.BarWidth :
+            this.SpellIconSize;
 
         /// <summary>
         /// WarningFontの色
@@ -140,6 +131,12 @@ namespace ACT.SpecialSpellTimer.Views
         /// Time left warning in seconds
         /// </summary>
         public double WarningTime { get; set; }
+
+        /// <summary>
+        /// リキャスト秒数の書式
+        /// </summary>
+        private static string RecastTimeFormat =>
+            Settings.Default.EnabledSpellTimerNoDecimal ? "N0" : "N1";
 
         /// <summary>バーのアニメーション用DoubleAnimation</summary>
         private DoubleAnimation BarAnimation { get; set; }
@@ -195,26 +192,25 @@ namespace ACT.SpecialSpellTimer.Views
             // リキャスト時間を描画する
             var tb = this.RecastTimeTextBlock;
             var recast = this.RecastTime > 0 ?
-                this.RecastTime.ToString(recastTimeFormat) :
+                this.RecastTime.ToString(RecastTimeFormat) :
                 this.IsReverse ? Settings.Default.OverText : Settings.Default.ReadyText;
-            if (tb.Text != recast)
-            {
-                tb.Text = recast;
-                tb.SetFontInfo(this.FontInfo);
-                if (this.ChangeFontColorsWhenWarning &&
-                    this.RecastTime < this.WarningTime)
-                {
-                    tb.Fill = this.WarningFontBrush;
-                    tb.Stroke = this.WarningFontOutlineBrush;
-                }
-                else
-                {
-                    tb.Fill = this.FontBrush;
-                    tb.Stroke = this.FontOutlineBrush;
-                }
 
-                tb.SetAutoStrokeThickness();
+            if (tb.Text != recast) tb.Text = recast;
+            tb.SetFontInfo(this.FontInfo);
+            tb.SetAutoStrokeThickness();
+
+            var fill = this.FontBrush;
+            var stroke = this.FontOutlineBrush;
+
+            if (this.ChangeFontColorsWhenWarning &&
+                this.RecastTime < this.WarningTime)
+            {
+                fill = this.WarningFontBrush;
+                stroke = this.WarningFontOutlineBrush;
             }
+
+            if (tb.Fill != fill) tb.Fill = fill;
+            if (tb.Stroke != stroke) tb.Stroke = stroke;
         }
 
         /// <summary>
@@ -266,9 +262,6 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void Update()
         {
-#if false
-            var sw = Stopwatch.StartNew();
-#endif
             this.Width = this.SpellWidth;
 
             // Brushを生成する
@@ -279,11 +272,11 @@ namespace ACT.SpecialSpellTimer.Views
                 Settings.Default.FontOutlineColor.ToWPF() :
                 this.FontOutlineColor.FromHTMLWPF();
             var warningFontColor = string.IsNullOrWhiteSpace(this.WarningFontColor) ?
-                    Settings.Default.WarningFontColor.ToWPF() :
-                    this.WarningFontColor.FromHTMLWPF();
+                Settings.Default.WarningFontColor.ToWPF() :
+                this.WarningFontColor.FromHTMLWPF();
             var warningFontOutlineColor = string.IsNullOrWhiteSpace(this.WarningFontOutlineColor) ?
-                    Settings.Default.WarningFontOutlineColor.ToWPF() :
-                    this.WarningFontOutlineColor.FromHTMLWPF();
+                Settings.Default.WarningFontOutlineColor.ToWPF() :
+                this.WarningFontOutlineColor.FromHTMLWPF();
 
             var barColor = string.IsNullOrWhiteSpace(this.BarColor) ?
                 Settings.Default.ProgressBarColor.ToWPF() :
@@ -307,7 +300,8 @@ namespace ACT.SpecialSpellTimer.Views
             // アイコンを描画する
             var image = this.SpellIconImage;
             var iconFile = IconController.Default.getIconFile(this.SpellIcon);
-            if (image.Source == null && iconFile != null)
+            if (image.Source == null &&
+                iconFile != null)
             {
                 var bitmap = new BitmapImage(new Uri(iconFile.FullPath));
                 image.Source = bitmap;
@@ -322,14 +316,11 @@ namespace ACT.SpecialSpellTimer.Views
             var title = string.IsNullOrWhiteSpace(this.SpellTitle) ? "　" : this.SpellTitle;
             title = title.Replace(",", Environment.NewLine);
 
-            if (tb.Text != title)
-            {
-                tb.Text = title;
-                tb.SetFontInfo(font);
-                tb.Fill = this.FontBrush;
-                tb.Stroke = this.FontOutlineBrush;
-                tb.SetAutoStrokeThickness();
-            }
+            if (tb.Text != title) tb.Text = title;
+            if (tb.Fill != this.FontBrush) tb.Fill = this.FontBrush;
+            if (tb.Stroke != this.FontOutlineBrush) tb.Stroke = this.FontOutlineBrush;
+            tb.SetFontInfo(font);
+            tb.SetAutoStrokeThickness();
 
             if (this.HideSpellName)
             {
@@ -351,48 +342,21 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // ProgressBarを描画する
-            this.BarCanvas.Width = this.BarWidth;
-
             var foreRect = this.BarRectangle;
-            foreRect.Stroke = this.BarBrush;
-            foreRect.Fill = this.BarBrush;
-            foreRect.Width = this.BarWidth;
-            foreRect.Height = this.BarHeight;
-            foreRect.RadiusX = 2.0d;
-            foreRect.RadiusY = 2.0d;
-            Canvas.SetLeft(foreRect, 0);
-            Canvas.SetTop(foreRect, 0);
+            if (foreRect.Fill != this.BarBrush) foreRect.Fill = this.BarBrush;
+            if (foreRect.Width != this.BarWidth) foreRect.Width = this.BarWidth;
+            if (foreRect.Height != this.BarHeight) foreRect.Height = this.BarHeight;
 
             var backRect = this.BarBackRectangle;
-            backRect.Stroke = this.BarBackBrush;
-            backRect.Fill = this.BarBackBrush;
-            backRect.Width = this.BarWidth;
-            backRect.Height = this.BarHeight;
-            backRect.RadiusX = 2.0d;
-            backRect.RadiusY = 2.0d;
-            Canvas.SetLeft(backRect, 0);
-            Canvas.SetTop(backRect, 0);
+            if (backRect.Fill != this.BarBackBrush) backRect.Fill = this.BarBackBrush;
+            if (backRect.Width != this.BarWidth) backRect.Width = this.BarWidth;
 
             var outlineRect = this.BarOutlineRectangle;
-            outlineRect.Stroke = this.BarOutlineBrush;
-            outlineRect.StrokeThickness = 1.0d;
-            outlineRect.Width = this.BarWidth;
-            outlineRect.Height = this.BarHeight;
-            outlineRect.RadiusX = 2.0d;
-            outlineRect.RadiusY = 2.0d;
-            Canvas.SetLeft(outlineRect, 0);
-            Canvas.SetTop(outlineRect, 0);
+            if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
 
             // バーのエフェクトの色を設定する
-            this.BarEffect.Color = this.BarBrush.Color.ChangeBrightness(1.05d);
-
-            this.ProgressBarCanvas.Width = backRect.Width;
-            this.ProgressBarCanvas.Height = backRect.Height;
-
-#if false
-            sw.Stop();
-            Debug.WriteLine("Spell Refresh -> " + sw.ElapsedMilliseconds.ToString("N0") + "ms");
-#endif
+            var barEffectColor = this.BarBrush.Color.ChangeBrightness(1.05d);
+            if (this.BarEffect.Color != barEffectColor) this.BarEffect.Color = barEffectColor;
         }
     }
 }
