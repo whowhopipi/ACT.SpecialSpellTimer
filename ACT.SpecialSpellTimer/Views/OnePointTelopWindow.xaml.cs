@@ -176,6 +176,9 @@ namespace ACT.SpecialSpellTimer.Views
             textBlock.SetFontInfo(this.DataSource.Font);
             textBlock.SetAutoStrokeThickness();
 
+            // プログレスバーを初期化する
+            this.InitializeProgressBar();
+
             // プログレスバーを表示しない？
             if (!this.DataSource.ProgressBarEnabled ||
                 this.DataSource.DisplayTime <= 0)
@@ -186,11 +189,6 @@ namespace ACT.SpecialSpellTimer.Views
 
         private void InitializeProgressBar()
         {
-            // アニメーションを停止させる
-            this.BarRectangle.BeginAnimation(
-                Rectangle.WidthProperty,
-                null);
-
             var baseHeight = Settings.Default.ProgressBarSize.Height;
             var baseWidth = this.MessageTextBlock.ActualWidth;
 
@@ -266,6 +264,9 @@ namespace ACT.SpecialSpellTimer.Views
                 this.KeyFrame.Value = 0;
                 this.KeyFrame.KeyTime = TimeSpan.FromMilliseconds(timeToLive);
 
+                this.BarRectangle.BeginAnimation(
+                    Rectangle.WidthProperty,
+                    null);
                 this.BarRectangle.BeginAnimation(
                     Rectangle.WidthProperty,
                     this.animation);
