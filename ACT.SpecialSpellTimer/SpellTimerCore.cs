@@ -739,8 +739,6 @@ namespace ACT.SpecialSpellTimer
                 // 暗転中もずっとリセットし続けてしまうので
                 if ((DateTime.Now - this.lastWipeOutDateTime).TotalSeconds >= 15.0)
                 {
-                    Logger.Write("Party was wiped out. Reset spells and tickers.");
-
                     SpellTimerTable.ResetCount();
                     OnePointTelopTable.Instance.ResetCount();
 
