@@ -163,7 +163,7 @@
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.delaySound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                    this.delaySound = Path.Combine(SoundController.Instance.WaveDirectory, value);
                 }
             }
         }
@@ -179,7 +179,7 @@
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.matchSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                    this.matchSound = Path.Combine(SoundController.Instance.WaveDirectory, value);
                 }
             }
         }
@@ -247,21 +247,21 @@
             var wave = this.DelaySound;
             var speak = this.DelayTextToSpeak;
 
-            SoundController.Default.Play(this.DelaySound);
+            SoundController.Instance.Play(this.DelaySound);
 
             if (!string.IsNullOrWhiteSpace(this.DelayTextToSpeak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Default.Play(speak);
+                    SoundController.Instance.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Default.Play(speak);
+                SoundController.Instance.Play(speak);
             }
         }
     }

@@ -67,7 +67,12 @@
             if (x.Opacity <= 0d)
             {
                 var targetOpacity = (100d - Settings.Default.Opacity) / 100d;
-                x.Opacity = targetOpacity;
+
+                if (x.Opacity != targetOpacity)
+                {
+                    x.Opacity = targetOpacity;
+                }
+
                 x.Topmost = true;
             }
         }

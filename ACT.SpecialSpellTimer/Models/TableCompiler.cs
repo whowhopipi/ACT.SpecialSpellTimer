@@ -41,6 +41,7 @@ namespace ACT.SpecialSpellTimer.Models
             this.CompileTickers();
 
             this.worker = new Thread(this.DoWork);
+            this.worker.Priority = ThreadPriority.BelowNormal;
             this.worker.Start();
 
             Logger.Write("start spell compiler.");
@@ -381,8 +382,11 @@ namespace ACT.SpecialSpellTimer.Models
                         this.RecompileTickers();
 
                         // 不要なWindowを閉じる
-                        OnePointTelopController.GarbageWindows(this.TickerList);
-                        SpellTimerCore.Default.GarbageSpellPanelWindows(this.SpellList);
+                        if (!Settings.Default.OverlayForceVisible)
+                        {
+                            OnePointTelopController.GarbageWindows(this.TickerList);
+                            SpellTimerCore.Default.GarbageSpellPanelWindows(this.SpellList);
+                        }
                     }
                 }
                 catch (ThreadAbortException)

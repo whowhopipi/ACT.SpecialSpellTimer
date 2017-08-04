@@ -17,9 +17,6 @@
         {
             this.SaveSettingsDQXOption();
 
-            // 現在の設定を無効にする
-            SpellTimerCore.Default.InvalidateSettings();
-
             // Windowを一旦すべて閉じる
             SpellTimerCore.Default.ClosePanels();
             OnePointTelopController.CloseTelops();

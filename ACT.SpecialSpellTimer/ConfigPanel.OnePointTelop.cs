@@ -79,32 +79,32 @@
             this.TelopDetailGroupBox.Visible = false;
 
             // コンボボックスにアイテムを装填する
-            this.TelopMatchSoundComboBox.DataSource = SoundController.Default.EnumlateWave();
+            this.TelopMatchSoundComboBox.DataSource = SoundController.Instance.EnumlateWave();
             this.TelopMatchSoundComboBox.ValueMember = "FullPath";
             this.TelopMatchSoundComboBox.DisplayMember = "Name";
 
-            this.TelopDelaySoundComboBox.DataSource = SoundController.Default.EnumlateWave();
+            this.TelopDelaySoundComboBox.DataSource = SoundController.Instance.EnumlateWave();
             this.TelopDelaySoundComboBox.ValueMember = "FullPath";
             this.TelopDelaySoundComboBox.DisplayMember = "Name";
 
             this.TelopPlay1Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play((string)this.TelopMatchSoundComboBox.SelectedValue ?? string.Empty);
+                SoundController.Instance.Play((string)this.TelopMatchSoundComboBox.SelectedValue ?? string.Empty);
             };
 
             this.TelopPlay2Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play((string)this.TelopDelaySoundComboBox.SelectedValue ?? string.Empty);
+                SoundController.Instance.Play((string)this.TelopDelaySoundComboBox.SelectedValue ?? string.Empty);
             };
 
             this.TelopSpeak1Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play(this.TelopMatchTTSTextBox.Text);
+                SoundController.Instance.Play(this.TelopMatchTTSTextBox.Text);
             };
 
             this.TelopSpeak2Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play(this.TelopDelayTTSTextBox.Text);
+                SoundController.Instance.Play(this.TelopDelayTTSTextBox.Text);
             };
 
             this.TelopTreeView.AfterCheck += (s1, e1) =>

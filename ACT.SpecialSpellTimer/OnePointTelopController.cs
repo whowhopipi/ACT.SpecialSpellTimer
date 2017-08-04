@@ -1,18 +1,19 @@
-﻿namespace ACT.SpecialSpellTimer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Threading;
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.FFXIVHelper;
-    using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Sound;
-    using ACT.SpecialSpellTimer.Utility;
-    using ACT.SpecialSpellTimer.Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
+using ACT.SpecialSpellTimer.Utility;
+using ACT.SpecialSpellTimer.Views;
+
+namespace ACT.SpecialSpellTimer
+{
     /// <summary>
     /// ワンポイントテレロップ Controller
     /// </summary>
@@ -28,16 +29,22 @@
         /// </summary>
         public static void ActivateTelops()
         {
-            if (telopWindowList != null)
+            if (telopWindowList == null)
             {
-                ActInvoker.Invoke(() =>
-                {
-                    foreach (var telop in telopWindowList.Values)
-                    {
-                        telop.Activate();
-                    }
-                });
+                return;
             }
+
+            void activateTelopsCore()
+            {
+                foreach (var telop in telopWindowList.Values)
+                {
+                    telop.Activate();
+                }
+            }
+
+            Application.Current.Dispatcher.BeginInvoke(
+                DispatcherPriority.Normal,
+                (Action)activateTelopsCore);
         }
 
         /// <summary>
@@ -135,18 +142,18 @@
                 {
                     left = telop.Left;
                     top = telop.Top;
-                }
-                else
-                {
-                    var telopSettings = OnePointTelopTable.Instance.Table
-                        .Where(x => x.ID == telopID)
-                        .FirstOrDefault();
 
-                    if (telopSettings != null)
-                    {
-                        left = telopSettings.Left;
-                        top = telopSettings.Top;
-                    }
+                    return;
+                }
+
+                var telopSettings = OnePointTelopTable.Instance.Table
+                    .Where(x => x.ID == telopID)
+                    .FirstOrDefault();
+
+                if (telopSettings != null)
+                {
+                    left = telopSettings.Left;
+                    top = telopSettings.Top;
                 }
             }
         }
@@ -216,8 +223,8 @@
                                     telop.MatchedLog = log;
                                     telop.ForceHide = false;
 
-                                    SoundController.Default.Play(telop.MatchSound);
-                                    SoundController.Default.Play(telop.MatchTextToSpeak);
+                                    SoundController.Instance.Play(telop.MatchSound);
+                                    SoundController.Instance.Play(telop.MatchTextToSpeak);
 
                                     matched = true;
                                 }
@@ -252,11 +259,11 @@
                                 telop.MatchedLog = log;
                                 telop.ForceHide = false;
 
-                                SoundController.Default.Play(telop.MatchSound);
+                                SoundController.Instance.Play(telop.MatchSound);
                                 if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
                                 {
                                     var tts = match.Result(telop.MatchTextToSpeak);
-                                    SoundController.Default.Play(tts);
+                                    SoundController.Instance.Play(tts);
                                 }
 
                                 matched = true;
@@ -423,15 +430,17 @@
                     telop.Left = left;
                     telop.Top = top;
                 }
-
-                var telopSettings = OnePointTelopTable.Instance.Table
-                    .Where(x => x.ID == telopID)
-                    .FirstOrDefault();
-
-                if (telopSettings != null)
+                else
                 {
-                    telopSettings.Left = left;
-                    telopSettings.Top = top;
+                    var telopSettings = OnePointTelopTable.Instance.Table
+                        .Where(x => x.ID == telopID)
+                        .FirstOrDefault();
+
+                    if (telopSettings != null)
+                    {
+                        telopSettings.Left = left;
+                        telopSettings.Top = top;
+                    }
                 }
             }
         }

@@ -267,7 +267,7 @@
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.beforeSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                    this.beforeSound = Path.Combine(SoundController.Instance.WaveDirectory, value);
                 }
             }
         }
@@ -283,7 +283,7 @@
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.matchSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                    this.matchSound = Path.Combine(SoundController.Instance.WaveDirectory, value);
                 }
             }
         }
@@ -299,7 +299,7 @@
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.overSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                    this.overSound = Path.Combine(SoundController.Instance.WaveDirectory, value);
                 }
             }
         }
@@ -315,7 +315,7 @@
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    this.timeupSound = Path.Combine(SoundController.Default.WaveDirectory, value);
+                    this.timeupSound = Path.Combine(SoundController.Instance.WaveDirectory, value);
                 }
             }
         }
@@ -539,21 +539,21 @@
             var wave = this.BeforeSound;
             var speak = this.BeforeTextToSpeak;
 
-            SoundController.Default.Play(wave);
+            SoundController.Instance.Play(wave);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Default.Play(speak);
+                    SoundController.Instance.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Default.Play(speak);
+                SoundController.Instance.Play(speak);
             }
         }
 
@@ -570,21 +570,21 @@
             var wave = this.OverSound;
             var speak = this.OverTextToSpeak;
 
-            SoundController.Default.Play(wave);
+            SoundController.Instance.Play(wave);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Default.Play(speak);
+                    SoundController.Instance.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Default.Play(speak);
+                SoundController.Instance.Play(speak);
             }
         }
 
@@ -596,21 +596,21 @@
             var wave = this.TimeupSound;
             var speak = this.TimeupTextToSpeak;
 
-            SoundController.Default.Play(wave);
+            SoundController.Instance.Play(wave);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Default.Play(speak);
+                    SoundController.Instance.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Default.Play(speak);
+                SoundController.Instance.Play(speak);
             }
         }
     }

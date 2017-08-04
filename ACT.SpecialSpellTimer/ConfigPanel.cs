@@ -326,19 +326,19 @@ namespace ACT.SpecialSpellTimer
             this.DetailPanelGroupBox.Visible = false;
 
             // コンボボックスにアイテムを装填する
-            this.MatchSoundComboBox.DataSource = SoundController.Default.EnumlateWave();
+            this.MatchSoundComboBox.DataSource = SoundController.Instance.EnumlateWave();
             this.MatchSoundComboBox.ValueMember = "FullPath";
             this.MatchSoundComboBox.DisplayMember = "Name";
 
-            this.OverSoundComboBox.DataSource = SoundController.Default.EnumlateWave();
+            this.OverSoundComboBox.DataSource = SoundController.Instance.EnumlateWave();
             this.OverSoundComboBox.ValueMember = "FullPath";
             this.OverSoundComboBox.DisplayMember = "Name";
 
-            this.BeforeSoundComboBox.DataSource = SoundController.Default.EnumlateWave();
+            this.BeforeSoundComboBox.DataSource = SoundController.Instance.EnumlateWave();
             this.BeforeSoundComboBox.ValueMember = "FullPath";
             this.BeforeSoundComboBox.DisplayMember = "Name";
 
-            this.TimeupSoundComboBox.DataSource = SoundController.Default.EnumlateWave();
+            this.TimeupSoundComboBox.DataSource = SoundController.Instance.EnumlateWave();
             this.TimeupSoundComboBox.ValueMember = "FullPath";
             this.TimeupSoundComboBox.DisplayMember = "Name";
 
@@ -356,42 +356,42 @@ namespace ACT.SpecialSpellTimer
 
             this.Play1Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play((string)this.MatchSoundComboBox.SelectedValue ?? string.Empty);
+                SoundController.Instance.Play((string)this.MatchSoundComboBox.SelectedValue ?? string.Empty);
             };
 
             this.Play2Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play((string)this.OverSoundComboBox.SelectedValue ?? string.Empty);
+                SoundController.Instance.Play((string)this.OverSoundComboBox.SelectedValue ?? string.Empty);
             };
 
             this.Play3Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play((string)this.TimeupSoundComboBox.SelectedValue ?? string.Empty);
+                SoundController.Instance.Play((string)this.TimeupSoundComboBox.SelectedValue ?? string.Empty);
             };
 
             this.Play4Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play((string)this.BeforeSoundComboBox.SelectedValue ?? string.Empty);
+                SoundController.Instance.Play((string)this.BeforeSoundComboBox.SelectedValue ?? string.Empty);
             };
 
             this.Speak1Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play(this.MatchTextToSpeakTextBox.Text);
+                SoundController.Instance.Play(this.MatchTextToSpeakTextBox.Text);
             };
 
             this.Speak2Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play(this.OverTextToSpeakTextBox.Text);
+                SoundController.Instance.Play(this.OverTextToSpeakTextBox.Text);
             };
 
             this.Speak3Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play(this.TimeupTextToSpeakTextBox.Text);
+                SoundController.Instance.Play(this.TimeupTextToSpeakTextBox.Text);
             };
 
             this.Speak4Button.Click += (s1, e1) =>
             {
-                SoundController.Default.Play(this.BeforeTextToSpeakTextBox.Text);
+                SoundController.Instance.Play(this.BeforeTextToSpeakTextBox.Text);
             };
 
             this.SpellTimerTreeView.AfterCheck += (s1, e1) =>

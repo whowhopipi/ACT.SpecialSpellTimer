@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 using ACT.SpecialSpellTimer.Utility;
@@ -15,10 +16,13 @@ namespace ACT.SpecialSpellTimer.Sound
     /// </summary>
     public class SoundController
     {
-        /// <summary>
-        /// シングルトンinstance
-        /// </summary>
+        #region Singleton
+
         private static SoundController instance = new SoundController();
+
+        public static SoundController Instance => instance;
+
+        #endregion Singleton
 
         /// <summary>
         /// ゆっくりをチェックしたタイムスタンプ
@@ -28,37 +32,68 @@ namespace ACT.SpecialSpellTimer.Sound
         /// <summary>
         /// ゆっくりが有効かどうか？
         /// </summary>
-        private bool enabledYukkuri;
+        private volatile bool enabledYukkuri = false;
 
-        /// <summary>
-        /// シングルトンinstance
-        /// </summary>
-        public static SoundController Default => instance;
+        private Thread existYukkuriThread;
+        private volatile bool existYukkuriThreadRunning = false;
 
-        /// <summary>
-        /// ゆっくりが有効かどうか？
-        /// </summary>
-        public bool EnabledYukkuri
+        #region Begin / End
+
+        public void Begin()
         {
-            get
+            this.existYukkuriThreadRunning = true;
+            this.existYukkuriThread = new Thread(() =>
             {
-                if ((DateTime.Now - this.checkedYukkuriTimeStamp).TotalSeconds >= 10d)
+                while (this.existYukkuriThreadRunning)
                 {
-                    if (ActGlobals.oFormActMain.Visible)
+                    try
                     {
-                        this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
-                            .Where(x =>
-                                x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
-                                x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
-                            .Any();
-
-                        this.checkedYukkuriTimeStamp = DateTime.Now;
+                        if (ActGlobals.oFormActMain != null &&
+                            ActGlobals.oFormActMain.Visible &&
+                            ActGlobals.oFormActMain.ActPlugins != null)
+                        {
+                            this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
+                                .Where(x =>
+                                    x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
+                                    x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
+                                .Any();
+                        }
                     }
+                    catch (ThreadAbortException)
+                    {
+                        this.existYukkuriThreadRunning = false;
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write("soundcontroller backgound thread error:", ex);
+                    }
+
+                    Thread.Sleep(TimeSpan.FromSeconds(10));
+                }
+            });
+
+            this.existYukkuriThread.Priority = ThreadPriority.Lowest;
+            this.existYukkuriThread.Start();
+        }
+
+        public void End()
+        {
+            this.existYukkuriThreadRunning = false;
+
+            if (this.existYukkuriThread != null)
+            {
+                this.existYukkuriThread.Join(1);
+                if (this.existYukkuriThread.IsAlive)
+                {
+                    this.existYukkuriThread.Abort();
                 }
 
-                return this.enabledYukkuri;
+                this.existYukkuriThread = null;
             }
         }
+
+        #endregion Begin / End
 
         public string WaveDirectory
         {
@@ -136,7 +171,7 @@ namespace ACT.SpecialSpellTimer.Sound
                     return;
                 }
 
-                if (this.EnabledYukkuri)
+                if (this.enabledYukkuri)
                 {
                     Task.Run(() => ActGlobals.oFormActMain.TTS(source));
                 }
@@ -179,7 +214,7 @@ namespace ACT.SpecialSpellTimer.Sound
             /// <summary>
             /// ファイル名
             /// </summary>
-            public string Name => 
+            public string Name =>
                 !string.IsNullOrWhiteSpace(this.FullPath) ?
                 Path.GetFileName(this.FullPath) :
                 string.Empty;

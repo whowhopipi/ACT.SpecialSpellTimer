@@ -110,6 +110,7 @@ namespace ACT.SpecialSpellTimer
             });
 
             this.writeThreadRunning = true;
+            this.writeThread.Priority = ThreadPriority.Lowest;
             this.writeThread.Start();
         }
 

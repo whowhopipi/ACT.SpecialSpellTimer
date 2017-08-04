@@ -58,8 +58,6 @@
             Settings.Default.TextOutlineThicknessRate = (double)this.TextOutlineThicknessRateNumericUpDown.Value;
             Settings.Default.TextBlurRate = (double)this.TextBlurRateNumericUpDown.Value;
 
-            SpellTimerCore.Default.InvalidateSettings();
-
             // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&
                 !this.EnabledNotifyNormalSpellTimerCheckBox.Checked)
