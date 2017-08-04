@@ -178,7 +178,7 @@ namespace ACT.SpecialSpellTimer
                     }
                     catch (Exception ex)
                     {
-                        Logger.Write("background thread for UI:", ex);
+                        Logger.Write("background thread for UI error:", ex);
                     }
                 }
             });
