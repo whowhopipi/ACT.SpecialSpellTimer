@@ -46,15 +46,15 @@ namespace ACT.SpecialSpellTimer
 
         #region Thread
 
-        private Thread backgroudThread;
+        private Task backgroudThread;
         private volatile bool backgroundThreadRunning = false;
 
-        private Thread detectLogsThread;
+        private Task detectLogsThread;
         private volatile bool detectLogsThreadRunning = false;
 
         private volatile bool refreshOverlaysThreadRunning = false;
-        private Thread refreshSpellOverlaysThread;
-        private Thread refreshTickerOverlaysThread;
+        private Task refreshSpellOverlaysThread;
+        private Task refreshTickerOverlaysThread;
 
         #endregion Thread
 
@@ -108,7 +108,7 @@ namespace ACT.SpecialSpellTimer
 
             // ログ監視タイマを開始する
             this.detectLogsThreadRunning = true;
-            this.detectLogsThread = new Thread(() =>
+            this.detectLogsThread = new Task(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 Logger.Write("start detect logs.");
@@ -132,12 +132,11 @@ namespace ACT.SpecialSpellTimer
                 Logger.Write("end detect logs.");
             });
 
-            this.detectLogsThread.Priority = ThreadPriority.AboveNormal;
             this.detectLogsThread.Start();
 
             // Backgroudスレッドを開始する
             this.backgroundThreadRunning = true;
-            this.backgroudThread = new Thread(() =>
+            this.backgroudThread = new Task(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(5));
 
@@ -161,7 +160,6 @@ namespace ACT.SpecialSpellTimer
                 }
             });
 
-            this.backgroudThread.Priority = ThreadPriority.BelowNormal;
             this.backgroudThread.Start();
         }
 
@@ -171,7 +169,7 @@ namespace ACT.SpecialSpellTimer
             this.refreshOverlaysThreadRunning = true;
 
             // スペルのスレッドを開始する
-            this.refreshSpellOverlaysThread = new Thread(() =>
+            this.refreshSpellOverlaysThread = new Task(() =>
             {
                 Logger.Write("start refresh spell overlays.");
 
@@ -197,13 +195,10 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 Logger.Write("end refresh spell overlays.");
-            })
-            {
-                Priority = ThreadPriority.AboveNormal
-            };
+            });
 
             // テロップのスレッドを開始する
-            this.refreshTickerOverlaysThread = new Thread(() =>
+            this.refreshTickerOverlaysThread = new Task(() =>
             {
                 Logger.Write("start refresh ticker overlays.");
 
@@ -229,10 +224,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 Logger.Write("end refresh ticker overlays.");
-            })
-            {
-                Priority = ThreadPriority.AboveNormal
-            };
+            });
 
             this.refreshSpellOverlaysThread.Start();
             this.refreshTickerOverlaysThread.Start();
@@ -253,10 +245,10 @@ namespace ACT.SpecialSpellTimer
             // スペルのOverlayの更新を開放する
             if (this.refreshSpellOverlaysThread != null)
             {
-                this.refreshSpellOverlaysThread.Join(TimeSpan.FromSeconds(0.5));
-                if (this.refreshSpellOverlaysThread.IsAlive)
+                this.refreshSpellOverlaysThread.Wait();
+                if (this.refreshSpellOverlaysThread.IsCompleted)
                 {
-                    this.refreshSpellOverlaysThread.Abort();
+                    this.refreshSpellOverlaysThread.Dispose();
                 }
 
                 this.refreshSpellOverlaysThread = null;
@@ -265,10 +257,10 @@ namespace ACT.SpecialSpellTimer
             // テロップのOverlayの更新を開放する
             if (this.refreshTickerOverlaysThread != null)
             {
-                this.refreshTickerOverlaysThread.Join(TimeSpan.FromSeconds(0.5));
-                if (this.refreshTickerOverlaysThread.IsAlive)
+                this.refreshTickerOverlaysThread.Wait();
+                if (this.refreshTickerOverlaysThread.IsCompleted)
                 {
-                    this.refreshTickerOverlaysThread.Abort();
+                    this.refreshTickerOverlaysThread.Dispose();
                 }
 
                 this.refreshTickerOverlaysThread = null;
@@ -277,10 +269,10 @@ namespace ACT.SpecialSpellTimer
             // ログ監視を開放する
             if (this.detectLogsThread != null)
             {
-                this.detectLogsThread.Join(TimeSpan.FromSeconds(0.5));
-                if (this.detectLogsThread.IsAlive)
+                this.detectLogsThread.Wait();
+                if (this.detectLogsThread.IsCompleted)
                 {
-                    this.detectLogsThread.Abort();
+                    this.detectLogsThread.Dispose();
                 }
 
                 this.detectLogsThread = null;
@@ -289,10 +281,10 @@ namespace ACT.SpecialSpellTimer
             // Backgroudスレッドを開放する
             if (this.backgroudThread != null)
             {
-                this.backgroudThread.Join(TimeSpan.FromSeconds(5));
-                if (this.backgroudThread.IsAlive)
+                this.backgroudThread.Wait();
+                if (this.backgroudThread.IsCompleted)
                 {
-                    this.backgroudThread.Abort();
+                    this.backgroudThread.Dispose();
                 }
 
                 this.backgroudThread = null;
@@ -757,11 +749,7 @@ namespace ACT.SpecialSpellTimer
             {
                 var f = panel.First();
 
-                var w = this.spellTimerPanels
-                    .AsParallel()
-                    .Where(x => x.PanelName == f.Panel)
-                    .FirstOrDefault();
-
+                var w = this.FindPanelByName(f.Panel);
                 if (w == null)
                 {
                     w = new SpellTimerListWindow()

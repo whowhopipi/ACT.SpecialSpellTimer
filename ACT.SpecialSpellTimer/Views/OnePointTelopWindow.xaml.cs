@@ -229,6 +229,7 @@ namespace ACT.SpecialSpellTimer.Views
 
         private DoubleAnimationUsingKeyFrames animation = new DoubleAnimationUsingKeyFrames()
         {
+            AutoReverse = false,
             KeyFrames = new DoubleKeyFrameCollection()
             {
                 new LinearDoubleKeyFrame()

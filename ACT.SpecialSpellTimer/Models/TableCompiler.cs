@@ -25,7 +25,7 @@ namespace ACT.SpecialSpellTimer.Models
         #region Worker
 
         private const int WorkerInterval = 5;
-        private Thread worker;
+        private Task worker;
 
         private volatile bool workerRunning;
 
@@ -40,8 +40,7 @@ namespace ACT.SpecialSpellTimer.Models
             this.CompileSpells();
             this.CompileTickers();
 
-            this.worker = new Thread(this.DoWork);
-            this.worker.Priority = ThreadPriority.BelowNormal;
+            this.worker = new Task(this.DoWork);
             this.worker.Start();
 
             Logger.Write("start spell compiler.");
@@ -53,10 +52,10 @@ namespace ACT.SpecialSpellTimer.Models
 
             if (this.worker != null)
             {
-                this.worker.Join(TimeSpan.FromSeconds(WorkerInterval * 2));
-                if (this.worker.IsAlive)
+                this.worker.Wait(TimeSpan.FromSeconds(WorkerInterval * 2));
+                if (!this.worker.IsCompleted)
                 {
-                    this.worker.Abort();
+                    this.worker.Dispose();
                 }
 
                 this.worker = null;

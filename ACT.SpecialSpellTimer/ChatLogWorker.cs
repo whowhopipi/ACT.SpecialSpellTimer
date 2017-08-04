@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-
+using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 
 namespace ACT.SpecialSpellTimer
@@ -23,7 +23,7 @@ namespace ACT.SpecialSpellTimer
 
         private volatile StringBuilder logBuffer = new StringBuilder();
 
-        private Thread writeThread;
+        private Task writeThread;
         private volatile bool writeThreadRunning;
 
         private string OutputDirectory => Settings.Default.SaveLogDirectory;
@@ -88,7 +88,7 @@ namespace ACT.SpecialSpellTimer
                 this.logBuffer.Clear();
             }
 
-            this.writeThread = new Thread(() =>
+            this.writeThread = new Task(() =>
             {
                 while (this.writeThreadRunning)
                 {
@@ -110,7 +110,6 @@ namespace ACT.SpecialSpellTimer
             });
 
             this.writeThreadRunning = true;
-            this.writeThread.Priority = ThreadPriority.Lowest;
             this.writeThread.Start();
         }
 
@@ -120,10 +119,10 @@ namespace ACT.SpecialSpellTimer
 
             if (this.writeThread != null)
             {
-                this.writeThread.Join(TimeSpan.FromSeconds(2));
-                if (this.writeThread.IsAlive)
+                this.writeThread.Wait();
+                if (this.writeThread.IsCanceled)
                 {
-                    this.writeThread.Abort();
+                    this.writeThread.Dispose();
                 }
 
                 this.writeThread = null;
