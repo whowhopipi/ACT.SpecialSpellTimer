@@ -409,118 +409,84 @@ namespace ACT.SpecialSpellTimer
 
         private void RefreshSpellOverlaysCore()
         {
-#if DEBUG
-            var sw = Stopwatch.StartNew();
-#endif
-            try
+            // 有効なスペルとテロップのリストを取得する
+            var spells = TableCompiler.Instance.SpellList;
+
+            if (ActGlobals.oFormActMain == null)
             {
-                // 有効なスペルとテロップのリストを取得する
-                var spells = TableCompiler.Instance.SpellList;
+                this.HidePanels();
 
-                if (ActGlobals.oFormActMain == null)
-                {
-                    this.HidePanels();
-
-                    Thread.Sleep(1000);
-                    return;
-                }
-
-                // FFXIVでの使用？
-                if (!Settings.Default.UseOtherThanFFXIV &&
-                    !this.existFFXIVProcess &&
-                    !Settings.Default.OverlayForceVisible)
-                {
-                    this.ClosePanels();
-                    return;
-                }
-
-                // オーバーレイが非表示？
-                if (!Settings.Default.OverlayVisible)
-                {
-                    this.HidePanels();
-                    return;
-                }
-
-                // 非アクティブのとき非表示にする？
-                if (Settings.Default.HideWhenNotActive &&
-                    !this.isFFXIVActive)
-                {
-                    this.HidePanels();
-                    return;
-                }
-
-                // スペルWindowを表示する
-                this.RefreshSpellOverlays(spells);
+                Thread.Sleep(1000);
+                return;
             }
-            finally
+
+            // FFXIVでの使用？
+            if (!Settings.Default.UseOtherThanFFXIV &&
+                !this.existFFXIVProcess &&
+                !Settings.Default.OverlayForceVisible)
             {
-#if DEBUG
-                sw.Stop();
-#if false
-                Debug.WriteLine(
-                    DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
-                    "◎RefreshWindow " + sw.Elapsed.TotalMilliseconds.ToString("N4") + "ms");
-#endif
-#endif
+                this.ClosePanels();
+                return;
             }
+
+            // オーバーレイが非表示？
+            if (!Settings.Default.OverlayVisible)
+            {
+                this.HidePanels();
+                return;
+            }
+
+            // 非アクティブのとき非表示にする？
+            if (Settings.Default.HideWhenNotActive &&
+                !this.isFFXIVActive)
+            {
+                this.HidePanels();
+                return;
+            }
+
+            // スペルWindowを表示する
+            this.RefreshSpellOverlays(spells);
         }
 
         private void RefreshTickerOverlaysCore()
         {
-#if DEBUG
-            var sw = Stopwatch.StartNew();
-#endif
-            try
+            // 有効なスペルとテロップのリストを取得する
+            var telops = TableCompiler.Instance.TickerList;
+
+            if (ActGlobals.oFormActMain == null)
             {
-                // 有効なスペルとテロップのリストを取得する
-                var telops = TableCompiler.Instance.TickerList;
+                OnePointTelopController.HideTelops();
 
-                if (ActGlobals.oFormActMain == null)
-                {
-                    OnePointTelopController.HideTelops();
-
-                    Thread.Sleep(1000);
-                    return;
-                }
-
-                // FFXIVでの使用？
-                if (!Settings.Default.UseOtherThanFFXIV &&
-                    !this.existFFXIVProcess &&
-                    !Settings.Default.OverlayForceVisible)
-                {
-                    OnePointTelopController.CloseTelops();
-                    return;
-                }
-
-                // オーバーレイが非表示？
-                if (!Settings.Default.OverlayVisible)
-                {
-                    OnePointTelopController.HideTelops();
-                    return;
-                }
-
-                // 非アクティブのとき非表示にする？
-                if (Settings.Default.HideWhenNotActive &&
-                    !this.isFFXIVActive)
-                {
-                    OnePointTelopController.HideTelops();
-                    return;
-                }
-
-                // テロップWindowを表示する
-                OnePointTelopController.RefreshTelopOverlays(telops);
+                Thread.Sleep(1000);
+                return;
             }
-            finally
+
+            // FFXIVでの使用？
+            if (!Settings.Default.UseOtherThanFFXIV &&
+                !this.existFFXIVProcess &&
+                !Settings.Default.OverlayForceVisible)
             {
-#if DEBUG
-                sw.Stop();
-#if false
-                Debug.WriteLine(
-                    DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
-                    "◎RefreshWindow " + sw.Elapsed.TotalMilliseconds.ToString("N4") + "ms");
-#endif
-#endif
+                OnePointTelopController.CloseTelops();
+                return;
             }
+
+            // オーバーレイが非表示？
+            if (!Settings.Default.OverlayVisible)
+            {
+                OnePointTelopController.HideTelops();
+                return;
+            }
+
+            // 非アクティブのとき非表示にする？
+            if (Settings.Default.HideWhenNotActive &&
+                !this.isFFXIVActive)
+            {
+                OnePointTelopController.HideTelops();
+                return;
+            }
+
+            // テロップWindowを表示する
+            OnePointTelopController.RefreshTelopOverlays(telops);
         }
 
         #endregion Core
