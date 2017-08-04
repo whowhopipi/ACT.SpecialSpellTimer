@@ -63,7 +63,7 @@ namespace ACT.SpecialSpellTimer.Image
 
             if (Directory.Exists(this.IconDirectory))
             {
-                list.AddRange(EmulateIcon(this.IconDirectory, ""));
+                list.AddRange(this.EnumulateIcon(this.IconDirectory, string.Empty));
             }
 
             return list.ToArray();
@@ -71,8 +71,7 @@ namespace ACT.SpecialSpellTimer.Image
 
         public IconFile GetIconFile(String relativePath)
         {
-            if (relativePath == string.Empty ||
-                relativePath == null)
+            if (string.IsNullOrEmpty(relativePath))
             {
                 return null;
             }
@@ -90,13 +89,13 @@ namespace ACT.SpecialSpellTimer.Image
             return null;
         }
 
-        private IconFile[] EmulateIcon(String target, String prefix)
+        private IconFile[] EnumulateIcon(String target, String prefix)
         {
             var list = new List<IconFile>();
 
             foreach (var dir in Directory.GetDirectories(target))
             {
-                list.AddRange(EmulateIcon(dir, prefix + Path.GetFileName(dir) + Path.DirectorySeparatorChar));
+                list.AddRange(this.EnumulateIcon(dir, prefix + Path.GetFileName(dir) + Path.DirectorySeparatorChar));
             }
 
             foreach (var file in Directory.GetFiles(target, "*.png"))
