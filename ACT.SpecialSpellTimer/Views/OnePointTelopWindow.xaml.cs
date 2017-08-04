@@ -245,7 +245,6 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             this.InitializeProgressBar();
-            this.ProgressBarCanvas.Visibility = Visibility.Visible;
 
             var matchDateTime = this.DataSource.MatchDateTime;
             if (matchDateTime <= DateTime.MinValue)
@@ -266,6 +265,8 @@ namespace ACT.SpecialSpellTimer.Views
                 this.BarRectangle.BeginAnimation(
                     Rectangle.WidthProperty,
                     this.animation);
+
+                this.ProgressBarCanvas.Visibility = Visibility.Visible;
             }
         }
 
