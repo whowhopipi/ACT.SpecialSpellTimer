@@ -185,7 +185,7 @@ namespace ACT.SpecialSpellTimer
                     }
                     catch (ThreadAbortException)
                     {
-                        this.detectLogsThreadRunning = false;
+                        this.refreshOverlaysThreadRunning = false;
                         break;
                     }
                     catch (Exception ex)
@@ -217,7 +217,7 @@ namespace ACT.SpecialSpellTimer
                     }
                     catch (ThreadAbortException)
                     {
-                        this.detectLogsThreadRunning = false;
+                        this.refreshOverlaysThreadRunning = false;
                         break;
                     }
                     catch (Exception ex)
