@@ -29,7 +29,7 @@ namespace ACT.SpecialSpellTimer.Sound
         /// </summary>
         private volatile bool enabledYukkuri = false;
 
-        private Thread existYukkuriThread;
+        private Task existYukkuriThread;
         private volatile bool existYukkuriThreadRunning = false;
 
         #region Begin / End
@@ -37,7 +37,7 @@ namespace ACT.SpecialSpellTimer.Sound
         public void Begin()
         {
             this.existYukkuriThreadRunning = true;
-            this.existYukkuriThread = new Thread(() =>
+            this.existYukkuriThread = new Task(() =>
             {
                 while (this.existYukkuriThreadRunning)
                 {
@@ -68,7 +68,6 @@ namespace ACT.SpecialSpellTimer.Sound
                 }
             });
 
-            this.existYukkuriThread.Priority = ThreadPriority.Lowest;
             this.existYukkuriThread.Start();
         }
 
@@ -78,10 +77,10 @@ namespace ACT.SpecialSpellTimer.Sound
 
             if (this.existYukkuriThread != null)
             {
-                this.existYukkuriThread.Join(1);
-                if (this.existYukkuriThread.IsAlive)
+                this.existYukkuriThread.Wait();
+                if (this.existYukkuriThread.IsCanceled)
                 {
-                    this.existYukkuriThread.Abort();
+                    this.existYukkuriThread.Dispose();
                 }
 
                 this.existYukkuriThread = null;
