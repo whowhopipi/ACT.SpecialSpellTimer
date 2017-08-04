@@ -62,9 +62,6 @@ namespace ACT.SpecialSpellTimer.Views
             this.MessageTextBlock.MouseUp += (s1, e1) => this.DragOff(e1);
             this.ProgressBarCanvas.MouseDown += (s1, e1) => this.DragOn(e1);
             this.ProgressBarCanvas.MouseUp += (s1, e1) => this.DragOff(e1);
-
-            // アニメーションを準備する
-            this.SetupAnimation();
         }
 
         /// <summary>
@@ -232,8 +229,15 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Animation
 
-        private DoubleAnimationUsingKeyFrames animation = new DoubleAnimationUsingKeyFrames();
-        private LinearDoubleKeyFrame keyframe1 = new LinearDoubleKeyFrame();
+        private DoubleAnimationUsingKeyFrames animation = new DoubleAnimationUsingKeyFrames()
+        {
+            KeyFrames = new DoubleKeyFrameCollection()
+            {
+                new LinearDoubleKeyFrame()
+            }
+        };
+
+        private LinearDoubleKeyFrame KeyFrame => (LinearDoubleKeyFrame)this.animation.KeyFrames[0];
 
         public void StartProgressBar()
         {
@@ -259,8 +263,8 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (timeToLive >= 0)
             {
-                this.keyframe1.Value = 0;
-                this.keyframe1.KeyTime = TimeSpan.FromMilliseconds(timeToLive);
+                this.KeyFrame.Value = 0;
+                this.KeyFrame.KeyTime = TimeSpan.FromMilliseconds(timeToLive);
 
                 this.BarRectangle.BeginAnimation(
                     Rectangle.WidthProperty,
@@ -268,11 +272,6 @@ namespace ACT.SpecialSpellTimer.Views
 
                 this.ProgressBarCanvas.Visibility = Visibility.Visible;
             }
-        }
-
-        private void SetupAnimation()
-        {
-            this.animation.KeyFrames.Add(this.keyframe1);
         }
 
         #endregion Animation
