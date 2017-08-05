@@ -113,6 +113,11 @@ namespace ACT.SpecialSpellTimer.Utility
             {
                 try
                 {
+                    if (buffer.Length <= 0)
+                    {
+                        return;
+                    }
+
                     var directoryName = Path.GetDirectoryName(LogFile);
                     if (!Directory.Exists(directoryName))
                     {
