@@ -1,22 +1,18 @@
-﻿namespace ACT.SpecialSpellTimer.Utility
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.IO;
-    using System.Text;
-    using System.Threading;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Threading;
 
+namespace ACT.SpecialSpellTimer.Utility
+{
     /// <summary>
     /// ログ
     /// </summary>
     public static class Logger
     {
-        private static readonly TimeSpan dueTime = TimeSpan.FromSeconds(10);
-        private static readonly object lockObject = new object();
-
+        private static readonly TimeSpan dueTime = TimeSpan.FromSeconds(1);
         private static readonly TimeSpan period = TimeSpan.FromSeconds(5);
-        private static volatile ConcurrentQueue<LogItem> buffer;
-        private static volatile ConcurrentQueue<string> bufferForFile;
+        private static readonly StringBuilder buffer = new StringBuilder();
         private static Timer flushTimer;
 
         private static string LogFile => Path.Combine(
@@ -29,9 +25,12 @@
         /// <param name="text">書き込む内容</param>
         public static void Write(string text)
         {
-            if (buffer != null)
+            var log =
+                $"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff")}] {text}";
+
+            lock (buffer)
             {
-                buffer.Enqueue(new LogItem(null, text, null));
+                buffer.AppendLine(log);
             }
         }
 
@@ -42,9 +41,13 @@
         /// <param name="ex">例外情報</param>
         public static void Write(string text, Exception ex)
         {
-            if (buffer != null)
+            var log =
+                $"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff")}] {text}" + Environment.NewLine +
+                ex.ToString();
+
+            lock (buffer)
             {
-                buffer.Enqueue(new LogItem(ex, text, null));
+                buffer.AppendLine(log);
             }
         }
 
@@ -55,9 +58,14 @@
         /// <param name="args">0 個以上の書式設定対象オブジェクトを含んだオブジェクト配列。</param>
         public static void Write(string format, params object[] args)
         {
-            if (buffer != null)
+            var text = string.Format(format, args);
+
+            var log =
+                $"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff")}] {text}";
+
+            lock (buffer)
             {
-                buffer.Enqueue(new LogItem(null, format, args));
+                buffer.AppendLine(log);
             }
         }
 
@@ -65,10 +73,10 @@
 
         public static void Begin()
         {
-            lock (lockObject)
+            lock (buffer)
             {
-                buffer = new ConcurrentQueue<LogItem>();
-                bufferForFile = new ConcurrentQueue<string>();
+                buffer.Clear();
+
                 if (flushTimer != null)
                 {
                     flushTimer.Dispose();
@@ -82,7 +90,7 @@
         {
             try
             {
-                lock (lockObject)
+                lock (buffer)
                 {
                     if (flushTimer != null)
                     {
@@ -91,16 +99,7 @@
 
                     flushTimer = null;
 
-                    LogItem item;
-                    while (buffer.TryDequeue(out item))
-                    {
-                        bufferForFile.Enqueue(item.ToString());
-                    }
-
                     Flush();
-
-                    buffer = null;
-                    bufferForFile = null;
                 }
             }
             catch (Exception)
@@ -108,66 +107,29 @@
             }
         }
 
-        public static void Update()
-        {
-            if (SpecialSpellTimerPlugin.ConfigPanel == null)
-            {
-                return;
-            }
-
-            var buf = buffer;
-            var fileBuf = bufferForFile;
-
-            if (buf == null || fileBuf == null || buf.IsEmpty)
-            {
-                return;
-            }
-
-            LogItem item;
-            while (buf.TryDequeue(out item))
-            {
-                var line = item.ToString();
-                fileBuf.Enqueue(line);
-                try
-                {
-                    ConfigPanelLog.Instance.AppendLog(line);
-                }
-                catch (Exception ex)
-                {
-                    if (!line.Contains("ConfigPanel.AppendLog failed."))
-                    {
-                        Write("ConfigPanel.AppendLog failed.", ex);
-                    }
-                }
-            }
-        }
-
         private static void Flush()
         {
-            var fileBuf = bufferForFile;
-            if (fileBuf == null || fileBuf.IsEmpty)
+            lock (buffer)
             {
-                return;
-            }
-
-            lock (lockObject)
-            {
-                var directoryName = Path.GetDirectoryName(LogFile);
-                if (!Directory.Exists(directoryName))
-                {
-                    Directory.CreateDirectory(directoryName);
-                }
-
-                var lines = new StringBuilder();
-                string line;
-                while (fileBuf.TryDequeue(out line))
-                {
-                    lines.AppendLine(line);
-                }
-
                 try
                 {
-                    File.AppendAllText(LogFile, lines.ToString(), new UTF8Encoding(false));
+                    var directoryName = Path.GetDirectoryName(LogFile);
+                    if (!Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+
+                    File.AppendAllText(
+                        LogFile,
+                        buffer.ToString(),
+                        new UTF8Encoding(false));
+
+                    if (ConfigPanelLog.Instance != null)
+                    {
+                        ConfigPanelLog.Instance.AppendLog(buffer.ToString());
+                    }
+
+                    buffer.Clear();
                 }
                 catch (Exception)
                 {
@@ -176,32 +138,5 @@
         }
 
         #endregion Controll metods
-
-        #region LogItem
-
-        private class LogItem
-        {
-            private object[] args;
-            private Exception cause;
-            private DateTime logTime;
-            private string text;
-
-            public LogItem(Exception cause, string text, object[] args)
-            {
-                logTime = DateTime.Now;
-                this.cause = cause;
-                this.text = text;
-                this.args = args != null && args.Length == 0 ? null : args;
-            }
-
-            public override string ToString()
-            {
-                var log = "[" + logTime.ToString("yyyy/MM/dd HH:mm:ss.fff") + "] "
-                    + (args == null ? text : string.Format(text, args));
-                return cause == null ? log : log + Environment.NewLine + cause.ToString();
-            }
-        }
-
-        #endregion LogItem
     }
 }

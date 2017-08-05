@@ -178,10 +178,7 @@ namespace ACT.SpecialSpellTimer
                 // WPFアプリケーションを開始する
                 if (System.Windows.Application.Current == null)
                 {
-                    new System.Windows.Application()
-                    {
-                        ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown
-                    };
+                    new System.Windows.Application();
                 }
 
                 // 設定ファイルを読み込む

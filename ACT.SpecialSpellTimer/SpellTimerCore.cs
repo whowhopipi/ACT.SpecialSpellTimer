@@ -79,7 +79,8 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// SpellTimerのPanelリスト
         /// </summary>
-        private volatile List<SpellTimerListWindow> spellTimerPanels = new List<SpellTimerListWindow>();
+        private volatile List<SpellTimerListWindow> spellTimerPanels =
+            new List<SpellTimerListWindow>();
 
         #region Begin / End
 
@@ -325,8 +326,6 @@ namespace ACT.SpecialSpellTimer
 
         private void BackgroundCore()
         {
-            Logger.Update();
-
             // FFXIVプロセスの有無を取得する
             this.existFFXIVProcess = FFXIV.Instance.Process != null;
 
@@ -370,19 +369,25 @@ namespace ACT.SpecialSpellTimer
                 var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
 
                 // 有効なスペルとテロップのリストを取得する
-                var spellTask = Task.Run(() => TableCompiler.Instance.SpellList);
-                var telopTask = Task.Run(() => TableCompiler.Instance.TickerList);
+                var spells = TableCompiler.Instance.SpellList;
+                var telops = TableCompiler.Instance.TickerList;
 
-                if (logsTask.Result.Count > 0)
+                var logs = logsTask.Result;
+                if (logs.Count > 0)
                 {
                     // テロップとマッチングする
-                    var t1 = Task.Run(() => OnePointTelopController.Match(telopTask.Result, logsTask.Result));
+                    var t1 = Task.Run(() => OnePointTelopController.Match(
+                        telops,
+                        logs));
 
                     // スペルリストとマッチングする
-                    var t2 = Task.Run(() => this.MatchSpells(spellTask.Result, logsTask.Result));
+                    var t2 = Task.Run(() => this.MatchSpells(
+                        spells,
+                        logs));
 
                     // コマンドとマッチングする
-                    var t3 = Task.Run(() => TextCommandController.MatchCommand(logsTask.Result));
+                    var t3 = Task.Run(() => TextCommandController.MatchCommand(
+                        logs));
 
                     Task.WaitAll(t1, t2, t3);
 

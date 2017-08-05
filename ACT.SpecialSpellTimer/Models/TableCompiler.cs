@@ -52,8 +52,8 @@ namespace ACT.SpecialSpellTimer.Models
 
             if (this.worker != null)
             {
-                this.worker.Wait(TimeSpan.FromSeconds(WorkerInterval * 2));
-                if (!this.worker.IsCompleted)
+                this.worker.Wait();
+                if (this.worker.IsCompleted)
                 {
                     this.worker.Dispose();
                 }

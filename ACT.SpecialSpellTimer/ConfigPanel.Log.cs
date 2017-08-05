@@ -51,7 +51,12 @@ namespace ACT.SpecialSpellTimer
         {
             void appendLog()
             {
-                this.LogTextBox.AppendText(text + Environment.NewLine);
+                this.LogTextBox.AppendText(text);
+            }
+
+            if (this.IsDisposed)
+            {
+                return;
             }
 
             try
