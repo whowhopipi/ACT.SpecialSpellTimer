@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 
 namespace ACT.SpecialSpellTimer
@@ -23,8 +22,7 @@ namespace ACT.SpecialSpellTimer
 
         private volatile StringBuilder logBuffer = new StringBuilder();
 
-        private Task writeThread;
-        private volatile bool writeThreadRunning;
+        private Timer writeThread;
 
         private string OutputDirectory => Settings.Default.SaveLogDirectory;
 
@@ -88,43 +86,29 @@ namespace ACT.SpecialSpellTimer
                 this.logBuffer.Clear();
             }
 
-            this.writeThread = new Task(() =>
+            this.writeThread = new Timer((stat) =>
             {
-                while (this.writeThreadRunning)
+                try
                 {
-                    try
-                    {
-                        this.Flush();
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        this.writeThreadRunning = false;
-                        return;
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    Thread.Sleep(FlushInterval);
+                    this.Flush();
                 }
-            });
-
-            this.writeThreadRunning = true;
-            this.writeThread.Start();
+                catch (ThreadAbortException)
+                {
+                }
+                catch (Exception)
+                {
+                }
+            },
+            null,
+            1000,
+            FlushInterval.Milliseconds);
         }
 
         public void End()
         {
-            this.writeThreadRunning = false;
-
             if (this.writeThread != null)
             {
-                this.writeThread.Wait();
-                if (this.writeThread.IsCanceled)
-                {
-                    this.writeThread.Dispose();
-                }
-
+                this.writeThread.Dispose();
                 this.writeThread = null;
             }
 

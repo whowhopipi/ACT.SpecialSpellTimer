@@ -46,8 +46,7 @@ namespace ACT.SpecialSpellTimer
 
         #region Thread
 
-        private Task backgroudThread;
-        private volatile bool backgroundThreadRunning = false;
+        private Timer backgroudThread;
 
         private Task detectLogsThread;
         private volatile bool detectLogsThreadRunning = false;
@@ -136,32 +135,23 @@ namespace ACT.SpecialSpellTimer
             this.detectLogsThread.Start();
 
             // Backgroudスレッドを開始する
-            this.backgroundThreadRunning = true;
-            this.backgroudThread = new Task(() =>
+            this.backgroudThread = new Timer((stat) =>
             {
-                Thread.Sleep(TimeSpan.FromSeconds(5));
-
-                while (this.backgroundThreadRunning)
+                try
                 {
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
-
-                    try
-                    {
-                        this.BackgroundCore();
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        this.backgroundThreadRunning = false;
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("background thread for UI error:", ex);
-                    }
+                    this.BackgroundCore();
                 }
-            });
-
-            this.backgroudThread.Start();
+                catch (ThreadAbortException)
+                {
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("background thread for UI error:", ex);
+                }
+            },
+            null,
+            1 * 1000,
+            5 * 1000);
         }
 
         public void BeginOverlaysThread()
@@ -238,7 +228,6 @@ namespace ACT.SpecialSpellTimer
         {
             this.refreshOverlaysThreadRunning = false;
             this.detectLogsThreadRunning = false;
-            this.backgroundThreadRunning = false;
 
             // 戦闘分析を開放する
             CombatAnalyzer.Default.Denitialize();
@@ -282,12 +271,7 @@ namespace ACT.SpecialSpellTimer
             // Backgroudスレッドを開放する
             if (this.backgroudThread != null)
             {
-                this.backgroudThread.Wait();
-                if (this.backgroudThread.IsCompleted)
-                {
-                    this.backgroudThread.Dispose();
-                }
-
+                this.backgroudThread.Dispose();
                 this.backgroudThread = null;
             }
 
@@ -763,7 +747,10 @@ namespace ACT.SpecialSpellTimer
                         PanelName = f.Panel,
                     };
 
-                    this.spellTimerPanels.Add(w);
+                    lock (this.spellTimerPanels)
+                    {
+                        this.spellTimerPanels.Add(w);
+                    }
 
                     // クリックスルー？
                     if (Settings.Default.ClickThroughEnabled)
@@ -918,16 +905,14 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void ActivatePanels()
         {
-            if (this.spellTimerPanels == null)
-            {
-                return;
-            }
-
             void activatePanelsCore()
             {
-                foreach (var panel in this.spellTimerPanels)
+                lock (this.spellTimerPanels)
                 {
-                    panel.Activate();
+                    foreach (var panel in this.spellTimerPanels)
+                    {
+                        panel.Activate();
+                    }
                 }
             }
 
@@ -941,45 +926,43 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void ClosePanels()
         {
-            if (this.spellTimerPanels == null)
-            {
-                return;
-            }
-
             void colosePanelsCore()
             {
-                // Panelの位置を保存する
-                foreach (var panel in this.spellTimerPanels)
+                lock (this.spellTimerPanels)
                 {
-                    var setting = (
-                        from x in PanelSettings.Instance.SettingsTable
-                        where
-                        x.PanelName == panel.PanelName
-                        select
-                        x).FirstOrDefault();
-
-                    if (setting == null)
+                    // Panelの位置を保存する
+                    foreach (var panel in this.spellTimerPanels)
                     {
-                        setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
-                        PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
+                        var setting = (
+                            from x in PanelSettings.Instance.SettingsTable
+                            where
+                            x.PanelName == panel.PanelName
+                            select
+                            x).FirstOrDefault();
+
+                        if (setting == null)
+                        {
+                            setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
+                            PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
+                        }
+
+                        setting.PanelName = panel.PanelName;
+                        setting.Left = panel.Left;
+                        setting.Top = panel.Top;
                     }
 
-                    setting.PanelName = panel.PanelName;
-                    setting.Left = panel.Left;
-                    setting.Top = panel.Top;
-                }
+                    if (this.spellTimerPanels.Count > 0)
+                    {
+                        PanelSettings.Instance.Save();
+                    }
 
-                if (this.spellTimerPanels.Count > 0)
-                {
-                    PanelSettings.Instance.Save();
-                }
+                    foreach (var panel in this.spellTimerPanels)
+                    {
+                        panel.Close();
+                    }
 
-                foreach (var panel in this.spellTimerPanels)
-                {
-                    panel.Close();
+                    this.spellTimerPanels.Clear();
                 }
-
-                this.spellTimerPanels.Clear();
             }
 
             Application.Current.Dispatcher.BeginInvoke(
@@ -996,45 +979,45 @@ namespace ACT.SpecialSpellTimer
         {
             void removePanels()
             {
-                if (this.spellTimerPanels == null)
-                {
-                    return;
-                }
-
                 var removeList = new List<SpellTimerListWindow>();
-                foreach (var panel in this.spellTimerPanels)
+
+                lock (this.spellTimerPanels)
                 {
-                    // パネルの位置を保存する
-                    var setting = (
-                        from x in PanelSettings.Instance.SettingsTable
-                        where
-                        x.PanelName == panel.PanelName
-                        select
-                        x).FirstOrDefault();
-
-                    if (setting == null)
+                    foreach (var panel in this.spellTimerPanels)
                     {
-                        setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
-                        PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
-                    }
+                        // パネルの位置を保存する
+                        var setting = (
+                            from x in PanelSettings.Instance.SettingsTable
+                            where
+                            x.PanelName == panel.PanelName
+                            select
+                            x).FirstOrDefault();
 
-                    setting.PanelName = panel.PanelName;
-                    setting.Left = panel.Left;
-                    setting.Top = panel.Top;
+                        if (setting == null)
+                        {
+                            setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
+                            PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
+                        }
 
-                    PanelSettings.Instance.Save();
+                        setting.PanelName = panel.PanelName;
+                        setting.Left = panel.Left;
+                        setting.Top = panel.Top;
 
-                    // スペルリストに存在しないパネルを閉じる
-                    if (!spells.Any(x => x.Panel == panel.PanelName))
-                    {
-                        ActInvoker.Invoke(() => panel.Close());
-                        removeList.Add(panel);
+                        PanelSettings.Instance.Save();
+
+                        // スペルリストに存在しないパネルを閉じる
+                        if (!spells.Any(x => x.Panel == panel.PanelName))
+                        {
+                            panel.Close();
+                            removeList.Add(panel);
+                        }
                     }
                 }
 
-                foreach (var item in removeList)
+                lock (this.spellTimerPanels)
                 {
-                    this.spellTimerPanels.Remove(item);
+                    this.spellTimerPanels.RemoveAll(x =>
+                        !spells.Any(y => y.Panel == x.PanelName));
                 }
             }
 
@@ -1057,7 +1040,7 @@ namespace ACT.SpecialSpellTimer
             horizontal = false;
             fixedPositionSpell = false;
 
-            if (this.spellTimerPanels != null)
+            lock (spellTimerPanels)
             {
                 var panel = this.FindPanelByName(panelName);
                 if (panel != null)
@@ -1091,7 +1074,7 @@ namespace ACT.SpecialSpellTimer
             left = 10.0d;
             top = 10.0d;
 
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 var panel = this.spellTimerPanels
                     .Where(x => x.PanelName == panelName)
@@ -1128,7 +1111,7 @@ namespace ACT.SpecialSpellTimer
         {
             margin = 0;
 
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 var panel = this.FindPanelByName(panelName);
                 if (panel != null)
@@ -1151,7 +1134,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void HidePanels()
         {
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 foreach (var panel in this.spellTimerPanels)
                 {
@@ -1165,7 +1148,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void LayoutPanels()
         {
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 ActInvoker.Invoke(() =>
                 {
@@ -1201,7 +1184,7 @@ namespace ACT.SpecialSpellTimer
             bool horizontal,
             bool fixedPositionSpell)
         {
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 var panel = this.FindPanelByName(panelName);
                 if (panel != null)
@@ -1230,7 +1213,7 @@ namespace ACT.SpecialSpellTimer
             double left,
             double top)
         {
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 var panel = this.spellTimerPanels
                     .Where(x => x.PanelName == panelName)
@@ -1263,7 +1246,7 @@ namespace ACT.SpecialSpellTimer
             string panelName,
             int margin)
         {
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 var panel = this.FindPanelByName(panelName);
                 if (panel != null)
@@ -1285,14 +1268,12 @@ namespace ACT.SpecialSpellTimer
         /// <param name="panelName">パネルの名前</param>
         private SpellTimerListWindow FindPanelByName(string panelName)
         {
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 return this.spellTimerPanels
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
             }
-
-            return null;
         }
 
         /// <summary>
@@ -1301,14 +1282,12 @@ namespace ACT.SpecialSpellTimer
         /// <param name="panelName">パネルの名前</param>
         private SpellTimerDataSet.PanelSettingsRow FindPanelSettingByName(string panelName)
         {
-            if (this.spellTimerPanels != null)
+            lock (this.spellTimerPanels)
             {
                 return PanelSettings.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
             }
-
-            return null;
         }
 
         #endregion Panel controller

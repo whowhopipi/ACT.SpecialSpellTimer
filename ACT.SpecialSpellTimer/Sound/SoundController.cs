@@ -29,60 +29,45 @@ namespace ACT.SpecialSpellTimer.Sound
         /// </summary>
         private volatile bool enabledYukkuri = false;
 
-        private Task existYukkuriThread;
-        private volatile bool existYukkuriThreadRunning = false;
+        private Timer existYukkuriThread;
 
         #region Begin / End
 
         public void Begin()
         {
-            this.existYukkuriThreadRunning = true;
-            this.existYukkuriThread = new Task(() =>
+            this.existYukkuriThread = new Timer((stat) =>
             {
-                while (this.existYukkuriThreadRunning)
+                try
                 {
-                    try
+                    if (ActGlobals.oFormActMain != null &&
+                        ActGlobals.oFormActMain.Visible &&
+                        ActGlobals.oFormActMain.ActPlugins != null)
                     {
-                        if (ActGlobals.oFormActMain != null &&
-                            ActGlobals.oFormActMain.Visible &&
-                            ActGlobals.oFormActMain.ActPlugins != null)
-                        {
-                            this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
-                                .Where(x =>
-                                    x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
-                                    x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
-                                .Any();
-                        }
+                        this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
+                            .Where(x =>
+                                x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
+                                x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
+                            .Any();
                     }
-                    catch (ThreadAbortException)
-                    {
-                        this.existYukkuriThreadRunning = false;
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("soundcontroller backgound thread error:", ex);
-                    }
-
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
                 }
-            });
-
-            this.existYukkuriThread.Start();
+                catch (ThreadAbortException)
+                {
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("soundcontroller backgound thread error:", ex);
+                }
+            },
+            null,
+            1 * 1000,
+            10 * 1000);
         }
 
         public void End()
         {
-            this.existYukkuriThreadRunning = false;
-
             if (this.existYukkuriThread != null)
             {
-                this.existYukkuriThread.Wait();
-                if (this.existYukkuriThread.IsCanceled)
-                {
-                    this.existYukkuriThread.Dispose();
-                }
-
+                this.existYukkuriThread.Dispose();
                 this.existYukkuriThread = null;
             }
         }

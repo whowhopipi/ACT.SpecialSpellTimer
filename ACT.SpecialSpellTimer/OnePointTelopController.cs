@@ -178,25 +178,30 @@ namespace ACT.SpecialSpellTimer
             void refreshTelop(
                 OnePointTelop telop)
             {
-                var w = telopWindowList.ContainsKey(telop.ID) ? telopWindowList[telop.ID] : null;
-                if (w == null)
+                var w = default(OnePointTelopWindow);
+
+                lock (telopWindowList)
                 {
-                    w = new OnePointTelopWindow()
+                    w = telopWindowList.ContainsKey(telop.ID) ? telopWindowList[telop.ID] : null;
+                    if (w == null)
                     {
-                        Title = "OnePointTelop - " + telop.Title,
-                        DataSource = telop
-                    };
+                        w = new OnePointTelopWindow()
+                        {
+                            Title = "OnePointTelop - " + telop.Title,
+                            DataSource = telop
+                        };
 
-                    if (Settings.Default.ClickThroughEnabled)
-                    {
-                        w.ToTransparentWindow();
+                        if (Settings.Default.ClickThroughEnabled)
+                        {
+                            w.ToTransparentWindow();
+                        }
+
+                        w.Opacity = 0;
+                        w.Topmost = false;
+                        w.Show();
+
+                        telopWindowList.Add(telop.ID, w);
                     }
-
-                    w.Opacity = 0;
-                    w.Topmost = false;
-                    w.Show();
-
-                    telopWindowList.Add(telop.ID, w);
                 }
 
                 if (Settings.Default.OverlayVisible &&
@@ -270,16 +275,14 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public static void ActivateTelops()
         {
-            if (telopWindowList == null)
-            {
-                return;
-            }
-
             void activateTelopsCore()
             {
-                foreach (var telop in telopWindowList.Values)
+                lock (telopWindowList)
                 {
-                    telop.Activate();
+                    foreach (var telop in telopWindowList.Values)
+                    {
+                        telop.Activate();
+                    }
                 }
             }
 
@@ -293,18 +296,16 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public static void CloseTelops()
         {
-            if (telopWindowList == null)
-            {
-                return;
-            }
-
             void closeTelopsCore()
             {
-                foreach (var telop in telopWindowList.Values)
+                lock (telopWindowList)
                 {
-                    telop.DataSource.Left = telop.Left;
-                    telop.DataSource.Top = telop.Top;
-                    telop.Close();
+                    foreach (var telop in telopWindowList.Values)
+                    {
+                        telop.DataSource.Left = telop.Left;
+                        telop.DataSource.Top = telop.Top;
+                        telop.Close();
+                    }
                 }
             }
 
@@ -312,12 +313,15 @@ namespace ACT.SpecialSpellTimer
                 DispatcherPriority.Background,
                 (Action)closeTelopsCore);
 
-            if (telopWindowList.Count > 0)
+            lock (telopWindowList)
             {
-                OnePointTelopTable.Instance.Save();
-            }
+                if (telopWindowList.Count > 0)
+                {
+                    OnePointTelopTable.Instance.Save();
+                }
 
-            telopWindowList.Clear();
+                telopWindowList.Clear();
+            }
         }
 
         /// <summary>
@@ -329,28 +333,26 @@ namespace ACT.SpecialSpellTimer
         {
             void removeWindows()
             {
-                if (telopWindowList == null)
-                {
-                    return;
-                }
-
                 // 不要になったWindowを閉じる
                 var removeWindowList = new List<OnePointTelopWindow>();
                 foreach (var window in telopWindowList.Values)
                 {
                     if (!telops.Any(x => x.ID == window.DataSource.ID))
                     {
+                        window.DataSource.Left = window.Left;
+                        window.DataSource.Top = window.Top;
+                        window.Close();
+
                         removeWindowList.Add(window);
                     }
                 }
 
-                foreach (var window in removeWindowList)
+                lock (telopWindowList)
                 {
-                    window.DataSource.Left = window.Left;
-                    window.DataSource.Top = window.Top;
-                    window.Close();
-
-                    telopWindowList.Remove(window.DataSource.ID);
+                    foreach (var window in removeWindowList)
+                    {
+                        telopWindowList.Remove(window.DataSource.ID);
+                    }
                 }
             }
 
@@ -373,7 +375,7 @@ namespace ACT.SpecialSpellTimer
             left = 0;
             top = 0;
 
-            if (telopWindowList != null)
+            lock (telopWindowList)
             {
                 var telop = telopWindowList.ContainsKey(telopID) ?
                     telopWindowList[telopID] :
@@ -404,7 +406,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public static void HideTelops()
         {
-            if (telopWindowList != null)
+            lock (telopWindowList)
             {
                 foreach (var telop in telopWindowList.Values)
                 {
@@ -424,7 +426,7 @@ namespace ACT.SpecialSpellTimer
             double left,
             double top)
         {
-            if (telopWindowList != null)
+            lock (telopWindowList)
             {
                 var telop = telopWindowList.ContainsKey(telopID) ?
                     telopWindowList[telopID] :

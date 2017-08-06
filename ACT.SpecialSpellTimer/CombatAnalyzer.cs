@@ -175,7 +175,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログ格納スレッド
         /// </summary>
-        private Thread storeLogThread;
+        private Task storeLogThread;
 
         /// <summary>
         /// 戦闘ログのリスト
@@ -277,10 +277,10 @@ namespace ACT.SpecialSpellTimer
 
             if (this.storeLogThread != null)
             {
-                this.storeLogThread.Join(1);
-                if (this.storeLogThread.IsAlive)
+                this.storeLogThread.Wait();
+                if (this.storeLogThread.IsCompleted)
                 {
-                    this.storeLogThread.Abort();
+                    this.storeLogThread.Dispose();
                 }
 
                 this.storeLogThread = null;
@@ -314,7 +314,7 @@ namespace ACT.SpecialSpellTimer
 
             this.isRunning = true;
 
-            this.storeLogThread = new Thread(() =>
+            this.storeLogThread = new Task(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
 
@@ -335,7 +335,6 @@ namespace ACT.SpecialSpellTimer
                 }
             });
 
-            this.storeLogThread.Priority = ThreadPriority.Lowest;
             this.storeLogThread.Start();
         }
 
