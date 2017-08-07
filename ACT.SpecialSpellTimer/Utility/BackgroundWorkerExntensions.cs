@@ -12,12 +12,6 @@ namespace ACT.SpecialSpellTimer.Utility
                 worker.WorkerSupportsCancellation = true;
             }
 
-            worker.RunWorkerCompleted += (s, e) =>
-            {
-                worker.Dispose();
-                worker = null;
-            };
-
             worker.CancelAsync();
         }
     }
