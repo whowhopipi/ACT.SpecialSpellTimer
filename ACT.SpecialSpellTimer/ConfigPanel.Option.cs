@@ -58,6 +58,8 @@
             Settings.Default.TextOutlineThicknessRate = (double)this.TextOutlineThicknessRateNumericUpDown.Value;
             Settings.Default.TextBlurRate = (double)this.TextBlurRateNumericUpDown.Value;
 
+            Settings.Default.RenderCPUOnly = this.RenderWithCPUOnlyCheckBox.Checked;
+
             // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&
                 !this.EnabledNotifyNormalSpellTimerCheckBox.Checked)
@@ -72,6 +74,9 @@
 
             // 設定を保存する
             Settings.Default.Save();
+
+            // レンダリングモードを適用する
+            Settings.Default.ApplyRenderMode();
         }
 
         /// <summary>
@@ -241,6 +246,8 @@
 
             this.TextOutlineThicknessRateNumericUpDown.Value = (decimal)Settings.Default.TextOutlineThicknessRate;
             this.TextBlurRateNumericUpDown.Value = (decimal)Settings.Default.TextBlurRate;
+
+            this.RenderWithCPUOnlyCheckBox.Checked = Settings.Default.RenderCPUOnly;
 
             var sw1 = this.SaveLogCheckBox.Checked;
             this.SaveLogTextBox.Enabled = sw1;

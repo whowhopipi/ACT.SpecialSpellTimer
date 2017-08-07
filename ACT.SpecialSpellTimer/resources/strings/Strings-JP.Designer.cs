@@ -1726,6 +1726,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   レンダリングをCPUに限定する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string RenderWithCPUOnly {
+            get {
+                return ResourceManager.GetString("RenderWithCPUOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   リキャスト後に繰り返す に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string RepeatCheckBox {

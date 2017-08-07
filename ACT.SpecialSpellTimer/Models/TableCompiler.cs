@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -24,8 +25,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region Worker
 
-        private const int WorkerInterval = 5 * 1000;
-        private Timer worker;
+        private readonly TimeSpan WorkerInterval = TimeSpan.FromSeconds(5);
+        private BackgroundWorker worker;
 
         #endregion Worker
 
@@ -36,24 +37,17 @@ namespace ACT.SpecialSpellTimer.Models
             this.CompileSpells();
             this.CompileTickers();
 
-            this.worker = new Timer(
-                (stat) => this.DoWork(),
-                null,
-                1 * 1000,
-                WorkerInterval);
+            this.worker = new BackgroundWorker();
+            this.worker.WorkerSupportsCancellation = true;
+            this.worker.DoWork += (s, e) => this.DoWork(e);
+            this.worker.RunWorkerAsync();
 
             Logger.Write("start spell compiler.");
         }
 
         public void End()
         {
-            if (this.worker != null)
-            {
-                this.worker.Dispose();
-                this.worker = null;
-            }
-
-            Logger.Write("end spell compiler.");
+            this.worker?.Cancel();
         }
 
         #endregion Begin / End
@@ -337,54 +331,62 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        private void DoWork()
+        private void DoWork(DoWorkEventArgs arg)
         {
-            try
+            while (true)
             {
-                this.RefreshCombatants();
+                Thread.Sleep(this.WorkerInterval);
 
-                var isPlayerChanged = this.IsPlayerChanged();
-                var isPartyChanged = this.IsPartyChanged();
-                var isZoneChanged = this.IsZoneChanged();
-
-                if (isZoneChanged)
+                try
                 {
-                    this.RefreshPetPlaceholder();
-                }
-
-                if (isPlayerChanged)
-                {
-                    this.RefreshPlayerPlacceholder();
-                }
-
-                if (isPartyChanged)
-                {
-                    this.RefreshPartyPlaceholders();
-                    this.RefreshPetPlaceholder();
-                }
-
-                if (isPlayerChanged ||
-                    isPartyChanged ||
-                    isZoneChanged)
-                {
-                    this.RecompileSpells();
-                    this.RecompileTickers();
-
-                    // 不要なWindowを閉じる
-                    if (!Settings.Default.OverlayForceVisible)
+                    if (this.worker.CancellationPending)
                     {
-                        OnePointTelopController.GarbageWindows(this.TickerList);
-                        SpellTimerCore.Instance.GarbageSpellPanelWindows(this.SpellList);
+                        Logger.Write("end spell compiler.");
+                        arg.Cancel = true;
+                        return;
+                    }
+
+                    this.RefreshCombatants();
+
+                    var isPlayerChanged = this.IsPlayerChanged();
+                    var isPartyChanged = this.IsPartyChanged();
+                    var isZoneChanged = this.IsZoneChanged();
+
+                    if (isZoneChanged)
+                    {
+                        this.RefreshPetPlaceholder();
+                    }
+
+                    if (isPlayerChanged)
+                    {
+                        this.RefreshPlayerPlacceholder();
+                    }
+
+                    if (isPartyChanged)
+                    {
+                        this.RefreshPartyPlaceholders();
+                        this.RefreshPetPlaceholder();
+                    }
+
+                    if (isPlayerChanged ||
+                        isPartyChanged ||
+                        isZoneChanged)
+                    {
+                        this.RecompileSpells();
+                        this.RecompileTickers();
+
+                        // 不要なWindowを閉じる
+                        if (!Settings.Default.OverlayForceVisible)
+                        {
+                            OnePointTelopController.GarbageWindows(this.TickerList);
+                            SpellTimerCore.Instance.GarbageSpellPanelWindows(this.SpellList);
+                        }
                     }
                 }
-            }
-            catch (ThreadAbortException)
-            {
-                return;
-            }
-            catch (Exception ex)
-            {
-                Logger.Write("table compiler error:", ex);
+                catch (Exception ex)
+                {
+                    Logger.Write("table compiler error:", ex);
+                }
             }
         }
 

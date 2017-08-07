@@ -183,6 +183,7 @@ namespace ACT.SpecialSpellTimer
 
                 // 設定ファイルを読み込む
                 Settings.Default.Load();
+                Settings.Default.ApplyRenderMode();
 
                 pluginScreenSpace.Text = Translate.Get("LN_Tabname");
                 this.PluginStatusLabel = pluginStatusText;

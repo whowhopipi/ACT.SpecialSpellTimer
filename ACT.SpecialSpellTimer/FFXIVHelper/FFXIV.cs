@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
@@ -123,40 +123,32 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #region Start/End
 
+        private BackgroundWorker attachFFXIVPluginWorker;
         private double scanFFXIVDurationAvg;
-        private Task scanFFXIVTask;
-        private volatile bool scanFFXIVTaskRunning;
-        private Task task;
-        private volatile bool taskRunning;
+        private BackgroundWorker scanFFXIVWorker;
 
         public void End()
         {
-            this.scanFFXIVTaskRunning = false;
-            this.taskRunning = false;
-
-            if (this.task != null)
-            {
-                this.task.Wait();
-                this.task.Dispose();
-                this.task = null;
-            }
-
-            if (this.scanFFXIVTask != null)
-            {
-                this.scanFFXIVTask.Wait();
-                this.scanFFXIVTask.Dispose();
-                this.scanFFXIVTask = null;
-            }
+            this.attachFFXIVPluginWorker?.Cancel();
+            this.scanFFXIVWorker?.Cancel();
         }
 
         public void Start()
         {
-            this.task = new Task(() =>
+            this.attachFFXIVPluginWorker = new BackgroundWorker();
+            this.attachFFXIVPluginWorker.WorkerSupportsCancellation = true;
+            this.attachFFXIVPluginWorker.DoWork += (s, e) =>
             {
-                while (this.taskRunning)
+                while (true)
                 {
                     try
                     {
+                        if (this.attachFFXIVPluginWorker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+
                         this.Attach();
                         this.LoadZoneList();
                         this.LoadSkillList();
@@ -170,19 +162,26 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
                     Thread.Sleep(5000);
                 }
-            });
+            };
 
-            this.taskRunning = true;
-            this.task.Start();
+            this.attachFFXIVPluginWorker.RunWorkerAsync();
 
-            this.scanFFXIVTask = new Task(() =>
+            this.scanFFXIVWorker = new BackgroundWorker();
+            this.scanFFXIVWorker.WorkerSupportsCancellation = true;
+            this.scanFFXIVWorker.DoWork += (s, e) =>
             {
-                while (this.scanFFXIVTaskRunning)
+                while (true)
                 {
                     var interval = (int)Settings.Default.LogPollSleepInterval;
 
                     try
                     {
+                        if (this.scanFFXIVWorker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+
                         if (!this.IsAvalable)
                         {
                             Thread.Sleep(5000);
@@ -232,10 +231,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
                     Thread.Sleep(interval);
                 }
-            });
+            };
 
-            this.scanFFXIVTaskRunning = true;
-            this.scanFFXIVTask.Start();
+            this.scanFFXIVWorker.RunWorkerAsync();
         }
 
         #endregion Start/End

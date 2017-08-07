@@ -111,6 +111,7 @@
     <Compile Include="OnePointTelopController.cs" />
     <Compile Include="Models\OnePointTelopTable.cs" />
     <Compile Include="Config\Settings.cs" />
+    <Compile Include="Utility\BackgroundWorkerExntensions.cs" />
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
     </Compile>

@@ -46,14 +46,10 @@ namespace ACT.SpecialSpellTimer
 
         #region Thread
 
-        private Timer backgroudThread;
-
-        private Task detectLogsThread;
-        private volatile bool detectLogsThreadRunning = false;
-
-        private volatile bool refreshOverlaysThreadRunning = false;
-        private Task refreshSpellOverlaysThread;
-        private Task refreshTickerOverlaysThread;
+        private BackgroundWorker backgroudWorker;
+        private BackgroundWorker detectLogsWorker;
+        private BackgroundWorker refreshSpellOverlaysWorker;
+        private BackgroundWorker refreshTickerOverlaysWorker;
 
         #endregion Thread
 
@@ -107,75 +103,89 @@ namespace ACT.SpecialSpellTimer
             this.BeginOverlaysThread();
 
             // ログ監視タイマを開始する
-            this.detectLogsThreadRunning = true;
-            this.detectLogsThread = new Task(() =>
+            this.detectLogsWorker = new BackgroundWorker();
+            this.detectLogsWorker.WorkerSupportsCancellation = true;
+            this.detectLogsWorker.DoWork += (s, e) =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 Logger.Write("start detect logs.");
-                while (this.detectLogsThreadRunning)
+
+                while (true)
                 {
                     try
                     {
+                        if (this.detectLogsWorker.CancellationPending)
+                        {
+                            Logger.Write("end detect logs.");
+                            e.Cancel = true;
+                            return;
+                        }
+
                         this.DetectLogsCore();
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        this.detectLogsThreadRunning = false;
-                        break;
                     }
                     catch (Exception ex)
                     {
                         Logger.Write("detect logs error:", ex);
                     }
                 }
+            };
 
-                Logger.Write("end detect logs.");
-            });
-
-            this.detectLogsThread.Start();
+            this.detectLogsWorker.RunWorkerAsync();
 
             // Backgroudスレッドを開始する
-            this.backgroudThread = new Timer((stat) =>
+            this.backgroudWorker = new BackgroundWorker();
+            this.backgroudWorker.WorkerSupportsCancellation = true;
+            this.backgroudWorker.DoWork += (s, e) =>
             {
-                try
+                Thread.Sleep(TimeSpan.FromSeconds(5));
+
+                while (true)
                 {
-                    this.BackgroundCore();
+                    try
+                    {
+                        if (this.backgroudWorker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        this.BackgroundCore();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write("background thread for UI error:", ex);
+                    }
+
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
-                catch (ThreadAbortException)
-                {
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write("background thread for UI error:", ex);
-                }
-            },
-            null,
-            1 * 1000,
-            5 * 1000);
+            };
+
+            this.backgroudWorker.RunWorkerAsync();
         }
 
         public void BeginOverlaysThread()
         {
-            // Overlay更新スレッドを開始する
-            this.refreshOverlaysThreadRunning = true;
-
             // スペルのスレッドを開始する
-            this.refreshSpellOverlaysThread = new Task(() =>
+            this.refreshSpellOverlaysWorker = new BackgroundWorker();
+            this.refreshSpellOverlaysWorker.WorkerSupportsCancellation = true;
+            this.refreshSpellOverlaysWorker.DoWork += (s, e) =>
             {
                 Logger.Write("start refresh spell overlays.");
 
-                while (this.refreshOverlaysThreadRunning)
+                while (true)
                 {
                     try
                     {
-                        Application.Current.Dispatcher.Invoke(
+                        if (this.refreshSpellOverlaysWorker.CancellationPending)
+                        {
+                            Logger.Write("end refresh spell overlays.");
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        Application.Current.Dispatcher.BeginInvoke(
                             (Action)this.RefreshSpellOverlaysCore,
                             DispatcherPriority.Normal);
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        this.refreshOverlaysThreadRunning = false;
-                        break;
                     }
                     catch (Exception ex)
                     {
@@ -184,27 +194,31 @@ namespace ACT.SpecialSpellTimer
 
                     Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval));
                 }
+            };
 
-                Logger.Write("end refresh spell overlays.");
-            });
+            this.refreshSpellOverlaysWorker.RunWorkerAsync();
 
             // テロップのスレッドを開始する
-            this.refreshTickerOverlaysThread = new Task(() =>
+            this.refreshTickerOverlaysWorker = new BackgroundWorker();
+            this.refreshTickerOverlaysWorker.WorkerSupportsCancellation = true;
+            this.refreshTickerOverlaysWorker.DoWork += (s, e) =>
             {
                 Logger.Write("start refresh ticker overlays.");
 
-                while (this.refreshOverlaysThreadRunning)
+                while (true)
                 {
                     try
                     {
-                        Application.Current.Dispatcher.Invoke(
+                        if (this.refreshTickerOverlaysWorker.CancellationPending)
+                        {
+                            Logger.Write("end refresh ticker overlays.");
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        Application.Current.Dispatcher.BeginInvoke(
                             (Action)this.RefreshTickerOverlaysCore,
                             DispatcherPriority.Normal);
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        this.refreshOverlaysThreadRunning = false;
-                        break;
                     }
                     catch (Exception ex)
                     {
@@ -213,12 +227,9 @@ namespace ACT.SpecialSpellTimer
 
                     Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval));
                 }
+            };
 
-                Logger.Write("end refresh ticker overlays.");
-            });
-
-            this.refreshSpellOverlaysThread.Start();
-            this.refreshTickerOverlaysThread.Start();
+            this.refreshTickerOverlaysWorker.RunWorkerAsync();
         }
 
         /// <summary>
@@ -226,54 +237,14 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void End()
         {
-            this.refreshOverlaysThreadRunning = false;
-            this.detectLogsThreadRunning = false;
-
             // 戦闘分析を開放する
             CombatAnalyzer.Default.Denitialize();
 
-            // スペルのOverlayの更新を開放する
-            if (this.refreshSpellOverlaysThread != null)
-            {
-                this.refreshSpellOverlaysThread.Wait();
-                if (this.refreshSpellOverlaysThread.IsCompleted)
-                {
-                    this.refreshSpellOverlaysThread.Dispose();
-                }
-
-                this.refreshSpellOverlaysThread = null;
-            }
-
-            // テロップのOverlayの更新を開放する
-            if (this.refreshTickerOverlaysThread != null)
-            {
-                this.refreshTickerOverlaysThread.Wait();
-                if (this.refreshTickerOverlaysThread.IsCompleted)
-                {
-                    this.refreshTickerOverlaysThread.Dispose();
-                }
-
-                this.refreshTickerOverlaysThread = null;
-            }
-
-            // ログ監視を開放する
-            if (this.detectLogsThread != null)
-            {
-                this.detectLogsThread.Wait();
-                if (this.detectLogsThread.IsCompleted)
-                {
-                    this.detectLogsThread.Dispose();
-                }
-
-                this.detectLogsThread = null;
-            }
-
-            // Backgroudスレッドを開放する
-            if (this.backgroudThread != null)
-            {
-                this.backgroudThread.Dispose();
-                this.backgroudThread = null;
-            }
+            // Workerを開放する
+            this.refreshSpellOverlaysWorker?.Cancel();
+            this.refreshTickerOverlaysWorker?.Cancel();
+            this.detectLogsWorker?.Cancel();
+            this.backgroudWorker?.Cancel();
 
             // ログバッファを開放する
             if (this.LogBuffer != null)
@@ -282,7 +253,7 @@ namespace ACT.SpecialSpellTimer
                 this.LogBuffer = null;
             }
 
-            // 全てのPanelを閉じる
+            // Windowを閉じる
             this.ClosePanels();
             OnePointTelopController.CloseTelops();
 
@@ -965,7 +936,7 @@ namespace ACT.SpecialSpellTimer
                 }
             }
 
-            Application.Current.Dispatcher.BeginInvoke(
+            Application.Current.Dispatcher.Invoke(
                 DispatcherPriority.Background,
                 (Action)colosePanelsCore);
         }
@@ -1021,7 +992,7 @@ namespace ACT.SpecialSpellTimer
                 }
             }
 
-            Application.Current.Dispatcher.BeginInvoke(
+            Application.Current.Dispatcher.Invoke(
                 DispatcherPriority.Background,
                 (Action)removePanels);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -168,14 +169,9 @@ namespace ACT.SpecialSpellTimer
         private long id;
 
         /// <summary>
-        /// スレッド稼働中？
-        /// </summary>
-        private volatile bool isRunning;
-
-        /// <summary>
         /// ログ格納スレッド
         /// </summary>
-        private Task storeLogThread;
+        private BackgroundWorker storeLogWorker;
 
         /// <summary>
         /// 戦闘ログのリスト
@@ -273,19 +269,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void EndPoller()
         {
-            this.isRunning = false;
-
-            if (this.storeLogThread != null)
-            {
-                this.storeLogThread.Wait();
-                if (this.storeLogThread.IsCompleted)
-                {
-                    this.storeLogThread.Dispose();
-                }
-
-                this.storeLogThread = null;
-            }
-
+            this.storeLogWorker?.Cancel();
             this.ClearLogInfoQueue();
         }
 
@@ -312,16 +296,16 @@ namespace ACT.SpecialSpellTimer
         {
             this.ClearLogInfoQueue();
 
-            this.isRunning = true;
-
-            this.storeLogThread = new Task(() =>
+            this.storeLogWorker = new BackgroundWorker();
+            this.storeLogWorker.WorkerSupportsCancellation = true;
+            this.storeLogWorker.DoWork += (s, e) =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(1));
 
                 try
                 {
                     Logger.Write("start log poll for analyze.");
-                    this.StoreLogPoller();
+                    this.StoreLogPoller(e);
                 }
                 catch (Exception ex)
                 {
@@ -333,9 +317,9 @@ namespace ACT.SpecialSpellTimer
                 {
                     Logger.Write("end log poll for analyze.");
                 }
-            });
+            };
 
-            this.storeLogThread.Start();
+            this.storeLogWorker.RunWorkerAsync();
         }
 
         /// <summary>
@@ -619,7 +603,8 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログを格納するスレッド
         /// </summary>
-        private void StoreLogPoller()
+        private void StoreLogPoller(
+            DoWorkEventArgs args)
         {
             var analyzeLogLine = new Func<string, IReadOnlyCollection<AnalyzeKeyword>, AnalyzeKeywordCategory>(
                 (log, keywords) =>
@@ -636,10 +621,16 @@ namespace ACT.SpecialSpellTimer
                         AnalyzeKeywordCategory.Unknown;
                 });
 
-            while (this.isRunning)
+            while (true)
             {
                 try
                 {
+                    if (this.storeLogWorker.CancellationPending)
+                    {
+                        args.Cancel = true;
+                        return;
+                    }
+
                     while (!this.logInfoQueue.IsEmpty)
                     {
                         Thread.Sleep(0);
@@ -682,11 +673,6 @@ namespace ACT.SpecialSpellTimer
                                 break;
                         }
                     }
-                }
-                catch (ThreadAbortException)
-                {
-                    this.isRunning = false;
-                    break;
                 }
                 catch (Exception ex)
                 {

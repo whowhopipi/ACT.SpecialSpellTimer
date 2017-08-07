@@ -2,8 +2,10 @@
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
+
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
@@ -15,9 +17,8 @@ namespace ACT.SpecialSpellTimer.Config
     {
         #region Singleton
 
-        private static object singletonLocker = new object();
-
         private static Settings instance;
+        private static object singletonLocker = new object();
 
         public static Settings Default
         {
@@ -173,15 +174,18 @@ namespace ACT.SpecialSpellTimer.Config
         public bool OverlayForceVisible { get; set; }
         public bool OverlayVisible { get; set; }
         public string OverText { get; set; }
+        public NameStyles PCNameInitialOnDisplayStyle { get; set; } = NameStyles.FullName;
+        public NameStyles PCNameInitialOnLogStyle { get; set; } = NameStyles.FullName;
         public double PlayerInfoRefreshInterval { get; set; }
         public string ReadyText { get; set; }
         public int ReduceIconBrightness { get; set; }
         public long RefreshInterval { get; set; }
         public bool RemoveTooltipSymbols { get; set; }
+        public bool RenderCPUOnly { get; set; } = true;
         public bool ResetOnWipeOut { get; set; }
+        public string SaveLogDirectory { get; set; }
         public bool SaveLogEnabled { get; set; }
         public string SaveLogFile { get; set; }
-        public string SaveLogDirectory { get; set; }
         public bool SimpleRegex { get; set; }
         public bool TelopAlwaysVisible { get; set; }
         public double TextBlurRate { get; set; }
@@ -190,9 +194,6 @@ namespace ACT.SpecialSpellTimer.Config
         public double UpdateCheckInterval { get; set; }
         public bool UseOtherThanFFXIV { get; set; }
         public bool WipeoutNotifyToACT { get; set; }
-
-        public NameStyles PCNameInitialOnLogStyle { get; set; } = NameStyles.FullName;
-        public NameStyles PCNameInitialOnDisplayStyle { get; set; } = NameStyles.FullName;
 
         #endregion Data
 
@@ -295,7 +296,7 @@ namespace ACT.SpecialSpellTimer.Config
             CombatLogBufferSize = 30000,
             ReduceIconBrightness = 55,
             Opacity = 10,
-            MaxFPS = 30,
+            MaxFPS = 15,
             Font = FontInfo.DefaultFont.ToFontForWindowsForm(),
             OverlayVisible = true,
             AutoSortEnabled = true,
@@ -323,7 +324,22 @@ namespace ACT.SpecialSpellTimer.Config
             TextOutlineThicknessRate = 1.0d,
             PCNameInitialOnLogStyle = NameStyles.FullName,
             PCNameInitialOnDisplayStyle = NameStyles.FullName,
+            RenderCPUOnly = true,
         };
+
+        /// <summary>
+        /// レンダリングモードを適用する
+        /// </summary>
+        public void ApplyRenderMode()
+        {
+            var renderMode =
+                this.RenderCPUOnly ? RenderMode.SoftwareOnly : RenderMode.Default;
+
+            if (System.Windows.Media.RenderOptions.ProcessRenderMode != renderMode)
+            {
+                System.Windows.Media.RenderOptions.ProcessRenderMode = renderMode;
+            }
+        }
 
         /// <summary>
         /// Clone

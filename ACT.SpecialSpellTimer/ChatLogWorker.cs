@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -22,7 +24,7 @@ namespace ACT.SpecialSpellTimer
 
         private volatile StringBuilder logBuffer = new StringBuilder();
 
-        private Timer writeThread;
+        private BackgroundWorker worker;
 
         private string OutputDirectory => Settings.Default.SaveLogDirectory;
 
@@ -86,32 +88,36 @@ namespace ACT.SpecialSpellTimer
                 this.logBuffer.Clear();
             }
 
-            this.writeThread = new Timer((stat) =>
+            this.worker = new BackgroundWorker();
+            this.worker.WorkerSupportsCancellation = true;
+            this.worker.DoWork += (s, e) =>
             {
-                try
+                while (true)
                 {
-                    this.Flush();
+                    Thread.Sleep(this.FlushInterval);
+
+                    try
+                    {
+                        if (this.worker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        this.Flush();
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
-                catch (ThreadAbortException)
-                {
-                }
-                catch (Exception)
-                {
-                }
-            },
-            null,
-            1000,
-            FlushInterval.Milliseconds);
+            };
+
+            this.worker.RunWorkerAsync();
         }
 
         public void End()
         {
-            if (this.writeThread != null)
-            {
-                this.writeThread.Dispose();
-                this.writeThread = null;
-            }
-
+            this.worker?.Cancel();
             this.Flush();
         }
 

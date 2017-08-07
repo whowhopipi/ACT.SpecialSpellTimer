@@ -1207,4 +1207,8 @@
     <value>Display style with overlay</value>
     <comment>オーバーレイでの表示スタイル</comment>
   </data>
+  <data name="RenderWithCPUOnly" xml:space="preserve">
+    <value>Render with CPU only.</value>
+    <comment>レンダリングをCPUに限定する</comment>
+  </data>
 </root>

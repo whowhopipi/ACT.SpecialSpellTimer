@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,52 +25,59 @@ namespace ACT.SpecialSpellTimer.Sound
 
         #endregion Singleton
 
+        private readonly TimeSpan existYukkuriWorkerInterval = TimeSpan.FromSeconds(10);
+
         /// <summary>
         /// ゆっくりが有効かどうか？
         /// </summary>
         private volatile bool enabledYukkuri = false;
 
-        private Timer existYukkuriThread;
+        private BackgroundWorker existYukkuriWorker;
 
         #region Begin / End
 
         public void Begin()
         {
-            this.existYukkuriThread = new Timer((stat) =>
+            this.existYukkuriWorker = new BackgroundWorker();
+            this.existYukkuriWorker.WorkerSupportsCancellation = true;
+            this.existYukkuriWorker.DoWork += (s, e) =>
             {
-                try
+                while (true)
                 {
-                    if (ActGlobals.oFormActMain != null &&
-                        ActGlobals.oFormActMain.Visible &&
-                        ActGlobals.oFormActMain.ActPlugins != null)
+                    if (this.existYukkuriWorker.CancellationPending)
                     {
-                        this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
-                            .Where(x =>
-                                x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
-                                x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
-                            .Any();
+                        e.Cancel = true;
+                        return;
                     }
+
+                    try
+                    {
+                        if (ActGlobals.oFormActMain != null &&
+                            ActGlobals.oFormActMain.Visible &&
+                            ActGlobals.oFormActMain.ActPlugins != null)
+                        {
+                            this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
+                                .Where(x =>
+                                    x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
+                                    x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
+                                .Any();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write("soundcontroller backgound thread error:", ex);
+                    }
+
+                    Thread.Sleep(this.existYukkuriWorkerInterval);
                 }
-                catch (ThreadAbortException)
-                {
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write("soundcontroller backgound thread error:", ex);
-                }
-            },
-            null,
-            1 * 1000,
-            10 * 1000);
+            };
+
+            this.existYukkuriWorker.RunWorkerAsync();
         }
 
         public void End()
         {
-            if (this.existYukkuriThread != null)
-            {
-                this.existYukkuriThread.Dispose();
-                this.existYukkuriThread = null;
-            }
+            this.existYukkuriWorker?.Cancel();
         }
 
         #endregion Begin / End

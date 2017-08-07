@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -10,10 +11,10 @@ namespace ACT.SpecialSpellTimer.Utility
     /// </summary>
     public static class Logger
     {
-        private static readonly TimeSpan dueTime = TimeSpan.FromSeconds(1);
-        private static readonly TimeSpan period = TimeSpan.FromSeconds(5);
         private static readonly StringBuilder buffer = new StringBuilder();
-        private static Timer flushTimer;
+        private static readonly TimeSpan interval = TimeSpan.FromSeconds(5);
+        private static readonly object lockObject = new object();
+        private static BackgroundWorker worker;
 
         private static string LogFile => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -28,9 +29,9 @@ namespace ACT.SpecialSpellTimer.Utility
             var log =
                 $"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff")}] {text}";
 
-            lock (buffer)
+            lock (lockObject)
             {
-                buffer.AppendLine(log);
+                buffer?.AppendLine(log);
             }
         }
 
@@ -45,9 +46,9 @@ namespace ACT.SpecialSpellTimer.Utility
                 $"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff")}] {text}" + Environment.NewLine +
                 ex.ToString();
 
-            lock (buffer)
+            lock (lockObject)
             {
-                buffer.AppendLine(log);
+                buffer?.AppendLine(log);
             }
         }
 
@@ -63,9 +64,9 @@ namespace ACT.SpecialSpellTimer.Utility
             var log =
                 $"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.fff")}] {text}";
 
-            lock (buffer)
+            lock (lockObject)
             {
-                buffer.AppendLine(log);
+                buffer?.AppendLine(log);
             }
         }
 
@@ -73,34 +74,36 @@ namespace ACT.SpecialSpellTimer.Utility
 
         public static void Begin()
         {
-            lock (buffer)
+            lock (lockObject)
             {
-                buffer.Clear();
-
-                if (flushTimer != null)
-                {
-                    flushTimer.Dispose();
-                }
-
-                flushTimer = new Timer(ignoreState => Flush(), null, dueTime, period);
+                buffer?.Clear();
             }
+
+            worker = new BackgroundWorker();
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += (s, e) =>
+            {
+                while (true)
+                {
+                    if (worker.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    Flush();
+
+                    Thread.Sleep(interval);
+                }
+            };
         }
 
         public static void End()
         {
             try
             {
-                lock (buffer)
-                {
-                    if (flushTimer != null)
-                    {
-                        flushTimer.Dispose();
-                    }
-
-                    flushTimer = null;
-
-                    Flush();
-                }
+                worker?.Cancel();
+                Flush();
             }
             catch (Exception)
             {
@@ -109,10 +112,15 @@ namespace ACT.SpecialSpellTimer.Utility
 
         private static void Flush()
         {
-            lock (buffer)
+            lock (lockObject)
             {
                 try
                 {
+                    if (buffer == null)
+                    {
+                        return;
+                    }
+
                     if (buffer.Length <= 0)
                     {
                         return;
