@@ -179,6 +179,8 @@ namespace ACT.SpecialSpellTimer
                 if (System.Windows.Application.Current == null)
                 {
                     new System.Windows.Application();
+                    System.Windows.Application.Current.ShutdownMode = 
+                        System.Windows.ShutdownMode.OnLastWindowClose;
                 }
 
                 // 設定ファイルを読み込む
