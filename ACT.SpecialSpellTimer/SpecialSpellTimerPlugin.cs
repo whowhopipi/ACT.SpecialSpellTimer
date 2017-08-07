@@ -180,7 +180,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     new System.Windows.Application();
                     System.Windows.Application.Current.ShutdownMode = 
-                        System.Windows.ShutdownMode.OnLastWindowClose;
+                        System.Windows.ShutdownMode.OnExplicitShutdown;
                 }
 
                 // 設定ファイルを読み込む
