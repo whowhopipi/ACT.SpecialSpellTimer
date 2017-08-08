@@ -29,12 +29,6 @@
                 if (this.IDonDB >= 20000 && this.IDonDB < 30000)
                 {
                     rank = 129;
-
-                    if (this.Name.Contains("極") ||
-                        this.Name.Contains("Extreme"))
-                    {
-                        rank = 120;
-                    }
                 }
 
                 // PvP

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 using ACT.SpecialSpellTimer.FFXIVHelper;
@@ -20,6 +21,11 @@ namespace ACT.SpecialSpellTimer
         {
             this.InitializeComponent();
             Translate.TranslateControls(this);
+
+            // ListViewのダブルバッファリングを有効にする
+            typeof(CheckedListBox)
+                .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(this.ZonesCheckedListBox, true, null);
 
             this.Load += this.FormLoad;
             this.OKButton.Click += this.OKButton_Click;
@@ -55,22 +61,30 @@ namespace ACT.SpecialSpellTimer
         {
             var zoneFilters = this.ZoneFilter.Split(',');
 
-            this.ZonesCheckedListBox.Items.Clear();
-
-            var query =
-                from x in FFXIV.Instance.ZoneList
-                orderby
-                x.IsAddedByUser ? 0 : 1,
-                x.Rank,
-                x.ID
-                select
-                x;
-
-            foreach (var zone in query)
+            try
             {
-                this.ZonesCheckedListBox.Items.Add(
-                    zone,
-                    zoneFilters.Any(x => x == zone.ID.ToString()));
+                this.ZonesCheckedListBox.SuspendLayout();
+                this.ZonesCheckedListBox.Items.Clear();
+
+                var query =
+                    from x in FFXIV.Instance.ZoneList
+                    orderby
+                    x.IsAddedByUser ? 0 : 1,
+                    x.Rank,
+                    x.ID descending
+                    select
+                    x;
+
+                foreach (var zone in query)
+                {
+                    this.ZonesCheckedListBox.Items.Add(
+                        zone,
+                        zoneFilters.Any(x => x == zone.ID.ToString()));
+                }
+            }
+            finally
+            {
+                this.ZonesCheckedListBox.ResumeLayout();
             }
         }
 
