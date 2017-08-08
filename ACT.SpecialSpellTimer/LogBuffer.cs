@@ -17,7 +17,8 @@ namespace ACT.SpecialSpellTimer
     /// <summary>
     /// ログのバッファ
     /// </summary>
-    public class LogBuffer : IDisposable
+    public class LogBuffer :
+        IDisposable
     {
         /// <summary>
         /// 空のログリスト
@@ -29,6 +30,13 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private static readonly Regex TooltipCharsRegex =
             new Regex(@"(.\u0001\u0001\uFFFD|u001E)",
+                RegexOptions.Compiled);
+
+        /// <summary>
+        /// Unknownスキルを補完するための正規表現
+        /// </summary>
+        private static readonly Regex UnknownSkillRegex =
+            new Regex(@"(?<UnknownSkill>Unknown_(?<UnknownSkillID>\w\w\w\w))",
                 RegexOptions.Compiled);
 
         /// <summary>
@@ -163,11 +171,12 @@ namespace ACT.SpecialSpellTimer
             bool isImport,
             LogLineEventArgs logInfo)
         {
+#if !DEBUG
             if (isImport)
             {
                 return;
             }
-
+#endif
             // PacketDumpを解析対象にしていないならば何もしない
             if (!Settings.Default.DetectPacketDump)
             {
@@ -288,6 +297,28 @@ namespace ACT.SpecialSpellTimer
                 if (Settings.Default.RemoveTooltipSymbols)
                 {
                     logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
+                }
+
+                // Unknownスキルを補完する？
+                if (Settings.Default.ToComplementUnknownSkill)
+                {
+                    if (logLine.Contains("Unknown_"))
+                    {
+                        var match = LogBuffer.UnknownSkillRegex.Match(logLine);
+                        if (match.Success)
+                        {
+                            var unknownSkill = match.Groups["UnknownSkill"].Value;
+                            var unknownSkillID = match.Groups["UnknownSkillID"].Value;
+
+                            var skill = XIVDB.Instance.FindSkill(unknownSkillID);
+                            if (skill != null)
+                            {
+                                logLine = logLine.Replace(
+                                    unknownSkill,
+                                    skill.Name);
+                            }
+                        }
+                    }
                 }
 
                 // FFXIVでの使用？

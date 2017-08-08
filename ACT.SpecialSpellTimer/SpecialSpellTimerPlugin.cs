@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,7 +15,8 @@ namespace ACT.SpecialSpellTimer
     /// <summary>
     /// SpecialSpellTimer Plugin
     /// </summary>
-    public class SpecialSpellTimerPlugin : IActPluginV1
+    public class SpecialSpellTimerPlugin :
+        IActPluginV1
     {
         /// <summary>
         /// コンストラクタ
@@ -165,7 +165,6 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="pluginScreenSpace">Pluginタブ</param>
         /// <param name="pluginStatusText">Pluginステータスラベル</param>
-        [MethodImpl(MethodImplOptions.NoInlining)]
         void IActPluginV1.InitPlugin(
             TabPage pluginScreenSpace,
             Label pluginStatusText)
@@ -179,7 +178,7 @@ namespace ACT.SpecialSpellTimer
                 if (System.Windows.Application.Current == null)
                 {
                     new System.Windows.Application();
-                    System.Windows.Application.Current.ShutdownMode = 
+                    System.Windows.Application.Current.ShutdownMode =
                         System.Windows.ShutdownMode.OnExplicitShutdown;
                 }
 

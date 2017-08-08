@@ -2365,6 +2365,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Unknownスキルを補完する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ToComplementUnknownSkill {
+            get {
+                return ResourceManager.GetString("ToComplementUnknownSkill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   スペルの名前(表示テキスト)が異なる場合にインスタンス化する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ToInstanceCheckBox {

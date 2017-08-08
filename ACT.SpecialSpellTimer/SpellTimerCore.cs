@@ -307,10 +307,9 @@ namespace ACT.SpecialSpellTimer
         {
             var existsLog = false;
 
-            // ACTが起動していない？
-            if (ActGlobals.oFormActMain == null)
+            // FFXIVがいない？
+            if (!FFXIV.Instance.IsAvalable)
             {
-                Logger.Write("act not started.");
                 Thread.Sleep(TimeSpan.FromSeconds(3));
                 return;
             }
@@ -354,7 +353,7 @@ namespace ACT.SpecialSpellTimer
 
             var interval = !existsLog ?
                 TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval) :
-                TimeSpan.FromMilliseconds(1);
+                TimeSpan.FromMilliseconds(0);
 
             Thread.Sleep(interval);
         }

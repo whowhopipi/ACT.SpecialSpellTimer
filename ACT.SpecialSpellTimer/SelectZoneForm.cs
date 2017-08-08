@@ -20,6 +20,7 @@ namespace ACT.SpecialSpellTimer
         public SelectZoneForm()
         {
             this.InitializeComponent();
+
             Translate.TranslateControls(this);
 
             // ListViewのダブルバッファリングを有効にする

@@ -54,6 +54,7 @@
             Settings.Default.SimpleRegex = this.SimpleRegexCheckBox.Checked;
             Settings.Default.RemoveTooltipSymbols = this.RemoveTooltipSymbolsCheckBox.Checked;
             Settings.Default.DetectPacketDump = this.DetectPacketDumpcheckBox.Checked;
+            Settings.Default.ToComplementUnknownSkill = this.ToComplementUnknownSkillCheckBox.Checked;
 
             Settings.Default.TextOutlineThicknessRate = (double)this.TextOutlineThicknessRateNumericUpDown.Value;
             Settings.Default.TextBlurRate = (double)this.TextBlurRateNumericUpDown.Value;
@@ -243,6 +244,7 @@
             this.SimpleRegexCheckBox.Checked = Settings.Default.SimpleRegex;
             this.RemoveTooltipSymbolsCheckBox.Checked = Settings.Default.RemoveTooltipSymbols;
             this.DetectPacketDumpcheckBox.Checked = Settings.Default.DetectPacketDump;
+            this.ToComplementUnknownSkillCheckBox.Checked = Settings.Default.ToComplementUnknownSkill;
 
             this.TextOutlineThicknessRateNumericUpDown.Value = (decimal)Settings.Default.TextOutlineThicknessRate;
             this.TextBlurRateNumericUpDown.Value = (decimal)Settings.Default.TextBlurRate;

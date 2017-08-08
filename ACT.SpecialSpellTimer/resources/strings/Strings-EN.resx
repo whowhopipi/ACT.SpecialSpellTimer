@@ -1211,4 +1211,8 @@
     <value>Render with CPU only.</value>
     <comment>レンダリングをCPUに限定する</comment>
   </data>
+  <data name="ToComplementUnknownSkill" xml:space="preserve">
+    <value>To Complement Unknown skill.</value>
+    <comment>Unknownスキルを補完する</comment>
+  </data>
 </root>

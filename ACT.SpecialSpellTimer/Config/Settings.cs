@@ -191,6 +191,7 @@ namespace ACT.SpecialSpellTimer.Config
         public double TextBlurRate { get; set; }
         public double TextOutlineThicknessRate { get; set; }
         public double TimeOfHideSpell { get; set; }
+        public bool ToComplementUnknownSkill { get; set; } = true;
         public double UpdateCheckInterval { get; set; }
         public bool UseOtherThanFFXIV { get; set; }
         public bool WipeoutNotifyToACT { get; set; }
@@ -325,6 +326,7 @@ namespace ACT.SpecialSpellTimer.Config
             PCNameInitialOnLogStyle = NameStyles.FullName,
             PCNameInitialOnDisplayStyle = NameStyles.FullName,
             RenderCPUOnly = true,
+            ToComplementUnknownSkill = true,
         };
 
         /// <summary>
