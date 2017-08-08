@@ -162,17 +162,14 @@ namespace ACT.SpecialSpellTimer
             object sender,
             EventArgs e)
         {
-            if (!this.IsLogTabActive)
-            {
-                return;
-            }
-
             var listItems = new List<ListViewItem>();
 
             await Task.Run(() =>
             {
                 var spells =
                     from s in TableCompiler.Instance.SpellList
+                    where
+                    !s.IsInstance
                     orderby
                     s.Panel,
                     s.DisplayNo,
