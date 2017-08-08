@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 
 using ACT.SpecialSpellTimer.Config;
@@ -55,7 +56,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         private volatile IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
         private volatile IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
-        private volatile IReadOnlyDictionary<string, Zone> zoneHash = new Dictionary<string, Zone>();
         private volatile IReadOnlyList<Zone> zoneList = new List<Zone>();
 
         #endregion Resources
@@ -234,6 +234,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             };
 
             this.scanFFXIVWorker.RunWorkerAsync();
+
+            // XIVDBをロードする
+            XIVDB.Instance.Load();
         }
 
         #endregion Start/End
@@ -720,7 +723,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
 
             var newList = new List<Zone>();
-            var newHash = new Dictionary<string, Zone>();
 
             var asm = this.plugin.GetType().Assembly;
 
@@ -751,19 +753,110 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                                 };
 
                                 newList.Add(zone);
-
-                                if (!newHash.ContainsKey(zone.Name))
-                                {
-                                    newHash.Add(zone.Name, zone);
-                                }
                             }
                         }
                     }
                 }
 
+                // ユーザで任意に追加したゾーンを読み込む
+                this.LoadZoneListAdded(newList);
+
+                // 新しいゾーンリストをセットする
                 this.zoneList = newList;
-                this.zoneHash = newHash;
+
+                // ゾーンリストを翻訳する
+                this.TranslateZoneList();
+
                 Logger.Write("zone list loaded.");
+            }
+        }
+
+        private void LoadZoneListAdded(List<Zone> baseZoneList)
+        {
+            try
+            {
+                var dir = XIVDB.Instance.ResourcesDirectory;
+                var file = Path.Combine(dir, "Zones.csv");
+
+                if (!File.Exists(file))
+                {
+                    return;
+                }
+
+                using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        var line = sr.ReadLine();
+                        var values = line.Split(',');
+
+                        if (values.Length >= 2)
+                        {
+                            var newZone = new Zone()
+                            {
+                                ID = int.Parse(values[0]),
+                                Name = values[1].Trim(),
+                                IsAddedByUser = true,
+                            };
+
+                            var oldZone = baseZoneList.FirstOrDefault(x =>
+                                x.ID == newZone.ID);
+
+                            if (oldZone != null)
+                            {
+                                oldZone.Name = newZone.Name;
+                                oldZone.IsAddedByUser = true;
+                            }
+                            else
+                            {
+                                baseZoneList.Add(newZone);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("error on Load Extra Zonelist.", ex);
+            }
+        }
+
+        private void TranslateZoneList()
+        {
+            if (Settings.Default.Language != "JP")
+            {
+                return;
+            }
+
+            foreach (var zone in this.ZoneList)
+            {
+                var place = (
+                    from x in XIVDB.Instance.PlacenameList.AsParallel()
+                    where
+                    string.Equals(x.NameEn, zone.Name, StringComparison.InvariantCultureIgnoreCase)
+                    select
+                    x).FirstOrDefault();
+
+                if (place != null)
+                {
+                    zone.Name = place.Name;
+                    zone.IDonDB = place.ID;
+                }
+                else
+                {
+                    var area = (
+                        from x in XIVDB.Instance.AreaList.AsParallel()
+                        where
+                        string.Equals(x.NameEn, zone.Name, StringComparison.InvariantCultureIgnoreCase)
+                        select
+                        x).FirstOrDefault();
+
+                    if (area != null)
+                    {
+                        zone.Name = area.Name;
+                        zone.IDonDB = area.ID;
+                    }
+                }
             }
         }
     }

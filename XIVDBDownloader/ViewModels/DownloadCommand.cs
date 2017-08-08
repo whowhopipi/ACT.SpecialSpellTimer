@@ -65,6 +65,14 @@ namespace XIVDBDownloader.ViewModels
                     this.DownloadAction();
                     break;
 
+                case DataModels.Instance:
+                    this.DownloadInstance();
+                    break;
+
+                case DataModels.Placename:
+                    this.DownloadPlacename();
+                    break;
+
                 default:
                     break;
             }
@@ -89,5 +97,47 @@ namespace XIVDBDownloader.ViewModels
         }
 
         #endregion Download Action
+
+        #region Download Instance (Zone)
+
+        private void DownloadInstance()
+        {
+            this.AppendLineMessages("Download Instance.");
+
+            var model = new InstanceModel();
+
+            // XIVDB からInstanceのリストを取得する
+            model.GET(this.viewModel.Language);
+
+            // 取得したリストをCSVに保存する
+            model.SaveToCSV(
+                Path.Combine(this.viewModel.SaveDirectory, "Instance.csv"),
+                this.viewModel.Language);
+
+            this.AppendLineMessages("Download Instance. Done.");
+        }
+
+        #endregion Download Instance (Zone)
+
+        #region Download Placename (Zone?)
+
+        private void DownloadPlacename()
+        {
+            this.AppendLineMessages("Download Placename.");
+
+            var model = new InstanceModel();
+
+            // XIVDB からInstanceのリストを取得する
+            model.GET(this.viewModel.Language);
+
+            // 取得したリストをCSVに保存する
+            model.SaveToCSV(
+                Path.Combine(this.viewModel.SaveDirectory, "Placename.csv"),
+                this.viewModel.Language);
+
+            this.AppendLineMessages("Download Placename. Done.");
+        }
+
+        #endregion Download Placename (Zone?)
     }
 }

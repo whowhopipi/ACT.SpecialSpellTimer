@@ -78,6 +78,8 @@
     </ApplicationDefinition>
     <Compile Include="Constants\DataModels.cs" />
     <Compile Include="Constants\Jobs.cs" />
+    <Compile Include="Models\Placename.cs" />
+    <Compile Include="Models\Instance.cs" />
     <Compile Include="ViewModels\DownloadCommand.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">

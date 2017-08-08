@@ -1,11 +1,13 @@
-﻿namespace ACT.SpecialSpellTimer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Forms;
-    using ACT.SpecialSpellTimer.FFXIVHelper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
+using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Utility;
+
+namespace ACT.SpecialSpellTimer
+{
     /// <summary>
     /// ゾーン選択Form
     /// </summary>
@@ -17,7 +19,7 @@
         public SelectZoneForm()
         {
             this.InitializeComponent();
-            Utility.Translate.TranslateControls(this);
+            Translate.TranslateControls(this);
 
             this.Load += this.FormLoad;
             this.OKButton.Click += this.OKButton_Click;
@@ -51,14 +53,24 @@
         /// <param name="e">イベント引数</param>
         private void FormLoad(object sender, EventArgs e)
         {
-            var items = this.ZoneFilter.Split(',');
+            var zoneFilters = this.ZoneFilter.Split(',');
 
             this.ZonesCheckedListBox.Items.Clear();
-            foreach (var item in FFXIV.Instance.ZoneList)
+
+            var query =
+                from x in FFXIV.Instance.ZoneList
+                orderby
+                x.IsAddedByUser ? 0 : 1,
+                x.Rank,
+                x.ID
+                select
+                x;
+
+            foreach (var zone in query)
             {
                 this.ZonesCheckedListBox.Items.Add(
-                    item,
-                    items.Any(x => x == item.ID.ToString()));
+                    zone,
+                    zoneFilters.Any(x => x == zone.ID.ToString()));
             }
         }
 

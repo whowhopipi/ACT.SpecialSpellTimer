@@ -21,9 +21,9 @@ namespace XIVDBDownloader.ViewModels
         private Language language = Language.JA;
         private string messages = string.Empty;
 #if DEBUG
-        private string saveDirectory = Path.GetFullPath(@".\resources\icon");
+        private string saveDirectory = Path.GetFullPath(@".\resources\xivdb");
 #else
-        private string saveDirectory = Path.GetFullPath(@"..\..\resources\icon");
+        private string saveDirectory = Path.GetFullPath(@"..\..\resources\xivdb");
 #endif
 
         public DataModels DataModel

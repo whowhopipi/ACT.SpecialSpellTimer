@@ -100,6 +100,7 @@
     <Compile Include="FFXIVHelper\MobType.cs" />
     <Compile Include="FFXIVHelper\NameStyles.cs" />
     <Compile Include="FFXIVHelper\Skill.cs" />
+    <Compile Include="FFXIVHelper\XIVDB.cs" />
     <Compile Include="FFXIVHelper\Zone.cs" />
     <Compile Include="Image\IconController.cs" />
     <Compile Include="Job.cs" />
@@ -311,6 +312,15 @@
     <None Include="Models\SpellTimerDataSet.xss">
       <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
     </None>
+    <Content Include="resources\xivdb\Instance.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\xivdb\Placename.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\Zones.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ConfigPanel.Log.resx">
