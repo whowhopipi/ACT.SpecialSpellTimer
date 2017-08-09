@@ -242,16 +242,14 @@ namespace ACT.SpecialSpellTimer
             this.SwitchVisibleButton = new CheckBox()
             {
                 Name = "SpecialSpellTimerSwitchVisibleButton",
-                Size = new Size(90, 24),
                 Text = Translate.Get("SupeSupe"),
                 TextAlign = ContentAlignment.MiddleCenter,
                 Appearance = Appearance.Button,
                 FlatStyle = FlatStyle.Flat,
                 UseVisualStyleBackColor = true,
                 Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                Font = Settings.Default.Language == "JP" ?
-                    new Font("メイリオ", ActGlobals.oFormActMain.Font.Size, FontStyle.Bold) :
-                    new Font(ActGlobals.oFormActMain.Font, FontStyle.Bold),
+                Location = new Point(ActGlobals.oFormActMain.Width - 533, 0),
+                AutoSize = true,
             };
 
             this.SwitchVisibleButton.CheckedChanged += async (s, e) =>
