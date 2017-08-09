@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+
 using Advanced_Combat_Tracker;
 
 namespace ACT.SpecialSpellTimer
@@ -45,7 +46,7 @@ namespace ACT.SpecialSpellTimer
             // Directories プロパティで指定されたディレクトリを基準にアセンブリを検索する
             foreach (var directory in this.Directories)
             {
-                var asmPath = "";
+                var asmPath = string.Empty;
                 var match = AssemblyNameParser.Match(e.Name);
                 if (match.Success)
                 {

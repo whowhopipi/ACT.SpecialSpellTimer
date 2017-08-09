@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
@@ -46,48 +46,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 表示切り替えボタン
         /// </summary>
-        private Button SwitchVisibleButton { get; set; }
-
-        /// <summary>
-        /// 表示切り替えボタン（スペスペボタン）の状態を切り替える
-        /// </summary>
-        /// <param name="visible">
-        /// 切り替える状態</param>
-        public void ChangeSwitchVisibleButton(
-            bool visible)
-        {
-            Settings.Default.OverlayVisible = visible;
-            Settings.Default.Save();
-
-            SpellTimerCore.Instance.ClosePanels();
-            OnePointTelopController.CloseTelops();
-
-            TableCompiler.Instance.RefreshPlayerPlacceholder();
-            TableCompiler.Instance.RefreshPartyPlaceholders();
-            TableCompiler.Instance.RefreshPetPlaceholder();
-            TableCompiler.Instance.RecompileSpells();
-            TableCompiler.Instance.RecompileTickers();
-
-            if (Settings.Default.OverlayVisible)
-            {
-                SpellTimerCore.Instance.ActivatePanels();
-                OnePointTelopController.ActivateTelops();
-            }
-
-            ActInvoker.Invoke(() =>
-            {
-                if (Settings.Default.OverlayVisible)
-                {
-                    this.SwitchVisibleButton.BackColor = Color.OrangeRed;
-                    this.SwitchVisibleButton.ForeColor = Color.WhiteSmoke;
-                }
-                else
-                {
-                    this.SwitchVisibleButton.BackColor = SystemColors.Control;
-                    this.SwitchVisibleButton.ForeColor = Color.Black;
-                }
-            });
-        }
+        private CheckBox SwitchVisibleButton { get; set; }
 
         /// <summary>
         /// 後片付けをする
@@ -194,16 +153,41 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
+        #region SpeSpeButton
+
         /// <summary>
-        /// ACTメインフォーム Resize
+        /// 表示切り替えボタン（スペスペボタン）の状態を切り替える
         /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void FormActMain_Resize(object sender, EventArgs e)
+        /// <param name="visible">
+        /// 切り替える状態</param>
+        public async void ChangeSwitchVisibleButton(
+            bool visible)
         {
-            SwitchVisibleButton.Location = new Point(
-                ActGlobals.oFormActMain.Width - 533,
-                0);
+            await Task.Run(() =>
+            {
+                this.SwitchOverlay(visible);
+            });
+
+            ActInvoker.Invoke(() =>
+            {
+                this.ChangeButtonColor();
+            });
+        }
+
+        private void ChangeButtonColor()
+        {
+            var button = this.SwitchVisibleButton;
+
+            if (Settings.Default.OverlayVisible)
+            {
+                button.BackColor = Color.SandyBrown;
+                button.ForeColor = Color.WhiteSmoke;
+            }
+            else
+            {
+                button.BackColor = SystemColors.Control;
+                button.ForeColor = Color.Black;
+            }
         }
 
         /// <summary>
@@ -211,10 +195,42 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private void RemoveSwitchVisibleButton()
         {
-            if (SwitchVisibleButton != null)
+            if (this.SwitchVisibleButton != null)
             {
-                ActGlobals.oFormActMain.Resize -= this.FormActMain_Resize;
-                ActGlobals.oFormActMain.Controls.Remove(SwitchVisibleButton);
+                ActGlobals.oFormActMain.Controls.Remove(this.SwitchVisibleButton);
+
+                this.SwitchVisibleButton.Dispose();
+                this.SwitchVisibleButton = null;
+            }
+        }
+
+        private void ReplaceButton()
+        {
+            if (this.SwitchVisibleButton != null &&
+                !this.SwitchVisibleButton.IsDisposed &&
+                this.SwitchVisibleButton.IsHandleCreated)
+            {
+                var leftButton = (
+                    from Control x in ActGlobals.oFormActMain.Controls
+                    where
+                    !x.Equals(this.SwitchVisibleButton) &&
+                    (
+                        x is Button ||
+                        x is CheckBox
+                    )
+                    orderby
+                    x.Left
+                    select
+                    x).FirstOrDefault();
+
+                var location = leftButton != null ?
+                    new Point(leftButton.Left - this.SwitchVisibleButton.Width - 1, 0) :
+                    new Point(ActGlobals.oFormActMain.Width - 533, 0);
+
+                ActInvoker.Invoke(() =>
+                {
+                    this.SwitchVisibleButton.Location = location;
+                });
             }
         }
 
@@ -223,60 +239,73 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private void SetSwitchVisibleButton()
         {
-            var changeColor = new Action<Button>((button) =>
+            this.SwitchVisibleButton = new CheckBox()
             {
-                if (Settings.Default.OverlayVisible)
-                {
-                    button.BackColor = Color.OrangeRed;
-                    button.ForeColor = Color.WhiteSmoke;
-                }
-                else
-                {
-                    button.BackColor = SystemColors.Control;
-                    button.ForeColor = Color.Black;
-                }
-            });
-
-            SwitchVisibleButton = new Button();
-            SwitchVisibleButton.Name = "SpecialSpellTimerSwitchVisibleButton";
-            SwitchVisibleButton.Size = new Size(90, 24);
-            SwitchVisibleButton.Text = Translate.Get("SupeSupe");
-            SwitchVisibleButton.TextAlign = ContentAlignment.MiddleCenter;
-            SwitchVisibleButton.UseVisualStyleBackColor = true;
-
-            SwitchVisibleButton.Click += (s, e) =>
-            {
-                var button = s as Button;
-
-                Settings.Default.OverlayVisible = !Settings.Default.OverlayVisible;
-                Settings.Default.Save();
-
-                SpellTimerCore.Instance.ClosePanels();
-                OnePointTelopController.CloseTelops();
-
-                TableCompiler.Instance.RefreshPlayerPlacceholder();
-                TableCompiler.Instance.RefreshPartyPlaceholders();
-                TableCompiler.Instance.RefreshPetPlaceholder();
-                TableCompiler.Instance.RecompileSpells();
-                TableCompiler.Instance.RecompileTickers();
-
-                if (Settings.Default.OverlayVisible)
-                {
-                    SpellTimerCore.Instance.ActivatePanels();
-                    OnePointTelopController.ActivateTelops();
-                }
-
-                changeColor(s as Button);
+                Name = "SpecialSpellTimerSwitchVisibleButton",
+                Size = new Size(90, 24),
+                Text = Translate.Get("SupeSupe"),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Appearance = Appearance.Button,
+                FlatStyle = FlatStyle.Flat,
+                UseVisualStyleBackColor = true,
+                Anchor = AnchorStyles.Top | AnchorStyles.Right,
+                Font = Settings.Default.Language == "JP" ?
+                    new Font("メイリオ", ActGlobals.oFormActMain.Font.Size, FontStyle.Bold) :
+                    new Font(ActGlobals.oFormActMain.Font, FontStyle.Bold),
             };
 
-            changeColor(SwitchVisibleButton);
+            this.SwitchVisibleButton.CheckedChanged += async (s, e) =>
+            {
+                await Task.Run(() =>
+                {
+                    this.SwitchOverlay(!Settings.Default.OverlayVisible);
+                });
 
-            ActGlobals.oFormActMain.Resize += this.FormActMain_Resize;
-            ActGlobals.oFormActMain.Controls.Add(SwitchVisibleButton);
-            ActGlobals.oFormActMain.Controls.SetChildIndex(SwitchVisibleButton, 1);
+                this.ChangeButtonColor();
+                Application.DoEvents();
+            };
 
-            this.FormActMain_Resize(this, null);
+            this.ChangeButtonColor();
+
+            ActGlobals.oFormActMain.Resize += (s, e) => this.ReplaceButton();
+            ActGlobals.oFormActMain.Controls.Add(this.SwitchVisibleButton);
+            ActGlobals.oFormActMain.Controls.SetChildIndex(this.SwitchVisibleButton, 1);
+
+            Task.Run(async () =>
+            {
+                this.ReplaceButton();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    this.ReplaceButton();
+                }
+            });
         }
+
+        private void SwitchOverlay(
+            bool visibility)
+        {
+            Settings.Default.OverlayVisible = visibility;
+            Settings.Default.Save();
+
+            SpellTimerCore.Instance.ClosePanels();
+            OnePointTelopController.CloseTelops();
+
+            TableCompiler.Instance.RefreshPlayerPlacceholder();
+            TableCompiler.Instance.RefreshPartyPlaceholders();
+            TableCompiler.Instance.RefreshPetPlaceholder();
+            TableCompiler.Instance.RecompileSpells();
+            TableCompiler.Instance.RecompileTickers();
+
+            if (Settings.Default.OverlayVisible)
+            {
+                SpellTimerCore.Instance.ActivatePanels();
+                OnePointTelopController.ActivateTelops();
+            }
+        }
+
+        #endregion SpeSpeButton
 
         /// <summary>
         /// アップデートを行う

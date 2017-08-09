@@ -96,6 +96,8 @@ namespace ACT.SpecialSpellTimer.Utility
                     Thread.Sleep(interval);
                 }
             };
+
+            worker.RunWorkerAsync();
         }
 
         public static void End()
@@ -112,24 +114,20 @@ namespace ACT.SpecialSpellTimer.Utility
 
         private static void Flush()
         {
+            var directoryName = Path.GetDirectoryName(LogFile);
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
             lock (lockObject)
             {
                 try
                 {
-                    if (buffer == null)
+                    if (buffer == null ||
+                        buffer.Length <= 0)
                     {
                         return;
-                    }
-
-                    if (buffer.Length <= 0)
-                    {
-                        return;
-                    }
-
-                    var directoryName = Path.GetDirectoryName(LogFile);
-                    if (!Directory.Exists(directoryName))
-                    {
-                        Directory.CreateDirectory(directoryName);
                     }
 
                     File.AppendAllText(

@@ -150,7 +150,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
+                var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
                 var resourcesUnderThis = Path.Combine(selfDirectory, @"resources\color");
 
                 if (Directory.Exists(resourcesUnderThis))

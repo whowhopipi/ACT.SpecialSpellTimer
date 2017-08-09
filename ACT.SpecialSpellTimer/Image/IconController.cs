@@ -33,7 +33,7 @@ namespace ACT.SpecialSpellTimer.Image
                 }
 
                 // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
+                var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
                 var resourcesUnderThis = Path.Combine(selfDirectory, @"resources\icon");
 
                 if (Directory.Exists(resourcesUnderThis))

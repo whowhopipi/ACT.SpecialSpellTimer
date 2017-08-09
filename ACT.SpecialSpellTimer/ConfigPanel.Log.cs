@@ -54,23 +54,24 @@ namespace ACT.SpecialSpellTimer
                 this.LogTextBox.AppendText(text);
             }
 
-            if (this.IsDisposed)
+            this.logBuffer.Append(text);
+
+            if (this.LogTextBox.IsDisposed ||
+                !this.LogTextBox.IsHandleCreated)
             {
                 return;
             }
 
             try
             {
-                if (this.InvokeRequired)
+                if (this.LogTextBox.InvokeRequired)
                 {
-                    this.Invoke((Action)appendLog);
+                    this.LogTextBox.Invoke((Action)appendLog);
                 }
                 else
                 {
                     appendLog();
                 }
-
-                this.logBuffer.AppendLine(text);
             }
             catch (Exception)
             {

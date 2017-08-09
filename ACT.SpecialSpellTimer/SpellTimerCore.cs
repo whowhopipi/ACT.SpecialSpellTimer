@@ -886,7 +886,7 @@ namespace ACT.SpecialSpellTimer
                 }
             }
 
-            Application.Current.Dispatcher.BeginInvoke(
+            Application.Current.Dispatcher.Invoke(
                 DispatcherPriority.Normal,
                 (Action)activatePanelsCore);
         }
