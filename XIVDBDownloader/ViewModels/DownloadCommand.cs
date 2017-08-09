@@ -93,6 +93,8 @@ namespace XIVDBDownloader.ViewModels
             model.SaveToCSV(
                 Path.Combine(this.viewModel.SaveDirectory, "Action.csv"));
 
+            this.AppendLineMessages("Save to CSV.");
+
             this.AppendLineMessages("Download Action. Done.");
         }
 

@@ -1,16 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using XIVDBDownloader.Constants;
 
 namespace XIVDBDownloader.Models
 {
     [DataContract]
     public class ActionData
     {
-        public string ClassJob => this.ClassJobID.ToString();
-        public string ClassJobCategory => this.ClassJobCategoryID.ToString();
+        public Job Job => Jobs.Find(this.ClassJobID);
+
+        public Roles Role
+        {
+            get
+            {
+                var role = Roles.Unknown;
+                if (Enum.IsDefined(typeof(Roles), this.ClassJobCategoryID))
+                {
+                    role = (Roles)this.ClassJobCategoryID;
+                }
+
+                return role;
+            }
+        }
 
         [DataMember(Name = "classjob_category", Order = 2)]
         public int ClassJobCategoryID { get; set; }
@@ -66,7 +81,7 @@ namespace XIVDBDownloader.Models
                 foreach (var action in orderd)
                 {
                     buffer.AppendLine(
-                        $"{action.ID},{action.ID:X4},{action.ClassJob},{action.ClassJobCategory},{action.Name}");
+                        $"{action.ID},{action.ID:X4},{action.ClassJobID},{action.ClassJobCategoryID},{action.Name}");
 
                     if (buffer.Length >= 5120)
                     {
