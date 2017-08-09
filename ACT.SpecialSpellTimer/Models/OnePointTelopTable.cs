@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+
 using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -56,7 +57,7 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 var backupFile = Path.Combine(
                     Path.Combine(Path.GetDirectoryName(file), "backup"),
-                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
+                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyy-MM-dd") + ".bak");
 
                 if (!Directory.Exists(Path.GetDirectoryName(backupFile)))
                 {
@@ -112,10 +113,6 @@ namespace ACT.SpecialSpellTimer.Models
         {
             if (File.Exists(file))
             {
-                if (isClear)
-                {
-                    this.table.Clear();
-                }
 #if false
                 // 旧フォーマットを置換する
                 var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
@@ -131,6 +128,12 @@ namespace ACT.SpecialSpellTimer.Models
                         {
                             var xs = new XmlSerializer(table.GetType());
                             var data = xs.Deserialize(sr) as List<OnePointTelop>;
+
+                            if (isClear)
+                            {
+                                this.table.Clear();
+                            }
+
                             table.AddRange(data);
                         }
                     }
@@ -216,9 +219,10 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// Save
         /// </summary>
-        public void Save()
+        public void Save(
+            bool force = false)
         {
-            this.Save(this.DefaultFile);
+            this.Save(this.DefaultFile, force);
         }
 
         /// <summary>
@@ -226,8 +230,17 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         /// <param name="file">ファイル</param>
         public void Save(
-            string file)
+            string file,
+            bool force)
         {
+            if (!force)
+            {
+                if (this.table.Count <= 0)
+                {
+                    return;
+                }
+            }
+
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))
             {

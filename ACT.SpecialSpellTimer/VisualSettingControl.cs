@@ -542,7 +542,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 SpellTimerCore.Instance.ClosePanels();
-                SpellTimerTable.Instance.Save();
+                SpellTimerTable.Instance.Save(true);
             };
 
             this.ResetSpellBarSizeItem.Click += (s1, e1) =>
@@ -554,7 +554,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 SpellTimerCore.Instance.ClosePanels();
-                SpellTimerTable.Instance.Save();
+                SpellTimerTable.Instance.Save(true);
             };
 
             this.ResetSpellColorItem.Click += (s1, e1) =>
@@ -572,7 +572,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 SpellTimerCore.Instance.ClosePanels();
-                SpellTimerTable.Instance.Save();
+                SpellTimerTable.Instance.Save(true);
             };
 
             this.ResetTelopFontItem.Click += (s1, e1) =>
@@ -583,7 +583,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 OnePointTelopController.CloseTelops();
-                OnePointTelopTable.Instance.Save();
+                OnePointTelopTable.Instance.Save(true);
             };
 
             this.ResetTelopColorItem.Click += (s1, e1) =>
@@ -597,7 +597,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 OnePointTelopController.CloseTelops();
-                OnePointTelopTable.Instance.Save();
+                OnePointTelopTable.Instance.Save(true);
             };
         }
     }

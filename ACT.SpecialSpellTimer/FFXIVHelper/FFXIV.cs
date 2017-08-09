@@ -309,9 +309,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         /// <returns>
         /// ロールで分類したパーティリスト</returns>
-        public IReadOnlyList<(JobRoles RoleType, string RoleLabel, IReadOnlyList<Combatant> Combatants)> GetPatryListByRole()
+        public IReadOnlyList<CombatantsByRole> GetPatryListByRole()
         {
-            var list = new List<(JobRoles RoleType, string RoleLabel, IReadOnlyList<Combatant> Combatants)>();
+            var list = new List<CombatantsByRole>();
 
             var partyList = this.GetPartyList();
 
@@ -344,7 +344,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (tanks.Any())
             {
-                list.Add((
+                list.Add(new CombatantsByRole(
                     JobRoles.Tank,
                     "TANK",
                     tanks));
@@ -352,7 +352,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (dpses.Any())
             {
-                list.Add((
+                list.Add(new CombatantsByRole(
                     JobRoles.DPS,
                     "DPS",
                     dpses));
@@ -360,7 +360,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (melees.Any())
             {
-                list.Add((
+                list.Add(new CombatantsByRole(
                     JobRoles.MeleeDPS,
                     "MELEE",
                     melees));
@@ -368,7 +368,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (ranges.Any())
             {
-                list.Add((
+                list.Add(new CombatantsByRole(
                     JobRoles.RangeDPS,
                     "RANGE",
                     ranges));
@@ -376,7 +376,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (magics.Any())
             {
-                list.Add((
+                list.Add(new CombatantsByRole(
                     JobRoles.MagicDPS,
                     "MAGIC",
                     magics));
@@ -384,7 +384,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (healers.Any())
             {
-                list.Add((
+                list.Add(new CombatantsByRole(
                     JobRoles.Healer,
                     "HEALER",
                     healers));
@@ -863,5 +863,22 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 }
             }
         }
+    }
+
+    public class CombatantsByRole
+    {
+        public CombatantsByRole(
+            JobRoles roleType,
+            string roleLabel,
+            IReadOnlyList<Combatant> combatants)
+        {
+            this.RoleType = roleType;
+            this.RoleLabel = roleLabel;
+            this.Combatants = combatants;
+        }
+
+        public JobRoles RoleType { get; set; }
+        public string RoleLabel { get; set; }
+        public IReadOnlyList<Combatant> Combatants { get; set; }
     }
 }

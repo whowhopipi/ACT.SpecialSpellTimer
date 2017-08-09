@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
-
-using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Models
 {
     /// <summary>
     /// Panel設定

@@ -85,7 +85,7 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 var backupFile = Path.Combine(
                     Path.Combine(Path.GetDirectoryName(file), "backup"),
-                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
+                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyy-MM-dd") + ".bak");
 
                 if (!Directory.Exists(Path.GetDirectoryName(backupFile)))
                 {
@@ -263,10 +263,6 @@ namespace ACT.SpecialSpellTimer.Models
         {
             if (File.Exists(file))
             {
-                if (isClear)
-                {
-                    this.table.Clear();
-                }
 #if false
                 // 旧フォーマットを置換する
                 var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
@@ -282,6 +278,12 @@ namespace ACT.SpecialSpellTimer.Models
                         {
                             var xs = new XmlSerializer(table.GetType());
                             var data = xs.Deserialize(sr) as List<SpellTimer>;
+
+                            if (isClear)
+                            {
+                                this.table.Clear();
+                            }
+
                             this.table.AddRange(data);
                         }
                     }
@@ -383,9 +385,10 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// 保存する
         /// </summary>
-        public void Save()
+        public void Save(
+            bool force = false)
         {
-            this.Save(this.DefaultFile);
+            this.Save(this.DefaultFile, force);
         }
 
         /// <summary>
@@ -393,11 +396,20 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         /// <param name="file">ファイルパス</param>
         public void Save(
-            string file)
+            string file,
+            bool force)
         {
             if (this.table == null)
             {
                 return;
+            }
+
+            if (!force)
+            {
+                if (this.table.Count <= 0)
+                {
+                    return;
+                }
             }
 
             var dir = Path.GetDirectoryName(file);

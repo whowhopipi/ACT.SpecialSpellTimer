@@ -177,12 +177,12 @@ namespace ACT.SpecialSpellTimer.Models
                 var r2 = this.GetRegex(spell.RegexForExtend1, spell.RegexForExtendPattern1, spell.KeywordForExtendReplaced1);
                 var r3 = this.GetRegex(spell.RegexForExtend2, spell.RegexForExtendPattern2, spell.KeywordForExtendReplaced2);
 
-                spell.Regex = r1.newRegex;
-                spell.RegexPattern = r1.newPattern;
-                spell.RegexForExtend1 = r2.newRegex;
-                spell.RegexForExtendPattern1 = r2.newPattern;
-                spell.RegexForExtend2 = r3.newRegex;
-                spell.KeywordForExtendReplaced2 = r3.newPattern;
+                spell.Regex = r1.Regex;
+                spell.RegexPattern = r1.RegexPattern;
+                spell.RegexForExtend1 = r2.Regex;
+                spell.RegexForExtendPattern1 = r2.RegexPattern;
+                spell.RegexForExtend2 = r3.Regex;
+                spell.KeywordForExtendReplaced2 = r3.RegexPattern;
             }
 
             lock (this.spellListLocker)
@@ -268,10 +268,10 @@ namespace ACT.SpecialSpellTimer.Models
                 var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
                 var r2 = this.GetRegex(spell.RegexToHide, spell.RegexPatternToHide, spell.KeywordToHideReplaced);
 
-                spell.Regex = r1.newRegex;
-                spell.RegexPattern = r1.newPattern;
-                spell.RegexToHide = r2.newRegex;
-                spell.RegexPatternToHide = r2.newPattern;
+                spell.Regex = r1.Regex;
+                spell.RegexPattern = r1.RegexPattern;
+                spell.RegexToHide = r2.Regex;
+                spell.RegexPatternToHide = r2.RegexPattern;
             }
 
             lock (this.tickerListLocker)
@@ -433,7 +433,7 @@ namespace ACT.SpecialSpellTimer.Models
             return destinationKeyword;
         }
 
-        private (Regex newRegex, string newPattern) GetRegex(
+        private RegexEx GetRegex(
             Regex destinationRegex,
             string destinationPattern,
             string sourceKeyword)
@@ -454,7 +454,7 @@ namespace ACT.SpecialSpellTimer.Models
                 }
             }
 
-            return (newRegex, newPattern);
+            return new RegexEx(newRegex, newPattern);
         }
 
         private void RefreshCombatants()
@@ -554,17 +554,17 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region プレースホルダに関するメソッド群
 
-        private volatile List<(string Placeholder, string ReplaceString, PlaceholderTypes Type)> placeholderList =
-            new List<(string Placeholder, string ReplaceString, PlaceholderTypes Type)>();
+        private volatile List<PlaceholderContainer> placeholderList =
+            new List<PlaceholderContainer>();
 
-        public IReadOnlyList<(string Placeholder, string ReplaceString, PlaceholderTypes Type)> PlaceholderList
+        public IReadOnlyList<PlaceholderContainer> PlaceholderList
         {
             get
             {
                 lock (this.PlaceholderListSyncRoot)
                 {
                     return
-                        new List<(string Placeholder, string ReplaceString, PlaceholderTypes Type)>(
+                        new List<PlaceholderContainer>(
                             this.placeholderList);
                 }
             }
@@ -581,7 +581,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             var newList =
-                new List<(string Placeholder, string ReplaceString, PlaceholderTypes Type)>();
+                new List<PlaceholderContainer>();
 
             // FF14内部のPTメンバ自動ソート順で並び替える
             var partyListSorted =
@@ -601,12 +601,12 @@ namespace ACT.SpecialSpellTimer.Models
             var index = 2;
             foreach (var combatant in partyListSorted)
             {
-                newList.Add((
+                newList.Add(new PlaceholderContainer(
                     $"<{index}>",
                     combatant.Name,
                     PlaceholderTypes.Party));
 
-                newList.Add((
+                newList.Add(new PlaceholderContainer(
                     $"<{index}ex>",
                     $"(?<_{index}ex>{combatant.NamesRegex})",
                     PlaceholderTypes.Party));
@@ -638,7 +638,7 @@ namespace ACT.SpecialSpellTimer.Models
                 // ex. <PLD2> → Jiro Paladin
                 for (int i = 0; i < combatantsByJob.Length; i++)
                 {
-                    newList.Add((
+                    newList.Add(new PlaceholderContainer(
                         $"<{job.JobName.ToUpper()}{i + 1}>",
                         $"(?<_{job.JobName.ToUpper()}{i + 1}>{ combatantsByJob[i].NamesRegex})",
                         PlaceholderTypes.Party));
@@ -651,7 +651,7 @@ namespace ACT.SpecialSpellTimer.Models
                 var oldValue = $"<{job.JobName.ToUpper()}>";
                 var newValue = $"(?<_{job.JobName.ToUpper()}>{names})";
 
-                newList.Add((
+                newList.Add(new PlaceholderContainer(
                     oldValue.ToUpper(),
                     newValue,
                     PlaceholderTypes.Party));
@@ -671,7 +671,7 @@ namespace ACT.SpecialSpellTimer.Models
                 var oldValue = $"<{role.RoleLabel}>";
                 var newValue = $"(?<_{role.RoleLabel}>{names})";
 
-                newList.Add((
+                newList.Add(new PlaceholderContainer(
                     oldValue.ToUpper(),
                     newValue,
                     PlaceholderTypes.Party));
@@ -729,7 +729,7 @@ namespace ACT.SpecialSpellTimer.Models
                             lock (this.PlaceholderListSyncRoot)
                             {
                                 this.placeholderList.RemoveAll(x => x.Type == PlaceholderTypes.Pet);
-                                this.placeholderList.Add((
+                                this.placeholderList.Add(new PlaceholderContainer(
                                     "<petid>",
                                     Convert.ToString((long)((ulong)pet.ID), 16).ToUpper(),
                                     PlaceholderTypes.Pet));
@@ -764,12 +764,12 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this.PlaceholderListSyncRoot)
             {
                 this.placeholderList.RemoveAll(x => x.Type == PlaceholderTypes.Me);
-                this.placeholderList.Add((
+                this.placeholderList.Add(new PlaceholderContainer(
                     "<me>",
                     this.player.Name,
                     PlaceholderTypes.Me));
 
-                this.placeholderList.Add((
+                this.placeholderList.Add(new PlaceholderContainer(
                     "<mex>",
                     $"(?<_mex>{this.player.NamesRegex})",
                     PlaceholderTypes.Me));
@@ -821,7 +821,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             lock (this.PlaceholderListSyncRoot)
             {
-                this.placeholderList.Add((
+                this.placeholderList.Add(new PlaceholderContainer(
                     $"<{name}>",
                     value,
                     PlaceholderTypes.Custom));
@@ -832,5 +832,36 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion カスタムプレースホルダに関するメソッド群
+
+        private class RegexEx
+        {
+            public RegexEx(
+                Regex regex,
+                string regexPattern)
+            {
+                this.Regex = regex;
+                this.RegexPattern = regexPattern;
+            }
+
+            public Regex Regex { get; set; }
+            public string RegexPattern { get; set; }
+        }
+    }
+
+    public class PlaceholderContainer
+    {
+        public PlaceholderContainer(
+            string placeholder,
+            string replaceString,
+            PlaceholderTypes type)
+        {
+            this.Placeholder = placeholder;
+            this.ReplaceString = replaceString;
+            this.Type = type;
+        }
+
+        public string Placeholder { get; set; }
+        public string ReplaceString { get; set; }
+        public PlaceholderTypes Type { get; set; }
     }
 }

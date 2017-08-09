@@ -354,7 +354,7 @@
                 OnePointTelopTable.Instance.Table.Add(nr);
 
                 TableCompiler.Instance.RecompileTickers();
-                OnePointTelopTable.Instance.Save();
+                OnePointTelopTable.Instance.Save(true);
             });
 
             // 新しいノードを生成する
@@ -429,7 +429,7 @@
                     {
                         OnePointTelopTable.Instance.Table.Remove(src);
                         TableCompiler.Instance.RecompileTickers();
-                        OnePointTelopTable.Instance.Save();
+                        OnePointTelopTable.Instance.Save(true);
 
                         OnePointTelopController.CloseTelops();
 
@@ -468,7 +468,8 @@
             if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
             {
                 OnePointTelopTable.Instance.Save(
-                    this.SaveFileDialog.FileName);
+                    this.SaveFileDialog.FileName,
+                    true);
             }
         }
 
@@ -548,7 +549,7 @@
                     }
 
                     TableCompiler.Instance.RecompileTickers();
-                    OnePointTelopTable.Instance.Save();
+                    OnePointTelopTable.Instance.Save(true);
                     this.LoadTelopTable();
 
                     // 一度全てのテロップを閉じる

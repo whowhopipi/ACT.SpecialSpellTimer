@@ -233,7 +233,7 @@ namespace ACT.SpecialSpellTimer
 
                     TableCompiler.Instance.RecompileSpells();
                     SpellTimerTable.Instance.RemoveAllInstanceSpells();
-                    SpellTimerTable.Instance.Save();
+                    SpellTimerTable.Instance.Save(true);
                 });
 
                 // 新しいノードを生成する
@@ -538,7 +538,7 @@ namespace ACT.SpecialSpellTimer
                         SpellTimerTable.Instance.Table.Remove(src);
                         TableCompiler.Instance.RecompileSpells();
                         SpellTimerTable.Instance.RemoveAllInstanceSpells();
-                        SpellTimerTable.Instance.Save();
+                        SpellTimerTable.Instance.Save(true);
 
                         this.DetailGroupBox.Visible = false;
                         this.DetailPanelGroupBox.Visible = false;
@@ -602,7 +602,8 @@ namespace ACT.SpecialSpellTimer
             if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
             {
                 SpellTimerTable.Instance.Save(
-                    this.SaveFileDialog.FileName);
+                    this.SaveFileDialog.FileName,
+                    true);
             }
         }
 
@@ -686,7 +687,7 @@ namespace ACT.SpecialSpellTimer
                 telop.Top = 10.0d;
             }
 
-            OnePointTelopTable.Instance.Save();
+            OnePointTelopTable.Instance.Save(true);
 
             this.LoadSettingsOption();
             SpellTimerCore.Instance.LayoutPanels();
@@ -1001,7 +1002,7 @@ namespace ACT.SpecialSpellTimer
 
                         TableCompiler.Instance.RecompileSpells();
 
-                        SpellTimerTable.Instance.Save();
+                        SpellTimerTable.Instance.Save(true);
                         this.LoadSpellTimerTable();
 
                         // 一度全てのパネルを閉じる
