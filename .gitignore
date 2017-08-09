@@ -185,3 +185,4 @@ FakesAssemblies/
 # ドキュメントフォルダ
 [dD]ocuments/
 /ACT.SpecialSpellTimer/Advanced Combat Tracker.exe
+/Thirdparty/*.exe

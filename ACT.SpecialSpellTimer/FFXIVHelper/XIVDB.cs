@@ -63,7 +63,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 }
 
                 // 自身の場所を取得する
-                var selfDirectory = SpecialSpellTimerPlugin.Location ?? string.Empty;
+                var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
                 var resourcesUnderThis = Path.Combine(selfDirectory, @"resources");
 
                 if (Directory.Exists(resourcesUnderThis))

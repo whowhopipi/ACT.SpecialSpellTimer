@@ -61,6 +61,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyResolver.cs" />
     <Compile Include="ChatLogWorker.cs" />
     <Compile Include="CombatAnalyzer.cs" />
     <Compile Include="CombatLog.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="OnePointTelopController.cs" />
     <Compile Include="Models\OnePointTelopTable.cs" />
     <Compile Include="Config\Settings.cs" />
+    <Compile Include="PluginCore.cs" />
     <Compile Include="Utility\BackgroundWorkerExntensions.cs" />
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
@@ -157,7 +159,7 @@
       <DependentUpon>SelectJobForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Sound\SoundController.cs" />
-    <Compile Include="SpecialSpellTimerPlugin.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Views\OutlineTextBlockExtensions.cs" />
     <Compile Include="Views\SpellTimerControl.xaml.cs">
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>

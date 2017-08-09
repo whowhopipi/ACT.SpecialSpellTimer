@@ -59,12 +59,12 @@ namespace ACT.SpecialSpellTimer
                         switch (target)
                         {
                             case "on":
-                                SpecialSpellTimerPlugin.ConfigPanel.CombatAnalyzerEnabled = true;
+                                PluginCore.Instance.ConfigPanel.CombatAnalyzerEnabled = true;
                                 commandDone = true;
                                 break;
 
                             case "off":
-                                SpecialSpellTimerPlugin.ConfigPanel.CombatAnalyzerEnabled = false;
+                                PluginCore.Instance.ConfigPanel.CombatAnalyzerEnabled = false;
                                 commandDone = true;
                                 break;
                         }
@@ -122,7 +122,7 @@ namespace ACT.SpecialSpellTimer
                                 {
                                     ActInvoker.Invoke(() =>
                                     {
-                                        SpecialSpellTimerPlugin.ConfigPanel.LoadSpellTimerTable();
+                                        PluginCore.Instance.ConfigPanel.LoadSpellTimerTable();
                                     });
 
                                     commandDone = true;
@@ -145,7 +145,7 @@ namespace ACT.SpecialSpellTimer
                                 {
                                     ActInvoker.Invoke(() =>
                                     {
-                                        SpecialSpellTimerPlugin.ConfigPanel.LoadTelopTable();
+                                        PluginCore.Instance.ConfigPanel.LoadTelopTable();
                                     });
 
                                     commandDone = true;
@@ -197,12 +197,12 @@ namespace ACT.SpecialSpellTimer
                         break;
 
                     case "on":
-                        SpecialSpellTimerPlugin.ChangeSwitchVisibleButton(true);
+                        PluginCore.Instance.ChangeSwitchVisibleButton(true);
                         commandDone = true;
                         break;
 
                     case "off":
-                        SpecialSpellTimerPlugin.ChangeSwitchVisibleButton(false);
+                        PluginCore.Instance.ChangeSwitchVisibleButton(false);
                         commandDone = true;
                         break;
                 }

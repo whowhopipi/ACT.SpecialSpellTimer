@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,88 +11,49 @@ using Advanced_Combat_Tracker;
 namespace ACT.SpecialSpellTimer
 {
     /// <summary>
-    /// SpecialSpellTimer Plugin
+    /// PluginCore
     /// </summary>
-    public class SpecialSpellTimerPlugin :
-        IActPluginV1
+    public class PluginCore
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public SpecialSpellTimerPlugin()
+        #region Singleton
+
+        private static PluginCore instance;
+
+        public static PluginCore Instance => instance;
+
+        public static void Initialize()
         {
-            // このDLLの配置場所とACT標準のPluginディレクトリも解決の対象にする
-            AppDomain.CurrentDomain.AssemblyResolve += (s, e) =>
-            {
-                try
-                {
-                    var asm = new AssemblyName(e.Name);
-
-                    var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this);
-                    if (plugin != null)
-                    {
-                        var thisDirectory = plugin.pluginFile.DirectoryName;
-                        var path1 = Path.Combine(thisDirectory, asm.Name + ".dll");
-                        if (File.Exists(path1))
-                        {
-                            return Assembly.LoadFrom(path1);
-                        }
-                    }
-
-                    var pluginDirectory = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                        @"Advanced Combat Tracker\Plugins");
-
-                    var path = Path.Combine(pluginDirectory, asm.Name + ".dll");
-
-                    if (File.Exists(path))
-                    {
-                        return Assembly.LoadFrom(path);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write(Translate.Get("ACTAssemblyError"), ex);
-                }
-
-                return null;
-            };
+            instance = new PluginCore();
         }
+
+        #endregion Singleton
 
         /// <summary>
         /// 設定パネル
         /// </summary>
-        public static ConfigPanel ConfigPanel { get; private set; }
+        public ConfigPanel ConfigPanel { get; private set; }
 
         /// <summary>
         /// 自身の場所
         /// </summary>
-        public static string Location
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// 表示切り替えボタン
-        /// </summary>
-        private static Button SwitchVisibleButton { get; set; }
+        public string Location { get; private set; }
 
         /// <summary>
         /// プラグインステータス表示ラベル
         /// </summary>
-        private Label PluginStatusLabel
-        {
-            get;
-            set;
-        }
+        private Label PluginStatusLabel { get; set; }
+
+        /// <summary>
+        /// 表示切り替えボタン
+        /// </summary>
+        private Button SwitchVisibleButton { get; set; }
 
         /// <summary>
         /// 表示切り替えボタン（スペスペボタン）の状態を切り替える
         /// </summary>
         /// <param name="visible">
         /// 切り替える状態</param>
-        public static void ChangeSwitchVisibleButton(
+        public void ChangeSwitchVisibleButton(
             bool visible)
         {
             Settings.Default.OverlayVisible = visible;
@@ -119,13 +78,13 @@ namespace ACT.SpecialSpellTimer
             {
                 if (Settings.Default.OverlayVisible)
                 {
-                    SwitchVisibleButton.BackColor = Color.OrangeRed;
-                    SwitchVisibleButton.ForeColor = Color.WhiteSmoke;
+                    this.SwitchVisibleButton.BackColor = Color.OrangeRed;
+                    this.SwitchVisibleButton.ForeColor = Color.WhiteSmoke;
                 }
                 else
                 {
-                    SwitchVisibleButton.BackColor = SystemColors.Control;
-                    SwitchVisibleButton.ForeColor = Color.Black;
+                    this.SwitchVisibleButton.BackColor = SystemColors.Control;
+                    this.SwitchVisibleButton.ForeColor = Color.Black;
                 }
             });
         }
@@ -133,11 +92,12 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 後片付けをする
         /// </summary>
-        void IActPluginV1.DeInitPlugin()
+        public void DeInitPluginCore()
         {
             try
             {
                 SpellTimerCore.Instance.End();
+
                 this.RemoveSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Exited";
 
@@ -156,8 +116,6 @@ namespace ACT.SpecialSpellTimer
 
                 this.PluginStatusLabel.Text = "Plugin Exited Error";
             }
-
-            Logger.End();
         }
 
         /// <summary>
@@ -165,14 +123,17 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="pluginScreenSpace">Pluginタブ</param>
         /// <param name="pluginStatusText">Pluginステータスラベル</param>
-        void IActPluginV1.InitPlugin(
+        public void InitPluginCore(
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
             try
             {
-                Logger.Begin();
                 Logger.Write("Plugin Start.");
+
+                // 設定ファイルを読み込む
+                Settings.Default.Load();
+                Settings.Default.ApplyRenderMode();
 
                 // WPFアプリケーションを開始する
                 if (System.Windows.Application.Current == null)
@@ -181,10 +142,6 @@ namespace ACT.SpecialSpellTimer
                     System.Windows.Application.Current.ShutdownMode =
                         System.Windows.ShutdownMode.OnExplicitShutdown;
                 }
-
-                // 設定ファイルを読み込む
-                Settings.Default.Load();
-                Settings.Default.ApplyRenderMode();
 
                 pluginScreenSpace.Text = Translate.Get("LN_Tabname");
                 this.PluginStatusLabel = pluginStatusText;
@@ -196,16 +153,16 @@ namespace ACT.SpecialSpellTimer
                 });
 
                 // 自身の場所を格納しておく
-                var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this);
+                var plugin = ActGlobals.oFormActMain.PluginGetSelfData(Plugin.Instance);
                 if (plugin != null)
                 {
-                    SpecialSpellTimerPlugin.Location = plugin.pluginFile.DirectoryName;
+                    this.Location = plugin.pluginFile.DirectoryName;
                 }
 
                 // 設定Panelを追加する
-                SpecialSpellTimerPlugin.ConfigPanel = new ConfigPanel();
-                pluginScreenSpace.Controls.Add(SpecialSpellTimerPlugin.ConfigPanel);
-                SpecialSpellTimerPlugin.ConfigPanel.Dock = DockStyle.Fill;
+                this.ConfigPanel = new ConfigPanel();
+                pluginScreenSpace.Controls.Add(this.ConfigPanel);
+                this.ConfigPanel.Dock = DockStyle.Fill;
 
                 // 設定ファイルのバックアップを作成する
                 SpellTimerTable.Instance.Backup();
@@ -286,6 +243,7 @@ namespace ACT.SpecialSpellTimer
             SwitchVisibleButton.Text = Translate.Get("SupeSupe");
             SwitchVisibleButton.TextAlign = ContentAlignment.MiddleCenter;
             SwitchVisibleButton.UseVisualStyleBackColor = true;
+
             SwitchVisibleButton.Click += (s, e) =>
             {
                 var button = s as Button;
