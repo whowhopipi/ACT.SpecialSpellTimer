@@ -17,6 +17,18 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
     public class FFXIV
     {
+        #region Singleton
+
+        private static FFXIV instance = new FFXIV();
+
+        private FFXIV()
+        {
+        }
+
+        public static FFXIV Instance => instance;
+
+        #endregion Singleton
+
         /// <summary>
         /// FFXIV_ACT_Plugin
         /// </summary>
@@ -47,11 +59,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private volatile dynamic pluginScancombat;
 
-        /// <summary>
-        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
-        /// </summary>
-        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
-
         public bool IsAvalable
         {
             get
@@ -75,21 +82,14 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public IReadOnlyList<Zone> ZoneList => this.zoneList;
 
         /// <summary>
+        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
+        /// </summary>
+        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
+
+        /// <summary>
         /// ACTプラグインアセンブリ
         /// </summary>
         private Assembly FFXIVPluginAssembly => this.ActPlugin?.GetType()?.Assembly;
-
-        #region Singleton
-
-        private static FFXIV instance = new FFXIV();
-
-        private FFXIV()
-        {
-        }
-
-        public static FFXIV Instance => instance;
-
-        #endregion Singleton
 
         #region Combatants
 
