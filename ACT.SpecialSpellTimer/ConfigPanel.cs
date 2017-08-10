@@ -699,8 +699,8 @@ namespace ACT.SpecialSpellTimer
             Settings.Default.Reset();
             Settings.Default.Save();
 
-            PanelSettings.Instance.SettingsTable.Clear();
-            PanelSettings.Instance.Save();
+            PanelTable.Instance.SettingsTable.Clear();
+            PanelTable.Instance.Save();
 
             foreach (var telop in OnePointTelopTable.Instance.Table)
             {

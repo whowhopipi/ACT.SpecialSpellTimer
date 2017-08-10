@@ -904,7 +904,7 @@ namespace ACT.SpecialSpellTimer
                     foreach (var panel in this.spellTimerPanels)
                     {
                         var setting = (
-                            from x in PanelSettings.Instance.SettingsTable
+                            from x in PanelTable.Instance.SettingsTable
                             where
                             x.PanelName == panel.PanelName
                             select
@@ -912,8 +912,8 @@ namespace ACT.SpecialSpellTimer
 
                         if (setting == null)
                         {
-                            setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
-                            PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
+                            setting = new PanelSettings();
+                            PanelTable.Instance.SettingsTable.Add(setting);
                         }
 
                         setting.PanelName = panel.PanelName;
@@ -923,7 +923,7 @@ namespace ACT.SpecialSpellTimer
 
                     if (this.spellTimerPanels.Count > 0)
                     {
-                        PanelSettings.Instance.Save();
+                        PanelTable.Instance.Save();
                     }
 
                     foreach (var panel in this.spellTimerPanels)
@@ -957,7 +957,7 @@ namespace ACT.SpecialSpellTimer
                     {
                         // パネルの位置を保存する
                         var setting = (
-                            from x in PanelSettings.Instance.SettingsTable
+                            from x in PanelTable.Instance.SettingsTable
                             where
                             x.PanelName == panel.PanelName
                             select
@@ -965,15 +965,15 @@ namespace ACT.SpecialSpellTimer
 
                         if (setting == null)
                         {
-                            setting = PanelSettings.Instance.SettingsTable.NewPanelSettingsRow();
-                            PanelSettings.Instance.SettingsTable.AddPanelSettingsRow(setting);
+                            setting = new PanelSettings();
+                            PanelTable.Instance.SettingsTable.Add(setting);
                         }
 
                         setting.PanelName = panel.PanelName;
                         setting.Left = panel.Left;
                         setting.Top = panel.Top;
 
-                        PanelSettings.Instance.Save();
+                        PanelTable.Instance.Save();
 
                         // スペルリストに存在しないパネルを閉じる
                         if (!spells.Any(x => x.Panel == panel.PanelName))
@@ -1057,7 +1057,7 @@ namespace ACT.SpecialSpellTimer
                 }
                 else
                 {
-                    var panelSettings = PanelSettings.Instance.SettingsTable
+                    var panelSettings = PanelTable.Instance.SettingsTable
                         .Where(x => x.PanelName == panelName)
                         .FirstOrDefault();
 
@@ -1093,7 +1093,7 @@ namespace ACT.SpecialSpellTimer
                     var setting = this.FindPanelSettingByName(panelName);
                     if (setting != null)
                     {
-                        margin = setting.Margin;
+                        margin = (int)setting.Margin;
                     }
                 }
             }
@@ -1124,7 +1124,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     foreach (var panel in this.spellTimerPanels)
                     {
-                        var setting = PanelSettings.Instance.SettingsTable
+                        var setting = PanelTable.Instance.SettingsTable
                             .Where(x => x.PanelName == panel.PanelName)
                             .FirstOrDefault();
 
@@ -1195,7 +1195,7 @@ namespace ACT.SpecialSpellTimer
                     panel.Top = top;
                 }
 
-                var panelSettings = PanelSettings.Instance.SettingsTable
+                var panelSettings = PanelTable.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
 
@@ -1250,11 +1250,11 @@ namespace ACT.SpecialSpellTimer
         /// PanelSettingsRowを取得する
         /// </summary>
         /// <param name="panelName">パネルの名前</param>
-        private SpellTimerDataSet.PanelSettingsRow FindPanelSettingByName(string panelName)
+        private PanelSettings FindPanelSettingByName(string panelName)
         {
             lock (this.spellTimerPanels)
             {
-                return PanelSettings.Instance.SettingsTable
+                return PanelTable.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
             }

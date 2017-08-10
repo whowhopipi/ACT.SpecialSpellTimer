@@ -54,9 +54,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -106,6 +104,7 @@
     <Compile Include="Image\IconController.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="LogBuffer.cs" />
+    <Compile Include="Models\PanelSettings.cs" />
     <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="Models\Spell.cs" />
     <Compile Include="Models\TableCompiler.cs" />
@@ -130,7 +129,7 @@
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\PanelSettings.cs" />
+    <Compile Include="Models\PanelTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -177,11 +176,6 @@
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpellTimerCore.cs" />
-    <Compile Include="Models\SpellTimerDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="TabControlExtHoriz.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -315,17 +309,6 @@
     <Compile Include="ConfigPanel.DQXOption.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <None Include="Models\SpellTimerDataSet.xsc">
-      <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="Models\SpellTimerDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>SpellTimerDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Models\SpellTimerDataSet.xss">
-      <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
-    </None>
     <Content Include="resources\xivdb\Instance.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
