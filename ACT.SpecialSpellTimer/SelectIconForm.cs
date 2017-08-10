@@ -51,7 +51,13 @@ namespace ACT.SpecialSpellTimer
 
                 if (owner != null)
                 {
-                    instance.Font = (owner as Form)?.Font;
+                    var font = (owner as Control)?.Font;
+                    instance.Font = font;
+                    instance.FolderTreeView.Font = font;
+                    instance.FolderTreeView.ItemHeight = (int)(font.Size * 2);
+                    instance.ClearButton.Font = font;
+                    instance.CloseButton.Font = font;
+                    instance.IconsFlowLayoutPanel.Font = font;
                 }
 
                 instance.SelectedIconRelativePath = iconRelativePath;
@@ -86,7 +92,9 @@ namespace ACT.SpecialSpellTimer
 
                 foreach (var dir in iconsByDirectory)
                 {
-                    var text = dir.Key.Split('\\').LastOrDefault();
+                    var text = string.Empty;
+                    text = dir.Key.Split('\\').LastOrDefault();
+
                     var node = new TreeNode()
                     {
                         Text = text,
@@ -141,6 +149,9 @@ namespace ACT.SpecialSpellTimer
 
                     ctrl.Label.Text = icon.Name;
                     ctrl.Icon = icon;
+
+                    ctrl.Button.Font = panel.Font;
+                    ctrl.Label.Font = panel.Font;
 
                     ctrl.Button.Click += (s, e) =>
                     {

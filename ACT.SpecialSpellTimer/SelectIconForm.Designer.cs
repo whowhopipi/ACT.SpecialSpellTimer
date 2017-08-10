@@ -72,7 +72,7 @@
             // 
             this.SplitContainer.Panel2.Controls.Add(this.IconsFlowLayoutPanel);
             this.SplitContainer.Size = new System.Drawing.Size(778, 374);
-            this.SplitContainer.SplitterDistance = 218;
+            this.SplitContainer.SplitterDistance = 248;
             this.SplitContainer.TabIndex = 5;
             // 
             // FolderTreeView
@@ -81,11 +81,11 @@
             this.FolderTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FolderTreeView.FullRowSelect = true;
             this.FolderTreeView.HideSelection = false;
-            this.FolderTreeView.ItemHeight = 16;
+            this.FolderTreeView.ItemHeight = 20;
             this.FolderTreeView.Location = new System.Drawing.Point(0, 0);
             this.FolderTreeView.Name = "FolderTreeView";
             this.FolderTreeView.ShowLines = false;
-            this.FolderTreeView.Size = new System.Drawing.Size(218, 374);
+            this.FolderTreeView.Size = new System.Drawing.Size(248, 374);
             this.FolderTreeView.TabIndex = 0;
             // 
             // IconsFlowLayoutPanel
@@ -95,7 +95,7 @@
             this.IconsFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.IconsFlowLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.IconsFlowLayoutPanel.Name = "IconsFlowLayoutPanel";
-            this.IconsFlowLayoutPanel.Size = new System.Drawing.Size(556, 374);
+            this.IconsFlowLayoutPanel.Size = new System.Drawing.Size(526, 374);
             this.IconsFlowLayoutPanel.TabIndex = 0;
             // 
             // BottomTableLayoutPanel

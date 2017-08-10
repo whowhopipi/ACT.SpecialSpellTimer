@@ -21,11 +21,13 @@ namespace ACT.SpecialSpellTimer.Image
             {
                 var dirs = new List<string>();
 
+                var actDirectory = string.Empty;
+
                 // ACTのパスを取得する
                 var asm = Assembly.GetEntryAssembly();
                 if (asm != null)
                 {
-                    var actDirectory = Path.GetDirectoryName(asm.Location);
+                    actDirectory = Path.GetDirectoryName(asm.Location);
 
                     var dir1 = Path.Combine(actDirectory, @"resources\icon");
                     if (Directory.Exists(dir1))
@@ -42,17 +44,20 @@ namespace ACT.SpecialSpellTimer.Image
 
                 // 自身の場所を取得する
                 var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
-
-                var dir3 = Path.Combine(selfDirectory, @"resources\icon");
-                if (Directory.Exists(dir3))
+                if (Path.GetFullPath(selfDirectory).ToLower() !=
+                    Path.GetFullPath(actDirectory).ToLower())
                 {
-                    dirs.Add(dir3);
-                }
+                    var dir3 = Path.Combine(selfDirectory, @"resources\icon");
+                    if (Directory.Exists(dir3))
+                    {
+                        dirs.Add(dir3);
+                    }
 
-                var dir4 = Path.Combine(selfDirectory, @"resources\xivdb\Action icons");
-                if (Directory.Exists(dir4))
-                {
-                    dirs.Add(dir4);
+                    var dir4 = Path.Combine(selfDirectory, @"resources\xivdb\Action icons");
+                    if (Directory.Exists(dir4))
+                    {
+                        dirs.Add(dir4);
+                    }
                 }
 
                 return dirs.ToArray();
