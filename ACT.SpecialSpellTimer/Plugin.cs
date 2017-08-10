@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-
+using ACT.SpecialSpellTimer;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT
 {
     /// <summary>
     /// SpecialSpellTimer Plugin
