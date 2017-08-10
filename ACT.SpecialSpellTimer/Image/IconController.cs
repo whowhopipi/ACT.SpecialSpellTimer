@@ -135,6 +135,11 @@ namespace ACT.SpecialSpellTimer.Image
         /// </summary>
         public class IconFile
         {
+            public string Directory => 
+                !string.IsNullOrEmpty(this.FullPath) ? 
+                Path.GetDirectoryName(this.FullPath) :
+                string.Empty;
+
             /// <summary>
             /// フルパス
             /// </summary>

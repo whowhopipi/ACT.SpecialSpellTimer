@@ -114,6 +114,18 @@
     <Compile Include="Models\OnePointTelopTable.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="PluginCore.cs" />
+    <Compile Include="SelectIconForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectIconForm.Designer.cs">
+      <DependentUpon>SelectIconForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectIconUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SelectIconUserControl.Designer.cs">
+      <DependentUpon>SelectIconUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utility\BackgroundWorkerExntensions.cs" />
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
@@ -354,6 +366,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="resources\strings\Strings-KR.resx">
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectIconForm.resx">
+      <DependentUpon>SelectIconForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectIconUserControl.resx">
+      <DependentUpon>SelectIconUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SetConditionForm.resx">
       <DependentUpon>SetConditionForm.cs</DependentUpon>

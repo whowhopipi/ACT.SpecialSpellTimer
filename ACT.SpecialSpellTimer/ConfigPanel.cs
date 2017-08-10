@@ -342,12 +342,6 @@ namespace ACT.SpecialSpellTimer
             this.TimeupSoundComboBox.ValueMember = "FullPath";
             this.TimeupSoundComboBox.DisplayMember = "Name";
 
-            this.SpellIconComboBox.DataSource = IconController.Instance.EnumlateIcon()
-                .OrderBy(x => x.RelativePath)
-                .ToArray();
-            this.SpellIconComboBox.ValueMember = "RelativePath";
-            this.SpellIconComboBox.DisplayMember = "RelativePath";
-
             // イベントを設定する
             this.SpellTimerTreeView.AfterSelect += this.SpellTimerTreeView_AfterSelect;
             this.AddButton.Click += this.AddButton_Click;
@@ -486,10 +480,37 @@ namespace ACT.SpecialSpellTimer
                 }
             };
 
-            this.SpellIconComboBox.SelectionChangeCommitted += (s1, e1) =>
+            // アイコン選択ボタンの挙動を設定する
+            this.SelectIconButton.Click += async (s1, e1) =>
             {
-                this.SpellVisualSetting.SpellIcon = (string)this.SpellIconComboBox.SelectedValue;
-                this.SpellVisualSetting.RefreshSampleImage();
+                var selectedIcon = (string)this.SelectIconButton.Tag; 
+
+                var result = await SelectIconForm.ShowDialogAsync(
+                    selectedIcon,
+                    this);
+
+                if (result.Result)
+                {
+                    ActInvoker.Invoke(() =>
+                    {
+                        this.SelectIconButton.Tag = result.Icon;
+                        this.SelectIconButton.BackgroundImageLayout = ImageLayout.Zoom;
+
+                        this.SelectIconButton.BackgroundImage = null;
+                        this.SelectIconButton.FlatAppearance.BorderSize = 1;
+                        var icon = IconController.Instance.GetIconFile(result.Icon);
+                        if (icon != null &&
+                            File.Exists(icon.FullPath))
+                        {
+                            this.SelectIconButton.BackgroundImage = System.Drawing.Image.FromFile(
+                                icon.FullPath);
+                            this.SelectIconButton.FlatAppearance.BorderSize = 0;
+                        }
+
+                        this.SpellVisualSetting.SpellIcon = result.Icon;
+                        this.SpellVisualSetting.RefreshSampleImage();
+                    });
+                }
             };
 
             this.SpellIconSizeUpDown.ValueChanged += (s1, e1) =>
@@ -709,9 +730,22 @@ namespace ACT.SpecialSpellTimer
 
             this.DetailGroupBox.Visible = true;
 
+            // アイコンを設定する
+            this.SelectIconButton.Tag = src.SpellIcon;
+            this.SelectIconButton.BackgroundImageLayout = ImageLayout.Zoom;
+            this.SelectIconButton.BackgroundImage = null;
+            this.SelectIconButton.FlatAppearance.BorderSize = 1;
+            var icon = IconController.Instance.GetIconFile(src.SpellIcon);
+            if (icon != null &&
+                File.Exists(icon.FullPath))
+            {
+                this.SelectIconButton.BackgroundImage = System.Drawing.Image.FromFile(
+                    icon.FullPath);
+                this.SelectIconButton.FlatAppearance.BorderSize = 0;
+            }
+
             this.PanelNameTextBox.Text = src.Panel;
             this.SpellTitleTextBox.Text = src.SpellTitle;
-            this.SpellIconComboBox.SelectedValue = src.SpellIcon;
             this.SpellIconSizeUpDown.Value = src.SpellIconSize;
             this.DisplayNoNumericUpDown.Value = src.DisplayNo;
             this.KeywordTextBox.Text = src.Keyword;
@@ -942,7 +976,7 @@ namespace ACT.SpecialSpellTimer
                     {
                         src.Panel = this.PanelNameTextBox.Text;
                         src.SpellTitle = this.SpellTitleTextBox.Text;
-                        src.SpellIcon = (string)this.SpellIconComboBox.SelectedValue ?? string.Empty;
+                        src.SpellIcon = (string)this.SelectIconButton.Tag;
                         src.SpellIconSize = (int)this.SpellIconSizeUpDown.Value;
                         src.DisplayNo = (int)this.DisplayNoNumericUpDown.Value;
                         src.Keyword = this.KeywordTextBox.Text;
