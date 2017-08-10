@@ -1,5 +1,6 @@
-﻿using MahApps.Metro.Controls;
-
+﻿using System.Threading.Tasks;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using XIVDBDownloader.ViewModels;
 
 namespace XIVDBDownloader
@@ -19,5 +20,15 @@ namespace XIVDBDownloader
 
         /// <summary>ViewModel</summary>
         public MainWindowViewModel ViewModel => (MainWindowViewModel)this.DataContext;
+
+        public Task<MessageDialogResult> ShowMessageDialogAync(
+            string title,
+            string message)
+        {
+            return this.ShowMessageAsync(
+                title,
+                message,
+                MessageDialogStyle.AffirmativeAndNegative);
+        }
     }
 }

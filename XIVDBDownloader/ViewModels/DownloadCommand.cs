@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
+using MahApps.Metro.Controls.Dialogs;
 using XIVDBDownloader.Constants;
 using XIVDBDownloader.Models;
 
@@ -35,7 +36,20 @@ namespace XIVDBDownloader.ViewModels
             {
                 this.viewModel.IsEnabledDownload = false;
 
-                await Task.Run(() => this.ExecuteCore());
+                var alsoDownloadActionIcons = false;
+                if (this.viewModel.DataModel == DataModels.Action)
+                {
+                    var result = await this.viewModel.View.ShowMessageDialogAync(
+                        "Download Action",
+                        "Also download icon images?");
+
+                    if (result == MessageDialogResult.FirstAuxiliary)
+                    {
+                        alsoDownloadActionIcons = true;
+                    }
+                }
+
+                await Task.Run(() => this.ExecuteCore(alsoDownloadActionIcons));
             }
             finally
             {
@@ -57,12 +71,13 @@ namespace XIVDBDownloader.ViewModels
                 null);
         }
 
-        private void ExecuteCore()
+        private void ExecuteCore(
+            bool alsoDownloadActionIcons)
         {
             switch (this.viewModel.DataModel)
             {
                 case DataModels.Action:
-                    this.DownloadAction();
+                    this.DownloadAction(alsoDownloadActionIcons);
                     break;
 
                 case DataModels.Instance:
@@ -80,7 +95,29 @@ namespace XIVDBDownloader.ViewModels
 
         #region Download Action
 
-        private void DownloadAction()
+        private void DownloadAction(
+            bool alsoDownloadActionIcons)
+        {
+            var model = this.DownloadActionList();
+
+            if (alsoDownloadActionIcons)
+            {
+                this.DownloadActionIcons(model);
+            }
+        }
+
+        private void DownloadActionIcons(
+            ActionModel model)
+        {
+            this.AppendLineMessages("Download Action icons.");
+
+            // アイコンを取得する
+            model.DownloadIcon(this.viewModel.SaveDirectory);
+
+            this.AppendLineMessages("Download Action icons, Done.");
+        }
+
+        private ActionModel DownloadActionList()
         {
             this.AppendLineMessages("Download Action.");
 
@@ -96,11 +133,9 @@ namespace XIVDBDownloader.ViewModels
             model.SaveToCSV(
                 Path.Combine(this.viewModel.SaveDirectory, "Action.csv"));
 
-            // アイコンを取得する
-            this.AppendLineMessages("Download icons.");
-            model.DownloadIcon(this.viewModel.SaveDirectory);
+            this.AppendLineMessages("Download Action, Done.");
 
-            this.AppendLineMessages("Download Action. Done.");
+            return model;
         }
 
         #endregion Download Action
@@ -121,7 +156,7 @@ namespace XIVDBDownloader.ViewModels
                 Path.Combine(this.viewModel.SaveDirectory, "Instance.csv"),
                 this.viewModel.Language);
 
-            this.AppendLineMessages("Download Instance. Done.");
+            this.AppendLineMessages("Download Instance, Done.");
         }
 
         #endregion Download Instance (Zone)
@@ -142,7 +177,7 @@ namespace XIVDBDownloader.ViewModels
                 Path.Combine(this.viewModel.SaveDirectory, "Placename.csv"),
                 this.viewModel.Language);
 
-            this.AppendLineMessages("Download Placename. Done.");
+            this.AppendLineMessages("Download Placename, Done.");
         }
 
         #endregion Download Placename (Zone?)
