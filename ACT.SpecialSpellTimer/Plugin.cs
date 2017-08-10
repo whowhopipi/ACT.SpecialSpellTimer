@@ -12,23 +12,6 @@ namespace ACT
     public class Plugin :
         IActPluginV1
     {
-        #region Singleton
-
-        private static Plugin instance;
-
-        public static Plugin Instance => instance;
-
-        #endregion Singleton
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public Plugin()
-        {
-            instance = this;
-            AssemblyResolver.Instance.Initialize(this);
-        }
-
         /// <summary>
         /// 後片付けをする
         /// </summary>
@@ -48,8 +31,10 @@ namespace ACT
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
+            AssemblyResolver.Instance.Initialize(this);
+
             Logger.Begin();
-            PluginCore.Initialize();
+            PluginCore.Initialize(this);
             PluginCore.Instance.InitPluginCore(
                 pluginScreenSpace,
                 pluginStatusText);

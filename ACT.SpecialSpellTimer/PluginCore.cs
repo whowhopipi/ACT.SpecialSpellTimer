@@ -21,9 +21,11 @@ namespace ACT.SpecialSpellTimer
 
         public static PluginCore Instance => instance;
 
-        public static void Initialize()
+        public static void Initialize(
+            Plugin plugin)
         {
             instance = new PluginCore();
+            instance.PluginRoot = plugin;
         }
 
         #endregion Singleton
@@ -37,6 +39,8 @@ namespace ACT.SpecialSpellTimer
         /// 自身の場所
         /// </summary>
         public string Location { get; private set; }
+
+        public Plugin PluginRoot { get; private set; }
 
         /// <summary>
         /// プラグインステータス表示ラベル
@@ -112,7 +116,7 @@ namespace ACT.SpecialSpellTimer
                 });
 
                 // 自身の場所を格納しておく
-                var plugin = ActGlobals.oFormActMain.PluginGetSelfData(Plugin.Instance);
+                var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this.PluginRoot);
                 if (plugin != null)
                 {
                     this.Location = plugin.pluginFile.DirectoryName;
