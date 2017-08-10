@@ -17,49 +17,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
     public class FFXIV
     {
-        #region Singleton
-
-        private static FFXIV instance = new FFXIV();
-
-        private FFXIV()
-        {
-        }
-
-        public static FFXIV Instance => instance;
-
-        #endregion Singleton
-
-        #region Combatants
-
-        private readonly IReadOnlyList<Combatant> EmptyCombatantList = new List<Combatant>();
-
-        private volatile IReadOnlyDictionary<uint, Combatant> combatantDictionary;
-        private volatile IReadOnlyList<Combatant> combatantList;
-        private object combatantListLock = new object();
-
-        private volatile List<uint> currentPartyIDList = new List<uint>();
-        private object currentPartyIDListLock = new object();
-
-#if false
-        // とりあえずはリストを直接外部に公開しないことにする
-        public IReadOnlyDictionary<uint, Combatant> CombatantDictionary => this.combatantDictionary;
-        public IReadOnlyList<Combatant> CombatantList => this.combatantList;
-        public object CombatantListLock => this.combatantListLock;
-
-        public IReadOnlyCollection<uint> CurrentPartyIDList => this.currentPartyIDList;
-        public object CurrentPartyIDListLock => this.currentPartyIDListLock;
-#endif
-
-        #endregion Combatants
-
-        #region Resources
-
-        private volatile IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
-        private volatile IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
-        private volatile IReadOnlyList<Zone> zoneList = new List<Zone>();
-
-        #endregion Resources
-
         /// <summary>
         /// FFXIV_ACT_Plugin
         /// </summary>
@@ -121,6 +78,49 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// ACTプラグインアセンブリ
         /// </summary>
         private Assembly FFXIVPluginAssembly => this.ActPlugin?.GetType()?.Assembly;
+
+        #region Singleton
+
+        private static FFXIV instance = new FFXIV();
+
+        private FFXIV()
+        {
+        }
+
+        public static FFXIV Instance => instance;
+
+        #endregion Singleton
+
+        #region Combatants
+
+        private readonly IReadOnlyList<Combatant> EmptyCombatantList = new List<Combatant>();
+
+        private volatile IReadOnlyDictionary<uint, Combatant> combatantDictionary;
+        private volatile IReadOnlyList<Combatant> combatantList;
+        private object combatantListLock = new object();
+
+        private volatile List<uint> currentPartyIDList = new List<uint>();
+        private object currentPartyIDListLock = new object();
+
+#if false
+        // とりあえずはリストを直接外部に公開しないことにする
+        public IReadOnlyDictionary<uint, Combatant> CombatantDictionary => this.combatantDictionary;
+        public IReadOnlyList<Combatant> CombatantList => this.combatantList;
+        public object CombatantListLock => this.combatantListLock;
+
+        public IReadOnlyCollection<uint> CurrentPartyIDList => this.currentPartyIDList;
+        public object CurrentPartyIDListLock => this.currentPartyIDListLock;
+#endif
+
+        #endregion Combatants
+
+        #region Resources
+
+        private volatile IReadOnlyDictionary<int, Buff> buffList = new Dictionary<int, Buff>();
+        private volatile IReadOnlyDictionary<int, Skill> skillList = new Dictionary<int, Skill>();
+        private volatile IReadOnlyList<Zone> zoneList = new List<Zone>();
+
+        #endregion Resources
 
         #region Start/End
 
@@ -244,6 +244,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         }
 
         #endregion Start/End
+
+        #region Methods
 
         public IReadOnlyDictionary<uint, Combatant> GetCombatantDictionaly()
         {
@@ -863,22 +865,28 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 }
             }
         }
-    }
 
-    public class CombatantsByRole
-    {
-        public CombatantsByRole(
-            JobRoles roleType,
-            string roleLabel,
-            IReadOnlyList<Combatant> combatants)
+        #endregion Methods
+
+        #region Sub classes
+
+        public class CombatantsByRole
         {
-            this.RoleType = roleType;
-            this.RoleLabel = roleLabel;
-            this.Combatants = combatants;
+            public CombatantsByRole(
+                JobRoles roleType,
+                string roleLabel,
+                IReadOnlyList<Combatant> combatants)
+            {
+                this.RoleType = roleType;
+                this.RoleLabel = roleLabel;
+                this.Combatants = combatants;
+            }
+
+            public IReadOnlyList<Combatant> Combatants { get; set; }
+            public string RoleLabel { get; set; }
+            public JobRoles RoleType { get; set; }
         }
 
-        public JobRoles RoleType { get; set; }
-        public string RoleLabel { get; set; }
-        public IReadOnlyList<Combatant> Combatants { get; set; }
+        #endregion Sub classes
     }
 }

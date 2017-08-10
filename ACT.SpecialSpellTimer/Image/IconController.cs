@@ -15,33 +15,47 @@ namespace ACT.SpecialSpellTimer.Image
 
         #endregion Singleton
 
-        public string IconDirectory
+        public string[] IconDirectories
         {
             get
             {
+                var dirs = new List<string>();
+
                 // ACTのパスを取得する
                 var asm = Assembly.GetEntryAssembly();
                 if (asm != null)
                 {
                     var actDirectory = Path.GetDirectoryName(asm.Location);
-                    var resourcesUnderAct = Path.Combine(actDirectory, @"resources\icon");
 
-                    if (Directory.Exists(resourcesUnderAct))
+                    var dir1 = Path.Combine(actDirectory, @"resources\icon");
+                    if (Directory.Exists(dir1))
                     {
-                        return resourcesUnderAct;
+                        dirs.Add(dir1);
+                    }
+
+                    var dir2 = Path.Combine(actDirectory, @"resources\xivdb\Action icons");
+                    if (Directory.Exists(dir2))
+                    {
+                        dirs.Add(dir2);
                     }
                 }
 
                 // 自身の場所を取得する
                 var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
-                var resourcesUnderThis = Path.Combine(selfDirectory, @"resources\icon");
 
-                if (Directory.Exists(resourcesUnderThis))
+                var dir3 = Path.Combine(selfDirectory, @"resources\icon");
+                if (Directory.Exists(dir3))
                 {
-                    return resourcesUnderThis;
+                    dirs.Add(dir3);
                 }
 
-                return string.Empty;
+                var dir4 = Path.Combine(selfDirectory, @"resources\xivdb\Action icons");
+                if (Directory.Exists(dir4))
+                {
+                    dirs.Add(dir4);
+                }
+
+                return dirs.ToArray();
             }
         }
 
@@ -61,9 +75,12 @@ namespace ACT.SpecialSpellTimer.Image
                 RelativePath = string.Empty
             });
 
-            if (Directory.Exists(this.IconDirectory))
+            foreach (var dir in this.IconDirectories)
             {
-                list.AddRange(this.EnumulateIcon(this.IconDirectory, string.Empty));
+                if (Directory.Exists(dir))
+                {
+                    list.AddRange(this.EnumulateIcon(dir, string.Empty));
+                }
             }
 
             return list.ToArray();
@@ -76,14 +93,17 @@ namespace ACT.SpecialSpellTimer.Image
                 return null;
             }
 
-            var iconPath = Path.Combine(this.IconDirectory, relativePath);
-            if (File.Exists(iconPath))
+            foreach (var dir in this.IconDirectories)
             {
-                return new IconFile()
+                var iconPath = Path.Combine(dir, relativePath);
+                if (File.Exists(iconPath))
                 {
-                    FullPath = iconPath.ToString(),
-                    RelativePath = relativePath
-                };
+                    return new IconFile()
+                    {
+                        FullPath = iconPath.ToString(),
+                        RelativePath = relativePath
+                    };
+                }
             }
 
             return null;

@@ -833,6 +833,25 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion カスタムプレースホルダに関するメソッド群
 
+        #region Sub classes
+
+        public class PlaceholderContainer
+        {
+            public PlaceholderContainer(
+                string placeholder,
+                string replaceString,
+                PlaceholderTypes type)
+            {
+                this.Placeholder = placeholder;
+                this.ReplaceString = replaceString;
+                this.Type = type;
+            }
+
+            public string Placeholder { get; set; }
+            public string ReplaceString { get; set; }
+            public PlaceholderTypes Type { get; set; }
+        }
+
         private class RegexEx
         {
             public RegexEx(
@@ -846,22 +865,7 @@ namespace ACT.SpecialSpellTimer.Models
             public Regex Regex { get; set; }
             public string RegexPattern { get; set; }
         }
-    }
 
-    public class PlaceholderContainer
-    {
-        public PlaceholderContainer(
-            string placeholder,
-            string replaceString,
-            PlaceholderTypes type)
-        {
-            this.Placeholder = placeholder;
-            this.ReplaceString = replaceString;
-            this.Type = type;
-        }
-
-        public string Placeholder { get; set; }
-        public string ReplaceString { get; set; }
-        public PlaceholderTypes Type { get; set; }
+        #endregion Sub classes
     }
 }
