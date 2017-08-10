@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using System.Windows.Input;
 using Prism.Mvvm;
 using XIVDBDownloader.Constants;
@@ -19,7 +20,7 @@ namespace XIVDBDownloader.ViewModels
         private DataModels dataModel = DataModels.Action;
         private bool isEnabledDownload = true;
         private Language language = Language.JA;
-        private string messages = string.Empty;
+        private StringBuilder messages = new StringBuilder();
 #if DEBUG
         private string saveDirectory = Path.GetFullPath(@".\resources\xivdb");
 #else
@@ -46,13 +47,12 @@ namespace XIVDBDownloader.ViewModels
 
         public string Messages
         {
-            get => this.messages;
+            get => this.messages.ToString();
             set
             {
-                if (this.SetProperty(ref this.messages, value))
-                {
-                    this.View.MessagesScrollViewer.ScrollToEnd();
-                }
+                this.messages.AppendLine(value);
+                this.View.MessagesScrollViewer.ScrollToEnd();
+                this.RaisePropertyChanged();
             }
         }
 
@@ -60,6 +60,12 @@ namespace XIVDBDownloader.ViewModels
         {
             get => this.saveDirectory;
             set => this.SetProperty(ref this.saveDirectory, value);
+        }
+
+        public void ClearMessages()
+        {
+            this.messages.Clear();
+            this.RaisePropertyChanged(nameof(this.Messages));
         }
 
         #endregion Properties

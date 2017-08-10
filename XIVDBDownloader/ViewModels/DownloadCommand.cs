@@ -48,10 +48,10 @@ namespace XIVDBDownloader.ViewModels
         {
             var action = new Action(() =>
             {
-                this.viewModel.Messages += message + Environment.NewLine;
+                this.viewModel.Messages = message;
             });
 
-            this.viewModel.View.Dispatcher.BeginInvoke(
+            this.viewModel.View.Dispatcher.Invoke(
                 action,
                 DispatcherPriority.Normal,
                 null);
@@ -85,15 +85,20 @@ namespace XIVDBDownloader.ViewModels
             this.AppendLineMessages("Download Action.");
 
             var model = new ActionModel();
+            model.WriteLogLineAction = this.AppendLineMessages;
 
             // XIVDB からActionのリストを取得する
+            this.AppendLineMessages("Download Action list.");
             model.GET(this.viewModel.Language);
 
             // 取得したリストをCSVに保存する
+            this.AppendLineMessages("Save to CSV.");
             model.SaveToCSV(
                 Path.Combine(this.viewModel.SaveDirectory, "Action.csv"));
 
-            this.AppendLineMessages("Save to CSV.");
+            // アイコンを取得する
+            this.AppendLineMessages("Download icons.");
+            model.DownloadIcon(this.viewModel.SaveDirectory);
 
             this.AppendLineMessages("Download Action. Done.");
         }
