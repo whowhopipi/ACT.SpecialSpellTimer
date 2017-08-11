@@ -15,14 +15,12 @@ ACT.SpecialSpellTimer
 ※スペスペの動作には. NET Framework 4.7 以降が必要です。  
 
 2) インストール  
-*resources*  
-*tools*  
-*ACT.SpecialSpellTimer.dll*  
-  
+**resources**  
+**tools**  
+**ACT.SpecialSpellTimer.dll**  
 をACTのインストールディレクトリにコピーします  
-*配置例*
+**配置例**  
 ![deploy_sample](https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/images/deploy.jpg)  
-  
 その後、プラグインとしてACT.SpecialSpellTimer.dllを追加してください  
   
 3) DoTの開始にヒットさせてDoT継続時間を可視化したい  
