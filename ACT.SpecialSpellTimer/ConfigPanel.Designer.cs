@@ -939,7 +939,7 @@
             // 
             this.ExpandSecounds2NumericUpDown.DecimalPlaces = 1;
             this.ExpandSecounds2NumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ExpandSecounds2NumericUpDown.Location = new System.Drawing.Point(425, 286);
+            this.ExpandSecounds2NumericUpDown.Location = new System.Drawing.Point(426, 286);
             this.ExpandSecounds2NumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.ExpandSecounds2NumericUpDown.Maximum = new decimal(new int[] {
             65535,
@@ -1191,7 +1191,7 @@
             // label55
             // 
             this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(513, 288);
+            this.label55.Location = new System.Drawing.Point(513, 289);
             this.label55.Margin = new System.Windows.Forms.Padding(0);
             this.label55.Name = "label55";
             this.label55.Size = new System.Drawing.Size(75, 12);
