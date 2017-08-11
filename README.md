@@ -16,8 +16,10 @@ ACT.SpecialSpellTimer
 
 2) インストール  
 resources  
+tools  
 ACT.SpecialSpellTimer.dll  
 をACTのインストールディレクトリにコピーします  
+![sample](https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/images/deploy.png)  
 その後、プラグインとしてACT.SpecialSpellTimer.dllを追加してください  
   
 3) DoTの開始にヒットさせてDoT継続時間を可視化したい  
