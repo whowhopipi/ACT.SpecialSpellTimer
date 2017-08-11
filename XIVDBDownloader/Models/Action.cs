@@ -219,6 +219,9 @@ namespace XIVDBDownloader.Models
                 return;
             }
 
+            // ファイル名に使えない文字を取得しておく
+            var invalidChars = Path.GetInvalidFileNameChars();
+
             var iconBaseDirectory = Path.Combine(
                 directory,
                 "Action icons");
@@ -263,6 +266,11 @@ namespace XIVDBDownloader.Models
 
                         var fileName =
                             $"{skill.ID.ToString("0000")}_{skill.Name}.png";
+
+                        // ファイル名に使えない文字を除去する
+                        fileName = string.Concat(fileName.Where(c =>
+                            !invalidChars.Contains(c)));
+
                         var file =
                             Path.Combine(dir, fileName);
 
