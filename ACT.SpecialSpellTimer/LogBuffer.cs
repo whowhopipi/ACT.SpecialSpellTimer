@@ -229,12 +229,6 @@ namespace ACT.SpecialSpellTimer
         /// <remarks>FFXIVプラグインが加工した後のログが通知されるイベント</remarks>
         private void OnLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
-#if !DEBUG
-            if (isImport)
-            {
-                return;
-            }
-#endif
             // 18文字以下のログは読み捨てる
             // なぜならば、タイムスタンプ＋ログタイプのみのログだから
             if (logInfo.logLine.Length <= 18)
