@@ -434,6 +434,11 @@ namespace ACT.SpecialSpellTimer
             {
                 var result = value;
 
+                if (double.IsNaN(result))
+                {
+                    result = 0;
+                }
+
                 if (value > 65535)
                 {
                     result = 65535;
