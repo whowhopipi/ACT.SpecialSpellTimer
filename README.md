@@ -17,7 +17,8 @@ ACT.SpecialSpellTimer
 2) インストール  
 **resources**  
 **tools**  
-**ACT.SpecialSpellTimer.dll**    
+**ACT.SpecialSpellTimer.dll**  
+<br />
 をACTのインストールディレクトリにコピーします  
 (配置の例)  
 ![deploy_sample](https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/images/deploy.jpg)  
