@@ -308,6 +308,12 @@ namespace ACT.SpecialSpellTimer
             // FFXIVがいない？
             if (!FFXIV.Instance.IsAvalable)
             {
+                // importログの解析用にログを取り出しておく
+                if (!this.LogBuffer.IsEmpty)
+                {
+                    this.LogBuffer.GetLogLines();
+                }
+
                 Thread.Sleep(TimeSpan.FromSeconds(3));
                 return;
             }
