@@ -249,6 +249,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     {
                         item.Nodes.Add(node);
                         this.SpellTimerTreeView.SelectedNode = node;
+                        this.SpellTimerTreeView.SelectedNode.EnsureVisible();
                         break;
                     }
                 }
@@ -261,8 +262,11 @@ namespace ACT.SpecialSpellTimer.Forms
                         Checked = true
                     };
 
+                    SpellsController.Instance.GetPanelSettings(nr.Panel);
+
                     this.SpellTimerTreeView.Nodes.Add(parentNode);
                     this.SpellTimerTreeView.SelectedNode = node;
+                    this.SpellTimerTreeView.SelectedNode.EnsureVisible();
                 }
 
                 // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
@@ -579,6 +583,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     if (prevNode != null)
                     {
                         this.SpellTimerTreeView.SelectedNode = prevNode;
+                        this.SpellTimerTreeView.SelectedNode.EnsureVisible();
                     }
                 }
                 else
@@ -819,29 +824,15 @@ namespace ACT.SpecialSpellTimer.Forms
             var panelName = e.Node.Text;
             this.DetailPanelGroupBox.Tag = panelName;
 
-            // パネルの位置を取得する
-            double left, top;
-            SpellsController.Instance.GetPanelLocation(
-                panelName,
-                out left,
-                out top);
+            // パネルの設定を取り出す
+            var panelSettings = SpellsController.Instance.GetPanelSettings(
+                panelName);
 
-            this.PanelLeftNumericUpDown.Value = (int)left;
-            this.PanelTopNumericUpDown.Value = (int)top;
-
-            int margin;
-            SpellsController.Instance.GetSpellMargin(
-                panelName,
-                out margin);
-            this.MarginUpDown.Value = margin;
-
-            bool horizontal, fixedPositionSpell;
-            SpellsController.Instance.GetPanelLayout(
-                panelName,
-                out horizontal,
-                out fixedPositionSpell);
-            this.HorizontalLayoutCheckBox.Checked = horizontal;
-            this.FixedPositionSpellCheckBox.Checked = fixedPositionSpell;
+            this.PanelLeftNumericUpDown.Value = (int)panelSettings.Left;
+            this.PanelTopNumericUpDown.Value = (int)panelSettings.Top;
+            this.MarginUpDown.Value = (int)panelSettings.Margin;
+            this.HorizontalLayoutCheckBox.Checked = panelSettings.Horizontal;
+            this.FixedPositionSpellCheckBox.Checked = panelSettings.FixedPositionSpell;
 
             // 更新ボタンの挙動をセットする
             if (this.UpdatePanelButton.Tag == null ||
@@ -849,24 +840,20 @@ namespace ACT.SpecialSpellTimer.Forms
             {
                 this.UpdatePanelButton.Click += new EventHandler((s1, e1) =>
                 {
-                    left = (double)this.PanelLeftNumericUpDown.Value;
-                    top = (double)this.PanelTopNumericUpDown.Value;
-                    margin = (int)this.MarginUpDown.Value;
-                    horizontal = this.HorizontalLayoutCheckBox.Checked;
-                    fixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
+                    var left = (double)this.PanelLeftNumericUpDown.Value;
+                    var top = (double)this.PanelTopNumericUpDown.Value;
+                    var margin = (int)this.MarginUpDown.Value;
+                    var horizontal = this.HorizontalLayoutCheckBox.Checked;
+                    var fixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
 
                     if (this.DetailPanelGroupBox.Tag != null)
                     {
                         var panelNameToUpdate = (string)this.DetailPanelGroupBox.Tag;
-                        SpellsController.Instance.SetPanelLocation(
+                        SpellsController.Instance.SetPanelSettings(
                             panelNameToUpdate,
                             left,
-                            top);
-                        SpellsController.Instance.SetSpellMargin(
-                            panelNameToUpdate,
-                            margin);
-                        SpellsController.Instance.SetPanelLayout(
-                            panelNameToUpdate,
+                            top,
+                            margin,
                             horizontal,
                             fixedPositionSpell);
                     }
@@ -1004,6 +991,7 @@ namespace ACT.SpecialSpellTimer.Forms
                                     if (ds.ID == src.ID)
                                     {
                                         this.SpellTimerTreeView.SelectedNode = node;
+                                        this.SpellTimerTreeView.SelectedNode.EnsureVisible();
                                         break;
                                     }
                                 }

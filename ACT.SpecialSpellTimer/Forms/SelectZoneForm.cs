@@ -64,6 +64,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             try
             {
+                this.ZonesCheckedListBox.Visible = false;
                 this.ZonesCheckedListBox.SuspendLayout();
                 this.ZonesCheckedListBox.Items.Clear();
 
@@ -86,6 +87,7 @@ namespace ACT.SpecialSpellTimer.Forms
             finally
             {
                 this.ZonesCheckedListBox.ResumeLayout();
+                this.ZonesCheckedListBox.Visible = true;
             }
         }
 
