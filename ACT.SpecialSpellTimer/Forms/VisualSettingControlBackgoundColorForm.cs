@@ -21,6 +21,14 @@
                 this.OpacityNumericUpDown.Value = this.Alpha;
                 this.OpacityNumericUpDown.Focus();
             };
+
+            this.Shown += (s, e) =>
+            {
+                if (this.Owner != null)
+                {
+                    this.Font = this.Owner.Font;
+                }
+            };
         }
 
         public int Alpha { get; set; }

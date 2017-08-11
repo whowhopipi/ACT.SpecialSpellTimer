@@ -40,7 +40,7 @@
             // 
             this.TojiruButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.TojiruButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.TojiruButton.Location = new System.Drawing.Point(137, 66);
+            this.TojiruButton.Location = new System.Drawing.Point(137, 85);
             this.TojiruButton.Name = "TojiruButton";
             this.TojiruButton.Size = new System.Drawing.Size(75, 23);
             this.TojiruButton.TabIndex = 2;
@@ -51,7 +51,7 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(56, 66);
+            this.OKButton.Location = new System.Drawing.Point(56, 85);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 1;
@@ -94,7 +94,7 @@
             // 
             // AlphaRateLabel
             // 
-            this.AlphaRateLabel.Location = new System.Drawing.Point(13, 36);
+            this.AlphaRateLabel.Location = new System.Drawing.Point(13, 46);
             this.AlphaRateLabel.Name = "AlphaRateLabel";
             this.AlphaRateLabel.Size = new System.Drawing.Size(43, 24);
             this.AlphaRateLabel.TabIndex = 4;
@@ -107,7 +107,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.TojiruButton;
-            this.ClientSize = new System.Drawing.Size(224, 101);
+            this.ClientSize = new System.Drawing.Size(224, 120);
             this.Controls.Add(this.AlphaRateLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.OpacityNumericUpDown);

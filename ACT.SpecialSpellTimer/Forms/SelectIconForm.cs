@@ -29,6 +29,14 @@ namespace ACT.SpecialSpellTimer.Forms
                 this.SelectedIconRelativePath = string.Empty;
                 this.DialogResult = DialogResult.OK;
             };
+
+            this.Shown += (s, e) =>
+            {
+                if (this.Owner != null)
+                {
+                    this.Font = this.Owner.Font;
+                }
+            };
         }
 
         public SpellTimer ParrentSpell { get; set; }

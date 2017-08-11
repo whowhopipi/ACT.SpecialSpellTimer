@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -186,6 +187,30 @@
             helper.Owner = windowsControl.Handle;
         }
 
+        public FontDialogResult ShowDialog(
+            FontInfo fontInfo,
+            System.Windows.Forms.Control owner = null)
+        {
+            var result = new FontDialogResult()
+            {
+                FontInfo = fontInfo
+            };
+
+            this.FontInfo = fontInfo;
+            this.SetOwner(owner);
+            result.Result = this.ShowDialog() ?? false;
+            result.FontInfo = this.FontInfo;
+
+            return result;
+        }
+
+        public Task<FontDialogResult> ShowDialogAsync(
+            FontInfo fontInfo,
+            System.Windows.Forms.Control owner = null)
+        {
+            return Task.Run(() => this.ShowDialog(fontInfo, owner));
+        }
+
         private void CancelBUtton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
@@ -257,6 +282,12 @@
             }
 
             this.FontStyleListBox.SelectedItem = this.fontInfo.Typeface;
+        }
+
+        public class FontDialogResult
+        {
+            public FontInfo FontInfo { get; set; }
+            public bool Result { get; set; }
         }
     }
 

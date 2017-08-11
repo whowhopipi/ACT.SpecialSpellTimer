@@ -364,15 +364,15 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.RefreshSampleImage();
 
-            this.ChangeFontItem.Click += async (s1, e1) =>
+            this.ChangeFontItem.Click += (s1, e1) =>
             {
-                var f = new FontDialogWindow();
-                f.SetOwner(this.ParentForm);
+                var result = new FontDialogWindow().ShowDialog(
+                    this.GetFontInfo(),
+                    this.ParentForm);
 
-                f.FontInfo = this.GetFontInfo();
-                if (await Task.Run(() => f.ShowDialog().Value))
+                if (result.Result)
                 {
-                    this.SetFontInfo(f.FontInfo);
+                    this.SetFontInfo(result.FontInfo);
                     this.RefreshSampleImage();
                 }
             };
