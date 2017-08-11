@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ACT.SpecialSpellTimer.Image;
+using ACT.SpecialSpellTimer.Models;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -36,10 +37,12 @@ namespace ACT.SpecialSpellTimer
         }
 
         public string SelectedIconRelativePath { get; set; }
+        public SpellTimer ParrentSpell { get; set; }
 
         public static Task<IconDialogResult> ShowDialogAsync(
             string iconRelativePath,
-            IWin32Window owner = null)
+            IWin32Window owner = null,
+            SpellTimer spell = null)
         {
             return Task.Run(() =>
             {
@@ -61,6 +64,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 instance.SelectedIconRelativePath = iconRelativePath;
+                instance.ParrentSpell = spell;
 
                 if (instance.ShowDialog(owner) == 
                     DialogResult.OK)
@@ -103,10 +107,36 @@ namespace ACT.SpecialSpellTimer
 
                     if (selectedNode == null)
                     {
-                        if (dir.AsParallel().Any(x =>
-                            x.RelativePath == this.SelectedIconRelativePath))
+                        if (string.IsNullOrEmpty(
+                            this.SelectedIconRelativePath))
                         {
-                            selectedNode = node;
+                            if (this.ParrentSpell != null)
+                            {
+                                var q =
+                                    from x in dir
+                                    where
+                                    !string.IsNullOrEmpty(x.SkillName) &&
+                                    (
+                                        this.ParrentSpell.Keyword.Contains(x.SkillName) ||
+                                        this.ParrentSpell.SpellTitle.Contains(x.SkillName)
+                                    )
+                                    select
+                                    x;
+
+                                if (q.Any())
+                                {
+                                    selectedNode = node;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (dir.AsParallel().Any(x =>
+                                x.RelativePath.ToLower() == 
+                                this.SelectedIconRelativePath.ToLower()))
+                            {
+                                selectedNode = node;
+                            }
                         }
                     }
 
@@ -121,9 +151,17 @@ namespace ACT.SpecialSpellTimer
             if (selectedNode != null)
             {
                 tree.SelectedNode = selectedNode;
-                tree.Focus();
-                Application.DoEvents();
             }
+            else
+            {
+                if (tree.Nodes.Count > 0)
+                {
+                    tree.SelectedNode = tree.Nodes[0];
+                }
+            }
+
+            Application.DoEvents();
+            tree.Focus();
         }
 
         private void ShowIcons(
@@ -160,10 +198,31 @@ namespace ACT.SpecialSpellTimer
 
                     panel.Controls.Add(ctrl);
 
-                    if (icon.RelativePath ==
-                        this.SelectedIconRelativePath)
+                    if (selectedCtrl == null)
                     {
-                        selectedCtrl = ctrl;
+                        if (string.IsNullOrEmpty(
+                            this.SelectedIconRelativePath))
+                        {
+                            if (this.ParrentSpell != null)
+                            {
+                                if (!string.IsNullOrEmpty(icon.SkillName))
+                                {
+                                    if (this.ParrentSpell.Keyword.Contains(icon.SkillName) ||
+                                        this.ParrentSpell.SpellTitle.Contains(icon.SkillName))
+                                    {
+                                        selectedCtrl = ctrl;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (icon.RelativePath.ToLower() ==
+                                this.SelectedIconRelativePath.ToLower())
+                            {
+                                selectedCtrl = ctrl;
+                            }
+                        }
                     }
                 }
             }

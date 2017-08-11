@@ -34,9 +34,9 @@
             // 
             // IconLabel
             // 
-            this.IconLabel.Location = new System.Drawing.Point(3, 76);
+            this.IconLabel.Location = new System.Drawing.Point(4, 74);
             this.IconLabel.Name = "IconLabel";
-            this.IconLabel.Size = new System.Drawing.Size(108, 27);
+            this.IconLabel.Size = new System.Drawing.Size(107, 27);
             this.IconLabel.TabIndex = 4;
             this.IconLabel.Text = "サンプルテキスト";
             this.IconLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -44,12 +44,16 @@
             // IconButton
             // 
             this.IconButton.BackColor = System.Drawing.Color.Transparent;
+            this.IconButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IconButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.IconButton.FlatAppearance.BorderSize = 0;
             this.IconButton.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.Highlight;
+            this.IconButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.MistyRose;
             this.IconButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.IconButton.Location = new System.Drawing.Point(25, 7);
+            this.IconButton.Location = new System.Drawing.Point(4, 4);
             this.IconButton.Name = "IconButton";
-            this.IconButton.Size = new System.Drawing.Size(64, 64);
+            this.IconButton.Padding = new System.Windows.Forms.Padding(3);
+            this.IconButton.Size = new System.Drawing.Size(110, 64);
             this.IconButton.TabIndex = 3;
             this.IconButton.UseVisualStyleBackColor = false;
             // 
@@ -62,7 +66,8 @@
             this.Controls.Add(this.IconLabel);
             this.Controls.Add(this.IconButton);
             this.Name = "SelectIconUserControl";
-            this.Size = new System.Drawing.Size(114, 103);
+            this.Padding = new System.Windows.Forms.Padding(4);
+            this.Size = new System.Drawing.Size(118, 105);
             this.ResumeLayout(false);
 
         }

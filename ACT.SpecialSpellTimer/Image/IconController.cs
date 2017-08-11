@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ACT.SpecialSpellTimer.Image
 {
@@ -140,6 +141,10 @@ namespace ACT.SpecialSpellTimer.Image
         /// </summary>
         public class IconFile
         {
+            private static readonly Regex SkillNameRegex = new Regex(
+                @"\d\d\d\d_(?<skillName>.+?)\.png",
+                RegexOptions.Compiled);
+
             public string Directory => 
                 !string.IsNullOrEmpty(this.FullPath) ? 
                 Path.GetDirectoryName(this.FullPath) :
@@ -160,6 +165,25 @@ namespace ACT.SpecialSpellTimer.Image
                     return !string.IsNullOrWhiteSpace(this.FullPath) ?
                         Path.GetFileName(this.FullPath) :
                         string.Empty;
+                }
+            }
+
+            public string SkillName
+            {
+                get
+                {
+                    if (string.IsNullOrEmpty(this.Name))
+                    {
+                        return this.Name;
+                    }
+
+                    var match = SkillNameRegex.Match(this.Name);
+                    if (match.Success)
+                    {
+                        return match.Groups["skillName"].Value;
+                    }
+
+                    return this.Name;
                 }
             }
 

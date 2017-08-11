@@ -483,11 +483,13 @@ namespace ACT.SpecialSpellTimer
             // アイコン選択ボタンの挙動を設定する
             this.SelectIconButton.Click += async (s1, e1) =>
             {
-                var selectedIcon = (string)this.SelectIconButton.Tag; 
+                var selectedIcon = (string)this.SelectIconButton.Tag;
+                var spell = this.DetailGroupBox.Tag as SpellTimer;
 
                 var result = await SelectIconForm.ShowDialogAsync(
                     selectedIcon,
-                    this);
+                    this,
+                    spell);
 
                 if (result.Result)
                 {
