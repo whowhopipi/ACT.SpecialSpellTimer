@@ -20,7 +20,7 @@
 
         public OnePointTelop()
         {
-            this.guid = Guid.Empty;
+            this.Guid = Guid.Empty;
             this.Title = string.Empty;
             this.Keyword = string.Empty;
             this.KeywordToHide = string.Empty;
@@ -87,7 +87,7 @@
         [XmlIgnore]
         public bool ForceHide { get; set; }
 
-        public Guid guid { get; set; }
+        public Guid Guid { get; set; }
 
         public long ID { get; set; }
 

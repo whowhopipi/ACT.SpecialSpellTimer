@@ -59,16 +59,24 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         /// </summary>
         private volatile dynamic pluginScancombat;
 
+        /// <summary>
+        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
+        /// </summary>
+        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
+
         public bool IsAvalable
         {
             get
             {
                 if (ActGlobals.oFormActMain == null ||
+                    ActGlobals.oFormActMain.IsDisposed ||
+                    !ActGlobals.oFormActMain.IsHandleCreated ||
                     !ActGlobals.oFormActMain.Visible ||
                     this.plugin == null ||
-                    this.Process == null ||
+                    this.pluginConfig == null ||
                     this.pluginScancombat == null ||
-                    this.pluginCombatantHistory == null)
+                    this.pluginCombatantHistory == null ||
+                    this.Process == null)
                 {
                     return false;
                 }
@@ -80,11 +88,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public Process Process => (Process)this.pluginConfig?.Process;
 
         public IReadOnlyList<Zone> ZoneList => this.zoneList;
-
-        /// <summary>
-        /// ACTプラグイン型のプラグインオブジェクトのインスタンス
-        /// </summary>
-        private IActPluginV1 ActPlugin => (IActPluginV1)this.plugin;
 
         /// <summary>
         /// ACTプラグインアセンブリ
@@ -140,6 +143,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.attachFFXIVPluginWorker.WorkerSupportsCancellation = true;
             this.attachFFXIVPluginWorker.DoWork += (s, e) =>
             {
+                Thread.Sleep(5000);
+
                 while (true)
                 {
                     try
@@ -174,6 +179,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.scanFFXIVWorker.WorkerSupportsCancellation = true;
             this.scanFFXIVWorker.DoWork += (s, e) =>
             {
+                Thread.Sleep(6000);
+
                 while (true)
                 {
                     var interval = (int)Settings.Default.LogPollSleepInterval;
@@ -512,31 +519,33 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         private void Attach()
         {
-            if (!ActGlobals.oFormActMain.Visible)
-            {
-                return;
-            }
-
             this.AttachPlugin();
             this.AttachScanMemory();
         }
 
         private void AttachPlugin()
         {
-            if (this.plugin != null)
+            if (this.plugin != null ||
+                ActGlobals.oFormActMain == null ||
+                ActGlobals.oFormActMain.IsDisposed ||
+                !ActGlobals.oFormActMain.IsHandleCreated ||
+                !ActGlobals.oFormActMain.Visible)
             {
                 return;
             }
 
-            foreach (var item in ActGlobals.oFormActMain.ActPlugins)
+            var ffxivPlugin = (
+                from x in ActGlobals.oFormActMain.ActPlugins
+                where
+                x.pluginFile.Name.ToUpper().Contains("FFXIV_ACT_Plugin".ToUpper()) &&
+                x.lblPluginStatus.Text.ToUpper().Contains("FFXIV Plugin Started.".ToUpper())
+                select
+                x).FirstOrDefault();
+
+            if (ffxivPlugin != null)
             {
-                if (item.pluginFile.Name.ToUpper().Contains("FFXIV_ACT_Plugin".ToUpper()) &&
-                    item.lblPluginStatus.Text.ToUpper() == "FFXIV Plugin Started.".ToUpper())
-                {
-                    this.plugin = item.pluginObj;
-                    Logger.Write("attached ffxiv plugin.");
-                    break;
-                }
+                this.plugin = ffxivPlugin;
+                Logger.Write("attached ffxiv plugin.");
             }
         }
 
@@ -551,10 +560,10 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (this.pluginLogParse == null)
             {
-                fi = this.plugin.GetType().GetField(
+                fi = this.plugin?.GetType().GetField(
                     "_LogParse",
                     BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                this.pluginLogParse = fi.GetValue(this.plugin);
+                this.pluginLogParse = fi?.GetValue(this.plugin);
             }
 
             if (this.pluginCombatantHistory == null)
@@ -562,23 +571,19 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 var settings = this.pluginLogParse.Settings;
                 if (settings != null)
                 {
-                    fi = settings.GetType().GetField(
+                    fi = settings?.GetType().GetField(
                         "CombatantHistory",
                     BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-
-                    if (fi != null)
-                    {
-                        this.pluginCombatantHistory = fi.GetValue(settings);
-                    }
+                    this.pluginCombatantHistory = fi?.GetValue(settings);
                 }
             }
 
             if (this.pluginMemory == null)
             {
-                fi = this.plugin.GetType().GetField(
+                fi = this.plugin?.GetType().GetField(
                     "_Memory",
                     BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                this.pluginMemory = fi.GetValue(this.plugin);
+                this.pluginMemory = fi?.GetValue(this.plugin);
             }
 
             if (this.pluginMemory == null)
@@ -588,10 +593,10 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (this.pluginConfig == null)
             {
-                fi = this.pluginMemory.GetType().GetField(
+                fi = this?.pluginMemory.GetType().GetField(
                     "_config",
                     BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                this.pluginConfig = fi.GetValue(this.pluginMemory);
+                this.pluginConfig = fi?.GetValue(this.pluginMemory);
             }
 
             if (this.pluginConfig == null)
@@ -601,10 +606,10 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (this.pluginScancombat == null)
             {
-                fi = this.pluginConfig.GetType().GetField(
+                fi = this.pluginConfig?.GetType().GetField(
                     "ScanCombatants",
                     BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
-                this.pluginScancombat = fi.GetValue(this.pluginConfig);
+                this.pluginScancombat = fi?.GetValue(this.pluginConfig);
 
                 Logger.Write("attached ffxiv plugin ScanCombatants.");
             }

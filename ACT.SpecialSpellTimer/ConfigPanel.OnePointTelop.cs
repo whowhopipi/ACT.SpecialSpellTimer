@@ -293,7 +293,7 @@
                 nr.ID = OnePointTelopTable.Instance.Table.Any() ?
                     OnePointTelopTable.Instance.Table.Max(x => x.ID) + 1 :
                     1;
-                nr.guid = Guid.NewGuid();
+                nr.Guid = Guid.NewGuid();
                 nr.Title = Translate.Get("NewTelop");
                 nr.DisplayTime = 3;
                 nr.FontColor = Settings.Default.FontColor.ToHTML();

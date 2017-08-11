@@ -90,7 +90,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             return table
                 .AsParallel()
-                .Where(x => x.guid == guid)
+                .Where(x => x.Guid == guid)
                 .FirstOrDefault();
         }
 
@@ -157,9 +157,9 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 id++;
                 row.ID = id;
-                if (row.guid == Guid.Empty)
+                if (row.Guid == Guid.Empty)
                 {
-                    row.guid = Guid.NewGuid();
+                    row.Guid = Guid.NewGuid();
                 }
 
                 row.MatchDateTime = DateTime.MinValue;

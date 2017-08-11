@@ -32,7 +32,7 @@
 
         public SpellTimer()
         {
-            this.guid = Guid.Empty;
+            this.Guid = Guid.Empty;
             this.Panel = string.Empty;
             this.SpellTitle = string.Empty;
             this.SpellIcon = string.Empty;
@@ -147,7 +147,7 @@
 
         public float FontSize { get; set; }
         public int FontStyle { get; set; }
-        public Guid guid { get; set; }
+        public Guid Guid { get; set; }
         public bool HideSpellName { get; set; }
         public long ID { get; set; }
 
@@ -402,32 +402,6 @@
         }
 
         /// <summary>
-        /// インスタンススペルのガーベージタイマを開始する
-        /// </summary>
-        public void StartGarbageInstanceTimer()
-        {
-            var timer = this.garbageInstanceTimer;
-
-            if (timer == null)
-            {
-                return;
-            }
-
-            if (timer.Enabled)
-            {
-                timer.Stop();
-            }
-
-            if (!this.IsInstance)
-            {
-                return;
-            }
-
-            timer.AutoReset = true;
-            timer.Start();
-        }
-
-        /// <summary>
         /// マッチ後ｎ秒後のサウンドタイマを開始する
         /// </summary>
         public void StartOverSoundTimer()
@@ -520,17 +494,6 @@
             }
         }
 
-        /// <summary>
-        /// インスタンススペルのガーベージタイマを開始する
-        /// </summary>
-        public void StopGarbageInstanceTimer()
-        {
-            var timer = this.garbageInstanceTimer;
-
-            timer.AutoReset = false;
-            timer.Stop();
-        }
-
         private void BeforeSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             this.BeforeDone = true;
@@ -555,11 +518,6 @@
 
                 SoundController.Instance.Play(speak);
             }
-        }
-
-        private void GarbageInstanceTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            SpellTimerTable.Instance.TryRemoveInstance(this);
         }
 
         private void OverSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -613,5 +571,57 @@
                 SoundController.Instance.Play(speak);
             }
         }
+
+        #region To Instance Spells
+
+        /// <summary>
+        /// インスタンススペルのガーベージタイマを開始する
+        /// </summary>
+        public void StartGarbageInstanceTimer()
+        {
+            lock (this)
+            {
+                var timer = this.garbageInstanceTimer;
+
+                if (timer == null)
+                {
+                    return;
+                }
+
+                if (timer.Enabled)
+                {
+                    timer.Stop();
+                }
+
+                if (!this.IsInstance)
+                {
+                    return;
+                }
+
+                timer.AutoReset = true;
+                timer.Start();
+            }
+        }
+
+        /// <summary>
+        /// インスタンススペルのガーベージタイマを開始する
+        /// </summary>
+        public void StopGarbageInstanceTimer()
+        {
+            var timer = this.garbageInstanceTimer;
+
+            if (timer != null)
+            {
+                timer.AutoReset = false;
+                timer.Stop();
+            }
+        }
+
+        private void GarbageInstanceTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            SpellTimerTable.Instance.TryRemoveInstance(this);
+        }
+
+        #endregion To Instance Spells
     }
 }

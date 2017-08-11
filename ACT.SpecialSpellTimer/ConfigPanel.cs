@@ -145,7 +145,7 @@ namespace ACT.SpecialSpellTimer
                     nr.ID = SpellTimerTable.Instance.Table.Any() ?
                         SpellTimerTable.Instance.Table.Max(x => x.ID) + 1 :
                         1;
-                    nr.guid = Guid.NewGuid();
+                    nr.Guid = Guid.NewGuid();
                     nr.Panel = "General";
                     nr.SpellTitle = "New Spell";
                     nr.SpellIcon = string.Empty;

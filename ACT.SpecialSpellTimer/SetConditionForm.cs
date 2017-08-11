@@ -65,7 +65,7 @@
                     if (node.Checked)
                     {
                         var spell = (SpellTimer)node.Tag;
-                        spells.Add(spell.guid);
+                        spells.Add(spell.Guid);
                     }
                 }
             }
@@ -86,7 +86,7 @@
                 if (node.Checked)
                 {
                     var telop = (OnePointTelop)node.Tag;
-                    telops.Add(telop.guid);
+                    telops.Add(telop.Guid);
                 }
             }
 
@@ -119,7 +119,7 @@
                     {
                         Text = spell.SpellTitle,
                         ToolTipText = spell.Keyword,
-                        Checked = Array.IndexOf(checks, spell.guid) != -1,
+                        Checked = Array.IndexOf(checks, spell.Guid) != -1,
                         Tag = spell,
                     };
 
@@ -156,7 +156,7 @@
                 n.Tag = telop;
                 n.Text = telop.Title;
                 n.ToolTipText = telop.Message;
-                n.Checked = Array.IndexOf(checks, telop.guid) != -1;
+                n.Checked = Array.IndexOf(checks, telop.Guid) != -1;
 
                 treeView.Nodes.Add(n);
             }
