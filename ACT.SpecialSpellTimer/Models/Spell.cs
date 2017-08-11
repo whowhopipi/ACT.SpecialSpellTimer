@@ -187,8 +187,8 @@
         public bool ProgressBarVisible { get; set; }
         public double RecastTime { get; set; } = 0;
         public double RecastTimeExtending1 { get; set; } = 0;
-        public double RecastTimeExtending2 { get; set; }
-        public bool ReduceIconBrightness { get; set; } = 0;
+        public double RecastTimeExtending2 { get; set; } = 0;
+        public bool ReduceIconBrightness { get; set; }
 
         [XmlIgnore]
         public Regex Regex { get; set; }
