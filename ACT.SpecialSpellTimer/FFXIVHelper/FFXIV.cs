@@ -593,7 +593,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (this.pluginConfig == null)
             {
-                fi = this?.pluginMemory.GetType().GetField(
+                fi = this?.pluginMemory?.GetType().GetField(
                     "_config",
                     BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance);
                 this.pluginConfig = fi?.GetValue(this.pluginMemory);
