@@ -50,7 +50,7 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 var backupFile = Path.Combine(
                     Path.Combine(Path.GetDirectoryName(file), "backup"),
-                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".bak");
+                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyy-MM-dd") + ".bak");
 
                 if (!Directory.Exists(Path.GetDirectoryName(backupFile)))
                 {
