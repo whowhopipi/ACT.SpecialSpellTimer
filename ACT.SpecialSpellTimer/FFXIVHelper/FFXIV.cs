@@ -540,7 +540,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 x.pluginFile.Name.ToUpper().Contains("FFXIV_ACT_Plugin".ToUpper()) &&
                 x.lblPluginStatus.Text.ToUpper().Contains("FFXIV Plugin Started.".ToUpper())
                 select
-                x).FirstOrDefault();
+                x.pluginObj).FirstOrDefault();
 
             if (ffxivPlugin != null)
             {
