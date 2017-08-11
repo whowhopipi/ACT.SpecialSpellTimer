@@ -568,7 +568,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             if (this.pluginCombatantHistory == null)
             {
-                var settings = this.pluginLogParse.Settings;
+                var settings = this.pluginLogParse?.Settings;
                 if (settings != null)
                 {
                     fi = settings?.GetType().GetField(
