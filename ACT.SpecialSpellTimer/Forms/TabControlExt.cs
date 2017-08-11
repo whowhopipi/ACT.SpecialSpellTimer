@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Drawing;

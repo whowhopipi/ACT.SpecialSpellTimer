@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Forms
 {
     partial class ConfigPanel
     {
@@ -41,7 +41,7 @@
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
-            this.TabControl = new ACT.SpecialSpellTimer.TabControlExt();
+            this.TabControl = new ACT.SpecialSpellTimer.Forms.TabControlExt();
             this.SpecialSpellTabPage = new System.Windows.Forms.TabPage();
             this.panel5 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -63,7 +63,7 @@
             this.ClearAllButton = new System.Windows.Forms.ToolStripMenuItem();
             this.AddButton = new System.Windows.Forms.ToolStripMenuItem();
             this.DetailGroupBox = new System.Windows.Forms.Panel();
-            this.tabControlExtHoriz2 = new ACT.SpecialSpellTimer.TabControlExtHoriz();
+            this.tabControlExtHoriz2 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.GeneralTab = new System.Windows.Forms.TabPage();
             this.SpellDetailPanel = new System.Windows.Forms.Panel();
             this.SelectIconButton = new System.Windows.Forms.Button();
@@ -85,7 +85,7 @@
             this.RecastTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.UpperLimitOfExtensionNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.RepeatCheckBox = new System.Windows.Forms.CheckBox();
-            this.SpellVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
+            this.SpellVisualSetting = new ACT.SpecialSpellTimer.Forms.VisualSettingControl();
             this.SetConditionButton = new System.Windows.Forms.Button();
             this.ToInstanceCheckBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -156,7 +156,7 @@
             this.panel9 = new System.Windows.Forms.Panel();
             this.TelopUpdateButton = new System.Windows.Forms.Button();
             this.TelopDeleteButton = new System.Windows.Forms.Button();
-            this.tabControlExtHoriz3 = new ACT.SpecialSpellTimer.TabControlExtHoriz();
+            this.tabControlExtHoriz3 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.panel6 = new System.Windows.Forms.Panel();
             this.TelopTitleTextBox = new System.Windows.Forms.TextBox();
@@ -168,7 +168,7 @@
             this.TelopSetConditionButton = new System.Windows.Forms.Button();
             this.label47 = new System.Windows.Forms.Label();
             this.TelopSelectZoneButton = new System.Windows.Forms.Button();
-            this.TelopVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
+            this.TelopVisualSetting = new ACT.SpecialSpellTimer.Forms.VisualSettingControl();
             this.TelopSelectJobButton = new System.Windows.Forms.Button();
             this.label46 = new System.Windows.Forms.Label();
             this.TelopProgressBarEnabledCheckBox = new System.Windows.Forms.CheckBox();
@@ -224,7 +224,7 @@
             this.lblCombatAnalyzer = new System.Windows.Forms.Label();
             this.NameStyleTabPage = new System.Windows.Forms.TabPage();
             this.OptionTabPage = new System.Windows.Forms.TabPage();
-            this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.TabControlExtHoriz();
+            this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabOverlayOptions = new System.Windows.Forms.TabPage();
             this.RenderWithCPUOnlyCheckBox = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -232,7 +232,7 @@
             this.label106 = new System.Windows.Forms.Label();
             this.TextBlurRateNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.TextOutlineThicknessRateNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.DefaultVisualSetting = new ACT.SpecialSpellTimer.VisualSettingControl();
+            this.DefaultVisualSetting = new ACT.SpecialSpellTimer.Forms.VisualSettingControl();
             this.label18 = new System.Windows.Forms.Label();
             this.OpacityNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.label20 = new System.Windows.Forms.Label();

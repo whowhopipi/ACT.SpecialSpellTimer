@@ -63,31 +63,31 @@
     <Compile Include="ChatLogWorker.cs" />
     <Compile Include="CombatAnalyzer.cs" />
     <Compile Include="CombatLog.cs" />
-    <Compile Include="ConfigPanel.CombatAnalyzer.cs">
+    <Compile Include="Forms\ConfigPanel.CombatAnalyzer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfigPanel.cs">
+    <Compile Include="Forms\ConfigPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfigPanel.Designer.cs">
+    <Compile Include="Forms\ConfigPanel.Designer.cs">
       <DependentUpon>ConfigPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConfigPanel.Log.cs">
+    <Compile Include="Forms\ConfigPanel.Log.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfigPanel.Log.Designer.cs">
+    <Compile Include="Forms\ConfigPanel.Log.Designer.cs">
       <DependentUpon>ConfigPanel.Log.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConfigPanel.NameStyle.cs">
+    <Compile Include="Forms\ConfigPanel.NameStyle.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfigPanel.NameStyle.Designer.cs">
+    <Compile Include="Forms\ConfigPanel.NameStyle.Designer.cs">
       <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
     </Compile>
-    <Compile Include="ConfigPanel.OnePointTelop.cs">
+    <Compile Include="Forms\ConfigPanel.OnePointTelop.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ConfigPanel.Option.cs">
+    <Compile Include="Forms\ConfigPanel.Option.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Config\FontSerializationHelper.cs" />
@@ -109,20 +109,21 @@
     <Compile Include="Models\Spell.cs" />
     <Compile Include="Models\TableCompiler.cs" />
     <Compile Include="Models\Ticker.cs" />
-    <Compile Include="OnePointTelopController.cs" />
+    <Compile Include="SpellsController.cs" />
+    <Compile Include="TickersController.cs" />
     <Compile Include="Models\OnePointTelopTable.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="PluginCore.cs" />
-    <Compile Include="SelectIconForm.cs">
+    <Compile Include="Forms\SelectIconForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SelectIconForm.Designer.cs">
+    <Compile Include="Forms\SelectIconForm.Designer.cs">
       <DependentUpon>SelectIconForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SelectIconUserControl.cs">
+    <Compile Include="Forms\SelectIconUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SelectIconUserControl.Designer.cs">
+    <Compile Include="Forms\SelectIconUserControl.Designer.cs">
       <DependentUpon>SelectIconUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\BackgroundWorkerExntensions.cs" />
@@ -151,22 +152,22 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings-KR.resx</DependentUpon>
     </Compile>
-    <Compile Include="SetConditionForm.cs">
+    <Compile Include="Forms\SetConditionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SetConditionForm.Designer.cs">
+    <Compile Include="Forms\SetConditionForm.Designer.cs">
       <DependentUpon>SetConditionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SelectZoneForm.cs">
+    <Compile Include="Forms\SelectZoneForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SelectZoneForm.Designer.cs">
+    <Compile Include="Forms\SelectZoneForm.Designer.cs">
       <DependentUpon>SelectZoneForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SelectJobForm.cs">
+    <Compile Include="Forms\SelectJobForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SelectJobForm.Designer.cs">
+    <Compile Include="Forms\SelectJobForm.Designer.cs">
       <DependentUpon>SelectJobForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Sound\SoundController.cs" />
@@ -175,11 +176,11 @@
     <Compile Include="Views\SpellTimerControl.xaml.cs">
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SpellTimerCore.cs" />
-    <Compile Include="TabControlExtHoriz.cs">
+    <Compile Include="PluginMainWorker.cs" />
+    <Compile Include="Forms\TabControlExtHoriz.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TabControlExt.cs">
+    <Compile Include="Forms\TabControlExt.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TextCommandController.cs" />
@@ -199,18 +200,18 @@
     <Compile Include="Views\OutlineTextBlock.cs" />
     <Compile Include="Views\StrokeThicknessToBlurRadiusConverter.cs" />
     <Compile Include="Views\WPFHelper.cs" />
-    <Compile Include="VisualSettingControl.cs" />
-    <Compile Include="VisualSettingControl.Designer.cs">
+    <Compile Include="Forms\VisualSettingControl.cs" />
+    <Compile Include="Forms\VisualSettingControl.Designer.cs">
       <DependentUpon>VisualSettingControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="VisualSettingControlBackgoundColorForm.cs">
+    <Compile Include="Forms\VisualSettingControlBackgoundColorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="VisualSettingControlBackgoundColorForm.Designer.cs">
+    <Compile Include="Forms\VisualSettingControlBackgoundColorForm.Designer.cs">
       <DependentUpon>VisualSettingControlBackgoundColorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="WindowExtension.Visibility.cs" />
-    <Compile Include="WindowExtension.Transparent.cs" />
+    <Compile Include="Views\WindowExtension.Visibility.cs" />
+    <Compile Include="Views\WindowExtension.Transparent.cs" />
     <Compile Include="Views\SpellTimerListWindow.xaml.cs">
       <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
     </Compile>
@@ -306,7 +307,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigPanel.DQXOption.cs">
+    <Compile Include="Forms\ConfigPanel.DQXOption.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Content Include="resources\xivdb\Instance.csv">
@@ -323,13 +324,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConfigPanel.Log.resx">
+    <EmbeddedResource Include="Forms\ConfigPanel.Log.resx">
       <DependentUpon>ConfigPanel.Log.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConfigPanel.NameStyle.resx">
+    <EmbeddedResource Include="Forms\ConfigPanel.NameStyle.resx">
       <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ConfigPanel.resx">
+    <EmbeddedResource Include="Forms\ConfigPanel.resx">
       <DependentUpon>ConfigPanel.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -350,25 +351,25 @@
     <EmbeddedResource Include="resources\strings\Strings-KR.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SelectIconForm.resx">
+    <EmbeddedResource Include="Forms\SelectIconForm.resx">
       <DependentUpon>SelectIconForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SelectIconUserControl.resx">
+    <EmbeddedResource Include="Forms\SelectIconUserControl.resx">
       <DependentUpon>SelectIconUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SetConditionForm.resx">
+    <EmbeddedResource Include="Forms\SetConditionForm.resx">
       <DependentUpon>SetConditionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SelectZoneForm.resx">
+    <EmbeddedResource Include="Forms\SelectZoneForm.resx">
       <DependentUpon>SelectZoneForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SelectJobForm.resx">
+    <EmbeddedResource Include="Forms\SelectJobForm.resx">
       <DependentUpon>SelectJobForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VisualSettingControl.resx">
+    <EmbeddedResource Include="Forms\VisualSettingControl.resx">
       <DependentUpon>VisualSettingControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VisualSettingControlBackgoundColorForm.resx">
+    <EmbeddedResource Include="Forms\VisualSettingControlBackgoundColorForm.resx">
       <DependentUpon>VisualSettingControlBackgoundColorForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

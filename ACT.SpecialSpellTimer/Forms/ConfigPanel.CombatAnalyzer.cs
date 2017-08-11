@@ -1,8 +1,9 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Threading;
@@ -183,6 +184,41 @@
             }
 
             Clipboard.SetText(sb.ToString());
+        }
+
+        /// <summary>
+        /// ExportCSVButton Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private async void ExportCSVButton_Click(object sender, EventArgs e)
+        {
+            var dialog = this.combatAnalysisCSVExportSaveFileDialog;
+
+            var result = await Task.Run(() =>
+            {
+                dialog.RestoreDirectory = true;
+                dialog.DefaultExt = "csv";
+                dialog.Filter = "CSV File (*.csv) | *.csv";
+                dialog.OverwritePrompt = true;
+                dialog.CreatePrompt = false;
+                dialog.Title = "Export to CSV file";
+
+                return dialog.ShowDialog();
+            });
+
+            if (result == DialogResult.OK)
+            {
+                string filename = dialog.FileName;
+                using (var sw = new StreamWriter(filename))
+                {
+                    foreach (ListViewItem item in this.CombatLogListView.Items)
+                    {
+                        var row = item.SubItems.OfType<ListViewItem.ListViewSubItem>().Skip(1).Select(s => s.Text).ToArray();
+                        sw.WriteLine(string.Join(",", row));
+                    }
+                }
+            }
         }
 
         /// <summary>

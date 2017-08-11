@@ -5,6 +5,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
@@ -13,7 +14,7 @@ using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Forms
 {
     [Serializable]
     public class ColorSet
@@ -363,83 +364,90 @@ namespace ACT.SpecialSpellTimer
 
             this.RefreshSampleImage();
 
-            this.ChangeFontItem.Click += (s1, e1) =>
+            this.ChangeFontItem.Click += async (s1, e1) =>
             {
                 var f = new FontDialogWindow();
                 f.SetOwner(this.ParentForm);
 
                 f.FontInfo = this.GetFontInfo();
-                if (f.ShowDialog().Value)
+                if (await Task.Run(() => f.ShowDialog().Value))
                 {
                     this.SetFontInfo(f.FontInfo);
                     this.RefreshSampleImage();
                 }
             };
 
-            this.ChangeFontColorItem.Click += (s1, e1) =>
+            this.ChangeFontColorItem.Click += async (s1, e1) =>
             {
                 this.ColorDialog.Color = this.FontColor;
-                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.ColorDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.FontColor = this.ColorDialog.Color;
                     this.RefreshSampleImage();
                 }
             };
 
-            this.ChangeFontOutlineColorItem.Click += (s1, e1) =>
+            this.ChangeFontOutlineColorItem.Click += async (s1, e1) =>
             {
                 this.ColorDialog.Color = this.FontOutlineColor;
-                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.ColorDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.FontOutlineColor = this.ColorDialog.Color;
                     this.RefreshSampleImage();
                 }
             };
 
-            this.ChangeWarningFontColorItem.Click += (s1, e1) =>
+            this.ChangeWarningFontColorItem.Click += async (s1, e1) =>
             {
                 this.ColorDialog.Color = this.WarningFontColor;
-                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.ColorDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.WarningFontColor = this.ColorDialog.Color;
                     this.RefreshSampleImage();
                 }
             };
 
-            this.ChangeWarningFontOutlineColorItem.Click += (s1, e1) =>
+            this.ChangeWarningFontOutlineColorItem.Click += async (s1, e1) =>
             {
                 this.ColorDialog.Color = this.WarningFontOutlineColor;
-                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.ColorDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.WarningFontOutlineColor = this.ColorDialog.Color;
                     this.RefreshSampleImage();
                 }
             };
 
-            this.ChangeBarColorItem.Click += (s1, e1) =>
+            this.ChangeBarColorItem.Click += async (s1, e1) =>
             {
                 this.ColorDialog.Color = this.BarColor;
-                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.ColorDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.BarColor = this.ColorDialog.Color;
                     this.RefreshSampleImage();
                 }
             };
 
-            this.ChangeBarOutlineColorItem.Click += (s1, e1) =>
+            this.ChangeBarOutlineColorItem.Click += async (s1, e1) =>
             {
                 this.ColorDialog.Color = this.BarOutlineColor;
-                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.ColorDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.BarOutlineColor = this.ColorDialog.Color;
                     this.RefreshSampleImage();
                 }
             };
 
-            this.ChangeBackgoundColorItem.Click += (s1, e1) =>
+            this.ChangeBackgoundColorItem.Click += async (s1, e1) =>
             {
                 this.ColorDialog.Color = this.backgroundColor;
-                if (this.ColorDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.ColorDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.backgroundColor = Color.FromArgb(
                         this.alphaDialog.Alpha,
@@ -448,10 +456,11 @@ namespace ACT.SpecialSpellTimer
                 }
             };
 
-            this.ChangeBackgroundAlphaItem.Click += (s1, e1) =>
+            this.ChangeBackgroundAlphaItem.Click += async (s1, e1) =>
             {
                 this.alphaDialog.Alpha = this.backgroundColor.A;
-                if (this.alphaDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.alphaDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     this.backgroundColor = Color.FromArgb(
                         this.alphaDialog.Alpha,
@@ -460,9 +469,10 @@ namespace ACT.SpecialSpellTimer
                 }
             };
 
-            this.LoadColorSetItem.Click += (s1, e1) =>
+            this.LoadColorSetItem.Click += async (s1, e1) =>
             {
-                if (this.OpenFileDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.OpenFileDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     using (var sr = new StreamReader(this.OpenFileDialog.FileName, new UTF8Encoding(false)))
                     {
@@ -495,14 +505,15 @@ namespace ACT.SpecialSpellTimer
                 }
             };
 
-            this.SaveColorSetItem.Click += (s1, e1) =>
+            this.SaveColorSetItem.Click += async (s1, e1) =>
             {
                 if (string.IsNullOrWhiteSpace(this.SaveFileDialog.FileName))
                 {
                     this.SaveFileDialog.FileName = "スペスペ配色セット.xml";
                 }
 
-                if (this.SaveFileDialog.ShowDialog(this) != DialogResult.Cancel)
+                if (await Task.Run(() => this.SaveFileDialog.ShowDialog(this)) !=
+                    DialogResult.Cancel)
                 {
                     var colorSet = new ColorSet()
                     {
@@ -541,7 +552,7 @@ namespace ACT.SpecialSpellTimer
                     s.Font = this.GetFontInfo();
                 }
 
-                SpellTimerCore.Instance.ClosePanels();
+                SpellsController.Instance.ClosePanels();
                 SpellTimerTable.Instance.Save(true);
             };
 
@@ -553,7 +564,7 @@ namespace ACT.SpecialSpellTimer
                     s.BarHeight = this.BarSize.Height;
                 }
 
-                SpellTimerCore.Instance.ClosePanels();
+                SpellsController.Instance.ClosePanels();
                 SpellTimerTable.Instance.Save(true);
             };
 
@@ -571,7 +582,7 @@ namespace ACT.SpecialSpellTimer
                     s.BackgroundAlpha = this.backgroundColor.A;
                 }
 
-                SpellTimerCore.Instance.ClosePanels();
+                SpellsController.Instance.ClosePanels();
                 SpellTimerTable.Instance.Save(true);
             };
 
@@ -582,7 +593,7 @@ namespace ACT.SpecialSpellTimer
                     s.Font = this.GetFontInfo();
                 }
 
-                OnePointTelopController.CloseTelops();
+                TickersController.Instance.CloseTelops();
                 OnePointTelopTable.Instance.Save(true);
             };
 
@@ -596,7 +607,7 @@ namespace ACT.SpecialSpellTimer
                     s.BackgroundAlpha = this.backgroundColor.A;
                 }
 
-                OnePointTelopController.CloseTelops();
+                TickersController.Instance.CloseTelops();
                 OnePointTelopTable.Instance.Save(true);
             };
         }

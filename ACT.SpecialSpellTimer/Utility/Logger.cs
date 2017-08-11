@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading;
+using ACT.SpecialSpellTimer.Forms;
 
 namespace ACT.SpecialSpellTimer.Utility
 {

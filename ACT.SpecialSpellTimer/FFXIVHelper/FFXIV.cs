@@ -143,7 +143,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.attachFFXIVPluginWorker.WorkerSupportsCancellation = true;
             this.attachFFXIVPluginWorker.DoWork += (s, e) =>
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(1000);
 
                 while (true)
                 {
@@ -179,7 +179,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.scanFFXIVWorker.WorkerSupportsCancellation = true;
             this.scanFFXIVWorker.DoWork += (s, e) =>
             {
-                Thread.Sleep(6000);
+                Thread.Sleep(1500);
 
                 while (true)
                 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Forms;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
@@ -59,7 +60,7 @@ namespace ACT.SpecialSpellTimer
         {
             try
             {
-                SpellTimerCore.Instance.End();
+                PluginMainWorker.Instance.End();
 
                 this.RemoveSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Exited";
@@ -138,7 +139,7 @@ namespace ACT.SpecialSpellTimer
                 PanelTable.Instance.Load();
 
                 // 本体を開始する
-                SpellTimerCore.Instance.Begin();
+                PluginMainWorker.Instance.Begin();
 
                 this.SetSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Started";
@@ -291,20 +292,14 @@ namespace ACT.SpecialSpellTimer
             Settings.Default.OverlayVisible = visibility;
             Settings.Default.Save();
 
-            SpellTimerCore.Instance.ClosePanels();
-            OnePointTelopController.CloseTelops();
+            SpellsController.Instance.ClosePanels();
+            TickersController.Instance.CloseTelops();
 
             TableCompiler.Instance.RefreshPlayerPlacceholder();
             TableCompiler.Instance.RefreshPartyPlaceholders();
             TableCompiler.Instance.RefreshPetPlaceholder();
             TableCompiler.Instance.RecompileSpells();
             TableCompiler.Instance.RecompileTickers();
-
-            if (Settings.Default.OverlayVisible)
-            {
-                SpellTimerCore.Instance.ActivatePanels();
-                OnePointTelopController.ActivateTelops();
-            }
         }
 
         #endregion SpeSpeButton

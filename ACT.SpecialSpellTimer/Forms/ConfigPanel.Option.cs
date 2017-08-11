@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Windows.Forms;
@@ -65,13 +65,13 @@
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&
                 !this.EnabledNotifyNormalSpellTimerCheckBox.Checked)
             {
-                SpellTimerCore.Instance.ClearNormalSpellTimer(true);
+                SpellsController.Instance.ClearNormalSpellTimer(true);
             }
 
             Settings.Default.EnabledNotifyNormalSpellTimer = this.EnabledNotifyNormalSpellTimerCheckBox.Checked;
 
             // 標準のスペルタイマーへ設定を反映する
-            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
+            SpellsController.Instance.ApplyToNormalSpellTimer();
 
             // 設定を保存する
             Settings.Default.Save();
@@ -118,12 +118,6 @@
                 Settings.Default.OverlayVisible = !Settings.Default.OverlayVisible;
                 Settings.Default.Save();
                 this.LoadSettingsOption();
-
-                if (Settings.Default.OverlayVisible)
-                {
-                    SpellTimerCore.Instance.ActivatePanels();
-                    OnePointTelopController.ActivateTelops();
-                }
             };
 
             this.SwitchTelopButton.Click += (s1, e1) =>
@@ -261,7 +255,7 @@
             this.ResetOnWipeOutCheckBox.Enabled = sw2;
 
             // 標準のスペルタイマーへ設定を反映する
-            SpellTimerCore.Instance.ApplyToNormalSpellTimer();
+            SpellsController.Instance.ApplyToNormalSpellTimer();
         }
     }
 }

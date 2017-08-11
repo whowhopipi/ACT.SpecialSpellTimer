@@ -1,6 +1,6 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Forms
 {
-    partial class SelectJobForm
+    partial class SelectZoneForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,36 +28,36 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.JobsCheckedListBox = new System.Windows.Forms.CheckedListBox();
+            this.ZonesCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.OKButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
             this.AllONButton = new System.Windows.Forms.Button();
             this.AllOFFButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // JobsCheckedListBox
+            // ZonesCheckedListBox
             // 
-            this.JobsCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.ZonesCheckedListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.JobsCheckedListBox.BackColor = System.Drawing.SystemColors.Control;
-            this.JobsCheckedListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.JobsCheckedListBox.CheckOnClick = true;
-            this.JobsCheckedListBox.FormattingEnabled = true;
-            this.JobsCheckedListBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.JobsCheckedListBox.Location = new System.Drawing.Point(12, 35);
-            this.JobsCheckedListBox.MultiColumn = true;
-            this.JobsCheckedListBox.Name = "JobsCheckedListBox";
-            this.JobsCheckedListBox.Size = new System.Drawing.Size(478, 210);
-            this.JobsCheckedListBox.TabIndex = 0;
-            this.JobsCheckedListBox.ThreeDCheckBoxes = true;
+            this.ZonesCheckedListBox.BackColor = System.Drawing.SystemColors.Control;
+            this.ZonesCheckedListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ZonesCheckedListBox.CheckOnClick = true;
+            this.ZonesCheckedListBox.ColumnWidth = 400;
+            this.ZonesCheckedListBox.FormattingEnabled = true;
+            this.ZonesCheckedListBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.ZonesCheckedListBox.Location = new System.Drawing.Point(12, 12);
+            this.ZonesCheckedListBox.MultiColumn = true;
+            this.ZonesCheckedListBox.Name = "ZonesCheckedListBox";
+            this.ZonesCheckedListBox.Size = new System.Drawing.Size(920, 476);
+            this.ZonesCheckedListBox.TabIndex = 0;
+            this.ZonesCheckedListBox.ThreeDCheckBoxes = true;
             // 
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(290, 278);
+            this.OKButton.Location = new System.Drawing.Point(732, 520);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(97, 28);
             this.OKButton.TabIndex = 1;
@@ -68,7 +68,7 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(393, 278);
+            this.CloseButton.Location = new System.Drawing.Point(835, 520);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(97, 28);
             this.CloseButton.TabIndex = 2;
@@ -78,7 +78,7 @@
             // AllONButton
             // 
             this.AllONButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AllONButton.Location = new System.Drawing.Point(12, 278);
+            this.AllONButton.Location = new System.Drawing.Point(12, 520);
             this.AllONButton.Name = "AllONButton";
             this.AllONButton.Size = new System.Drawing.Size(75, 28);
             this.AllONButton.TabIndex = 3;
@@ -88,54 +88,43 @@
             // AllOFFButton
             // 
             this.AllOFFButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AllOFFButton.Location = new System.Drawing.Point(93, 278);
+            this.AllOFFButton.Location = new System.Drawing.Point(93, 520);
             this.AllOFFButton.Name = "AllOFFButton";
             this.AllOFFButton.Size = new System.Drawing.Size(75, 28);
             this.AllOFFButton.TabIndex = 4;
             this.AllOFFButton.Text = "AllOffButton";
             this.AllOFFButton.UseVisualStyleBackColor = true;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 12);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "SelectJobSubtitle";
-            // 
-            // SelectJobForm
+            // SelectZoneForm
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(502, 319);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(944, 561);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.AllONButton);
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.OKButton);
-            this.Controls.Add(this.JobsCheckedListBox);
+            this.Controls.Add(this.ZonesCheckedListBox);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "SelectJobForm";
+            this.Name = "SelectZoneForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "SelectJobTitle";
-            this.Shown += new System.EventHandler(this.SelectJobForm_Shown);
+            this.Text = "SelectZoneTitle";
+            this.Shown += new System.EventHandler(this.SelectZoneForm_Shown);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox JobsCheckedListBox;
+        private System.Windows.Forms.CheckedListBox ZonesCheckedListBox;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Button AllONButton;
         private System.Windows.Forms.Button AllOFFButton;
-        private System.Windows.Forms.Label label1;
     }
 }

@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Models;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Forms
 {
     public partial class SelectIconForm : Form
     {
@@ -31,13 +31,9 @@ namespace ACT.SpecialSpellTimer
             };
         }
 
-        private void FolderTreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            this.ShowIcons(e.Node);
-        }
+        public SpellTimer ParrentSpell { get; set; }
 
         public string SelectedIconRelativePath { get; set; }
-        public SpellTimer ParrentSpell { get; set; }
 
         public static Task<IconDialogResult> ShowDialogAsync(
             string iconRelativePath,
@@ -66,7 +62,7 @@ namespace ACT.SpecialSpellTimer
                 instance.SelectedIconRelativePath = iconRelativePath;
                 instance.ParrentSpell = spell;
 
-                if (instance.ShowDialog(owner) == 
+                if (instance.ShowDialog(owner) ==
                     DialogResult.OK)
                 {
                     result.Result = true;
@@ -75,6 +71,18 @@ namespace ACT.SpecialSpellTimer
 
                 return result;
             });
+        }
+
+        private void FolderTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            this.ShowIcons(e.Node);
+        }
+
+        private void SelectIcon(
+            SelectIconUserControl selectedControl)
+        {
+            this.SelectedIconRelativePath = selectedControl?.Icon.RelativePath;
+            this.DialogResult = DialogResult.OK;
         }
 
         private void SelectIconForm_Load(object sender, EventArgs e)
@@ -132,7 +140,7 @@ namespace ACT.SpecialSpellTimer
                         else
                         {
                             if (dir.AsParallel().Any(x =>
-                                x.RelativePath.ToLower() == 
+                                x.RelativePath.ToLower() ==
                                 this.SelectedIconRelativePath.ToLower()))
                             {
                                 selectedNode = node;
@@ -235,22 +243,14 @@ namespace ACT.SpecialSpellTimer
             Application.DoEvents();
         }
 
-        private void SelectIcon(
-            SelectIconUserControl selectedControl)
-        {
-            this.SelectedIconRelativePath = selectedControl?.Icon.RelativePath;
-            this.DialogResult = DialogResult.OK;
-        }
-
         #region Sub classes
 
         public class IconDialogResult
         {
-            public bool Result { get; set; }
-
             public string Icon { get; set; }
+            public bool Result { get; set; }
         }
 
-        #endregion
+        #endregion Sub classes
     }
 }

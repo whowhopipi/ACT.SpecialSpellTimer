@@ -378,8 +378,8 @@ namespace ACT.SpecialSpellTimer.Models
                         // 不要なWindowを閉じる
                         if (!Settings.Default.OverlayForceVisible)
                         {
-                            OnePointTelopController.GarbageWindows(this.TickerList);
-                            SpellTimerCore.Instance.GarbageSpellPanelWindows(this.SpellList);
+                            TickersController.Instance.GarbageWindows(this.TickerList);
+                            SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
                         }
                     }
                 }

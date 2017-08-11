@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Windows.Threading;
 
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
@@ -16,12 +14,20 @@ namespace ACT.SpecialSpellTimer
     /// <summary>
     /// ワンポイントテレロップ Controller
     /// </summary>
-    public class OnePointTelopController
+    public class TickersController
     {
+        #region Singleton
+
+        private static TickersController instance = new TickersController();
+
+        public static TickersController Instance => instance;
+
+        #endregion Singleton
+
         /// <summary>
         /// テロップWindowのリスト
         /// </summary>
-        private volatile static Dictionary<long, OnePointTelopWindow> telopWindowList =
+        private volatile Dictionary<long, OnePointTelopWindow> telopWindowList =
             new Dictionary<long, OnePointTelopWindow>();
 
         /// <summary>
@@ -29,7 +35,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="telops">Telops</param>
         /// <param name="logLines">ログ行</param>
-        public static void Match(
+        public void Match(
             IReadOnlyList<OnePointTelop> telops,
             IReadOnlyList<string> logLines)
         {
@@ -128,8 +134,8 @@ namespace ACT.SpecialSpellTimer
                         // ディレイサウンドをスタートさせる
                         telop.StartDelayedSoundTimer();
 
-                        SpellTimerCore.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
+                        SpellsController.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellsController.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
 
                         return;
                     }
@@ -161,8 +167,8 @@ namespace ACT.SpecialSpellTimer
 
                     if (matched)
                     {
-                        SpellTimerCore.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellTimerCore.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
+                        SpellsController.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                        SpellsController.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
                     }
                 });   // end loop telops
             }
@@ -172,7 +178,7 @@ namespace ACT.SpecialSpellTimer
         /// Windowをリフレッシュする
         /// </summary>
         /// <param name="telop">テロップ</param>
-        public static void RefreshTelopOverlays(
+        public void RefreshTelopOverlays(
             IReadOnlyList<OnePointTelop> telops)
         {
             void refreshTelop(
@@ -270,55 +276,49 @@ namespace ACT.SpecialSpellTimer
 
         #region Overlays Controller
 
-        /// <summary>
-        /// テロップをActive化する
-        /// </summary>
-        public static void ActivateTelops()
-        {
-            void activateTelopsCore()
-            {
-                lock (telopWindowList)
-                {
-                    foreach (var telop in telopWindowList.Values)
-                    {
-                        telop.Activate();
-                    }
-                }
-            }
-
-            Application.Current.Dispatcher.Invoke(
-                DispatcherPriority.Normal,
-                (Action)activateTelopsCore);
-        }
+        #region Hide & Close
 
         /// <summary>
         /// テロップを閉じる
         /// </summary>
-        public static void CloseTelops()
+        public void CloseTelops()
         {
-            void closeTelopsCore()
-            {
-                foreach (var telop in telopWindowList.Values)
-                {
-                    telop.DataSource.Left = telop.Left;
-                    telop.DataSource.Top = telop.Top;
-                    telop.Close();
-                }
-            }
-
             lock (telopWindowList)
             {
-                if (telopWindowList.Count < 1)
+                foreach (var window in telopWindowList.Values)
                 {
-                    return;
+                    window.DataSource.ToClose = true;
                 }
+            }
+        }
 
-                Application.Current.Dispatcher.Invoke(
-                    DispatcherPriority.Background,
-                    (Action)closeTelopsCore);
+        public void ExecuteCloseTelops()
+        {
+            lock (telopWindowList)
+            {
+                var targets = telopWindowList
+                    .Where(x => x.Value.DataSource.ToClose).ToList();
 
-                OnePointTelopTable.Instance.Save();
-                telopWindowList.Clear();
+                foreach (var entry in targets)
+                {
+                    var window = entry.Value;
+                    if (window == null)
+                    {
+                        continue;
+                    }
+
+                    if (window.DataSource.ToClose)
+                    {
+                        window.DataSource.ToClose = false;
+
+                        window.DataSource.Left = window.Left;
+                        window.DataSource.Top = window.Top;
+
+                        window.Close();
+
+                        telopWindowList.Remove(entry.Key);
+                    }
+                }
             }
         }
 
@@ -326,44 +326,37 @@ namespace ACT.SpecialSpellTimer
         /// 不要になったWindowを閉じる
         /// </summary>
         /// <param name="telops">Telops</param>
-        public static void GarbageWindows(
+        public void GarbageWindows(
             IReadOnlyList<OnePointTelop> telops)
         {
-            var removeWindowList = new List<OnePointTelopWindow>();
-
-            void removeWindows()
+            lock (telopWindowList)
             {
                 // 不要になったWindowを閉じる
                 foreach (var window in telopWindowList.Values)
                 {
                     if (!telops.Any(x => x.ID == window.DataSource.ID))
                     {
-                        window.DataSource.Left = window.Left;
-                        window.DataSource.Top = window.Top;
-                        window.Close();
-
-                        removeWindowList.Add(window);
+                        window.DataSource.ToClose = true;
                     }
                 }
             }
+        }
 
+        /// <summary>
+        /// テロップを隠す
+        /// </summary>
+        public void HideTelops()
+        {
             lock (telopWindowList)
             {
-                if (telopWindowList.Count < 1)
+                foreach (var telop in telopWindowList.Values)
                 {
-                    return;
-                }
-
-                Application.Current.Dispatcher.Invoke(
-                DispatcherPriority.Background,
-                (Action)removeWindows);
-
-                foreach (var window in removeWindowList)
-                {
-                    telopWindowList.Remove(window.DataSource.ID);
+                    telop.HideOverlay();
                 }
             }
         }
+
+        #endregion Hide & Close
 
         /// <summary>
         /// 位置を取得する
@@ -371,7 +364,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="telopID">設定するテロップのID</param>
         /// <param name="left">Left</param>
         /// <param name="top">Top</param>
-        public static void GettLocation(
+        public void GettLocation(
             long telopID,
             out double left,
             out double top)
@@ -406,26 +399,12 @@ namespace ACT.SpecialSpellTimer
         }
 
         /// <summary>
-        /// テロップを隠す
-        /// </summary>
-        public static void HideTelops()
-        {
-            lock (telopWindowList)
-            {
-                foreach (var telop in telopWindowList.Values)
-                {
-                    telop.HideOverlay();
-                }
-            }
-        }
-
-        /// <summary>
         /// 位置を設定する
         /// </summary>
         /// <param name="telopID">設定するテロップのID</param>
         /// <param name="left">Left</param>
         /// <param name="top">Top</param>
-        public static void SetLocation(
+        public void SetLocation(
             long telopID,
             double left,
             double top)

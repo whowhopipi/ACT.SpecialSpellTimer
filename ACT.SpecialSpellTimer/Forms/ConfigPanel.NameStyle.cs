@@ -8,7 +8,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Forms
 {
     public partial class ConfigPanelNameStyle :
         UserControl

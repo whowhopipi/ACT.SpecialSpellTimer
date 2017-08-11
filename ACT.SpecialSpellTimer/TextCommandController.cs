@@ -75,12 +75,12 @@ namespace ACT.SpecialSpellTimer
                         switch (target)
                         {
                             case "spells":
-                                SpellTimerCore.Instance.ClosePanels();
+                                SpellsController.Instance.ClosePanels();
                                 commandDone = true;
                                 break;
 
                             case "telops":
-                                OnePointTelopController.CloseTelops();
+                                TickersController.Instance.CloseTelops();
                                 commandDone = true;
                                 break;
 

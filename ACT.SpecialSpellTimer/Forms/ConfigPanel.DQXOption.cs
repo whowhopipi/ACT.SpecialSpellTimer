@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer
+﻿namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Windows.Forms;
@@ -18,8 +18,8 @@
             this.SaveSettingsDQXOption();
 
             // Windowを一旦すべて閉じる
-            SpellTimerCore.Instance.ClosePanels();
-            OnePointTelopController.CloseTelops();
+            SpellsController.Instance.ClosePanels();
+            TickersController.Instance.CloseTelops();
         }
 
         private void DQXOtionTabRefreshTimer_Tick(object sender, EventArgs e)

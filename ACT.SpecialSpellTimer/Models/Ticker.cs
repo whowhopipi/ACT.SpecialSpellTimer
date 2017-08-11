@@ -18,6 +18,9 @@
         [XmlIgnore]
         private Timer delayedSoundTimer;
 
+        [XmlIgnore]
+        public bool ToClose { get; set; } = false;
+
         public OnePointTelop()
         {
             this.Guid = Guid.Empty;

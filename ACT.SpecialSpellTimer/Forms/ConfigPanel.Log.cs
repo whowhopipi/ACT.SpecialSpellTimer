@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 using ACT.SpecialSpellTimer.Models;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Forms
 {
     public partial class ConfigPanelLog :
         UserControl

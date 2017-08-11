@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Forms
 {
     /// <summary>
     /// ゾーン選択Form
