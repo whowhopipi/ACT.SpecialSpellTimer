@@ -38,6 +38,11 @@ namespace XIVDBDownloader.Models
         BlackMage = 51,
         Summoner = 52,
         RedMage = 53,
+
+        PetsEgi = 61,
+        PetsFairy = 62,
+
+        Others = 90,
     }
 
     [DataContract]
@@ -100,6 +105,17 @@ namespace XIVDBDownloader.Models
 
                     case Roles.MagicDPS:
                         return ActionCategory.MagicDPSRole;
+
+                    case Roles.PetsEgi:
+                        return ActionCategory.PetsEgi;
+
+                    case Roles.PetsFairy:
+                        return ActionCategory.PetsFairy;
+
+                    case Roles.PhysicalDPS:
+                    case Roles.DPS:
+                    case Roles.Magic:
+                        return ActionCategory.Others;
                 }
 
                 switch (this.Job.ID)

@@ -53,8 +53,13 @@ namespace XIVDBDownloader.Constants
         MeleeDPS = 114,
         RangeDPS = 115,
         MagicDPS = 116,
+        PhysicalDPS = 118,
+        DPS = 119,
+        Magic = 120,
         Crafter = 210,
         Gatherer = 220,
+        PetsEgi = 28,
+        PetsFairy = 29,
     }
 
     public class Job
