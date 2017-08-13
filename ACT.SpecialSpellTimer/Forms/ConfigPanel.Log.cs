@@ -107,6 +107,12 @@ namespace ACT.SpecialSpellTimer.Forms
 
         public async void UpdatePlaceholder()
         {
+            if (this.IsDisposed ||
+                !this.IsHandleCreated)
+            {
+                return;
+            }
+
             var listItems = new List<ListViewItem>();
 
             await Task.Run(() =>
@@ -163,6 +169,12 @@ namespace ACT.SpecialSpellTimer.Forms
             object sender,
             EventArgs e)
         {
+            if (this.IsDisposed ||
+                !this.IsHandleCreated)
+            {
+                return;
+            }
+
             var listItems = new List<ListViewItem>();
 
             await Task.Run(() =>
