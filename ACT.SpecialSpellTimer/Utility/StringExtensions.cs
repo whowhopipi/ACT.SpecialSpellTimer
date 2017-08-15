@@ -1,17 +1,30 @@
-﻿namespace ACT.SpecialSpellTimer.Utility
+﻿using System;
+using System.Text.RegularExpressions;
+
+using ACT.SpecialSpellTimer.Config;
+
+namespace ACT.SpecialSpellTimer.Utility
 {
-    using System.Text.RegularExpressions;
-
-    using ACT.SpecialSpellTimer.Config;
-
     public static class StringExtensions
     {
         public static Regex ToRegex(
             this string s)
         {
-            return !string.IsNullOrEmpty(s) ?
-                new Regex(s, RegexOptions.Compiled) :
-                null;
+            Regex regex = null;
+
+            try
+            {
+                regex = !string.IsNullOrEmpty(s) ?
+                    new Regex(s, RegexOptions.Compiled) :
+                    null;
+            }
+            catch (Exception ex)
+            {
+                regex = null;
+                Logger.Write("ToRegex error:", ex);
+            }
+
+            return regex;
         }
 
         public static string ToRegexPattern(
