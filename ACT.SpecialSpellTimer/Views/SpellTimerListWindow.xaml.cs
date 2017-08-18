@@ -410,9 +410,8 @@
         private void SpellTimerListWindow_Loaded(object sender, RoutedEventArgs e)
         {
             // Panelの位置を復元する
-            var setting = PanelTable.Instance.SettingsTable
-                .Where(x => x.PanelName == this.PanelName)
-                .FirstOrDefault();
+            var setting = SpellsController.Instance.FindPanelSettingByName(
+                this.PanelName);
 
             if (setting != null)
             {
@@ -421,6 +420,8 @@
                 this.SpellMargin = (int)setting.Margin;
                 this.IsHorizontal = setting.Horizontal;
                 this.SpellPositionFixed = setting.FixedPositionSpell;
+
+                setting.PanelWindow = this;
             }
 
             this.RefreshSpellTimer();

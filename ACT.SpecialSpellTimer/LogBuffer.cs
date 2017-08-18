@@ -324,6 +324,9 @@ namespace ACT.SpecialSpellTimer
                         if (palyerIsSummoner)
                         {
                             if (logLine.Contains(player.Name + "の「サモン") ||
+                                logLine.Contains(player.NameFI + "の「サモン") ||
+                                logLine.Contains(player.NameIF + "の「サモン") ||
+                                logLine.Contains(player.NameII + "の「サモン") ||
                                 logLine.Contains("You cast Summon"))
                             {
                                 summoned = true;
@@ -357,10 +360,13 @@ namespace ACT.SpecialSpellTimer
             }
 
             // ログファイルに出力する
-            Task.Run(() =>
+            if (Settings.Default.SaveLogEnabled)
             {
-                ChatLogWorker.Instance.AppendLines(list);
-            });
+                Task.Run(() =>
+                {
+                    ChatLogWorker.Instance.AppendLines(list);
+                });
+            }
 
             // ログのタイムスタンプを記録する
             this.lastLogineTimestamp = DateTime.Now;

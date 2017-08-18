@@ -122,7 +122,7 @@
 
         public string BeforeTextToSpeak { get; set; }
 
-        public double BeforeTime { get; set; }
+        public double BeforeTime { get; set; } = 0;
 
         public bool ChangeFontColorsWhenWarning { get; set; }
 
@@ -182,12 +182,12 @@
 
         public bool OverlapRecastTime { get; set; }
         public string OverTextToSpeak { get; set; }
-        public double OverTime { get; set; }
+        public double OverTime { get; set; } = 0;
         public string Panel { get; set; }
         public bool ProgressBarVisible { get; set; }
-        public double RecastTime { get; set; }
-        public double RecastTimeExtending1 { get; set; }
-        public double RecastTimeExtending2 { get; set; }
+        public double RecastTime { get; set; } = 0;
+        public double RecastTimeExtending1 { get; set; } = 0;
+        public double RecastTimeExtending2 { get; set; } = 0;
         public bool ReduceIconBrightness { get; set; }
 
         [XmlIgnore]
@@ -235,11 +235,11 @@
         /// <remarks>表示テキストが異なる条件でマッチングした場合に当該スペルの新しいインスタンスを生成する</remarks>
         public bool ToInstance { get; set; }
 
-        public double UpperLimitOfExtension { get; set; }
+        public double UpperLimitOfExtension { get; set; } = 0;
         public string WarningFontColor { get; set; }
 
         public string WarningFontOutlineColor { get; set; }
-        public double WarningTime { get; set; }
+        public double WarningTime { get; set; } = 0;
         public string ZoneFilter { get; set; }
 
         #region Sound files

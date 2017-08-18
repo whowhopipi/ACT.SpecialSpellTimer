@@ -43,7 +43,7 @@ namespace XIVDBDownloader.ViewModels
                         "Download Action",
                         "Also download icon images?");
 
-                    if (result == MessageDialogResult.FirstAuxiliary)
+                    if (result == MessageDialogResult.Affirmative)
                     {
                         alsoDownloadActionIcons = true;
                     }

@@ -109,6 +109,14 @@ namespace ACT.SpecialSpellTimer.Models
                         Logger.Write(Translate.Get("LoadXMLError"), ex);
                     }
                 }
+
+                // NaNを潰す
+                foreach (var x in this.table)
+                {
+                    x.Top = double.IsNaN(x.Top) ? 0 : x.Top;
+                    x.Left = double.IsNaN(x.Left) ? 0 : x.Left;
+                    x.Margin = double.IsNaN(x.Margin) ? 0 : x.Margin;
+                }
             }
         }
 

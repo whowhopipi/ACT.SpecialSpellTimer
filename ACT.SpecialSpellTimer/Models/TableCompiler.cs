@@ -692,7 +692,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             var playerJob = this.player.AsJob();
-            if (playerJob != null ||
+            if (playerJob != null &&
                 !playerJob.IsSummoner())
             {
                 return;
@@ -738,8 +738,9 @@ namespace ACT.SpecialSpellTimer.Models
                             return;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Logger.Write("refresh petid error:", ex);
                     }
 
                     Thread.Sleep(TimeSpan.FromSeconds(Interval));

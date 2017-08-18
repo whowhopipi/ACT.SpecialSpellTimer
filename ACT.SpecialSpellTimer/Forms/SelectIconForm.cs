@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -61,7 +62,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     var font = (owner as Control)?.Font;
                     instance.Font = font;
                     instance.FolderTreeView.Font = font;
-                    instance.FolderTreeView.ItemHeight = (int)(font.Size * 2);
+                    instance.FolderTreeView.ItemHeight = (int)(font.Size * 3);
                     instance.ClearButton.Font = font;
                     instance.CloseButton.Font = font;
                     instance.IconsFlowLayoutPanel.Font = font;
@@ -167,17 +168,19 @@ namespace ACT.SpecialSpellTimer.Forms
             if (selectedNode != null)
             {
                 tree.SelectedNode = selectedNode;
+                tree.SelectedNode.EnsureVisible();
             }
             else
             {
                 if (tree.Nodes.Count > 0)
                 {
                     tree.SelectedNode = tree.Nodes[0];
+                    tree.SelectedNode.EnsureVisible();
                 }
             }
 
-            Application.DoEvents();
             tree.Focus();
+            Application.DoEvents();
         }
 
         private void ShowIcons(
@@ -247,8 +250,13 @@ namespace ACT.SpecialSpellTimer.Forms
                 panel.ResumeLayout();
             }
 
-            selectedCtrl?.Focus();
-            Application.DoEvents();
+            if (selectedCtrl != null)
+            {
+                this.IconsFlowLayoutPanel.ScrollControlIntoView(selectedCtrl);
+                selectedCtrl.BackColor = Color.Lavender;
+                selectedCtrl.Focus();
+                Application.DoEvents();
+            }
         }
 
         #region Sub classes

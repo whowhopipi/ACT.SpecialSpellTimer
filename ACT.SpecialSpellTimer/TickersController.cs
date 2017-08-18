@@ -294,6 +294,8 @@ namespace ACT.SpecialSpellTimer
 
         public void ExecuteCloseTelops()
         {
+            var closed = false;
+
             lock (telopWindowList)
             {
                 var targets = telopWindowList
@@ -317,8 +319,15 @@ namespace ACT.SpecialSpellTimer
                         window.Close();
 
                         telopWindowList.Remove(entry.Key);
+
+                        closed = true;
                     }
                 }
+            }
+
+            if (closed)
+            {
+                OnePointTelopTable.Instance.Save();
             }
         }
 

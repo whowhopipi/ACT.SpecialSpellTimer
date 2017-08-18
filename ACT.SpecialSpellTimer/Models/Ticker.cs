@@ -64,14 +64,14 @@
 
         public string BackgroundColor { get; set; }
 
-        public double Delay { get; set; }
+        public double Delay { get; set; } = 0;
 
         [XmlIgnore]
         public bool Delayed { get; set; }
 
         public string DelayTextToSpeak { get; set; }
 
-        public double DisplayTime { get; set; }
+        public double DisplayTime { get; set; } = 0;
 
         public bool Enabled { get; set; }
 
@@ -106,7 +106,7 @@
         [XmlIgnore]
         public string KeywordToHideReplaced { get; set; }
 
-        public double Left { get; set; }
+        public double Left { get; set; } = 0;
 
         [XmlIgnore]
         public DateTime MatchDateTime { get; set; }
@@ -143,7 +143,7 @@
 
         public string Title { get; set; }
 
-        public double Top { get; set; }
+        public double Top { get; set; } = 0;
 
         public string ZoneFilter { get; set; }
 

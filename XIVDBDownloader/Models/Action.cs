@@ -38,6 +38,11 @@ namespace XIVDBDownloader.Models
         BlackMage = 51,
         Summoner = 52,
         RedMage = 53,
+
+        PetsEgi = 61,
+        PetsFairy = 62,
+
+        Others = 90,
     }
 
     [DataContract]
@@ -100,6 +105,17 @@ namespace XIVDBDownloader.Models
 
                     case Roles.MagicDPS:
                         return ActionCategory.MagicDPSRole;
+
+                    case Roles.PetsEgi:
+                        return ActionCategory.PetsEgi;
+
+                    case Roles.PetsFairy:
+                        return ActionCategory.PetsFairy;
+
+                    case Roles.PhysicalDPS:
+                    case Roles.DPS:
+                    case Roles.Magic:
+                        return ActionCategory.Others;
                 }
 
                 switch (this.Job.ID)
@@ -219,6 +235,9 @@ namespace XIVDBDownloader.Models
                 return;
             }
 
+            // ファイル名に使えない文字を取得しておく
+            var invalidChars = Path.GetInvalidFileNameChars();
+
             var iconBaseDirectory = Path.Combine(
                 directory,
                 "Action icons");
@@ -263,6 +282,11 @@ namespace XIVDBDownloader.Models
 
                         var fileName =
                             $"{skill.ID.ToString("0000")}_{skill.Name}.png";
+
+                        // ファイル名に使えない文字を除去する
+                        fileName = string.Concat(fileName.Where(c =>
+                            !invalidChars.Contains(c)));
+
                         var file =
                             Path.Combine(dir, fileName);
 

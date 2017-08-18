@@ -303,23 +303,6 @@ namespace ACT.SpecialSpellTimer
                         PanelName = f.Panel,
                     };
 
-                    lock (PanelTable.Instance.SettingsTable)
-                    {
-                        var panelSetting = PanelTable.Instance.SettingsTable
-                            .FirstOrDefault(x => x.PanelName == w.PanelName);
-                        if (panelSetting == null)
-                        {
-                            panelSetting = new PanelSettings()
-                            {
-                                PanelName = w.PanelName
-                            };
-
-                            PanelTable.Instance.SettingsTable.Add(panelSetting);
-                        }
-
-                        panelSetting.PanelWindow = w;
-                    }
-
                     lock (this.spellTimerPanels)
                     {
                         this.spellTimerPanels.Add(w);
@@ -370,6 +353,8 @@ namespace ACT.SpecialSpellTimer
 
         public void ExecuteClosePanels()
         {
+            var closed = false;
+
             lock (this.spellTimerPanels)
             {
                 var targets = PanelTable.Instance.SettingsTable
@@ -393,8 +378,15 @@ namespace ACT.SpecialSpellTimer
 
                         panel.Close();
                         this.spellTimerPanels.Remove(panel);
+
+                        closed = true;
                     }
                 }
+            }
+
+            if (closed)
+            {
+                PanelTable.Instance.Save();
             }
         }
 
@@ -435,136 +427,68 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Close & Hide
 
-        /// <summary>
-        /// Panelのレイアウトを取得する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        /// <param name="horizontal">水平レイアウトか？</param>
-        /// <param name="fixedPositionSpell">スペル位置を固定するか？</param>
-        public void GetPanelLayout(
-            string panelName,
-            out bool horizontal,
-            out bool fixedPositionSpell)
+        public PanelSettings GetPanelSettings(
+            string panelName)
         {
-            horizontal = false;
-            fixedPositionSpell = false;
-
-            lock (spellTimerPanels)
+            double normalize(double value)
             {
-                var panel = this.FindPanelByName(panelName);
-                if (panel != null)
+                var result = value;
+
+                if (double.IsNaN(result))
                 {
-                    horizontal = panel.IsHorizontal;
-                    fixedPositionSpell = panel.SpellPositionFixed;
+                    result = 0;
                 }
-                else
+
+                if (value > 65535)
                 {
-                    var setting = this.FindPanelSettingByName(panelName);
-                    if (setting != null)
-                    {
-                        horizontal = setting.Horizontal;
-                        fixedPositionSpell = setting.FixedPositionSpell;
-                    }
+                    result = 65535;
                 }
+
+                if (value < -65535)
+                {
+                    result = -65535;
+                }
+
+                return result;
             }
-        }
 
-        /// <summary>
-        /// Panelの位置を取得する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        /// <param name="left">Left</param>
-        /// <param name="top">Top</param>
-        public void GetPanelLocation(
-            string panelName,
-            out double left,
-            out double top)
-        {
-            left = 10.0d;
-            top = 10.0d;
-
-            lock (this.spellTimerPanels)
+            var settings = new PanelSettings()
             {
-                var panel = this.spellTimerPanels
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-
-                if (panel != null)
-                {
-                    left = panel.Left;
-                    top = panel.Top;
-                }
-                else
-                {
-                    var panelSettings = PanelTable.Instance.SettingsTable
-                        .Where(x => x.PanelName == panelName)
-                        .FirstOrDefault();
-
-                    if (panelSettings != null)
-                    {
-                        left = panelSettings.Left;
-                        top = panelSettings.Top;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// SpellTimer間のマージンを取得する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        /// <param name="margin">マージン</param>
-        public void GetSpellMargin(
-            string panelName,
-            out int margin)
-        {
-            margin = 0;
+                PanelName = panelName,
+                Top = 10,
+                Left = 10,
+                Margin = 5,
+                Horizontal = false,
+                FixedPositionSpell = false,
+            };
 
             lock (this.spellTimerPanels)
             {
                 var panel = this.FindPanelByName(panelName);
                 if (panel != null)
                 {
-                    margin = panel.SpellMargin;
+                    settings.Top = panel.Top;
+                    settings.Left = panel.Left;
+                    settings.Margin = panel.SpellMargin;
+                    settings.Horizontal = panel.IsHorizontal;
+                    settings.FixedPositionSpell = panel.SpellPositionFixed;
                 }
                 else
                 {
-                    var setting = this.FindPanelSettingByName(panelName);
-                    if (setting != null)
+                    var s = this.FindPanelSettingByName(panelName);
+                    if (s != null)
                     {
-                        margin = (int)setting.Margin;
+                        settings = s;
                     }
                 }
             }
-        }
 
-        /// <summary>
-        /// Panelのレイアウトを設定する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        /// <param name="horizontal">水平レイアウトか？</param>
-        /// <param name="fixedPositionSpell">スペル位置を固定するか？</param>
-        public void SetPanelLayout(
-            string panelName,
-            bool horizontal,
-            bool fixedPositionSpell)
-        {
-            lock (this.spellTimerPanels)
-            {
-                var panel = this.FindPanelByName(panelName);
-                if (panel != null)
-                {
-                    panel.IsHorizontal = horizontal;
-                    panel.SpellPositionFixed = fixedPositionSpell;
-                }
+            // 変な値が入っていたら補正する
+            settings.Top = normalize(settings.Top);
+            settings.Left = normalize(settings.Left);
+            settings.Margin = normalize(settings.Margin);
 
-                var setting = this.FindPanelSettingByName(panelName);
-                if (setting != null)
-                {
-                    setting.Horizontal = horizontal;
-                    setting.FixedPositionSpell = fixedPositionSpell;
-                }
-            }
+            return settings;
         }
 
         /// <summary>
@@ -573,10 +497,13 @@ namespace ACT.SpecialSpellTimer
         /// <param name="panelName">パネルの名前</param>
         /// <param name="left">Left</param>
         /// <param name="top">Top</param>
-        public void SetPanelLocation(
+        public void SetPanelSettings(
             string panelName,
             double left,
-            double top)
+            double top,
+            double margin,
+            bool horizontal,
+            bool fixedPositionSpell)
         {
             lock (this.spellTimerPanels)
             {
@@ -588,6 +515,9 @@ namespace ACT.SpecialSpellTimer
                 {
                     panel.Left = left;
                     panel.Top = top;
+                    panel.SpellMargin = (int)margin;
+                    panel.IsHorizontal = horizontal;
+                    panel.SpellPositionFixed = fixedPositionSpell;
                 }
 
                 var panelSettings = PanelTable.Instance.SettingsTable
@@ -598,31 +528,9 @@ namespace ACT.SpecialSpellTimer
                 {
                     panelSettings.Left = left;
                     panelSettings.Top = top;
-                }
-            }
-        }
-
-        /// <summary>
-        /// SpellTimer間のマージンを設定する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        /// <param name="marign">マージン</param>
-        public void SetSpellMargin(
-            string panelName,
-            int margin)
-        {
-            lock (this.spellTimerPanels)
-            {
-                var panel = this.FindPanelByName(panelName);
-                if (panel != null)
-                {
-                    panel.SpellMargin = margin;
-                }
-
-                var setting = this.FindPanelSettingByName(panelName);
-                if (setting != null)
-                {
-                    setting.Margin = margin;
+                    panelSettings.Margin = margin;
+                    panelSettings.Horizontal = horizontal;
+                    panelSettings.FixedPositionSpell = fixedPositionSpell;
                 }
             }
         }
@@ -645,14 +553,35 @@ namespace ACT.SpecialSpellTimer
         /// PanelSettingsRowを取得する
         /// </summary>
         /// <param name="panelName">パネルの名前</param>
-        private PanelSettings FindPanelSettingByName(string panelName)
+        public PanelSettings FindPanelSettingByName(string panelName)
         {
+            var settings = new PanelSettings()
+            {
+                PanelName = panelName,
+                Top = 10,
+                Left = 10,
+                Margin = 5,
+                Horizontal = false,
+                FixedPositionSpell = false,
+            };
+
             lock (this.spellTimerPanels)
             {
-                return PanelTable.Instance.SettingsTable
+                var s = PanelTable.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
+
+                if (s != null)
+                {
+                    settings = s;
+                }
+                else
+                {
+                    PanelTable.Instance.SettingsTable.Add(settings);
+                }
             }
+
+            return settings;
         }
 
         #endregion Panel controller

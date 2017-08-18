@@ -198,6 +198,10 @@ namespace ACT.SpecialSpellTimer.Models
                         row.Font.Weight = System.Windows.FontWeights.Bold;
                     }
                 }
+
+                // NaNを潰す
+                row.Top = double.IsNaN(row.Top) ? 0 : row.Top;
+                row.Left = double.IsNaN(row.Top) ? 0 : row.Left;
             }
         }
 
