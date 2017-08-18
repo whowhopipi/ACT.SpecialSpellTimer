@@ -290,8 +290,8 @@ http://maoudamashii.jokersounds.com/
 GitHubと連動しているためツイートは少々五月蠅いかもしれません  
 https://twitter.com/anoyetta  
 
-
-<a href="https://github.com/anoyetta/ACT.SpecialSpellTimer">
-  <img src="https://ga-beacon.appspot.com/UA-58705151-2/https://github.com/anoyetta/ACT.SpecialSpellTimer?pixel"/>
-</a>
-
+**Discord はじめました**
+**ACT.SST Forum**
+**https://discord.gg/n6Mut3F**
+気軽にご参加ください。twitterよりもコミュニケーションし易いです。  
+公開では対応できないような案件の場合は別途プライベートルームに招待いたします。  
