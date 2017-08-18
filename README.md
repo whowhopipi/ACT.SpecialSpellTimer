@@ -290,8 +290,8 @@ http://maoudamashii.jokersounds.com/
 GitHubと連動しているためツイートは少々五月蠅いかもしれません  
 https://twitter.com/anoyetta  
 
-**Discord はじめました**
-**ACT.SST Forum**
-**https://discord.gg/n6Mut3F**
+**Discord はじめました**  
+**ACT.SST Forum**  
+**https://discord.gg/n6Mut3F**  
 気軽にご参加ください。twitterよりもコミュニケーションし易いです。  
 公開では対応できないような案件の場合は別途プライベートルームに招待いたします。  
