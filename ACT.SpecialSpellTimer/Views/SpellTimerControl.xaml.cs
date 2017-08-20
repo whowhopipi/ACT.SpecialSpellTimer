@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 
 using ACT.SpecialSpellTimer.Config;
@@ -177,25 +176,28 @@ namespace ACT.SpecialSpellTimer.Views
         public void Refresh()
         {
             // アイコンの不透明度を設定する
-            var image = this.SpellIconImage;
-            if (this.ReduceIconBrightness)
+            if (!this.StartBlink())
             {
-                if (this.RecastTime > 0)
+                var image = this.SpellIconImage;
+                if (this.ReduceIconBrightness)
                 {
-                    image.Opacity = this.IsReverse ?
-                        1.0 :
-                        ((double)Settings.Default.ReduceIconBrightness / 100d);
+                    if (this.RecastTime > 0)
+                    {
+                        image.Opacity = this.IsReverse ?
+                            1.0 :
+                            ((double)Settings.Default.ReduceIconBrightness / 100d);
+                    }
+                    else
+                    {
+                        image.Opacity = this.IsReverse ?
+                            ((double)Settings.Default.ReduceIconBrightness / 100d) :
+                            1.0;
+                    }
                 }
                 else
                 {
-                    image.Opacity = this.IsReverse ?
-                        ((double)Settings.Default.ReduceIconBrightness / 100d) :
-                        1.0;
+                    image.Opacity = 1.0;
                 }
-            }
-            else
-            {
-                image.Opacity = 1.0;
             }
 
             // リキャスト時間を描画する
@@ -222,7 +224,7 @@ namespace ACT.SpecialSpellTimer.Views
             if (tb.Stroke != stroke) tb.Stroke = stroke;
 
             // アイコンをブリンクさせる
-            this.StartBlink();
+            //this.StartBlink();
         }
 
         /// <summary>
@@ -373,34 +375,40 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Icon Blink Animations
 
-        private ColorAnimation iconBorderColorAnimation = new ColorAnimation(
-            Colors.Transparent,
-            Colors.White,
+        private volatile bool isBlinking = false;
+
+        private DoubleAnimation iconBlinkAnimation = new DoubleAnimation(
+            (double)Settings.Default.ReduceIconBrightness / 100d,
+            1.0,
             TimeSpan.FromSeconds(0.5))
         {
             AutoReverse = true,
+            RepeatBehavior = RepeatBehavior.Forever,
         };
 
-        public void StartBlink()
+        public bool StartBlink()
         {
             if (this.BlinkTime == 0 ||
                 this.RecastTime == 0 ||
                 this.RecastTime > this.BlinkTime)
             {
-                this.IconEffect.BlurRadius = 0;
-                this.IconEffect.BeginAnimation(
-                    DropShadowEffect.ColorProperty,
+                this.isBlinking = false;
+                this.SpellIconImage.BeginAnimation(
+                    System.Windows.Controls.Image.OpacityProperty,
                     null);
-                return;
+
+                return false;
             }
 
-            if (this.IconEffect.BlurRadius == 0)
+            if (!this.isBlinking)
             {
-                this.IconEffect.BlurRadius = 10;
-                this.IconEffect.BeginAnimation(
-                    DropShadowEffect.ColorProperty,
-                    this.iconBorderColorAnimation);
+                this.isBlinking = true;
+                this.SpellIconImage.BeginAnimation(
+                    System.Windows.Controls.Image.OpacityProperty,
+                    this.iconBlinkAnimation);
             }
+
+            return true;
         }
 
         #endregion Icon Blink Animations
@@ -413,6 +421,7 @@ namespace ACT.SpecialSpellTimer.Views
                 var now = DateTime.Now;
                 this.Spell.MatchDateTime = now;
                 this.Spell.CompleteScheduledTime = now.AddSeconds(this.Spell.RecastTime);
+                this.Spell.UpdateDone = false;
             }
         }
     }

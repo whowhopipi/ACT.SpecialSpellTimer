@@ -87,17 +87,10 @@
       Grid.Row="0"
       Panel.ZIndex="-1"
       Background="Black">
-      <Image x:Name="SpellIconImage">
-        <Image.Effect>
-          <DropShadowEffect
-            x:Name="IconEffect"
-            BlurRadius="11"
-            Direction="0"
-            RenderingBias="Performance"
-            ShadowDepth="10"
-            Color="Transparent"/>
-        </Image.Effect>
-      </Image>
+      <Image 
+        x:Name="SpellIconImage" 
+        RenderOptions.BitmapScalingMode="HighQuality" 
+        RenderOptions.EdgeMode="Unspecified" />
     </DockPanel>
 
     <DockPanel
@@ -117,7 +110,6 @@
         <local:OutlineTextBlock.Effect>
           <DropShadowEffect
             BlurRadius="{Binding ElementName=SpellTitleTextBlock, Path=StrokeThickness, Converter={StaticResource StrokeThicknessToBlurRadiusConverter}}"
-            Direction="0"
             RenderingBias="Performance"
             ShadowDepth="0"
             Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />
@@ -147,7 +139,6 @@
         <local:OutlineTextBlock.Effect>
           <DropShadowEffect
             BlurRadius="{Binding ElementName=RecastTimeTextBlock, Path=StrokeThickness, Converter={StaticResource StrokeThicknessToBlurRadiusConverter}}"
-            Direction="0"
             RenderingBias="Performance"
             ShadowDepth="0"
             Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />

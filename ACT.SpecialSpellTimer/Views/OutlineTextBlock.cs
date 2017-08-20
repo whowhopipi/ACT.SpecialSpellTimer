@@ -230,7 +230,9 @@ namespace ACT.SpecialSpellTimer.Views
 
         private void EnsureFormattedText()
         {
-            if (this.FormattedText != null || this.Text == null)
+            if (this.FormattedText != null || 
+                string.IsNullOrEmpty(this.Text) ||
+                this.Visibility == Visibility.Collapsed)
             {
                 return;
             }
