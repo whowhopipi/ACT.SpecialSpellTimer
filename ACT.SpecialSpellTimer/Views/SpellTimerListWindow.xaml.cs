@@ -51,7 +51,7 @@
         /// <summary>
         /// 扱うSpellTimer間のマージン
         /// </summary>
-        public int SpellMargin { get; set; }
+        public double SpellMargin { get; set; }
 
         /// <summary>
         /// SpellTimerを固定位置に表示するか？
@@ -205,6 +205,8 @@
                     c.SetValue(Grid.ColumnProperty, 0);
                     c.SetValue(Grid.RowProperty, 0);
                 }
+
+                c.Spell = spell;
 
                 c.SpellTitle = string.IsNullOrWhiteSpace(spell.SpellTitleReplaced) ?
                     spell.SpellTitle :
@@ -376,7 +378,7 @@
             {
                 this.Left = setting.Left;
                 this.Top = setting.Top;
-                this.SpellMargin = (int)setting.Margin;
+                this.SpellMargin = setting.Margin;
                 this.IsHorizontal = setting.Horizontal;
                 this.SpellPositionFixed = setting.FixedPositionSpell;
 

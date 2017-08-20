@@ -17,6 +17,12 @@
     <local:StrokeThicknessToBlurRadiusConverter x:Key="StrokeThicknessToBlurRadiusConverter" />
   </UserControl.Resources>
 
+  <UserControl.ContextMenu>
+    <ContextMenu>
+      <MenuItem Header="Test" Click="TestMenuItem_Click" />
+    </ContextMenu>
+  </UserControl.ContextMenu>
+  
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition />
@@ -78,32 +84,28 @@
     <DockPanel
       x:Name="SpellIconPanel"
       Grid.Column="0"
+      Grid.Row="0"
       Panel.ZIndex="-1"
       Background="Black">
-      <Border
-        x:Name="SpellIconBorder"
-        BorderThickness="1"
-        BorderBrush="White"
-        Background="Transparent"
-        CornerRadius="2"
-        Visibility="Collapsed">
-        <Border.Effect>
+      <Image x:Name="SpellIconImage">
+        <Image.Effect>
           <DropShadowEffect
-            BlurRadius="8"
+            x:Name="IconEffect"
+            BlurRadius="11"
             Direction="0"
             RenderingBias="Performance"
-            ShadowDepth="0"
-            Color="{Binding ElementName=SpellIconBorder, Path=BorderBrush.Color}" />
-        </Border.Effect>
-        <Image x:Name="SpellIconImage" />
-      </Border>
+            ShadowDepth="10"
+            Color="Transparent"/>
+        </Image.Effect>
+      </Image>
     </DockPanel>
 
     <DockPanel
       Grid.Row="0"
       Grid.Column="1"
       HorizontalAlignment="Left"
-      VerticalAlignment="Bottom">
+      VerticalAlignment="Bottom"
+      Visibility="{Binding ElementName=SpellTitleTextBlock, Path=Visibility, Mode=OneWay}">
       <local:OutlineTextBlock
         x:Name="SpellTitleTextBlock"
         HorizontalAlignment="Left"

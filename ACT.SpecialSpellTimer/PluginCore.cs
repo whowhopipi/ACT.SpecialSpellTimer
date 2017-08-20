@@ -234,7 +234,10 @@ namespace ACT.SpecialSpellTimer
 
                 ActInvoker.Invoke(() =>
                 {
-                    this.SwitchVisibleButton.Location = location;
+                    if (this.SwitchVisibleButton != null)
+                    {
+                        this.SwitchVisibleButton.Location = location;
+                    }
                 });
             }
         }

@@ -3,10 +3,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Image;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.Views
@@ -22,7 +24,6 @@ namespace ACT.SpecialSpellTimer.Views
         public SpellTimerControl()
         {
             this.InitializeComponent();
-            this.InitializeBlinkStoryboard();
         }
 
         /// <summary>
@@ -168,32 +169,33 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>フォントのアウトラインBrush</summary>
         private SolidColorBrush WarningFontOutlineBrush { get; set; }
 
+        public SpellTimer Spell { get; set; }
+
         /// <summary>
         /// 描画を更新する
         /// </summary>
         public void Refresh()
         {
             // アイコンの不透明度を設定する
-            var opacity = 1.0;
+            var image = this.SpellIconImage;
             if (this.ReduceIconBrightness)
             {
                 if (this.RecastTime > 0)
                 {
-                    opacity = this.IsReverse ?
+                    image.Opacity = this.IsReverse ?
                         1.0 :
                         ((double)Settings.Default.ReduceIconBrightness / 100d);
                 }
                 else
                 {
-                    opacity = this.IsReverse ?
+                    image.Opacity = this.IsReverse ?
                         ((double)Settings.Default.ReduceIconBrightness / 100d) :
                         1.0;
                 }
             }
-
-            if (this.SpellIconImage.Opacity != opacity)
+            else
             {
-                this.SpellIconImage.Opacity = opacity;
+                image.Opacity = 1.0;
             }
 
             // リキャスト時間を描画する
@@ -371,8 +373,6 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Icon Blink Animations
 
-        private Storyboard blinkAnimationStoryboard = new Storyboard();
-
         private ColorAnimation iconBorderColorAnimation = new ColorAnimation(
             Colors.Transparent,
             Colors.White,
@@ -381,35 +381,39 @@ namespace ACT.SpecialSpellTimer.Views
             AutoReverse = true,
         };
 
-        private void InitializeBlinkStoryboard()
-        {
-            // 点滅アニメーションを生成する
-            this.blinkAnimationStoryboard.Duration = new Duration(TimeSpan.FromSeconds(0.5));
-            this.blinkAnimationStoryboard.AutoReverse = true;
-            this.blinkAnimationStoryboard.Children.Add(this.iconBorderColorAnimation);
-
-            Storyboard.SetTarget(this.iconBorderColorAnimation, this.SpellIconBorder);
-            Storyboard.SetTargetProperty(this.iconBorderColorAnimation, new PropertyPath("BorderBrush.Color"));
-        }
-
         public void StartBlink()
         {
             if (this.BlinkTime == 0 ||
                 this.RecastTime == 0 ||
                 this.RecastTime > this.BlinkTime)
             {
-                this.SpellIconBorder.Visibility = Visibility.Collapsed;
-                this.blinkAnimationStoryboard.Stop();
+                this.IconEffect.BlurRadius = 0;
+                this.IconEffect.BeginAnimation(
+                    DropShadowEffect.ColorProperty,
+                    null);
                 return;
             }
 
-            if (this.SpellIconBorder.Visibility != Visibility.Visible)
+            if (this.IconEffect.BlurRadius == 0)
             {
-                this.SpellIconBorder.Visibility = Visibility.Visible;
-                this.blinkAnimationStoryboard.Begin();
+                this.IconEffect.BlurRadius = 10;
+                this.IconEffect.BeginAnimation(
+                    DropShadowEffect.ColorProperty,
+                    this.iconBorderColorAnimation);
             }
         }
 
         #endregion Icon Blink Animations
+
+        private void TestMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Spell != null)
+            {
+                // 擬似的にマッチ状態にする
+                var now = DateTime.Now;
+                this.Spell.MatchDateTime = now;
+                this.Spell.CompleteScheduledTime = now.AddSeconds(this.Spell.RecastTime);
+            }
+        }
     }
 }

@@ -510,7 +510,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     panel.Left = left;
                     panel.Top = top;
-                    panel.SpellMargin = (int)margin;
+                    panel.SpellMargin = margin;
                     panel.IsHorizontal = horizontal;
                     panel.SpellPositionFixed = fixedPositionSpell;
                 }
