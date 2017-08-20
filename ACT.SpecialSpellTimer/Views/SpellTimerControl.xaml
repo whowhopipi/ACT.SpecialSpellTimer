@@ -11,9 +11,6 @@
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
-  RenderOptions.ClearTypeHint="Enabled"
-  RenderOptions.BitmapScalingMode="HighQuality"
-  RenderOptions.EdgeMode="Unspecified"
   mc:Ignorable="d">
 
   <UserControl.Resources>
@@ -83,7 +80,23 @@
       Grid.Column="0"
       Panel.ZIndex="-1"
       Background="Black">
-      <Image x:Name="SpellIconImage" />
+      <Border
+        x:Name="SpellIconBorder"
+        BorderThickness="1"
+        BorderBrush="White"
+        Background="Transparent"
+        CornerRadius="2"
+        Visibility="Collapsed">
+        <Border.Effect>
+          <DropShadowEffect
+            BlurRadius="8"
+            Direction="0"
+            RenderingBias="Performance"
+            ShadowDepth="0"
+            Color="{Binding ElementName=SpellIconBorder, Path=BorderBrush.Color}" />
+        </Border.Effect>
+        <Image x:Name="SpellIconImage" />
+      </Border>
     </DockPanel>
 
     <DockPanel

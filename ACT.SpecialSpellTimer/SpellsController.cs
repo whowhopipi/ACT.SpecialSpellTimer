@@ -324,12 +324,7 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 w.SpellTimers = panel.ToArray();
-
-                // ドラッグ中じゃない？
-                if (!w.IsDragging)
-                {
-                    w.RefreshSpellTimer();
-                }
+                w.RefreshSpellTimer();
             }
         }
 

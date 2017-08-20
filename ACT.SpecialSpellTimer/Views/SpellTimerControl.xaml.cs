@@ -22,6 +22,7 @@ namespace ACT.SpecialSpellTimer.Views
         public SpellTimerControl()
         {
             this.InitializeComponent();
+            this.InitializeBlinkStoryboard();
         }
 
         /// <summary>
@@ -133,6 +134,11 @@ namespace ACT.SpecialSpellTimer.Views
         public double WarningTime { get; set; }
 
         /// <summary>
+        /// Time left blink in seconds
+        /// </summary>
+        public double BlinkTime { get; set; }
+
+        /// <summary>
         /// リキャスト秒数の書式
         /// </summary>
         private static string RecastTimeFormat =>
@@ -212,6 +218,9 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (tb.Fill != fill) tb.Fill = fill;
             if (tb.Stroke != stroke) tb.Stroke = stroke;
+
+            // アイコンをブリンクさせる
+            this.StartBlink();
         }
 
         /// <summary>
@@ -359,5 +368,48 @@ namespace ACT.SpecialSpellTimer.Views
             var barEffectColor = this.BarBrush.Color.ChangeBrightness(1.05d);
             if (this.BarEffect.Color != barEffectColor) this.BarEffect.Color = barEffectColor;
         }
+
+        #region Icon Blink Animations
+
+        private Storyboard blinkAnimationStoryboard = new Storyboard();
+
+        private ColorAnimation iconBorderColorAnimation = new ColorAnimation(
+            Colors.Transparent,
+            Colors.White,
+            TimeSpan.FromSeconds(0.5))
+        {
+            AutoReverse = true,
+        };
+
+        private void InitializeBlinkStoryboard()
+        {
+            // 点滅アニメーションを生成する
+            this.blinkAnimationStoryboard.Duration = new Duration(TimeSpan.FromSeconds(0.5));
+            this.blinkAnimationStoryboard.AutoReverse = true;
+            this.blinkAnimationStoryboard.Children.Add(this.iconBorderColorAnimation);
+
+            Storyboard.SetTarget(this.iconBorderColorAnimation, this.SpellIconBorder);
+            Storyboard.SetTargetProperty(this.iconBorderColorAnimation, new PropertyPath("BorderBrush.Color"));
+        }
+
+        public void StartBlink()
+        {
+            if (this.BlinkTime == 0 ||
+                this.RecastTime == 0 ||
+                this.RecastTime > this.BlinkTime)
+            {
+                this.SpellIconBorder.Visibility = Visibility.Collapsed;
+                this.blinkAnimationStoryboard.Stop();
+                return;
+            }
+
+            if (this.SpellIconBorder.Visibility != Visibility.Visible)
+            {
+                this.SpellIconBorder.Visibility = Visibility.Visible;
+                this.blinkAnimationStoryboard.Begin();
+            }
+        }
+
+        #endregion Icon Blink Animations
     }
 }

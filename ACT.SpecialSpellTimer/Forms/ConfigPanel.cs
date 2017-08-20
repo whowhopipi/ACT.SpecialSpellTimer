@@ -201,6 +201,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         nr.DontHide = baseRow.DontHide;
                         nr.HideSpellName = baseRow.HideSpellName;
                         nr.WarningTime = baseRow.WarningTime;
+                        nr.BlinkTime = baseRow.BlinkTime;
                         nr.ChangeFontColorsWhenWarning = baseRow.ChangeFontColorsWhenWarning;
                         nr.OverlapRecastTime = baseRow.OverlapRecastTime;
                         nr.ReduceIconBrightness = baseRow.ReduceIconBrightness;
@@ -743,6 +744,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.WarningTimeCheckBox.Checked = src.ChangeFontColorsWhenWarning;
             this.WarningTimeNumericUpDown.Value = (decimal)src.WarningTime;
+            this.BlinkTimeNumericUpDown.Value = (decimal)src.BlinkTime;
 
             this.SpellVisualSetting.SetFontInfo(src.Font);
             this.SpellVisualSetting.BarColor = string.IsNullOrWhiteSpace(src.BarColor) ?
@@ -964,6 +966,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                     src.WarningTime = (double)this.WarningTimeNumericUpDown.Value;
                     src.ChangeFontColorsWhenWarning = this.WarningTimeCheckBox.Checked;
+                    src.BlinkTime = (double)this.BlinkTimeNumericUpDown.Value;
 
                     var panel = SpellTimerTable.Instance.Table.Where(x => x.Panel == src.Panel);
                     foreach (var s in panel)

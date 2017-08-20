@@ -39,5 +39,13 @@ namespace ACT.SpecialSpellTimer.Utility
                 ".*" + s + ".*" :
                 string.Empty;
         }
+
+        public static bool Contains(
+            this string source,
+            string value,
+            StringComparison comprarison)
+        {
+            return source.IndexOf(value, comprarison) >= 0;
+        }
     }
 }

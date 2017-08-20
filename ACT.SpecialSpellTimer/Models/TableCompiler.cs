@@ -156,7 +156,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in query)
+            query.AsParallel().ForAll(spell =>
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
@@ -170,20 +170,21 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexForExtend1 = null;
                     spell.RegexForExtendPattern2 = string.Empty;
                     spell.RegexForExtend2 = null;
-                    continue;
                 }
+                else
+                {
+                    var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
+                    var r2 = this.GetRegex(spell.RegexForExtend1, spell.RegexForExtendPattern1, spell.KeywordForExtendReplaced1);
+                    var r3 = this.GetRegex(spell.RegexForExtend2, spell.RegexForExtendPattern2, spell.KeywordForExtendReplaced2);
 
-                var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
-                var r2 = this.GetRegex(spell.RegexForExtend1, spell.RegexForExtendPattern1, spell.KeywordForExtendReplaced1);
-                var r3 = this.GetRegex(spell.RegexForExtend2, spell.RegexForExtendPattern2, spell.KeywordForExtendReplaced2);
-
-                spell.Regex = r1.Regex;
-                spell.RegexPattern = r1.RegexPattern;
-                spell.RegexForExtend1 = r2.Regex;
-                spell.RegexForExtendPattern1 = r2.RegexPattern;
-                spell.RegexForExtend2 = r3.Regex;
-                spell.KeywordForExtendReplaced2 = r3.RegexPattern;
-            }
+                    spell.Regex = r1.Regex;
+                    spell.RegexPattern = r1.RegexPattern;
+                    spell.RegexForExtend1 = r2.Regex;
+                    spell.RegexForExtendPattern1 = r2.RegexPattern;
+                    spell.RegexForExtend2 = r3.Regex;
+                    spell.KeywordForExtendReplaced2 = r3.RegexPattern;
+                }
+            });
 
             lock (this.spellListLocker)
             {
@@ -251,7 +252,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in query)
+            query.AsParallel().ForAll(spell =>
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
@@ -262,17 +263,18 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.Regex = null;
                     spell.RegexPatternToHide = string.Empty;
                     spell.RegexToHide = null;
-                    continue;
                 }
+                else
+                {
+                    var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
+                    var r2 = this.GetRegex(spell.RegexToHide, spell.RegexPatternToHide, spell.KeywordToHideReplaced);
 
-                var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
-                var r2 = this.GetRegex(spell.RegexToHide, spell.RegexPatternToHide, spell.KeywordToHideReplaced);
-
-                spell.Regex = r1.Regex;
-                spell.RegexPattern = r1.RegexPattern;
-                spell.RegexToHide = r2.Regex;
-                spell.RegexPatternToHide = r2.RegexPattern;
-            }
+                    spell.Regex = r1.Regex;
+                    spell.RegexPattern = r1.RegexPattern;
+                    spell.RegexToHide = r2.Regex;
+                    spell.RegexPatternToHide = r2.RegexPattern;
+                }
+            });
 
             lock (this.tickerListLocker)
             {

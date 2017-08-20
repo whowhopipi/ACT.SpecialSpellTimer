@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -19,16 +18,6 @@ namespace ACT.SpecialSpellTimer.Views
     public partial class OnePointTelopWindow : Window
     {
         /// <summary>
-        /// ドラッグ終了
-        /// </summary>
-        private Action<MouseEventArgs> DragOff;
-
-        /// <summary>
-        /// ドラッグ開始
-        /// </summary>
-        private Action<MouseEventArgs> DragOn;
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         public OnePointTelopWindow()
@@ -39,40 +28,12 @@ namespace ACT.SpecialSpellTimer.Views
 
             this.Loaded += this.OnePointTelopWindow_Loaded;
             this.MouseLeftButtonDown += (s1, e1) => this.DragMove();
-
-            this.DragOn = new Action<MouseEventArgs>((mouse) =>
-            {
-                if (mouse.LeftButton == MouseButtonState.Pressed)
-                {
-                    this.IsDragging = true;
-                }
-            });
-
-            this.DragOff = new Action<MouseEventArgs>((mouse) =>
-            {
-                if (mouse.LeftButton == MouseButtonState.Released)
-                {
-                    this.IsDragging = false;
-                }
-            });
-
-            this.MouseDown += (s1, e1) => this.DragOn(e1);
-            this.MouseUp += (s1, e1) => this.DragOff(e1);
-            this.MessageTextBlock.MouseDown += (s1, e1) => this.DragOn(e1);
-            this.MessageTextBlock.MouseUp += (s1, e1) => this.DragOff(e1);
-            this.ProgressBarCanvas.MouseDown += (s1, e1) => this.DragOn(e1);
-            this.ProgressBarCanvas.MouseUp += (s1, e1) => this.DragOff(e1);
         }
 
         /// <summary>
         /// 表示するデータソース
         /// </summary>
         public OnePointTelop DataSource { get; set; }
-
-        /// <summary>
-        /// ドラッグ中か？
-        /// </summary>
-        public bool IsDragging { get; private set; }
 
         /// <summary>背景色のBrush</summary>
         private SolidColorBrush BackgroundBrush { get; set; }
@@ -97,11 +58,6 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void Refresh()
         {
-            if (this.IsDragging)
-            {
-                return;
-            }
-
             if (this.DataSource == null)
             {
                 this.HideOverlay();
@@ -176,15 +132,15 @@ namespace ACT.SpecialSpellTimer.Views
             textBlock.SetFontInfo(this.DataSource.Font);
             textBlock.SetAutoStrokeThickness();
 
-            // プログレスバーを初期化する
-            this.InitializeProgressBar();
-
             // プログレスバーを表示しない？
             if (!this.DataSource.ProgressBarEnabled ||
                 this.DataSource.DisplayTime <= 0)
             {
                 this.ProgressBarCanvas.Visibility = Visibility.Collapsed;
             }
+
+            // プログレスバーを初期化する
+            this.InitializeProgressBar();
         }
 
         private void InitializeProgressBar()

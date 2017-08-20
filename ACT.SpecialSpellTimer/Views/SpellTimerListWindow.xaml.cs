@@ -6,7 +6,6 @@
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Input;
     using System.Windows.Interop;
     using System.Windows.Media;
 
@@ -19,16 +18,6 @@
     /// </summary>
     public partial class SpellTimerListWindow : Window
     {
-        /// <summary>
-        /// ドラッグ終了
-        /// </summary>
-        private Action<MouseEventArgs> DragOff;
-
-        /// <summary>
-        /// ドラッグ開始
-        /// </summary>
-        private Action<MouseEventArgs> DragOn;
-
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -47,31 +36,7 @@
                     this.SpellTimerControls.Clear();
                 }
             };
-
-            this.DragOn = new Action<MouseEventArgs>((mouse) =>
-            {
-                if (mouse.LeftButton == MouseButtonState.Pressed)
-                {
-                    this.IsDragging = true;
-                }
-            });
-
-            this.DragOff = new Action<MouseEventArgs>((mouse) =>
-            {
-                if (mouse.LeftButton == MouseButtonState.Released)
-                {
-                    this.IsDragging = false;
-                }
-            });
-
-            this.MouseDown += (s1, e1) => this.DragOn(e1);
-            this.MouseUp += (s1, e1) => this.DragOff(e1);
         }
-
-        /// <summary>
-        /// ドラッグ中か？
-        /// </summary>
-        public bool IsDragging { get; private set; }
 
         /// <summary>
         /// 水平レイアウトか？
@@ -111,11 +76,6 @@
         /// </summary>
         public void RefreshSpellTimer()
         {
-            if (this.IsDragging)
-            {
-                return;
-            }
-
             // 表示するものがなければ何もしない
             if (this.SpellTimers == null)
             {
@@ -235,8 +195,6 @@
                     this.SpellTimerControls.Add(spell.ID, c);
 
                     c.Visibility = Visibility.Collapsed;
-                    c.MouseDown += (s, e) => this.DragOn(e);
-                    c.MouseUp += (s, e) => this.DragOff(e);
 
                     c.HorizontalAlignment = HorizontalAlignment.Left;
                     c.VerticalAlignment = VerticalAlignment.Top;
@@ -269,6 +227,7 @@
                 c.FontOutlineColor = spell.FontOutlineColor;
                 c.WarningFontColor = spell.WarningFontColor;
                 c.WarningFontOutlineColor = spell.WarningFontOutlineColor;
+                c.BlinkTime = spell.BlinkTime;
                 c.BarColor = spell.BarColor;
                 c.BarOutlineColor = spell.BarOutlineColor;
 

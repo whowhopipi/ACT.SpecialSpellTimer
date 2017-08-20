@@ -8,12 +8,9 @@
   Background="Transparent"
   ShowInTaskbar="False"
   SizeToContent="WidthAndHeight"
-  TextOptions.TextFormattingMode="Ideal"
+  TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
-  RenderOptions.ClearTypeHint="Enabled"
-  RenderOptions.BitmapScalingMode="HighQuality"
-  RenderOptions.EdgeMode="Unspecified"
   Topmost="True"
   WindowStyle="None">
 
@@ -85,12 +82,6 @@
         Grid.Column="0"
         Margin="0"
         HorizontalAlignment="Left"
-        FontFamily="メイリオ"
-        FontSize="30"
-        FontStretch="Normal"
-        FontStyle="Normal"
-        FontWeight="ExtraBlack"
-        Text="サンプルテキスト"
         TextWrapping="Wrap">
 
         <local:OutlineTextBlock.Effect>

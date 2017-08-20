@@ -1,6 +1,6 @@
 ﻿namespace ACT.SpecialSpellTimer.Views
 {
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
@@ -15,7 +15,7 @@
         /// <summary>
         /// Brush辞書
         /// </summary>
-        private static Dictionary<string, SolidColorBrush> brushDictionary = new Dictionary<string, SolidColorBrush>();
+        private static ConcurrentDictionary<string, SolidColorBrush> brushDictionary = new ConcurrentDictionary<string, SolidColorBrush>();
 
         /// <summary>
         /// Brushを取得する

@@ -321,6 +321,8 @@
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
             this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.BlinkTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label68 = new System.Windows.Forms.Label();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -388,6 +390,7 @@
             this.panel7.SuspendLayout();
             this.pnlLanguage.SuspendLayout();
             this.DQXOptionTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BlinkTimeNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // CombatAnalyzerContextMenuStrip
@@ -770,6 +773,8 @@
             // SpellDetailPanel
             // 
             this.SpellDetailPanel.AutoScroll = true;
+            this.SpellDetailPanel.Controls.Add(this.label68);
+            this.SpellDetailPanel.Controls.Add(this.BlinkTimeNumericUpDown);
             this.SpellDetailPanel.Controls.Add(this.SelectIconButton);
             this.SpellDetailPanel.Controls.Add(this.label58);
             this.SpellDetailPanel.Controls.Add(this.label56);
@@ -821,7 +826,7 @@
             // SelectIconButton
             // 
             this.SelectIconButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SelectIconButton.Location = new System.Drawing.Point(374, 408);
+            this.SelectIconButton.Location = new System.Drawing.Point(374, 433);
             this.SelectIconButton.Name = "SelectIconButton";
             this.SelectIconButton.Size = new System.Drawing.Size(64, 64);
             this.SelectIconButton.TabIndex = 77;
@@ -980,7 +985,7 @@
             // SpellIconSizeUpDown
             // 
             this.SpellIconSizeUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.SpellIconSizeUpDown.Location = new System.Drawing.Point(447, 453);
+            this.SpellIconSizeUpDown.Location = new System.Drawing.Point(447, 478);
             this.SpellIconSizeUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1051,7 +1056,7 @@
             this.SpellVisualSetting.FontColor = System.Drawing.Color.White;
             this.SpellVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
             this.SpellVisualSetting.HideSpellName = false;
-            this.SpellVisualSetting.Location = new System.Drawing.Point(5, 393);
+            this.SpellVisualSetting.Location = new System.Drawing.Point(5, 418);
             this.SpellVisualSetting.Name = "SpellVisualSetting";
             this.SpellVisualSetting.OverlapRecastTime = false;
             this.SpellVisualSetting.Size = new System.Drawing.Size(355, 88);
@@ -1063,7 +1068,7 @@
             // 
             // SetConditionButton
             // 
-            this.SetConditionButton.Location = new System.Drawing.Point(308, 630);
+            this.SetConditionButton.Location = new System.Drawing.Point(308, 655);
             this.SetConditionButton.Name = "SetConditionButton";
             this.SetConditionButton.Size = new System.Drawing.Size(144, 26);
             this.SetConditionButton.TabIndex = 36;
@@ -1103,7 +1108,7 @@
             // ReduceIconBrightnessCheckBox
             // 
             this.ReduceIconBrightnessCheckBox.AutoSize = true;
-            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 604);
+            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 629);
             this.ReduceIconBrightnessCheckBox.Name = "ReduceIconBrightnessCheckBox";
             this.ReduceIconBrightnessCheckBox.Size = new System.Drawing.Size(190, 16);
             this.ReduceIconBrightnessCheckBox.TabIndex = 72;
@@ -1122,7 +1127,7 @@
             // 
             // SelectZoneButton
             // 
-            this.SelectZoneButton.Location = new System.Drawing.Point(158, 630);
+            this.SelectZoneButton.Location = new System.Drawing.Point(158, 655);
             this.SelectZoneButton.Name = "SelectZoneButton";
             this.SelectZoneButton.Size = new System.Drawing.Size(144, 26);
             this.SelectZoneButton.TabIndex = 29;
@@ -1141,7 +1146,7 @@
             // 
             // SelectJobButton
             // 
-            this.SelectJobButton.Location = new System.Drawing.Point(8, 630);
+            this.SelectJobButton.Location = new System.Drawing.Point(8, 655);
             this.SelectJobButton.Name = "SelectJobButton";
             this.SelectJobButton.Size = new System.Drawing.Size(144, 26);
             this.SelectJobButton.TabIndex = 27;
@@ -1151,7 +1156,7 @@
             // OverlapRecastTimeCheckBox
             // 
             this.OverlapRecastTimeCheckBox.AutoSize = true;
-            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 582);
+            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 607);
             this.OverlapRecastTimeCheckBox.Name = "OverlapRecastTimeCheckBox";
             this.OverlapRecastTimeCheckBox.Size = new System.Drawing.Size(176, 16);
             this.OverlapRecastTimeCheckBox.TabIndex = 71;
@@ -1171,7 +1176,7 @@
             // DontHideCheckBox
             // 
             this.DontHideCheckBox.AutoSize = true;
-            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 537);
+            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 562);
             this.DontHideCheckBox.Name = "DontHideCheckBox";
             this.DontHideCheckBox.Size = new System.Drawing.Size(123, 16);
             this.DontHideCheckBox.TabIndex = 48;
@@ -1181,7 +1186,7 @@
             // HideSpellNameCheckBox
             // 
             this.HideSpellNameCheckBox.AutoSize = true;
-            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 560);
+            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 585);
             this.HideSpellNameCheckBox.Name = "HideSpellNameCheckBox";
             this.HideSpellNameCheckBox.Size = new System.Drawing.Size(153, 16);
             this.HideSpellNameCheckBox.TabIndex = 70;
@@ -1211,7 +1216,7 @@
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(445, 434);
+            this.label61.Location = new System.Drawing.Point(445, 459);
             this.label61.Margin = new System.Windows.Forms.Padding(0);
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(99, 12);
@@ -1231,7 +1236,7 @@
             // IsReverseCheckBox
             // 
             this.IsReverseCheckBox.AutoSize = true;
-            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 516);
+            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 541);
             this.IsReverseCheckBox.Name = "IsReverseCheckBox";
             this.IsReverseCheckBox.Size = new System.Drawing.Size(162, 16);
             this.IsReverseCheckBox.TabIndex = 47;
@@ -1241,7 +1246,7 @@
             // ShowProgressBarCheckBox
             // 
             this.ShowProgressBarCheckBox.AutoSize = true;
-            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 493);
+            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 518);
             this.ShowProgressBarCheckBox.Name = "ShowProgressBarCheckBox";
             this.ShowProgressBarCheckBox.Size = new System.Drawing.Size(166, 16);
             this.ShowProgressBarCheckBox.TabIndex = 46;
@@ -1251,7 +1256,7 @@
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(375, 393);
+            this.label60.Location = new System.Drawing.Point(375, 418);
             this.label60.Margin = new System.Windows.Forms.Padding(0);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(78, 12);
@@ -1736,25 +1741,25 @@
             // TelopExportButton
             // 
             this.TelopExportButton.Name = "TelopExportButton";
-            this.TelopExportButton.Size = new System.Drawing.Size(117, 20);
+            this.TelopExportButton.Size = new System.Drawing.Size(118, 20);
             this.TelopExportButton.Text = "TelopExportButton";
             // 
             // TelopImportButton
             // 
             this.TelopImportButton.Name = "TelopImportButton";
-            this.TelopImportButton.Size = new System.Drawing.Size(118, 20);
+            this.TelopImportButton.Size = new System.Drawing.Size(119, 20);
             this.TelopImportButton.Text = "TelopImportButton";
             // 
             // TelopClearAllButton
             // 
             this.TelopClearAllButton.Name = "TelopClearAllButton";
-            this.TelopClearAllButton.Size = new System.Drawing.Size(123, 20);
+            this.TelopClearAllButton.Size = new System.Drawing.Size(124, 20);
             this.TelopClearAllButton.Text = "TelopClearAllButton";
             // 
             // TelopAddButton
             // 
             this.TelopAddButton.Name = "TelopAddButton";
-            this.TelopAddButton.Size = new System.Drawing.Size(105, 20);
+            this.TelopAddButton.Size = new System.Drawing.Size(106, 20);
             this.TelopAddButton.Text = "TelopAddButton";
             // 
             // TelopDetailGroupBox
@@ -3612,6 +3617,32 @@
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
+            // BlinkTimeNumericUpDown
+            // 
+            this.BlinkTimeNumericUpDown.DecimalPlaces = 1;
+            this.BlinkTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.BlinkTimeNumericUpDown.Location = new System.Drawing.Point(5, 392);
+            this.BlinkTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
+            this.BlinkTimeNumericUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.BlinkTimeNumericUpDown.Name = "BlinkTimeNumericUpDown";
+            this.BlinkTimeNumericUpDown.Size = new System.Drawing.Size(68, 19);
+            this.BlinkTimeNumericUpDown.TabIndex = 78;
+            this.BlinkTimeNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(85, 394);
+            this.label68.Margin = new System.Windows.Forms.Padding(0);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(83, 12);
+            this.label68.TabIndex = 79;
+            this.label68.Text = "BlinkTimeLabel";
+            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3705,6 +3736,7 @@
             this.pnlLanguage.PerformLayout();
             this.DQXOptionTabPage.ResumeLayout(false);
             this.DQXOptionTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BlinkTimeNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4003,5 +4035,7 @@
         private System.Windows.Forms.CheckBox ToComplementUnknownSkillCheckBox;
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.Button SelectIconButton;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.NumericUpDown BlinkTimeNumericUpDown;
     }
 }

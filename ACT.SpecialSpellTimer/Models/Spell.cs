@@ -240,6 +240,7 @@
 
         public string WarningFontOutlineColor { get; set; }
         public double WarningTime { get; set; } = 0;
+        public double BlinkTime { get; set; } = 0;
         public string ZoneFilter { get; set; }
 
         #region Sound files
