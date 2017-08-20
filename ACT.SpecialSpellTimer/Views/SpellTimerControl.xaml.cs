@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Models;
@@ -175,9 +174,10 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void Refresh()
         {
-            // アイコンの不透明度を設定する
+            // 点滅を判定する
             if (!this.StartBlink())
             {
+                // アイコンの不透明度を設定する
                 var image = this.SpellIconImage;
                 if (this.ReduceIconBrightness)
                 {
@@ -222,9 +222,6 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (tb.Fill != fill) tb.Fill = fill;
             if (tb.Stroke != stroke) tb.Stroke = stroke;
-
-            // アイコンをブリンクさせる
-            //this.StartBlink();
         }
 
         /// <summary>
@@ -376,15 +373,61 @@ namespace ACT.SpecialSpellTimer.Views
         #region Icon Blink Animations
 
         private volatile bool isBlinking = false;
+        private static readonly TimeSpan BlinkDuration = TimeSpan.FromSeconds(0.7);
 
-        private DoubleAnimation iconBlinkAnimation = new DoubleAnimation(
-            (double)Settings.Default.ReduceIconBrightness / 100d,
-            1.0,
-            TimeSpan.FromSeconds(0.5))
+        private Storyboard barBlinkStoryboard;
+
+        private Storyboard BarBlinkStoryboard
         {
-            AutoReverse = true,
-            RepeatBehavior = RepeatBehavior.Forever,
+            get
+            {
+                lock (this)
+                {
+                    if (this.barBlinkStoryboard == null)
+                    {
+                        var story = this.barBlinkStoryboard = new Storyboard();
+
+                        if (this.SpellIconSize > 0)
+                        {
+                            story.Children.Add(this.iconBlinkAnimation);
+
+                            Storyboard.SetTarget(this.iconBlinkAnimation, this.SpellIconImage);
+                            Storyboard.SetTargetProperty(this.iconBlinkAnimation, new PropertyPath("Opacity"));
+                        }
+
+                        if (this.BarWidth > 0 ||
+                            this.BarHeight > 0)
+                        {
+                            story.Children.Add(this.barBlinkAnimation);
+
+                            // カラーを設定する
+                            var baseColor = this.BarBrush.Color;
+                            this.barBlinkAnimation.From = this.GetBrush(baseColor.ChangeBrightness(0.4));
+                            this.barBlinkAnimation.To = this.BarRectangle.Fill;
+
+                            Storyboard.SetTarget(this.barBlinkAnimation, this.BarRectangle);
+                            Storyboard.SetTargetProperty(this.barBlinkAnimation, new PropertyPath("Fill"));
+                        }
+
+                        story.AutoReverse = true;
+                        story.RepeatBehavior = RepeatBehavior.Forever;
+                        story.Duration = BlinkDuration;
+
+                        Timeline.SetDesiredFrameRate(story, 30);
+                    }
+
+                    return this.barBlinkStoryboard;
+                }
+            }
+        }
+
+        private DoubleAnimation iconBlinkAnimation = new DoubleAnimation()
+        {
+            From = (double)Settings.Default.ReduceIconBrightness / 100d,
+            To = 1.0,
         };
+
+        private BrushAnimation barBlinkAnimation = new BrushAnimation();
 
         public bool StartBlink()
         {
@@ -393,9 +436,7 @@ namespace ACT.SpecialSpellTimer.Views
                 this.RecastTime > this.BlinkTime)
             {
                 this.isBlinking = false;
-                this.SpellIconImage.BeginAnimation(
-                    System.Windows.Controls.Image.OpacityProperty,
-                    null);
+                this.BarBlinkStoryboard.Stop();
 
                 return false;
             }
@@ -403,9 +444,7 @@ namespace ACT.SpecialSpellTimer.Views
             if (!this.isBlinking)
             {
                 this.isBlinking = true;
-                this.SpellIconImage.BeginAnimation(
-                    System.Windows.Controls.Image.OpacityProperty,
-                    this.iconBlinkAnimation);
+                this.BarBlinkStoryboard.Begin();
             }
 
             return true;

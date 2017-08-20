@@ -127,6 +127,7 @@
       <DependentUpon>SelectIconUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\BackgroundWorkerExntensions.cs" />
+    <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\OnePointTelopWindow.xaml.cs">
       <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
     </Compile>

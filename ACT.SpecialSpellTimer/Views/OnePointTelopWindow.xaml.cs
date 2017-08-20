@@ -221,6 +221,8 @@ namespace ACT.SpecialSpellTimer.Views
                 this.KeyFrame.Value = 0;
                 this.KeyFrame.KeyTime = TimeSpan.FromMilliseconds(timeToLive);
 
+                Timeline.SetDesiredFrameRate(this.animation, 30);
+
                 this.BarRectangle.BeginAnimation(
                     Rectangle.WidthProperty,
                     null);
