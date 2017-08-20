@@ -370,7 +370,7 @@ namespace ACT.SpecialSpellTimer.Views
             if (this.BarEffect.Color != barEffectColor) this.BarEffect.Color = barEffectColor;
         }
 
-        #region Icon Blink Animations
+        #region Blink Animations
 
         private volatile bool isBlinking = false;
         private static readonly TimeSpan BlinkDuration = TimeSpan.FromSeconds(0.7);
@@ -450,7 +450,7 @@ namespace ACT.SpecialSpellTimer.Views
             return true;
         }
 
-        #endregion Icon Blink Animations
+        #endregion Blink Animations
 
         private void TestMenuItem_Click(object sender, RoutedEventArgs e)
         {
