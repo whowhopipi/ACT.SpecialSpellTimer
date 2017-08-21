@@ -1218,7 +1218,15 @@
     <comment>To Complement Unknown skill.</comment>
   </data>
   <data name="BlinkTimeLabel" xml:space="preserve">
-    <value>秒前からアイコンをブリンクさせる</value>
-    <comment>Icon Blink Time</comment>
+    <value>秒前からブリンクさせる</value>
+    <comment>Blink Time</comment>
+  </data>
+  <data name="BlinkBarCheckBox" xml:space="preserve">
+    <value>バーをブリンクさせる</value>
+    <comment>Blink bar</comment>
+  </data>
+  <data name="BlinkIconCheckBox" xml:space="preserve">
+    <value>アイコンをブリンクさせる</value>
+    <comment>Blink icon</comment>
   </data>
 </root>

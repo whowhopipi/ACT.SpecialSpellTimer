@@ -259,7 +259,25 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   秒前からアイコンをブリンクさせる に類似しているローカライズされた文字列を検索します。
+        ///   バーをブリンクさせる に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string BlinkBarCheckBox {
+            get {
+                return ResourceManager.GetString("BlinkBarCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   アイコンをブリンクさせる に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string BlinkIconCheckBox {
+            get {
+                return ResourceManager.GetString("BlinkIconCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   秒前からブリンクさせる に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string BlinkTimeLabel {
             get {

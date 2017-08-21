@@ -156,9 +156,6 @@ namespace ACT.SpecialSpellTimer.Forms
                 nr.WarningFontOutlineColor = Settings.Default.WarningFontOutlineColor.ToHTML();
                 nr.BarColor = Settings.Default.ProgressBarColor.ToHTML();
                 nr.BarOutlineColor = Settings.Default.ProgressBarOutlineColor.ToHTML();
-                nr.FontFamily = Settings.Default.Font.Name;
-                nr.FontSize = Settings.Default.Font.Size;
-                nr.FontStyle = (int)Settings.Default.Font.Style;
                 nr.BarWidth = Settings.Default.ProgressBarSize.Width;
                 nr.BarHeight = Settings.Default.ProgressBarSize.Height;
                 nr.BackgroundColor = Settings.Default.BackgroundColor.ToHTML();
@@ -202,12 +199,11 @@ namespace ACT.SpecialSpellTimer.Forms
                         nr.HideSpellName = baseRow.HideSpellName;
                         nr.WarningTime = baseRow.WarningTime;
                         nr.BlinkTime = baseRow.BlinkTime;
+                        nr.BlinkIcon = baseRow.BlinkIcon;
+                        nr.BlinkBar = baseRow.BlinkBar;
                         nr.ChangeFontColorsWhenWarning = baseRow.ChangeFontColorsWhenWarning;
                         nr.OverlapRecastTime = baseRow.OverlapRecastTime;
                         nr.ReduceIconBrightness = baseRow.ReduceIconBrightness;
-                        nr.FontFamily = baseRow.FontFamily;
-                        nr.FontSize = baseRow.FontSize;
-                        nr.FontStyle = baseRow.FontStyle;
                         nr.Font = baseRow.Font;
                         nr.BarWidth = baseRow.BarWidth;
                         nr.BarHeight = baseRow.BarHeight;
@@ -745,6 +741,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.WarningTimeCheckBox.Checked = src.ChangeFontColorsWhenWarning;
             this.WarningTimeNumericUpDown.Value = (decimal)src.WarningTime;
             this.BlinkTimeNumericUpDown.Value = (decimal)src.BlinkTime;
+            this.BlinkIconCheckBox.Checked = src.BlinkIcon;
+            this.BlinkBarCheckBox.Checked = src.BlinkBar;
 
             this.SpellVisualSetting.SetFontInfo(src.Font);
             this.SpellVisualSetting.BarColor = string.IsNullOrWhiteSpace(src.BarColor) ?
@@ -967,6 +965,8 @@ namespace ACT.SpecialSpellTimer.Forms
                     src.WarningTime = (double)this.WarningTimeNumericUpDown.Value;
                     src.ChangeFontColorsWhenWarning = this.WarningTimeCheckBox.Checked;
                     src.BlinkTime = (double)this.BlinkTimeNumericUpDown.Value;
+                    src.BlinkIcon = this.BlinkIconCheckBox.Checked;
+                    src.BlinkBar = this.BlinkBarCheckBox.Checked;
 
                     var panel = SpellTimerTable.Instance.Table.Where(x => x.Panel == src.Panel);
                     foreach (var s in panel)

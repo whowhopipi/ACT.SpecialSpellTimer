@@ -282,9 +282,6 @@
             nr.DisplayTime = 3;
             nr.FontColor = Settings.Default.FontColor.ToHTML();
             nr.FontOutlineColor = Settings.Default.FontOutlineColor.ToHTML();
-            nr.FontFamily = Settings.Default.Font.Name;
-            nr.FontSize = Settings.Default.Font.Size;
-            nr.FontStyle = (int)Settings.Default.Font.Style;
             nr.BackgroundColor = Settings.Default.BackgroundColor.ToHTML();
             nr.Left = 10.0d;
             nr.Top = 10.0d;
@@ -313,9 +310,6 @@
                     nr.ProgressBarEnabled = baseRow.ProgressBarEnabled;
                     nr.FontColor = baseRow.FontColor;
                     nr.FontOutlineColor = baseRow.FontOutlineColor;
-                    nr.FontFamily = baseRow.FontFamily;
-                    nr.FontSize = baseRow.FontSize;
-                    nr.FontStyle = baseRow.FontStyle;
                     nr.Font = baseRow.Font;
                     nr.BackgroundColor = baseRow.BackgroundColor;
                     nr.BackgroundAlpha = baseRow.BackgroundAlpha;

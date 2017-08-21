@@ -33,7 +33,6 @@
             this.DelaySound = string.Empty;
             this.DelayTextToSpeak = string.Empty;
             this.BackgroundColor = string.Empty;
-            this.FontFamily = string.Empty;
             this.FontColor = string.Empty;
             this.FontOutlineColor = string.Empty;
             this.MatchedLog = string.Empty;
@@ -75,17 +74,11 @@
 
         public bool Enabled { get; set; }
 
-        public FontInfo Font { get; set; }
+        public FontInfo Font { get; set; } = new FontInfo();
 
         public string FontColor { get; set; }
 
-        public string FontFamily { get; set; }
-
         public string FontOutlineColor { get; set; }
-
-        public float FontSize { get; set; }
-
-        public int FontStyle { get; set; }
 
         [XmlIgnore]
         public bool ForceHide { get; set; }

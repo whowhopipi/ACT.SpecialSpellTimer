@@ -16,6 +16,8 @@
 
   <Window.Resources>
     <local:StrokeThicknessToBlurRadiusConverter x:Key="StrokeThicknessToBlurRadiusConverter" />
+    <local:ColorBrightnessConverter x:Key="ColorConv" />
+    <local:BrushBrightnessConverter x:Key="BrushConv" />
   </Window.Resources>
 
   <Grid Name="BackgroundColorGrid">
@@ -51,7 +53,8 @@
           x:Name="BarBackRectangle"
           RadiusX="2"
           RadiusY="2"
-          Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}" />
+          Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}"
+          Fill="{Binding ElementName=BarRectangle, Path=Fill, Converter={StaticResource BrushConv}, ConverterParameter=0.4, Mode=OneWay}" />
 
         <Rectangle
           x:Name="BarRectangle"
@@ -63,7 +66,8 @@
               x:Name="BarEffect"
               BlurRadius="11"
               RenderingBias="Performance"
-              ShadowDepth="0" />
+              ShadowDepth="0"
+              Color="{Binding ElementName=BarRectangle, Path=Fill.Color, Converter={StaticResource ColorConv}, ConverterParameter=1.2, Mode=OneWay}" />
           </Rectangle.Effect>
         </Rectangle>
 

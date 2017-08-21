@@ -38,9 +38,6 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>背景色のBrush</summary>
         private SolidColorBrush BackgroundBrush { get; set; }
 
-        /// <summary>バーの背景のBrush</summary>
-        private SolidColorBrush BarBackBrush { get; set; }
-
         /// <summary>バーのBrush</summary>
         private SolidColorBrush BarBrush { get; set; }
 
@@ -82,7 +79,6 @@ namespace ACT.SpecialSpellTimer.Views
             this.FontBrush = this.GetBrush(fontColor);
             this.FontOutlineBrush = this.GetBrush(fontOutlineColor);
             this.BarBrush = this.GetBrush(barColor);
-            this.BarBackBrush = this.GetBrush(barBackColor);
             this.BarOutlineBrush = this.GetBrush(barOutlineColor);
             this.BackgroundBrush = this.GetBrush(backGroundColor);
 
@@ -154,15 +150,10 @@ namespace ACT.SpecialSpellTimer.Views
             if (barRect.Height != baseHeight) barRect.Height = baseHeight;
 
             var backRect = this.BarBackRectangle;
-            if (backRect.Fill != this.BarBackBrush) backRect.Fill = this.BarBackBrush;
             if (backRect.Width != baseWidth) backRect.Width = baseWidth;
 
             var outlineRect = this.BarOutlineRectangle;
             if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
-
-            // バーのエフェクトの色を設定する
-            var barEffectColor = this.BarBrush.Color.ChangeBrightness(1.05d);
-            if (this.BarEffect.Color != barEffectColor) this.BarEffect.Color = barEffectColor;
         }
 
         /// <summary>

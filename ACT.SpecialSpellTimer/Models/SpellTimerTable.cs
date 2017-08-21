@@ -214,42 +214,9 @@ namespace ACT.SpecialSpellTimer.Models
                     row.BarHeight = Settings.Default.ProgressBarSize.Height;
                 }
 
-                if (string.IsNullOrWhiteSpace(row.FontFamily))
-                {
-                    row.FontFamily = Settings.Default.Font.Name;
-                    row.FontSize = Settings.Default.Font.Size;
-                    row.FontStyle = (int)Settings.Default.Font.Style;
-                }
-
                 if (string.IsNullOrWhiteSpace(row.BackgroundColor))
                 {
                     row.BackgroundColor = Color.Transparent.ToHTML();
-                }
-
-                if (row.Font == null ||
-                    row.Font.Family == null ||
-                    string.IsNullOrWhiteSpace(row.Font.Family.Source))
-                {
-                    var style = (FontStyle)row.FontStyle;
-
-                    row.Font = new FontInfo()
-                    {
-                        FamilyName = row.FontFamily,
-                        Size = row.FontSize / 72.0d * 96.0d,
-                        Style = System.Windows.FontStyles.Normal,
-                        Weight = System.Windows.FontWeights.Normal,
-                        Stretch = System.Windows.FontStretches.Normal
-                    };
-
-                    if ((style & FontStyle.Italic) != 0)
-                    {
-                        row.Font.Style = System.Windows.FontStyles.Italic;
-                    }
-
-                    if ((style & FontStyle.Bold) != 0)
-                    {
-                        row.Font.Weight = System.Windows.FontWeights.Bold;
-                    }
                 }
             }
         }
@@ -292,18 +259,6 @@ namespace ACT.SpecialSpellTimer.Models
 
             var work = new List<SpellTimer>(
                 this.table.Where(x => !x.IsInstance));
-
-            foreach (var item in work)
-            {
-                if (item.Font != null &&
-                    item.Font.Family != null &&
-                    !string.IsNullOrWhiteSpace(item.Font.Family.Source))
-                {
-                    item.FontFamily = string.Empty;
-                    item.FontSize = 1;
-                    item.FontStyle = 0;
-                }
-            }
 
             using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
             {
@@ -367,10 +322,6 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.TimeupHide = sourceSpell.TimeupHide;
                     ns.IsReverse = sourceSpell.IsReverse;
                     ns.Font = sourceSpell.Font;
-                    ns.FontFamily = sourceSpell.FontFamily;
-                    ns.FontSize = sourceSpell.FontSize;
-                    ns.FontStyle = sourceSpell.FontStyle;
-                    ns.FontColor = sourceSpell.FontColor;
                     ns.FontOutlineColor = sourceSpell.FontOutlineColor;
                     ns.WarningFontColor = sourceSpell.WarningFontColor;
                     ns.WarningFontOutlineColor = sourceSpell.WarningFontOutlineColor;

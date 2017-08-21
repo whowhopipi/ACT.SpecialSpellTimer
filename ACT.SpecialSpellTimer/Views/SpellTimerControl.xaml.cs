@@ -146,9 +146,6 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>バーのアニメーション用DoubleAnimation</summary>
         private DoubleAnimation BarAnimation { get; set; }
 
-        /// <summary>バーの背景のBrush</summary>
-        private SolidColorBrush BarBackBrush { get; set; }
-
         /// <summary>バーのBrush</summary>
         private SolidColorBrush BarBrush { get; set; }
 
@@ -293,7 +290,6 @@ namespace ACT.SpecialSpellTimer.Views
             var barColor = string.IsNullOrWhiteSpace(this.BarColor) ?
                 Settings.Default.ProgressBarColor.ToWPF() :
                 this.BarColor.FromHTMLWPF();
-            var barBackColor = barColor.ChangeBrightness(0.4d);
             var barOutlineColor = string.IsNullOrWhiteSpace(this.BarOutlineColor) ?
                 Settings.Default.ProgressBarOutlineColor.ToWPF() :
                 this.BarOutlineColor.FromHTMLWPF();
@@ -303,7 +299,6 @@ namespace ACT.SpecialSpellTimer.Views
             this.WarningFontBrush = this.GetBrush(warningFontColor);
             this.WarningFontOutlineBrush = this.GetBrush(warningFontOutlineColor);
             this.BarBrush = this.GetBrush(barColor);
-            this.BarBackBrush = this.GetBrush(barBackColor);
             this.BarOutlineBrush = this.GetBrush(barOutlineColor);
 
             var tb = default(OutlineTextBlock);
@@ -360,15 +355,10 @@ namespace ACT.SpecialSpellTimer.Views
             if (foreRect.Height != this.BarHeight) foreRect.Height = this.BarHeight;
 
             var backRect = this.BarBackRectangle;
-            if (backRect.Fill != this.BarBackBrush) backRect.Fill = this.BarBackBrush;
             if (backRect.Width != this.BarWidth) backRect.Width = this.BarWidth;
 
             var outlineRect = this.BarOutlineRectangle;
             if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
-
-            // バーのエフェクトの色を設定する
-            var barEffectColor = this.BarBrush.Color.ChangeBrightness(1.2d);
-            if (this.BarEffect.Color != barEffectColor) this.BarEffect.Color = barEffectColor;
         }
 
         #region Blink Animations
@@ -425,7 +415,39 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Bar
 
-        private BrushAnimation barBlinkAnimation = new BrushAnimation();
+        private DiscreteColorKeyFrame barKeyframe1 = new DiscreteColorKeyFrame(Colors.Transparent, TimeSpan.FromSeconds(0));
+        private DiscreteColorKeyFrame barKeyframe2 = new DiscreteColorKeyFrame(Colors.Transparent, TimeSpan.FromSeconds(BlinkHoldDuration));
+        private LinearColorKeyFrame barKeyframe3 = new LinearColorKeyFrame(Colors.Transparent, TimeSpan.FromSeconds(BlinkDuration));
+
+        private ColorAnimationUsingKeyFrames barBlinkAnimation;
+
+        private ColorAnimationUsingKeyFrames BarBlinkAnimation =>
+            (this.barBlinkAnimation ?? (this.barBlinkAnimation = new ColorAnimationUsingKeyFrames()
+            {
+                KeyFrames = new ColorKeyFrameCollection()
+                {
+                    this.barKeyframe1,
+                    this.barKeyframe2,
+                    this.barKeyframe3
+                }
+            }));
+
+        private DiscreteDoubleKeyFrame barEffectKeyframe1 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0));
+        private DiscreteDoubleKeyFrame barEffectKeyframe2 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration));
+        private LinearDoubleKeyFrame barEffectKeyframe3 = new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration));
+
+        private DoubleAnimationUsingKeyFrames barEffectBlinkAnimation;
+
+        private DoubleAnimationUsingKeyFrames BarEffectBlinkAnimation =>
+            (this.barEffectBlinkAnimation ?? (this.barEffectBlinkAnimation = new DoubleAnimationUsingKeyFrames()
+            {
+                KeyFrames = new DoubleKeyFrameCollection()
+                {
+                    this.barEffectKeyframe1,
+                    this.barEffectKeyframe2,
+                    this.barEffectKeyframe3
+                }
+            }));
 
         #endregion Bar
 
@@ -453,23 +475,35 @@ namespace ACT.SpecialSpellTimer.Views
                             this.iconKeyframe1.Value = value1;
                             this.iconKeyframe2.Value = value1;
                             this.iconKeyframe3.Value = vakue2;
-
-                            Storyboard.SetTarget(this.IconBlinkAnimation, this.SpellIconImage);
-                            Storyboard.SetTargetProperty(this.IconBlinkAnimation, new PropertyPath("Opacity"));
                         }
 
                         // バーのアニメを設定する
                         if ((this.BarWidth > 0 || this.BarHeight > 0) &&
                             this.Spell.BlinkBar)
                         {
-                            story.Children.Add(this.barBlinkAnimation);
+                            // バーの色を設定する
+                            story.Children.Add(this.BarBlinkAnimation);
+                            var darkColor = this.BarBrush.Color.ChangeBrightness(0.5);
+                            var lightColor = this.BarBrush.Color.ChangeBrightness(1.1);
 
-                            var baseColor = this.BarBrush.Color;
-                            this.barBlinkAnimation.From = this.GetBrush(baseColor.ChangeBrightness(0.4));
-                            this.barBlinkAnimation.To = this.BarRectangle.Fill;
+                            var value1 = !this.IsReverse ? darkColor : lightColor;
+                            var vakue2 = !this.IsReverse ? lightColor : darkColor;
 
-                            Storyboard.SetTarget(this.barBlinkAnimation, this.BarRectangle);
-                            Storyboard.SetTargetProperty(this.barBlinkAnimation, new PropertyPath("Fill"));
+                            this.barKeyframe1.Value = value1;
+                            this.barKeyframe2.Value = value1;
+                            this.barKeyframe3.Value = vakue2;
+
+                            // バーのエフェクト強度を設定する
+                            story.Children.Add(this.BarEffectBlinkAnimation);
+                            var weekEffect = this.BarEffect.BlurRadius * 0.5;
+                            var strongEffect = this.BarEffect.BlurRadius * 1.5;
+
+                            var effect1 = !this.IsReverse ? weekEffect : strongEffect;
+                            var effect2 = !this.IsReverse ? strongEffect : weekEffect;
+
+                            this.barEffectKeyframe1.Value = effect1;
+                            this.barEffectKeyframe2.Value = effect1;
+                            this.barEffectKeyframe3.Value = effect2;
                         }
 
                         story.AutoReverse = true;
@@ -499,6 +533,14 @@ namespace ACT.SpecialSpellTimer.Views
             if (!this.isBlinking)
             {
                 this.isBlinking = true;
+
+                Storyboard.SetTarget(this.IconBlinkAnimation, this.SpellIconImage);
+                Storyboard.SetTargetProperty(this.IconBlinkAnimation, new PropertyPath("Opacity"));
+                Storyboard.SetTarget(this.BarBlinkAnimation, this.BarRectangle);
+                Storyboard.SetTargetProperty(this.BarBlinkAnimation, new PropertyPath("Fill.Color"));
+                Storyboard.SetTarget(this.BarEffectBlinkAnimation, this.BarEffect);
+                Storyboard.SetTargetProperty(this.BarEffectBlinkAnimation, new PropertyPath("BlurRadius"));
+
                 this.BlinkStoryboard.Begin();
             }
 

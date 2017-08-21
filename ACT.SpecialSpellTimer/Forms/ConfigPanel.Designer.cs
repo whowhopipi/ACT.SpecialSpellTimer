@@ -66,6 +66,8 @@
             this.tabControlExtHoriz2 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.GeneralTab = new System.Windows.Forms.TabPage();
             this.SpellDetailPanel = new System.Windows.Forms.Panel();
+            this.label68 = new System.Windows.Forms.Label();
+            this.BlinkTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.SelectIconButton = new System.Windows.Forms.Button();
             this.label58 = new System.Windows.Forms.Label();
             this.label56 = new System.Windows.Forms.Label();
@@ -321,8 +323,8 @@
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
             this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.BlinkTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label68 = new System.Windows.Forms.Label();
+            this.BlinkIconCheckBox = new System.Windows.Forms.CheckBox();
+            this.BlinkBarCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -340,6 +342,7 @@
             this.tabControlExtHoriz2.SuspendLayout();
             this.GeneralTab.SuspendLayout();
             this.SpellDetailPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BlinkTimeNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.WarningTimeNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds1NumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds2NumericUpDown)).BeginInit();
@@ -390,7 +393,6 @@
             this.panel7.SuspendLayout();
             this.pnlLanguage.SuspendLayout();
             this.DQXOptionTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BlinkTimeNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // CombatAnalyzerContextMenuStrip
@@ -773,6 +775,8 @@
             // SpellDetailPanel
             // 
             this.SpellDetailPanel.AutoScroll = true;
+            this.SpellDetailPanel.Controls.Add(this.BlinkBarCheckBox);
+            this.SpellDetailPanel.Controls.Add(this.BlinkIconCheckBox);
             this.SpellDetailPanel.Controls.Add(this.label68);
             this.SpellDetailPanel.Controls.Add(this.BlinkTimeNumericUpDown);
             this.SpellDetailPanel.Controls.Add(this.SelectIconButton);
@@ -823,10 +827,36 @@
             this.SpellDetailPanel.Size = new System.Drawing.Size(537, 759);
             this.SpellDetailPanel.TabIndex = 74;
             // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(85, 394);
+            this.label68.Margin = new System.Windows.Forms.Padding(0);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(83, 12);
+            this.label68.TabIndex = 79;
+            this.label68.Text = "BlinkTimeLabel";
+            // 
+            // BlinkTimeNumericUpDown
+            // 
+            this.BlinkTimeNumericUpDown.DecimalPlaces = 1;
+            this.BlinkTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.BlinkTimeNumericUpDown.Location = new System.Drawing.Point(5, 392);
+            this.BlinkTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
+            this.BlinkTimeNumericUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.BlinkTimeNumericUpDown.Name = "BlinkTimeNumericUpDown";
+            this.BlinkTimeNumericUpDown.Size = new System.Drawing.Size(68, 19);
+            this.BlinkTimeNumericUpDown.TabIndex = 78;
+            this.BlinkTimeNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // SelectIconButton
             // 
             this.SelectIconButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SelectIconButton.Location = new System.Drawing.Point(374, 433);
+            this.SelectIconButton.Location = new System.Drawing.Point(374, 484);
             this.SelectIconButton.Name = "SelectIconButton";
             this.SelectIconButton.Size = new System.Drawing.Size(64, 64);
             this.SelectIconButton.TabIndex = 77;
@@ -985,7 +1015,7 @@
             // SpellIconSizeUpDown
             // 
             this.SpellIconSizeUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.SpellIconSizeUpDown.Location = new System.Drawing.Point(447, 478);
+            this.SpellIconSizeUpDown.Location = new System.Drawing.Point(447, 529);
             this.SpellIconSizeUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1056,7 +1086,7 @@
             this.SpellVisualSetting.FontColor = System.Drawing.Color.White;
             this.SpellVisualSetting.FontOutlineColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(120)))), ((int)(((byte)(157)))));
             this.SpellVisualSetting.HideSpellName = false;
-            this.SpellVisualSetting.Location = new System.Drawing.Point(5, 418);
+            this.SpellVisualSetting.Location = new System.Drawing.Point(5, 469);
             this.SpellVisualSetting.Name = "SpellVisualSetting";
             this.SpellVisualSetting.OverlapRecastTime = false;
             this.SpellVisualSetting.Size = new System.Drawing.Size(355, 88);
@@ -1068,7 +1098,7 @@
             // 
             // SetConditionButton
             // 
-            this.SetConditionButton.Location = new System.Drawing.Point(308, 655);
+            this.SetConditionButton.Location = new System.Drawing.Point(308, 706);
             this.SetConditionButton.Name = "SetConditionButton";
             this.SetConditionButton.Size = new System.Drawing.Size(144, 26);
             this.SetConditionButton.TabIndex = 36;
@@ -1108,7 +1138,7 @@
             // ReduceIconBrightnessCheckBox
             // 
             this.ReduceIconBrightnessCheckBox.AutoSize = true;
-            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 629);
+            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 680);
             this.ReduceIconBrightnessCheckBox.Name = "ReduceIconBrightnessCheckBox";
             this.ReduceIconBrightnessCheckBox.Size = new System.Drawing.Size(190, 16);
             this.ReduceIconBrightnessCheckBox.TabIndex = 72;
@@ -1127,7 +1157,7 @@
             // 
             // SelectZoneButton
             // 
-            this.SelectZoneButton.Location = new System.Drawing.Point(158, 655);
+            this.SelectZoneButton.Location = new System.Drawing.Point(158, 706);
             this.SelectZoneButton.Name = "SelectZoneButton";
             this.SelectZoneButton.Size = new System.Drawing.Size(144, 26);
             this.SelectZoneButton.TabIndex = 29;
@@ -1146,7 +1176,7 @@
             // 
             // SelectJobButton
             // 
-            this.SelectJobButton.Location = new System.Drawing.Point(8, 655);
+            this.SelectJobButton.Location = new System.Drawing.Point(8, 706);
             this.SelectJobButton.Name = "SelectJobButton";
             this.SelectJobButton.Size = new System.Drawing.Size(144, 26);
             this.SelectJobButton.TabIndex = 27;
@@ -1156,7 +1186,7 @@
             // OverlapRecastTimeCheckBox
             // 
             this.OverlapRecastTimeCheckBox.AutoSize = true;
-            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 607);
+            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 658);
             this.OverlapRecastTimeCheckBox.Name = "OverlapRecastTimeCheckBox";
             this.OverlapRecastTimeCheckBox.Size = new System.Drawing.Size(176, 16);
             this.OverlapRecastTimeCheckBox.TabIndex = 71;
@@ -1176,7 +1206,7 @@
             // DontHideCheckBox
             // 
             this.DontHideCheckBox.AutoSize = true;
-            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 562);
+            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 613);
             this.DontHideCheckBox.Name = "DontHideCheckBox";
             this.DontHideCheckBox.Size = new System.Drawing.Size(123, 16);
             this.DontHideCheckBox.TabIndex = 48;
@@ -1186,7 +1216,7 @@
             // HideSpellNameCheckBox
             // 
             this.HideSpellNameCheckBox.AutoSize = true;
-            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 585);
+            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 636);
             this.HideSpellNameCheckBox.Name = "HideSpellNameCheckBox";
             this.HideSpellNameCheckBox.Size = new System.Drawing.Size(153, 16);
             this.HideSpellNameCheckBox.TabIndex = 70;
@@ -1216,7 +1246,7 @@
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(445, 459);
+            this.label61.Location = new System.Drawing.Point(445, 510);
             this.label61.Margin = new System.Windows.Forms.Padding(0);
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(99, 12);
@@ -1236,7 +1266,7 @@
             // IsReverseCheckBox
             // 
             this.IsReverseCheckBox.AutoSize = true;
-            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 541);
+            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 592);
             this.IsReverseCheckBox.Name = "IsReverseCheckBox";
             this.IsReverseCheckBox.Size = new System.Drawing.Size(162, 16);
             this.IsReverseCheckBox.TabIndex = 47;
@@ -1246,7 +1276,7 @@
             // ShowProgressBarCheckBox
             // 
             this.ShowProgressBarCheckBox.AutoSize = true;
-            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 518);
+            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 569);
             this.ShowProgressBarCheckBox.Name = "ShowProgressBarCheckBox";
             this.ShowProgressBarCheckBox.Size = new System.Drawing.Size(166, 16);
             this.ShowProgressBarCheckBox.TabIndex = 46;
@@ -1256,7 +1286,7 @@
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(375, 418);
+            this.label60.Location = new System.Drawing.Point(375, 469);
             this.label60.Margin = new System.Windows.Forms.Padding(0);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(78, 12);
@@ -3617,31 +3647,25 @@
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // BlinkTimeNumericUpDown
+            // BlinkIconCheckBox
             // 
-            this.BlinkTimeNumericUpDown.DecimalPlaces = 1;
-            this.BlinkTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.BlinkTimeNumericUpDown.Location = new System.Drawing.Point(5, 392);
-            this.BlinkTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
-            this.BlinkTimeNumericUpDown.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.BlinkTimeNumericUpDown.Name = "BlinkTimeNumericUpDown";
-            this.BlinkTimeNumericUpDown.Size = new System.Drawing.Size(68, 19);
-            this.BlinkTimeNumericUpDown.TabIndex = 78;
-            this.BlinkTimeNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.BlinkIconCheckBox.AutoSize = true;
+            this.BlinkIconCheckBox.Location = new System.Drawing.Point(5, 420);
+            this.BlinkIconCheckBox.Name = "BlinkIconCheckBox";
+            this.BlinkIconCheckBox.Size = new System.Drawing.Size(123, 16);
+            this.BlinkIconCheckBox.TabIndex = 80;
+            this.BlinkIconCheckBox.Text = "BlinkIconCheckBox";
+            this.BlinkIconCheckBox.UseVisualStyleBackColor = true;
             // 
-            // label68
+            // BlinkBarCheckBox
             // 
-            this.label68.AutoSize = true;
-            this.label68.Location = new System.Drawing.Point(85, 394);
-            this.label68.Margin = new System.Windows.Forms.Padding(0);
-            this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(83, 12);
-            this.label68.TabIndex = 79;
-            this.label68.Text = "BlinkTimeLabel";
+            this.BlinkBarCheckBox.AutoSize = true;
+            this.BlinkBarCheckBox.Location = new System.Drawing.Point(5, 445);
+            this.BlinkBarCheckBox.Name = "BlinkBarCheckBox";
+            this.BlinkBarCheckBox.Size = new System.Drawing.Size(120, 16);
+            this.BlinkBarCheckBox.TabIndex = 81;
+            this.BlinkBarCheckBox.Text = "BlinkBarCheckBox";
+            this.BlinkBarCheckBox.UseVisualStyleBackColor = true;
             // 
             // ConfigPanel
             // 
@@ -3671,6 +3695,7 @@
             this.GeneralTab.ResumeLayout(false);
             this.SpellDetailPanel.ResumeLayout(false);
             this.SpellDetailPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BlinkTimeNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.WarningTimeNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds1NumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ExpandSecounds2NumericUpDown)).EndInit();
@@ -3736,7 +3761,6 @@
             this.pnlLanguage.PerformLayout();
             this.DQXOptionTabPage.ResumeLayout(false);
             this.DQXOptionTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.BlinkTimeNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4037,5 +4061,7 @@
         private System.Windows.Forms.Button SelectIconButton;
         private System.Windows.Forms.Label label68;
         private System.Windows.Forms.NumericUpDown BlinkTimeNumericUpDown;
+        private System.Windows.Forms.CheckBox BlinkBarCheckBox;
+        private System.Windows.Forms.CheckBox BlinkIconCheckBox;
     }
 }

@@ -173,32 +173,6 @@ namespace ACT.SpecialSpellTimer.Models
                     row.BackgroundColor = Color.Transparent.ToHTML();
                 }
 
-                if (row.Font == null ||
-                    row.Font.Family == null ||
-                    string.IsNullOrWhiteSpace(row.Font.Family.Source))
-                {
-                    var style = (FontStyle)row.FontStyle;
-
-                    row.Font = new FontInfo()
-                    {
-                        FamilyName = row.FontFamily,
-                        Size = row.FontSize / 72.0d * 96.0d,
-                        Style = System.Windows.FontStyles.Normal,
-                        Weight = System.Windows.FontWeights.Normal,
-                        Stretch = System.Windows.FontStretches.Normal
-                    };
-
-                    if ((style & FontStyle.Italic) != 0)
-                    {
-                        row.Font.Style = System.Windows.FontStyles.Italic;
-                    }
-
-                    if ((style & FontStyle.Bold) != 0)
-                    {
-                        row.Font.Weight = System.Windows.FontWeights.Bold;
-                    }
-                }
-
                 // NaNを潰す
                 row.Top = double.IsNaN(row.Top) ? 0 : row.Top;
                 row.Left = double.IsNaN(row.Top) ? 0 : row.Left;
@@ -249,18 +223,6 @@ namespace ACT.SpecialSpellTimer.Models
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
-            }
-
-            foreach (var item in table)
-            {
-                if (item.Font != null &&
-                    item.Font.Family != null &&
-                    !string.IsNullOrWhiteSpace(item.Font.Family.Source))
-                {
-                    item.FontFamily = string.Empty;
-                    item.FontSize = 1;
-                    item.FontStyle = 0;
-                }
             }
 
             using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))

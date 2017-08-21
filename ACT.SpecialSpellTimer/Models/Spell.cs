@@ -137,16 +137,12 @@ namespace ACT.SpecialSpellTimer.Models
 
         public bool ExtendBeyondOriginalRecastTime { get; set; }
 
-        public FontInfo Font { get; set; }
+        public FontInfo Font { get; set; } = new FontInfo();
 
         public string FontColor { get; set; }
 
-        public string FontFamily { get; set; }
-
         public string FontOutlineColor { get; set; }
 
-        public float FontSize { get; set; }
-        public int FontStyle { get; set; }
         public Guid Guid { get; set; }
         public bool HideSpellName { get; set; }
         public long ID { get; set; }
