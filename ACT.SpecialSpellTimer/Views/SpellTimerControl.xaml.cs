@@ -429,20 +429,21 @@ namespace ACT.SpecialSpellTimer.Views
 
         #endregion Bar
 
-        private Storyboard barBlinkStoryboard;
+        private Storyboard blinkStoryboard;
 
-        private Storyboard BarBlinkStoryboard
+        private Storyboard BlinkStoryboard
         {
             get
             {
                 lock (this)
                 {
-                    if (this.barBlinkStoryboard == null)
+                    if (this.blinkStoryboard == null)
                     {
-                        var story = this.barBlinkStoryboard = new Storyboard();
+                        var story = this.blinkStoryboard = new Storyboard();
 
                         // アイコンのアニメを設定する
-                        if (this.SpellIconSize > 0)
+                        if (this.SpellIconSize > 0 &&
+                            this.Spell.BlinkIcon)
                         {
                             story.Children.Add(this.IconBlinkAnimation);
 
@@ -458,8 +459,8 @@ namespace ACT.SpecialSpellTimer.Views
                         }
 
                         // バーのアニメを設定する
-                        if (this.BarWidth > 0 ||
-                            this.BarHeight > 0)
+                        if ((this.BarWidth > 0 || this.BarHeight > 0) &&
+                            this.Spell.BlinkBar)
                         {
                             story.Children.Add(this.barBlinkAnimation);
 
@@ -472,14 +473,13 @@ namespace ACT.SpecialSpellTimer.Views
                         }
 
                         story.AutoReverse = true;
-                        story.RepeatBehavior = RepeatBehavior.Forever;
-                        /*
-                        story.Duration = SpellTimerControl.BlinkDuration;
-                        */
+                        story.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
+
+                        // FPSを制限する。しないと負荷が高くなる
                         Timeline.SetDesiredFrameRate(story, 30);
                     }
 
-                    return this.barBlinkStoryboard;
+                    return this.blinkStoryboard;
                 }
             }
         }
@@ -491,7 +491,7 @@ namespace ACT.SpecialSpellTimer.Views
                 this.RecastTime > this.BlinkTime)
             {
                 this.isBlinking = false;
-                this.BarBlinkStoryboard.Stop();
+                this.BlinkStoryboard.Stop();
 
                 return false;
             }
@@ -499,7 +499,7 @@ namespace ACT.SpecialSpellTimer.Views
             if (!this.isBlinking)
             {
                 this.isBlinking = true;
-                this.BarBlinkStoryboard.Begin();
+                this.BlinkStoryboard.Begin();
             }
 
             return true;
