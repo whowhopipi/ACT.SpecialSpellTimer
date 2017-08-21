@@ -374,15 +374,21 @@ namespace ACT.SpecialSpellTimer.Views
         #region Blink Animations
 
         private volatile bool isBlinking = false;
-        private static readonly double BlinkDuration = 0.6;
+        private const double BlinkDuration = 0.6;
+
+        // 20%状態を維持させる。多少ピークを維持させないと目立たないため
+        private const double BlinkHoldDuration = BlinkDuration * 0.2;
+
+        // 暗さは80%にする。コントラストが必要なため
+        private static readonly double IconDarkValue = ((double)Settings.Default.ReduceIconBrightness / 100d) * 0.8;
+
+        private static readonly double IconLightValue = 1.0;
 
         #region Icon
 
-        // スタートの状態を1.5倍持続させる。少しホールドさせないと点滅が目立たないため
-
-        private DiscreteDoubleKeyFrame iconKeyframe1 = new DiscreteDoubleKeyFrame(1.0, TimeSpan.FromSeconds(0));
-        private DiscreteDoubleKeyFrame iconKeyframe2 = new DiscreteDoubleKeyFrame(1.0, TimeSpan.FromSeconds(BlinkDuration * 0.5));
-        private LinearDoubleKeyFrame iconKeyframe3 = new LinearDoubleKeyFrame(1.0, TimeSpan.FromSeconds(BlinkDuration));
+        private DiscreteDoubleKeyFrame iconKeyframe1 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0));
+        private DiscreteDoubleKeyFrame iconKeyframe2 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration));
+        private LinearDoubleKeyFrame iconKeyframe3 = new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration));
 
         private DoubleAnimationUsingKeyFrames iconBlinkAnimation;
 
@@ -422,11 +428,8 @@ namespace ACT.SpecialSpellTimer.Views
                         {
                             story.Children.Add(this.IconBlinkAnimation);
 
-                            // 暗さは80%にする。コントラストが必要なため
-                            var darkValue = ((double)Settings.Default.ReduceIconBrightness / 100) * 0.8;
-                            var lightValue = 1.0;
-                            var value1 = !this.IsReverse ? darkValue : lightValue;
-                            var vakue2 = !this.IsReverse ? lightValue : darkValue;
+                            var value1 = !this.IsReverse ? IconDarkValue : IconLightValue;
+                            var vakue2 = !this.IsReverse ? IconLightValue : IconDarkValue;
 
                             this.iconKeyframe1.Value = value1;
                             this.iconKeyframe2.Value = value1;
