@@ -389,14 +389,14 @@ IF NOT EXIST %25OUTPUTDIR%25 (
     MKDIR %25OUTPUTDIR%25
 )
 
-DEL /Q /S %25OUTPUTDIR%25
+DEL /Q /S %25OUTPUTDIR%25 &gt;NUL
 
 XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25* /EXCLUDE:$(SolutionDir)exclude.txt
 
 IF EXIST %25OUTPUTDIR%25locale (
     RMDIR /S /Q %25OUTPUTDIR%25locale
 )
-DEL /Q /S %25OUTPUTDIR%25*.xml
+DEL /Q /S %25OUTPUTDIR%25*.xml  &gt;NUL
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
