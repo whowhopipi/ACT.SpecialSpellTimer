@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -59,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Views
 
         protected override Freezable CreateInstanceCore() => new BrushAnimation();
 
-        //we must define From and To, AnimationTimeline does not have this properties
+        // we must define From and To, AnimationTimeline does not have this properties
         public Brush From
         {
             get => (Brush)this.GetValue(FromProperty);

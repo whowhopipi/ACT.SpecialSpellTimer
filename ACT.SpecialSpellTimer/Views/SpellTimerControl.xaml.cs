@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -178,25 +178,26 @@ namespace ACT.SpecialSpellTimer.Views
             if (!this.StartBlink())
             {
                 // アイコンの不透明度を設定する
-                var image = this.SpellIconImage;
+                var opacity = 1.0;
                 if (this.ReduceIconBrightness)
                 {
                     if (this.RecastTime > 0)
                     {
-                        image.Opacity = this.IsReverse ?
+                        opacity = this.IsReverse ?
                             1.0 :
                             ((double)Settings.Default.ReduceIconBrightness / 100d);
                     }
                     else
                     {
-                        image.Opacity = this.IsReverse ?
+                        opacity = this.IsReverse ?
                             ((double)Settings.Default.ReduceIconBrightness / 100d) :
                             1.0;
                     }
                 }
-                else
+
+                if (this.SpellIconImage.Opacity != opacity)
                 {
-                    image.Opacity = 1.0;
+                    this.SpellIconImage.Opacity = opacity;
                 }
             }
 
@@ -366,14 +367,43 @@ namespace ACT.SpecialSpellTimer.Views
             if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
 
             // バーのエフェクトの色を設定する
-            var barEffectColor = this.BarBrush.Color.ChangeBrightness(1.05d);
+            var barEffectColor = this.BarBrush.Color.ChangeBrightness(1.2d);
             if (this.BarEffect.Color != barEffectColor) this.BarEffect.Color = barEffectColor;
         }
 
         #region Blink Animations
 
         private volatile bool isBlinking = false;
-        private static readonly TimeSpan BlinkDuration = TimeSpan.FromSeconds(0.7);
+        private static readonly double BlinkDuration = 0.6;
+
+        #region Icon
+
+        // スタートの状態を1.5倍持続させる。少しホールドさせないと点滅が目立たないため
+
+        private DiscreteDoubleKeyFrame iconKeyframe1 = new DiscreteDoubleKeyFrame(1.0, TimeSpan.FromSeconds(0));
+        private DiscreteDoubleKeyFrame iconKeyframe2 = new DiscreteDoubleKeyFrame(1.0, TimeSpan.FromSeconds(BlinkDuration * 0.5));
+        private LinearDoubleKeyFrame iconKeyframe3 = new LinearDoubleKeyFrame(1.0, TimeSpan.FromSeconds(BlinkDuration));
+
+        private DoubleAnimationUsingKeyFrames iconBlinkAnimation;
+
+        private DoubleAnimationUsingKeyFrames IconBlinkAnimation =>
+            (this.iconBlinkAnimation ?? (this.iconBlinkAnimation = new DoubleAnimationUsingKeyFrames()
+            {
+                KeyFrames = new DoubleKeyFrameCollection()
+                {
+                    this.iconKeyframe1,
+                    this.iconKeyframe2,
+                    this.iconKeyframe3
+                }
+            }));
+
+        #endregion Icon
+
+        #region Bar
+
+        private BrushAnimation barBlinkAnimation = new BrushAnimation();
+
+        #endregion Bar
 
         private Storyboard barBlinkStoryboard;
 
@@ -387,20 +417,31 @@ namespace ACT.SpecialSpellTimer.Views
                     {
                         var story = this.barBlinkStoryboard = new Storyboard();
 
+                        // アイコンのアニメを設定する
                         if (this.SpellIconSize > 0)
                         {
-                            story.Children.Add(this.iconBlinkAnimation);
+                            story.Children.Add(this.IconBlinkAnimation);
 
-                            Storyboard.SetTarget(this.iconBlinkAnimation, this.SpellIconImage);
-                            Storyboard.SetTargetProperty(this.iconBlinkAnimation, new PropertyPath("Opacity"));
+                            // 暗さは80%にする。コントラストが必要なため
+                            var darkValue = ((double)Settings.Default.ReduceIconBrightness / 100) * 0.8;
+                            var lightValue = 1.0;
+                            var value1 = !this.IsReverse ? darkValue : lightValue;
+                            var vakue2 = !this.IsReverse ? lightValue : darkValue;
+
+                            this.iconKeyframe1.Value = value1;
+                            this.iconKeyframe2.Value = value1;
+                            this.iconKeyframe3.Value = vakue2;
+
+                            Storyboard.SetTarget(this.IconBlinkAnimation, this.SpellIconImage);
+                            Storyboard.SetTargetProperty(this.IconBlinkAnimation, new PropertyPath("Opacity"));
                         }
 
+                        // バーのアニメを設定する
                         if (this.BarWidth > 0 ||
                             this.BarHeight > 0)
                         {
                             story.Children.Add(this.barBlinkAnimation);
 
-                            // カラーを設定する
                             var baseColor = this.BarBrush.Color;
                             this.barBlinkAnimation.From = this.GetBrush(baseColor.ChangeBrightness(0.4));
                             this.barBlinkAnimation.To = this.BarRectangle.Fill;
@@ -411,8 +452,9 @@ namespace ACT.SpecialSpellTimer.Views
 
                         story.AutoReverse = true;
                         story.RepeatBehavior = RepeatBehavior.Forever;
-                        story.Duration = BlinkDuration;
-
+                        /*
+                        story.Duration = SpellTimerControl.BlinkDuration;
+                        */
                         Timeline.SetDesiredFrameRate(story, 30);
                     }
 
@@ -420,14 +462,6 @@ namespace ACT.SpecialSpellTimer.Views
                 }
             }
         }
-
-        private DoubleAnimation iconBlinkAnimation = new DoubleAnimation()
-        {
-            From = (double)Settings.Default.ReduceIconBrightness / 100d,
-            To = 1.0,
-        };
-
-        private BrushAnimation barBlinkAnimation = new BrushAnimation();
 
         public bool StartBlink()
         {
