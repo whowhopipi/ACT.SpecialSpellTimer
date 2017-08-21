@@ -1,10 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using ACT.SpecialSpellTimer;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 
-namespace ACT
+namespace ACT.SpecialSpellTimer
 {
     /// <summary>
     /// SpecialSpellTimer Plugin
@@ -12,9 +11,16 @@ namespace ACT
     public class Plugin :
         IActPluginV1
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public Plugin()
+        {
+            AssemblyResolver.Instance.Initialize();
+        }
+
         /// <summary>
         /// 後片付けをする
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         void IActPluginV1.DeInitPlugin()
         {
             PluginCore.Instance.DeInitPluginCore();
@@ -31,8 +37,6 @@ namespace ACT
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
-            AssemblyResolver.Instance.Initialize(this);
-
             Logger.Begin();
             PluginCore.Initialize(this);
             PluginCore.Instance.InitPluginCore(

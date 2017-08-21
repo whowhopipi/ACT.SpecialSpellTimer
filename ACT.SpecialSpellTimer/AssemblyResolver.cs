@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
-
 using Advanced_Combat_Tracker;
 
 namespace ACT.SpecialSpellTimer
@@ -18,16 +17,13 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
-        private static readonly Regex AssemblyNameParser = new Regex(
-            @"(?<name>.+?), Version=(?<version>.+?), Culture=(?<culture>.+?), PublicKeyToken=(?<pubkey>.+)",
-            RegexOptions.Compiled);
-
         public List<string> Directories { get; private set; } = new List<string>();
 
-        public void Initialize(
-            IActPluginV1 plugin)
+        public void Initialize()
         {
-            var pluginDirectory = ActGlobals.oFormActMain?.PluginGetSelfData(plugin)?.pluginFile.DirectoryName;
+            var pluginDirectory = ActGlobals.oFormActMain?.ActPlugins
+                .FirstOrDefault(x => x.pluginFile.Name.Contains("ACT.SpecialSpellTimer"))?
+                .pluginFile.DirectoryName;
             if (!string.IsNullOrEmpty(pluginDirectory))
             {
                 this.Directories.Add(pluginDirectory);
@@ -43,31 +39,27 @@ namespace ACT.SpecialSpellTimer
 
         private Assembly CustomAssemblyResolve(object sender, ResolveEventArgs e)
         {
+            Assembly tryLoadAssembly(
+                string directory,
+                string extension)
+            {
+                var asm = new AssemblyName(e.Name);
+
+                var asmPath = Path.Combine(directory, asm.Name + extension);
+                if (File.Exists(asmPath))
+                {
+                    return Assembly.LoadFrom(asmPath);
+                }
+
+                return null;
+            }
+
             // Directories プロパティで指定されたディレクトリを基準にアセンブリを検索する
             foreach (var directory in this.Directories)
             {
-                var asmPath = string.Empty;
-                var match = AssemblyNameParser.Match(e.Name);
-                if (match.Success)
+                var asm = tryLoadAssembly(directory, ".dll");
+                if (asm != null)
                 {
-                    var asmFileName = match.Groups["name"].Value + ".dll";
-                    if (match.Groups["culture"].Value == "neutral")
-                    {
-                        asmPath = Path.Combine(directory, asmFileName);
-                    }
-                    else
-                    {
-                        asmPath = Path.Combine(directory, match.Groups["culture"].Value, asmFileName);
-                    }
-                }
-                else
-                {
-                    asmPath = Path.Combine(directory, e.Name + ".dll");
-                }
-
-                if (File.Exists(asmPath))
-                {
-                    var asm = Assembly.LoadFile(asmPath);
                     return asm;
                 }
             }
