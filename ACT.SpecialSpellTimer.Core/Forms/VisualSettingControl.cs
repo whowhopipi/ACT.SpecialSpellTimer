@@ -379,7 +379,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ChangeFontColorItem.Click += async (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.FontColor);
+                var result = await ColorDialogWrapper.ShowDialogAsync(this.FontColor, true);
                 if (result.Result)
                 {
                     this.FontColor = result.LegacyColor;
@@ -389,7 +389,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ChangeFontOutlineColorItem.Click += async (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.FontOutlineColor);
+                var result = await ColorDialogWrapper.ShowDialogAsync(this.FontOutlineColor, true);
                 if (result.Result)
                 {
                     this.FontOutlineColor = result.LegacyColor;
@@ -399,7 +399,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ChangeWarningFontColorItem.Click += async (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.WarningFontColor);
+                var result = await ColorDialogWrapper.ShowDialogAsync(this.WarningFontColor, true);
                 if (result.Result)
                 {
                     this.WarningFontColor = result.LegacyColor;
@@ -409,7 +409,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ChangeWarningFontOutlineColorItem.Click += async (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.WarningFontOutlineColor);
+                var result = await ColorDialogWrapper.ShowDialogAsync(this.WarningFontOutlineColor, true);
                 if (result.Result)
                 {
                     this.WarningFontOutlineColor = result.LegacyColor;
@@ -419,7 +419,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ChangeBarColorItem.Click += async (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.BarColor);
+                var result = await ColorDialogWrapper.ShowDialogAsync(this.BarColor, true);
                 if (result.Result)
                 {
                     this.BarColor = result.LegacyColor;
@@ -429,7 +429,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ChangeBarOutlineColorItem.Click += async (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.BarOutlineColor);
+                var result = await ColorDialogWrapper.ShowDialogAsync(this.BarOutlineColor, true);
                 if (result.Result)
                 {
                     this.BarOutlineColor = result.LegacyColor;
@@ -439,7 +439,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ChangeBackgoundColorItem.Click += async (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.backgroundColor);
+                var result = await ColorDialogWrapper.ShowDialogAsync(this.backgroundColor, true);
                 if (result.Result)
                 {
                     this.backgroundColor = Color.FromArgb(
