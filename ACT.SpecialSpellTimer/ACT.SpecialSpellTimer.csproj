@@ -59,10 +59,6 @@
       <Project>{5fc72c62-16d6-4f95-aa45-c7ad5f8a7901}</Project>
       <Name>FFXIV.Framework.Dialog</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XIVDBDownloader\XIVDBDownloader.csproj">
-      <Project>{c3fa9195-3381-4622-97eb-d0e1ca7c8b14}</Project>
-      <Name>XIVDBDownloader</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

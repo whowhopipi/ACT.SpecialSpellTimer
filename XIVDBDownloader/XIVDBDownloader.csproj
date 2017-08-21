@@ -133,19 +133,25 @@
   <PropertyGroup>
     <PostBuildEvent>@ECHO OFF
 
-SET OUTPUTDIR=$(SolutionDir)bin\$(ConfigurationName)\tools\XIVDBDownloader\
+IF "$(ConfigurationName)"=="Debug" (
+    EXIT /B
+)
+
+SET OUTPUTDIR=$(SolutionDir)deploy\$(ConfigurationName)\tools\XIVDBDownloader\
 
 IF NOT EXIST %25OUTPUTDIR%25 (
     MKDIR %25OUTPUTDIR%25
 )
 
-DEL /Q /S %25OUTPUTDIR%25
+@DEL /Q /S %25OUTPUTDIR%25
 
-XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25*
+XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25* /EXCLUDE:$(SolutionDir)exclude.txt
 
-RMDIR /S /Q %25OUTPUTDIR%25locale
-DEL /Q %25OUTPUTDIR%25*.xml
-DEL /Q %25OUTPUTDIR%25*.pdb
+IF EXIST %25OUTPUTDIR%25locale (
+    RMDIR /S /Q %25OUTPUTDIR%25locale
+)
+DEL /Q /S %25OUTPUTDIR%25*.xml
+
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

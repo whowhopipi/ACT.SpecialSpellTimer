@@ -216,7 +216,6 @@
     </Compile>
     <Compile Include="Models\SpellTimerTable.cs" />
     <Compile Include="UpdateChecker.cs" />
-    <Compile Include="Utility\FontUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\samples\" />
@@ -380,7 +379,11 @@
   <PropertyGroup>
     <PostBuildEvent>@ECHO OFF
 
-SET OUTPUTDIR=$(SolutionDir)bin\$(ConfigurationName)\
+IF "$(ConfigurationName)"=="Debug" (
+    EXIT /B
+)
+
+SET OUTPUTDIR=$(SolutionDir)deploy\$(ConfigurationName)\
 
 IF NOT EXIST %25OUTPUTDIR%25 (
     MKDIR %25OUTPUTDIR%25
@@ -388,11 +391,12 @@ IF NOT EXIST %25OUTPUTDIR%25 (
 
 DEL /Q /S %25OUTPUTDIR%25
 
-XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25*
+XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25* /EXCLUDE:$(SolutionDir)exclude.txt
 
-RMDIR /S /Q %25OUTPUTDIR%25locale
-DEL /Q %25OUTPUTDIR%25*.xml
-DEL /Q %25OUTPUTDIR%25*.pdb
+IF EXIST %25OUTPUTDIR%25locale (
+    RMDIR /S /Q %25OUTPUTDIR%25locale
+)
+DEL /Q /S %25OUTPUTDIR%25*.xml
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

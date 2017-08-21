@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +9,8 @@ namespace ACT.SpecialSpellTimer
 {
     public class AssemblyResolver
     {
+        private const string PluginName = "ACT.SpecialSpellTimer";
+
         #region Singleton
 
         private static AssemblyResolver instance = new AssemblyResolver();
@@ -22,7 +24,7 @@ namespace ACT.SpecialSpellTimer
         public void Initialize()
         {
             var pluginDirectory = ActGlobals.oFormActMain?.ActPlugins
-                .FirstOrDefault(x => x.pluginFile.Name.Contains("ACT.SpecialSpellTimer"))?
+                .FirstOrDefault(x => x.pluginFile.Name.Contains(PluginName))?
                 .pluginFile.DirectoryName;
             if (!string.IsNullOrEmpty(pluginDirectory))
             {

@@ -1,10 +1,11 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Windows.Forms;
 
     using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
+    using FFXIV.Framework.Extensions;
 
     /// <summary>
     /// Configパネル オプション

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -296,7 +296,7 @@ namespace ACT.SpecialSpellTimer.Forms
                             Translate.Get("SampleSpell"),
                             font.FontFamily,
                             (int)font.Style,
-                            (float)font.ToFontSizeWPF(),
+                            font.Size,
                             fontRect,
                             spellSf);
                     }
@@ -312,7 +312,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         Settings.Default.EnabledSpellTimerNoDecimal ? "120" : "120.0",
                         font.FontFamily,
                         (int)font.Style,
-                        (float)font.ToFontSizeWPF(),
+                        font.Size,
                         fontRect,
                         recastSf);
                 }
@@ -322,7 +322,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         Translate.Get("SampleTelop"),
                         font.FontFamily,
                         (int)font.Style,
-                        (float)font.ToFontSizeWPF(),
+                        font.Size,
                         fontRect,
                         telopSf);
                 }
