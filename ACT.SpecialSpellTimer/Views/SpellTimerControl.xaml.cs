@@ -373,16 +373,34 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Blink Animations
 
-        private volatile bool isBlinking = false;
+        /// <summary>
+        /// 点滅のサイクル
+        /// </summary>
         private const double BlinkDuration = 0.6;
 
-        // 20%状態を維持させる。多少ピークを維持させないと目立たないため
+        /// <summary>
+        /// 点滅のピーク状態のホールド時間
+        /// </summary>
+        /// <remarks>
+        /// ピーク状態を多少ホールドしないと点滅が目立たないため</remarks>
         private const double BlinkHoldDuration = BlinkDuration * 0.2;
 
-        // 暗さは80%にする。コントラストが必要なため
+        /// <summary>
+        /// アイコンの暗い状態の値
+        /// </summary>
+        /// <remarks>
+        /// 暗さ設定の80%とする。点滅の際にはよりコントラストが必要なため</remarks>
         private static readonly double IconDarkValue = ((double)Settings.Default.ReduceIconBrightness / 100d) * 0.8;
 
+        /// <summary>
+        /// アイコンの明るい状態の値
+        /// </summary>
         private static readonly double IconLightValue = 1.0;
+
+        /// <summary>
+        /// ブリンク状態か？
+        /// </summary>
+        private volatile bool isBlinking = false;
 
         #region Icon
 
