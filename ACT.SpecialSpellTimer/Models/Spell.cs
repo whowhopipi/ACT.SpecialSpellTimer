@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Models
+namespace ACT.SpecialSpellTimer.Models
 {
     using System;
     using System.IO;
@@ -241,6 +241,8 @@
         public string WarningFontOutlineColor { get; set; }
         public double WarningTime { get; set; } = 0;
         public double BlinkTime { get; set; } = 0;
+        public bool BlinkIcon { get; set; } = false;
+        public bool BlinkBar { get; set; } = false;
         public string ZoneFilter { get; set; }
 
         #region Sound files
