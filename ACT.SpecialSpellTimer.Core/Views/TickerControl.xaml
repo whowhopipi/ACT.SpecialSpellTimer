@@ -51,8 +51,8 @@
             x:Name="BarBackRectangle"
             RadiusX="2"
             RadiusY="2"
-            Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}"
             Width="{Binding ElementName=ProgressBarPanel, Path=ActualWidth, Mode=OneWay}"
+            Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}"
             Fill="{Binding ElementName=BarRectangle, Path=Fill, Converter={StaticResource BrushConv}, ConverterParameter=0.4, Mode=OneWay}" />
 
           <Rectangle

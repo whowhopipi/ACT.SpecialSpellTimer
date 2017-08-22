@@ -42,7 +42,9 @@
       Grid.Column="0"
       Grid.ColumnSpan="3"
       Margin="0,2,0,10"
-      VerticalAlignment="Top">
+      VerticalAlignment="Top"
+      Width="{Binding ElementName=BarBackRectangle, Path=Width, Mode=OneWay}"
+      Height="{Binding ElementName=BarBackRectangle, Path=Height, Mode=OneWay}">
 
       <Rectangle
         x:Name="BarBackRectangle"
@@ -73,7 +75,7 @@
             x:Name="BarRectangle"
             RadiusX="2"
             RadiusY="2"
-            Fill="Transparent"/>
+            Fill="Transparent" />
         </Canvas>
       </Canvas>
 
