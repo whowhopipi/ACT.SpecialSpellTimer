@@ -146,8 +146,11 @@ namespace ACT.SpecialSpellTimer.Models
             var query =
                 from x in sourceList
                 where
-                x.Enabled &&
-                filter(x)
+                x.IsTemporarilyDisplay ||
+                (
+                    x.Enabled &&
+                    filter(x)
+                )
                 orderby
                 x.Panel,
                 x.DisplayNo,

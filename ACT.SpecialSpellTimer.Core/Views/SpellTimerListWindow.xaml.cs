@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Views
+namespace ACT.SpecialSpellTimer.Views
 {
     using System;
     using System.Collections.Generic;
@@ -99,6 +99,7 @@
                     from x in spells
                     where
                     x.DontHide ||
+                    x.IsTemporarilyDisplay ||
                     (DateTime.Now - x.CompleteScheduledTime).TotalSeconds <= Settings.Default.TimeOfHideSpell
                     select
                     x;
@@ -277,10 +278,13 @@
                 if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
                     this.SpellPositionFixed)
                 {
-                    if (!spell.DontHide &&
-                        (DateTime.Now - spell.CompleteScheduledTime).TotalSeconds > Settings.Default.TimeOfHideSpell)
+                    if (!spell.IsTemporarilyDisplay)
                     {
-                        timeupList.Add(c);
+                        if (!spell.DontHide &&
+                            (DateTime.Now - spell.CompleteScheduledTime).TotalSeconds > Settings.Default.TimeOfHideSpell)
+                        {
+                            timeupList.Add(c);
+                        }
                     }
                 }
             }

@@ -178,7 +178,7 @@ namespace ACT.SpecialSpellTimer.Forms
             };
 
             // テロップの一時表示チェックボックス
-            this.TemporarilyDisplayCheckBox.CheckedChanged += (s1, e1) =>
+            this.TemporarilyDisplayTickerCheckBox.CheckedChanged += (s1, e1) =>
             {
                 var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
                 if (src == null)
@@ -186,7 +186,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
-                src.IsTemporarilyDisplay = this.TemporarilyDisplayCheckBox.Checked;
+                src.IsTemporarilyDisplay = this.TemporarilyDisplayTickerCheckBox.Checked;
 
                 TableCompiler.Instance.RecompileTickers();
             };
@@ -235,7 +235,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 Settings.Default.BackgroundColor :
                 Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
 
-            this.TemporarilyDisplayCheckBox.Checked = src.IsTemporarilyDisplay;
+            this.TemporarilyDisplayTickerCheckBox.Checked = src.IsTemporarilyDisplay;
 
             this.TelopVisualSetting.RefreshSampleImage();
 

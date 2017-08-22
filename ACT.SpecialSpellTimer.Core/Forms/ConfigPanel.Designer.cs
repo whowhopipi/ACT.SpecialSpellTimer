@@ -163,6 +163,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TelopDeleteButton = new System.Windows.Forms.Button();
             this.tabControlExtHoriz3 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.TemporarilyDisplayTickerCheckBox = new System.Windows.Forms.CheckBox();
             this.TelopTitleTextBox = new System.Windows.Forms.TextBox();
             this.TelopMessageTextBox = new System.Windows.Forms.TextBox();
             this.TelopKeywordTextBox = new System.Windows.Forms.TextBox();
@@ -324,7 +325,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.TemporarilyDisplayCheckBox = new System.Windows.Forms.CheckBox();
+            this.TemporarilyDisplaySpellCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -776,6 +777,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.SpellDetailPanel.AutoScroll = true;
             this.SpellDetailPanel.AutoScrollMargin = new System.Drawing.Size(10, 40);
+            this.SpellDetailPanel.Controls.Add(this.TemporarilyDisplaySpellCheckBox);
             this.SpellDetailPanel.Controls.Add(this.BlinkBarCheckBox);
             this.SpellDetailPanel.Controls.Add(this.BlinkIconCheckBox);
             this.SpellDetailPanel.Controls.Add(this.label68);
@@ -1119,7 +1121,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // SetConditionButton
             // 
-            this.SetConditionButton.Location = new System.Drawing.Point(308, 706);
+            this.SetConditionButton.Location = new System.Drawing.Point(308, 725);
             this.SetConditionButton.Name = "SetConditionButton";
             this.SetConditionButton.Size = new System.Drawing.Size(144, 26);
             this.SetConditionButton.TabIndex = 36;
@@ -1159,7 +1161,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // ReduceIconBrightnessCheckBox
             // 
             this.ReduceIconBrightnessCheckBox.AutoSize = true;
-            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 680);
+            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 699);
             this.ReduceIconBrightnessCheckBox.Name = "ReduceIconBrightnessCheckBox";
             this.ReduceIconBrightnessCheckBox.Size = new System.Drawing.Size(190, 16);
             this.ReduceIconBrightnessCheckBox.TabIndex = 72;
@@ -1178,7 +1180,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // SelectZoneButton
             // 
-            this.SelectZoneButton.Location = new System.Drawing.Point(158, 706);
+            this.SelectZoneButton.Location = new System.Drawing.Point(158, 725);
             this.SelectZoneButton.Name = "SelectZoneButton";
             this.SelectZoneButton.Size = new System.Drawing.Size(144, 26);
             this.SelectZoneButton.TabIndex = 29;
@@ -1197,7 +1199,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // SelectJobButton
             // 
-            this.SelectJobButton.Location = new System.Drawing.Point(8, 706);
+            this.SelectJobButton.Location = new System.Drawing.Point(8, 725);
             this.SelectJobButton.Name = "SelectJobButton";
             this.SelectJobButton.Size = new System.Drawing.Size(144, 26);
             this.SelectJobButton.TabIndex = 27;
@@ -1207,7 +1209,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // OverlapRecastTimeCheckBox
             // 
             this.OverlapRecastTimeCheckBox.AutoSize = true;
-            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 658);
+            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 677);
             this.OverlapRecastTimeCheckBox.Name = "OverlapRecastTimeCheckBox";
             this.OverlapRecastTimeCheckBox.Size = new System.Drawing.Size(176, 16);
             this.OverlapRecastTimeCheckBox.TabIndex = 71;
@@ -1227,7 +1229,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // DontHideCheckBox
             // 
             this.DontHideCheckBox.AutoSize = true;
-            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 613);
+            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 632);
             this.DontHideCheckBox.Name = "DontHideCheckBox";
             this.DontHideCheckBox.Size = new System.Drawing.Size(123, 16);
             this.DontHideCheckBox.TabIndex = 48;
@@ -1237,7 +1239,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // HideSpellNameCheckBox
             // 
             this.HideSpellNameCheckBox.AutoSize = true;
-            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 636);
+            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 655);
             this.HideSpellNameCheckBox.Name = "HideSpellNameCheckBox";
             this.HideSpellNameCheckBox.Size = new System.Drawing.Size(153, 16);
             this.HideSpellNameCheckBox.TabIndex = 70;
@@ -1287,7 +1289,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // IsReverseCheckBox
             // 
             this.IsReverseCheckBox.AutoSize = true;
-            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 592);
+            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 611);
             this.IsReverseCheckBox.Name = "IsReverseCheckBox";
             this.IsReverseCheckBox.Size = new System.Drawing.Size(162, 16);
             this.IsReverseCheckBox.TabIndex = 47;
@@ -1297,7 +1299,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // ShowProgressBarCheckBox
             // 
             this.ShowProgressBarCheckBox.AutoSize = true;
-            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 569);
+            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 588);
             this.ShowProgressBarCheckBox.Name = "ShowProgressBarCheckBox";
             this.ShowProgressBarCheckBox.Size = new System.Drawing.Size(166, 16);
             this.ShowProgressBarCheckBox.TabIndex = 46;
@@ -1871,7 +1873,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.tabPage1.AutoScroll = true;
             this.tabPage1.AutoScrollMargin = new System.Drawing.Size(10, 40);
-            this.tabPage1.Controls.Add(this.TemporarilyDisplayCheckBox);
+            this.tabPage1.Controls.Add(this.TemporarilyDisplayTickerCheckBox);
             this.tabPage1.Controls.Add(this.TelopTitleTextBox);
             this.tabPage1.Controls.Add(this.TelopMessageTextBox);
             this.tabPage1.Controls.Add(this.TelopKeywordTextBox);
@@ -1905,6 +1907,17 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "GeneralTab";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // TemporarilyDisplayTickerCheckBox
+            // 
+            this.TemporarilyDisplayTickerCheckBox.AutoSize = true;
+            this.TemporarilyDisplayTickerCheckBox.ForeColor = System.Drawing.Color.DeepPink;
+            this.TemporarilyDisplayTickerCheckBox.Location = new System.Drawing.Point(5, 327);
+            this.TemporarilyDisplayTickerCheckBox.Name = "TemporarilyDisplayTickerCheckBox";
+            this.TemporarilyDisplayTickerCheckBox.Size = new System.Drawing.Size(174, 16);
+            this.TemporarilyDisplayTickerCheckBox.TabIndex = 76;
+            this.TemporarilyDisplayTickerCheckBox.Text = "TemporarilyDisplayCheckBox";
+            this.TemporarilyDisplayTickerCheckBox.UseVisualStyleBackColor = true;
             // 
             // TelopTitleTextBox
             // 
@@ -3662,16 +3675,16 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // TemporarilyDisplayCheckBox
+            // TemporarilyDisplaySpellCheckBox
             // 
-            this.TemporarilyDisplayCheckBox.AutoSize = true;
-            this.TemporarilyDisplayCheckBox.ForeColor = System.Drawing.Color.DeepPink;
-            this.TemporarilyDisplayCheckBox.Location = new System.Drawing.Point(5, 327);
-            this.TemporarilyDisplayCheckBox.Name = "TemporarilyDisplayCheckBox";
-            this.TemporarilyDisplayCheckBox.Size = new System.Drawing.Size(174, 16);
-            this.TemporarilyDisplayCheckBox.TabIndex = 76;
-            this.TemporarilyDisplayCheckBox.Text = "TemporarilyDisplayCheckBox";
-            this.TemporarilyDisplayCheckBox.UseVisualStyleBackColor = true;
+            this.TemporarilyDisplaySpellCheckBox.AutoSize = true;
+            this.TemporarilyDisplaySpellCheckBox.ForeColor = System.Drawing.Color.DeepPink;
+            this.TemporarilyDisplaySpellCheckBox.Location = new System.Drawing.Point(8, 563);
+            this.TemporarilyDisplaySpellCheckBox.Name = "TemporarilyDisplaySpellCheckBox";
+            this.TemporarilyDisplaySpellCheckBox.Size = new System.Drawing.Size(174, 16);
+            this.TemporarilyDisplaySpellCheckBox.TabIndex = 82;
+            this.TemporarilyDisplaySpellCheckBox.Text = "TemporarilyDisplayCheckBox";
+            this.TemporarilyDisplaySpellCheckBox.UseVisualStyleBackColor = true;
             // 
             // ConfigPanel
             // 
@@ -4068,6 +4081,7 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.NumericUpDown BlinkTimeNumericUpDown;
         private System.Windows.Forms.CheckBox BlinkBarCheckBox;
         private System.Windows.Forms.CheckBox BlinkIconCheckBox;
-        private System.Windows.Forms.CheckBox TemporarilyDisplayCheckBox;
+        private System.Windows.Forms.CheckBox TemporarilyDisplayTickerCheckBox;
+        private System.Windows.Forms.CheckBox TemporarilyDisplaySpellCheckBox;
     }
 }

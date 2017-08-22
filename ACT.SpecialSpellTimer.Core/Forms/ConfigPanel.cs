@@ -533,6 +533,21 @@ namespace ACT.SpecialSpellTimer.Forms
                 this.SpellVisualSetting.RefreshSampleImage();
             };
 
+            // スペルの一時表示チェックボックス
+            this.TemporarilyDisplaySpellCheckBox.CheckedChanged += (s1, e1) =>
+            {
+                var src = this.DetailGroupBox.Tag as SpellTimer;
+                if (src == null)
+                {
+                    return;
+                }
+
+                src.IsTemporarilyDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
+                src.UpdateDone = false;
+
+                TableCompiler.Instance.RecompileSpells();
+            };
+
             // オプションのロードメソッドを呼ぶ
             this.LoadOption();
             this.LoadDQXOption();
@@ -685,6 +700,9 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.DetailGroupBox.Visible = true;
 
+            // データソースをタグに突っ込んでおく
+            this.DetailGroupBox.Tag = src;
+
             // アイコンを設定する
             this.SelectIconButton.Tag = src.SpellIcon;
             this.SelectIconButton.BackgroundImageLayout = ImageLayout.Zoom;
@@ -774,10 +792,9 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpellVisualSetting.HideSpellName = src.HideSpellName;
             this.SpellVisualSetting.OverlapRecastTime = src.OverlapRecastTime;
 
-            this.SpellVisualSetting.RefreshSampleImage();
+            this.TemporarilyDisplaySpellCheckBox.Checked = src.IsTemporarilyDisplay;
 
-            // データソースをタグに突っ込んでおく
-            this.DetailGroupBox.Tag = src;
+            this.SpellVisualSetting.RefreshSampleImage();
 
             // ゾーン限定ボタンの色を変える（未設定：黒、設定有：青）
             this.SelectZoneButton.ForeColor = src.ZoneFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;

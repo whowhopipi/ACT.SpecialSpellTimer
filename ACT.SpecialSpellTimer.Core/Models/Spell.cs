@@ -106,6 +106,8 @@ namespace ACT.SpecialSpellTimer.Models
             this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
         }
 
+        [XmlIgnore]
+        public bool IsTemporarilyDisplay { get; set; } = false;
         public int BackgroundAlpha { get; set; }
 
         public string BackgroundColor { get; set; }
