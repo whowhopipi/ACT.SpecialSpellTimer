@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     partial class ConfigPanel
     {
@@ -41,6 +41,7 @@
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
+            this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.TabControl = new ACT.SpecialSpellTimer.Forms.TabControlExt();
             this.SpecialSpellTabPage = new System.Windows.Forms.TabPage();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -66,6 +67,8 @@
             this.tabControlExtHoriz2 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.GeneralTab = new System.Windows.Forms.TabPage();
             this.SpellDetailPanel = new System.Windows.Forms.Panel();
+            this.BlinkBarCheckBox = new System.Windows.Forms.CheckBox();
+            this.BlinkIconCheckBox = new System.Windows.Forms.CheckBox();
             this.label68 = new System.Windows.Forms.Label();
             this.BlinkTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.SelectIconButton = new System.Windows.Forms.Button();
@@ -160,7 +163,6 @@
             this.TelopDeleteButton = new System.Windows.Forms.Button();
             this.tabControlExtHoriz3 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.panel6 = new System.Windows.Forms.Panel();
             this.TelopTitleTextBox = new System.Windows.Forms.TextBox();
             this.TelopMessageTextBox = new System.Windows.Forms.TextBox();
             this.TelopKeywordTextBox = new System.Windows.Forms.TextBox();
@@ -322,9 +324,6 @@
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.BlinkIconCheckBox = new System.Windows.Forms.CheckBox();
-            this.BlinkBarCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -775,6 +774,7 @@
             // SpellDetailPanel
             // 
             this.SpellDetailPanel.AutoScroll = true;
+            this.SpellDetailPanel.AutoScrollMargin = new System.Drawing.Size(10, 40);
             this.SpellDetailPanel.Controls.Add(this.BlinkBarCheckBox);
             this.SpellDetailPanel.Controls.Add(this.BlinkIconCheckBox);
             this.SpellDetailPanel.Controls.Add(this.label68);
@@ -826,6 +826,26 @@
             this.SpellDetailPanel.Name = "SpellDetailPanel";
             this.SpellDetailPanel.Size = new System.Drawing.Size(537, 759);
             this.SpellDetailPanel.TabIndex = 74;
+            // 
+            // BlinkBarCheckBox
+            // 
+            this.BlinkBarCheckBox.AutoSize = true;
+            this.BlinkBarCheckBox.Location = new System.Drawing.Point(5, 445);
+            this.BlinkBarCheckBox.Name = "BlinkBarCheckBox";
+            this.BlinkBarCheckBox.Size = new System.Drawing.Size(120, 16);
+            this.BlinkBarCheckBox.TabIndex = 81;
+            this.BlinkBarCheckBox.Text = "BlinkBarCheckBox";
+            this.BlinkBarCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // BlinkIconCheckBox
+            // 
+            this.BlinkIconCheckBox.AutoSize = true;
+            this.BlinkIconCheckBox.Location = new System.Drawing.Point(5, 420);
+            this.BlinkIconCheckBox.Name = "BlinkIconCheckBox";
+            this.BlinkIconCheckBox.Size = new System.Drawing.Size(123, 16);
+            this.BlinkIconCheckBox.TabIndex = 80;
+            this.BlinkIconCheckBox.Text = "BlinkIconCheckBox";
+            this.BlinkIconCheckBox.UseVisualStyleBackColor = true;
             // 
             // label68
             // 
@@ -1771,25 +1791,25 @@
             // TelopExportButton
             // 
             this.TelopExportButton.Name = "TelopExportButton";
-            this.TelopExportButton.Size = new System.Drawing.Size(118, 20);
+            this.TelopExportButton.Size = new System.Drawing.Size(117, 20);
             this.TelopExportButton.Text = "TelopExportButton";
             // 
             // TelopImportButton
             // 
             this.TelopImportButton.Name = "TelopImportButton";
-            this.TelopImportButton.Size = new System.Drawing.Size(119, 20);
+            this.TelopImportButton.Size = new System.Drawing.Size(118, 20);
             this.TelopImportButton.Text = "TelopImportButton";
             // 
             // TelopClearAllButton
             // 
             this.TelopClearAllButton.Name = "TelopClearAllButton";
-            this.TelopClearAllButton.Size = new System.Drawing.Size(124, 20);
+            this.TelopClearAllButton.Size = new System.Drawing.Size(123, 20);
             this.TelopClearAllButton.Text = "TelopClearAllButton";
             // 
             // TelopAddButton
             // 
             this.TelopAddButton.Name = "TelopAddButton";
-            this.TelopAddButton.Size = new System.Drawing.Size(106, 20);
+            this.TelopAddButton.Size = new System.Drawing.Size(105, 20);
             this.TelopAddButton.Text = "TelopAddButton";
             // 
             // TelopDetailGroupBox
@@ -1849,7 +1869,7 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
-            this.tabPage1.Controls.Add(this.panel6);
+            this.tabPage1.AutoScrollMargin = new System.Drawing.Size(10, 40);
             this.tabPage1.Controls.Add(this.TelopTitleTextBox);
             this.tabPage1.Controls.Add(this.TelopMessageTextBox);
             this.tabPage1.Controls.Add(this.TelopKeywordTextBox);
@@ -1883,13 +1903,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "GeneralTab";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // panel6
-            // 
-            this.panel6.Location = new System.Drawing.Point(6, 445);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(529, 68);
-            this.panel6.TabIndex = 76;
             // 
             // TelopTitleTextBox
             // 
@@ -3647,26 +3660,6 @@
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // BlinkIconCheckBox
-            // 
-            this.BlinkIconCheckBox.AutoSize = true;
-            this.BlinkIconCheckBox.Location = new System.Drawing.Point(5, 420);
-            this.BlinkIconCheckBox.Name = "BlinkIconCheckBox";
-            this.BlinkIconCheckBox.Size = new System.Drawing.Size(123, 16);
-            this.BlinkIconCheckBox.TabIndex = 80;
-            this.BlinkIconCheckBox.Text = "BlinkIconCheckBox";
-            this.BlinkIconCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // BlinkBarCheckBox
-            // 
-            this.BlinkBarCheckBox.AutoSize = true;
-            this.BlinkBarCheckBox.Location = new System.Drawing.Point(5, 445);
-            this.BlinkBarCheckBox.Name = "BlinkBarCheckBox";
-            this.BlinkBarCheckBox.Size = new System.Drawing.Size(120, 16);
-            this.BlinkBarCheckBox.TabIndex = 81;
-            this.BlinkBarCheckBox.Text = "BlinkBarCheckBox";
-            this.BlinkBarCheckBox.UseVisualStyleBackColor = true;
-            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4050,7 +4043,6 @@
         private System.Windows.Forms.NumericUpDown TextBlurRateNumericUpDown;
         private System.Windows.Forms.NumericUpDown TextOutlineThicknessRateNumericUpDown;
         private System.Windows.Forms.CheckBox NotifyToACTCheckBox;
-        private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.TabPage NameStyleTabPage;
         private System.Windows.Forms.TabPage LogTabPage;
         private System.Windows.Forms.FolderBrowserDialog FolderBrowserDialog;

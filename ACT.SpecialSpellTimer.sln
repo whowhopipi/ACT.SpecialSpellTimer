@@ -16,6 +16,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFXIV.Framework.Dialog.Wrapper", "FFXIV.Framework\FFXIV.Framework.Dialog.Wrapper\FFXIV.Framework.Dialog.Wrapper.csproj", "{DD7824D5-F74E-4412-9E87-C7B89E1C6165}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACT.SpecialSpellTimer", "ACT.SpecialSpellTimer\ACT.SpecialSpellTimer.csproj", "{CCF72089-92FA-4AFB-BDE7-869CA0E394F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5FC72C62-16D6-4F95-AA45-C7AD5F8A7901} = {5FC72C62-16D6-4F95-AA45-C7AD5F8A7901}
+		{C3FA9195-3381-4622-97EB-D0E1CA7C8B14} = {C3FA9195-3381-4622-97EB-D0E1CA7C8B14}
+		{22EBF8A4-EED1-4CD1-99EB-99665163A315} = {22EBF8A4-EED1-4CD1-99EB-99665163A315}
+		{DD7824D5-F74E-4412-9E87-C7B89E1C6165} = {DD7824D5-F74E-4412-9E87-C7B89E1C6165}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,7 +63,7 @@ Global
 		{DD7824D5-F74E-4412-9E87-C7B89E1C6165} = {E2873F90-2125-4C9D-ABCD-CF4DBDD6ECE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		    SolutionGuid = {32BB6EC1-12B3-4408-AE6B-AF2190C8F2FE}
 		SolutionGuid = {791D8943-D639-4AFC-AA3E-09C570AA10B7}
+		    SolutionGuid = {32BB6EC1-12B3-4408-AE6B-AF2190C8F2FE}
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
@@ -23,7 +23,7 @@ namespace ACT.SpecialSpellTimer
         [MethodImpl(MethodImplOptions.NoInlining)]
         void IActPluginV1.DeInitPlugin()
         {
-            PluginCore.Instance.DeInitPluginCore();
+            PluginCore.Instance?.DeInitPluginCore();
             Logger.End();
         }
 
@@ -39,7 +39,7 @@ namespace ACT.SpecialSpellTimer
         {
             Logger.Begin();
             PluginCore.Initialize(this);
-            PluginCore.Instance.InitPluginCore(
+            PluginCore.Instance?.InitPluginCore(
                 pluginScreenSpace,
                 pluginStatusText);
         }
