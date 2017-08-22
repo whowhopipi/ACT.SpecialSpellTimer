@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +29,8 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// テロップWindowのリスト
         /// </summary>
-        private ConcurrentDictionary<long, OnePointTelopWindow> telopWindowList =
-            new ConcurrentDictionary<long, OnePointTelopWindow>();
+        private ConcurrentDictionary<long, TickerWindow> telopWindowList =
+            new ConcurrentDictionary<long, TickerWindow>();
 
         /// <summary>
         /// ログとマッチングする
@@ -184,9 +184,9 @@ namespace ACT.SpecialSpellTimer
             void refreshTelop(
                 OnePointTelop telop)
             {
-                if (!this.telopWindowList.TryGetValue(telop.ID, out OnePointTelopWindow w))
+                if (!this.telopWindowList.TryGetValue(telop.ID, out TickerWindow w))
                 {
-                    w = new OnePointTelopWindow()
+                    w = new TickerWindow()
                     {
                         Title = "OnePointTelop - " + telop.Title,
                         DataSource = telop,
@@ -204,8 +204,8 @@ namespace ACT.SpecialSpellTimer
                     w.Show();
                 }
 
-                if (Settings.Default.OverlayVisible &&
-                    Settings.Default.TelopAlwaysVisible)
+                if (telop.IsTemporarilyDisplay ||
+                    (Settings.Default.OverlayVisible && Settings.Default.TelopAlwaysVisible))
                 {
                     w.Refresh();
                     if (w.ShowOverlay())
@@ -303,7 +303,7 @@ namespace ACT.SpecialSpellTimer
 
                     window.Close();
 
-                    telopWindowList.TryRemove(entry.Key, out OnePointTelopWindow w);
+                    telopWindowList.TryRemove(entry.Key, out TickerWindow w);
 
                     closed = true;
                 }

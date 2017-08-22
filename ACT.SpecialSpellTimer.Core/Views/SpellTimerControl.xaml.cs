@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
@@ -24,6 +25,11 @@ namespace ACT.SpecialSpellTimer.Views
         {
             this.InitializeComponent();
         }
+
+        /// <summary>
+        /// 設定モードか？
+        /// </summary>
+        public bool IsSettingMode { get; set; } = false;
 
         /// <summary>
         /// バーの色
@@ -560,7 +566,20 @@ namespace ACT.SpecialSpellTimer.Views
                 var now = DateTime.Now;
                 this.Spell.MatchDateTime = now;
                 this.Spell.CompleteScheduledTime = now.AddSeconds(this.Spell.RecastTime);
+
                 this.Spell.UpdateDone = false;
+                this.Spell.OverDone = false;
+                this.Spell.BeforeDone = false;
+                this.Spell.TimeupDone = false;
+
+                // マッチ時点のサウンドを再生する
+                SoundController.Instance.Play(this.Spell.MatchSound);
+                SoundController.Instance.Play(this.Spell.MatchTextToSpeak);
+
+                // 遅延サウンドタイマを開始する
+                this.Spell.StartOverSoundTimer();
+                this.Spell.StartBeforeSoundTimer();
+                this.Spell.StartTimeupSoundTimer();
             }
         }
     }

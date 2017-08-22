@@ -135,8 +135,8 @@
     <Compile Include="Utility\BackgroundWorkerExntensions.cs" />
     <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\BrightnessConverter.cs" />
-    <Compile Include="Views\OnePointTelopWindow.xaml.cs">
-      <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
+    <Compile Include="Views\TickerWindow.xaml.cs">
+      <DependentUpon>TickerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\PanelTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,7 +199,9 @@
     <Compile Include="Utility\Translate.cs" />
     <Compile Include="Views\OutlineTextBlock.cs" />
     <Compile Include="Views\StrokeThicknessToBlurRadiusConverter.cs" />
-    <Compile Include="Forms\VisualSettingControl.cs" />
+    <Compile Include="Forms\VisualSettingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\VisualSettingControl.Designer.cs">
       <DependentUpon>VisualSettingControl.cs</DependentUpon>
     </Compile>
@@ -208,6 +210,9 @@
     </Compile>
     <Compile Include="Forms\VisualSettingControlBackgoundColorForm.Designer.cs">
       <DependentUpon>VisualSettingControlBackgoundColorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TickerControl.xaml.cs">
+      <DependentUpon>TickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindowExtension.Visibility.cs" />
     <Compile Include="Views\WindowExtension.Transparent.cs" />
@@ -278,7 +283,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\OnePointTelopWindow.xaml">
+    <Page Include="Views\TickerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -287,6 +292,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SpellTimerListWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TickerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

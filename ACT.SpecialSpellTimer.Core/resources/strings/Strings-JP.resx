@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1228,5 +1228,9 @@
   <data name="BlinkIconCheckBox" xml:space="preserve">
     <value>アイコンをブリンクさせる</value>
     <comment>Blink icon</comment>
+  </data>
+  <data name="TemporarilyDisplayCheckBox" xml:space="preserve">
+    <value>一時的に表示する</value>
+    <comment>Temporarily Display</comment>
   </data>
 </root>

@@ -19,19 +19,6 @@ using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Forms
 {
-    [Serializable]
-    public class ColorSet
-    {
-        public int BackgroundAlpha { get; set; }
-        public string BackgroundColor { get; set; }
-        public string BarColor { get; set; }
-        public string BarOutlineColor { get; set; }
-        public string FontColor { get; set; }
-        public string FontOutlineColor { get; set; }
-        public string WarningFontColor { get; set; }
-        public string WarningFontOutlineColor { get; set; }
-    }
-
     /// <summary>
     /// 見た目設定用コントロール
     /// </summary>
@@ -595,5 +582,18 @@ namespace ACT.SpecialSpellTimer.Forms
                 OnePointTelopTable.Instance.Save(true);
             };
         }
+    }
+
+    [Serializable]
+    public class ColorSet
+    {
+        public int BackgroundAlpha { get; set; }
+        public string BackgroundColor { get; set; }
+        public string BarColor { get; set; }
+        public string BarOutlineColor { get; set; }
+        public string FontColor { get; set; }
+        public string FontOutlineColor { get; set; }
+        public string WarningFontColor { get; set; }
+        public string WarningFontOutlineColor { get; set; }
     }
 }

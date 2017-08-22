@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
@@ -15,16 +13,15 @@ namespace ACT.SpecialSpellTimer.Views
     /// <summary>
     /// ワンポイントテロップWindow
     /// </summary>
-    public partial class OnePointTelopWindow : Window
+    public partial class TickerWindow :
+        Window
     {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public OnePointTelopWindow()
+        public TickerWindow()
         {
             this.InitializeComponent();
-
-            this.MessageTextBlock.Text = string.Empty;
 
             this.Loaded += this.OnePointTelopWindow_Loaded;
             this.MouseLeftButtonDown += (s1, e1) => this.DragMove();
@@ -90,7 +87,11 @@ namespace ACT.SpecialSpellTimer.Views
                 this.BaseColorRectangle.Fill = this.BackgroundBrush;
             }
 
-            var message = Settings.Default.TelopAlwaysVisible ?
+            var forceVisible =
+                Settings.Default.TelopAlwaysVisible ||
+                this.DataSource.IsTemporarilyDisplay;
+
+            var message = forceVisible ?
                 this.DataSource.Message.Replace(",", Environment.NewLine) :
                 this.DataSource.MessageReplaced.Replace(",", Environment.NewLine);
 
@@ -121,39 +122,24 @@ namespace ACT.SpecialSpellTimer.Views
             message = message.Replace("{COUNT0}", count0AsText);
 
             // テキストブロックにセットする
-            var textBlock = this.MessageTextBlock;
-            if (textBlock.Text != message) textBlock.Text = message;
-            if (textBlock.Fill != this.FontBrush) textBlock.Fill = this.FontBrush;
-            if (textBlock.Stroke != this.FontOutlineBrush) textBlock.Stroke = this.FontOutlineBrush;
-            textBlock.SetFontInfo(this.DataSource.Font);
-            textBlock.SetAutoStrokeThickness();
+            this.TickerControl.Message = message;
+            this.TickerControl.Font = this.DataSource.Font;
+            this.TickerControl.FontBrush = this.FontBrush;
+            this.TickerControl.FontOutlineBrush = this.FontOutlineBrush;
 
             // プログレスバーを表示しない？
             if (!this.DataSource.ProgressBarEnabled ||
                 this.DataSource.DisplayTime <= 0)
             {
-                this.ProgressBarCanvas.Visibility = Visibility.Collapsed;
+                this.TickerControl.BarVisible = false;
+            }
+            else
+            {
+                this.TickerControl.BarVisible = true;
             }
 
             // プログレスバーを初期化する
-            this.InitializeProgressBar();
-        }
-
-        private void InitializeProgressBar()
-        {
-            var baseHeight = Settings.Default.ProgressBarSize.Height;
-            var baseWidth = this.MessageTextBlock.ActualWidth;
-
-            var barRect = this.BarRectangle;
-            if (barRect.Fill != this.BarBrush) barRect.Fill = this.BarBrush;
-            if (barRect.Width != baseWidth) barRect.Width = baseWidth;
-            if (barRect.Height != baseHeight) barRect.Height = baseHeight;
-
-            var backRect = this.BarBackRectangle;
-            if (backRect.Width != baseWidth) backRect.Width = baseWidth;
-
-            var outlineRect = this.BarOutlineRectangle;
-            if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
+            this.TickerControl.BarHeight = Settings.Default.ProgressBarSize.Height;
         }
 
         /// <summary>
@@ -174,27 +160,14 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Animation
 
-        private DoubleAnimationUsingKeyFrames animation = new DoubleAnimationUsingKeyFrames()
-        {
-            AutoReverse = false,
-            KeyFrames = new DoubleKeyFrameCollection()
-            {
-                new LinearDoubleKeyFrame()
-            }
-        };
-
-        private LinearDoubleKeyFrame KeyFrame => (LinearDoubleKeyFrame)this.animation.KeyFrames[0];
-
         public void StartProgressBar()
         {
             if (this.DataSource == null ||
                 !this.DataSource.ProgressBarEnabled)
             {
-                this.ProgressBarCanvas.Visibility = Visibility.Collapsed;
+                this.TickerControl.BarVisible = false;
                 return;
             }
-
-            this.InitializeProgressBar();
 
             var matchDateTime = this.DataSource.MatchDateTime;
             if (matchDateTime <= DateTime.MinValue)
@@ -204,25 +177,9 @@ namespace ACT.SpecialSpellTimer.Views
 
             var timeToHide = matchDateTime.AddSeconds(
                 this.DataSource.Delay + this.DataSource.DisplayTime);
-
             var timeToLive = (timeToHide - DateTime.Now).TotalMilliseconds;
 
-            if (timeToLive >= 0)
-            {
-                this.KeyFrame.Value = 0;
-                this.KeyFrame.KeyTime = TimeSpan.FromMilliseconds(timeToLive);
-
-                Timeline.SetDesiredFrameRate(this.animation, 30);
-
-                this.BarRectangle.BeginAnimation(
-                    Rectangle.WidthProperty,
-                    null);
-                this.BarRectangle.BeginAnimation(
-                    Rectangle.WidthProperty,
-                    this.animation);
-
-                this.ProgressBarCanvas.Visibility = Visibility.Visible;
-            }
+            this.TickerControl.StartProgressBar(timeToLive);
         }
 
         #endregion Animation

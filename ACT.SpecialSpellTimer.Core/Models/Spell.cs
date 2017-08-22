@@ -13,7 +13,8 @@ namespace ACT.SpecialSpellTimer.Models
     /// スペルタイマ
     /// </summary>
     [Serializable]
-    public class SpellTimer : IDisposable
+    public class SpellTimer : 
+        IDisposable
     {
         [XmlIgnore]
         public volatile bool UpdateDone;
@@ -622,5 +623,11 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion To Instance Spells
+
+        #region Clone
+
+        public SpellTimer Clone() => (SpellTimer)this.MemberwiseClone();
+
+        #endregion
     }
 }
