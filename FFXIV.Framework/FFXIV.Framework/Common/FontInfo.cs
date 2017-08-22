@@ -79,15 +79,15 @@ namespace FFXIV.Framework.Common
             set => this.Family = FontInfo.GetFontFamily(value);
         }
 
-        [XmlAttribute("FontSize")]
-        [DataMember(Name = "FontSize")]
+        [XmlAttribute("Size")]
+        [DataMember(Name = "Size")]
         public double Size { get; set; } = 11.25d;
 
         [XmlIgnore]
         public FontStretch Stretch { get; set; }
 
-        [XmlAttribute("FontStretch")]
-        [DataMember(Name = "FontStretch")]
+        [XmlAttribute("Stretch")]
+        [DataMember(Name = "Stretch")]
         public string StretchString
         {
             get => FontInfo.stretchConverter.ConvertToString(this.Stretch);
@@ -97,8 +97,8 @@ namespace FFXIV.Framework.Common
         [XmlIgnore]
         public FontStyle Style { get; set; }
 
-        [XmlAttribute("FontStyle")]
-        [DataMember(Name = "FontStyle")]
+        [XmlAttribute("Style")]
+        [DataMember(Name = "Style")]
         public string StyleString
         {
             get => FontInfo.styleConverter.ConvertToString(this.Style);
@@ -119,8 +119,8 @@ namespace FFXIV.Framework.Common
         [XmlIgnore]
         public FontWeight Weight { get; set; }
 
-        [XmlAttribute("FontWeight")]
-        [DataMember(Name = "FontWeight")]
+        [XmlAttribute("Weight")]
+        [DataMember(Name = "Weight")]
         public string WeightString
         {
             get => FontInfo.weightConverter.ConvertToString(this.Weight);
