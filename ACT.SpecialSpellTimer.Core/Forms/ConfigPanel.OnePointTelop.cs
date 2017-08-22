@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Drawing;
@@ -177,6 +177,20 @@
                 }
             };
 
+            // テロップの一時表示チェックボックス
+            this.TemporarilyDisplayTickerCheckBox.CheckedChanged += (s1, e1) =>
+            {
+                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                if (src == null)
+                {
+                    return;
+                }
+
+                src.IsTemporarilyDisplay = this.TemporarilyDisplayTickerCheckBox.Checked;
+
+                TableCompiler.Instance.RecompileTickers();
+            };
+
             this.TelopExportButton.Click += this.TelopExportButton_Click;
             this.TelopImportButton.Click += this.TelopImportButton_Click;
             this.TelopClearAllButton.Click += this.TelopClearAllButton_Click;
@@ -199,6 +213,9 @@
                 return;
             }
 
+            // データソースをタグに突っ込んでおく
+            this.TelopDetailGroupBox.Tag = src;
+
             this.TelopDetailGroupBox.Visible = true;
 
             this.TelopTitleTextBox.Text = src.Title;
@@ -217,6 +234,8 @@
             this.TelopVisualSetting.BackgroundColor = string.IsNullOrWhiteSpace(src.BackgroundColor) ?
                 Settings.Default.BackgroundColor :
                 Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
+
+            this.TemporarilyDisplayTickerCheckBox.Checked = src.IsTemporarilyDisplay;
 
             this.TelopVisualSetting.RefreshSampleImage();
 
@@ -249,9 +268,6 @@
 
             this.TelopDelaySoundComboBox.SelectedValue = src.DelaySound;
             this.TelopDelayTTSTextBox.Text = src.DelayTextToSpeak;
-
-            // データソースをタグに突っ込んでおく
-            this.TelopDetailGroupBox.Tag = src;
 
             // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
             this.TelopSelectJobButton.ForeColor = src.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;

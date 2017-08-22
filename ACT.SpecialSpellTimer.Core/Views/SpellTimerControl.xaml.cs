@@ -7,6 +7,7 @@ using System.Windows.Media.Imaging;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
@@ -24,6 +25,11 @@ namespace ACT.SpecialSpellTimer.Views
         {
             this.InitializeComponent();
         }
+
+        /// <summary>
+        /// 設定モードか？
+        /// </summary>
+        public bool IsSettingMode { get; set; } = false;
 
         /// <summary>
         /// バーの色
@@ -360,6 +366,11 @@ namespace ACT.SpecialSpellTimer.Views
 
             var outlineRect = this.BarOutlineRectangle;
             if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
+
+            // バーのエフェクトカラーも手動で設定する
+            // Bindingだとアニメーションでエラーが発生するため
+            var effectColor = this.BarBrush.Color.ChangeBrightness(1.1);
+            if (this.BarEffect.Color != effectColor) this.BarEffect.Color = effectColor;
         }
 
         #region Blink Animations
@@ -395,132 +406,62 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Icon
 
-        private DiscreteDoubleKeyFrame iconKeyframe1 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0));
-        private DiscreteDoubleKeyFrame iconKeyframe2 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration));
-        private LinearDoubleKeyFrame iconKeyframe3 = new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration));
+        private DiscreteDoubleKeyFrame IconKeyframe1 => (DiscreteDoubleKeyFrame)this.iconBlinkAnimation.KeyFrames[0];
+        private DiscreteDoubleKeyFrame IconKeyframe2 => (DiscreteDoubleKeyFrame)this.iconBlinkAnimation.KeyFrames[1];
+        private LinearDoubleKeyFrame IconKeyframe3 => (LinearDoubleKeyFrame)this.iconBlinkAnimation.KeyFrames[2];
 
-        private DoubleAnimationUsingKeyFrames iconBlinkAnimation;
-
-        private DoubleAnimationUsingKeyFrames IconBlinkAnimation =>
-            (this.iconBlinkAnimation ?? (this.iconBlinkAnimation = new DoubleAnimationUsingKeyFrames()
+        private DoubleAnimationUsingKeyFrames iconBlinkAnimation = new DoubleAnimationUsingKeyFrames()
+        {
+            KeyFrames = new DoubleKeyFrameCollection()
             {
-                KeyFrames = new DoubleKeyFrameCollection()
-                {
-                    this.iconKeyframe1,
-                    this.iconKeyframe2,
-                    this.iconKeyframe3
-                }
-            }));
+                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0)),
+                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration)),
+                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration))
+            }
+        };
 
         #endregion Icon
 
         #region Bar
 
-        private DiscreteColorKeyFrame barKeyframe1 = new DiscreteColorKeyFrame(Colors.Transparent, TimeSpan.FromSeconds(0));
-        private DiscreteColorKeyFrame barKeyframe2 = new DiscreteColorKeyFrame(Colors.Transparent, TimeSpan.FromSeconds(BlinkHoldDuration));
-        private LinearColorKeyFrame barKeyframe3 = new LinearColorKeyFrame(Colors.Transparent, TimeSpan.FromSeconds(BlinkDuration));
+        private DiscreteColorKeyFrame BarKeyframe1 => (DiscreteColorKeyFrame)this.barBlinkAnimation.KeyFrames[0];
+        private DiscreteColorKeyFrame BarKeyframe2 => (DiscreteColorKeyFrame)this.barBlinkAnimation.KeyFrames[1];
+        private LinearColorKeyFrame BarKeyframe3 => (LinearColorKeyFrame)this.barBlinkAnimation.KeyFrames[2];
 
-        private ColorAnimationUsingKeyFrames barBlinkAnimation;
-
-        private ColorAnimationUsingKeyFrames BarBlinkAnimation =>
-            (this.barBlinkAnimation ?? (this.barBlinkAnimation = new ColorAnimationUsingKeyFrames()
+        private ColorAnimationUsingKeyFrames barBlinkAnimation = new ColorAnimationUsingKeyFrames()
+        {
+            KeyFrames = new ColorKeyFrameCollection()
             {
-                KeyFrames = new ColorKeyFrameCollection()
-                {
-                    this.barKeyframe1,
-                    this.barKeyframe2,
-                    this.barKeyframe3
-                }
-            }));
+                new DiscreteColorKeyFrame(Colors.White, TimeSpan.FromSeconds(0)),
+                new DiscreteColorKeyFrame(Colors.White, TimeSpan.FromSeconds(BlinkHoldDuration)),
+                new LinearColorKeyFrame(Colors.White, TimeSpan.FromSeconds(BlinkDuration))
+            }
+        };
 
-        private DiscreteDoubleKeyFrame barEffectKeyframe1 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0));
-        private DiscreteDoubleKeyFrame barEffectKeyframe2 = new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration));
-        private LinearDoubleKeyFrame barEffectKeyframe3 = new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration));
+        private DiscreteDoubleKeyFrame BarEffectKeyframe1 => (DiscreteDoubleKeyFrame)this.barEffectBlinkAnimation.KeyFrames[0];
+        private DiscreteDoubleKeyFrame BarEffectKeyframe2 => (DiscreteDoubleKeyFrame)this.barEffectBlinkAnimation.KeyFrames[1];
+        private LinearDoubleKeyFrame BarEffectKeyframe3 => (LinearDoubleKeyFrame)this.barEffectBlinkAnimation.KeyFrames[2];
 
-        private DoubleAnimationUsingKeyFrames barEffectBlinkAnimation;
-
-        private DoubleAnimationUsingKeyFrames BarEffectBlinkAnimation =>
-            (this.barEffectBlinkAnimation ?? (this.barEffectBlinkAnimation = new DoubleAnimationUsingKeyFrames()
+        private DoubleAnimationUsingKeyFrames barEffectBlinkAnimation = new DoubleAnimationUsingKeyFrames()
+        {
+            KeyFrames = new DoubleKeyFrameCollection()
             {
-                KeyFrames = new DoubleKeyFrameCollection()
-                {
-                    this.barEffectKeyframe1,
-                    this.barEffectKeyframe2,
-                    this.barEffectKeyframe3
-                }
-            }));
+                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0)),
+                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration)),
+                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration))
+            }
+        };
 
         #endregion Bar
 
         private Storyboard blinkStoryboard;
 
-        private Storyboard BlinkStoryboard
-        {
-            get
-            {
-                lock (this)
-                {
-                    if (this.blinkStoryboard == null)
-                    {
-                        var story = this.blinkStoryboard = new Storyboard();
-
-                        // アイコンのアニメを設定する
-                        if (this.SpellIconSize > 0 &&
-                            this.Spell.BlinkIcon)
-                        {
-                            story.Children.Add(this.IconBlinkAnimation);
-
-                            var value1 = !this.IsReverse ? IconDarkValue : IconLightValue;
-                            var vakue2 = !this.IsReverse ? IconLightValue : IconDarkValue;
-
-                            this.iconKeyframe1.Value = value1;
-                            this.iconKeyframe2.Value = value1;
-                            this.iconKeyframe3.Value = vakue2;
-                        }
-
-                        // バーのアニメを設定する
-                        if ((this.BarWidth > 0 || this.BarHeight > 0) &&
-                            this.Spell.BlinkBar)
-                        {
-                            // バーの色を設定する
-                            story.Children.Add(this.BarBlinkAnimation);
-                            var darkColor = this.BarBrush.Color.ChangeBrightness(0.5);
-                            var lightColor = this.BarBrush.Color.ChangeBrightness(1.1);
-
-                            var value1 = !this.IsReverse ? darkColor : lightColor;
-                            var vakue2 = !this.IsReverse ? lightColor : darkColor;
-
-                            this.barKeyframe1.Value = value1;
-                            this.barKeyframe2.Value = value1;
-                            this.barKeyframe3.Value = vakue2;
-
-                            // バーのエフェクト強度を設定する
-                            story.Children.Add(this.BarEffectBlinkAnimation);
-                            var weekEffect = this.BarEffect.BlurRadius * 0.5;
-                            var strongEffect = this.BarEffect.BlurRadius * 1.5;
-
-                            var effect1 = !this.IsReverse ? weekEffect : strongEffect;
-                            var effect2 = !this.IsReverse ? strongEffect : weekEffect;
-
-                            this.barEffectKeyframe1.Value = effect1;
-                            this.barEffectKeyframe2.Value = effect1;
-                            this.barEffectKeyframe3.Value = effect2;
-                        }
-
-                        story.AutoReverse = true;
-                        story.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
-
-                        // FPSを制限する。しないと負荷が高くなる
-                        Timeline.SetDesiredFrameRate(story, 30);
-                    }
-
-                    return this.blinkStoryboard;
-                }
-            }
-        }
+        private Storyboard BlinkStoryboard => this.blinkStoryboard;
 
         public bool StartBlink()
         {
+            this.InitializeBlinkAnimation();
+
             if (this.BlinkTime == 0 ||
                 this.RecastTime == 0 ||
                 this.RecastTime > this.BlinkTime)
@@ -536,18 +477,87 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (!this.isBlinking)
             {
-                Storyboard.SetTarget(this.IconBlinkAnimation, this.SpellIconImage);
-                Storyboard.SetTargetProperty(this.IconBlinkAnimation, new PropertyPath("Opacity"));
-                Storyboard.SetTarget(this.BarBlinkAnimation, this.BarRectangle);
-                Storyboard.SetTargetProperty(this.BarBlinkAnimation, new PropertyPath("Fill.Color"));
-                Storyboard.SetTarget(this.BarEffectBlinkAnimation, this.BarEffect);
-                Storyboard.SetTargetProperty(this.BarEffectBlinkAnimation, new PropertyPath("BlurRadius"));
-
                 this.isBlinking = true;
                 this.BlinkStoryboard.Begin();
             }
 
             return true;
+        }
+
+        private void InitializeBlinkAnimation()
+        {
+            lock (this)
+            {
+                if (this.blinkStoryboard != null)
+                {
+                    return;
+                }
+
+                var story = new Storyboard();
+
+                // アイコンのアニメを設定する
+                if (this.SpellIconSize > 0 &&
+                    this.Spell.BlinkIcon)
+                {
+                    var value1 = !this.IsReverse ? IconDarkValue : IconLightValue;
+                    var vakue2 = !this.IsReverse ? IconLightValue : IconDarkValue;
+
+                    this.IconKeyframe1.Value = value1;
+                    this.IconKeyframe2.Value = value1;
+                    this.IconKeyframe3.Value = vakue2;
+
+                    story.Children.Add(this.iconBlinkAnimation);
+
+                    Storyboard.SetTarget(this.iconBlinkAnimation, this.SpellIconImage);
+                    Storyboard.SetTargetProperty(this.iconBlinkAnimation, new PropertyPath("Opacity"));
+                }
+
+                // バーのアニメを設定する
+                if ((this.BarWidth > 0 || this.BarHeight > 0) &&
+                    this.Spell.BlinkBar)
+                {
+                    // バーの色を設定する
+                    var darkColor = this.BarBrush.Color.ChangeBrightness(0.5);
+                    var lightColor = this.BarBrush.Color.ChangeBrightness(1.1);
+
+                    var value1 = !this.IsReverse ? darkColor : lightColor;
+                    var value2 = !this.IsReverse ? lightColor : darkColor;
+
+                    this.BarKeyframe1.Value = value1;
+                    this.BarKeyframe2.Value = value1;
+                    this.BarKeyframe3.Value = value2;
+
+                    story.Children.Add(this.barBlinkAnimation);
+
+                    // バーのエフェクト強度を設定する
+                    var weekEffect = 0;
+                    var strongEffect = this.BarEffect.BlurRadius;
+
+                    var effect1 = !this.IsReverse ? weekEffect : strongEffect;
+                    var effect2 = !this.IsReverse ? strongEffect : weekEffect;
+
+                    this.BarEffectKeyframe1.Value = effect1;
+                    this.BarEffectKeyframe2.Value = effect1;
+                    this.BarEffectKeyframe3.Value = effect2;
+
+                    story.Children.Add(this.barEffectBlinkAnimation);
+
+                    Storyboard.SetTarget(this.barBlinkAnimation, this.BarRectangle);
+                    Storyboard.SetTargetProperty(this.barBlinkAnimation, new PropertyPath("Fill.Color"));
+
+                    Storyboard.SetTarget(this.barEffectBlinkAnimation, this.BarEffect);
+                    Storyboard.SetTargetProperty(this.barEffectBlinkAnimation, new PropertyPath("BlurRadius"));
+                }
+
+                story.AutoReverse = true;
+                story.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
+
+                // FPSを制限する。しないと負荷が高くなる
+                Timeline.SetDesiredFrameRate(story, 30);
+
+                // ストーリーボードを格納する
+                this.blinkStoryboard = story;
+            }
         }
 
         #endregion Blink Animations
@@ -560,7 +570,20 @@ namespace ACT.SpecialSpellTimer.Views
                 var now = DateTime.Now;
                 this.Spell.MatchDateTime = now;
                 this.Spell.CompleteScheduledTime = now.AddSeconds(this.Spell.RecastTime);
+
                 this.Spell.UpdateDone = false;
+                this.Spell.OverDone = false;
+                this.Spell.BeforeDone = false;
+                this.Spell.TimeupDone = false;
+
+                // マッチ時点のサウンドを再生する
+                SoundController.Instance.Play(this.Spell.MatchSound);
+                SoundController.Instance.Play(this.Spell.MatchTextToSpeak);
+
+                // 遅延サウンドタイマを開始する
+                this.Spell.StartOverSoundTimer();
+                this.Spell.StartBeforeSoundTimer();
+                this.Spell.StartTimeupSoundTimer();
             }
         }
     }

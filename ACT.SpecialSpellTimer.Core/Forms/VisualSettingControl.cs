@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -19,19 +19,6 @@ using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Forms
 {
-    [Serializable]
-    public class ColorSet
-    {
-        public int BackgroundAlpha { get; set; }
-        public string BackgroundColor { get; set; }
-        public string BarColor { get; set; }
-        public string BarOutlineColor { get; set; }
-        public string FontColor { get; set; }
-        public string FontOutlineColor { get; set; }
-        public string WarningFontColor { get; set; }
-        public string WarningFontOutlineColor { get; set; }
-    }
-
     /// <summary>
     /// 見た目設定用コントロール
     /// </summary>
@@ -296,7 +283,7 @@ namespace ACT.SpecialSpellTimer.Forms
                             Translate.Get("SampleSpell"),
                             font.FontFamily,
                             (int)font.Style,
-                            (float)font.ToFontSizeWPF(),
+                            font.Size,
                             fontRect,
                             spellSf);
                     }
@@ -312,7 +299,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         Settings.Default.EnabledSpellTimerNoDecimal ? "120" : "120.0",
                         font.FontFamily,
                         (int)font.Style,
-                        (float)font.ToFontSizeWPF(),
+                        font.Size,
                         fontRect,
                         recastSf);
                 }
@@ -322,7 +309,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         Translate.Get("SampleTelop"),
                         font.FontFamily,
                         (int)font.Style,
-                        (float)font.ToFontSizeWPF(),
+                        font.Size,
                         fontRect,
                         telopSf);
                 }
@@ -595,5 +582,18 @@ namespace ACT.SpecialSpellTimer.Forms
                 OnePointTelopTable.Instance.Save(true);
             };
         }
+    }
+
+    [Serializable]
+    public class ColorSet
+    {
+        public int BackgroundAlpha { get; set; }
+        public string BackgroundColor { get; set; }
+        public string BarColor { get; set; }
+        public string BarOutlineColor { get; set; }
+        public string FontColor { get; set; }
+        public string FontOutlineColor { get; set; }
+        public string WarningFontColor { get; set; }
+        public string WarningFontOutlineColor { get; set; }
     }
 }

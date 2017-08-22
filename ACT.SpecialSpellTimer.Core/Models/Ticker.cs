@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Models
+namespace ACT.SpecialSpellTimer.Models
 {
     using System;
     using System.IO;
@@ -13,7 +13,8 @@
     /// ワンポイントテロップ
     /// </summary>
     [Serializable]
-    public class OnePointTelop : IDisposable
+    public class OnePointTelop :
+        IDisposable
     {
         [XmlIgnore]
         private Timer delayedSoundTimer;
@@ -56,6 +57,9 @@
 
             this.delayedSoundTimer.Elapsed += this.DelayedSoundTimer_Elapsed;
         }
+
+        [XmlIgnore]
+        public bool IsTemporarilyDisplay { get; set; } = false;
 
         public bool AddMessageEnabled { get; set; }
 
@@ -260,5 +264,11 @@
                 SoundController.Instance.Play(speak);
             }
         }
+
+        #region Clone
+
+        public OnePointTelop Clone() => (OnePointTelop)this.MemberwiseClone();
+
+        #endregion Clone
     }
 }

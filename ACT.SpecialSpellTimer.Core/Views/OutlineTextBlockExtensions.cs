@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
@@ -18,7 +18,7 @@ namespace ACT.SpecialSpellTimer.Views
                 control.FontStretch);
         }
 
-        internal static void SetFontInfo(
+        internal static bool SetFontInfo(
             this OutlineTextBlock control,
             FontInfo fontInfo)
         {
@@ -29,7 +29,11 @@ namespace ACT.SpecialSpellTimer.Views
                 control.FontStyle = fontInfo.Style;
                 control.FontWeight = fontInfo.Weight;
                 control.FontStretch = fontInfo.Stretch;
+
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>

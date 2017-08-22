@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -268,9 +268,6 @@ namespace ACT.SpecialSpellTimer
 
             // FFXIVのスキャンを停止する
             FFXIVPlugin.Instance.End();
-
-            // instanceを初期化する
-            instance = null;
         }
 
         #endregion Begin / End

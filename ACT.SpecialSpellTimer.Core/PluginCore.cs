@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -81,6 +81,13 @@ namespace ACT.SpecialSpellTimer
                 Logger.Write("Plugin deinit error.", ex);
 
                 this.PluginStatusLabel.Text = "Plugin Exited Error";
+
+                MessageBox.Show(
+                    ActGlobals.oFormActMain,
+                    ex.ToString(),
+                    "Plugin Exited Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -161,6 +168,13 @@ namespace ACT.SpecialSpellTimer
                 {
                     this.PluginStatusLabel.Text = "Plugin Initialize Error";
                 }
+
+                MessageBox.Show(
+                    ActGlobals.oFormActMain,
+                    ex.ToString(),
+                    "Plugin Initialize Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 

@@ -13,7 +13,8 @@ namespace ACT.SpecialSpellTimer.Models
     /// スペルタイマ
     /// </summary>
     [Serializable]
-    public class SpellTimer : IDisposable
+    public class SpellTimer : 
+        IDisposable
     {
         [XmlIgnore]
         public volatile bool UpdateDone;
@@ -105,6 +106,8 @@ namespace ACT.SpecialSpellTimer.Models
             this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
         }
 
+        [XmlIgnore]
+        public bool IsTemporarilyDisplay { get; set; } = false;
         public int BackgroundAlpha { get; set; }
 
         public string BackgroundColor { get; set; }
@@ -622,5 +625,11 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion To Instance Spells
+
+        #region Clone
+
+        public SpellTimer Clone() => (SpellTimer)this.MemberwiseClone();
+
+        #endregion
     }
 }

@@ -2338,6 +2338,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Temporarily Display に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string TemporarilyDisplayCheckBox {
+            get {
+                return ResourceManager.GetString("TemporarilyDisplayCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Text blur rate に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string TextBlurRate {

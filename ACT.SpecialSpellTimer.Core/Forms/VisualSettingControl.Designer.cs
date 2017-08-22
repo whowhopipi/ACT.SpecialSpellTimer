@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     partial class VisualSettingControl
     {
@@ -100,124 +100,124 @@
             this.LoadColorSetItem,
             this.SaveColorSetItem});
             this.VisualSettingContextMenuStrip.Name = "ContextMenuStrip";
-            this.VisualSettingContextMenuStrip.Size = new System.Drawing.Size(218, 330);
+            this.VisualSettingContextMenuStrip.Size = new System.Drawing.Size(251, 374);
             // 
             // ChangeFontItem
             // 
             this.ChangeFontItem.Name = "ChangeFontItem";
-            this.ChangeFontItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeFontItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeFontItem.Text = "ChangeFont";
             // 
             // ChangeFontColorItem
             // 
             this.ChangeFontColorItem.Name = "ChangeFontColorItem";
-            this.ChangeFontColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeFontColorItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeFontColorItem.Text = "ChangeFontColor";
             // 
             // ChangeFontOutlineColorItem
             // 
             this.ChangeFontOutlineColorItem.Name = "ChangeFontOutlineColorItem";
-            this.ChangeFontOutlineColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeFontOutlineColorItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeFontOutlineColorItem.Text = "ChangeFontOutlineColor";
             // 
-            // ChangeFontColorItem
+            // ChangeWarningFontColorItem
             // 
             this.ChangeWarningFontColorItem.Name = "ChangeWarningFontColorItem";
-            this.ChangeWarningFontColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeWarningFontColorItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeWarningFontColorItem.Text = "ChangeWarningFontColor";
             // 
-            // ChangeFontOutlineColorItem
+            // ChangeWarningFontOutlineColorItem
             // 
             this.ChangeWarningFontOutlineColorItem.Name = "ChangeWarningFontOutlineColorItem";
-            this.ChangeWarningFontOutlineColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeWarningFontOutlineColorItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeWarningFontOutlineColorItem.Text = "ChangeWarningFontOutlineColor";
             // 
             // ChangeBarColorItem
             // 
             this.ChangeBarColorItem.Name = "ChangeBarColorItem";
-            this.ChangeBarColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeBarColorItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeBarColorItem.Text = "ChangeBarColor";
             // 
             // ChangeBarOutlineColorItem
             // 
             this.ChangeBarOutlineColorItem.Name = "ChangeBarOutlineColorItem";
-            this.ChangeBarOutlineColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeBarOutlineColorItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeBarOutlineColorItem.Text = "ChangeBarOutlineColor";
             // 
             // ChangeBackgoundColorItem
             // 
             this.ChangeBackgoundColorItem.Name = "ChangeBackgoundColorItem";
-            this.ChangeBackgoundColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeBackgoundColorItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeBackgoundColorItem.Text = "ChangeBackgroundColor";
             // 
             // ChangeBackgroundAlphaItem
             // 
             this.ChangeBackgroundAlphaItem.Name = "ChangeBackgroundAlphaItem";
-            this.ChangeBackgroundAlphaItem.Size = new System.Drawing.Size(217, 22);
+            this.ChangeBackgroundAlphaItem.Size = new System.Drawing.Size(250, 22);
             this.ChangeBackgroundAlphaItem.Text = "ChangeBackgroundAlpha";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(214, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(247, 6);
             // 
             // ResetSpellFontItem
             // 
             this.ResetSpellFontItem.Name = "ResetSpellFontItem";
-            this.ResetSpellFontItem.Size = new System.Drawing.Size(217, 22);
+            this.ResetSpellFontItem.Size = new System.Drawing.Size(250, 22);
             this.ResetSpellFontItem.Text = "ResetSpellFont";
             // 
             // ResetSpellBarSizeItem
             // 
             this.ResetSpellBarSizeItem.Name = "ResetSpellBarSizeItem";
-            this.ResetSpellBarSizeItem.Size = new System.Drawing.Size(217, 22);
+            this.ResetSpellBarSizeItem.Size = new System.Drawing.Size(250, 22);
             this.ResetSpellBarSizeItem.Text = "ResetSpellBarSize";
             // 
             // ResetSpellColorItem
             // 
             this.ResetSpellColorItem.Name = "ResetSpellColorItem";
-            this.ResetSpellColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ResetSpellColorItem.Size = new System.Drawing.Size(250, 22);
             this.ResetSpellColorItem.Text = "ResetSpellColor";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(214, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(247, 6);
             // 
             // ResetTelopFontItem
             // 
             this.ResetTelopFontItem.Name = "ResetTelopFontItem";
-            this.ResetTelopFontItem.Size = new System.Drawing.Size(217, 22);
+            this.ResetTelopFontItem.Size = new System.Drawing.Size(250, 22);
             this.ResetTelopFontItem.Text = "ResetTelopFont";
             // 
             // ResetTelopColorItem
             // 
             this.ResetTelopColorItem.Name = "ResetTelopColorItem";
-            this.ResetTelopColorItem.Size = new System.Drawing.Size(217, 22);
+            this.ResetTelopColorItem.Size = new System.Drawing.Size(250, 22);
             this.ResetTelopColorItem.Text = "ResetTelopColor";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(214, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(247, 6);
             // 
             // LoadColorSetItem
             // 
             this.LoadColorSetItem.Name = "LoadColorSetItem";
-            this.LoadColorSetItem.Size = new System.Drawing.Size(217, 22);
+            this.LoadColorSetItem.Size = new System.Drawing.Size(250, 22);
             this.LoadColorSetItem.Text = "LoadColorSet";
             // 
             // SaveColorSetItem
             // 
             this.SaveColorSetItem.Name = "SaveColorSetItem";
-            this.SaveColorSetItem.Size = new System.Drawing.Size(217, 22);
+            this.SaveColorSetItem.Size = new System.Drawing.Size(250, 22);
             this.SaveColorSetItem.Text = "SaveColorSet";
             // 
             // BarSizeLabel
             // 
             this.BarSizeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BarSizeLabel.AutoSize = true;
-            this.BarSizeLabel.Location = new System.Drawing.Point(110, 62);
+            this.BarSizeLabel.Location = new System.Drawing.Point(115, 62);
             this.BarSizeLabel.Name = "BarSizeLabel";
             this.BarSizeLabel.Size = new System.Drawing.Size(44, 12);
             this.BarSizeLabel.TabIndex = 2;
@@ -268,9 +268,9 @@
             this.BarSizeXLabel.AutoSize = true;
             this.BarSizeXLabel.Location = new System.Drawing.Point(233, 62);
             this.BarSizeXLabel.Name = "BarSizeXLabel";
-            this.BarSizeXLabel.Size = new System.Drawing.Size(25, 12);
+            this.BarSizeXLabel.Size = new System.Drawing.Size(19, 12);
             this.BarSizeXLabel.TabIndex = 5;
-            this.BarSizeXLabel.Text = "__×";
+            this.BarSizeXLabel.Text = "__x";
             // 
             // label3
             // 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -146,8 +146,11 @@ namespace ACT.SpecialSpellTimer.Models
             var query =
                 from x in sourceList
                 where
-                x.Enabled &&
-                filter(x)
+                x.IsTemporarilyDisplay ||
+                (
+                    x.Enabled &&
+                    filter(x)
+                )
                 orderby
                 x.Panel,
                 x.DisplayNo,
@@ -243,8 +246,11 @@ namespace ACT.SpecialSpellTimer.Models
             var query =
                 from x in sourceList
                 where
-                x.Enabled &&
-                filter(x)
+                x.IsTemporarilyDisplay ||
+                (
+                    x.Enabled &&
+                    filter(x)
+                )
                 orderby
                 x.MatchDateTime descending,
                 x.ID

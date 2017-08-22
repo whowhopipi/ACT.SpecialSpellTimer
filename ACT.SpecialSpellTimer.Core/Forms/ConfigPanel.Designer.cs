@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     partial class ConfigPanel
     {
@@ -41,6 +41,7 @@
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.CombatAnalyzingTimer = new System.Windows.Forms.Timer(this.components);
             this.EnabledSpellTimerNoDecimal = new System.Windows.Forms.CheckBox();
+            this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.TabControl = new ACT.SpecialSpellTimer.Forms.TabControlExt();
             this.SpecialSpellTabPage = new System.Windows.Forms.TabPage();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -66,6 +67,8 @@
             this.tabControlExtHoriz2 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.GeneralTab = new System.Windows.Forms.TabPage();
             this.SpellDetailPanel = new System.Windows.Forms.Panel();
+            this.BlinkBarCheckBox = new System.Windows.Forms.CheckBox();
+            this.BlinkIconCheckBox = new System.Windows.Forms.CheckBox();
             this.label68 = new System.Windows.Forms.Label();
             this.BlinkTimeNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.SelectIconButton = new System.Windows.Forms.Button();
@@ -160,7 +163,7 @@
             this.TelopDeleteButton = new System.Windows.Forms.Button();
             this.tabControlExtHoriz3 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.panel6 = new System.Windows.Forms.Panel();
+            this.TemporarilyDisplayTickerCheckBox = new System.Windows.Forms.CheckBox();
             this.TelopTitleTextBox = new System.Windows.Forms.TextBox();
             this.TelopMessageTextBox = new System.Windows.Forms.TextBox();
             this.TelopKeywordTextBox = new System.Windows.Forms.TextBox();
@@ -322,9 +325,7 @@
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.FolderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.BlinkIconCheckBox = new System.Windows.Forms.CheckBox();
-            this.BlinkBarCheckBox = new System.Windows.Forms.CheckBox();
+            this.TemporarilyDisplaySpellCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -775,6 +776,8 @@
             // SpellDetailPanel
             // 
             this.SpellDetailPanel.AutoScroll = true;
+            this.SpellDetailPanel.AutoScrollMargin = new System.Drawing.Size(10, 40);
+            this.SpellDetailPanel.Controls.Add(this.TemporarilyDisplaySpellCheckBox);
             this.SpellDetailPanel.Controls.Add(this.BlinkBarCheckBox);
             this.SpellDetailPanel.Controls.Add(this.BlinkIconCheckBox);
             this.SpellDetailPanel.Controls.Add(this.label68);
@@ -826,6 +829,26 @@
             this.SpellDetailPanel.Name = "SpellDetailPanel";
             this.SpellDetailPanel.Size = new System.Drawing.Size(537, 759);
             this.SpellDetailPanel.TabIndex = 74;
+            // 
+            // BlinkBarCheckBox
+            // 
+            this.BlinkBarCheckBox.AutoSize = true;
+            this.BlinkBarCheckBox.Location = new System.Drawing.Point(5, 445);
+            this.BlinkBarCheckBox.Name = "BlinkBarCheckBox";
+            this.BlinkBarCheckBox.Size = new System.Drawing.Size(120, 16);
+            this.BlinkBarCheckBox.TabIndex = 81;
+            this.BlinkBarCheckBox.Text = "BlinkBarCheckBox";
+            this.BlinkBarCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // BlinkIconCheckBox
+            // 
+            this.BlinkIconCheckBox.AutoSize = true;
+            this.BlinkIconCheckBox.Location = new System.Drawing.Point(5, 420);
+            this.BlinkIconCheckBox.Name = "BlinkIconCheckBox";
+            this.BlinkIconCheckBox.Size = new System.Drawing.Size(123, 16);
+            this.BlinkIconCheckBox.TabIndex = 80;
+            this.BlinkIconCheckBox.Text = "BlinkIconCheckBox";
+            this.BlinkIconCheckBox.UseVisualStyleBackColor = true;
             // 
             // label68
             // 
@@ -1098,7 +1121,7 @@
             // 
             // SetConditionButton
             // 
-            this.SetConditionButton.Location = new System.Drawing.Point(308, 706);
+            this.SetConditionButton.Location = new System.Drawing.Point(308, 725);
             this.SetConditionButton.Name = "SetConditionButton";
             this.SetConditionButton.Size = new System.Drawing.Size(144, 26);
             this.SetConditionButton.TabIndex = 36;
@@ -1138,7 +1161,7 @@
             // ReduceIconBrightnessCheckBox
             // 
             this.ReduceIconBrightnessCheckBox.AutoSize = true;
-            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 680);
+            this.ReduceIconBrightnessCheckBox.Location = new System.Drawing.Point(8, 699);
             this.ReduceIconBrightnessCheckBox.Name = "ReduceIconBrightnessCheckBox";
             this.ReduceIconBrightnessCheckBox.Size = new System.Drawing.Size(190, 16);
             this.ReduceIconBrightnessCheckBox.TabIndex = 72;
@@ -1157,7 +1180,7 @@
             // 
             // SelectZoneButton
             // 
-            this.SelectZoneButton.Location = new System.Drawing.Point(158, 706);
+            this.SelectZoneButton.Location = new System.Drawing.Point(158, 725);
             this.SelectZoneButton.Name = "SelectZoneButton";
             this.SelectZoneButton.Size = new System.Drawing.Size(144, 26);
             this.SelectZoneButton.TabIndex = 29;
@@ -1176,7 +1199,7 @@
             // 
             // SelectJobButton
             // 
-            this.SelectJobButton.Location = new System.Drawing.Point(8, 706);
+            this.SelectJobButton.Location = new System.Drawing.Point(8, 725);
             this.SelectJobButton.Name = "SelectJobButton";
             this.SelectJobButton.Size = new System.Drawing.Size(144, 26);
             this.SelectJobButton.TabIndex = 27;
@@ -1186,7 +1209,7 @@
             // OverlapRecastTimeCheckBox
             // 
             this.OverlapRecastTimeCheckBox.AutoSize = true;
-            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 658);
+            this.OverlapRecastTimeCheckBox.Location = new System.Drawing.Point(8, 677);
             this.OverlapRecastTimeCheckBox.Name = "OverlapRecastTimeCheckBox";
             this.OverlapRecastTimeCheckBox.Size = new System.Drawing.Size(176, 16);
             this.OverlapRecastTimeCheckBox.TabIndex = 71;
@@ -1206,7 +1229,7 @@
             // DontHideCheckBox
             // 
             this.DontHideCheckBox.AutoSize = true;
-            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 613);
+            this.DontHideCheckBox.Location = new System.Drawing.Point(8, 632);
             this.DontHideCheckBox.Name = "DontHideCheckBox";
             this.DontHideCheckBox.Size = new System.Drawing.Size(123, 16);
             this.DontHideCheckBox.TabIndex = 48;
@@ -1216,7 +1239,7 @@
             // HideSpellNameCheckBox
             // 
             this.HideSpellNameCheckBox.AutoSize = true;
-            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 636);
+            this.HideSpellNameCheckBox.Location = new System.Drawing.Point(8, 655);
             this.HideSpellNameCheckBox.Name = "HideSpellNameCheckBox";
             this.HideSpellNameCheckBox.Size = new System.Drawing.Size(153, 16);
             this.HideSpellNameCheckBox.TabIndex = 70;
@@ -1266,7 +1289,7 @@
             // IsReverseCheckBox
             // 
             this.IsReverseCheckBox.AutoSize = true;
-            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 592);
+            this.IsReverseCheckBox.Location = new System.Drawing.Point(8, 611);
             this.IsReverseCheckBox.Name = "IsReverseCheckBox";
             this.IsReverseCheckBox.Size = new System.Drawing.Size(162, 16);
             this.IsReverseCheckBox.TabIndex = 47;
@@ -1276,7 +1299,7 @@
             // ShowProgressBarCheckBox
             // 
             this.ShowProgressBarCheckBox.AutoSize = true;
-            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 569);
+            this.ShowProgressBarCheckBox.Location = new System.Drawing.Point(8, 588);
             this.ShowProgressBarCheckBox.Name = "ShowProgressBarCheckBox";
             this.ShowProgressBarCheckBox.Size = new System.Drawing.Size(166, 16);
             this.ShowProgressBarCheckBox.TabIndex = 46;
@@ -1771,25 +1794,25 @@
             // TelopExportButton
             // 
             this.TelopExportButton.Name = "TelopExportButton";
-            this.TelopExportButton.Size = new System.Drawing.Size(118, 20);
+            this.TelopExportButton.Size = new System.Drawing.Size(117, 20);
             this.TelopExportButton.Text = "TelopExportButton";
             // 
             // TelopImportButton
             // 
             this.TelopImportButton.Name = "TelopImportButton";
-            this.TelopImportButton.Size = new System.Drawing.Size(119, 20);
+            this.TelopImportButton.Size = new System.Drawing.Size(118, 20);
             this.TelopImportButton.Text = "TelopImportButton";
             // 
             // TelopClearAllButton
             // 
             this.TelopClearAllButton.Name = "TelopClearAllButton";
-            this.TelopClearAllButton.Size = new System.Drawing.Size(124, 20);
+            this.TelopClearAllButton.Size = new System.Drawing.Size(123, 20);
             this.TelopClearAllButton.Text = "TelopClearAllButton";
             // 
             // TelopAddButton
             // 
             this.TelopAddButton.Name = "TelopAddButton";
-            this.TelopAddButton.Size = new System.Drawing.Size(106, 20);
+            this.TelopAddButton.Size = new System.Drawing.Size(105, 20);
             this.TelopAddButton.Text = "TelopAddButton";
             // 
             // TelopDetailGroupBox
@@ -1849,7 +1872,8 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
-            this.tabPage1.Controls.Add(this.panel6);
+            this.tabPage1.AutoScrollMargin = new System.Drawing.Size(10, 40);
+            this.tabPage1.Controls.Add(this.TemporarilyDisplayTickerCheckBox);
             this.tabPage1.Controls.Add(this.TelopTitleTextBox);
             this.tabPage1.Controls.Add(this.TelopMessageTextBox);
             this.tabPage1.Controls.Add(this.TelopKeywordTextBox);
@@ -1884,12 +1908,16 @@
             this.tabPage1.Text = "GeneralTab";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // panel6
+            // TemporarilyDisplayTickerCheckBox
             // 
-            this.panel6.Location = new System.Drawing.Point(6, 445);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(529, 68);
-            this.panel6.TabIndex = 76;
+            this.TemporarilyDisplayTickerCheckBox.AutoSize = true;
+            this.TemporarilyDisplayTickerCheckBox.ForeColor = System.Drawing.Color.DeepPink;
+            this.TemporarilyDisplayTickerCheckBox.Location = new System.Drawing.Point(5, 327);
+            this.TemporarilyDisplayTickerCheckBox.Name = "TemporarilyDisplayTickerCheckBox";
+            this.TemporarilyDisplayTickerCheckBox.Size = new System.Drawing.Size(174, 16);
+            this.TemporarilyDisplayTickerCheckBox.TabIndex = 76;
+            this.TemporarilyDisplayTickerCheckBox.Text = "TemporarilyDisplayCheckBox";
+            this.TemporarilyDisplayTickerCheckBox.UseVisualStyleBackColor = true;
             // 
             // TelopTitleTextBox
             // 
@@ -1956,7 +1984,7 @@
             // 
             // TelopSetConditionButton
             // 
-            this.TelopSetConditionButton.Location = new System.Drawing.Point(306, 414);
+            this.TelopSetConditionButton.Location = new System.Drawing.Point(306, 439);
             this.TelopSetConditionButton.Name = "TelopSetConditionButton";
             this.TelopSetConditionButton.Size = new System.Drawing.Size(144, 25);
             this.TelopSetConditionButton.TabIndex = 75;
@@ -1975,7 +2003,7 @@
             // 
             // TelopSelectZoneButton
             // 
-            this.TelopSelectZoneButton.Location = new System.Drawing.Point(156, 414);
+            this.TelopSelectZoneButton.Location = new System.Drawing.Point(156, 439);
             this.TelopSelectZoneButton.Name = "TelopSelectZoneButton";
             this.TelopSelectZoneButton.Size = new System.Drawing.Size(144, 25);
             this.TelopSelectZoneButton.TabIndex = 74;
@@ -2004,7 +2032,7 @@
             // 
             // TelopSelectJobButton
             // 
-            this.TelopSelectJobButton.Location = new System.Drawing.Point(6, 414);
+            this.TelopSelectJobButton.Location = new System.Drawing.Point(6, 439);
             this.TelopSelectJobButton.Name = "TelopSelectJobButton";
             this.TelopSelectJobButton.Size = new System.Drawing.Size(144, 25);
             this.TelopSelectJobButton.TabIndex = 73;
@@ -2024,7 +2052,7 @@
             // TelopProgressBarEnabledCheckBox
             // 
             this.TelopProgressBarEnabledCheckBox.AutoSize = true;
-            this.TelopProgressBarEnabledCheckBox.Location = new System.Drawing.Point(5, 353);
+            this.TelopProgressBarEnabledCheckBox.Location = new System.Drawing.Point(5, 378);
             this.TelopProgressBarEnabledCheckBox.Name = "TelopProgressBarEnabledCheckBox";
             this.TelopProgressBarEnabledCheckBox.Size = new System.Drawing.Size(192, 16);
             this.TelopProgressBarEnabledCheckBox.TabIndex = 72;
@@ -2034,7 +2062,7 @@
             // EnabledAddMessageCheckBox
             // 
             this.EnabledAddMessageCheckBox.AutoSize = true;
-            this.EnabledAddMessageCheckBox.Location = new System.Drawing.Point(5, 330);
+            this.EnabledAddMessageCheckBox.Location = new System.Drawing.Point(5, 355);
             this.EnabledAddMessageCheckBox.Name = "EnabledAddMessageCheckBox";
             this.EnabledAddMessageCheckBox.Size = new System.Drawing.Size(141, 16);
             this.EnabledAddMessageCheckBox.TabIndex = 71;
@@ -2054,7 +2082,7 @@
             // TelopTopNumericUpDown
             // 
             this.TelopTopNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.TelopTopNumericUpDown.Location = new System.Drawing.Point(160, 381);
+            this.TelopTopNumericUpDown.Location = new System.Drawing.Point(160, 406);
             this.TelopTopNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -2073,7 +2101,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(142, 383);
+            this.label35.Location = new System.Drawing.Point(142, 408);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(12, 12);
             this.label35.TabIndex = 65;
@@ -2091,7 +2119,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(49, 383);
+            this.label34.Location = new System.Drawing.Point(49, 408);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(12, 12);
             this.label34.TabIndex = 64;
@@ -2111,7 +2139,7 @@
             // TelopLeftNumericUpDown
             // 
             this.TelopLeftNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.TelopLeftNumericUpDown.Location = new System.Drawing.Point(67, 381);
+            this.TelopLeftNumericUpDown.Location = new System.Drawing.Point(67, 406);
             this.TelopLeftNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -2139,7 +2167,7 @@
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(3, 384);
+            this.label33.Location = new System.Drawing.Point(3, 409);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(48, 12);
             this.label33.TabIndex = 62;
@@ -3647,25 +3675,16 @@
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // BlinkIconCheckBox
+            // TemporarilyDisplaySpellCheckBox
             // 
-            this.BlinkIconCheckBox.AutoSize = true;
-            this.BlinkIconCheckBox.Location = new System.Drawing.Point(5, 420);
-            this.BlinkIconCheckBox.Name = "BlinkIconCheckBox";
-            this.BlinkIconCheckBox.Size = new System.Drawing.Size(123, 16);
-            this.BlinkIconCheckBox.TabIndex = 80;
-            this.BlinkIconCheckBox.Text = "BlinkIconCheckBox";
-            this.BlinkIconCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // BlinkBarCheckBox
-            // 
-            this.BlinkBarCheckBox.AutoSize = true;
-            this.BlinkBarCheckBox.Location = new System.Drawing.Point(5, 445);
-            this.BlinkBarCheckBox.Name = "BlinkBarCheckBox";
-            this.BlinkBarCheckBox.Size = new System.Drawing.Size(120, 16);
-            this.BlinkBarCheckBox.TabIndex = 81;
-            this.BlinkBarCheckBox.Text = "BlinkBarCheckBox";
-            this.BlinkBarCheckBox.UseVisualStyleBackColor = true;
+            this.TemporarilyDisplaySpellCheckBox.AutoSize = true;
+            this.TemporarilyDisplaySpellCheckBox.ForeColor = System.Drawing.Color.DeepPink;
+            this.TemporarilyDisplaySpellCheckBox.Location = new System.Drawing.Point(8, 563);
+            this.TemporarilyDisplaySpellCheckBox.Name = "TemporarilyDisplaySpellCheckBox";
+            this.TemporarilyDisplaySpellCheckBox.Size = new System.Drawing.Size(174, 16);
+            this.TemporarilyDisplaySpellCheckBox.TabIndex = 82;
+            this.TemporarilyDisplaySpellCheckBox.Text = "TemporarilyDisplayCheckBox";
+            this.TemporarilyDisplaySpellCheckBox.UseVisualStyleBackColor = true;
             // 
             // ConfigPanel
             // 
@@ -4050,7 +4069,6 @@
         private System.Windows.Forms.NumericUpDown TextBlurRateNumericUpDown;
         private System.Windows.Forms.NumericUpDown TextOutlineThicknessRateNumericUpDown;
         private System.Windows.Forms.CheckBox NotifyToACTCheckBox;
-        private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.TabPage NameStyleTabPage;
         private System.Windows.Forms.TabPage LogTabPage;
         private System.Windows.Forms.FolderBrowserDialog FolderBrowserDialog;
@@ -4063,5 +4081,7 @@
         private System.Windows.Forms.NumericUpDown BlinkTimeNumericUpDown;
         private System.Windows.Forms.CheckBox BlinkBarCheckBox;
         private System.Windows.Forms.CheckBox BlinkIconCheckBox;
+        private System.Windows.Forms.CheckBox TemporarilyDisplayTickerCheckBox;
+        private System.Windows.Forms.CheckBox TemporarilyDisplaySpellCheckBox;
     }
 }
