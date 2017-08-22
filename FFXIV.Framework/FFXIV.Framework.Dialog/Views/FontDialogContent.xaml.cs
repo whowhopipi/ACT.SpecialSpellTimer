@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -113,7 +113,7 @@ namespace FFXIV.Framework.Dialog.Views
             {
                 if (decimal.TryParse(t.Text, out d))
                 {
-                    t.Text = (d + 0.5m).ToString("N1");
+                    t.Text = (d + 0.1m).ToString("N1");
                 }
             }
 
@@ -121,9 +121,9 @@ namespace FFXIV.Framework.Dialog.Views
             {
                 if (decimal.TryParse(t.Text, out d))
                 {
-                    if ((d - 0.5m) >= 1.0m)
+                    if ((d - 0.1m) >= 1.0m)
                     {
-                        t.Text = (d - 0.5m).ToString("N1");
+                        t.Text = (d - 0.1m).ToString("N1");
                     }
                 }
             }
