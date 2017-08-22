@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
   x:Class="FFXIV.Framework.Dialog.Views.FontDialogContent"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -101,9 +101,11 @@
           FontStretch="{Binding SelectedItem.Stretch, ElementName=FontStyleListBox}"
           FontStyle="{Binding SelectedItem.Style, ElementName=FontStyleListBox}"
           TextAlignment="Center" TextWrapping="Wrap"
-          Foreground="WhiteSmoke"
           IsReadOnly="True"
           Text="0123456789&#10;abcdefghijklmnopqrstuvwxyz&#10;ABCDEFGHIJKLMNOPQRSTUVWXYZ&#10;&#10;あのイーハトーヴォの&#10;すきとおった風、&#10;夏でも底に冷たさをもつ青いそら、&#10;うつくしい森で飾られたモリーオ市、&#10;郊外のぎらぎらひかる草の波。">
+          <TextBox.Foreground>
+            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowTextColorKey}}" />
+          </TextBox.Foreground>
         </TextBox>
       </StackPanel>
     </Grid>
