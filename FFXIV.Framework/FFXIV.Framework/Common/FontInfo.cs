@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -14,16 +14,18 @@ namespace FFXIV.Framework.Common
     [DataContract]
     public class FontInfo
     {
+        private static readonly object locker = new object();
+
         [XmlIgnore]
         public static readonly FontInfo DefaultFont = new FontInfo(
-            new FontFamily(),
+            new FontFamily("Arial"),
             11,
             FontStyles.Normal,
             FontWeights.Normal,
             FontStretches.Normal);
 
         [XmlIgnore]
-        private static Dictionary<string, FontFamily> fontFamilyDictionary = new Dictionary<string, FontFamily>();
+        private static readonly Dictionary<string, FontFamily> fontFamilyDictionary = new Dictionary<string, FontFamily>();
 
         [XmlIgnore]
         private static FontStretchConverter stretchConverter = new FontStretchConverter();
@@ -36,6 +38,20 @@ namespace FFXIV.Framework.Common
 
         public FontInfo()
         {
+        }
+
+        public FontInfo(
+            string family)
+        {
+            this.Family = GetFontFamily(family);
+        }
+
+        public FontInfo(
+            string family,
+            double size)
+        {
+            this.Family = GetFontFamily(family);
+            this.Size = size;
         }
 
         public FontInfo(
@@ -79,15 +95,15 @@ namespace FFXIV.Framework.Common
             set => this.Family = FontInfo.GetFontFamily(value);
         }
 
-        [XmlAttribute("FontSize")]
-        [DataMember(Name = "FontSize")]
-        public double Size { get; set; } = 11.25d;
+        [XmlAttribute("Size")]
+        [DataMember(Name = "Size")]
+        public double Size { get; set; } = 11.0d;
 
         [XmlIgnore]
-        public FontStretch Stretch { get; set; }
+        public FontStretch Stretch { get; set; } = FontStretches.Normal;
 
-        [XmlAttribute("FontStretch")]
-        [DataMember(Name = "FontStretch")]
+        [XmlAttribute("Stretch")]
+        [DataMember(Name = "Stretch")]
         public string StretchString
         {
             get => FontInfo.stretchConverter.ConvertToString(this.Stretch);
@@ -95,10 +111,10 @@ namespace FFXIV.Framework.Common
         }
 
         [XmlIgnore]
-        public FontStyle Style { get; set; }
+        public FontStyle Style { get; set; } = FontStyles.Normal;
 
-        [XmlAttribute("FontStyle")]
-        [DataMember(Name = "FontStyle")]
+        [XmlAttribute("Style")]
+        [DataMember(Name = "Style")]
         public string StyleString
         {
             get => FontInfo.styleConverter.ConvertToString(this.Style);
@@ -117,10 +133,10 @@ namespace FFXIV.Framework.Common
         }
 
         [XmlIgnore]
-        public FontWeight Weight { get; set; }
+        public FontWeight Weight { get; set; } = FontWeights.Normal;
 
-        [XmlAttribute("FontWeight")]
-        [DataMember(Name = "FontWeight")]
+        [XmlAttribute("Weight")]
+        [DataMember(Name = "Weight")]
         public string WeightString
         {
             get => FontInfo.weightConverter.ConvertToString(this.Weight);
@@ -164,12 +180,15 @@ namespace FFXIV.Framework.Common
                 return new FontFamily();
             }
 
-            if (!fontFamilyDictionary.ContainsKey(source))
+            lock (locker)
             {
-                fontFamilyDictionary[source] = new FontFamily(source);
-            }
+                if (!fontFamilyDictionary.ContainsKey(source))
+                {
+                    fontFamilyDictionary[source] = new FontFamily(source);
+                }
 
-            return fontFamilyDictionary[source];
+                return fontFamilyDictionary[source];
+            }
         }
 
         public System.Drawing.Font ToFontForWindowsForm()
@@ -189,7 +208,7 @@ namespace FFXIV.Framework.Common
 
             System.Drawing.Font f = new System.Drawing.Font(
                 this.FamilyName,
-                (float)(this.Size * 72.0d / 96.0d),
+                (float)this.Size,
                 style);
 
             return f;

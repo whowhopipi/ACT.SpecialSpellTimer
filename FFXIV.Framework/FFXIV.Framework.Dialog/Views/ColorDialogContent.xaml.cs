@@ -53,12 +53,15 @@ namespace FFXIV.Framework.Dialog.Views
                 if (this.ignoreAlpha != value)
                 {
                     this.ignoreAlpha = value;
-                    this.ASlider.IsEnabled = !this.ignoreAlpha;
-                    this.ATextBox.IsReadOnly = !this.ignoreAlpha;
 
                     if (this.ignoreAlpha)
                     {
                         this.ATextBox.Text = "255";
+                        this.APanel.Visibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        this.APanel.Visibility = Visibility.Visible;
                     }
                 }
             }

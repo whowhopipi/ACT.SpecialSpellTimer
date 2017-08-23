@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DD7824D5-F74E-4412-9E87-C7B89E1C6165}</ProjectGuid>
+    <ProjectGuid>{9F031C94-8011-408E-B916-19C484EA95FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FFXIV.Framework.Dialog</RootNamespace>
-    <AssemblyName>FFXIV.Framework.Dialog.Wrapper</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <RootNamespace>deploy</RootNamespace>
+    <AssemblyName>deploy</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -31,10 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,19 +41,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorDialogWrapper.cs" />
-    <Compile Include="FontDialogWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FFXIV.Framework.Dialog\FFXIV.Framework.Dialog.csproj">
+    <Content Include="README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ACT.SpecialSpellTimer.Core\ACT.SpecialSpellTimer.Core.csproj">
+      <Project>{ea12d333-f0ed-4524-8bad-b986b0137ea5}</Project>
+      <Name>ACT.SpecialSpellTimer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ACT.SpecialSpellTimer\ACT.SpecialSpellTimer.csproj">
+      <Project>{ccf72089-92fa-4afb-bde7-869ca0e394f9}</Project>
+      <Name>ACT.SpecialSpellTimer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework.Dialog.Wrapper\FFXIV.Framework.Dialog.Wrapper.csproj">
+      <Project>{dd7824d5-f74e-4412-9e87-c7b89e1c6165}</Project>
+      <Name>FFXIV.Framework.Dialog.Wrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework.Dialog\FFXIV.Framework.Dialog.csproj">
       <Project>{5fc72c62-16d6-4f95-aa45-c7ad5f8a7901}</Project>
       <Name>FFXIV.Framework.Dialog</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework.csproj">
+    <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework\FFXIV.Framework.csproj">
       <Project>{22ebf8a4-eed1-4cd1-99eb-99665163a315}</Project>
       <Name>FFXIV.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XIVDBDownloader\XIVDBDownloader.csproj">
+      <Project>{c3fa9195-3381-4622-97eb-d0e1ca7c8b14}</Project>
+      <Name>XIVDBDownloader</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="deploy.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
