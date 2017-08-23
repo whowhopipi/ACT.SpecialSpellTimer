@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
@@ -237,7 +237,8 @@ namespace ACT.SpecialSpellTimer.Models
         /// <param name="file">ファイルパス</param>
         public void Save(
             string file,
-            bool force)
+            bool force,
+            string panelName = "")
         {
             if (this.table == null)
             {
@@ -252,19 +253,31 @@ namespace ACT.SpecialSpellTimer.Models
                 }
             }
 
+            var work = this.table.Where(x =>
+                !x.IsInstance &&
+                (
+                    string.IsNullOrEmpty(panelName) ||
+                    x.Panel == panelName
+                )).ToList();
+
+            this.Save(file, work);
+        }
+
+
+        public void Save(
+            string file,
+            List<SpellTimer> list)
+        {
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
 
-            var work = new List<SpellTimer>(
-                this.table.Where(x => !x.IsInstance));
-
             using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
             {
-                var xs = new XmlSerializer(work.GetType());
-                xs.Serialize(sw, work);
+                var xs = new XmlSerializer(list.GetType());
+                xs.Serialize(sw, list);
             }
         }
 

@@ -369,13 +369,20 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
+            // 有効なスペルを取得する
+            var spells = TableCompiler.Instance.SpellList;
+
             // FFXIVでの使用？
             if (!Settings.Default.UseOtherThanFFXIV &&
                 !this.existFFXIVProcess &&
                 !Settings.Default.OverlayForceVisible)
             {
-                SpellsController.Instance.ClosePanels();
-                return;
+                // 一時表示スペルがない？
+                if (!spells.Any(x => x.IsTemporarilyDisplay))
+                {
+                    SpellsController.Instance.ClosePanels();
+                    return;
+                }
             }
 
             // オーバーレイが非表示？
@@ -394,7 +401,6 @@ namespace ACT.SpecialSpellTimer
             }
 
             // スペルWindowを表示する
-            var spells = TableCompiler.Instance.SpellList;
             SpellsController.Instance.RefreshSpellOverlays(spells);
         }
 
@@ -408,13 +414,20 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
+            // 有効なテロップを取得する
+            var telops = TableCompiler.Instance.TickerList;
+
             // FFXIVでの使用？
             if (!Settings.Default.UseOtherThanFFXIV &&
                 !this.existFFXIVProcess &&
                 !Settings.Default.OverlayForceVisible)
             {
-                TickersController.Instance.CloseTelops();
-                return;
+                // 一時表示テロップがない？
+                if (!telops.Any(x => x.IsTemporarilyDisplay))
+                {
+                    TickersController.Instance.CloseTelops();
+                    return;
+                }
             }
 
             // オーバーレイが非表示？
@@ -433,7 +446,6 @@ namespace ACT.SpecialSpellTimer
             }
 
             // テロップWindowを表示する
-            var telops = TableCompiler.Instance.TickerList;
             TickersController.Instance.RefreshTelopOverlays(telops);
         }
 

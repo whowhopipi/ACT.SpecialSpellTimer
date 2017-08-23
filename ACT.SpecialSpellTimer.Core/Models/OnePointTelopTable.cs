@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -220,6 +220,13 @@ namespace ACT.SpecialSpellTimer.Models
                 }
             }
 
+            this.Save(file, this.table);
+        }
+
+        public void Save(
+            string file,
+            List<OnePointTelop> list)
+        {
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))
             {
@@ -228,8 +235,8 @@ namespace ACT.SpecialSpellTimer.Models
 
             using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
             {
-                var xs = new XmlSerializer(table.GetType());
-                xs.Serialize(sw, table);
+                var xs = new XmlSerializer(list.GetType());
+                xs.Serialize(sw, list);
             }
         }
     }

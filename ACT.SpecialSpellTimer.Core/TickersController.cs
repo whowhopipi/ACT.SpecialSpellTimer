@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using ACT.SpecialSpellTimer.Config;
@@ -211,6 +212,9 @@ namespace ACT.SpecialSpellTimer
                     if (w.ShowOverlay())
                     {
                         w.StartProgressBar();
+#if DEBUG
+                        Debug.WriteLine($"●show telop {telop.Title}");
+#endif
                     }
 
                     return;
@@ -231,6 +235,9 @@ namespace ACT.SpecialSpellTimer
                         if (w.ShowOverlay())
                         {
                             w.StartProgressBar();
+#if DEBUG
+                            Debug.WriteLine($"●show telop {telop.Title}");
+#endif
                         }
                     }
                     else
@@ -260,7 +267,18 @@ namespace ACT.SpecialSpellTimer
 
             foreach (var telop in telops)
             {
+#if DEBUG
+                var sw = Stopwatch.StartNew();
+#endif
                 refreshTelop(telop);
+#if DEBUG
+                sw.Stop();
+                if (telop.IsTemporarilyDisplay &&
+                    sw.Elapsed.TotalMilliseconds >= 1.0)
+                {
+                    Debug.WriteLine($"●refreshTelop {telop.Title} {sw.Elapsed.TotalMilliseconds:N0}ms");
+                }
+#endif
             }
         }
 

@@ -548,6 +548,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 TableCompiler.Instance.RecompileSpells();
             };
 
+            // スペルパネル単位のエクスポート
+            this.ExportBySpellPanelButton.Click += this.ExportBySpellPanelButton_Click;
+
             // オプションのロードメソッドを呼ぶ
             this.LoadOption();
             this.LoadDQXOption();
@@ -616,8 +619,22 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private async void ExportButton_Click(object sender, EventArgs e)
         {
-            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
+            await SelectExportTargetForm.ShowDialogAsync(
+                SelectExportTargetForm.Targets.Spells,
+                this);
+        }
 
+        /// <summary>
+        /// エクスポート Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private async void ExportBySpellPanelButton_Click(object sender, EventArgs e)
+        {
+            // パネル名を取り出す
+            var panelName = (string)this.DetailPanelGroupBox.Tag;
+
+            this.SaveFileDialog.FileName = $"spells.{panelName}.xml";
             var result = await Task.Run(() =>
             {
                 return this.SaveFileDialog.ShowDialog(this);
@@ -627,7 +644,8 @@ namespace ACT.SpecialSpellTimer.Forms
             {
                 SpellTimerTable.Instance.Save(
                     this.SaveFileDialog.FileName,
-                    true);
+                    true,
+                    panelName);
             }
         }
 

@@ -10,7 +10,7 @@ if (Test-Path deploy.dll) {
   Remove-Item deploy.dll -Force
 }
 
-Remove-Item -Force -Recurse -Path .\* -Include *.xml -Exclude *系*
+Remove-Item -Force -Recurse -Path .\* -Include *.xml -Exclude *系*,preset-*
 Remove-Item -Force -Recurse -Path .\* -Include *.pdb
 Remove-Item -Force -Recurse -Path .\* -Include "Action icons",locale
 'Done'

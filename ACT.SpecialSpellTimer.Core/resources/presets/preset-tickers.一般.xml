@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfOnePointTelop xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <OnePointTelop>
+    <AddMessageEnabled>false</AddMessageEnabled>
+    <BackgroundAlpha>0</BackgroundAlpha>
+    <BackgroundColor>#FFFFFF</BackgroundColor>
+    <Delay>0</Delay>
+    <DelayTextToSpeak />
+    <DisplayTime>3</DisplayTime>
+    <Enabled>true</Enabled>
+    <Font FontFamily="メイリオ" Size="30" Stretch="Normal" Style="Normal" Weight="Bold" />
+    <FontColor>White</FontColor>
+    <FontOutlineColor>#FF8000</FontOutlineColor>
+    <Guid>458101c6-c415-4b7d-8cd9-c1b4239e0f7a</Guid>
+    <ID>46</ID>
+    <JobFilter />
+    <Keyword>は「ファイナルスピア」の構え。</Keyword>
+    <KeywordToHide />
+    <Left>660</Left>
+    <MatchTextToSpeak>ファイナルスピア！</MatchTextToSpeak>
+    <Message>ファイナルスピア</Message>
+    <ProgressBarEnabled>false</ProgressBarEnabled>
+    <RegexEnabled>false</RegexEnabled>
+    <TimersMustRunningForStart />
+    <TimersMustStoppingForStart />
+    <Title>一般.ファイナルスピア</Title>
+    <Top>350</Top>
+    <ZoneFilter />
+    <DelaySound />
+    <MatchSound />
+  </OnePointTelop>
+  <OnePointTelop>
+    <AddMessageEnabled>true</AddMessageEnabled>
+    <BackgroundAlpha>0</BackgroundAlpha>
+    <BackgroundColor>#FFFFFF</BackgroundColor>
+    <Delay>0</Delay>
+    <DelayTextToSpeak />
+    <DisplayTime>3</DisplayTime>
+    <Enabled>true</Enabled>
+    <Font FontFamily="メイリオ" Size="30" Stretch="Normal" Style="Normal" Weight="Bold" />
+    <FontColor>White</FontColor>
+    <FontOutlineColor>#FF8000</FontOutlineColor>
+    <Guid>527ed7c6-e82e-4729-b661-dce1d8f04724</Guid>
+    <ID>19</ID>
+    <JobFilter />
+    <Keyword>(&lt;mex&gt;|&lt;2ex&gt;|&lt;3ex&gt;|&lt;4&gt;ex|&lt;5ex&gt;|&lt;6ex&gt;|&lt;7ex&gt;|&lt;8ex&gt;)に「マーキング」の効果</Keyword>
+    <KeywordToHide />
+    <Left>660</Left>
+    <MatchTextToSpeak>マーキング</MatchTextToSpeak>
+    <Message>$1 にマーキング</Message>
+    <ProgressBarEnabled>false</ProgressBarEnabled>
+    <RegexEnabled>true</RegexEnabled>
+    <TimersMustRunningForStart />
+    <TimersMustStoppingForStart />
+    <Title>一般.マーキング</Title>
+    <Top>350</Top>
+    <ZoneFilter />
+    <DelaySound />
+    <MatchSound />
+  </OnePointTelop>
+  <OnePointTelop>
+    <AddMessageEnabled>false</AddMessageEnabled>
+    <BackgroundAlpha>0</BackgroundAlpha>
+    <BackgroundColor>#FFFFFF</BackgroundColor>
+    <Delay>0</Delay>
+    <DelayTextToSpeak />
+    <DisplayTime>3</DisplayTime>
+    <Enabled>true</Enabled>
+    <Font FontFamily="メイリオ" Size="35" Stretch="Normal" Style="Normal" Weight="Bold" />
+    <FontColor>White</FontColor>
+    <FontOutlineColor>#FF8000</FontOutlineColor>
+    <Guid>e4327c26-e1c8-4c45-8759-dc20267bae78</Guid>
+    <ID>75</ID>
+    <JobFilter />
+    <Keyword>は「(.+まなざし)」の構え。</Keyword>
+    <KeywordToHide />
+    <Left>660</Left>
+    <MatchTextToSpeak>ジャガン</MatchTextToSpeak>
+    <Message>$1</Message>
+    <ProgressBarEnabled>false</ProgressBarEnabled>
+    <RegexEnabled>true</RegexEnabled>
+    <TimersMustRunningForStart />
+    <TimersMustStoppingForStart />
+    <Title>一般.まなざし</Title>
+    <Top>350</Top>
+    <ZoneFilter />
+    <DelaySound />
+    <MatchSound />
+  </OnePointTelop>
+  <OnePointTelop>
+    <AddMessageEnabled>false</AddMessageEnabled>
+    <BackgroundAlpha>0</BackgroundAlpha>
+    <BackgroundColor>#FFFFFF</BackgroundColor>
+    <Delay>0</Delay>
+    <DelayTextToSpeak />
+    <DisplayTime>3</DisplayTime>
+    <Enabled>true</Enabled>
+    <Font FontFamily="メイリオ" Size="35" Stretch="Normal" Style="Normal" Weight="Bold" />
+    <FontColor>White</FontColor>
+    <FontOutlineColor>#FF8000</FontOutlineColor>
+    <Guid>ad8a9b84-5a75-4593-9289-811db6fca155</Guid>
+    <ID>137</ID>
+    <JobFilter />
+    <Keyword>は「(.+瞳)」の構え。</Keyword>
+    <KeywordToHide />
+    <Left>660</Left>
+    <MatchTextToSpeak>ジャガン</MatchTextToSpeak>
+    <Message>$1</Message>
+    <ProgressBarEnabled>false</ProgressBarEnabled>
+    <RegexEnabled>true</RegexEnabled>
+    <TimersMustRunningForStart />
+    <TimersMustStoppingForStart />
+    <Title>一般.瞳</Title>
+    <Top>350</Top>
+    <ZoneFilter />
+    <DelaySound />
+    <MatchSound />
+  </OnePointTelop>
+</ArrayOfOnePointTelop>

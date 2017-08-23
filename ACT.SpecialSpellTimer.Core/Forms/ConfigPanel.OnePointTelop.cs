@@ -452,14 +452,9 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private async void TelopExportButton_Click(object sender, EventArgs e)
         {
-            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
-            if (await Task.Run(() => this.SaveFileDialog.ShowDialog(this)) !=
-                DialogResult.Cancel)
-            {
-                OnePointTelopTable.Instance.Save(
-                    this.SaveFileDialog.FileName,
-                    true);
-            }
+            await SelectExportTargetForm.ShowDialogAsync(
+                SelectExportTargetForm.Targets.Tickers,
+                this);
         }
 
         /// <summary>
