@@ -67,6 +67,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabControlExtHoriz2 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.GeneralTab = new System.Windows.Forms.TabPage();
             this.SpellDetailPanel = new System.Windows.Forms.Panel();
+            this.TemporarilyDisplaySpellCheckBox = new System.Windows.Forms.CheckBox();
             this.BlinkBarCheckBox = new System.Windows.Forms.CheckBox();
             this.BlinkIconCheckBox = new System.Windows.Forms.CheckBox();
             this.label68 = new System.Windows.Forms.Label();
@@ -325,7 +326,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.TemporarilyDisplaySpellCheckBox = new System.Windows.Forms.CheckBox();
+            this.ExportBySpellPanelButton = new System.Windows.Forms.Button();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -547,6 +548,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // DetailPanelGroupBox
             // 
+            this.DetailPanelGroupBox.Controls.Add(this.ExportBySpellPanelButton);
             this.DetailPanelGroupBox.Controls.Add(this.FixedPositionSpellCheckBox);
             this.DetailPanelGroupBox.Controls.Add(this.HorizontalLayoutCheckBox);
             this.DetailPanelGroupBox.Controls.Add(this.label62);
@@ -829,6 +831,17 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpellDetailPanel.Name = "SpellDetailPanel";
             this.SpellDetailPanel.Size = new System.Drawing.Size(537, 759);
             this.SpellDetailPanel.TabIndex = 74;
+            // 
+            // TemporarilyDisplaySpellCheckBox
+            // 
+            this.TemporarilyDisplaySpellCheckBox.AutoSize = true;
+            this.TemporarilyDisplaySpellCheckBox.ForeColor = System.Drawing.Color.DeepPink;
+            this.TemporarilyDisplaySpellCheckBox.Location = new System.Drawing.Point(8, 563);
+            this.TemporarilyDisplaySpellCheckBox.Name = "TemporarilyDisplaySpellCheckBox";
+            this.TemporarilyDisplaySpellCheckBox.Size = new System.Drawing.Size(174, 16);
+            this.TemporarilyDisplaySpellCheckBox.TabIndex = 82;
+            this.TemporarilyDisplaySpellCheckBox.Text = "TemporarilyDisplayCheckBox";
+            this.TemporarilyDisplaySpellCheckBox.UseVisualStyleBackColor = true;
             // 
             // BlinkBarCheckBox
             // 
@@ -3675,16 +3688,14 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // TemporarilyDisplaySpellCheckBox
+            // ExportBySpellPanelButton
             // 
-            this.TemporarilyDisplaySpellCheckBox.AutoSize = true;
-            this.TemporarilyDisplaySpellCheckBox.ForeColor = System.Drawing.Color.DeepPink;
-            this.TemporarilyDisplaySpellCheckBox.Location = new System.Drawing.Point(8, 563);
-            this.TemporarilyDisplaySpellCheckBox.Name = "TemporarilyDisplaySpellCheckBox";
-            this.TemporarilyDisplaySpellCheckBox.Size = new System.Drawing.Size(174, 16);
-            this.TemporarilyDisplaySpellCheckBox.TabIndex = 82;
-            this.TemporarilyDisplaySpellCheckBox.Text = "TemporarilyDisplayCheckBox";
-            this.TemporarilyDisplaySpellCheckBox.UseVisualStyleBackColor = true;
+            this.ExportBySpellPanelButton.Location = new System.Drawing.Point(6, 179);
+            this.ExportBySpellPanelButton.Name = "ExportBySpellPanelButton";
+            this.ExportBySpellPanelButton.Size = new System.Drawing.Size(102, 25);
+            this.ExportBySpellPanelButton.TabIndex = 48;
+            this.ExportBySpellPanelButton.Text = "ExportButton";
+            this.ExportBySpellPanelButton.UseVisualStyleBackColor = true;
             // 
             // ConfigPanel
             // 
@@ -4083,5 +4094,6 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.CheckBox BlinkIconCheckBox;
         private System.Windows.Forms.CheckBox TemporarilyDisplayTickerCheckBox;
         private System.Windows.Forms.CheckBox TemporarilyDisplaySpellCheckBox;
+        private System.Windows.Forms.Button ExportBySpellPanelButton;
     }
 }
