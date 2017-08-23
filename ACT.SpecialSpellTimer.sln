@@ -24,6 +24,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACT.SpecialSpellTimer", "AC
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "deploy", "deploy\deploy.csproj", "{9F031C94-8011-408E-B916-19C484EA95FF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3FA9195-3381-4622-97EB-D0E1CA7C8B14} = {C3FA9195-3381-4622-97EB-D0E1CA7C8B14}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

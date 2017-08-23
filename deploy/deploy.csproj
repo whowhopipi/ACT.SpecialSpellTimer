@@ -67,10 +67,6 @@
       <Project>{22ebf8a4-eed1-4cd1-99eb-99665163a315}</Project>
       <Name>FFXIV.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\XIVDBDownloader\XIVDBDownloader.csproj">
-      <Project>{c3fa9195-3381-4622-97eb-d0e1ca7c8b14}</Project>
-      <Name>XIVDBDownloader</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="deploy.ps1">

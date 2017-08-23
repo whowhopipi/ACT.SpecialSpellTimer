@@ -1,13 +1,23 @@
-﻿'配布対象外のファイルを削除する'
-Remove-Item deploy.dll -Force
-Remove-Item *.xml -Force
-Remove-Item *.pdb -Force
-Remove-Item -Path .\* -Force -Recurse -Include "Action icons","locale"
+﻿'XIVDBDownloader の出力を取得する'
+if (Test-Path .\tools) {
+  Remove-Item .\tools -Force -Recurse
+}
+Copy-Item -Recurse -Path ..\..\..\XIVDBDownloader\bin\Release\* -Destination .\
+'Done'
+
+'配布対象外のファイルを削除する'
+if (Test-Path deploy.dll) {
+  Remove-Item deploy.dll -Force
+}
+
+Remove-Item -Force -Recurse -Path .\* -Include *.xml -Exclude *系*
+Remove-Item -Force -Recurse -Path .\* -Include *.pdb
+Remove-Item -Force -Recurse -Path .\* -Include "Action icons",locale
 'Done'
 
 '配布ファイルをアーカイブする'
 if (Test-Path deploy.zip) {
-    Remove-Item deploy.zip -Force
+  Remove-Item deploy.zip -Force
 }
 
 $files = Get-ChildItem -Path .\ -Exclude deploy.ps1
