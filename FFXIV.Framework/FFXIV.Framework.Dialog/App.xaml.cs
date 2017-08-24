@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -60,7 +60,7 @@ namespace FFXIV.Framework.Dialog
             {
                 Trace.WriteLine("App_Startup begin.");
 
-                var arguments = e.Args.Aggregate((x, y) => x + y);
+                var arguments = e.Args.Aggregate((x, y) => x + " " + y);
 
                 // カラーダイアログを表示する
                 if (arguments.Contains(ColorDialogResult.SymbolKeyword, StringComparison.OrdinalIgnoreCase))
