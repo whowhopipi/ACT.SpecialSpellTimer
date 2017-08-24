@@ -136,10 +136,10 @@ namespace FFXIV.Framework.Dialog.Views
             int i = 0;
             foreach (FontFamily item in this.FontFamilyListBox.Items)
             {
-                if (this.fontInfo.Family != null)
+                if (this.fontInfo.FontFamily != null)
                 {
-                    if (item.Source == this.fontInfo.Family.Source ||
-                        item.FamilyNames.Any(x => x.Value == this.fontInfo.Family.Source))
+                    if (item.Source == this.fontInfo.FontFamily.Source ||
+                        item.FamilyNames.Any(x => x.Value == this.fontInfo.FontFamily.Source))
                     {
                         break;
                     }

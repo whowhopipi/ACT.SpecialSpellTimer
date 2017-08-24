@@ -23,7 +23,7 @@ namespace FFXIV.Framework.Extensions
         {
             if (control.GetFontInfo().ToString() != fontInfo.ToString())
             {
-                control.FontFamily = fontInfo.Family;
+                control.FontFamily = fontInfo.FontFamily;
                 control.FontSize = fontInfo.Size;
                 control.FontStyle = fontInfo.Style;
                 control.FontWeight = fontInfo.Weight;
@@ -48,7 +48,7 @@ namespace FFXIV.Framework.Extensions
         {
             if (control.GetFontInfo().ToString() != fontInfo.ToString())
             {
-                control.FontFamily = fontInfo.Family;
+                control.FontFamily = fontInfo.FontFamily;
                 control.FontSize = fontInfo.Size;
                 control.FontStyle = fontInfo.Style;
                 control.FontWeight = fontInfo.Weight;
@@ -82,7 +82,7 @@ namespace FFXIV.Framework.Extensions
 
             var fi = new FontInfo()
             {
-                Family = font.ToFontFamilyWPF(),
+                FontFamily = font.ToFontFamilyWPF(),
                 Size = font.Size,
                 Style = font.ToFontStyleWPF(),
                 Weight = font.ToFontWeightWPF(),

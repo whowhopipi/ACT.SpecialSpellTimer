@@ -7,18 +7,25 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using Prism.Mvvm;
 
 namespace FFXIV.Framework.Common
 {
     [Serializable]
     [DataContract]
-    public class FontInfo
+    public class FontInfo :
+        BindableBase
     {
+        /// <summary>
+        /// デフォルトのフォントファミリー名
+        /// </summary>
+        private const string DefaultFontFamilyName = "Arial";
+
         private static readonly object locker = new object();
 
         [XmlIgnore]
         public static readonly FontInfo DefaultFont = new FontInfo(
-            new FontFamily("Arial"),
+            new FontFamily(DefaultFontFamilyName),
             11,
             FontStyles.Normal,
             FontWeights.Normal,
@@ -43,14 +50,14 @@ namespace FFXIV.Framework.Common
         public FontInfo(
             string family)
         {
-            this.Family = GetFontFamily(family);
+            this.FontFamily = GetFontFamily(family);
         }
 
         public FontInfo(
             string family,
             double size)
         {
-            this.Family = GetFontFamily(family);
+            this.FontFamily = GetFontFamily(family);
             this.Size = size;
         }
 
@@ -61,11 +68,11 @@ namespace FFXIV.Framework.Common
             string weight,
             string stretch)
         {
-            this.Family = GetFontFamily(family);
+            this.FontFamily = GetFontFamily(family);
             this.Size = size;
-            this.StyleString = style;
-            this.WeightString = weight;
-            this.StretchString = stretch;
+            this.StyleText = style;
+            this.WeightText = weight;
+            this.StretchText = stretch;
         }
 
         public FontInfo(
@@ -75,7 +82,7 @@ namespace FFXIV.Framework.Common
             FontWeight weight,
             FontStretch stretch)
         {
-            this.Family = family;
+            this.FontFamily = family;
             this.Size = size;
             this.Style = style;
             this.Weight = weight;
@@ -83,64 +90,110 @@ namespace FFXIV.Framework.Common
         }
 
         [XmlIgnore]
-        public FontFamily Family { get; set; } = new FontFamily("Arial");
+        private FontFamily fontFamily = new FontFamily(DefaultFontFamilyName);
+
+        [XmlIgnore]
+        private double size = 12;
+
+        [XmlIgnore]
+        private FontStretch stretch = FontStretches.Normal;
+
+        [XmlIgnore]
+        private FontStyle style = FontStyles.Normal;
+
+        [XmlIgnore]
+        private FontWeight weight = FontWeights.Normal;
+
+        /// <summary>Font Family</summary>
+        [XmlIgnore]
+        public FontFamily FontFamily
+        {
+            get => this.fontFamily;
+            set => this.SetProperty(ref this.fontFamily, value);
+        }
 
         [XmlAttribute("FontFamily")]
         [DataMember(Name = "FontFamily")]
-        public string FamilyName
+        public string FontFamilyText
         {
-            get => this.Family != null ?
-                this.Family.Source ?? string.Empty :
-                string.Empty;
-            set => this.Family = FontInfo.GetFontFamily(value);
+            get => this.FontFamily?.Source;
+            set => this.FontFamily = new FontFamily(value ?? DefaultFontFamilyName);
         }
 
-        [XmlAttribute("Size")]
-        [DataMember(Name = "Size")]
-        public double Size { get; set; } = 11.0d;
-
-        [XmlIgnore]
-        public FontStretch Stretch { get; set; } = FontStretches.Normal;
-
-        [XmlAttribute("Stretch")]
-        [DataMember(Name = "Stretch")]
-        public string StretchString
+        /// <summary>Font Size</summary>
+        [XmlAttribute]
+        [DataMember]
+        public double Size
         {
-            get => FontInfo.stretchConverter.ConvertToString(this.Stretch);
-            set => this.Stretch = (FontStretch)FontInfo.stretchConverter.ConvertFromString(value);
-        }
-
-        [XmlIgnore]
-        public FontStyle Style { get; set; } = FontStyles.Normal;
-
-        [XmlAttribute("Style")]
-        [DataMember(Name = "Style")]
-        public string StyleString
-        {
-            get => FontInfo.styleConverter.ConvertToString(this.Style);
-            set => this.Style = (FontStyle)FontInfo.styleConverter.ConvertFromString(value);
-        }
-
-        [XmlIgnore]
-        public FamilyTypeface Typeface
-        {
-            get => new FamilyTypeface()
+            get => this.size;
+            set
             {
-                Stretch = this.Stretch,
-                Weight = this.Weight,
-                Style = this.Style,
-            };
+                this.SetProperty(ref this.size, value);
+                this.RaisePropertyChanged(nameof(this.OutlineThickness));
+            }
         }
 
+        /// <summary>Font Stretch</summary>
         [XmlIgnore]
-        public FontWeight Weight { get; set; } = FontWeights.Normal;
-
-        [XmlAttribute("Weight")]
-        [DataMember(Name = "Weight")]
-        public string WeightString
+        public FontStretch Stretch
         {
-            get => FontInfo.weightConverter.ConvertToString(this.Weight);
-            set => this.Weight = (FontWeight)FontInfo.weightConverter.ConvertFromString(value);
+            get => this.stretch;
+            set => this.SetProperty(ref this.stretch, value);
+        }
+
+        /// <summary>Font Stretch (シリアル化向け)</summary>
+        [XmlAttribute(AttributeName = "Stretch")]
+        [DataMember(Name = "Stretch")]
+        public string StretchText
+        {
+            get => stretchConverter.ConvertToString(this.Stretch);
+            set => this.Stretch = (FontStretch)stretchConverter.ConvertFromString(value);
+        }
+
+        /// <summary>Font Style</summary>
+        [XmlIgnore]
+        public FontStyle Style
+        {
+            get => this.style;
+            set => this.SetProperty(ref this.style, value);
+        }
+
+        /// <summary>Font Style (シリアル化向け)</summary>
+        [XmlAttribute(AttributeName = "Style")]
+        [DataMember(Name = "Style")]
+        public string StyleText
+        {
+            get => styleConverter.ConvertToString(this.Style);
+            set => this.Style = (FontStyle)styleConverter.ConvertFromString(value);
+        }
+
+        /// <summary>Typeface</summary>
+        public FamilyTypeface Typeface => new FamilyTypeface()
+        {
+            Stretch = this.Stretch,
+            Weight = this.Weight,
+            Style = this.Style
+        };
+
+        /// <summary>Font Weight</summary>
+        [XmlIgnore]
+        public FontWeight Weight
+        {
+            get => this.weight;
+            set
+            {
+                this.SetProperty(ref this.weight, value);
+                this.RaisePropertyChanged(nameof(this.OutlineThickness));
+            }
+        }
+
+        /// <summary>Font Weight (シリアル化向け)</summary>
+        [XmlAttribute(AttributeName = "Weight")]
+        [DataMember(Name = "Weight")]
+        public string WeightText
+        {
+            get => weightConverter.ConvertToString(this.Weight);
+            set => this.Weight = (FontWeight)weightConverter.ConvertFromString(value);
         }
 
         public static double TextOutlineThicknessGain { get; set; } = 1.0d;
@@ -236,7 +289,7 @@ namespace FFXIV.Framework.Common
             }
 
             System.Drawing.Font f = new System.Drawing.Font(
-                this.FamilyName,
+                this.FontFamily.Source,
                 (float)this.Size,
                 style);
 
