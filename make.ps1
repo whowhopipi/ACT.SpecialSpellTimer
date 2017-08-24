@@ -19,7 +19,7 @@ if (Test-Path .\deploy\bin\Debug) {
 }
 
 'Deploy Release'
-if (Test-Path \deploy\bin\Release) {
+if (Test-Path .\deploy\bin\Release) {
     Set-Location .\deploy\bin\Release
     if (Test-Path .\deploy.ps1) {
         .\deploy.ps1
