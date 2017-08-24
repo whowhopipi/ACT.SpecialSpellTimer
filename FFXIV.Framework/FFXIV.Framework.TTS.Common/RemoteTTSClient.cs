@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,6 +16,7 @@ namespace FFXIV.Framework.TTS.Common
 
         #endregion Singleton
 
+        public string BaseDirectory { get; set; }
         public ITTSModel TTSModel { get; private set; }
 
         public void Close()
@@ -59,7 +60,9 @@ namespace FFXIV.Framework.TTS.Common
                 return;
             }
 
-            var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var dir = string.IsNullOrEmpty(this.BaseDirectory) ?
+                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) :
+                this.BaseDirectory;
             var ttsServer = Path.Combine(
                 dir,
                 $"{Constants.TTSServerProcessName}.exe");

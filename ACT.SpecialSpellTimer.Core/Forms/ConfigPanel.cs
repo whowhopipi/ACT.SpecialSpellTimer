@@ -542,7 +542,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
-                src.IsTemporarilyDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
+                src.IsTemporaryDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
                 src.UpdateDone = false;
 
                 TableCompiler.Instance.RecompileSpells();
@@ -810,7 +810,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpellVisualSetting.HideSpellName = src.HideSpellName;
             this.SpellVisualSetting.OverlapRecastTime = src.OverlapRecastTime;
 
-            this.TemporarilyDisplaySpellCheckBox.Checked = src.IsTemporarilyDisplay;
+            this.TemporarilyDisplaySpellCheckBox.Checked = src.IsTemporaryDisplay;
 
             this.SpellVisualSetting.RefreshSampleImage();
 

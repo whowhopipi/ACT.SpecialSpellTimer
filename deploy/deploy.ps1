@@ -20,7 +20,7 @@ if (Test-Path deploy.zip) {
   Remove-Item deploy.zip -Force
 }
 
-$files = Get-ChildItem -Path .\ -Exclude deploy.ps1
+$files = Get-ChildItem -Path .\ -Exclude deploy.ps1,*.zip
 Compress-Archive -CompressionLevel Optimal -Path $files -DestinationPath deploy.zip
 'Done'
 

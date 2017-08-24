@@ -1,4 +1,4 @@
-﻿namespace FFXIV.Framework.Extensions
+namespace FFXIV.Framework.Extensions
 {
     /// <summary>
     /// Colorに関するUtility
@@ -60,6 +60,39 @@
             }
 
             return System.Drawing.ColorTranslator.FromHtml(color);
+        }
+
+        /// <summary>
+        /// HTMLからカラーに
+        /// </summary>
+        /// <param name="color">HTMLカラー</param>
+        /// <returns>カラー</returns>
+        public static System.Windows.Media.Color FromString(
+            this string color)
+        {
+            if (string.IsNullOrWhiteSpace(color))
+            {
+                return System.Windows.Media.Colors.Transparent;
+            }
+
+            return (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color);
+        }
+
+        /// <summary>
+        /// HTMLからカラーに
+        /// </summary>
+        /// <param name="color">HTMLカラー</param>
+        /// <returns>カラー</returns>
+        public static System.Windows.Media.Color FromString(
+            this System.Windows.Media.Color color,
+            string colorString)
+        {
+            if (string.IsNullOrWhiteSpace(colorString))
+            {
+                return System.Windows.Media.Colors.Transparent;
+            }
+
+            return (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(colorString);
         }
 
         /// <summary>

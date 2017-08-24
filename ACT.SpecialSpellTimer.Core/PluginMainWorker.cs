@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Threading;
 
 using ACT.SpecialSpellTimer.Config;
@@ -46,8 +45,8 @@ namespace ACT.SpecialSpellTimer
         private BackgroundWorker backgroudWorker;
         private BackgroundWorker detectLogsWorker;
         private volatile bool isOver;
-        private BackgroundWorker refreshSpellOverlaysWorker;
-        private BackgroundWorker refreshTickerOverlaysWorker;
+        private DispatcherTimer refreshSpellOverlaysWorker;
+        private DispatcherTimer refreshTickerOverlaysWorker;
 
         #endregion Thread
 
@@ -160,70 +159,44 @@ namespace ACT.SpecialSpellTimer
         public void BeginOverlaysThread()
         {
             // スペルのスレッドを開始する
-            this.refreshSpellOverlaysWorker = new BackgroundWorker();
-            this.refreshSpellOverlaysWorker.WorkerSupportsCancellation = true;
-            this.refreshSpellOverlaysWorker.DoWork += (s, e) =>
+            this.refreshSpellOverlaysWorker = new DispatcherTimer(DispatcherPriority.Background)
             {
-                Logger.Write("start refresh spell overlays.");
+                Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval)
+            };
 
-                while (true)
+            this.refreshSpellOverlaysWorker.Tick += (s, e) =>
+            {
+                try
                 {
-                    try
-                    {
-                        if (this.refreshSpellOverlaysWorker.CancellationPending)
-                        {
-                            Logger.Write("end refresh spell overlays.");
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        Application.Current.Dispatcher.BeginInvoke(
-                            (Action)this.RefreshSpellOverlaysCore,
-                            DispatcherPriority.Normal);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("refresh spell overlays error:", ex);
-                    }
-
-                    Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval));
+                    this.RefreshSpellOverlaysCore();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("refresh spell overlays error:", ex);
                 }
             };
 
-            this.refreshSpellOverlaysWorker.RunWorkerAsync();
+            this.refreshSpellOverlaysWorker.Start();
 
             // テロップのスレッドを開始する
-            this.refreshTickerOverlaysWorker = new BackgroundWorker();
-            this.refreshTickerOverlaysWorker.WorkerSupportsCancellation = true;
-            this.refreshTickerOverlaysWorker.DoWork += (s, e) =>
+            this.refreshTickerOverlaysWorker = new DispatcherTimer(DispatcherPriority.Background)
             {
-                Logger.Write("start refresh ticker overlays.");
+                Interval = TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval)
+            };
 
-                while (true)
+            this.refreshTickerOverlaysWorker.Tick += (s, e) =>
+            {
+                try
                 {
-                    try
-                    {
-                        if (this.refreshTickerOverlaysWorker.CancellationPending)
-                        {
-                            Logger.Write("end refresh ticker overlays.");
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        Application.Current.Dispatcher.BeginInvoke(
-                            (Action)this.RefreshTickerOverlaysCore,
-                            DispatcherPriority.Normal);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("refresh ticker overlays error:", ex);
-                    }
-
-                    Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.RefreshInterval));
+                    this.RefreshTickerOverlaysCore();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("refresh ticker overlays error:", ex);
                 }
             };
 
-            this.refreshTickerOverlaysWorker.RunWorkerAsync();
+            this.refreshTickerOverlaysWorker.Start();
         }
 
         /// <summary>
@@ -237,8 +210,8 @@ namespace ACT.SpecialSpellTimer
             CombatAnalyzer.Default.Denitialize();
 
             // Workerを開放する
-            this.refreshSpellOverlaysWorker?.Cancel();
-            this.refreshTickerOverlaysWorker?.Cancel();
+            this.refreshSpellOverlaysWorker?.Stop();
+            this.refreshTickerOverlaysWorker?.Stop();
             this.detectLogsWorker?.Cancel();
             this.backgroudWorker?.Cancel();
 
@@ -378,7 +351,7 @@ namespace ACT.SpecialSpellTimer
                 !Settings.Default.OverlayForceVisible)
             {
                 // 一時表示スペルがない？
-                if (!spells.Any(x => x.IsTemporarilyDisplay))
+                if (!spells.Any(x => x.IsTemporaryDisplay))
                 {
                     SpellsController.Instance.ClosePanels();
                     return;
@@ -423,7 +396,7 @@ namespace ACT.SpecialSpellTimer
                 !Settings.Default.OverlayForceVisible)
             {
                 // 一時表示テロップがない？
-                if (!telops.Any(x => x.IsTemporarilyDisplay))
+                if (!telops.Any(x => x.IsTemporaryDisplay))
                 {
                     TickersController.Instance.CloseTelops();
                     return;
