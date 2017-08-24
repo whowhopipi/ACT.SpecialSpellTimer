@@ -302,6 +302,8 @@ namespace ACT.SpecialSpellTimer.Models
                 spellTitle,
                 (instanceSpellTitle) =>
                 {
+#if false
+                    // Cloneだと不要なフィールドもコピーされてしまう
                     var ns = sourceSpell.Clone();
 
                     ns.SpellTitleReplaced = instanceSpellTitle;
@@ -312,12 +314,12 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.IsTemporaryDisplay = false;
 
                     return ns;
-#if false
+#else
                     var ns = new SpellTimer();
 
                     ns.SpellTitleReplaced = instanceSpellTitle;
-
                     ns.Guid = Guid.NewGuid();
+
                     ns.Panel = sourceSpell.Panel;
                     ns.SpellTitle = sourceSpell.SpellTitle;
                     ns.SpellIcon = sourceSpell.SpellIcon;
@@ -359,6 +361,9 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.HideSpellName = sourceSpell.HideSpellName;
                     ns.WarningTime = sourceSpell.WarningTime;
                     ns.ChangeFontColorsWhenWarning = sourceSpell.ChangeFontColorsWhenWarning;
+                    ns.BlinkTime = sourceSpell.BlinkTime;
+                    ns.BlinkIcon = sourceSpell.BlinkIcon;
+                    ns.BlinkBar = sourceSpell.BlinkBar;
                     ns.OverlapRecastTime = sourceSpell.OverlapRecastTime;
                     ns.ReduceIconBrightness = sourceSpell.ReduceIconBrightness;
                     ns.RegexEnabled = sourceSpell.RegexEnabled;
@@ -381,6 +386,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                     ns.ToInstance = false;
                     ns.IsInstance = true;
+                    ns.IsTemporaryDisplay = false;
 
                     return ns;
 #endif
@@ -435,6 +441,12 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     // ガーベージタイマを止める
                     instance.StopGarbageInstanceTimer();
+
+                    if (!instance.IsInstance ||
+                        instance.IsTemporaryDisplay)
+                    {
+                        return;
+                    }
 
                     SpellTimer o;
                     this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
