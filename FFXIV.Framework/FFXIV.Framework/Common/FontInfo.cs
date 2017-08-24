@@ -143,6 +143,35 @@ namespace FFXIV.Framework.Common
             set => this.Weight = (FontWeight)FontInfo.weightConverter.ConvertFromString(value);
         }
 
+        public static double TextOutlineThicknessGain { get; set; } = 1.0d;
+
+        /// <summary>
+        /// アウトラインの太さ
+        /// </summary>
+        [XmlIgnore]
+        public double OutlineThickness
+        {
+            get
+            {
+                // 基準の太さ
+                var thickness = 1.0d;
+
+                // フォントサイズを基準に補正をかける
+                thickness *=
+                    this.Size / 11.0d;
+
+                // ウェイトによる補正をかける
+                thickness *=
+                    this.Weight.ToOpenTypeWeight() /
+                    FontWeights.Normal.ToOpenTypeWeight();
+
+                // 設定によって増幅させる
+                thickness *= TextOutlineThicknessGain;
+
+                return thickness;
+            }
+        }
+
         public static FontInfo FromString(
             string json)
         {
