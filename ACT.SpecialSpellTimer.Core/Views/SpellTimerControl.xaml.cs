@@ -31,15 +31,12 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public bool IsSettingMode { get; set; } = false;
 
+        #region Colors
+
         /// <summary>
         /// バーの色
         /// </summary>
         public string BarColor { get; set; }
-
-        /// <summary>
-        /// バーの高さ
-        /// </summary>
-        public int BarHeight { get; set; }
 
         /// <summary>
         /// バーOutlineの色
@@ -47,82 +44,14 @@ namespace ACT.SpecialSpellTimer.Views
         public string BarOutlineColor { get; set; }
 
         /// <summary>
-        /// バーの幅
-        /// </summary>
-        public int BarWidth { get; set; }
-
-        /// <summary>
-        /// Should font color change when warning?
-        /// </summary>
-        public bool ChangeFontColorsWhenWarning { get; set; }
-
-        /// <summary>
         /// Fontの色
         /// </summary>
         public string FontColor { get; set; }
 
         /// <summary>
-        /// フォント
-        /// </summary>
-        public FontInfo FontInfo { get; set; }
-
-        /// <summary>
         /// FontOutlineの色
         /// </summary>
         public string FontOutlineColor { get; set; }
-
-        /// <summary>
-        /// スペル名を非表示とするか？
-        /// </summary>
-        public bool HideSpellName { get; set; }
-
-        /// <summary>
-        /// プログレスバーを逆にするか？
-        /// </summary>
-        public bool IsReverse { get; set; }
-
-        /// <summary>
-        /// リキャストタイムを重ねて表示するか？
-        /// </summary>
-        public bool OverlapRecastTime { get; set; }
-
-        /// <summary>
-        /// リキャストの進捗率
-        /// </summary>
-        public double Progress { get; set; }
-
-        /// <summary>
-        /// 残りリキャストTime(秒数)
-        /// </summary>
-        public double RecastTime { get; set; }
-
-        /// <summary>
-        /// リキャスト中にアイコンの明度を下げるか？
-        /// </summary>
-        public bool ReduceIconBrightness { get; set; }
-
-        /// <summary>
-        /// スペルのIcon
-        /// </summary>
-        public string SpellIcon { get; set; }
-
-        /// <summary>
-        /// スペルIconサイズ
-        /// </summary>
-        public int SpellIconSize { get; set; }
-
-        /// <summary>
-        /// スペルのTitle
-        /// </summary>
-        public string SpellTitle { get; set; }
-
-        /// <summary>
-        /// スペル表示領域の幅
-        /// </summary>
-        public int SpellWidth =>
-            this.BarWidth > this.SpellIconSize ?
-            this.BarWidth :
-            this.SpellIconSize;
 
         /// <summary>
         /// WarningFontの色
@@ -133,25 +62,6 @@ namespace ACT.SpecialSpellTimer.Views
         /// WarningFontOutlineの色
         /// </summary>
         public string WarningFontOutlineColor { get; set; }
-
-        /// <summary>
-        /// Time left warning in seconds
-        /// </summary>
-        public double WarningTime { get; set; }
-
-        /// <summary>
-        /// Time left blink in seconds
-        /// </summary>
-        public double BlinkTime { get; set; }
-
-        /// <summary>
-        /// リキャスト秒数の書式
-        /// </summary>
-        private static string RecastTimeFormat =>
-            Settings.Default.EnabledSpellTimerNoDecimal ? "N0" : "N1";
-
-        /// <summary>バーのアニメーション用DoubleAnimation</summary>
-        private DoubleAnimation BarAnimation { get; set; }
 
         /// <summary>バーのBrush</summary>
         private SolidColorBrush BarBrush { get; set; }
@@ -170,6 +80,105 @@ namespace ACT.SpecialSpellTimer.Views
 
         /// <summary>フォントのアウトラインBrush</summary>
         private SolidColorBrush WarningFontOutlineBrush { get; set; }
+
+        /// <summary>
+        /// Should font color change when warning?
+        /// </summary>
+        public bool ChangeFontColorsWhenWarning { get; set; }
+
+        /// <summary>
+        /// リキャスト中にアイコンの明度を下げるか？
+        /// </summary>
+        public bool ReduceIconBrightness { get; set; }
+
+        #endregion Colors
+
+        #region Sizes
+
+        /// <summary>
+        /// バーの高さ
+        /// </summary>
+        public int BarHeight { get; set; }
+
+        /// <summary>
+        /// バーの幅
+        /// </summary>
+        public int BarWidth { get; set; }
+
+        /// <summary>
+        /// スペルのIcon
+        /// </summary>
+        public string SpellIcon { get; set; }
+
+        /// <summary>
+        /// スペルIconサイズ
+        /// </summary>
+        public int SpellIconSize { get; set; }
+
+        /// <summary>
+        /// スペル表示領域の幅
+        /// </summary>
+        public int SpellWidth =>
+            this.BarWidth > this.SpellIconSize ?
+            this.BarWidth :
+            this.SpellIconSize;
+
+        #endregion Sizes
+
+        #region Times
+
+        /// <summary>
+        /// リキャストの進捗率
+        /// </summary>
+        public double Progress { get; set; }
+
+        /// <summary>
+        /// リキャストタイムを重ねて表示するか？
+        /// </summary>
+        public bool OverlapRecastTime { get; set; }
+
+        /// <summary>
+        /// 残りリキャストTime(秒数)
+        /// </summary>
+        public double RecastTime { get; set; }
+
+        /// <summary>
+        /// Time left warning in seconds
+        /// </summary>
+        public double WarningTime { get; set; }
+
+        /// <summary>
+        /// Time left blink in seconds
+        /// </summary>
+        public double BlinkTime { get; set; }
+
+        /// <summary>
+        /// リキャスト秒数の書式
+        /// </summary>
+        private static string RecastTimeFormat =>
+            Settings.Default.EnabledSpellTimerNoDecimal ? "N0" : "N1";
+
+        #endregion Times
+
+        /// <summary>
+        /// フォント
+        /// </summary>
+        public FontInfo FontInfo { get; set; }
+
+        /// <summary>
+        /// スペル名を非表示とするか？
+        /// </summary>
+        public bool HideSpellName { get; set; }
+
+        /// <summary>
+        /// プログレスバーを逆にするか？
+        /// </summary>
+        public bool IsReverse { get; set; }
+
+        /// <summary>
+        /// スペルのTitle
+        /// </summary>
+        public string SpellTitle { get; set; }
 
         public SpellTimer Spell { get; set; }
 
@@ -227,50 +236,6 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (tb.Fill != fill) tb.Fill = fill;
             if (tb.Stroke != stroke) tb.Stroke = stroke;
-        }
-
-        /// <summary>
-        /// バーのアニメーションを開始する
-        /// </summary>
-        public void StartBarAnimation()
-        {
-            if (this.BarWidth == 0)
-            {
-                return;
-            }
-
-            if (this.BarAnimation == null)
-            {
-                this.BarAnimation = new DoubleAnimation();
-                this.BarAnimation.AutoReverse = false;
-            }
-
-            var fps = (int)Math.Ceiling(this.BarWidth / this.RecastTime);
-            if (fps <= 0 || fps > Settings.Default.MaxFPS)
-            {
-                fps = Settings.Default.MaxFPS;
-            }
-
-            Timeline.SetDesiredFrameRate(this.BarAnimation, fps);
-
-            var currentWidth = this.IsReverse ?
-                (double)(this.BarWidth * (1.0d - this.Progress)) :
-                (double)(this.BarWidth * this.Progress);
-            if (this.IsReverse)
-            {
-                this.BarAnimation.From = currentWidth / this.BarWidth;
-                this.BarAnimation.To = 0;
-            }
-            else
-            {
-                this.BarAnimation.From = currentWidth / this.BarWidth;
-                this.BarAnimation.To = 1.0;
-            }
-
-            this.BarAnimation.Duration = new Duration(TimeSpan.FromSeconds(this.RecastTime));
-
-            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
-            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, this.BarAnimation);
         }
 
         /// <summary>
@@ -373,26 +338,67 @@ namespace ACT.SpecialSpellTimer.Views
             if (this.BarEffect.Color != effectColor) this.BarEffect.Color = effectColor;
         }
 
+        #region Bar Animations
+
+        /// <summary>バーのアニメーション用DoubleAnimation</summary>
+        private DoubleAnimation BarAnimation { get; set; }
+
+        /// <summary>
+        /// バーのアニメーションを開始する
+        /// </summary>
+        public void StartBarAnimation()
+        {
+            if (this.BarWidth == 0)
+            {
+                return;
+            }
+
+            if (this.BarAnimation == null)
+            {
+                this.BarAnimation = new DoubleAnimation();
+                this.BarAnimation.AutoReverse = false;
+            }
+
+            var fps = (int)Math.Ceiling(this.BarWidth / this.RecastTime);
+            if (fps <= 0 || fps > Settings.Default.MaxFPS)
+            {
+                fps = Settings.Default.MaxFPS;
+            }
+
+            Timeline.SetDesiredFrameRate(this.BarAnimation, fps);
+
+            var currentWidth = this.IsReverse ?
+                (double)(this.BarWidth * (1.0d - this.Progress)) :
+                (double)(this.BarWidth * this.Progress);
+            if (this.IsReverse)
+            {
+                this.BarAnimation.From = currentWidth / this.BarWidth;
+                this.BarAnimation.To = 0;
+            }
+            else
+            {
+                this.BarAnimation.From = currentWidth / this.BarWidth;
+                this.BarAnimation.To = 1.0;
+            }
+
+            this.BarAnimation.Duration = new Duration(TimeSpan.FromSeconds(this.RecastTime));
+
+            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+            this.BarScale.BeginAnimation(ScaleTransform.ScaleXProperty, this.BarAnimation);
+        }
+
+        #endregion Bar Animations
+
         #region Blink Animations
-
-        /// <summary>
-        /// 点滅のサイクル
-        /// </summary>
-        private const double BlinkDuration = 0.6;
-
-        /// <summary>
-        /// 点滅のピーク状態のホールド時間
-        /// </summary>
-        /// <remarks>
-        /// ピーク状態を多少ホールドしないと点滅が目立たないため</remarks>
-        private const double BlinkHoldDuration = BlinkDuration * 0.2;
 
         /// <summary>
         /// アイコンの暗い状態の値
         /// </summary>
         /// <remarks>
         /// 暗さ設定の80%とする。点滅の際にはよりコントラストが必要なため</remarks>
-        private static readonly double IconDarkValue = ((double)Settings.Default.ReduceIconBrightness / 100d) * 0.8;
+        private static readonly double IconDarkValue =
+            ((double)Settings.Default.ReduceIconBrightness / 100d) *
+            Settings.Default.BlinkBrightnessDark;
 
         /// <summary>
         /// アイコンの明るい状態の値
@@ -415,8 +421,8 @@ namespace ACT.SpecialSpellTimer.Views
             KeyFrames = new DoubleKeyFrameCollection()
             {
                 new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0)),
-                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration)),
-                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration))
+                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold)),
+                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPitch))
             }
         };
 
@@ -433,8 +439,8 @@ namespace ACT.SpecialSpellTimer.Views
             KeyFrames = new ColorKeyFrameCollection()
             {
                 new DiscreteColorKeyFrame(Colors.White, TimeSpan.FromSeconds(0)),
-                new DiscreteColorKeyFrame(Colors.White, TimeSpan.FromSeconds(BlinkHoldDuration)),
-                new LinearColorKeyFrame(Colors.White, TimeSpan.FromSeconds(BlinkDuration))
+                new DiscreteColorKeyFrame(Colors.White, TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold)),
+                new LinearColorKeyFrame(Colors.White, TimeSpan.FromSeconds(Settings.Default.BlinkPitch))
             }
         };
 
@@ -447,8 +453,8 @@ namespace ACT.SpecialSpellTimer.Views
             KeyFrames = new DoubleKeyFrameCollection()
             {
                 new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0)),
-                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkHoldDuration)),
-                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(BlinkDuration))
+                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold)),
+                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPitch))
             }
         };
 
@@ -500,11 +506,11 @@ namespace ACT.SpecialSpellTimer.Views
                     this.Spell.BlinkIcon)
                 {
                     var value1 = !this.IsReverse ? IconDarkValue : IconLightValue;
-                    var vakue2 = !this.IsReverse ? IconLightValue : IconDarkValue;
+                    var value2 = !this.IsReverse ? IconLightValue : IconDarkValue;
 
-                    this.IconKeyframe1.Value = value1;
-                    this.IconKeyframe2.Value = value1;
-                    this.IconKeyframe3.Value = vakue2;
+                    this.IconKeyframe1.Value = value2;
+                    this.IconKeyframe2.Value = value2;
+                    this.IconKeyframe3.Value = value1;
 
                     story.Children.Add(this.iconBlinkAnimation);
 
@@ -517,15 +523,15 @@ namespace ACT.SpecialSpellTimer.Views
                     this.Spell.BlinkBar)
                 {
                     // バーの色を設定する
-                    var darkColor = this.BarBrush.Color.ChangeBrightness(0.5);
-                    var lightColor = this.BarBrush.Color.ChangeBrightness(1.1);
+                    var darkColor = this.BarBrush.Color.ChangeBrightness(Settings.Default.BlinkBrightnessDark);
+                    var lightColor = this.BarBrush.Color.ChangeBrightness(Settings.Default.BlinkBrightnessLight);
 
                     var value1 = !this.IsReverse ? darkColor : lightColor;
                     var value2 = !this.IsReverse ? lightColor : darkColor;
 
-                    this.BarKeyframe1.Value = value1;
-                    this.BarKeyframe2.Value = value1;
-                    this.BarKeyframe3.Value = value2;
+                    this.BarKeyframe1.Value = value2;
+                    this.BarKeyframe2.Value = value2;
+                    this.BarKeyframe3.Value = value1;
 
                     story.Children.Add(this.barBlinkAnimation);
 
@@ -536,9 +542,9 @@ namespace ACT.SpecialSpellTimer.Views
                     var effect1 = !this.IsReverse ? weekEffect : strongEffect;
                     var effect2 = !this.IsReverse ? strongEffect : weekEffect;
 
-                    this.BarEffectKeyframe1.Value = effect1;
-                    this.BarEffectKeyframe2.Value = effect1;
-                    this.BarEffectKeyframe3.Value = effect2;
+                    this.BarEffectKeyframe1.Value = effect2;
+                    this.BarEffectKeyframe2.Value = effect2;
+                    this.BarEffectKeyframe3.Value = effect1;
 
                     story.Children.Add(this.barEffectBlinkAnimation);
 

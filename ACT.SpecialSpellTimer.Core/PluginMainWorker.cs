@@ -378,7 +378,7 @@ namespace ACT.SpecialSpellTimer
                 !Settings.Default.OverlayForceVisible)
             {
                 // 一時表示スペルがない？
-                if (!spells.Any(x => x.IsTemporarilyDisplay))
+                if (!spells.Any(x => x.IsTemporaryDisplay))
                 {
                     SpellsController.Instance.ClosePanels();
                     return;
@@ -423,7 +423,7 @@ namespace ACT.SpecialSpellTimer
                 !Settings.Default.OverlayForceVisible)
             {
                 // 一時表示テロップがない？
-                if (!telops.Any(x => x.IsTemporarilyDisplay))
+                if (!telops.Any(x => x.IsTemporaryDisplay))
                 {
                     TickersController.Instance.CloseTelops();
                     return;

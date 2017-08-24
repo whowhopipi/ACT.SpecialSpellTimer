@@ -263,7 +263,6 @@ namespace ACT.SpecialSpellTimer.Models
             this.Save(file, work);
         }
 
-
         public void Save(
             string file,
             List<SpellTimer> list)
@@ -301,11 +300,22 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var instance = this.instanceSpells.GetOrAdd(
                 spellTitle,
-                (x) =>
+                (instanceSpellTitle) =>
                 {
+                    var ns = sourceSpell.Clone();
+
+                    ns.SpellTitleReplaced = instanceSpellTitle;
+                    ns.Guid = Guid.NewGuid();
+
+                    ns.ToInstance = false;
+                    ns.IsInstance = true;
+                    ns.IsTemporaryDisplay = false;
+
+                    return ns;
+#if false
                     var ns = new SpellTimer();
 
-                    ns.SpellTitleReplaced = x;
+                    ns.SpellTitleReplaced = instanceSpellTitle;
 
                     ns.Guid = Guid.NewGuid();
                     ns.Panel = sourceSpell.Panel;
@@ -373,6 +383,7 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.IsInstance = true;
 
                     return ns;
+#endif
                 });
 
             lock (instance)

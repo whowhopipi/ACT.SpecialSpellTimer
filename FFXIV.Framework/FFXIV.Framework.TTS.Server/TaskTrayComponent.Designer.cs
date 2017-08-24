@@ -1,4 +1,4 @@
-﻿namespace FFXIV.Framework.TTS.Server
+namespace FFXIV.Framework.TTS.Server
 {
     partial class TaskTrayComponent
     {
@@ -34,8 +34,8 @@
             this.MainContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ShowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StartCevioMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainContextMenuStrip.SuspendLayout();
             // 
             // NotifyIcon
@@ -67,16 +67,16 @@
             this.StartCevioMenuItem.Size = new System.Drawing.Size(215, 22);
             this.StartCevioMenuItem.Text = "Start CeVIO Creative Studio";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(212, 6);
+            // 
             // ExitMenuItem
             // 
             this.ExitMenuItem.Name = "ExitMenuItem";
             this.ExitMenuItem.Size = new System.Drawing.Size(215, 22);
             this.ExitMenuItem.Text = "Exit";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(212, 6);
             this.MainContextMenuStrip.ResumeLayout(false);
 
         }

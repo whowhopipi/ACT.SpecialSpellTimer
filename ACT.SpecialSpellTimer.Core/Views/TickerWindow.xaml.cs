@@ -89,7 +89,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             var forceVisible =
                 Settings.Default.TelopAlwaysVisible ||
-                this.DataSource.IsTemporarilyDisplay;
+                this.DataSource.IsTemporaryDisplay;
 
             var message = forceVisible ?
                 this.DataSource.Message.Replace(",", Environment.NewLine) :

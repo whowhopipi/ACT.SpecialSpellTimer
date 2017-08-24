@@ -205,7 +205,7 @@ namespace ACT.SpecialSpellTimer
                     w.Show();
                 }
 
-                if (telop.IsTemporarilyDisplay ||
+                if (telop.IsTemporaryDisplay ||
                     (Settings.Default.OverlayVisible && Settings.Default.TelopAlwaysVisible))
                 {
                     w.Refresh();
@@ -273,7 +273,7 @@ namespace ACT.SpecialSpellTimer
                 refreshTelop(telop);
 #if DEBUG
                 sw.Stop();
-                if (telop.IsTemporarilyDisplay &&
+                if (telop.IsTemporaryDisplay &&
                     sw.Elapsed.TotalMilliseconds >= 1.0)
                 {
                     Debug.WriteLine($"●refreshTelop {telop.Title} {sw.Elapsed.TotalMilliseconds:N0}ms");

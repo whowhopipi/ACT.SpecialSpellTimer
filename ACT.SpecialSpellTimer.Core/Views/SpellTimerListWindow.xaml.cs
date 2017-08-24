@@ -99,7 +99,7 @@ namespace ACT.SpecialSpellTimer.Views
                     from x in spells
                     where
                     x.DontHide ||
-                    x.IsTemporarilyDisplay ||
+                    x.IsTemporaryDisplay ||
                     (DateTime.Now - x.CompleteScheduledTime).TotalSeconds <= Settings.Default.TimeOfHideSpell
                     select
                     x;
@@ -278,7 +278,7 @@ namespace ACT.SpecialSpellTimer.Views
                 if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
                     this.SpellPositionFixed)
                 {
-                    if (!spell.IsTemporarilyDisplay)
+                    if (!spell.IsTemporaryDisplay)
                     {
                         if (!spell.DontHide &&
                             (DateTime.Now - spell.CompleteScheduledTime).TotalSeconds > Settings.Default.TimeOfHideSpell)

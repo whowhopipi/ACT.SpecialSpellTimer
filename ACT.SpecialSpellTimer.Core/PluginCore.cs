@@ -9,6 +9,7 @@ using ACT.SpecialSpellTimer.Forms;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Dialog;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -135,6 +136,10 @@ namespace ACT.SpecialSpellTimer
                 if (plugin != null)
                 {
                     this.Location = plugin.pluginFile.DirectoryName;
+
+                    // ダイアログの基本Directoryを設定する
+                    ColorDialogWrapper.BaseDirectory = this.Location;
+                    FontDialogWrapper.BaseDirectory = this.Location;
                 }
 
                 // 設定Panelを追加する
