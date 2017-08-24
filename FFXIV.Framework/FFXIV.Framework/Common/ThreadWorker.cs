@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using NLog;
 
@@ -48,22 +48,33 @@ namespace FFXIV.Framework.Common
             return worker;
         }
 
-        public void Abort()
+        public bool Abort(
+            int timeout = 0)
         {
+            var result = false;
+
             this.isAbort = true;
+
+            if (timeout == 0)
+            {
+                timeout = (int)this.Interval;
+            }
 
             if (this.thread != null)
             {
-                this.thread.Join((int)this.Interval);
+                this.thread.Join(timeout);
                 if (this.thread.IsAlive)
                 {
                     this.thread.Abort();
+                    result = true;
                 }
 
                 this.thread = null;
             }
 
-            this.logger.Trace($"ThreadWorker - {this.Name} end.");
+            this.logger.Trace($"ThreadWorker - {this.Name} end.{(result ? " aborted" : string.Empty)}");
+
+            return result;
         }
 
         public void Run()
