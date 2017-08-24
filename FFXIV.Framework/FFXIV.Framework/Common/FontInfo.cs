@@ -1,20 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
-using Prism.Mvvm;
 
 namespace FFXIV.Framework.Common
 {
     [Serializable]
-    [DataContract]
+    [DataContract(Name = "Font", Namespace = "")]
     public class FontInfo :
-        BindableBase
+        INotifyPropertyChanged
     {
         /// <summary>
         /// デフォルトのフォントファミリー名
@@ -295,5 +296,38 @@ namespace FFXIV.Framework.Common
 
             return f;
         }
+
+        #region INotifyPropertyChanged
+
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged(
+            [CallerMemberName]string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected virtual bool SetProperty<T>(
+            ref T field,
+            T value,
+            [CallerMemberName]string propertyName = null)
+        {
+            if (Equals(field, value))
+            {
+                return false;
+            }
+
+            field = value;
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+
+            return true;
+        }
+
+        #endregion INotifyPropertyChanged
     }
 }
