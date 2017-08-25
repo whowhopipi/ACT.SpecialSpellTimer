@@ -51,6 +51,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Wpf.6.3.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -68,13 +69,16 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\AppendedLogEventArgs.cs" />
     <Compile Include="Common\AppLog.cs" />
     <Compile Include="Common\AppLogEntry.cs" />
     <Compile Include="Common\EnvironmentHelper.cs" />
     <Compile Include="Common\FileHelper.cs" />
     <Compile Include="Common\FontInfo.cs" />
+    <Compile Include="Common\FormsHelper.cs" />
     <Compile Include="Common\ThreadWorker.cs" />
     <Compile Include="Common\TimerWorker.cs" />
+    <Compile Include="Common\TreeSource.cs" />
     <Compile Include="Common\UnmanagedLibrary.cs" />
     <Compile Include="Common\WPFHelper.cs" />
     <Compile Include="Dialog\ColorDialogResult.cs" />

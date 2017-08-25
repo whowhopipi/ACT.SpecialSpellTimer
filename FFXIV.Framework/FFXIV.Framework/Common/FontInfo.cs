@@ -297,6 +297,22 @@ namespace FFXIV.Framework.Common
             return f;
         }
 
+        public string DisplayText
+        {
+            get
+            {
+                var t = string.Empty;
+
+                t += this.FontFamilyText + ", ";
+                t += this.Size + ", ";
+                t += this.StyleText + "-";
+                t += this.WeightText + "-";
+                t += this.StretchText;
+
+                return t;
+            }
+        }
+
         #region INotifyPropertyChanged
 
         [field: NonSerialized]

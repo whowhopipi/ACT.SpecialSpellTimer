@@ -18,7 +18,9 @@ namespace FFXIV.Framework.Common
         public static readonly object locker = new object();
         public static readonly List<AppLogEntry> logBuffer = new List<AppLogEntry>();
 
-        public static event EventHandler AppendedLog;
+        public delegate void AppendedLogEventHandler(object sender, AppendedLogEventArgs e);
+
+        public static event AppendedLogEventHandler AppendedLog;
 
         /// <summary>
         /// ChatLog用のLogger
@@ -69,7 +71,7 @@ namespace FFXIV.Framework.Common
                 AppLog.logBuffer.Add(entry);
             }
 
-            AppLog.OnAppendedLog(new EventArgs());
+            AppLog.OnAppendedLog(new AppendedLogEventArgs(entry));
         }
 
         /// <summary>
@@ -106,7 +108,7 @@ namespace FFXIV.Framework.Common
         }
 
         private static void OnAppendedLog(
-            EventArgs e)
+            AppendedLogEventArgs e)
         {
             AppLog.AppendedLog?.Invoke(null, e);
         }
