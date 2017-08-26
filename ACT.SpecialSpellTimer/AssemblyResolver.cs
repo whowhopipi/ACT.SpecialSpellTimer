@@ -9,8 +9,6 @@ namespace ACT.SpecialSpellTimer
 {
     public class AssemblyResolver
     {
-        private const string PluginName = "ACT.SpecialSpellTimer";
-
         #region Singleton
 
         private static AssemblyResolver instance = new AssemblyResolver();
@@ -19,17 +17,13 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
+        private IActPluginV1 plugin;
         public List<string> Directories { get; private set; } = new List<string>();
 
-        public void Initialize()
+        public void Initialize(
+            IActPluginV1 plugin)
         {
-            var pluginDirectory = ActGlobals.oFormActMain?.ActPlugins
-                .FirstOrDefault(x => x.pluginFile.Name.ToUpper().Contains(PluginName.ToUpper()))?
-                .pluginFile.DirectoryName;
-            if (!string.IsNullOrEmpty(pluginDirectory))
-            {
-                this.Directories.Add(pluginDirectory);
-            }
+            this.plugin = plugin;
 
             this.Directories.Add(Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -54,6 +48,15 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 return null;
+            }
+
+            var pluginDirectory = ActGlobals.oFormActMain?.PluginGetSelfData(this.plugin)?.pluginFile.DirectoryName;
+            if (!string.IsNullOrEmpty(pluginDirectory))
+            {
+                if (!this.Directories.Any(x => x == pluginDirectory))
+                {
+                    this.Directories.Add(pluginDirectory);
+                }
             }
 
             // Directories プロパティで指定されたディレクトリを基準にアセンブリを検索する
