@@ -59,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public bool IsTemporarilyDisplay { get; set; } = false;
+        public bool IsTemporaryDisplay { get; set; } = false;
 
         public bool AddMessageEnabled { get; set; }
 

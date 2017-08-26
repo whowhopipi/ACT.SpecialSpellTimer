@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -27,7 +29,7 @@ namespace ACT.SpecialSpellTimer.Config
 #if DEBUG
                 if (WPFHelper.IsDesignMode)
                 {
-                    return DefaultSettings;
+                    return new Settings();
                 }
 #endif
                 lock (singletonLocker)
@@ -43,6 +45,11 @@ namespace ACT.SpecialSpellTimer.Config
         }
 
         #endregion Singleton
+
+        public Settings()
+        {
+            this.Reset();
+        }
 
         public readonly string FileName = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -166,9 +173,7 @@ namespace ACT.SpecialSpellTimer.Config
         public bool EnabledSpellTimerNoDecimal { get; set; }
         public bool HideWhenNotActive { get; set; }
         public string Language { get; set; }
-        public DateTime LastUpdateDateTime { get; set; }
         public long LogPollSleepInterval { get; set; }
-        public int MaxFPS { get; set; }
         public string NotifyNormalSpellTimerPrefix { get; set; }
         public int Opacity { get; set; }
         public bool OverlayForceVisible { get; set; }
@@ -192,13 +197,32 @@ namespace ACT.SpecialSpellTimer.Config
         public double TextOutlineThicknessRate { get; set; }
         public double TimeOfHideSpell { get; set; }
         public bool ToComplementUnknownSkill { get; set; } = true;
-        public double UpdateCheckInterval { get; set; }
         public bool UseOtherThanFFXIV { get; set; }
         public bool WipeoutNotifyToACT { get; set; }
 
         #endregion Data
 
-        #region Load Save
+        #region Data - Hidden
+
+        public DateTime LastUpdateDateTime { get; set; }
+        public double UpdateCheckInterval { get; set; }
+        public int MaxFPS { get; set; }
+
+        /// <summary>点滅の輝度倍率 暗</summary>
+        public double BlinkBrightnessDark { get; set; }
+
+        /// <summary>点滅の輝度倍率 明</summary>
+        public double BlinkBrightnessLight { get; set; }
+
+        /// <summary>点滅のピッチ(秒)</summary>
+        public double BlinkPitch { get; set; }
+
+        /// <summary>点滅のピーク状態でのホールド時間(秒)</summary>
+        public double BlinkPeekHold { get; set; }
+
+        #endregion Data - Hidden
+
+        #region Load & Save
 
         private readonly object locker = new object();
 
@@ -266,69 +290,6 @@ namespace ACT.SpecialSpellTimer.Config
             }
         }
 
-        #endregion Load Save
-
-        #region Default Values & Reset
-
-        public static readonly Settings DefaultSettings = new Settings()
-        {
-            Language = "EN",
-            LastUpdateDateTime = DateTime.Parse("2000-1-1"),
-            UpdateCheckInterval = 12.0d,
-            ProgressBarSize = new Size()
-            {
-                Width = 190,
-                Height = 8,
-            },
-            ProgressBarColor = Color.White,
-            ProgressBarOutlineColor = Color.FromArgb(22, 120, 157),
-            FontColor = Color.AliceBlue,
-            FontOutlineColor = Color.FromArgb(22, 120, 157),
-            WarningFontColor = Color.OrangeRed,
-            WarningFontOutlineColor = Color.DarkRed,
-            BackgroundColor = Color.Transparent,
-            NotifyNormalSpellTimerPrefix = "spespe_",
-            ReadyText = "Ready",
-            OverText = "Over",
-            TimeOfHideSpell = 0.0d,
-            PlayerInfoRefreshInterval = 3.0d,
-            LogPollSleepInterval = 10,
-            RefreshInterval = 20,
-            CombatLogBufferSize = 30000,
-            ReduceIconBrightness = 55,
-            Opacity = 10,
-            MaxFPS = 15,
-            Font = FontInfo.DefaultFont.ToFontForWindowsForm(),
-            OverlayVisible = true,
-            AutoSortEnabled = true,
-            ClickThroughEnabled = false,
-            AutoSortReverse = false,
-            TelopAlwaysVisible = false,
-            EnabledPartyMemberPlaceholder = true,
-            CombatLogEnabled = false,
-            OverlayForceVisible = false,
-            EnabledSpellTimerNoDecimal = false,
-            EnabledNotifyNormalSpellTimer = false,
-            SaveLogEnabled = false,
-            SaveLogFile = string.Empty,
-            SaveLogDirectory = string.Empty,
-            HideWhenNotActive = false,
-            UseOtherThanFFXIV = false,
-            DQXUtilityEnabled = false,
-            DQXPlayerName = "トンヌラ",
-            ResetOnWipeOut = true,
-            WipeoutNotifyToACT = true,
-            RemoveTooltipSymbols = true,
-            SimpleRegex = true,
-            DetectPacketDump = false,
-            TextBlurRate = 1.2d,
-            TextOutlineThicknessRate = 1.0d,
-            PCNameInitialOnLogStyle = NameStyles.FullName,
-            PCNameInitialOnDisplayStyle = NameStyles.FullName,
-            RenderCPUOnly = true,
-            ToComplementUnknownSkill = true,
-        };
-
         /// <summary>
         /// レンダリングモードを適用する
         /// </summary>
@@ -343,21 +304,102 @@ namespace ACT.SpecialSpellTimer.Config
             }
         }
 
+        #endregion Load & Save
+
+        #region Default Values & Reset
+
+        public static readonly Dictionary<string, object> DefaultValues = new Dictionary<string, object>()
+        {
+            { nameof(Settings.Language), "EN" },
+            { nameof(Settings.ProgressBarSize), new Size(190, 8) },
+            { nameof(Settings.ProgressBarColor), Color.White },
+            { nameof(Settings.ProgressBarOutlineColor), Color.FromArgb(22, 120, 157) },
+            { nameof(Settings.FontColor), Color.AliceBlue },
+            { nameof(Settings.FontOutlineColor), Color.FromArgb(22, 120, 157) },
+            { nameof(Settings.WarningFontColor), Color.OrangeRed },
+            { nameof(Settings.WarningFontOutlineColor), Color.DarkRed },
+            { nameof(Settings.BackgroundColor), Color.Transparent },
+            { nameof(Settings.NotifyNormalSpellTimerPrefix), "spespe_" },
+            { nameof(Settings.ReadyText), "Ready" },
+            { nameof(Settings.OverText), "Over" },
+            { nameof(Settings.TimeOfHideSpell), 0.0d },
+            { nameof(Settings.PlayerInfoRefreshInterval), 3.0d },
+            { nameof(Settings.LogPollSleepInterval), 10 },
+            { nameof(Settings.RefreshInterval), 60 },
+            { nameof(Settings.CombatLogBufferSize), 30000 },
+            { nameof(Settings.ReduceIconBrightness), 55 },
+            { nameof(Settings.Opacity), 10 },
+            { nameof(Settings.Font), FontInfo.DefaultFont.ToFontForWindowsForm() },
+            { nameof(Settings.OverlayVisible), true },
+            { nameof(Settings.AutoSortEnabled), true },
+            { nameof(Settings.ClickThroughEnabled), false },
+            { nameof(Settings.AutoSortReverse), false },
+            { nameof(Settings.TelopAlwaysVisible), false },
+            { nameof(Settings.EnabledPartyMemberPlaceholder), true },
+            { nameof(Settings.CombatLogEnabled), false },
+            { nameof(Settings.OverlayForceVisible), false },
+            { nameof(Settings.EnabledSpellTimerNoDecimal), true },
+            { nameof(Settings.EnabledNotifyNormalSpellTimer), false },
+            { nameof(Settings.SaveLogEnabled), false },
+            { nameof(Settings.SaveLogFile), string.Empty },
+            { nameof(Settings.SaveLogDirectory), string.Empty },
+            { nameof(Settings.HideWhenNotActive), false },
+            { nameof(Settings.UseOtherThanFFXIV), false },
+            { nameof(Settings.DQXUtilityEnabled), false },
+            { nameof(Settings.DQXPlayerName), "トンヌラ" },
+            { nameof(Settings.ResetOnWipeOut), true },
+            { nameof(Settings.WipeoutNotifyToACT), true },
+            { nameof(Settings.RemoveTooltipSymbols), true },
+            { nameof(Settings.SimpleRegex), true },
+            { nameof(Settings.DetectPacketDump), false },
+            { nameof(Settings.TextBlurRate), 1.2d },
+            { nameof(Settings.TextOutlineThicknessRate), 1.0d },
+            { nameof(Settings.PCNameInitialOnLogStyle), NameStyles.FullName },
+            { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
+            { nameof(Settings.RenderCPUOnly), true },
+            { nameof(Settings.ToComplementUnknownSkill), true },
+
+            // 設定画面のない設定項目
+            { nameof(Settings.LastUpdateDateTime), DateTime.Parse("2000-1-1") },
+            { nameof(Settings.UpdateCheckInterval), 12.0d },
+            { nameof(Settings.MaxFPS), 30 },
+            { nameof(Settings.BlinkBrightnessDark), 0.3d },
+            { nameof(Settings.BlinkBrightnessLight), 2.5d },
+            { nameof(Settings.BlinkPitch), 0.5d },
+            { nameof(Settings.BlinkPeekHold), 0.08d },
+        };
+
         /// <summary>
         /// Clone
         /// </summary>
         /// <returns>
         /// このオブジェクトのクローン</returns>
-        public Settings Clone()
-        {
-            return (Settings)this.MemberwiseClone();
-        }
+        public Settings Clone() => (Settings)this.MemberwiseClone();
 
         public void Reset()
         {
             lock (this.locker)
             {
-                instance = DefaultSettings.Clone();
+                var pis = this.GetType().GetProperties();
+                foreach (var pi in pis)
+                {
+                    try
+                    {
+                        var defaultValue =
+                            DefaultValues.ContainsKey(pi.Name) ?
+                            DefaultValues[pi.Name] :
+                            null;
+
+                        if (defaultValue != null)
+                        {
+                            pi.SetValue(this, defaultValue);
+                        }
+                    }
+                    catch
+                    {
+                        Debug.WriteLine($"Settings Reset Error: {pi.Name}");
+                    }
+                }
             }
         }
 

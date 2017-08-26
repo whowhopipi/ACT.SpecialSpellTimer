@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CCF72089-92FA-4AFB-BDE7-869CA0E394F9}</ProjectGuid>
+    <ProjectGuid>{9F031C94-8011-408E-B916-19C484EA95FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ACT.SpecialSpellTimer</RootNamespace>
-    <AssemblyName>ACT.SpecialSpellTimer</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <RootNamespace>deploy</RootNamespace>
+    <AssemblyName>deploy</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -31,13 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Advanced Combat Tracker">
-      <HintPath>..\..\ACTv3\Advanced Combat Tracker.exe</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,15 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyResolver.cs" />
-    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ACT.SpecialSpellTimer.Core\ACT.SpecialSpellTimer.Core.csproj">
       <Project>{ea12d333-f0ed-4524-8bad-b986b0137ea5}</Project>
       <Name>ACT.SpecialSpellTimer.Core</Name>
-      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ACT.SpecialSpellTimer\ACT.SpecialSpellTimer.csproj">
+      <Project>{ccf72089-92fa-4afb-bde7-869ca0e394f9}</Project>
+      <Name>ACT.SpecialSpellTimer</Name>
     </ProjectReference>
     <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework.Dialog.Wrapper\FFXIV.Framework.Dialog.Wrapper.csproj">
       <Project>{dd7824d5-f74e-4412-9e87-c7b89e1c6165}</Project>
@@ -69,28 +68,14 @@
       <Name>FFXIV.Framework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="deploy.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>@ECHO OFF
-
-IF "$(ConfigurationName)"=="Debug" (
-    EXIT /B
-)
-
-SET OUTPUTDIR=$(SolutionDir)deploy\$(ConfigurationName)\
-
-IF NOT EXIST %25OUTPUTDIR%25 (
-    MKDIR %25OUTPUTDIR%25
-)
-
-DEL /Q /S %25OUTPUTDIR%25 &gt;NUL
-
-XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25* /EXCLUDE:$(SolutionDir)exclude.txt
-
-IF EXIST %25OUTPUTDIR%25locale (
-    RMDIR /S /Q %25OUTPUTDIR%25locale
-)
-DEL /Q /S %25OUTPUTDIR%25*.xml  &gt;NUL
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

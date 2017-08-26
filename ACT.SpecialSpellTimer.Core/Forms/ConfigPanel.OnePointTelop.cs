@@ -186,7 +186,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
-                src.IsTemporarilyDisplay = this.TemporarilyDisplayTickerCheckBox.Checked;
+                src.IsTemporaryDisplay = this.TemporarilyDisplayTickerCheckBox.Checked;
 
                 TableCompiler.Instance.RecompileTickers();
             };
@@ -235,7 +235,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 Settings.Default.BackgroundColor :
                 Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
 
-            this.TemporarilyDisplayTickerCheckBox.Checked = src.IsTemporarilyDisplay;
+            this.TemporarilyDisplayTickerCheckBox.Checked = src.IsTemporaryDisplay;
 
             this.TelopVisualSetting.RefreshSampleImage();
 
@@ -452,14 +452,9 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private async void TelopExportButton_Click(object sender, EventArgs e)
         {
-            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Telops.xml";
-            if (await Task.Run(() => this.SaveFileDialog.ShowDialog(this)) !=
-                DialogResult.Cancel)
-            {
-                OnePointTelopTable.Instance.Save(
-                    this.SaveFileDialog.FileName,
-                    true);
-            }
+            await SelectExportTargetForm.ShowDialogAsync(
+                SelectExportTargetForm.Targets.Tickers,
+                this);
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace ACT.SpecialSpellTimer
         public void Initialize()
         {
             var pluginDirectory = ActGlobals.oFormActMain?.ActPlugins
-                .FirstOrDefault(x => x.pluginFile.Name.Contains(PluginName))?
+                .FirstOrDefault(x => x.pluginFile.Name.ToUpper().Contains(PluginName.ToUpper()))?
                 .pluginFile.DirectoryName;
             if (!string.IsNullOrEmpty(pluginDirectory))
             {

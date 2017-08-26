@@ -9,6 +9,7 @@ using ACT.SpecialSpellTimer.Forms;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Dialog;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -80,12 +81,15 @@ namespace ACT.SpecialSpellTimer
 
                 Logger.Write("Plugin deinit error.", ex);
 
-                this.PluginStatusLabel.Text = "Plugin Exited Error";
+                if (this.PluginStatusLabel != null)
+                {
+                    this.PluginStatusLabel.Text = "Plugin Exit Error";
+                }
 
                 MessageBox.Show(
                     ActGlobals.oFormActMain,
                     ex.ToString(),
-                    "Plugin Exited Error",
+                    "Plugin Exit Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -101,6 +105,8 @@ namespace ACT.SpecialSpellTimer
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
+            this.PluginStatusLabel = pluginStatusText;
+
             try
             {
                 Logger.Write("Plugin Start.");
@@ -118,7 +124,6 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 pluginScreenSpace.Text = Translate.Get("LN_Tabname");
-                this.PluginStatusLabel = pluginStatusText;
 
                 // アップデートを確認する
                 Task.Run(() =>
@@ -131,6 +136,10 @@ namespace ACT.SpecialSpellTimer
                 if (plugin != null)
                 {
                     this.Location = plugin.pluginFile.DirectoryName;
+
+                    // ダイアログの基本Directoryを設定する
+                    ColorDialogWrapper.BaseDirectory = this.Location;
+                    FontDialogWrapper.BaseDirectory = this.Location;
                 }
 
                 // 設定Panelを追加する

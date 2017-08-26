@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -287,7 +287,9 @@ namespace ACT.SpecialSpellTimer
         {
             var spellsGroupByPanel =
                 from s in spells
-                where !s.ToInstance
+                where
+                !s.ToInstance ||
+                s.IsTemporaryDisplay
                 group s by s.Panel.Trim();
 
             foreach (var panel in spellsGroupByPanel)

@@ -542,11 +542,14 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
-                src.IsTemporarilyDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
+                src.IsTemporaryDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
                 src.UpdateDone = false;
 
                 TableCompiler.Instance.RecompileSpells();
             };
+
+            // スペルパネル単位のエクスポート
+            this.ExportBySpellPanelButton.Click += this.ExportBySpellPanelButton_Click;
 
             // オプションのロードメソッドを呼ぶ
             this.LoadOption();
@@ -616,8 +619,22 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private async void ExportButton_Click(object sender, EventArgs e)
         {
-            this.SaveFileDialog.FileName = "ACT.SpecialSpellTimer.Spells.xml";
+            await SelectExportTargetForm.ShowDialogAsync(
+                SelectExportTargetForm.Targets.Spells,
+                this);
+        }
 
+        /// <summary>
+        /// エクスポート Click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private async void ExportBySpellPanelButton_Click(object sender, EventArgs e)
+        {
+            // パネル名を取り出す
+            var panelName = (string)this.DetailPanelGroupBox.Tag;
+
+            this.SaveFileDialog.FileName = $"spells.{panelName}.xml";
             var result = await Task.Run(() =>
             {
                 return this.SaveFileDialog.ShowDialog(this);
@@ -627,7 +644,8 @@ namespace ACT.SpecialSpellTimer.Forms
             {
                 SpellTimerTable.Instance.Save(
                     this.SaveFileDialog.FileName,
-                    true);
+                    true,
+                    panelName);
             }
         }
 
@@ -792,7 +810,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpellVisualSetting.HideSpellName = src.HideSpellName;
             this.SpellVisualSetting.OverlapRecastTime = src.OverlapRecastTime;
 
-            this.TemporarilyDisplaySpellCheckBox.Checked = src.IsTemporarilyDisplay;
+            this.TemporarilyDisplaySpellCheckBox.Checked = src.IsTemporaryDisplay;
 
             this.SpellVisualSetting.RefreshSampleImage();
 

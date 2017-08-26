@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSpellTimer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SpellTimer>
+    <BackgroundAlpha>0</BackgroundAlpha>
+    <BackgroundColor>#FFFFFF</BackgroundColor>
+    <BarColor>#3370FD</BarColor>
+    <BarHeight>8</BarHeight>
+    <BarOutlineColor>GhostWhite</BarOutlineColor>
+    <BarWidth>180</BarWidth>
+    <BeforeTextToSpeak />
+    <BeforeTime>0</BeforeTime>
+    <ChangeFontColorsWhenWarning>false</ChangeFontColorsWhenWarning>
+    <DisplayNo>101</DisplayNo>
+    <DontHide>false</DontHide>
+    <Enabled>true</Enabled>
+    <ExtendBeyondOriginalRecastTime>false</ExtendBeyondOriginalRecastTime>
+    <Font FontFamily="メイリオ" Size="14" Stretch="Normal" Style="Normal" Weight="Bold" />
+    <FontColor>White</FontColor>
+    <FontOutlineColor>#16789D</FontOutlineColor>
+    <Guid>7b54385f-8594-4368-bac2-c66e997c0715</Guid>
+    <HideSpellName>false</HideSpellName>
+    <ID>80</ID>
+    <IsReverse>true</IsReverse>
+    <JobFilter>6,19</JobFilter>
+    <Keyword>\] .+?:(?&lt;target&gt;.+?) gains the effect of インターベンション from &lt;mex&gt; for (?&lt;duration&gt;\d+)</Keyword>
+    <KeywordForExtend1 />
+    <KeywordForExtend2 />
+    <MatchDateTime>0001-01-01T00:00:00</MatchDateTime>
+    <MatchTextToSpeak />
+    <OverlapRecastTime>false</OverlapRecastTime>
+    <OverTextToSpeak />
+    <OverTime>0</OverTime>
+    <Panel>味方へのHoT</Panel>
+    <ProgressBarVisible>true</ProgressBarVisible>
+    <RecastTime>15</RecastTime>
+    <RecastTimeExtending1>0</RecastTimeExtending1>
+    <RecastTimeExtending2>0</RecastTimeExtending2>
+    <ReduceIconBrightness>false</ReduceIconBrightness>
+    <RegexEnabled>true</RegexEnabled>
+    <RepeatEnabled>false</RepeatEnabled>
+    <SpellIcon />
+    <SpellIconSize>0</SpellIconSize>
+    <SpellTitle>インターベンション,➡ ${target}</SpellTitle>
+    <TimersMustRunningForStart />
+    <TimersMustStoppingForStart />
+    <TimeupHide>false</TimeupHide>
+    <TimeupTextToSpeak />
+    <ToInstance>true</ToInstance>
+    <UpperLimitOfExtension>0</UpperLimitOfExtension>
+    <WarningFontColor>OrangeRed</WarningFontColor>
+    <WarningFontOutlineColor>DarkRed</WarningFontOutlineColor>
+    <WarningTime>0</WarningTime>
+    <BlinkTime>0</BlinkTime>
+    <BlinkIcon>false</BlinkIcon>
+    <BlinkBar>false</BlinkBar>
+    <ZoneFilter />
+    <BeforeSound />
+    <MatchSound />
+    <OverSound />
+    <TimeupSound />
+  </SpellTimer>
+</ArrayOfSpellTimer>

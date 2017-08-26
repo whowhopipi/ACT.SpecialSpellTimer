@@ -24,7 +24,7 @@ namespace ACT.SpecialSpellTimer.Views
         {
             if (control.GetFontInfo().ToString() != fontInfo.ToString())
             {
-                control.FontFamily = fontInfo.Family;
+                control.FontFamily = fontInfo.FontFamily;
                 control.FontSize = fontInfo.Size;
                 control.FontStyle = fontInfo.Style;
                 control.FontWeight = fontInfo.Weight;

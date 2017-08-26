@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
@@ -237,7 +237,8 @@ namespace ACT.SpecialSpellTimer.Models
         /// <param name="file">ファイルパス</param>
         public void Save(
             string file,
-            bool force)
+            bool force,
+            string panelName = "")
         {
             if (this.table == null)
             {
@@ -252,19 +253,30 @@ namespace ACT.SpecialSpellTimer.Models
                 }
             }
 
+            var work = this.table.Where(x =>
+                !x.IsInstance &&
+                (
+                    string.IsNullOrEmpty(panelName) ||
+                    x.Panel == panelName
+                )).ToList();
+
+            this.Save(file, work);
+        }
+
+        public void Save(
+            string file,
+            List<SpellTimer> list)
+        {
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
 
-            var work = new List<SpellTimer>(
-                this.table.Where(x => !x.IsInstance));
-
             using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
             {
-                var xs = new XmlSerializer(work.GetType());
-                xs.Serialize(sw, work);
+                var xs = new XmlSerializer(list.GetType());
+                xs.Serialize(sw, list);
             }
         }
 
@@ -288,13 +300,26 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var instance = this.instanceSpells.GetOrAdd(
                 spellTitle,
-                (x) =>
+                (instanceSpellTitle) =>
                 {
+#if false
+                    // Cloneだと不要なフィールドもコピーされてしまう
+                    var ns = sourceSpell.Clone();
+
+                    ns.SpellTitleReplaced = instanceSpellTitle;
+                    ns.Guid = Guid.NewGuid();
+
+                    ns.ToInstance = false;
+                    ns.IsInstance = true;
+                    ns.IsTemporaryDisplay = false;
+
+                    return ns;
+#else
                     var ns = new SpellTimer();
 
-                    ns.SpellTitleReplaced = x;
-
+                    ns.SpellTitleReplaced = instanceSpellTitle;
                     ns.Guid = Guid.NewGuid();
+
                     ns.Panel = sourceSpell.Panel;
                     ns.SpellTitle = sourceSpell.SpellTitle;
                     ns.SpellIcon = sourceSpell.SpellIcon;
@@ -336,6 +361,9 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.HideSpellName = sourceSpell.HideSpellName;
                     ns.WarningTime = sourceSpell.WarningTime;
                     ns.ChangeFontColorsWhenWarning = sourceSpell.ChangeFontColorsWhenWarning;
+                    ns.BlinkTime = sourceSpell.BlinkTime;
+                    ns.BlinkIcon = sourceSpell.BlinkIcon;
+                    ns.BlinkBar = sourceSpell.BlinkBar;
                     ns.OverlapRecastTime = sourceSpell.OverlapRecastTime;
                     ns.ReduceIconBrightness = sourceSpell.ReduceIconBrightness;
                     ns.RegexEnabled = sourceSpell.RegexEnabled;
@@ -358,8 +386,10 @@ namespace ACT.SpecialSpellTimer.Models
 
                     ns.ToInstance = false;
                     ns.IsInstance = true;
+                    ns.IsTemporaryDisplay = false;
 
                     return ns;
+#endif
                 });
 
             lock (instance)
@@ -411,6 +441,12 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     // ガーベージタイマを止める
                     instance.StopGarbageInstanceTimer();
+
+                    if (!instance.IsInstance ||
+                        instance.IsTemporaryDisplay)
+                    {
+                        return;
+                    }
 
                     SpellTimer o;
                     this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
