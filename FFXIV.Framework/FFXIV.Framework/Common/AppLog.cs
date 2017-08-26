@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -88,10 +88,16 @@ namespace FFXIV.Framework.Common
         public static void LoadConfiguration(
             string fileName)
         {
+            if (File.Exists(fileName))
+            {
+                LogManager.Configuration = new XmlLoggingConfiguration(fileName, true);
+                return;
+            }
+
             var dir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             if (!string.IsNullOrEmpty(fileName))
             {
-                var file = Path.Combine(dir, fileName);
+                var file = Path.Combine(dir, Path.GetFileName(fileName));
                 if (File.Exists(file))
                 {
                     LogManager.Configuration = new XmlLoggingConfiguration(file, true);

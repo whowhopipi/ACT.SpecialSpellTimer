@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -11,19 +13,27 @@ using System.Xml.Serialization;
 namespace FFXIV.Framework.Common
 {
     [Serializable]
-    [DataContract]
-    public class FontInfo
+    [DataContract(Name = "Font", Namespace = "")]
+    public class FontInfo :
+        INotifyPropertyChanged
     {
+        /// <summary>
+        /// デフォルトのフォントファミリー名
+        /// </summary>
+        private const string DefaultFontFamilyName = "Arial";
+
+        private static readonly object locker = new object();
+
         [XmlIgnore]
         public static readonly FontInfo DefaultFont = new FontInfo(
-            new FontFamily(),
+            new FontFamily(DefaultFontFamilyName),
             11,
             FontStyles.Normal,
             FontWeights.Normal,
             FontStretches.Normal);
 
         [XmlIgnore]
-        private static Dictionary<string, FontFamily> fontFamilyDictionary = new Dictionary<string, FontFamily>();
+        private static readonly Dictionary<string, FontFamily> fontFamilyDictionary = new Dictionary<string, FontFamily>();
 
         [XmlIgnore]
         private static FontStretchConverter stretchConverter = new FontStretchConverter();
@@ -39,17 +49,31 @@ namespace FFXIV.Framework.Common
         }
 
         public FontInfo(
+            string family)
+        {
+            this.FontFamily = GetFontFamily(family);
+        }
+
+        public FontInfo(
+            string family,
+            double size)
+        {
+            this.FontFamily = GetFontFamily(family);
+            this.Size = size;
+        }
+
+        public FontInfo(
             string family,
             double size,
             string style,
             string weight,
             string stretch)
         {
-            this.Family = GetFontFamily(family);
+            this.FontFamily = GetFontFamily(family);
             this.Size = size;
-            this.StyleString = style;
-            this.WeightString = weight;
-            this.StretchString = stretch;
+            this.StyleText = style;
+            this.WeightText = weight;
+            this.StretchText = stretch;
         }
 
         public FontInfo(
@@ -59,7 +83,7 @@ namespace FFXIV.Framework.Common
             FontWeight weight,
             FontStretch stretch)
         {
-            this.Family = family;
+            this.FontFamily = family;
             this.Size = size;
             this.Style = style;
             this.Weight = weight;
@@ -67,64 +91,139 @@ namespace FFXIV.Framework.Common
         }
 
         [XmlIgnore]
-        public FontFamily Family { get; set; } = new FontFamily("Arial");
+        private FontFamily fontFamily = new FontFamily(DefaultFontFamilyName);
+
+        [XmlIgnore]
+        private double size = 12;
+
+        [XmlIgnore]
+        private FontStretch stretch = FontStretches.Normal;
+
+        [XmlIgnore]
+        private FontStyle style = FontStyles.Normal;
+
+        [XmlIgnore]
+        private FontWeight weight = FontWeights.Normal;
+
+        /// <summary>Font Family</summary>
+        [XmlIgnore]
+        public FontFamily FontFamily
+        {
+            get => this.fontFamily;
+            set => this.SetProperty(ref this.fontFamily, value);
+        }
 
         [XmlAttribute("FontFamily")]
         [DataMember(Name = "FontFamily")]
-        public string FamilyName
+        public string FontFamilyText
         {
-            get => this.Family != null ?
-                this.Family.Source ?? string.Empty :
-                string.Empty;
-            set => this.Family = FontInfo.GetFontFamily(value);
+            get => this.FontFamily?.Source;
+            set => this.FontFamily = new FontFamily(value ?? DefaultFontFamilyName);
         }
 
-        [XmlAttribute("Size")]
-        [DataMember(Name = "Size")]
-        public double Size { get; set; } = 11.25d;
-
-        [XmlIgnore]
-        public FontStretch Stretch { get; set; }
-
-        [XmlAttribute("Stretch")]
-        [DataMember(Name = "Stretch")]
-        public string StretchString
+        /// <summary>Font Size</summary>
+        [XmlAttribute]
+        [DataMember]
+        public double Size
         {
-            get => FontInfo.stretchConverter.ConvertToString(this.Stretch);
-            set => this.Stretch = (FontStretch)FontInfo.stretchConverter.ConvertFromString(value);
-        }
-
-        [XmlIgnore]
-        public FontStyle Style { get; set; }
-
-        [XmlAttribute("Style")]
-        [DataMember(Name = "Style")]
-        public string StyleString
-        {
-            get => FontInfo.styleConverter.ConvertToString(this.Style);
-            set => this.Style = (FontStyle)FontInfo.styleConverter.ConvertFromString(value);
-        }
-
-        [XmlIgnore]
-        public FamilyTypeface Typeface
-        {
-            get => new FamilyTypeface()
+            get => this.size;
+            set
             {
-                Stretch = this.Stretch,
-                Weight = this.Weight,
-                Style = this.Style,
-            };
+                this.SetProperty(ref this.size, value);
+                this.RaisePropertyChanged(nameof(this.OutlineThickness));
+            }
         }
 
+        /// <summary>Font Stretch</summary>
         [XmlIgnore]
-        public FontWeight Weight { get; set; }
-
-        [XmlAttribute("Weight")]
-        [DataMember(Name = "Weight")]
-        public string WeightString
+        public FontStretch Stretch
         {
-            get => FontInfo.weightConverter.ConvertToString(this.Weight);
-            set => this.Weight = (FontWeight)FontInfo.weightConverter.ConvertFromString(value);
+            get => this.stretch;
+            set => this.SetProperty(ref this.stretch, value);
+        }
+
+        /// <summary>Font Stretch (シリアル化向け)</summary>
+        [XmlAttribute(AttributeName = "Stretch")]
+        [DataMember(Name = "Stretch")]
+        public string StretchText
+        {
+            get => stretchConverter.ConvertToString(this.Stretch);
+            set => this.Stretch = (FontStretch)stretchConverter.ConvertFromString(value);
+        }
+
+        /// <summary>Font Style</summary>
+        [XmlIgnore]
+        public FontStyle Style
+        {
+            get => this.style;
+            set => this.SetProperty(ref this.style, value);
+        }
+
+        /// <summary>Font Style (シリアル化向け)</summary>
+        [XmlAttribute(AttributeName = "Style")]
+        [DataMember(Name = "Style")]
+        public string StyleText
+        {
+            get => styleConverter.ConvertToString(this.Style);
+            set => this.Style = (FontStyle)styleConverter.ConvertFromString(value);
+        }
+
+        /// <summary>Typeface</summary>
+        public FamilyTypeface Typeface => new FamilyTypeface()
+        {
+            Stretch = this.Stretch,
+            Weight = this.Weight,
+            Style = this.Style
+        };
+
+        /// <summary>Font Weight</summary>
+        [XmlIgnore]
+        public FontWeight Weight
+        {
+            get => this.weight;
+            set
+            {
+                this.SetProperty(ref this.weight, value);
+                this.RaisePropertyChanged(nameof(this.OutlineThickness));
+            }
+        }
+
+        /// <summary>Font Weight (シリアル化向け)</summary>
+        [XmlAttribute(AttributeName = "Weight")]
+        [DataMember(Name = "Weight")]
+        public string WeightText
+        {
+            get => weightConverter.ConvertToString(this.Weight);
+            set => this.Weight = (FontWeight)weightConverter.ConvertFromString(value);
+        }
+
+        public static double TextOutlineThicknessGain { get; set; } = 1.0d;
+
+        /// <summary>
+        /// アウトラインの太さ
+        /// </summary>
+        [XmlIgnore]
+        public double OutlineThickness
+        {
+            get
+            {
+                // 基準の太さ
+                var thickness = 1.0d;
+
+                // フォントサイズを基準に補正をかける
+                thickness *=
+                    this.Size / 11.0d;
+
+                // ウェイトによる補正をかける
+                thickness *=
+                    this.Weight.ToOpenTypeWeight() /
+                    FontWeights.Normal.ToOpenTypeWeight();
+
+                // 設定によって増幅させる
+                thickness *= TextOutlineThicknessGain;
+
+                return thickness;
+            }
         }
 
         public static FontInfo FromString(
@@ -164,12 +263,15 @@ namespace FFXIV.Framework.Common
                 return new FontFamily();
             }
 
-            if (!fontFamilyDictionary.ContainsKey(source))
+            lock (locker)
             {
-                fontFamilyDictionary[source] = new FontFamily(source);
-            }
+                if (!fontFamilyDictionary.ContainsKey(source))
+                {
+                    fontFamilyDictionary[source] = new FontFamily(source);
+                }
 
-            return fontFamilyDictionary[source];
+                return fontFamilyDictionary[source];
+            }
         }
 
         public System.Drawing.Font ToFontForWindowsForm()
@@ -188,11 +290,44 @@ namespace FFXIV.Framework.Common
             }
 
             System.Drawing.Font f = new System.Drawing.Font(
-                this.FamilyName,
-                (float)(this.Size * 72.0d / 96.0d),
+                this.FontFamily.Source,
+                (float)this.Size,
                 style);
 
             return f;
         }
+
+        #region INotifyPropertyChanged
+
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged(
+            [CallerMemberName]string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected virtual bool SetProperty<T>(
+            ref T field,
+            T value,
+            [CallerMemberName]string propertyName = null)
+        {
+            if (Equals(field, value))
+            {
+                return false;
+            }
+
+            field = value;
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+
+            return true;
+        }
+
+        #endregion INotifyPropertyChanged
     }
 }

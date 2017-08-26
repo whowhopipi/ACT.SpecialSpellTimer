@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,8 +9,12 @@ namespace FFXIV.Framework.Dialog
 {
     public class FontDialogWrapper
     {
-        private static readonly string WPFDialogProccess = Path.Combine(
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+        public static string BaseDirectory { get; set; } = string.Empty;
+
+        private static string WPFDialogProccess => Path.Combine(
+            string.IsNullOrEmpty(BaseDirectory) ?
+            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) :
+            BaseDirectory,
             @"FFXIV.Framework.Dialog.exe");
 
         public static FontDialogResult ShowDialog(

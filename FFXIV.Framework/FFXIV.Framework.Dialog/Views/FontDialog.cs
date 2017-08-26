@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using FFXIV.Framework.Common;
@@ -25,7 +25,6 @@ namespace FFXIV.Framework.Dialog.Views
                 MaxWidth = 1280,
                 MaxHeight = 768,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                ShowInTaskbar = true,
             };
 
             dialog.Buttons = new Button[] { dialog.OkButton, dialog.CancelButton };
@@ -49,7 +48,6 @@ namespace FFXIV.Framework.Dialog.Views
                 MaxWidth = 1280,
                 MaxHeight = 768,
                 WindowStartupLocation = starupLocation,
-                ShowInTaskbar = true,
             };
 
             dialog.Buttons = new Button[] { dialog.OkButton, dialog.CancelButton };
@@ -72,7 +70,6 @@ namespace FFXIV.Framework.Dialog.Views
                 MaxWidth = 1280,
                 MaxHeight = 768,
                 WindowStartupLocation = starupLocation,
-                ShowInTaskbar = true,
             };
 
             if (owner != null)

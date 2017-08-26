@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
@@ -27,6 +27,22 @@ namespace FFXIV.Framework.Common
         }
 
         private static int _IsDebugMode = -1;
+
+        public static void Start()
+        {
+            if (Application.Current == null)
+            {
+                new Application().ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            }
+        }
+
+        public static void Shutdown()
+        {
+            if (Application.Current == null)
+            {
+                Application.Current.Shutdown();
+            }
+        }
 
         /// <summary>
         /// 現在のプロセスがデザインモードかどうか返します。

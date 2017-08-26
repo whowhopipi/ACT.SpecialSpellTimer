@@ -82,10 +82,6 @@
       <Project>{18ce9b28-4f0b-45d1-ae3f-14f3982f0e59}</Project>
       <Name>FFXIV.Framework.TTS.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FFXIV.Framework.TTS.Server\FFXIV.Framework.TTS.Server.csproj">
-      <Project>{4cb004be-8162-4601-8f98-162d4f1c0fa1}</Project>
-      <Name>FFXIV.Framework.TTS.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework.csproj">
       <Project>{22EBF8A4-EED1-4CD1-99EB-99665163A315}</Project>
       <Name>FFXIV.Framework</Name>
