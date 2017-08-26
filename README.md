@@ -15,9 +15,18 @@ ACT.SpecialSpellTimer
 ※スペスペの動作には. NET Framework 4.7 以降が必要です。  
 
 2) インストール  
-**resources**  
-**tools**  
-**ACT.SpecialSpellTimer.dll**  
+**FFXIV.Framework.Dialog.exe**
+**ACT.SpecialSpellTimer.Core.dll**
+**ACT.SpecialSpellTimer.dll**
+**ACT.TargetOverlay.Core.dll**
+**ACT.TargetOverlay.dll**
+**FFXIV.Framework.Dialog.Wrapper.dll**
+**FFXIV.Framework.dll**
+**FirstFloor.ModernUI.dll**
+**Microsoft.Practices.Prism.Mvvm.dll**
+**Microsoft.Practices.Prism.SharedInterfaces.dll**
+**NLog.dll**
+**Prism.dll**
 　  
 をACTのインストールディレクトリにコピーします  
 (配置の例)  
