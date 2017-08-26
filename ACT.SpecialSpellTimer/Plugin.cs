@@ -14,7 +14,7 @@ namespace ACT.SpecialSpellTimer
         [MethodImpl(MethodImplOptions.NoInlining)]
         public Plugin()
         {
-            AssemblyResolver.Instance.Initialize();
+            AssemblyResolver.Instance.Initialize(this);
         }
 
         /// <summary>
