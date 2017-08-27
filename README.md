@@ -17,7 +17,16 @@ ACT.SpecialSpellTimer
 2) インストール  
 **resources**  
 **tools**  
+**FFXIV.Framework.Dialog.exe**  
+**ACT.SpecialSpellTimer.Core.dll**  
 **ACT.SpecialSpellTimer.dll**  
+**ACT.TargetOverlay.Core.dll**  
+**ACT.TargetOverlay.dll**  
+**FFXIV.Framework.Dialog.Wrapper.dll**  
+**FFXIV.Framework.dll**  
+**FirstFloor.ModernUI.dll**  
+**NLog.dll**  
+**Prism.dll**  
 　  
 をACTのインストールディレクトリにコピーします  
 (配置の例)  
