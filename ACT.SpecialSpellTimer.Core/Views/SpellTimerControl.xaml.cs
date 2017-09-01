@@ -422,9 +422,9 @@ namespace ACT.SpecialSpellTimer.Views
         {
             KeyFrames = new DoubleKeyFrameCollection()
             {
-                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0)),
-                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold)),
-                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPitch))
+                new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))),
+                new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold))),
+                new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPitch)))
             }
         };
 
@@ -440,9 +440,9 @@ namespace ACT.SpecialSpellTimer.Views
         {
             KeyFrames = new DoubleKeyFrameCollection()
             {
-                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(0)),
-                new DiscreteDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold)),
-                new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(Settings.Default.BlinkPitch))
+                new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))),
+                new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold))),
+                new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPitch)))
             }
         };
 
