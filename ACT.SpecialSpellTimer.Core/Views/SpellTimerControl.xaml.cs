@@ -415,16 +415,14 @@ namespace ACT.SpecialSpellTimer.Views
         #region Icon
 
         private DiscreteDoubleKeyFrame IconKeyframe1 => (DiscreteDoubleKeyFrame)this.iconBlinkAnimation.KeyFrames[0];
-        private DiscreteDoubleKeyFrame IconKeyframe2 => (DiscreteDoubleKeyFrame)this.iconBlinkAnimation.KeyFrames[1];
-        private LinearDoubleKeyFrame IconKeyframe3 => (LinearDoubleKeyFrame)this.iconBlinkAnimation.KeyFrames[2];
+        private LinearDoubleKeyFrame IconKeyframe2 => (LinearDoubleKeyFrame)this.iconBlinkAnimation.KeyFrames[1];
 
         private DoubleAnimationUsingKeyFrames iconBlinkAnimation = new DoubleAnimationUsingKeyFrames()
         {
             KeyFrames = new DoubleKeyFrameCollection()
             {
                 new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))),
-                new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold))),
-                new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPitch)))
+                new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.3)))
             }
         };
 
@@ -433,16 +431,14 @@ namespace ACT.SpecialSpellTimer.Views
         #region Bar
 
         private DiscreteDoubleKeyFrame BarKeyframe1 => (DiscreteDoubleKeyFrame)this.barBlinkAnimation.KeyFrames[0];
-        private DiscreteDoubleKeyFrame BarKeyframe2 => (DiscreteDoubleKeyFrame)this.barBlinkAnimation.KeyFrames[1];
-        private LinearDoubleKeyFrame BarKeyframe3 => (LinearDoubleKeyFrame)this.barBlinkAnimation.KeyFrames[2];
+        private LinearDoubleKeyFrame BarKeyframe2 => (LinearDoubleKeyFrame)this.barBlinkAnimation.KeyFrames[1];
 
         private DoubleAnimationUsingKeyFrames barBlinkAnimation = new DoubleAnimationUsingKeyFrames()
         {
             KeyFrames = new DoubleKeyFrameCollection()
             {
                 new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0))),
-                new DiscreteDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPeekHold))),
-                new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Settings.Default.BlinkPitch)))
+                new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromSeconds(0.3)))
             }
         };
 
@@ -459,6 +455,16 @@ namespace ACT.SpecialSpellTimer.Views
                 if (this.isBlinking)
                 {
                     this.isBlinking = false;
+
+                    this.SpellIconImage.BeginAnimation(
+                        System.Windows.Controls.Image.OpacityProperty,
+                        null);
+                    this.BarRectangle.BeginAnimation(
+                        Rectangle.OpacityProperty,
+                        null);
+                    this.BarEffect.BeginAnimation(
+                        DropShadowEffect.OpacityProperty,
+                        null);
                 }
 
                 return false;
@@ -500,8 +506,7 @@ namespace ACT.SpecialSpellTimer.Views
                 var value2 = !this.IsReverse ? SpellTimerControl.IconLightValue : SpellTimerControl.IconDarkValue;
 
                 this.IconKeyframe1.Value = value2;
-                this.IconKeyframe2.Value = value2;
-                this.IconKeyframe3.Value = value1;
+                this.IconKeyframe2.Value = value1;
 
                 this.iconBlinkAnimation.AutoReverse = true;
                 this.iconBlinkAnimation.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
@@ -519,8 +524,7 @@ namespace ACT.SpecialSpellTimer.Views
                 var effect2 = !this.IsReverse ? strongEffect : weekEffect;
 
                 this.BarKeyframe1.Value = effect2;
-                this.BarKeyframe2.Value = effect2;
-                this.BarKeyframe3.Value = effect1;
+                this.BarKeyframe2.Value = effect1;
 
                 this.barBlinkAnimation.AutoReverse = true;
                 this.barBlinkAnimation.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
