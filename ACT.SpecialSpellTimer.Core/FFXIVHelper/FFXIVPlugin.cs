@@ -494,7 +494,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             foreach (var pc in party)
             {
-                if (string.IsNullOrEmpty(pc.NameFI) ||
+                if (string.IsNullOrEmpty(pc.Name) ||
+                    string.IsNullOrEmpty(pc.NameFI) ||
                     string.IsNullOrEmpty(pc.NameIF) ||
                     string.IsNullOrEmpty(pc.NameII))
                 {
