@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -68,8 +69,35 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public MobType MobType => (MobType)this.type;
 
-        public string Names =>
-            $"{this.Name}|{this.NameFI}|{this.NameIF}|{this.NameII}";
+        public string Names
+        {
+            get
+            {
+                var names = new List<string>();
+
+                if (!string.IsNullOrEmpty(this.Name))
+                {
+                    names.Add(this.Name);
+                }
+
+                if (!string.IsNullOrEmpty(this.NameFI))
+                {
+                    names.Add(this.NameFI);
+                }
+
+                if (!string.IsNullOrEmpty(this.NameIF))
+                {
+                    names.Add(this.NameIF);
+                }
+
+                if (!string.IsNullOrEmpty(this.NameII))
+                {
+                    names.Add(this.NameII);
+                }
+
+                return string.Join("|", names.ToArray());
+            }
+        }
 
         public string NamesRegex =>
             this.Names.Replace(@".", @"\.");

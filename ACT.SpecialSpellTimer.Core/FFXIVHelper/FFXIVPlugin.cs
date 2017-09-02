@@ -446,9 +446,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 combatant.MaxMP = (int)item.MaxMP;
                 combatant.CurrentTP = (int)item.CurrentTP;
 
+                var name = (string)item.Name;
+
                 // 名前を登録する
                 // TYPEによって分岐するため先にTYPEを設定しておくこと
-                combatant.SetName((string)item.Name);
+                combatant.SetName(name);
 
                 newList.Add(combatant);
                 newDictionary.Add(combatant.ID, combatant);
@@ -492,6 +494,13 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             foreach (var pc in party)
             {
+                if (string.IsNullOrEmpty(pc.NameFI) ||
+                    string.IsNullOrEmpty(pc.NameIF) ||
+                    string.IsNullOrEmpty(pc.NameII))
+                {
+                    continue;
+                }
+
                 switch (Settings.Default.PCNameInitialOnDisplayStyle)
                 {
                     case NameStyles.FullName:
