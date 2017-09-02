@@ -29,7 +29,7 @@ namespace ACT.SpecialSpellTimer
         /// ツールチップ文字を除去するための正規表現
         /// </summary>
         private static readonly Regex TooltipCharsRegex =
-            new Regex(@"(.\u0001\u0001\uFFFD|u001E)",
+            new Regex(@".\u0001\u0001\uFFFD",
                 RegexOptions.Compiled);
 
         /// <summary>
