@@ -44,20 +44,10 @@ namespace ACT.SpecialSpellTimer
         {
             foreach (var log in logLines)
             {
-                if (Settings.Default.SingleTaskLogMatching)
+                telops.AsParallel().ForAll(telop =>
                 {
-                    foreach (var telop in telops)
-                    {
-                        this.MatchCore(telop, log);
-                    }
-                }
-                else
-                {
-                    telops.AsParallel().ForAll(telop =>
-                    {
-                        this.MatchCore(telop, log);
-                    });
-                }
+                    this.MatchCore(telop, log);
+                });
             }
         }
 

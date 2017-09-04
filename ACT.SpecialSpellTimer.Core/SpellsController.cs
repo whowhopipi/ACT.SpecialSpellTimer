@@ -39,20 +39,10 @@ namespace ACT.SpecialSpellTimer
         {
             foreach (var logLine in logLines)
             {
-                if (Settings.Default.SingleTaskLogMatching)
+                spells.AsParallel().ForAll(spell =>
                 {
-                    foreach (var spell in spells)
-                    {
-                        this.MatchCore(spell, logLine);
-                    }
-                }
-                else
-                {
-                    spells.AsParallel().ForAll(spell =>
-                    {
-                        this.MatchCore(spell, logLine);
-                    });
-                }
+                    this.MatchCore(spell, logLine);
+                });
             }
         }
 

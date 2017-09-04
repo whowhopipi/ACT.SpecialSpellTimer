@@ -360,7 +360,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
             { nameof(Settings.RenderCPUOnly), true },
             { nameof(Settings.ToComplementUnknownSkill), true },
-            { nameof(Settings.SingleTaskLogMatching), true },
+            { nameof(Settings.SingleTaskLogMatching), false },
 
             // 設定画面のない設定項目
             { nameof(Settings.LastUpdateDateTime), DateTime.Parse("2000-1-1") },

@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
@@ -41,7 +42,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 内部バッファ
         /// </summary>
-        private readonly ConcurrentQueue<LogLineEventArgs> logInfoBuffer = new ConcurrentQueue<LogLineEventArgs>();
+        private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
 
         /// <summary>
         /// 最初のログが到着したか？
@@ -112,7 +113,6 @@ namespace ACT.SpecialSpellTimer
         /// </remarks>
         private void AddOnBeforeLogLineRead()
         {
-            // PacketDumpを解析対象にしていないならば何もしない
             if (!Settings.Default.DetectPacketDump)
             {
                 return;
@@ -210,8 +210,7 @@ namespace ACT.SpecialSpellTimer
                             copyLogInfo.logLine =
                                 $"[{timeStamp:HH:mm:ss.fff}] {messageType:X2}:{string.Join(":", data)}";
 
-                            this.logInfoBuffer.Enqueue(copyLogInfo);
-
+                            this.logInfoQueue.Enqueue(copyLogInfo);
                             break;
                     }
                 }
@@ -237,21 +236,22 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
-            this.logInfoBuffer.Enqueue(logInfo);
+            this.logInfoQueue.Enqueue(logInfo);
 
             // 最初のログならば動作ログに出力する
             if (!this.firstLogArrived)
             {
-                this.firstLogArrived = true;
                 Logger.Write("First log has arrived.");
             }
+
+            this.firstLogArrived = true;
         }
 
         #endregion ACT event hander
 
         #region ログ処理
 
-        public bool IsEmpty => this.logInfoBuffer.IsEmpty;
+        public bool IsEmpty => this.logInfoQueue.IsEmpty;
 
         /// <summary>
         /// ログ行を返す
@@ -259,16 +259,15 @@ namespace ACT.SpecialSpellTimer
         /// <returns>ログ行の配列</returns>
         public IReadOnlyList<string> GetLogLines()
         {
-            if (this.logInfoBuffer.IsEmpty)
+            if (this.logInfoQueue.IsEmpty)
             {
                 return EmptyLogLineList;
             }
 
-            var summoned = false;
-            var partyChangedAtDQX = false;
+            // プレイヤー情報を取得する
+            var player = FFXIVPlugin.Instance.GetPlayer();
 
             // プレイヤーが召喚士か？
-            var player = FFXIVPlugin.Instance.GetPlayer();
             var palyerIsSummoner = false;
             if (player != null)
             {
@@ -279,13 +278,14 @@ namespace ACT.SpecialSpellTimer
                 }
             }
 
-            // ログを取り出す
-            var list = new List<string>(this.logInfoBuffer.Count);
-            while (this.logInfoBuffer.TryDequeue(out LogLineEventArgs e))
-            {
-                var logLine = e.logLine.Trim();
+            var list = new List<string>(logInfoQueue.Count);
+            var partyChangedAtDQX = false;
+            var summoned = false;
 
-                list.Add(logLine);
+            while (logInfoQueue.TryDequeue(
+                out LogLineEventArgs logInfo))
+            {
+                var logLine = logInfo.logLine.Trim();
 
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
@@ -296,18 +296,21 @@ namespace ACT.SpecialSpellTimer
                 // Unknownスキルを補完する？
                 if (Settings.Default.ToComplementUnknownSkill)
                 {
-                    var match = LogBuffer.UnknownSkillRegex.Match(logLine);
-                    if (match.Success)
+                    if (logLine.Contains("Unknown_"))
                     {
-                        var unknownSkill = match.Groups["UnknownSkill"].Value;
-                        var unknownSkillID = match.Groups["UnknownSkillID"].Value;
-
-                        var skill = XIVDB.Instance.FindSkill(unknownSkillID);
-                        if (skill != null)
+                        var match = LogBuffer.UnknownSkillRegex.Match(logLine);
+                        if (match.Success)
                         {
-                            logLine = logLine.Replace(
-                                unknownSkill,
-                                skill.Name);
+                            var unknownSkill = match.Groups["UnknownSkill"].Value;
+                            var unknownSkillID = match.Groups["UnknownSkillID"].Value;
+
+                            var skill = XIVDB.Instance.FindSkill(unknownSkillID);
+                            if (skill != null)
+                            {
+                                logLine = logLine.Replace(
+                                    unknownSkill,
+                                    skill.Name);
+                            }
                         }
                     }
                 }
@@ -338,9 +341,10 @@ namespace ACT.SpecialSpellTimer
                 {
                     partyChangedAtDQX = r;
                 }
+
+                list.Add(logLine);
             }
 
-            // DQXにおけるパーティメンバの変更
             if (partyChangedAtDQX)
             {
                 Task.Run(() =>
@@ -350,7 +354,6 @@ namespace ACT.SpecialSpellTimer
                 });
             }
 
-            // 何かが召喚された
             if (summoned)
             {
                 TableCompiler.Instance.RefreshPetPlaceholder();
@@ -365,7 +368,6 @@ namespace ACT.SpecialSpellTimer
                 });
             }
 
-            // リストを返す
             return list;
         }
 
