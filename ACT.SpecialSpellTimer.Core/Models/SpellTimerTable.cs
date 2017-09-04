@@ -25,8 +25,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Singleton
 
-        private static readonly object lockObject = new object();
-
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
@@ -38,11 +36,6 @@ namespace ACT.SpecialSpellTimer.Models
         public string DefaultFile => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             @"anoyetta\ACT\ACT.SpecialSpellTimer.Spells.xml");
-
-        /// <summary>
-        /// テーブルの編集中？
-        /// </summary>
-        public bool IsEditingTable { get; set; }
 
         /// <summary>
         /// SpellTimerデータテーブル
@@ -281,6 +274,8 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #region To Instance spells
+
+        private static readonly object lockObject = new object();
 
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名

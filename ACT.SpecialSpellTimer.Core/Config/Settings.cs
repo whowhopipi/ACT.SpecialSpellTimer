@@ -200,6 +200,8 @@ namespace ACT.SpecialSpellTimer.Config
         public bool UseOtherThanFFXIV { get; set; }
         public bool WipeoutNotifyToACT { get; set; }
 
+        public bool SingleTaskLogMatching { get; set; }
+
         #endregion Data
 
         #region Data - Hidden
@@ -358,6 +360,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
             { nameof(Settings.RenderCPUOnly), true },
             { nameof(Settings.ToComplementUnknownSkill), true },
+            { nameof(Settings.SingleTaskLogMatching), true },
 
             // 設定画面のない設定項目
             { nameof(Settings.LastUpdateDateTime), DateTime.Parse("2000-1-1") },

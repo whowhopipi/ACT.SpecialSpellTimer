@@ -39,242 +39,261 @@ namespace ACT.SpecialSpellTimer
         {
             foreach (var logLine in logLines)
             {
-                // マッチする？
-                spells.AsParallel().ForAll(spell =>
+                if (Settings.Default.SingleTaskLogMatching)
                 {
-                    var regex = spell.Regex;
-                    var notifyNeeded = false;
-
-                    if (!spell.IsInstance)
+                    foreach (var spell in spells)
                     {
-                        // 開始条件を確認する
-                        if (ConditionUtility.CheckConditionsForSpell(spell))
-                        {
-                            // 正規表現が無効？
-                            if (!spell.RegexEnabled ||
-                                regex == null)
-                            {
-                                var keyword = spell.KeywordReplaced;
-                                if (string.IsNullOrWhiteSpace(keyword))
-                                {
-                                    return;
-                                }
-
-                                // キーワードが含まれるか？
-                                if (logLine.ToUpper().Contains(
-                                    keyword.ToUpper()))
-                                {
-                                    var targetSpell = spell;
-
-                                    // ヒットしたログを格納する
-                                    targetSpell.MatchedLog = logLine;
-
-                                    // スペル名（表示テキスト）を置換する
-                                    var replacedTitle = ConditionUtility.GetReplacedTitle(targetSpell);
-
-                                    // PC名を置換する
-                                    replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
-
-                                    targetSpell.SpellTitleReplaced = replacedTitle;
-                                    targetSpell.MatchDateTime = DateTime.Now;
-                                    targetSpell.UpdateDone = false;
-                                    targetSpell.OverDone = false;
-                                    targetSpell.BeforeDone = false;
-                                    targetSpell.TimeupDone = false;
-                                    targetSpell.CompleteScheduledTime = targetSpell.MatchDateTime.AddSeconds(targetSpell.RecastTime);
-
-                                    // マッチ時点のサウンドを再生する
-                                    this.Play(targetSpell.MatchSound);
-                                    this.Play(targetSpell.MatchTextToSpeak);
-
-                                    notifyNeeded = true;
-
-                                    // 遅延サウンドタイマを開始する
-                                    targetSpell.StartOverSoundTimer();
-                                    targetSpell.StartBeforeSoundTimer();
-                                    targetSpell.StartTimeupSoundTimer();
-                                }
-                            }
-                            else
-                            {
-                                // 正規表現でマッチングする
-                                var match = regex.Match(logLine);
-                                if (match.Success)
-                                {
-                                    var targetSpell = spell;
-
-                                    // ヒットしたログを格納する
-                                    targetSpell.MatchedLog = logLine;
-
-                                    // スペル名（表示テキスト）を置換する
-                                    var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
-
-                                    // PC名を置換する
-                                    replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
-
-                                    // インスタンス化する？
-                                    if (spell.ToInstance)
-                                    {
-                                        // 同じタイトルのインスタンススペルを探す
-                                        // 存在すればそれを使用して、なければ新しいインスタンスを生成する
-                                        targetSpell = SpellTimerTable.Instance.GetOrAddInstance(
-                                            replacedTitle,
-                                            spell);
-
-                                        // インスタンスのガーベージタイマをスタートする
-                                        targetSpell.StartGarbageInstanceTimer();
-                                    }
-
-                                    targetSpell.SpellTitleReplaced = replacedTitle;
-                                    targetSpell.MatchDateTime = DateTime.Now;
-                                    targetSpell.UpdateDone = false;
-                                    targetSpell.OverDone = false;
-                                    targetSpell.BeforeDone = false;
-                                    targetSpell.TimeupDone = false;
-
-                                    // 効果時間を決定する
-                                    // グループ "duration" をキャプチャーしていた場合は効果時間を置換する
-                                    var durationAsText = match.Groups["duration"].Value;
-                                    double duration;
-                                    if (!double.TryParse(durationAsText, out duration))
-                                    {
-                                        duration = targetSpell.RecastTime;
-                                    }
-
-                                    targetSpell.CompleteScheduledTime = targetSpell.MatchDateTime.AddSeconds(duration);
-
-                                    // スペル対象を保存する
-                                    // グループ "target" をキャプチャーしていた場合はその文字列を保存する
-                                    var targetName = match.Groups["target"].Value;
-                                    if (!string.IsNullOrWhiteSpace(targetName))
-                                    {
-                                        targetSpell.TargetName = targetName;
-                                    }
-
-                                    // マッチ時点のサウンドを再生する
-                                    this.Play(targetSpell.MatchSound);
-
-                                    if (!string.IsNullOrWhiteSpace(targetSpell.MatchTextToSpeak))
-                                    {
-                                        var tts = match.Result(targetSpell.MatchTextToSpeak);
-                                        this.Play(tts);
-                                    }
-
-                                    notifyNeeded = true;
-
-                                    // 遅延サウンドタイマを開始する
-                                    targetSpell.StartOverSoundTimer();
-                                    targetSpell.StartBeforeSoundTimer();
-                                    targetSpell.StartTimeupSoundTimer();
-                                }
-                            }
-                        }
+                        this.MatchCore(spell, logLine);
                     }
-
-                    // 延長をマッチングする
-                    if (spell.MatchDateTime > DateTime.MinValue)
+                }
+                else
+                {
+                    spells.AsParallel().ForAll(spell =>
                     {
-                        var keywords = new string[] { spell.KeywordForExtendReplaced1, spell.KeywordForExtendReplaced2 };
-                        var regexes = new Regex[] { spell.RegexForExtend1, spell.RegexForExtend2 };
-                        var timeToExtends = new double[] { spell.RecastTimeExtending1, spell.RecastTimeExtending2 };
+                        this.MatchCore(spell, logLine);
+                    });
+                }
+            }
+        }
 
-                        for (int i = 0; i < 2; i++)
+        /// <summary>
+        /// 1ログ1スペルに対して判定する
+        /// </summary>
+        /// <param name="spell">スペル</param>
+        /// <param name="logLine">ログ</param>
+        private void MatchCore(
+            Models.SpellTimer spell,
+            string logLine)
+        {
+            var regex = spell.Regex;
+            var notifyNeeded = false;
+
+            if (!spell.IsInstance)
+            {
+                // 開始条件を確認する
+                if (ConditionUtility.CheckConditionsForSpell(spell))
+                {
+                    // 正規表現が無効？
+                    if (!spell.RegexEnabled ||
+                        regex == null)
+                    {
+                        var keyword = spell.KeywordReplaced;
+                        if (string.IsNullOrWhiteSpace(keyword))
                         {
-                            var keywordToExtend = keywords[i];
-                            var regexToExtend = regexes[i];
-                            var timeToExtend = timeToExtends[i];
+                            return;
+                        }
 
-                            // マッチングする
-                            var matched = false;
+                        // キーワードが含まれるか？
+                        if (logLine.ToUpper().Contains(
+                            keyword.ToUpper()))
+                        {
+                            var targetSpell = spell;
 
-                            if (!spell.RegexEnabled ||
-                                regexToExtend == null)
-                            {
-                                if (!string.IsNullOrWhiteSpace(keywordToExtend))
-                                {
-                                    matched = logLine.ToUpper().Contains(keywordToExtend.ToUpper());
-                                }
-                            }
-                            else
-                            {
-                                var match = regexToExtend.Match(logLine);
-                                matched = match.Success;
+                            // ヒットしたログを格納する
+                            targetSpell.MatchedLog = logLine;
 
-                                if (matched)
-                                {
-                                    // targetをキャプチャーしている？
-                                    if (!string.IsNullOrWhiteSpace(spell.TargetName))
-                                    {
-                                        var targetName = match.Groups["target"].Value;
-                                        if (!string.IsNullOrWhiteSpace(targetName))
-                                        {
-                                            // targetが当初のマッチングと一致するか確認する
-                                            if (spell.TargetName != targetName)
-                                            {
-                                                matched = false;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            // スペル名（表示テキスト）を置換する
+                            var replacedTitle = ConditionUtility.GetReplacedTitle(targetSpell);
 
-                            if (!matched)
-                            {
-                                continue;
-                            }
+                            // PC名を置換する
+                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
 
-                            var now = DateTime.Now;
+                            targetSpell.SpellTitleReplaced = replacedTitle;
+                            targetSpell.MatchDateTime = DateTime.Now;
+                            targetSpell.UpdateDone = false;
+                            targetSpell.OverDone = false;
+                            targetSpell.BeforeDone = false;
+                            targetSpell.TimeupDone = false;
+                            targetSpell.CompleteScheduledTime = targetSpell.MatchDateTime.AddSeconds(targetSpell.RecastTime);
 
-                            // リキャストタイムを延長する
-                            var newSchedule = spell.CompleteScheduledTime.AddSeconds(timeToExtend);
-                            spell.BeforeDone = false;
-                            spell.UpdateDone = false;
-
-                            if (spell.ExtendBeyondOriginalRecastTime)
-                            {
-                                if (spell.UpperLimitOfExtension > 0)
-                                {
-                                    var newDuration = (newSchedule - now).TotalSeconds;
-                                    if (newDuration > (double)spell.UpperLimitOfExtension)
-                                    {
-                                        newSchedule = newSchedule.AddSeconds(
-                                            (newDuration - (double)spell.UpperLimitOfExtension) * -1);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var newDuration = (newSchedule - now).TotalSeconds;
-                                if (newDuration > (double)spell.RecastTime)
-                                {
-                                    newSchedule = newSchedule.AddSeconds(
-                                        (newDuration - (double)spell.RecastTime) * -1);
-                                }
-                            }
-
-                            spell.MatchDateTime = now;
-                            spell.CompleteScheduledTime = newSchedule;
+                            // マッチ時点のサウンドを再生する
+                            this.Play(targetSpell.MatchSound);
+                            this.Play(targetSpell.MatchTextToSpeak);
 
                             notifyNeeded = true;
 
-                            // 遅延サウンドタイマを開始(更新)する
-                            spell.StartOverSoundTimer();
-                            spell.StartBeforeSoundTimer();
-                            spell.StartTimeupSoundTimer();
+                            // 遅延サウンドタイマを開始する
+                            targetSpell.StartOverSoundTimer();
+                            targetSpell.StartBeforeSoundTimer();
+                            targetSpell.StartTimeupSoundTimer();
                         }
                     }
-                    // end if 延長マッチング
-
-                    // ACT標準のSpellTimerに変更を通知する
-                    if (notifyNeeded)
+                    else
                     {
-                        this.UpdateNormalSpellTimer(spell, false);
-                        this.NotifyNormalSpellTimer(spell);
+                        // 正規表現でマッチングする
+                        var match = regex.Match(logLine);
+                        if (match.Success)
+                        {
+                            var targetSpell = spell;
+
+                            // ヒットしたログを格納する
+                            targetSpell.MatchedLog = logLine;
+
+                            // スペル名（表示テキスト）を置換する
+                            var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
+
+                            // PC名を置換する
+                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
+
+                            // インスタンス化する？
+                            if (spell.ToInstance)
+                            {
+                                // 同じタイトルのインスタンススペルを探す
+                                // 存在すればそれを使用して、なければ新しいインスタンスを生成する
+                                targetSpell = SpellTimerTable.Instance.GetOrAddInstance(
+                                    replacedTitle,
+                                    spell);
+
+                                // インスタンスのガーベージタイマをスタートする
+                                targetSpell.StartGarbageInstanceTimer();
+                            }
+
+                            targetSpell.SpellTitleReplaced = replacedTitle;
+                            targetSpell.MatchDateTime = DateTime.Now;
+                            targetSpell.UpdateDone = false;
+                            targetSpell.OverDone = false;
+                            targetSpell.BeforeDone = false;
+                            targetSpell.TimeupDone = false;
+
+                            // 効果時間を決定する
+                            // グループ "duration" をキャプチャーしていた場合は効果時間を置換する
+                            var durationAsText = match.Groups["duration"].Value;
+                            double duration;
+                            if (!double.TryParse(durationAsText, out duration))
+                            {
+                                duration = targetSpell.RecastTime;
+                            }
+
+                            targetSpell.CompleteScheduledTime = targetSpell.MatchDateTime.AddSeconds(duration);
+
+                            // スペル対象を保存する
+                            // グループ "target" をキャプチャーしていた場合はその文字列を保存する
+                            var targetName = match.Groups["target"].Value;
+                            if (!string.IsNullOrWhiteSpace(targetName))
+                            {
+                                targetSpell.TargetName = targetName;
+                            }
+
+                            // マッチ時点のサウンドを再生する
+                            this.Play(targetSpell.MatchSound);
+
+                            if (!string.IsNullOrWhiteSpace(targetSpell.MatchTextToSpeak))
+                            {
+                                var tts = match.Result(targetSpell.MatchTextToSpeak);
+                                this.Play(tts);
+                            }
+
+                            notifyNeeded = true;
+
+                            // 遅延サウンドタイマを開始する
+                            targetSpell.StartOverSoundTimer();
+                            targetSpell.StartBeforeSoundTimer();
+                            targetSpell.StartTimeupSoundTimer();
+                        }
                     }
-                });
-                // end loop of Spells
+                }
             }
-            // end loop of LogLines
+
+            // 延長をマッチングする
+            if (spell.MatchDateTime > DateTime.MinValue)
+            {
+                var keywords = new string[] { spell.KeywordForExtendReplaced1, spell.KeywordForExtendReplaced2 };
+                var regexes = new Regex[] { spell.RegexForExtend1, spell.RegexForExtend2 };
+                var timeToExtends = new double[] { spell.RecastTimeExtending1, spell.RecastTimeExtending2 };
+
+                for (int i = 0; i < 2; i++)
+                {
+                    var keywordToExtend = keywords[i];
+                    var regexToExtend = regexes[i];
+                    var timeToExtend = timeToExtends[i];
+
+                    // マッチングする
+                    var matched = false;
+
+                    if (!spell.RegexEnabled ||
+                        regexToExtend == null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(keywordToExtend))
+                        {
+                            matched = logLine.ToUpper().Contains(keywordToExtend.ToUpper());
+                        }
+                    }
+                    else
+                    {
+                        var match = regexToExtend.Match(logLine);
+                        matched = match.Success;
+
+                        if (matched)
+                        {
+                            // targetをキャプチャーしている？
+                            if (!string.IsNullOrWhiteSpace(spell.TargetName))
+                            {
+                                var targetName = match.Groups["target"].Value;
+                                if (!string.IsNullOrWhiteSpace(targetName))
+                                {
+                                    // targetが当初のマッチングと一致するか確認する
+                                    if (spell.TargetName != targetName)
+                                    {
+                                        matched = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (!matched)
+                    {
+                        continue;
+                    }
+
+                    var now = DateTime.Now;
+
+                    // リキャストタイムを延長する
+                    var newSchedule = spell.CompleteScheduledTime.AddSeconds(timeToExtend);
+                    spell.BeforeDone = false;
+                    spell.UpdateDone = false;
+
+                    if (spell.ExtendBeyondOriginalRecastTime)
+                    {
+                        if (spell.UpperLimitOfExtension > 0)
+                        {
+                            var newDuration = (newSchedule - now).TotalSeconds;
+                            if (newDuration > (double)spell.UpperLimitOfExtension)
+                            {
+                                newSchedule = newSchedule.AddSeconds(
+                                    (newDuration - (double)spell.UpperLimitOfExtension) * -1);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var newDuration = (newSchedule - now).TotalSeconds;
+                        if (newDuration > (double)spell.RecastTime)
+                        {
+                            newSchedule = newSchedule.AddSeconds(
+                                (newDuration - (double)spell.RecastTime) * -1);
+                        }
+                    }
+
+                    spell.MatchDateTime = now;
+                    spell.CompleteScheduledTime = newSchedule;
+
+                    notifyNeeded = true;
+
+                    // 遅延サウンドタイマを開始(更新)する
+                    spell.StartOverSoundTimer();
+                    spell.StartBeforeSoundTimer();
+                    spell.StartTimeupSoundTimer();
+                }
+            }
+            // end if 延長マッチング
+
+            // ACT標準のSpellTimerに変更を通知する
+            if (notifyNeeded)
+            {
+                this.UpdateNormalSpellTimer(spell, false);
+                this.NotifyNormalSpellTimer(spell);
+            }
         }
 
         /// <summary>

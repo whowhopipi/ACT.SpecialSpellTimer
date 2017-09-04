@@ -61,6 +61,7 @@ namespace ACT.SpecialSpellTimer.Forms
             Settings.Default.TextBlurRate = (double)this.TextBlurRateNumericUpDown.Value;
 
             Settings.Default.RenderCPUOnly = this.RenderWithCPUOnlyCheckBox.Checked;
+            Settings.Default.SingleTaskLogMatching = this.SingleTaskLogMatchingCheckBox.Checked;
 
             // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&
@@ -245,6 +246,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TextBlurRateNumericUpDown.Value = (decimal)Settings.Default.TextBlurRate;
 
             this.RenderWithCPUOnlyCheckBox.Checked = Settings.Default.RenderCPUOnly;
+            this.SingleTaskLogMatchingCheckBox.Checked = Settings.Default.SingleTaskLogMatching;
 
             var sw1 = this.SaveLogCheckBox.Checked;
             this.SaveLogTextBox.Enabled = sw1;

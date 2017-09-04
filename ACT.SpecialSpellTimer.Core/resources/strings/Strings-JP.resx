@@ -1233,4 +1233,8 @@
     <value>一時的に表示する</value>
     <comment>Temporarily Display</comment>
   </data>
+  <data name="SingleTaskLogMatching" xml:space="preserve">
+    <value>ログのマッチングをシングルタスクにする</value>
+    <comment>Log matching with a single task</comment>
+  </data>
 </root>

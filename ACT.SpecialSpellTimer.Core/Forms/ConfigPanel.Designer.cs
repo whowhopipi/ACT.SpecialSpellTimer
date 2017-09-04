@@ -47,6 +47,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.panel5 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DetailPanelGroupBox = new System.Windows.Forms.GroupBox();
+            this.ExportBySpellPanelButton = new System.Windows.Forms.Button();
             this.FixedPositionSpellCheckBox = new System.Windows.Forms.CheckBox();
             this.HorizontalLayoutCheckBox = new System.Windows.Forms.CheckBox();
             this.label62 = new System.Windows.Forms.Label();
@@ -326,7 +327,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.ExportBySpellPanelButton = new System.Windows.Forms.Button();
+            this.label69 = new System.Windows.Forms.Label();
+            this.SingleTaskLogMatchingCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -564,6 +566,15 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DetailPanelGroupBox.Size = new System.Drawing.Size(312, 257);
             this.DetailPanelGroupBox.TabIndex = 6;
             this.DetailPanelGroupBox.TabStop = false;
+            // 
+            // ExportBySpellPanelButton
+            // 
+            this.ExportBySpellPanelButton.Location = new System.Drawing.Point(6, 179);
+            this.ExportBySpellPanelButton.Name = "ExportBySpellPanelButton";
+            this.ExportBySpellPanelButton.Size = new System.Drawing.Size(102, 25);
+            this.ExportBySpellPanelButton.TabIndex = 48;
+            this.ExportBySpellPanelButton.Text = "ExportButton";
+            this.ExportBySpellPanelButton.UseVisualStyleBackColor = true;
             // 
             // FixedPositionSpellCheckBox
             // 
@@ -2634,6 +2645,8 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.tabOverlayOptions.AutoScroll = true;
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.SingleTaskLogMatchingCheckBox);
+            this.tabOverlayOptions.Controls.Add(this.label69);
             this.tabOverlayOptions.Controls.Add(this.RenderWithCPUOnlyCheckBox);
             this.tabOverlayOptions.Controls.Add(this.label27);
             this.tabOverlayOptions.Controls.Add(this.label107);
@@ -3688,14 +3701,24 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // ExportBySpellPanelButton
+            // label69
             // 
-            this.ExportBySpellPanelButton.Location = new System.Drawing.Point(6, 179);
-            this.ExportBySpellPanelButton.Name = "ExportBySpellPanelButton";
-            this.ExportBySpellPanelButton.Size = new System.Drawing.Size(102, 25);
-            this.ExportBySpellPanelButton.TabIndex = 48;
-            this.ExportBySpellPanelButton.Text = "ExportButton";
-            this.ExportBySpellPanelButton.UseVisualStyleBackColor = true;
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(14, 445);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(125, 12);
+            this.label69.TabIndex = 71;
+            this.label69.Text = "SingleTaskLogMatching";
+            // 
+            // SingleTaskLogMatchingCheckBox
+            // 
+            this.SingleTaskLogMatchingCheckBox.AutoSize = true;
+            this.SingleTaskLogMatchingCheckBox.Location = new System.Drawing.Point(291, 444);
+            this.SingleTaskLogMatchingCheckBox.Name = "SingleTaskLogMatchingCheckBox";
+            this.SingleTaskLogMatchingCheckBox.Size = new System.Drawing.Size(64, 16);
+            this.SingleTaskLogMatchingCheckBox.TabIndex = 72;
+            this.SingleTaskLogMatchingCheckBox.Text = "Enabled";
+            this.SingleTaskLogMatchingCheckBox.UseVisualStyleBackColor = true;
             // 
             // ConfigPanel
             // 
@@ -4095,5 +4118,7 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.CheckBox TemporarilyDisplayTickerCheckBox;
         private System.Windows.Forms.CheckBox TemporarilyDisplaySpellCheckBox;
         private System.Windows.Forms.Button ExportBySpellPanelButton;
+        private System.Windows.Forms.CheckBox SingleTaskLogMatchingCheckBox;
+        private System.Windows.Forms.Label label69;
     }
 }

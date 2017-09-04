@@ -38,11 +38,6 @@ namespace ACT.SpecialSpellTimer.Models
             @"anoyetta\ACT\ACT.SpecialSpellTimer.Telops.xml");
 
         /// <summary>
-        /// テーブルの編集中？
-        /// </summary>
-        public bool IsEditingTable { get; set; }
-
-        /// <summary>
         /// 生のテーブル
         /// </summary>
         public List<OnePointTelop> Table => this.table;

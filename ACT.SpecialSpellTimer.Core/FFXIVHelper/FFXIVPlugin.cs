@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -458,6 +458,9 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             lock (this.combatantListLock)
             {
+                this.combatantList = null;
+                this.combatantDictionary = null;
+
                 this.combatantList = newList;
                 this.combatantDictionary = newDictionary;
             }

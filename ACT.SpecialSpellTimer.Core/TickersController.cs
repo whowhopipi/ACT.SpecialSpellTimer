@@ -44,134 +44,156 @@ namespace ACT.SpecialSpellTimer
         {
             foreach (var log in logLines)
             {
-                telops.AsParallel().ForAll(telop =>
+                if (Settings.Default.SingleTaskLogMatching)
                 {
-                    var matched = false;
-
-                    var regex = telop.Regex;
-                    var regexToHide = telop.RegexToHide;
-
-                    // 開始条件を確認する
-                    if (ConditionUtility.CheckConditionsForTelop(telop))
+                    foreach (var telop in telops)
                     {
-                        // 通常マッチ
-                        if (regex == null)
-                        {
-                            var keyword = telop.KeywordReplaced;
-                            if (!string.IsNullOrWhiteSpace(keyword))
-                            {
-                                if (log.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
-
-                                    // PC名を置換する
-                                    messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
-
-                                    if (!telop.AddMessageEnabled)
-                                    {
-                                        telop.MessageReplaced = messageReplaced;
-                                    }
-                                    else
-                                    {
-                                        telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
-                                            messageReplaced :
-                                            Environment.NewLine + messageReplaced;
-                                    }
-
-                                    telop.MatchDateTime = DateTime.Now;
-                                    telop.Delayed = false;
-                                    telop.MatchedLog = log;
-                                    telop.ForceHide = false;
-
-                                    SoundController.Instance.Play(telop.MatchSound);
-                                    SoundController.Instance.Play(telop.MatchTextToSpeak);
-
-                                    matched = true;
-                                }
-                            }
-                        }
-
-                        // 正規表現マッチ
-                        else
-                        {
-                            var match = regex.Match(log);
-                            if (match.Success)
-                            {
-                                var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
-                                messageReplaced = match.Result(messageReplaced);
-
-                                // PC名を置換する
-                                messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
-
-                                if (!telop.AddMessageEnabled)
-                                {
-                                    telop.MessageReplaced = messageReplaced;
-                                }
-                                else
-                                {
-                                    telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
-                                        messageReplaced :
-                                        Environment.NewLine + messageReplaced;
-                                }
-
-                                telop.MatchDateTime = DateTime.Now;
-                                telop.Delayed = false;
-                                telop.MatchedLog = log;
-                                telop.ForceHide = false;
-
-                                SoundController.Instance.Play(telop.MatchSound);
-                                if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
-                                {
-                                    var tts = match.Result(telop.MatchTextToSpeak);
-                                    SoundController.Instance.Play(tts);
-                                }
-
-                                matched = true;
-                            }
-                        }
+                        this.MatchCore(telop, log);
                     }
-
-                    if (matched)
+                }
+                else
+                {
+                    telops.AsParallel().ForAll(telop =>
                     {
-                        // ディレイサウンドをスタートさせる
-                        telop.StartDelayedSoundTimer();
+                        this.MatchCore(telop, log);
+                    });
+                }
+            }
+        }
 
-                        SpellsController.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellsController.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
+        /// <summary>
+        /// ログ1行1テロップに対して判定する
+        /// </summary>
+        /// <param name="telop">テロップ</param>
+        /// <param name="log">ログ</param>
+        private void MatchCore(
+            OnePointTelop telop,
+            string log)
+        {
+            var matched = false;
 
-                        return;
-                    }
+            var regex = telop.Regex;
+            var regexToHide = telop.RegexToHide;
 
-                    // 通常マッチ(強制非表示)
-                    if (regexToHide == null)
+            // 開始条件を確認する
+            if (ConditionUtility.CheckConditionsForTelop(telop))
+            {
+                // 通常マッチ
+                if (regex == null)
+                {
+                    var keyword = telop.KeywordReplaced;
+                    if (!string.IsNullOrWhiteSpace(keyword))
                     {
-                        var keyword = telop.KeywordToHideReplaced;
-                        if (!string.IsNullOrWhiteSpace(keyword))
+                        if (log.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                         {
-                            if (log.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                            var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+
+                            // PC名を置換する
+                            messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
+
+                            if (!telop.AddMessageEnabled)
                             {
-                                telop.ForceHide = true;
-                                matched = true;
+                                telop.MessageReplaced = messageReplaced;
                             }
-                        }
-                    }
+                            else
+                            {
+                                telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
+                                    messageReplaced :
+                                    Environment.NewLine + messageReplaced;
+                            }
 
-                    // 正規表現マッチ(強制非表示)
-                    else
-                    {
-                        if (regexToHide.IsMatch(log))
-                        {
-                            telop.ForceHide = true;
+                            telop.ForceHide = false;
+                            telop.Delayed = false;
+                            telop.MatchedLog = log;
+                            telop.MatchDateTime = DateTime.Now;
+
+                            SoundController.Instance.Play(telop.MatchSound);
+                            SoundController.Instance.Play(telop.MatchTextToSpeak);
+
                             matched = true;
                         }
                     }
+                }
 
-                    if (matched)
+                // 正規表現マッチ
+                else
+                {
+                    var match = regex.Match(log);
+                    if (match.Success)
                     {
-                        SpellsController.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
-                        SpellsController.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
+                        var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
+                        messageReplaced = match.Result(messageReplaced);
+
+                        // PC名を置換する
+                        messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
+
+                        if (!telop.AddMessageEnabled)
+                        {
+                            telop.MessageReplaced = messageReplaced;
+                        }
+                        else
+                        {
+                            telop.MessageReplaced += string.IsNullOrWhiteSpace(telop.MessageReplaced) ?
+                                messageReplaced :
+                                Environment.NewLine + messageReplaced;
+                        }
+
+                        telop.ForceHide = false;
+                        telop.Delayed = false;
+                        telop.MatchedLog = log;
+                        telop.MatchDateTime = DateTime.Now;
+
+                        SoundController.Instance.Play(telop.MatchSound);
+                        if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
+                        {
+                            var tts = match.Result(telop.MatchTextToSpeak);
+                            SoundController.Instance.Play(tts);
+                        }
+
+                        matched = true;
                     }
-                });   // end loop telops
+                }
+            }
+
+            if (matched)
+            {
+                // ディレイサウンドをスタートさせる
+                telop.StartDelayedSoundTimer();
+
+                SpellsController.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                SpellsController.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
+
+                return;
+            }
+
+            // 通常マッチ(強制非表示)
+            if (regexToHide == null)
+            {
+                var keyword = telop.KeywordToHideReplaced;
+                if (!string.IsNullOrWhiteSpace(keyword))
+                {
+                    if (log.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                    {
+                        telop.ForceHide = true;
+                        matched = true;
+                    }
+                }
+            }
+
+            // 正規表現マッチ(強制非表示)
+            else
+            {
+                if (regexToHide.IsMatch(log))
+                {
+                    telop.ForceHide = true;
+                    matched = true;
+                }
+            }
+
+            if (matched)
+            {
+                SpellsController.Instance.UpdateNormalSpellTimerForTelop(telop, telop.ForceHide);
+                SpellsController.Instance.NotifyNormalSpellTimerForTelop(telop.Title);
             }
         }
 

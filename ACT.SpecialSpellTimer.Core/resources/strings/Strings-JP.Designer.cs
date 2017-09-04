@@ -2059,6 +2059,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   ログのマッチングをシングルタスクにする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SingleTaskLogMatching {
+            get {
+                return ResourceManager.GetString("SingleTaskLogMatching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   召喚士 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string SMN {
