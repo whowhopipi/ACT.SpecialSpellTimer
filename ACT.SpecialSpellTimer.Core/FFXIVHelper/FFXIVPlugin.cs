@@ -422,10 +422,12 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 return;
             }
 
-            var newList = new List<Combatant>();
-            var newDictionary = new Dictionary<uint, Combatant>();
-
             dynamic list = this.pluginScancombat.GetCombatantList();
+            var count = (int)list.Count;
+
+            var newList = new List<Combatant>(count);
+            var newDictionary = new Dictionary<uint, Combatant>(count);
+
             foreach (dynamic item in list.ToArray())
             {
                 if (item == null)

@@ -52,6 +52,68 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Begin / End
 
+
+        private void DoWork(DoWorkEventArgs arg)
+        {
+            while (true)
+            {
+                Thread.Sleep(this.WorkerInterval);
+
+                try
+                {
+                    if (this.worker.CancellationPending)
+                    {
+                        Logger.Write("end spell compiler.");
+                        arg.Cancel = true;
+                        return;
+                    }
+
+                    this.RefreshCombatants();
+
+                    var isPlayerChanged = this.IsPlayerChanged();
+                    var isPartyChanged = this.IsPartyChanged();
+                    var isZoneChanged = this.IsZoneChanged();
+
+                    if (isZoneChanged)
+                    {
+                        this.RefreshPetPlaceholder();
+                    }
+
+                    if (isPlayerChanged)
+                    {
+                        this.RefreshPlayerPlacceholder();
+                    }
+
+                    if (isPartyChanged)
+                    {
+                        this.RefreshPartyPlaceholders();
+                        this.RefreshPetPlaceholder();
+                    }
+
+                    if (isPlayerChanged ||
+                        isPartyChanged ||
+                        isZoneChanged)
+                    {
+                        this.RecompileSpells();
+                        this.RecompileTickers();
+
+                        // 不要なWindowを閉じる
+                        if (!Settings.Default.OverlayForceVisible)
+                        {
+                            TickersController.Instance.GarbageWindows(this.TickerList);
+                            SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("table compiler error:", ex);
+                }
+            }
+        }
+
+        #region Compilers
+
         private volatile List<Combatant> partyList = new List<Combatant>();
 
         private volatile Combatant player = new Combatant();
@@ -159,7 +221,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            query.AsParallel().ForAll(spell =>
+            foreach(var spell in query)
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
@@ -187,7 +249,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexForExtend2 = r3.Regex;
                     spell.KeywordForExtendReplaced2 = r3.RegexPattern;
                 }
-            });
+            }
 
             lock (this.spellListLocker)
             {
@@ -258,7 +320,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            query.AsParallel().ForAll(spell =>
+            foreach(var spell in query)
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
@@ -280,7 +342,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexToHide = r2.Regex;
                     spell.RegexPatternToHide = r2.RegexPattern;
                 }
-            });
+            }
 
             lock (this.tickerListLocker)
             {
@@ -336,65 +398,6 @@ namespace ACT.SpecialSpellTimer.Models
                 }
 
                 this.CompileTickers();
-            }
-        }
-
-        private void DoWork(DoWorkEventArgs arg)
-        {
-            while (true)
-            {
-                Thread.Sleep(this.WorkerInterval);
-
-                try
-                {
-                    if (this.worker.CancellationPending)
-                    {
-                        Logger.Write("end spell compiler.");
-                        arg.Cancel = true;
-                        return;
-                    }
-
-                    this.RefreshCombatants();
-
-                    var isPlayerChanged = this.IsPlayerChanged();
-                    var isPartyChanged = this.IsPartyChanged();
-                    var isZoneChanged = this.IsZoneChanged();
-
-                    if (isZoneChanged)
-                    {
-                        this.RefreshPetPlaceholder();
-                    }
-
-                    if (isPlayerChanged)
-                    {
-                        this.RefreshPlayerPlacceholder();
-                    }
-
-                    if (isPartyChanged)
-                    {
-                        this.RefreshPartyPlaceholders();
-                        this.RefreshPetPlaceholder();
-                    }
-
-                    if (isPlayerChanged ||
-                        isPartyChanged ||
-                        isZoneChanged)
-                    {
-                        this.RecompileSpells();
-                        this.RecompileTickers();
-
-                        // 不要なWindowを閉じる
-                        if (!Settings.Default.OverlayForceVisible)
-                        {
-                            TickersController.Instance.GarbageWindows(this.TickerList);
-                            SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write("table compiler error:", ex);
-                }
             }
         }
 
@@ -465,28 +468,7 @@ namespace ACT.SpecialSpellTimer.Models
             return new RegexEx(newRegex, newPattern);
         }
 
-        private void RefreshCombatants()
-        {
-            var player = FFXIVPlugin.Instance.GetPlayer();
-            if (player != null)
-            {
-                this.player = player;
-            }
-
-            var party = FFXIVPlugin.Instance.GetPartyList();
-            if (party != null)
-            {
-                var newList = new List<Combatant>(party);
-
-                if (newList.Count < 1 &&
-                    !string.IsNullOrEmpty(this.player.Name))
-                {
-                    newList.Add(this.player);
-                }
-
-                this.partyList = newList;
-            }
-        }
+        #endregion
 
         #region 条件の変更を判定するメソッド群
 
@@ -556,6 +538,29 @@ namespace ACT.SpecialSpellTimer.Models
             this.previousZoneID = zoneID;
 
             return r;
+        }
+
+        private void RefreshCombatants()
+        {
+            var player = FFXIVPlugin.Instance.GetPlayer();
+            if (player != null)
+            {
+                this.player = player;
+            }
+
+            var party = FFXIVPlugin.Instance.GetPartyList();
+            if (party != null)
+            {
+                var newList = new List<Combatant>(party);
+
+                if (newList.Count < 1 &&
+                    !string.IsNullOrEmpty(this.player.Name))
+                {
+                    newList.Add(this.player);
+                }
+
+                this.partyList = newList;
+            }
         }
 
         #endregion 条件の変更を判定するメソッド群
