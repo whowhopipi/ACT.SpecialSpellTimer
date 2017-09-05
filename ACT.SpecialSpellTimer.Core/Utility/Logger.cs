@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -13,9 +13,9 @@ namespace ACT.SpecialSpellTimer.Utility
     public static class Logger
     {
         private static readonly StringBuilder buffer = new StringBuilder();
-        private static readonly TimeSpan interval = TimeSpan.FromSeconds(5);
+        private static readonly double interval = 5000;
         private static readonly object lockObject = new object();
-        private static BackgroundWorker worker;
+        private static System.Timers.Timer worker;
 
         private static string LogFile => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -80,32 +80,22 @@ namespace ACT.SpecialSpellTimer.Utility
                 buffer?.Clear();
             }
 
-            worker = new BackgroundWorker();
-            worker.WorkerSupportsCancellation = true;
-            worker.DoWork += (s, e) =>
+            worker = new System.Timers.Timer();
+            worker.Interval = interval;
+            worker.AutoReset = true;
+            worker.Elapsed += (s, e) =>
             {
-                while (true)
-                {
-                    if (worker.CancellationPending)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    Flush();
-
-                    Thread.Sleep(interval);
-                }
+                Flush();
             };
 
-            worker.RunWorkerAsync();
+            worker.Start();
         }
 
         public static void End()
         {
             try
             {
-                worker?.Cancel();
+                worker?.Stop();
                 Flush();
             }
             catch (Exception)
@@ -121,22 +111,24 @@ namespace ACT.SpecialSpellTimer.Utility
                 Directory.CreateDirectory(directoryName);
             }
 
+            if (buffer == null ||
+                buffer.Length <= 0)
+            {
+                return;
+            }
+
             lock (lockObject)
             {
                 try
                 {
-                    if (buffer == null ||
-                        buffer.Length <= 0)
-                    {
-                        return;
-                    }
-
                     File.AppendAllText(
                         LogFile,
                         buffer.ToString(),
                         new UTF8Encoding(false));
 
-                    if (ConfigPanelLog.Instance != null)
+                    if (ConfigPanelLog.Instance != null &&
+                        !ConfigPanelLog.Instance.IsDisposed &&
+                        ConfigPanelLog.Instance.IsHandleCreated)
                     {
                         ConfigPanelLog.Instance.AppendLog(buffer.ToString());
                     }
