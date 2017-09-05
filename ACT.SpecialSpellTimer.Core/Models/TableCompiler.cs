@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -25,8 +24,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region Worker
 
-        private readonly TimeSpan WorkerInterval = TimeSpan.FromSeconds(5);
-        private BackgroundWorker worker;
+        private readonly double WorkerInterval = 3000;
+        private System.Timers.Timer worker;
 
         #endregion Worker
 
@@ -37,78 +36,68 @@ namespace ACT.SpecialSpellTimer.Models
             this.CompileSpells();
             this.CompileTickers();
 
-            this.worker = new BackgroundWorker();
-            this.worker.WorkerSupportsCancellation = true;
-            this.worker.DoWork += (s, e) => this.DoWork(e);
-            this.worker.RunWorkerAsync();
+            this.worker = new System.Timers.Timer();
+            this.worker.AutoReset = true;
+            this.worker.Interval = WorkerInterval;
+            this.worker.Elapsed += (s, e) => this.DoWork();
+            this.worker.Start();
 
             Logger.Write("start spell compiler.");
         }
 
         public void End()
         {
-            this.worker?.Cancel();
+            this.worker?.Stop();
+            this.worker?.Dispose();
+            this.worker = null;
         }
 
         #endregion Begin / End
 
-
-        private void DoWork(DoWorkEventArgs arg)
+        private void DoWork()
         {
-            while (true)
+            try
             {
-                Thread.Sleep(this.WorkerInterval);
+                this.RefreshCombatants();
 
-                try
+                var isPlayerChanged = this.IsPlayerChanged();
+                var isPartyChanged = this.IsPartyChanged();
+                var isZoneChanged = this.IsZoneChanged();
+
+                if (isZoneChanged)
                 {
-                    if (this.worker.CancellationPending)
+                    this.RefreshPetPlaceholder();
+                }
+
+                if (isPlayerChanged)
+                {
+                    this.RefreshPlayerPlacceholder();
+                }
+
+                if (isPartyChanged)
+                {
+                    this.RefreshPartyPlaceholders();
+                    this.RefreshPetPlaceholder();
+                }
+
+                if (isPlayerChanged ||
+                    isPartyChanged ||
+                    isZoneChanged)
+                {
+                    this.RecompileSpells();
+                    this.RecompileTickers();
+
+                    // 不要なWindowを閉じる
+                    if (!Settings.Default.OverlayForceVisible)
                     {
-                        Logger.Write("end spell compiler.");
-                        arg.Cancel = true;
-                        return;
-                    }
-
-                    this.RefreshCombatants();
-
-                    var isPlayerChanged = this.IsPlayerChanged();
-                    var isPartyChanged = this.IsPartyChanged();
-                    var isZoneChanged = this.IsZoneChanged();
-
-                    if (isZoneChanged)
-                    {
-                        this.RefreshPetPlaceholder();
-                    }
-
-                    if (isPlayerChanged)
-                    {
-                        this.RefreshPlayerPlacceholder();
-                    }
-
-                    if (isPartyChanged)
-                    {
-                        this.RefreshPartyPlaceholders();
-                        this.RefreshPetPlaceholder();
-                    }
-
-                    if (isPlayerChanged ||
-                        isPartyChanged ||
-                        isZoneChanged)
-                    {
-                        this.RecompileSpells();
-                        this.RecompileTickers();
-
-                        // 不要なWindowを閉じる
-                        if (!Settings.Default.OverlayForceVisible)
-                        {
-                            TickersController.Instance.GarbageWindows(this.TickerList);
-                            SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
-                        }
+                        TickersController.Instance.GarbageWindows(this.TickerList);
+                        SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Logger.Write("table compiler error:", ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write("table compiler error:", ex);
             }
         }
 
@@ -221,7 +210,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach(var spell in query)
+            foreach (var spell in query)
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
@@ -320,7 +309,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach(var spell in query)
+            foreach (var spell in query)
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
@@ -468,7 +457,7 @@ namespace ACT.SpecialSpellTimer.Models
             return new RegexEx(newRegex, newPattern);
         }
 
-        #endregion
+        #endregion Compilers
 
         #region 条件の変更を判定するメソッド群
 

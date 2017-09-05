@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -125,7 +124,7 @@ namespace ACT.SpecialSpellTimer
         #endregion Singleton
 
         private static readonly Regex ActionRegex = new Regex(
-            @"\[.+?\] 00:2[89a]..:(?<actor>.+?)の「(?<skill>.+?)」$",
+            @"\[.+?\] 00:....:(?<actor>.+?)の「(?<skill>.+?)」$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         private static readonly Regex AddedRegex = new Regex(
@@ -133,7 +132,7 @@ namespace ACT.SpecialSpellTimer
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         private static readonly Regex CastRegex = new Regex(
-            @"\[.+?\] 00:2[89a]..:(?<actor>.+?)は「(?<skill>.+?)」(を唱えた。|の構え。)$",
+            @"\[.+?\] 00:....:(?<actor>.+?)は「(?<skill>.+?)」(を唱えた。|の構え。)$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         private static readonly Regex HPRateRegex = new Regex(
@@ -171,7 +170,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログ格納スレッド
         /// </summary>
-        private BackgroundWorker storeLogWorker;
+        private System.Timers.Timer storeLogWorker;
 
         /// <summary>
         /// 戦闘ログのリスト
@@ -269,7 +268,9 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void EndPoller()
         {
-            this.storeLogWorker?.Cancel();
+            this.storeLogWorker?.Stop();
+            this.storeLogWorker?.Dispose();
+            this.storeLogWorker = null;
             this.ClearLogInfoQueue();
         }
 
@@ -296,30 +297,15 @@ namespace ACT.SpecialSpellTimer
         {
             this.ClearLogInfoQueue();
 
-            this.storeLogWorker = new BackgroundWorker();
-            this.storeLogWorker.WorkerSupportsCancellation = true;
-            this.storeLogWorker.DoWork += (s, e) =>
+            this.storeLogWorker = new System.Timers.Timer();
+            this.storeLogWorker.AutoReset = true;
+            this.storeLogWorker.Interval = 1000;
+            this.storeLogWorker.Elapsed += (s, e) =>
             {
-                Thread.Sleep(TimeSpan.FromSeconds(1));
-
-                try
-                {
-                    Logger.Write("start log poll for analyze.");
-                    this.StoreLogPoller(e);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Write(
-                        "Catch exception at Store log for analyze.\n" +
-                        ex.ToString());
-                }
-                finally
-                {
-                    Logger.Write("end log poll for analyze.");
-                }
+                this.StoreLogPoller();
             };
 
-            this.storeLogWorker.RunWorkerAsync();
+            this.storeLogWorker.Start();
         }
 
         /// <summary>
@@ -603,8 +589,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログを格納するスレッド
         /// </summary>
-        private void StoreLogPoller(
-            DoWorkEventArgs args)
+        private void StoreLogPoller()
         {
             var analyzeLogLine = new Func<string, IReadOnlyCollection<AnalyzeKeyword>, AnalyzeKeywordCategory>(
                 (log, keywords) =>
@@ -621,68 +606,46 @@ namespace ACT.SpecialSpellTimer
                         AnalyzeKeywordCategory.Unknown;
                 });
 
-            while (true)
+            while (!this.logInfoQueue.IsEmpty)
             {
-                try
+                Thread.Sleep(0);
+
+                this.logInfoQueue.TryDequeue(out LogLineEventArgs log);
+
+                if (log == null)
                 {
-                    if (this.storeLogWorker.CancellationPending)
-                    {
-                        args.Cancel = true;
-                        return;
-                    }
-
-                    while (!this.logInfoQueue.IsEmpty)
-                    {
-                        Thread.Sleep(0);
-
-                        this.logInfoQueue.TryDequeue(out LogLineEventArgs log);
-
-                        if (log == null)
-                        {
-                            continue;
-                        }
-
-                        // ログを分類する
-                        var category = analyzeLogLine(log.logLine, Keywords);
-                        switch (category)
-                        {
-                            case AnalyzeKeywordCategory.Pet:
-                                break;
-
-                            case AnalyzeKeywordCategory.Cast:
-                                this.StoreCastLog(log);
-                                break;
-
-                            case AnalyzeKeywordCategory.CastStartsUsing:
-                                this.StoreCastStartsUsingLog(log);
-                                break;
-
-                            case AnalyzeKeywordCategory.Action:
-                                this.StoreActionLog(log);
-                                break;
-
-                            case AnalyzeKeywordCategory.HPRate:
-                                this.StoreHPRateLog(log);
-                                break;
-
-                            case AnalyzeKeywordCategory.Added:
-                                this.StoreAddedLog(log);
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
+                    continue;
                 }
-                catch (Exception ex)
+
+                // ログを分類する
+                var category = analyzeLogLine(log.logLine, Keywords);
+                switch (category)
                 {
-                    Logger.Write(
-                        "Catch exception at Store log poller for analyze.\n" +
-                        ex.ToString());
-                }
-                finally
-                {
-                    Thread.Sleep((int)Settings.Default.LogPollSleepInterval);
+                    case AnalyzeKeywordCategory.Pet:
+                        break;
+
+                    case AnalyzeKeywordCategory.Cast:
+                        this.StoreCastLog(log);
+                        break;
+
+                    case AnalyzeKeywordCategory.CastStartsUsing:
+                        this.StoreCastStartsUsingLog(log);
+                        break;
+
+                    case AnalyzeKeywordCategory.Action:
+                        this.StoreActionLog(log);
+                        break;
+
+                    case AnalyzeKeywordCategory.HPRate:
+                        this.StoreHPRateLog(log);
+                        break;
+
+                    case AnalyzeKeywordCategory.Added:
+                        this.StoreAddedLog(log);
+                        break;
+
+                    default:
+                        break;
                 }
             }
         }

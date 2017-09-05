@@ -43,7 +43,7 @@ namespace ACT.SpecialSpellTimer
 
         #region Thread
 
-        private ThreadWorker backgroudWorker;
+        private System.Timers.Timer backgroudWorker;
         private ThreadWorker detectLogsWorker;
         private volatile bool isOver;
         private DispatcherTimer refreshSpellOverlaysWorker;
@@ -105,15 +105,16 @@ namespace ACT.SpecialSpellTimer
             nameof(this.detectLogsWorker));
 
             // Backgroudスレッドを開始する
-            this.backgroudWorker = new ThreadWorker(() =>
+            this.backgroudWorker = new System.Timers.Timer();
+            this.backgroudWorker.AutoReset = true;
+            this.backgroudWorker.Interval = 5000;
+            this.backgroudWorker.Elapsed += (s, e) =>
             {
                 this.BackgroundCore();
-            },
-            5000,
-            nameof(this.backgroudWorker));
+            };
 
             this.detectLogsWorker.Run();
-            this.backgroudWorker.Run();
+            this.backgroudWorker.Start();
         }
 
         public void BeginOverlaysThread()
@@ -173,7 +174,9 @@ namespace ACT.SpecialSpellTimer
             this.refreshSpellOverlaysWorker?.Stop();
             this.refreshTickerOverlaysWorker?.Stop();
             this.detectLogsWorker?.Abort();
-            this.backgroudWorker?.Abort();
+            this.backgroudWorker?.Stop();
+            this.backgroudWorker?.Dispose();
+            this.backgroudWorker = null;
 
             // ログバッファを開放する
             if (this.LogBuffer != null)

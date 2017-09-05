@@ -1,11 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.Threading;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -19,12 +16,12 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
-        private readonly TimeSpan FlushInterval = TimeSpan.FromSeconds(10);
+        private readonly double FlushInterval = 10000;
         private readonly Encoding UTF8Encoding = new UTF8Encoding(false);
 
         private volatile StringBuilder logBuffer = new StringBuilder();
 
-        private BackgroundWorker worker;
+        private System.Timers.Timer worker;
 
         private string OutputDirectory => Settings.Default.SaveLogDirectory;
 
@@ -88,36 +85,19 @@ namespace ACT.SpecialSpellTimer
                 this.logBuffer.Clear();
             }
 
-            this.worker = new BackgroundWorker();
-            this.worker.WorkerSupportsCancellation = true;
-            this.worker.DoWork += (s, e) =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(this.FlushInterval);
+            this.worker = new System.Timers.Timer();
+            this.worker.AutoReset = true;
+            this.worker.Interval = FlushInterval;
+            this.worker.Elapsed += (s, e) => this.Flush();
 
-                    try
-                    {
-                        if (this.worker.CancellationPending)
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        this.Flush();
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-            };
-
-            this.worker.RunWorkerAsync();
+            this.worker.Start();
         }
 
         public void End()
         {
-            this.worker?.Cancel();
+            this.worker?.Stop();
+            this.worker?.Dispose();
+            this.worker = null;
             this.Flush();
         }
 

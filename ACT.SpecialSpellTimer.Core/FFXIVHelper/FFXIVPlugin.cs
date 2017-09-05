@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -128,25 +127,29 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #region Start/End
 
-        private ThreadWorker attachFFXIVPluginWorker;
+        private System.Timers.Timer attachFFXIVPluginWorker;
         private ThreadWorker scanFFXIVWorker;
 
         public void End()
         {
-            this.attachFFXIVPluginWorker?.Abort();
             this.scanFFXIVWorker?.Abort();
+
+            this.attachFFXIVPluginWorker?.Stop();
+            this.attachFFXIVPluginWorker.Dispose();
+            this.attachFFXIVPluginWorker = null;
         }
 
         public void Start()
         {
-            this.attachFFXIVPluginWorker = new ThreadWorker(() =>
+            this.attachFFXIVPluginWorker = new System.Timers.Timer();
+            this.attachFFXIVPluginWorker.AutoReset = true;
+            this.attachFFXIVPluginWorker.Interval = 5000;
+            this.attachFFXIVPluginWorker.Elapsed += (s, e) =>
             {
                 this.Attach();
                 this.LoadZoneList();
                 this.LoadSkillToFFXIVPlugin();
-            },
-            5000,
-            nameof(this.attachFFXIVPluginWorker));
+            };
 
             this.scanFFXIVWorker = new ThreadWorker(() =>
             {
@@ -156,14 +159,13 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                     return;
                 }
 
-                // CombatantとパーティIDリストを更新する
                 this.RefreshCombatantList();
                 this.RefreshCurrentPartyIDList();
             },
             Settings.Default.LogPollSleepInterval,
             nameof(this.attachFFXIVPluginWorker));
 
-            this.attachFFXIVPluginWorker.Run();
+            this.attachFFXIVPluginWorker.Start();
             this.scanFFXIVWorker.Run();
 
             // XIVDBをロードする
@@ -806,7 +808,6 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
         }
 
-
         private volatile bool loadedSkillToFFXIVPlugin = false;
 
         /// <summary>
@@ -831,7 +832,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             var t = (this.plugin as object).GetType().Module.Assembly.GetType("FFXIV_ACT_Plugin.Resources.SkillList");
             var obj = t.GetField(
-                "_instance", 
+                "_instance",
                 BindingFlags.NonPublic | BindingFlags.Static)
                 .GetValue(null);
 

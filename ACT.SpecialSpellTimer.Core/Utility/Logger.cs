@@ -1,8 +1,6 @@
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.Threading;
 using ACT.SpecialSpellTimer.Forms;
 
 namespace ACT.SpecialSpellTimer.Utility
@@ -83,11 +81,7 @@ namespace ACT.SpecialSpellTimer.Utility
             worker = new System.Timers.Timer();
             worker.Interval = interval;
             worker.AutoReset = true;
-            worker.Elapsed += (s, e) =>
-            {
-                Flush();
-            };
-
+            worker.Elapsed += (s, e) => Flush();
             worker.Start();
         }
 
@@ -96,6 +90,8 @@ namespace ACT.SpecialSpellTimer.Utility
             try
             {
                 worker?.Stop();
+                worker?.Dispose();
+                worker = null;
                 Flush();
             }
             catch (Exception)
