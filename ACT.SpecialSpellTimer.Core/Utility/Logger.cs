@@ -122,12 +122,7 @@ namespace ACT.SpecialSpellTimer.Utility
                         buffer.ToString(),
                         new UTF8Encoding(false));
 
-                    if (ConfigPanelLog.Instance != null &&
-                        !ConfigPanelLog.Instance.IsDisposed &&
-                        ConfigPanelLog.Instance.IsHandleCreated)
-                    {
-                        ConfigPanelLog.Instance.AppendLog(buffer.ToString());
-                    }
+                    ConfigPanelLog.Instance?.AppendLog(buffer.ToString());
 
                     buffer.Clear();
                 }
