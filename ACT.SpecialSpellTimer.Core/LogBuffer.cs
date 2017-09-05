@@ -2,15 +2,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -29,17 +28,18 @@ namespace ACT.SpecialSpellTimer
         /// ツールチップのサフィックス
         /// </summary>
         /// <remarks>
-        /// ツールチップは計4キャラで構成されるが先頭1文字が可変で残り3文字が固定となっている</remarks>
+        /// ツールチップは計4charsで構成されるが先頭1文字目が可変で残り3文字が固定となっている</remarks>
         private const string TooltipSuffix = @"\u0001\u0001\uFFFD";
 
+#if false
         /// <summary>
         /// ツールチップ文字を除去するための正規表現
         /// </summary>
         private static readonly Regex TooltipCharsRegex =
             new Regex($".{TooltipSuffix}",
                 RegexOptions.Compiled);
-
-        /*
+#endif
+#if false
         // 方式を変えたため封印
         /// <summary>
         /// Unknownスキルを補完するための正規表現
@@ -47,7 +47,7 @@ namespace ACT.SpecialSpellTimer
         private static readonly Regex UnknownSkillRegex =
             new Regex(@"(?<UnknownSkill>Unknown_(?<UnknownSkillID>\w\w\w\w))",
                 RegexOptions.Compiled);
-        */
+#endif
 
         /// <summary>
         /// 内部バッファ
@@ -76,6 +76,7 @@ namespace ACT.SpecialSpellTimer
             this.AddOnBeforeLogLineRead();
 
             // LogLineReadイベントを登録する
+            ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
             // 生ログの書き出しバッファを開始する
@@ -344,33 +345,25 @@ namespace ACT.SpecialSpellTimer
 #endif
 
                 // FFXIVでの使用？
-                if (!Settings.Default.UseOtherThanFFXIV)
+                if (!Settings.Default.UseOtherThanFFXIV &&
+                    !summoned &&
+                    palyerIsSummoner)
                 {
-                    if (!summoned)
-                    {
-                        // ペットIDのCacheを更新する
-                        if (palyerIsSummoner)
-                        {
-                            if (logLine.Contains(player.Name + "の「サモン") ||
-                                logLine.Contains(player.NameFI + "の「サモン") ||
-                                logLine.Contains(player.NameIF + "の「サモン") ||
-                                logLine.Contains(player.NameII + "の「サモン") ||
-                                logLine.Contains("You cast Summon"))
-                            {
-                                summoned = true;
-                            }
-                        }
-                    }
+                    summoned = isSummoned(logLine);
                 }
 
                 // パーティに変化があるか？（対DQX）
-                var r = DQXUtility.IsPartyChanged(logLine);
                 if (!partyChangedAtDQX)
                 {
-                    partyChangedAtDQX = r;
+                    partyChangedAtDQX = DQXUtility.IsPartyChanged(logLine);
                 }
 
                 list.Add(logLine);
+            }
+
+            if (summoned)
+            {
+                TableCompiler.Instance.RefreshPetPlaceholder();
             }
 
             if (partyChangedAtDQX)
@@ -382,11 +375,6 @@ namespace ACT.SpecialSpellTimer
                 });
             }
 
-            if (summoned)
-            {
-                TableCompiler.Instance.RefreshPetPlaceholder();
-            }
-
             // ログファイルに出力する
             if (Settings.Default.SaveLogEnabled)
             {
@@ -396,7 +384,43 @@ namespace ACT.SpecialSpellTimer
                 });
             }
 
+            // リストを返す
             return list;
+
+            // 召喚したか？
+            bool isSummoned(string logLine)
+            {
+                var r = false;
+
+                if (logLine.Contains("You cast Summon", StringComparison.OrdinalIgnoreCase))
+                {
+                    r = true;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(player.Name))
+                    {
+                        r = logLine.Contains(player.Name + "の「サモン", StringComparison.OrdinalIgnoreCase);
+                    }
+
+                    if (!string.IsNullOrEmpty(player.NameFI))
+                    {
+                        r = logLine.Contains(player.NameFI + "の「サモン", StringComparison.OrdinalIgnoreCase);
+                    }
+
+                    if (!string.IsNullOrEmpty(player.NameIF))
+                    {
+                        r = logLine.Contains(player.NameIF + "の「サモン", StringComparison.OrdinalIgnoreCase);
+                    }
+
+                    if (!string.IsNullOrEmpty(player.NameII))
+                    {
+                        r = logLine.Contains(player.NameII + "の「サモン", StringComparison.OrdinalIgnoreCase);
+                    }
+                }
+
+                return r;
+            }
         }
 
         #endregion ログ処理

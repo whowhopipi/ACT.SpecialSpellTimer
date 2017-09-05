@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +17,8 @@ namespace ACT.SpecialSpellTimer.Forms
 
         private static ConfigPanelLog instance = new ConfigPanelLog();
 
-        public static ConfigPanelLog Instance => instance;
+        public static ConfigPanelLog Instance =>
+            !instance.IsDisposed ? instance : (instance = new ConfigPanelLog());
 
         #endregion Singleton
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +17,8 @@ namespace ACT.SpecialSpellTimer.Forms
 
         private static ConfigPanelNameStyle instance = new ConfigPanelNameStyle();
 
-        public static ConfigPanelNameStyle Instance => instance;
+        public static ConfigPanelNameStyle Instance =>
+            !instance.IsDisposed ? instance : (instance = new ConfigPanelNameStyle());
 
         #endregion Singleton
 

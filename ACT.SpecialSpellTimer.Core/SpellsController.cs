@@ -9,6 +9,7 @@ using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -74,8 +75,7 @@ namespace ACT.SpecialSpellTimer
                         }
 
                         // キーワードが含まれるか？
-                        if (logLine.ToUpper().Contains(
-                            keyword.ToUpper()))
+                        if (logLine.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                         {
                             var targetSpell = spell;
 
@@ -89,12 +89,14 @@ namespace ACT.SpecialSpellTimer
                             replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
 
                             targetSpell.SpellTitleReplaced = replacedTitle;
-                            targetSpell.MatchDateTime = DateTime.Now;
                             targetSpell.UpdateDone = false;
                             targetSpell.OverDone = false;
                             targetSpell.BeforeDone = false;
                             targetSpell.TimeupDone = false;
-                            targetSpell.CompleteScheduledTime = targetSpell.MatchDateTime.AddSeconds(targetSpell.RecastTime);
+
+                            var now = DateTime.Now;
+                            targetSpell.CompleteScheduledTime = now.AddSeconds(targetSpell.RecastTime);
+                            targetSpell.MatchDateTime = now;
 
                             // マッチ時点のサウンドを再生する
                             this.Play(targetSpell.MatchSound);
@@ -139,11 +141,12 @@ namespace ACT.SpecialSpellTimer
                             }
 
                             targetSpell.SpellTitleReplaced = replacedTitle;
-                            targetSpell.MatchDateTime = DateTime.Now;
                             targetSpell.UpdateDone = false;
                             targetSpell.OverDone = false;
                             targetSpell.BeforeDone = false;
                             targetSpell.TimeupDone = false;
+
+                            var now = DateTime.Now;
 
                             // 効果時間を決定する
                             // グループ "duration" をキャプチャーしていた場合は効果時間を置換する
@@ -154,7 +157,7 @@ namespace ACT.SpecialSpellTimer
                                 duration = targetSpell.RecastTime;
                             }
 
-                            targetSpell.CompleteScheduledTime = targetSpell.MatchDateTime.AddSeconds(duration);
+                            targetSpell.CompleteScheduledTime = now.AddSeconds(duration);
 
                             // スペル対象を保存する
                             // グループ "target" をキャプチャーしていた場合はその文字列を保存する
@@ -163,6 +166,9 @@ namespace ACT.SpecialSpellTimer
                             {
                                 targetSpell.TargetName = targetName;
                             }
+
+                            // マッチ日時を格納する
+                            targetSpell.MatchDateTime = now;
 
                             // マッチ時点のサウンドを再生する
                             this.Play(targetSpell.MatchSound);
@@ -205,7 +211,7 @@ namespace ACT.SpecialSpellTimer
                     {
                         if (!string.IsNullOrWhiteSpace(keywordToExtend))
                         {
-                            matched = logLine.ToUpper().Contains(keywordToExtend.ToUpper());
+                            matched = logLine.Contains(keywordToExtend, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                     else
@@ -265,8 +271,8 @@ namespace ACT.SpecialSpellTimer
                         }
                     }
 
-                    spell.MatchDateTime = now;
                     spell.CompleteScheduledTime = newSchedule;
+                    spell.MatchDateTime = now;
 
                     notifyNeeded = true;
 
