@@ -12,6 +12,7 @@ using System.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Common;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -127,126 +128,43 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #region Start/End
 
-        private BackgroundWorker attachFFXIVPluginWorker;
-        private double scanFFXIVDurationAvg;
-        private BackgroundWorker scanFFXIVWorker;
+        private ThreadWorker attachFFXIVPluginWorker;
+        private ThreadWorker scanFFXIVWorker;
 
         public void End()
         {
-            this.attachFFXIVPluginWorker?.Cancel();
-            this.scanFFXIVWorker?.Cancel();
+            this.attachFFXIVPluginWorker?.Abort();
+            this.scanFFXIVWorker?.Abort();
         }
 
         public void Start()
         {
-            this.attachFFXIVPluginWorker = new BackgroundWorker();
-            this.attachFFXIVPluginWorker.WorkerSupportsCancellation = true;
-            this.attachFFXIVPluginWorker.DoWork += (s, e) =>
+            this.attachFFXIVPluginWorker = new ThreadWorker(() =>
             {
-                Thread.Sleep(1000);
+                this.Attach();
+                this.LoadZoneList();
+                this.LoadSkillToFFXIVPlugin();
+            },
+            5000,
+            nameof(this.attachFFXIVPluginWorker));
 
-                while (true)
+            this.scanFFXIVWorker = new ThreadWorker(() =>
+            {
+                if (!this.IsAvalable)
                 {
-                    try
-                    {
-                        if (this.attachFFXIVPluginWorker.CancellationPending)
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        this.Attach();
-                        this.LoadZoneList();
-                        /*
-                        // 使わないのでロードしない
-                        this.LoadSkillList();
-                        this.LoadBuffList();
-                        */
-
-                        this.LoadSkillToFFXIVPlugin();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("attach ffxiv plugin error:", ex);
-                        Thread.Sleep(5000);
-                    }
-
                     Thread.Sleep(5000);
+                    return;
                 }
-            };
 
-            this.attachFFXIVPluginWorker.RunWorkerAsync();
+                // CombatantとパーティIDリストを更新する
+                this.RefreshCombatantList();
+                this.RefreshCurrentPartyIDList();
+            },
+            Settings.Default.LogPollSleepInterval,
+            nameof(this.attachFFXIVPluginWorker));
 
-            this.scanFFXIVWorker = new BackgroundWorker();
-            this.scanFFXIVWorker.WorkerSupportsCancellation = true;
-            this.scanFFXIVWorker.DoWork += (s, e) =>
-            {
-                Thread.Sleep(1500);
-
-                while (true)
-                {
-                    var interval = (int)Settings.Default.LogPollSleepInterval;
-
-                    try
-                    {
-                        if (this.scanFFXIVWorker.CancellationPending)
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        if (!this.IsAvalable)
-                        {
-                            Thread.Sleep(5000);
-                            continue;
-                        }
-
-                        var sw = Stopwatch.StartNew();
-
-                        // CombatantとパーティIDリストを更新する
-                        this.RefreshCombatantList();
-                        this.RefreshCurrentPartyIDList();
-
-                        sw.Stop();
-                        var duration = sw.ElapsedMilliseconds;
-
-                        // 処理時間の平均値を算出する
-                        this.scanFFXIVDurationAvg =
-                            (this.scanFFXIVDurationAvg + duration) /
-                            (this.scanFFXIVDurationAvg != 0 ? 2 : 1);
-
-#if DEBUG
-                        Debug.WriteLine($"Scan FFXIV duration {this.scanFFXIVDurationAvg:N1} ms");
-#endif
-
-                        // 待機時間の補正率を算出する
-                        var correctionRate = 1.0d;
-                        if (this.scanFFXIVDurationAvg != 0 &&
-                            duration != 0)
-                        {
-                            correctionRate = duration / this.scanFFXIVDurationAvg;
-                        }
-
-                        // 待機時間を補正する
-                        interval = (int)(interval * correctionRate);
-
-                        // ただし極端に短くしない
-                        if (interval < 10)
-                        {
-                            interval = 10;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("scan ffxiv error:", ex);
-                        Thread.Sleep(5000);
-                    }
-
-                    Thread.Sleep(interval);
-                }
-            };
-
-            this.scanFFXIVWorker.RunWorkerAsync();
+            this.attachFFXIVPluginWorker.Run();
+            this.scanFFXIVWorker.Run();
 
             // XIVDBをロードする
             XIVDB.Instance.Load();

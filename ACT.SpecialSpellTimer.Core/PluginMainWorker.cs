@@ -14,6 +14,7 @@ using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Common;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -42,8 +43,8 @@ namespace ACT.SpecialSpellTimer
 
         #region Thread
 
-        private BackgroundWorker backgroudWorker;
-        private BackgroundWorker detectLogsWorker;
+        private ThreadWorker backgroudWorker;
+        private ThreadWorker detectLogsWorker;
         private volatile bool isOver;
         private DispatcherTimer refreshSpellOverlaysWorker;
         private DispatcherTimer refreshTickerOverlaysWorker;
@@ -96,64 +97,23 @@ namespace ACT.SpecialSpellTimer
             this.BeginOverlaysThread();
 
             // ログ監視タイマを開始する
-            this.detectLogsWorker = new BackgroundWorker();
-            this.detectLogsWorker.WorkerSupportsCancellation = true;
-            this.detectLogsWorker.DoWork += (s, e) =>
+            this.detectLogsWorker = new ThreadWorker(() =>
             {
-                Thread.Sleep(TimeSpan.FromSeconds(5));
-                Logger.Write("start detect logs.");
-
-                while (true)
-                {
-                    try
-                    {
-                        if (this.detectLogsWorker.CancellationPending)
-                        {
-                            Logger.Write("end detect logs.");
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        this.DetectLogsCore();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("detect logs error:", ex);
-                    }
-                }
-            };
-
-            this.detectLogsWorker.RunWorkerAsync();
+                this.DetectLogsCore();
+            },
+            0,
+            nameof(this.detectLogsWorker));
 
             // Backgroudスレッドを開始する
-            this.backgroudWorker = new BackgroundWorker();
-            this.backgroudWorker.WorkerSupportsCancellation = true;
-            this.backgroudWorker.DoWork += (s, e) =>
+            this.backgroudWorker = new ThreadWorker(() =>
             {
-                Thread.Sleep(TimeSpan.FromSeconds(5));
+                this.BackgroundCore();
+            },
+            5000,
+            nameof(this.backgroudWorker));
 
-                while (true)
-                {
-                    try
-                    {
-                        if (this.backgroudWorker.CancellationPending)
-                        {
-                            e.Cancel = true;
-                            return;
-                        }
-
-                        this.BackgroundCore();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write("background thread for UI error:", ex);
-                    }
-
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
-                }
-            };
-
-            this.backgroudWorker.RunWorkerAsync();
+            this.detectLogsWorker.Run();
+            this.backgroudWorker.Run();
         }
 
         public void BeginOverlaysThread()
@@ -212,8 +172,8 @@ namespace ACT.SpecialSpellTimer
             // Workerを開放する
             this.refreshSpellOverlaysWorker?.Stop();
             this.refreshTickerOverlaysWorker?.Stop();
-            this.detectLogsWorker?.Cancel();
-            this.backgroudWorker?.Cancel();
+            this.detectLogsWorker?.Abort();
+            this.backgroudWorker?.Abort();
 
             // ログバッファを開放する
             if (this.LogBuffer != null)
@@ -325,11 +285,10 @@ namespace ACT.SpecialSpellTimer
 
             resetTask.Wait();
 
-            var interval = !existsLog ?
-                TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval) :
-                TimeSpan.FromMilliseconds(0);
-
-            Thread.Sleep(interval);
+            if (!existsLog)
+            {
+                Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
+            }
         }
 
         private void RefreshSpellOverlaysCore()
