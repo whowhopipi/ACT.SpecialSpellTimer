@@ -26,18 +26,28 @@ namespace ACT.SpecialSpellTimer
         private static readonly List<string> EmptyLogLineList = new List<string>();
 
         /// <summary>
+        /// ツールチップのサフィックス
+        /// </summary>
+        /// <remarks>
+        /// ツールチップは計4キャラで構成されるが先頭1文字が可変で残り3文字が固定となっている</remarks>
+        private const string TooltipSuffix = @"\u0001\u0001\uFFFD";
+
+        /// <summary>
         /// ツールチップ文字を除去するための正規表現
         /// </summary>
         private static readonly Regex TooltipCharsRegex =
-            new Regex(@".\u0001\u0001\uFFFD",
+            new Regex($".{TooltipSuffix}",
                 RegexOptions.Compiled);
 
+        /*
+        // 方式を変えたため封印
         /// <summary>
         /// Unknownスキルを補完するための正規表現
         /// </summary>
         private static readonly Regex UnknownSkillRegex =
             new Regex(@"(?<UnknownSkill>Unknown_(?<UnknownSkillID>\w\w\w\w))",
                 RegexOptions.Compiled);
+        */
 
         /// <summary>
         /// 内部バッファ
@@ -285,15 +295,30 @@ namespace ACT.SpecialSpellTimer
             while (logInfoQueue.TryDequeue(
                 out LogLineEventArgs logInfo))
             {
-                var logLine = logInfo.logLine.Trim();
+                var logLine = logInfo.logLine;
 
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
                 {
-                    logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
+                    int index;
+                    if ((index = logLine.IndexOf(
+                        TooltipSuffix,
+                        17,
+                        StringComparison.Ordinal)) > -1)
+                    {
+                        logLine = logLine.Remove(index - 1, 4);
+                    }
                 }
 
-                /*
+#if false
+                // 正規表現方式
+                if (Settings.Default.RemoveTooltipSymbols)
+                {
+                    logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
+                }
+#endif
+
+#if false
                 // 方式を変えたので封印する
                 // Unknownスキルを補完する？
                 if (Settings.Default.ToComplementUnknownSkill)
@@ -316,7 +341,7 @@ namespace ACT.SpecialSpellTimer
                         }
                     }
                 }
-                */
+#endif
 
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)
