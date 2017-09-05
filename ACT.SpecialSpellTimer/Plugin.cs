@@ -25,6 +25,9 @@ namespace ACT.SpecialSpellTimer
         {
             PluginCore.Instance?.DeInitPluginCore();
             Logger.End();
+
+            PluginCore.Free();
+            AssemblyResolver.Free();
         }
 
         /// <summary>

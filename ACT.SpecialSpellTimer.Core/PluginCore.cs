@@ -32,6 +32,8 @@ namespace ACT.SpecialSpellTimer
             instance.PluginRoot = plugin;
         }
 
+        public static void Free() => instance = null;
+
         #endregion Singleton
 
         /// <summary>
@@ -64,6 +66,7 @@ namespace ACT.SpecialSpellTimer
             try
             {
                 PluginMainWorker.Instance.End();
+                PluginMainWorker.Free();
 
                 this.RemoveSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Exited";

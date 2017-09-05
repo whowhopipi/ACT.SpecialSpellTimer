@@ -32,12 +32,15 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        private static PluginMainWorker instance = new PluginMainWorker();
+        private static PluginMainWorker instance;
 
         /// <summary>
         /// シングルトンinstance
         /// </summary>
-        public static PluginMainWorker Instance => instance;
+        public static PluginMainWorker Instance =>
+            instance ?? (instance = new PluginMainWorker());
+
+        public static void Free() => instance = null;
 
         #endregion Singleton
 

@@ -11,9 +11,12 @@ namespace ACT.SpecialSpellTimer
     {
         #region Singleton
 
-        private static AssemblyResolver instance = new AssemblyResolver();
+        private static AssemblyResolver instance;
 
-        public static AssemblyResolver Instance => instance;
+        public static AssemblyResolver Instance =>
+            instance ?? (instance = new AssemblyResolver());
+
+        public static void Free() => instance = null;
 
         #endregion Singleton
 
