@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ACT.SpecialSpellTimer.Config;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -179,6 +180,11 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         private void LoadSkill()
         {
             if (!File.Exists(this.SkillFile))
+            {
+                return;
+            }
+
+            if (!Settings.Default.ToComplementUnknownSkill)
             {
                 return;
             }

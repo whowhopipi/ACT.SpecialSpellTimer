@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
@@ -293,6 +293,8 @@ namespace ACT.SpecialSpellTimer
                     logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
                 }
 
+                /*
+                // 方式を変えたので封印する
                 // Unknownスキルを補完する？
                 if (Settings.Default.ToComplementUnknownSkill)
                 {
@@ -314,6 +316,7 @@ namespace ACT.SpecialSpellTimer
                         }
                     }
                 }
+                */
 
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV)

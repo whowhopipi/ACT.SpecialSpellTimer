@@ -162,6 +162,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                         this.LoadSkillList();
                         this.LoadBuffList();
                         */
+
+                        this.LoadSkillToFFXIVPlugin();
                     }
                     catch (Exception ex)
                     {
@@ -883,6 +885,56 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                         zone.IDonDB = area.ID;
                     }
                 }
+            }
+        }
+
+
+        private volatile bool loadedSkillToFFXIVPlugin = false;
+
+        /// <summary>
+        /// FFXIVプラグインに足りないスキルをロードする
+        /// </summary>
+        public void LoadSkillToFFXIVPlugin()
+        {
+            if (!Settings.Default.ToComplementUnknownSkill)
+            {
+                return;
+            }
+
+            if (this.loadedSkillToFFXIVPlugin)
+            {
+                return;
+            }
+
+            if (this.plugin == null)
+            {
+                return;
+            }
+
+            var t = (this.plugin as object).GetType().Module.Assembly.GetType("FFXIV_ACT_Plugin.Resources.SkillList");
+            var obj = t.GetField(
+                "_instance", 
+                BindingFlags.NonPublic | BindingFlags.Static)
+                .GetValue(null);
+
+            var list = obj.GetType().GetField(
+                "_SkillList",
+                BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetValue(obj);
+
+            var pluginSkillList = list as SortedDictionary<int, string>;
+
+            foreach (var entry in XIVDB.Instance.SkillList)
+            {
+                if (!pluginSkillList.ContainsKey(entry.Key))
+                {
+                    pluginSkillList[entry.Key] = entry.Value.Name;
+                }
+            }
+
+            if (XIVDB.Instance.SkillList.Any())
+            {
+                this.loadedSkillToFFXIVPlugin = true;
             }
         }
 
