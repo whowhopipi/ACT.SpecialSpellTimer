@@ -29,7 +29,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <remarks>
         /// ツールチップは計4charsで構成されるが先頭1文字目が可変で残り3文字が固定となっている</remarks>
-        private const string TooltipSuffix = @"\u0001\u0001\uFFFD";
+        private const string TooltipSuffix = "\u0001\u0001\uFFFD";
 
 #if false
         /// <summary>
@@ -293,6 +293,9 @@ namespace ACT.SpecialSpellTimer
             var partyChangedAtDQX = false;
             var summoned = false;
 
+#if DEBUG
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+#endif
             while (logInfoQueue.TryDequeue(
                 out LogLineEventArgs logInfo))
             {
@@ -310,7 +313,6 @@ namespace ACT.SpecialSpellTimer
                         logLine = logLine.Remove(index - 1, 4);
                     }
                 }
-
 #if false
                 // 正規表現方式
                 if (Settings.Default.RemoveTooltipSymbols)
@@ -318,7 +320,6 @@ namespace ACT.SpecialSpellTimer
                     logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
                 }
 #endif
-
 #if false
                 // 方式を変えたので封印する
                 // Unknownスキルを補完する？
@@ -384,6 +385,10 @@ namespace ACT.SpecialSpellTimer
                 });
             }
 
+#if DEBUG
+            sw.Stop();
+            System.Diagnostics.Debug.WriteLine($"★GetLogLines {sw.Elapsed.TotalMilliseconds:N1} ms");
+#endif
             // リストを返す
             return list;
 
