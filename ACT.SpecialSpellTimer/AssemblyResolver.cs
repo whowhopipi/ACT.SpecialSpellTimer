@@ -36,16 +36,13 @@ namespace ACT.SpecialSpellTimer
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 @"Advanced Combat Tracker\Plugins"));
 
-            AppDomain.CurrentDomain.AssemblyResolve
-                -= this.CustomAssemblyResolve;
-            AppDomain.CurrentDomain.AssemblyResolve
-                += this.CustomAssemblyResolve;
+            AppDomain.CurrentDomain.AssemblyResolve -= this.CustomAssemblyResolve;
+            AppDomain.CurrentDomain.AssemblyResolve += this.CustomAssemblyResolve;
         }
 
         public void Dispose()
         {
-            AppDomain.CurrentDomain.AssemblyResolve
-                -= this.CustomAssemblyResolve;
+            AppDomain.CurrentDomain.AssemblyResolve -= this.CustomAssemblyResolve;
             this.plugin = null;
         }
 
