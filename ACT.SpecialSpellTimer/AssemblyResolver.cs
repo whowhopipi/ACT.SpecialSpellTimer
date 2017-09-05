@@ -16,7 +16,11 @@ namespace ACT.SpecialSpellTimer
         public static AssemblyResolver Instance =>
             instance ?? (instance = new AssemblyResolver());
 
-        public static void Free() => instance = null;
+        public static void Free()
+        {
+            instance.Dispose();
+            instance = null;
+        }
 
         #endregion Singleton
 
@@ -33,7 +37,16 @@ namespace ACT.SpecialSpellTimer
                 @"Advanced Combat Tracker\Plugins"));
 
             AppDomain.CurrentDomain.AssemblyResolve
+                -= this.CustomAssemblyResolve;
+            AppDomain.CurrentDomain.AssemblyResolve
                 += this.CustomAssemblyResolve;
+        }
+
+        public void Dispose()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve
+                -= this.CustomAssemblyResolve;
+            this.plugin = null;
         }
 
         private Assembly CustomAssemblyResolve(object sender, ResolveEventArgs e)
