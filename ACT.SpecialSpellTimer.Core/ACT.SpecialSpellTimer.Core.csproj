@@ -148,6 +148,7 @@
     <Compile Include="Forms\SelectIconUserControl.Designer.cs">
       <DependentUpon>SelectIconUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utility\Crypter.cs" />
     <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\BrightnessConverter.cs" />
     <Compile Include="Views\TickerWindow.xaml.cs">

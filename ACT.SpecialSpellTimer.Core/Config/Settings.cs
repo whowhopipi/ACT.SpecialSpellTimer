@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
@@ -54,6 +55,13 @@ namespace ACT.SpecialSpellTimer.Config
         public readonly string FileName = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             @"anoyetta\ACT\ACT.SpecialSpellTimer.config");
+
+        #region Constants
+
+        [XmlIgnore]
+        public const double UpdateCheckInterval = 12;
+
+        #endregion Constants
 
         #region Data - Colors
 
@@ -206,8 +214,45 @@ namespace ACT.SpecialSpellTimer.Config
 
         #region Data - Hidden
 
-        public DateTime LastUpdateDateTime { get; set; }
-        public double UpdateCheckInterval { get; set; }
+        private DateTime lastUpdateDateTime;
+
+        [XmlIgnore]
+        public DateTime LastUpdateDateTime
+        {
+            get => this.lastUpdateDateTime;
+            set => this.lastUpdateDateTime = value;
+        }
+
+        [XmlElement(ElementName = "LastUpdateDateTime")]
+        public string LastUpdateDateTimeCrypted
+        {
+            get => Crypter.EncryptString(this.lastUpdateDateTime.ToString());
+            set
+            {
+                DateTime d;
+                if (DateTime.TryParse(value, out d))
+                {
+                    this.lastUpdateDateTime = d;
+                    return;
+                }
+
+                try
+                {
+                    var decrypt = Crypter.DecryptString(value);
+                    if (DateTime.TryParse(decrypt, out d))
+                    {
+                        this.lastUpdateDateTime = d;
+                        return;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+
+                this.lastUpdateDateTime = DateTime.MinValue;
+            }
+        }
+
         public int MaxFPS { get; set; }
 
         /// <summary>点滅の輝度倍率 暗</summary>
@@ -364,7 +409,6 @@ namespace ACT.SpecialSpellTimer.Config
 
             // 設定画面のない設定項目
             { nameof(Settings.LastUpdateDateTime), DateTime.Parse("2000-1-1") },
-            { nameof(Settings.UpdateCheckInterval), 12.0d },
             { nameof(Settings.MaxFPS), 30 },
             { nameof(Settings.BlinkBrightnessDark), 0.3d },
             { nameof(Settings.BlinkBrightnessLight), 2.5d },

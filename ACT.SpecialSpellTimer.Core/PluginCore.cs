@@ -348,20 +348,17 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private void Update()
         {
-            if (Settings.Default.UpdateCheckInterval >= 0.0d)
+            if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours
+                >= Settings.UpdateCheckInterval)
             {
-                if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours >=
-                    Settings.Default.UpdateCheckInterval)
+                var message = UpdateChecker.Update();
+                if (!string.IsNullOrWhiteSpace(message))
                 {
-                    var message = UpdateChecker.Update();
-                    if (!string.IsNullOrWhiteSpace(message))
-                    {
-                        Logger.Write(message);
-                    }
-
-                    Settings.Default.LastUpdateDateTime = DateTime.Now;
-                    Settings.Default.Save();
+                    Logger.Write(message);
                 }
+
+                Settings.Default.LastUpdateDateTime = DateTime.Now;
+                Settings.Default.Save();
             }
         }
     }
