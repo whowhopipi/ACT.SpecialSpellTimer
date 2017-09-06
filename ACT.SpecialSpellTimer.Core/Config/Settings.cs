@@ -232,6 +232,11 @@ namespace ACT.SpecialSpellTimer.Config
                 DateTime d;
                 if (DateTime.TryParse(value, out d))
                 {
+                    if (d > DateTime.Now)
+                    {
+                        d = DateTime.Now;
+                    }
+
                     this.lastUpdateDateTime = d;
                     return;
                 }
@@ -241,6 +246,11 @@ namespace ACT.SpecialSpellTimer.Config
                     var decrypt = Crypter.DecryptString(value);
                     if (DateTime.TryParse(decrypt, out d))
                     {
+                        if (d > DateTime.Now)
+                        {
+                            d = DateTime.Now;
+                        }
+
                         this.lastUpdateDateTime = d;
                         return;
                     }
