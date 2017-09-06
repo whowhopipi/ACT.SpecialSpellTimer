@@ -253,14 +253,15 @@ namespace ACT.SpecialSpellTimer
             // FFXIVがいない？
             if (!FFXIVPlugin.Instance.IsAvalable)
             {
+#if !DEBUG
                 // importログの解析用にログを取り出しておく
                 if (!this.LogBuffer.IsEmpty)
                 {
                     this.LogBuffer.GetLogLines();
                 }
-
                 Thread.Sleep(TimeSpan.FromSeconds(3));
                 return;
+#endif
             }
 
             // 全滅によるリセットを判定する
@@ -396,7 +397,7 @@ namespace ACT.SpecialSpellTimer
             TickersController.Instance.RefreshTelopOverlays(telops);
         }
 
-        #endregion Core
+#endregion Core
 
         /// <summary>
         /// リスタートのときスペルのカウントをリセットする
@@ -448,7 +449,7 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-        #region Misc
+#region Misc
 
         /// <summary>
         /// FFXIVまたはACTがアクティブか？
@@ -507,9 +508,9 @@ namespace ACT.SpecialSpellTimer
             return r;
         }
 
-        #endregion Misc
+#endregion Misc
 
-        #region NativeMethods
+#region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -531,6 +532,6 @@ namespace ACT.SpecialSpellTimer
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-        #endregion NativeMethods
+#endregion NativeMethods
     }
 }

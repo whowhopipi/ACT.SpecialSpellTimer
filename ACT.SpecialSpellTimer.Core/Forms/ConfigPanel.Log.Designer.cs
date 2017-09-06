@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     partial class ConfigPanelLog
     {
@@ -31,25 +31,27 @@
             this.HeaderLabel = new System.Windows.Forms.Label();
             this.TabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.SplitContainer = new System.Windows.Forms.SplitContainer();
             this.PlaceholderListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.LogTextBox = new System.Windows.Forms.TextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.SpellsListView = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.AutoRefreshCheckBox = new System.Windows.Forms.CheckBox();
             this.TabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.Panel1.SuspendLayout();
             this.SplitContainer.Panel2.SuspendLayout();
             this.SplitContainer.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // HeaderLabel
@@ -65,13 +67,15 @@
             // 
             // TabControl
             // 
+            this.TabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TabControl.Controls.Add(this.tabPage1);
             this.TabControl.Controls.Add(this.tabPage2);
-            this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabControl.Location = new System.Drawing.Point(0, 24);
+            this.TabControl.Location = new System.Drawing.Point(0, 52);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(800, 576);
+            this.TabControl.Size = new System.Drawing.Size(800, 548);
             this.TabControl.TabIndex = 45;
             // 
             // tabPage1
@@ -82,19 +86,8 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(792, 550);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "__Placeholders & Logs";
+            this.tabPage1.Text = "__Placeholders & Logs　";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.SpellsListView);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(792, 550);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "__Spells & Tickers";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // SplitContainer
             // 
@@ -161,6 +154,17 @@
             this.LogTextBox.Size = new System.Drawing.Size(786, 289);
             this.LogTextBox.TabIndex = 44;
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.SpellsListView);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(792, 522);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "__Spells & Tickers　";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // SpellsListView
             // 
             this.SpellsListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -168,13 +172,14 @@
             this.columnHeader4,
             this.columnHeader5,
             this.columnHeader6,
-            this.columnHeader7});
+            this.columnHeader7,
+            this.columnHeader8});
             this.SpellsListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SpellsListView.FullRowSelect = true;
             this.SpellsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.SpellsListView.Location = new System.Drawing.Point(3, 3);
             this.SpellsListView.Name = "SpellsListView";
-            this.SpellsListView.Size = new System.Drawing.Size(786, 544);
+            this.SpellsListView.Size = new System.Drawing.Size(786, 516);
             this.SpellsListView.TabIndex = 0;
             this.SpellsListView.UseCompatibleStateImageBehavior = false;
             this.SpellsListView.View = System.Windows.Forms.View.Details;
@@ -195,23 +200,43 @@
             // 
             this.columnHeader7.Text = "__Regex";
             // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "__Cost";
+            this.columnHeader8.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // AutoRefreshCheckBox
+            // 
+            this.AutoRefreshCheckBox.AutoSize = true;
+            this.AutoRefreshCheckBox.Checked = true;
+            this.AutoRefreshCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoRefreshCheckBox.Location = new System.Drawing.Point(6, 30);
+            this.AutoRefreshCheckBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 3);
+            this.AutoRefreshCheckBox.Name = "AutoRefreshCheckBox";
+            this.AutoRefreshCheckBox.Size = new System.Drawing.Size(96, 16);
+            this.AutoRefreshCheckBox.TabIndex = 46;
+            this.AutoRefreshCheckBox.Text = "__Auto refresh";
+            this.AutoRefreshCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ConfigPanelLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.AutoRefreshCheckBox);
             this.Controls.Add(this.TabControl);
             this.Controls.Add(this.HeaderLabel);
             this.Name = "ConfigPanelLog";
             this.Size = new System.Drawing.Size(800, 600);
             this.TabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
             this.SplitContainer.Panel1.ResumeLayout(false);
             this.SplitContainer.Panel2.ResumeLayout(false);
             this.SplitContainer.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
             this.SplitContainer.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -232,5 +257,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.CheckBox AutoRefreshCheckBox;
     }
 }

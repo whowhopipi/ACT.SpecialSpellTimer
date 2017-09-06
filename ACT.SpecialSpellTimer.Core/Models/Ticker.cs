@@ -186,6 +186,42 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Soundfiles
 
+        #region Performance Monitor
+
+        [XmlIgnore]
+        public double MatchingDuration { get; set; } = 0.0;
+
+        [XmlIgnore]
+        private DateTime matchingStartDateTime;
+
+        public void StartMatching()
+        {
+            this.matchingStartDateTime = DateTime.Now;
+        }
+
+        public void EndMatching()
+        {
+            var ticks = (DateTime.Now - this.matchingStartDateTime).Ticks;
+            if (ticks == 0)
+            {
+                return;
+            }
+
+            var cost = ticks / 1000;
+
+            if (this.MatchingDuration != 0)
+            {
+                this.MatchingDuration += cost;
+                this.MatchingDuration /= 2;
+            }
+            else
+            {
+                this.MatchingDuration += cost;
+            }
+        }
+
+        #endregion Performance Monitor
+
         public void Dispose()
         {
             if (this.delayedSoundTimer != null)

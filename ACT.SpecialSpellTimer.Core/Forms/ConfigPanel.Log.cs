@@ -93,7 +93,13 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
+                if (!this.AutoRefreshCheckBox.Checked)
+                {
+                    return;
+                }
+
                 this.UpdatePlaceholder();
+                this.UpdateSpells();
             };
 
             this.updatePlaceholderTimer.Start();
@@ -113,6 +119,11 @@ namespace ACT.SpecialSpellTimer.Forms
         {
             if (this.IsDisposed ||
                 !this.IsHandleCreated)
+            {
+                return;
+            }
+
+            if (TableCompiler.Instance == null)
             {
                 return;
             }
@@ -181,6 +192,11 @@ namespace ACT.SpecialSpellTimer.Forms
                 return;
             }
 
+            if (TableCompiler.Instance == null)
+            {
+                return;
+            }
+
             var listItems = new List<ListViewItem>();
 
             await Task.Run(() =>
@@ -203,7 +219,8 @@ namespace ACT.SpecialSpellTimer.Forms
                         "Spell",
                         x.SpellTitle,
                         !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
-                        x.RegexEnabled.ToString()
+                        x.RegexEnabled.ToString() + "　",
+                        "　" + x.MatchingDuration.ToString("N2")
                     };
 
                     listItems.Add(new ListViewItem(values));
@@ -218,7 +235,8 @@ namespace ACT.SpecialSpellTimer.Forms
                         "Ticker",
                         x.Title,
                         !x.RegexEnabled ? x.KeywordReplaced : x.RegexPattern,
-                        x.RegexEnabled.ToString()
+                        x.RegexEnabled.ToString() + "　",
+                        "　" + x.MatchingDuration.ToString("N2")
                     };
 
                     listItems.Add(new ListViewItem(values));
@@ -238,7 +256,9 @@ namespace ACT.SpecialSpellTimer.Forms
                     {
                         for (int i = 0; i < this.SpellsListView.Columns.Count; i++)
                         {
-                            this.SpellsListView.AutoResizeColumn(i, ColumnHeaderAutoResizeStyle.ColumnContent);
+                            this.SpellsListView.AutoResizeColumn(
+                                i,
+                                ColumnHeaderAutoResizeStyle.ColumnContent);
                         }
                     }
                 }
@@ -248,13 +268,16 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             }
 
-            if (this.InvokeRequired)
+            lock (this)
             {
-                this.Invoke((Action)refresh);
-            }
-            else
-            {
-                refresh();
+                if (this.InvokeRequired)
+                {
+                    this.Invoke((Action)refresh);
+                }
+                else
+                {
+                    refresh();
+                }
             }
         }
     }

@@ -42,7 +42,15 @@ namespace ACT.SpecialSpellTimer
             {
                 spells.AsParallel().ForAll(spell =>
                 {
-                    this.MatchCore(spell, logLine);
+                    try
+                    {
+                        spell.StartMatching();
+                        this.MatchCore(spell, logLine);
+                    }
+                    finally
+                    {
+                        spell.EndMatching();
+                    }
                 });
             }
         }
@@ -61,6 +69,9 @@ namespace ACT.SpecialSpellTimer
 
             if (!spell.IsInstance)
             {
+                // マッチング計測開始
+                spell.StartMatching();
+
                 // 開始条件を確認する
                 if (ConditionUtility.CheckConditionsForSpell(spell))
                 {
@@ -97,6 +108,9 @@ namespace ACT.SpecialSpellTimer
                             var now = DateTime.Now;
                             targetSpell.CompleteScheduledTime = now.AddSeconds(targetSpell.RecastTime);
                             targetSpell.MatchDateTime = now;
+
+                            // マッチング計測終了
+                            spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
                             this.Play(targetSpell.MatchSound);
@@ -169,6 +183,9 @@ namespace ACT.SpecialSpellTimer
 
                             // マッチ日時を格納する
                             targetSpell.MatchDateTime = now;
+
+                            // マッチング計測終了
+                            spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
                             this.Play(targetSpell.MatchSound);

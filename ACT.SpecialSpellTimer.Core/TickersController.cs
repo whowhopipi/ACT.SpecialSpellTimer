@@ -65,6 +65,9 @@ namespace ACT.SpecialSpellTimer
             var regex = telop.Regex;
             var regexToHide = telop.RegexToHide;
 
+            // マッチング計測開始
+            telop.StartMatching();
+
             // 開始条件を確認する
             if (ConditionUtility.CheckConditionsForTelop(telop))
             {
@@ -96,6 +99,9 @@ namespace ACT.SpecialSpellTimer
                             telop.Delayed = false;
                             telop.MatchedLog = log;
                             telop.MatchDateTime = DateTime.Now;
+
+                            // マッチング計測終了
+                            telop.EndMatching();
 
                             SoundController.Instance.Play(telop.MatchSound);
                             SoundController.Instance.Play(telop.MatchTextToSpeak);
@@ -132,6 +138,9 @@ namespace ACT.SpecialSpellTimer
                         telop.Delayed = false;
                         telop.MatchedLog = log;
                         telop.MatchDateTime = DateTime.Now;
+
+                        // マッチング計測終了
+                        telop.EndMatching();
 
                         SoundController.Instance.Play(telop.MatchSound);
                         if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
