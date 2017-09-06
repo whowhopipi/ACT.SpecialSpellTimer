@@ -32,7 +32,11 @@ namespace ACT.SpecialSpellTimer
             instance.PluginRoot = plugin;
         }
 
-        public static void Free() => instance = null;
+        public static void Free()
+        {
+            instance.PluginRoot = null;
+            instance = null;
+        }
 
         #endregion Singleton
 

@@ -19,13 +19,17 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
     {
         #region Singleton
 
-        private static FFXIVPlugin instance = new FFXIVPlugin();
+        private static FFXIVPlugin instance;
+
+        public static FFXIVPlugin Instance => instance;
+
+        public static void Initialize() => instance = new FFXIVPlugin();
+
+        public static void Free() => instance = null;
 
         private FFXIVPlugin()
         {
         }
-
-        public static FFXIVPlugin Instance => instance;
 
         #endregion Singleton
 
@@ -854,6 +858,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             if (XIVDB.Instance.SkillList.Any())
             {
                 this.loadedSkillToFFXIVPlugin = true;
+                Logger.Write("extra skill list loaded.");
             }
         }
 

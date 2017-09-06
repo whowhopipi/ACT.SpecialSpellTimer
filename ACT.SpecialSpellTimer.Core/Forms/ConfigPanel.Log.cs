@@ -37,7 +37,6 @@ namespace ACT.SpecialSpellTimer.Forms
                 .SetValue(this.SpellsListView, true, null);
 
             this.Load += (s, e) => this.LoadLogTab();
-            TableCompiler.Instance.OnTableChanged += this.TableCompilerOnTableChanged;
         }
 
         public bool IsLogTabActive => this.IsLogTabActiveDelegate?.Invoke() ?? false;
@@ -104,6 +103,10 @@ namespace ACT.SpecialSpellTimer.Forms
             {
                 this.LogTextBox.AppendText(this.logBuffer.ToString());
             }
+
+            this.UpdateSpells();
+            TableCompiler.Instance.OnTableChanged -= this.TableCompilerOnTableChanged;
+            TableCompiler.Instance.OnTableChanged += this.TableCompilerOnTableChanged;
         }
 
         public async void UpdatePlaceholder()
@@ -166,9 +169,11 @@ namespace ACT.SpecialSpellTimer.Forms
             }
         }
 
-        private async void TableCompilerOnTableChanged(
+        private void TableCompilerOnTableChanged(
             object sender,
-            EventArgs e)
+            EventArgs e) => this.UpdateSpells();
+
+        private async void UpdateSpells()
         {
             if (this.IsDisposed ||
                 !this.IsHandleCreated)

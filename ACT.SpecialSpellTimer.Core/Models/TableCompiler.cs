@@ -16,9 +16,13 @@ namespace ACT.SpecialSpellTimer.Models
     {
         #region Singleton
 
-        private static TableCompiler instance = new TableCompiler();
+        private static TableCompiler instance;
 
         public static TableCompiler Instance => instance;
+
+        public static void Initialize() => instance = new TableCompiler();
+
+        public static void Free() => instance = null;
 
         #endregion Singleton
 

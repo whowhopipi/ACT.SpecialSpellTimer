@@ -82,12 +82,14 @@ namespace ACT.SpecialSpellTimer
             this.isOver = false;
 
             // FFXIVのスキャンを開始する
+            FFXIVPlugin.Initialize();
             FFXIVPlugin.Instance.Start();
 
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
 
             // テーブルコンパイラを開始する
+            TableCompiler.Initialize();
             TableCompiler.Instance.Begin();
 
             // 戦闘分析を初期化する
@@ -177,6 +179,11 @@ namespace ACT.SpecialSpellTimer
             this.refreshSpellOverlaysWorker?.Stop();
             this.refreshTickerOverlaysWorker?.Stop();
             this.detectLogsWorker?.Abort();
+
+            this.refreshSpellOverlaysWorker = null;
+            this.refreshTickerOverlaysWorker = null;
+            this.detectLogsWorker = null;
+
             this.backgroudWorker?.Stop();
             this.backgroudWorker?.Dispose();
             this.backgroudWorker = null;
@@ -204,9 +211,11 @@ namespace ACT.SpecialSpellTimer
 
             // テーブルコンパイラを停止する
             TableCompiler.Instance.End();
+            TableCompiler.Free();
 
             // FFXIVのスキャンを停止する
             FFXIVPlugin.Instance.End();
+            FFXIVPlugin.Free();
         }
 
         #endregion Begin / End
