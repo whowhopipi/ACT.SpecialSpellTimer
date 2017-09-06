@@ -15,6 +15,8 @@ namespace ACT.SpecialSpellTimer.Utility
         private static readonly object lockObject = new object();
         private static System.Timers.Timer worker;
 
+        private static bool toEnd;
+
         private static string LogFile => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             @"anoyetta\ACT\ACT.SpecialSpellTimer." + DateTime.Now.ToString("yyyy-MM") + ".log");
@@ -73,6 +75,8 @@ namespace ACT.SpecialSpellTimer.Utility
 
         public static void Begin()
         {
+            toEnd = false;
+
             lock (lockObject)
             {
                 buffer?.Clear();
@@ -89,6 +93,8 @@ namespace ACT.SpecialSpellTimer.Utility
         {
             try
             {
+                toEnd = true;
+
                 worker?.Stop();
                 worker?.Dispose();
                 worker = null;
@@ -122,7 +128,10 @@ namespace ACT.SpecialSpellTimer.Utility
                         buffer.ToString(),
                         new UTF8Encoding(false));
 
-                    ConfigPanelLog.Instance?.AppendLog(buffer.ToString());
+                    if (!toEnd)
+                    {
+                        ConfigPanelLog.Instance?.AppendLog(buffer.ToString());
+                    }
 
                     buffer.Clear();
                 }
