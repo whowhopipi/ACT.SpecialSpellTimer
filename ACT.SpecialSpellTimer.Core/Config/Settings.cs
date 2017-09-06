@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
-
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
