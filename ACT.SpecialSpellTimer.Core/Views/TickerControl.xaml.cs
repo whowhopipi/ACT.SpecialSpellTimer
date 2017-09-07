@@ -124,7 +124,7 @@ namespace ACT.SpecialSpellTimer.Views
             AutoReverse = false,
             KeyFrames = new DoubleKeyFrameCollection()
             {
-                new LinearDoubleKeyFrame()
+                new LinearDoubleKeyFrame(0)
             }
         };
 
@@ -149,9 +149,6 @@ namespace ACT.SpecialSpellTimer.Views
                     Rectangle.WidthProperty,
                     null);
 
-                this.ResetProgressBar();
-
-                this.KeyFrame.Value = 0;
                 this.KeyFrame.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(timeToCount));
 
                 Timeline.SetDesiredFrameRate(this.animation, 30);

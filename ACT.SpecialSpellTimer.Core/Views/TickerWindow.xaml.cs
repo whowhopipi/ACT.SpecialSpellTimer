@@ -187,15 +187,12 @@ namespace ACT.SpecialSpellTimer.Views
                 this.DataSource.Delay + this.DataSource.DisplayTime);
             var timeToLive = (timeToHide - DateTime.Now).TotalMilliseconds;
 
-            lock (this)
+            if (this.previousMatchDateTime != matchDateTime)
             {
-                if (this.previousMatchDateTime != matchDateTime)
-                {
-                    this.TickerControl.StartProgressBar(timeToLive);
-                }
-
-                this.previousMatchDateTime = matchDateTime;
+                this.TickerControl.StartProgressBar(timeToLive);
             }
+
+            this.previousMatchDateTime = matchDateTime;
         }
 
         #endregion Animation

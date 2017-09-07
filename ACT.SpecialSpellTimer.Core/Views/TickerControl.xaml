@@ -59,6 +59,7 @@
             x:Name="BarRectangle"
             RadiusX="2"
             RadiusY="2"
+            Width="{Binding ElementName=ProgressBarPanel, Path=ActualWidth, Mode=OneWay}"
             Fill="{Binding ElementName=MessageTextBlock, Path=Fill, Mode=OneWay}">
 
             <Rectangle.Effect>
