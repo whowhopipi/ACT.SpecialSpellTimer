@@ -250,6 +250,7 @@ namespace ACT.SpecialSpellTimer
                     if (start <= DateTime.Now && DateTime.Now <= end)
                     {
                         w.Refresh();
+                        w.ShowOverlay();
                         w.StartProgressBar();
                     }
                     else
