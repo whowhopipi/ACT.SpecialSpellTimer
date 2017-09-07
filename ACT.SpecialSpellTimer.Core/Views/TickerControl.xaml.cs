@@ -152,7 +152,7 @@ namespace ACT.SpecialSpellTimer.Views
                 this.ResetProgressBar();
 
                 this.KeyFrame.Value = 0;
-                this.KeyFrame.KeyTime = TimeSpan.FromMilliseconds(timeToCount);
+                this.KeyFrame.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(timeToCount));
 
                 Timeline.SetDesiredFrameRate(this.animation, 30);
 

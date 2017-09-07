@@ -160,7 +160,10 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Animation
 
-        public void StartProgressBar()
+        private DateTime previousMatchDateTime = DateTime.MinValue;
+
+        public void StartProgressBar(
+            bool force = false)
         {
             if (this.DataSource == null ||
                 !this.DataSource.ProgressBarEnabled)
@@ -170,16 +173,29 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             var matchDateTime = this.DataSource.MatchDateTime;
-            if (matchDateTime <= DateTime.MinValue)
+
+            // 強制アニメーションならば強制マッチ状態にする
+            if (force)
             {
-                matchDateTime = DateTime.Now;
+                if (matchDateTime <= DateTime.MinValue)
+                {
+                    matchDateTime = DateTime.Now;
+                }
             }
 
             var timeToHide = matchDateTime.AddSeconds(
                 this.DataSource.Delay + this.DataSource.DisplayTime);
             var timeToLive = (timeToHide - DateTime.Now).TotalMilliseconds;
 
-            this.TickerControl.StartProgressBar(timeToLive);
+            lock (this)
+            {
+                if (this.previousMatchDateTime != matchDateTime)
+                {
+                    this.TickerControl.StartProgressBar(timeToLive);
+                }
+
+                this.previousMatchDateTime = matchDateTime;
+            }
         }
 
         #endregion Animation

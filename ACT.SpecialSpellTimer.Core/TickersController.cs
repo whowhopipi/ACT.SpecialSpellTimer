@@ -232,10 +232,7 @@ namespace ACT.SpecialSpellTimer
                     w.Refresh();
                     if (w.ShowOverlay())
                     {
-                        w.StartProgressBar();
-#if DEBUG
-                        Debug.WriteLine($"●show telop {telop.Title}");
-#endif
+                        w.StartProgressBar(true);
                     }
 
                     return;
@@ -253,13 +250,7 @@ namespace ACT.SpecialSpellTimer
                     if (start <= DateTime.Now && DateTime.Now <= end)
                     {
                         w.Refresh();
-                        if (w.ShowOverlay())
-                        {
-                            w.StartProgressBar();
-#if DEBUG
-                            Debug.WriteLine($"●show telop {telop.Title}");
-#endif
-                        }
+                        w.StartProgressBar();
                     }
                     else
                     {
