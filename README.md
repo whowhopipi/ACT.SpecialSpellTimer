@@ -20,8 +20,6 @@ ACT.SpecialSpellTimer
 **FFXIV.Framework.Dialog.exe**  
 **ACT.SpecialSpellTimer.Core.dll**  
 **ACT.SpecialSpellTimer.dll**  
-**ACT.TargetOverlay.Core.dll**  
-**ACT.TargetOverlay.dll**  
 **FFXIV.Framework.Dialog.Wrapper.dll**  
 **FFXIV.Framework.dll**  
 **FirstFloor.ModernUI.dll**  
