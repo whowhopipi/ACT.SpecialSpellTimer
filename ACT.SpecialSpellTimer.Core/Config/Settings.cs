@@ -425,7 +425,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.NotifyNormalSpellTimerPrefix), "spespe_" },
             { nameof(Settings.ReadyText), "Ready" },
             { nameof(Settings.OverText), "Over" },
-            { nameof(Settings.TimeOfHideSpell), 0.0d },
+            { nameof(Settings.TimeOfHideSpell), 1.0d },
             { nameof(Settings.PlayerInfoRefreshInterval), 3.0d },
             { nameof(Settings.LogPollSleepInterval), 10 },
             { nameof(Settings.RefreshInterval), 60 },
