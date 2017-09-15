@@ -5,6 +5,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
     using ACT.SpecialSpellTimer.Config;
     using ACT.SpecialSpellTimer.Utility;
+    using FFXIV.Framework.Dialog;
     using FFXIV.Framework.Extensions;
 
     /// <summary>
@@ -12,6 +13,97 @@ namespace ACT.SpecialSpellTimer.Forms
     /// </summary>
     public partial class ConfigPanel
     {
+        /// <summary>
+        /// オプション設定をロードする
+        /// </summary>
+        private void LoadSettingsOption()
+        {
+            foreach (Language lang in this.LanguageComboBox.Items)
+            {
+                if (lang.Value == Settings.Default.Language)
+                    this.LanguageComboBox.SelectedItem = lang;
+            }
+
+            this.OverlayForceVisibleCheckBox.Checked = Settings.Default.OverlayForceVisible;
+            this.HideWhenNotActiceCheckBox.Checked = Settings.Default.HideWhenNotActive;
+            this.UseOtherThanFFXIVCheckbox.Checked = Settings.Default.UseOtherThanFFXIV;
+
+            if (Settings.Default.OverlayVisible)
+            {
+                this.SwitchOverlayButton.Text = Translate.Get("OverlayDisplaySwitchIsOn");
+            }
+            else
+            {
+                this.SwitchOverlayButton.Text = Translate.Get("OverlayDisplaySwitchIsOff");
+            }
+
+            if (Settings.Default.TelopAlwaysVisible)
+            {
+                this.SwitchTelopButton.Text = Translate.Get("TelopDisplaySwitchIsOn");
+            }
+            else
+            {
+                this.SwitchTelopButton.Text = Translate.Get("TelopDisplaySwitchIsOff");
+            }
+
+            this.DefaultVisualSetting.BarSize = Settings.Default.ProgressBarSize;
+            this.DefaultVisualSetting.BarColor = Settings.Default.ProgressBarColor;
+            this.DefaultVisualSetting.BarOutlineColor = Settings.Default.ProgressBarOutlineColor;
+            this.DefaultVisualSetting.SetFontInfo(Settings.Default.Font.ToFontInfo());
+            this.DefaultVisualSetting.FontColor = Settings.Default.FontColor;
+            this.DefaultVisualSetting.FontOutlineColor = Settings.Default.FontOutlineColor;
+            this.DefaultVisualSetting.WarningFontColor = Settings.Default.WarningFontColor;
+            this.DefaultVisualSetting.WarningFontOutlineColor = Settings.Default.WarningFontOutlineColor;
+            this.DefaultVisualSetting.BackgroundColor = Settings.Default.BackgroundColor;
+            this.DefaultVisualSetting.RefreshSampleImage();
+
+            this.OpacityNumericUpDown.Value = Settings.Default.Opacity;
+            this.ReduceIconBrightnessNumericUpDown.Value = Settings.Default.ReduceIconBrightness;
+            this.ClickThroughCheckBox.Checked = Settings.Default.ClickThroughEnabled;
+            this.AutoSortCheckBox.Checked = Settings.Default.AutoSortEnabled;
+            this.AutoSortReverseCheckBox.Checked = Settings.Default.AutoSortReverse;
+            this.TimeOfHideNumericUpDown.Value = (decimal)Settings.Default.TimeOfHideSpell;
+            this.RefreshIntervalNumericUpDown.Value = Settings.Default.RefreshInterval;
+            this.LogPollSleepNumericUpDown.Value = Settings.Default.LogPollSleepInterval;
+            this.EnabledPTPlaceholderCheckBox.Checked = Settings.Default.EnabledPartyMemberPlaceholder;
+            this.EnabledSpellTimerNoDecimalCheckBox.Checked = Settings.Default.EnabledSpellTimerNoDecimal;
+            this.EnabledNotifyNormalSpellTimerCheckBox.Checked = Settings.Default.EnabledNotifyNormalSpellTimer;
+
+            this.ReadyTextBox.Text = Settings.Default.ReadyText;
+            this.OverTextBox.Text = Settings.Default.OverText;
+
+            this.SaveLogCheckBox.Checked = Settings.Default.SaveLogEnabled;
+            this.SaveLogTextBox.Text = Settings.Default.SaveLogDirectory;
+
+            this.ResetOnWipeOutCheckBox.Checked = Settings.Default.ResetOnWipeOut;
+            this.NotifyToACTCheckBox.Checked = Settings.Default.WipeoutNotifyToACT;
+            this.SimpleRegexCheckBox.Checked = Settings.Default.SimpleRegex;
+            this.RemoveTooltipSymbolsCheckBox.Checked = Settings.Default.RemoveTooltipSymbols;
+            this.DetectPacketDumpcheckBox.Checked = Settings.Default.DetectPacketDump;
+            this.ToComplementUnknownSkillCheckBox.Checked = Settings.Default.ToComplementUnknownSkill;
+
+            this.TextOutlineThicknessRateNumericUpDown.Value = (decimal)Settings.Default.TextOutlineThicknessRate;
+            this.TextBlurRateNumericUpDown.Value = (decimal)Settings.Default.TextBlurRate;
+
+            this.RenderWithCPUOnlyCheckBox.Checked = Settings.Default.RenderCPUOnly;
+
+            this.FixBackgroundColorOfBarCheckBox.Checked = Settings.Default.BarBackgroundFixed;
+            this.BarBackgroundBrightnessNumericUpDown.Value = (decimal)Settings.Default.BarBackgroundBrightness;
+            this.BarBackgroundColorButton.BackColor = Settings.Default.BarDefaultBackgroundColor.ToLegacy();
+
+            var sw1 = this.SaveLogCheckBox.Checked;
+            this.SaveLogTextBox.Enabled = sw1;
+            this.SaveLogButton.Enabled = sw1;
+
+            var sw2 = !this.UseOtherThanFFXIVCheckbox.Checked;
+            this.OverlayForceVisibleCheckBox.Enabled = sw2;
+            this.EnabledPTPlaceholderCheckBox.Enabled = sw2;
+            this.ResetOnWipeOutCheckBox.Enabled = sw2;
+
+            // 標準のスペルタイマーへ設定を反映する
+            SpellsController.Instance.ApplyToNormalSpellTimer();
+        }
+
         /// <summary>
         /// 設定を適用する
         /// </summary>
@@ -61,6 +153,10 @@ namespace ACT.SpecialSpellTimer.Forms
             Settings.Default.TextBlurRate = (double)this.TextBlurRateNumericUpDown.Value;
 
             Settings.Default.RenderCPUOnly = this.RenderWithCPUOnlyCheckBox.Checked;
+
+            Settings.Default.BarBackgroundFixed = this.FixBackgroundColorOfBarCheckBox.Checked;
+            Settings.Default.BarBackgroundBrightness = (double)this.BarBackgroundBrightnessNumericUpDown.Value;
+            Settings.Default.BarDefaultBackgroundColor = this.BarBackgroundColorButton.BackColor.ToWPF();
 
             // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&
@@ -170,93 +266,32 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.OptionTabPage.MouseHover += (s1, e1) => action();
             this.SwitchOverlayButton.MouseHover += (s1, e1) => action();
-        }
 
-        /// <summary>
-        /// オプション設定をロードする
-        /// </summary>
-        private void LoadSettingsOption()
-        {
-            foreach (Language lang in this.LanguageComboBox.Items)
+            #region ProgressBar Background
+
+            void changeProgressBarBackgroundPanel(
+                bool isFixMode)
             {
-                if (lang.Value == Settings.Default.Language)
-                    this.LanguageComboBox.SelectedItem = lang;
+                this.BarBackgroundBrightnessPanel.Visible = !isFixMode;
+                this.BarBackgroundColorPanel.Visible = isFixMode;
             }
 
-            this.OverlayForceVisibleCheckBox.Checked = Settings.Default.OverlayForceVisible;
-            this.HideWhenNotActiceCheckBox.Checked = Settings.Default.HideWhenNotActive;
-            this.UseOtherThanFFXIVCheckbox.Checked = Settings.Default.UseOtherThanFFXIV;
+            this.FixBackgroundColorOfBarCheckBox.CheckedChanged += (s, e) =>
+                changeProgressBarBackgroundPanel((s as CheckBox).Checked);
+            changeProgressBarBackgroundPanel(this.FixBackgroundColorOfBarCheckBox.Checked);
 
-            if (Settings.Default.OverlayVisible)
+            this.BarBackgroundColorButton.Click += (s, e) =>
             {
-                this.SwitchOverlayButton.Text = Translate.Get("OverlayDisplaySwitchIsOn");
-            }
-            else
-            {
-                this.SwitchOverlayButton.Text = Translate.Get("OverlayDisplaySwitchIsOff");
-            }
+                var button = s as Button;
 
-            if (Settings.Default.TelopAlwaysVisible)
-            {
-                this.SwitchTelopButton.Text = Translate.Get("TelopDisplaySwitchIsOn");
-            }
-            else
-            {
-                this.SwitchTelopButton.Text = Translate.Get("TelopDisplaySwitchIsOff");
-            }
+                var result = ColorDialogWrapper.ShowDialog(button.BackColor);
+                if (result.Result)
+                {
+                    button.BackColor = result.Color.ToLegacy();
+                }
+            };
 
-            this.DefaultVisualSetting.BarSize = Settings.Default.ProgressBarSize;
-            this.DefaultVisualSetting.BarColor = Settings.Default.ProgressBarColor;
-            this.DefaultVisualSetting.BarOutlineColor = Settings.Default.ProgressBarOutlineColor;
-            this.DefaultVisualSetting.SetFontInfo(Settings.Default.Font.ToFontInfo());
-            this.DefaultVisualSetting.FontColor = Settings.Default.FontColor;
-            this.DefaultVisualSetting.FontOutlineColor = Settings.Default.FontOutlineColor;
-            this.DefaultVisualSetting.WarningFontColor = Settings.Default.WarningFontColor;
-            this.DefaultVisualSetting.WarningFontOutlineColor = Settings.Default.WarningFontOutlineColor;
-            this.DefaultVisualSetting.BackgroundColor = Settings.Default.BackgroundColor;
-            this.DefaultVisualSetting.RefreshSampleImage();
-
-            this.OpacityNumericUpDown.Value = Settings.Default.Opacity;
-            this.ReduceIconBrightnessNumericUpDown.Value = Settings.Default.ReduceIconBrightness;
-            this.ClickThroughCheckBox.Checked = Settings.Default.ClickThroughEnabled;
-            this.AutoSortCheckBox.Checked = Settings.Default.AutoSortEnabled;
-            this.AutoSortReverseCheckBox.Checked = Settings.Default.AutoSortReverse;
-            this.TimeOfHideNumericUpDown.Value = (decimal)Settings.Default.TimeOfHideSpell;
-            this.RefreshIntervalNumericUpDown.Value = Settings.Default.RefreshInterval;
-            this.LogPollSleepNumericUpDown.Value = Settings.Default.LogPollSleepInterval;
-            this.EnabledPTPlaceholderCheckBox.Checked = Settings.Default.EnabledPartyMemberPlaceholder;
-            this.EnabledSpellTimerNoDecimalCheckBox.Checked = Settings.Default.EnabledSpellTimerNoDecimal;
-            this.EnabledNotifyNormalSpellTimerCheckBox.Checked = Settings.Default.EnabledNotifyNormalSpellTimer;
-
-            this.ReadyTextBox.Text = Settings.Default.ReadyText;
-            this.OverTextBox.Text = Settings.Default.OverText;
-
-            this.SaveLogCheckBox.Checked = Settings.Default.SaveLogEnabled;
-            this.SaveLogTextBox.Text = Settings.Default.SaveLogDirectory;
-
-            this.ResetOnWipeOutCheckBox.Checked = Settings.Default.ResetOnWipeOut;
-            this.NotifyToACTCheckBox.Checked = Settings.Default.WipeoutNotifyToACT;
-            this.SimpleRegexCheckBox.Checked = Settings.Default.SimpleRegex;
-            this.RemoveTooltipSymbolsCheckBox.Checked = Settings.Default.RemoveTooltipSymbols;
-            this.DetectPacketDumpcheckBox.Checked = Settings.Default.DetectPacketDump;
-            this.ToComplementUnknownSkillCheckBox.Checked = Settings.Default.ToComplementUnknownSkill;
-
-            this.TextOutlineThicknessRateNumericUpDown.Value = (decimal)Settings.Default.TextOutlineThicknessRate;
-            this.TextBlurRateNumericUpDown.Value = (decimal)Settings.Default.TextBlurRate;
-
-            this.RenderWithCPUOnlyCheckBox.Checked = Settings.Default.RenderCPUOnly;
-
-            var sw1 = this.SaveLogCheckBox.Checked;
-            this.SaveLogTextBox.Enabled = sw1;
-            this.SaveLogButton.Enabled = sw1;
-
-            var sw2 = !this.UseOtherThanFFXIVCheckbox.Checked;
-            this.OverlayForceVisibleCheckBox.Enabled = sw2;
-            this.EnabledPTPlaceholderCheckBox.Enabled = sw2;
-            this.ResetOnWipeOutCheckBox.Enabled = sw2;
-
-            // 標準のスペルタイマーへ設定を反映する
-            SpellsController.Instance.ApplyToNormalSpellTimer();
+            #endregion ProgressBar Background
         }
     }
 }

@@ -1237,4 +1237,16 @@
     <value>ログのマッチングをシングルタスクにする</value>
     <comment>Log matching with a single task</comment>
   </data>
+  <data name="BarBackgroundBrightnessLabel" xml:space="preserve">
+    <value>プログレスバーの背景の輝度</value>
+    <comment>Progress bar background brightness.</comment>
+  </data>
+  <data name="BarBackgroundColorLabel" xml:space="preserve">
+    <value>プログレスバーの背景色</value>
+    <comment>Progress bar background color.</comment>
+  </data>
+  <data name="FixBackgroundColorOfBarCheckBox" xml:space="preserve">
+    <value>プログレスバーの背景色を固定する</value>
+    <comment>To fix Background color of Progress bar.</comment>
+  </data>
 </root>

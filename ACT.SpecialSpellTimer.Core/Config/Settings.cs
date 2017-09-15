@@ -136,6 +136,53 @@ namespace ACT.SpecialSpellTimer.Config
 
         #endregion Data - Colors
 
+        #region Data - ProgressBar Background
+
+        [XmlIgnore] private readonly System.Windows.Media.Color DefaultBackgroundColor = System.Windows.Media.Colors.Black;
+        [XmlIgnore] private bool barBackgroundFixed;
+        [XmlIgnore] private double barBackgroundBrightness;
+        [XmlIgnore] private System.Windows.Media.Color barDefaultBackgroundColor;
+
+        /// <summary>
+        /// プログレスバーの背景が固定色か？
+        /// </summary>
+        public bool BarBackgroundFixed
+        {
+            get => this.barBackgroundFixed;
+            set => this.barBackgroundFixed = value;
+        }
+
+        /// <summary>
+        /// プログレスバーの背景の輝度
+        /// </summary>
+        public double BarBackgroundBrightness
+        {
+            get => this.barBackgroundBrightness;
+            set => this.barBackgroundBrightness = value;
+        }
+
+        /// <summary>
+        /// プログレスバーの標準の背景色
+        /// </summary>
+        [XmlIgnore]
+        public System.Windows.Media.Color BarDefaultBackgroundColor
+        {
+            get => this.barDefaultBackgroundColor;
+            set => this.barDefaultBackgroundColor = value;
+        }
+
+        /// <summary>
+        /// プログレスバーの標準の背景色
+        /// </summary>
+        [XmlElement(ElementName = "BarDefaultBackgroundColor")]
+        public string BarDefaultBackgroundColorText
+        {
+            get => this.BarDefaultBackgroundColor.ToString();
+            set => this.BarDefaultBackgroundColor = this.DefaultBackgroundColor.FromString(value);
+        }
+
+        #endregion Data - ProgressBar Background
+
         #region Data - Sizes
 
         [XmlIgnore]
@@ -225,7 +272,7 @@ namespace ACT.SpecialSpellTimer.Config
         [XmlElement(ElementName = "LastUpdateDateTime")]
         public string LastUpdateDateTimeCrypted
         {
-            get => Crypter.EncryptString(this.lastUpdateDateTime.ToString());
+            get => Crypter.EncryptString(this.lastUpdateDateTime.ToString("o"));
             set
             {
                 DateTime d;
@@ -415,6 +462,10 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.RenderCPUOnly), true },
             { nameof(Settings.ToComplementUnknownSkill), true },
             { nameof(Settings.SingleTaskLogMatching), false },
+
+            { nameof(Settings.BarBackgroundFixed), false },
+            { nameof(Settings.BarBackgroundBrightness), 0.3 },
+            { nameof(Settings.BarDefaultBackgroundColor), System.Windows.Media.Color.FromArgb(240, 0, 0, 0) },
 
             // 設定画面のない設定項目
             { nameof(Settings.LastUpdateDateTime), DateTime.Parse("2000-1-1") },

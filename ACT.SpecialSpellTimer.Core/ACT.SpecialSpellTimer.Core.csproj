@@ -149,6 +149,7 @@
       <DependentUpon>SelectIconUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Utility\Crypter.cs" />
+    <Compile Include="Views\BarBackgroundConverter.cs" />
     <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\BrightnessConverter.cs" />
     <Compile Include="Views\TickerWindow.xaml.cs">

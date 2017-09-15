@@ -15,6 +15,7 @@
     <local:StrokeThicknessToBlurRadiusConverter x:Key="StrokeThicknessToBlurRadiusConverter" />
     <local:ColorBrightnessConverter x:Key="ColorConv" />
     <local:BrushBrightnessConverter x:Key="BrushConv" />
+    <local:BarBackgroundConverter x:Key="BarBackConv" />
   </UserControl.Resources>
 
   <Grid Name="BackgroundColorGrid">
@@ -53,7 +54,7 @@
             RadiusY="2"
             Width="{Binding ElementName=ProgressBarPanel, Path=ActualWidth, Mode=OneWay}"
             Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}"
-            Fill="{Binding ElementName=BarRectangle, Path=Fill, Converter={StaticResource BrushConv}, ConverterParameter=0.4, Mode=OneWay}" />
+            Fill="{Binding ElementName=BarRectangle, Path=Fill, Converter={StaticResource BarBackConv}, Mode=OneWay}" />
 
           <Rectangle
             x:Name="BarRectangle"

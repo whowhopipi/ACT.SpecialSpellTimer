@@ -17,6 +17,7 @@
     <local:StrokeThicknessToBlurRadiusConverter x:Key="StrokeThicknessToBlurRadiusConverter" />
     <local:ColorBrightnessConverter x:Key="ColorConv" />
     <local:BrushBrightnessConverter x:Key="BrushConv" />
+    <local:BarBackgroundConverter x:Key="BarBackConv" />
   </UserControl.Resources>
 
   <UserControl.ContextMenu>
@@ -51,7 +52,7 @@
         RadiusX="2"
         RadiusY="2"
         Height="{Binding ElementName=BarRectangle, Path=Height, Mode=OneWay}"
-        Fill="{Binding ElementName=BarRectangle, Path=Fill, Converter={StaticResource BrushConv}, ConverterParameter=0.4, Mode=OneWay}" />
+        Fill="{Binding ElementName=BarRectangle, Path=Fill, Converter={StaticResource BarBackConv}, Mode=OneWay}" />
 
       <Canvas ClipToBounds="False">
         <Canvas.Effect>

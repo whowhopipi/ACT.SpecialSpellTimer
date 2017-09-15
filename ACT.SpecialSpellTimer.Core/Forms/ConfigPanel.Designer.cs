@@ -233,6 +233,14 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage = new System.Windows.Forms.TabPage();
             this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabOverlayOptions = new System.Windows.Forms.TabPage();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.BarBackgroundBrightnessPanel = new System.Windows.Forms.Panel();
+            this.label69 = new System.Windows.Forms.Label();
+            this.BarBackgroundBrightnessNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.BarBackgroundColorPanel = new System.Windows.Forms.Panel();
+            this.BarBackgroundColorButton = new System.Windows.Forms.Button();
+            this.label70 = new System.Windows.Forms.Label();
+            this.FixBackgroundColorOfBarCheckBox = new System.Windows.Forms.CheckBox();
             this.RenderWithCPUOnlyCheckBox = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
             this.label107 = new System.Windows.Forms.Label();
@@ -384,6 +392,10 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage.SuspendLayout();
             this.tabControlExtHoriz1.SuspendLayout();
             this.tabOverlayOptions.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.BarBackgroundBrightnessPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BarBackgroundBrightnessNumericUpDown)).BeginInit();
+            this.BarBackgroundColorPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TextBlurRateNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TextOutlineThicknessRateNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).BeginInit();
@@ -508,7 +520,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpecialSpellTabPage.Controls.Add(this.panel5);
             this.SpecialSpellTabPage.Location = new System.Drawing.Point(264, 4);
             this.SpecialSpellTabPage.Name = "SpecialSpellTabPage";
-            this.SpecialSpellTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SpecialSpellTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.SpecialSpellTabPage.Size = new System.Drawing.Size(1065, 829);
             this.SpecialSpellTabPage.TabIndex = 0;
             this.SpecialSpellTabPage.Text = "SpellTimerTabTitle";
@@ -778,7 +790,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.GeneralTab.Controls.Add(this.SpellDetailPanel);
             this.GeneralTab.Location = new System.Drawing.Point(-1, 31);
             this.GeneralTab.Name = "GeneralTab";
-            this.GeneralTab.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GeneralTab.Padding = new System.Windows.Forms.Padding(2);
             this.GeneralTab.Size = new System.Drawing.Size(541, 763);
             this.GeneralTab.TabIndex = 0;
             this.GeneralTab.Text = "GeneralTab";
@@ -887,7 +899,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.BlinkTimeNumericUpDown.DecimalPlaces = 1;
             this.BlinkTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.BlinkTimeNumericUpDown.Location = new System.Drawing.Point(5, 392);
-            this.BlinkTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.BlinkTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.BlinkTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -942,7 +954,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.WarningTimeNumericUpDown.DecimalPlaces = 1;
             this.WarningTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.WarningTimeNumericUpDown.Location = new System.Drawing.Point(5, 364);
-            this.WarningTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.WarningTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.WarningTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -975,7 +987,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.ExpandSecounds1NumericUpDown.DecimalPlaces = 1;
             this.ExpandSecounds1NumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.ExpandSecounds1NumericUpDown.Location = new System.Drawing.Point(426, 260);
-            this.ExpandSecounds1NumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ExpandSecounds1NumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.ExpandSecounds1NumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1020,7 +1032,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.ExpandSecounds2NumericUpDown.DecimalPlaces = 1;
             this.ExpandSecounds2NumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.ExpandSecounds2NumericUpDown.Location = new System.Drawing.Point(426, 286);
-            this.ExpandSecounds2NumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ExpandSecounds2NumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.ExpandSecounds2NumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1083,7 +1095,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.RecastTimeNumericUpDown.DecimalPlaces = 1;
             this.RecastTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.RecastTimeNumericUpDown.Location = new System.Drawing.Point(5, 207);
-            this.RecastTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.RecastTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.RecastTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1099,7 +1111,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.UpperLimitOfExtensionNumericUpDown.DecimalPlaces = 1;
             this.UpperLimitOfExtensionNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.UpperLimitOfExtensionNumericUpDown.Location = new System.Drawing.Point(5, 337);
-            this.UpperLimitOfExtensionNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.UpperLimitOfExtensionNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.UpperLimitOfExtensionNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1366,8 +1378,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.AlarmTab.Controls.Add(this.groupBox2);
             this.AlarmTab.Location = new System.Drawing.Point(-1, 31);
             this.AlarmTab.Name = "AlarmTab";
-            this.AlarmTab.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.AlarmTab.Size = new System.Drawing.Size(804, 766);
+            this.AlarmTab.Padding = new System.Windows.Forms.Padding(3);
+            this.AlarmTab.Size = new System.Drawing.Size(541, 763);
             this.AlarmTab.TabIndex = 1;
             this.AlarmTab.Text = "AlarmTab";
             this.AlarmTab.UseVisualStyleBackColor = true;
@@ -1386,7 +1398,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.groupBox4.Controls.Add(this.label54);
             this.groupBox4.Location = new System.Drawing.Point(5, 213);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(793, 110);
+            this.groupBox4.Size = new System.Drawing.Size(530, 110);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "SoundEffectBeforeComplete";
@@ -1397,7 +1409,7 @@ namespace ACT.SpecialSpellTimer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BeforeTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.BeforeTextToSpeakTextBox.Name = "BeforeTextToSpeakTextBox";
-            this.BeforeTextToSpeakTextBox.Size = new System.Drawing.Size(531, 19);
+            this.BeforeTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
             this.BeforeTextToSpeakTextBox.TabIndex = 1;
             // 
             // BeforeSoundComboBox
@@ -1484,7 +1496,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Location = new System.Drawing.Point(5, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(793, 75);
+            this.groupBox1.Size = new System.Drawing.Size(530, 75);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "ImmediateSoundEffect";
@@ -1495,7 +1507,7 @@ namespace ACT.SpecialSpellTimer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MatchTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.MatchTextToSpeakTextBox.Name = "MatchTextToSpeakTextBox";
-            this.MatchTextToSpeakTextBox.Size = new System.Drawing.Size(531, 19);
+            this.MatchTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
             this.MatchTextToSpeakTextBox.TabIndex = 1;
             // 
             // MatchSoundComboBox
@@ -1560,7 +1572,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Location = new System.Drawing.Point(5, 93);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(793, 110);
+            this.groupBox3.Size = new System.Drawing.Size(530, 110);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "DelayedSoundEffectAfterMatch";
@@ -1571,7 +1583,7 @@ namespace ACT.SpecialSpellTimer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OverTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.OverTextToSpeakTextBox.Name = "OverTextToSpeakTextBox";
-            this.OverTextToSpeakTextBox.Size = new System.Drawing.Size(531, 19);
+            this.OverTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
             this.OverTextToSpeakTextBox.TabIndex = 1;
             // 
             // OverSoundComboBox
@@ -1658,9 +1670,9 @@ namespace ACT.SpecialSpellTimer.Forms
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Location = new System.Drawing.Point(5, 332);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(793, 75);
+            this.groupBox2.Size = new System.Drawing.Size(530, 75);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "RecastCompleteSoundEffect";
@@ -1671,7 +1683,7 @@ namespace ACT.SpecialSpellTimer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TimeupTextToSpeakTextBox.Location = new System.Drawing.Point(255, 44);
             this.TimeupTextToSpeakTextBox.Name = "TimeupTextToSpeakTextBox";
-            this.TimeupTextToSpeakTextBox.Size = new System.Drawing.Size(531, 19);
+            this.TimeupTextToSpeakTextBox.Size = new System.Drawing.Size(268, 19);
             this.TimeupTextToSpeakTextBox.TabIndex = 1;
             // 
             // TimeupSoundComboBox
@@ -1758,7 +1770,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OnPointTelopTabPage.Controls.Add(this.splitContainer2);
             this.OnPointTelopTabPage.Location = new System.Drawing.Point(264, 4);
             this.OnPointTelopTabPage.Name = "OnPointTelopTabPage";
-            this.OnPointTelopTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OnPointTelopTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.OnPointTelopTabPage.Size = new System.Drawing.Size(1065, 829);
             this.OnPointTelopTabPage.TabIndex = 2;
             this.OnPointTelopTabPage.Text = "TelopTabPageTitle";
@@ -1924,7 +1936,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabPage1.Controls.Add(this.label44);
             this.tabPage1.Location = new System.Drawing.Point(-1, 31);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(541, 795);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "GeneralTab";
@@ -2233,8 +2245,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabPage2.Controls.Add(this.groupBox7);
             this.tabPage2.Location = new System.Drawing.Point(-1, 31);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(804, 798);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(541, 795);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "AlarmTab";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -2251,7 +2263,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.groupBox5.Controls.Add(this.label38);
             this.groupBox5.Location = new System.Drawing.Point(6, 93);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(793, 75);
+            this.groupBox5.Size = new System.Drawing.Size(530, 75);
             this.groupBox5.TabIndex = 79;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DelayedSoundEffect";
@@ -2262,7 +2274,7 @@ namespace ACT.SpecialSpellTimer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TelopDelayTTSTextBox.Location = new System.Drawing.Point(255, 44);
             this.TelopDelayTTSTextBox.Name = "TelopDelayTTSTextBox";
-            this.TelopDelayTTSTextBox.Size = new System.Drawing.Size(531, 19);
+            this.TelopDelayTTSTextBox.Size = new System.Drawing.Size(268, 19);
             this.TelopDelayTTSTextBox.TabIndex = 1;
             // 
             // TelopDelaySoundComboBox
@@ -2325,7 +2337,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.groupBox7.Controls.Add(this.label42);
             this.groupBox7.Location = new System.Drawing.Point(6, 12);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(793, 75);
+            this.groupBox7.Size = new System.Drawing.Size(530, 75);
             this.groupBox7.TabIndex = 78;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "ImmediateSoundEffect";
@@ -2336,7 +2348,7 @@ namespace ACT.SpecialSpellTimer.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TelopMatchTTSTextBox.Location = new System.Drawing.Point(255, 44);
             this.TelopMatchTTSTextBox.Name = "TelopMatchTTSTextBox";
-            this.TelopMatchTTSTextBox.Size = new System.Drawing.Size(531, 19);
+            this.TelopMatchTTSTextBox.Size = new System.Drawing.Size(268, 19);
             this.TelopMatchTTSTextBox.TabIndex = 1;
             // 
             // TelopMatchSoundComboBox
@@ -2396,7 +2408,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.CombatAnalyzerTabPage.Controls.Add(this.lblCombatAnalyzer);
             this.CombatAnalyzerTabPage.Location = new System.Drawing.Point(264, 4);
             this.CombatAnalyzerTabPage.Name = "CombatAnalyzerTabPage";
-            this.CombatAnalyzerTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CombatAnalyzerTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.CombatAnalyzerTabPage.Size = new System.Drawing.Size(1065, 829);
             this.CombatAnalyzerTabPage.TabIndex = 3;
             this.CombatAnalyzerTabPage.Text = "CombatAnalyzerTabTitle";
@@ -2607,7 +2619,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.NameStyleTabPage.Location = new System.Drawing.Point(264, 4);
             this.NameStyleTabPage.Name = "NameStyleTabPage";
-            this.NameStyleTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.NameStyleTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.NameStyleTabPage.Size = new System.Drawing.Size(1065, 829);
             this.NameStyleTabPage.TabIndex = 7;
             this.NameStyleTabPage.Text = "NameStyleTabPage";
@@ -2622,7 +2634,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage.Controls.Add(this.lblLanguage);
             this.OptionTabPage.Location = new System.Drawing.Point(264, 4);
             this.OptionTabPage.Name = "OptionTabPage";
-            this.OptionTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OptionTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.OptionTabPage.Size = new System.Drawing.Size(1065, 829);
             this.OptionTabPage.TabIndex = 1;
             this.OptionTabPage.Text = "OptionTabPageTitle";
@@ -2642,7 +2654,10 @@ namespace ACT.SpecialSpellTimer.Forms
             // tabOverlayOptions
             // 
             this.tabOverlayOptions.AutoScroll = true;
+            this.tabOverlayOptions.AutoScrollMargin = new System.Drawing.Size(0, 40);
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.flowLayoutPanel1);
+            this.tabOverlayOptions.Controls.Add(this.FixBackgroundColorOfBarCheckBox);
             this.tabOverlayOptions.Controls.Add(this.RenderWithCPUOnlyCheckBox);
             this.tabOverlayOptions.Controls.Add(this.label27);
             this.tabOverlayOptions.Controls.Add(this.label107);
@@ -2669,15 +2684,109 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.Controls.Add(this.HideWhenNotActiceCheckBox);
             this.tabOverlayOptions.Location = new System.Drawing.Point(-1, 31);
             this.tabOverlayOptions.Name = "tabOverlayOptions";
-            this.tabOverlayOptions.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabOverlayOptions.Padding = new System.Windows.Forms.Padding(3);
             this.tabOverlayOptions.Size = new System.Drawing.Size(1063, 708);
             this.tabOverlayOptions.TabIndex = 0;
             this.tabOverlayOptions.Text = "tabOverlayOptions";
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel1.Controls.Add(this.BarBackgroundBrightnessPanel);
+            this.flowLayoutPanel1.Controls.Add(this.BarBackgroundColorPanel);
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(16, 467);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(378, 57);
+            this.flowLayoutPanel1.TabIndex = 72;
+            // 
+            // BarBackgroundBrightnessPanel
+            // 
+            this.BarBackgroundBrightnessPanel.AutoSize = true;
+            this.BarBackgroundBrightnessPanel.Controls.Add(this.label69);
+            this.BarBackgroundBrightnessPanel.Controls.Add(this.BarBackgroundBrightnessNumericUpDown);
+            this.BarBackgroundBrightnessPanel.Location = new System.Drawing.Point(0, 0);
+            this.BarBackgroundBrightnessPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.BarBackgroundBrightnessPanel.Name = "BarBackgroundBrightnessPanel";
+            this.BarBackgroundBrightnessPanel.Size = new System.Drawing.Size(337, 28);
+            this.BarBackgroundBrightnessPanel.TabIndex = 0;
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(3, 6);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(165, 12);
+            this.label69.TabIndex = 69;
+            this.label69.Text = "BarBackgroundBrightnessLabel";
+            // 
+            // BarBackgroundBrightnessNumericUpDown
+            // 
+            this.BarBackgroundBrightnessNumericUpDown.DecimalPlaces = 1;
+            this.BarBackgroundBrightnessNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.BarBackgroundBrightnessNumericUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.BarBackgroundBrightnessNumericUpDown.Location = new System.Drawing.Point(275, 3);
+            this.BarBackgroundBrightnessNumericUpDown.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
+            this.BarBackgroundBrightnessNumericUpDown.Maximum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.BarBackgroundBrightnessNumericUpDown.Name = "BarBackgroundBrightnessNumericUpDown";
+            this.BarBackgroundBrightnessNumericUpDown.Size = new System.Drawing.Size(59, 19);
+            this.BarBackgroundBrightnessNumericUpDown.TabIndex = 68;
+            this.BarBackgroundBrightnessNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // BarBackgroundColorPanel
+            // 
+            this.BarBackgroundColorPanel.AutoSize = true;
+            this.BarBackgroundColorPanel.Controls.Add(this.BarBackgroundColorButton);
+            this.BarBackgroundColorPanel.Controls.Add(this.label70);
+            this.BarBackgroundColorPanel.Location = new System.Drawing.Point(0, 28);
+            this.BarBackgroundColorPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.BarBackgroundColorPanel.Name = "BarBackgroundColorPanel";
+            this.BarBackgroundColorPanel.Size = new System.Drawing.Size(378, 29);
+            this.BarBackgroundColorPanel.TabIndex = 70;
+            // 
+            // BarBackgroundColorButton
+            // 
+            this.BarBackgroundColorButton.Location = new System.Drawing.Point(275, 3);
+            this.BarBackgroundColorButton.Name = "BarBackgroundColorButton";
+            this.BarBackgroundColorButton.Size = new System.Drawing.Size(100, 23);
+            this.BarBackgroundColorButton.TabIndex = 70;
+            this.BarBackgroundColorButton.Text = "__color";
+            this.BarBackgroundColorButton.UseVisualStyleBackColor = true;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(3, 8);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(137, 12);
+            this.label70.TabIndex = 69;
+            this.label70.Text = "BarBackgroundColorLabel";
+            // 
+            // FixBackgroundColorOfBarCheckBox
+            // 
+            this.FixBackgroundColorOfBarCheckBox.AutoSize = true;
+            this.FixBackgroundColorOfBarCheckBox.Location = new System.Drawing.Point(16, 445);
+            this.FixBackgroundColorOfBarCheckBox.Name = "FixBackgroundColorOfBarCheckBox";
+            this.FixBackgroundColorOfBarCheckBox.Size = new System.Drawing.Size(209, 16);
+            this.FixBackgroundColorOfBarCheckBox.TabIndex = 71;
+            this.FixBackgroundColorOfBarCheckBox.Text = "FixBackgroundColorOfBarCheckBox";
+            this.FixBackgroundColorOfBarCheckBox.UseVisualStyleBackColor = true;
+            // 
             // RenderWithCPUOnlyCheckBox
             // 
             this.RenderWithCPUOnlyCheckBox.AutoSize = true;
-            this.RenderWithCPUOnlyCheckBox.Location = new System.Drawing.Point(291, 415);
+            this.RenderWithCPUOnlyCheckBox.Location = new System.Drawing.Point(291, 411);
             this.RenderWithCPUOnlyCheckBox.Name = "RenderWithCPUOnlyCheckBox";
             this.RenderWithCPUOnlyCheckBox.Size = new System.Drawing.Size(64, 16);
             this.RenderWithCPUOnlyCheckBox.TabIndex = 70;
@@ -2687,7 +2796,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(15, 416);
+            this.label27.Location = new System.Drawing.Point(15, 412);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(109, 12);
             this.label27.TabIndex = 69;
@@ -2992,8 +3101,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabDetailOptions.Controls.Add(this.label66);
             this.tabDetailOptions.Location = new System.Drawing.Point(-1, 31);
             this.tabDetailOptions.Name = "tabDetailOptions";
-            this.tabDetailOptions.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabDetailOptions.Size = new System.Drawing.Size(1153, 711);
+            this.tabDetailOptions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDetailOptions.Size = new System.Drawing.Size(1063, 708);
             this.tabDetailOptions.TabIndex = 1;
             this.tabDetailOptions.Text = "tabDetailOptions";
             // 
@@ -3001,7 +3110,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.ToComplementUnknownSkillCheckBox.AutoSize = true;
             this.ToComplementUnknownSkillCheckBox.Location = new System.Drawing.Point(325, 381);
-            this.ToComplementUnknownSkillCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ToComplementUnknownSkillCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.ToComplementUnknownSkillCheckBox.Name = "ToComplementUnknownSkillCheckBox";
             this.ToComplementUnknownSkillCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ToComplementUnknownSkillCheckBox.TabIndex = 75;
@@ -3083,7 +3192,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.DetectPacketDumpcheckBox.AutoSize = true;
             this.DetectPacketDumpcheckBox.Location = new System.Drawing.Point(325, 409);
-            this.DetectPacketDumpcheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DetectPacketDumpcheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.DetectPacketDumpcheckBox.Name = "DetectPacketDumpcheckBox";
             this.DetectPacketDumpcheckBox.Size = new System.Drawing.Size(64, 16);
             this.DetectPacketDumpcheckBox.TabIndex = 71;
@@ -3103,7 +3212,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.RemoveTooltipSymbolsCheckBox.AutoSize = true;
             this.RemoveTooltipSymbolsCheckBox.Location = new System.Drawing.Point(325, 353);
-            this.RemoveTooltipSymbolsCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.RemoveTooltipSymbolsCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.RemoveTooltipSymbolsCheckBox.Name = "RemoveTooltipSymbolsCheckBox";
             this.RemoveTooltipSymbolsCheckBox.Size = new System.Drawing.Size(64, 16);
             this.RemoveTooltipSymbolsCheckBox.TabIndex = 70;
@@ -3143,7 +3252,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.SimpleRegexCheckBox.AutoSize = true;
             this.SimpleRegexCheckBox.Location = new System.Drawing.Point(325, 325);
-            this.SimpleRegexCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SimpleRegexCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.SimpleRegexCheckBox.Name = "SimpleRegexCheckBox";
             this.SimpleRegexCheckBox.Size = new System.Drawing.Size(64, 16);
             this.SimpleRegexCheckBox.TabIndex = 68;
@@ -3214,7 +3323,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.ResetOnWipeOutCheckBox.AutoSize = true;
             this.ResetOnWipeOutCheckBox.Location = new System.Drawing.Point(325, 297);
-            this.ResetOnWipeOutCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ResetOnWipeOutCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.ResetOnWipeOutCheckBox.Name = "ResetOnWipeOutCheckBox";
             this.ResetOnWipeOutCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ResetOnWipeOutCheckBox.TabIndex = 65;
@@ -3464,7 +3573,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LanguageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.LanguageComboBox.FormattingEnabled = true;
             this.LanguageComboBox.Location = new System.Drawing.Point(163, 6);
-            this.LanguageComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LanguageComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.LanguageComboBox.Name = "LanguageComboBox";
             this.LanguageComboBox.Size = new System.Drawing.Size(142, 20);
             this.LanguageComboBox.TabIndex = 40;
@@ -3515,7 +3624,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXOptionTabPage.Controls.Add(this.DQXAppleyButton);
             this.DQXOptionTabPage.Location = new System.Drawing.Point(264, 4);
             this.DQXOptionTabPage.Name = "DQXOptionTabPage";
-            this.DQXOptionTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DQXOptionTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.DQXOptionTabPage.Size = new System.Drawing.Size(1065, 829);
             this.DQXOptionTabPage.TabIndex = 5;
             this.DQXOptionTabPage.Text = "DQXOptionTabPage";
@@ -3691,7 +3800,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.LogTabPage.Location = new System.Drawing.Point(264, 4);
             this.LogTabPage.Name = "LogTabPage";
-            this.LogTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LogTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.LogTabPage.Size = new System.Drawing.Size(1065, 829);
             this.LogTabPage.TabIndex = 6;
             this.LogTabPage.Text = "LogTabPage";
@@ -3777,6 +3886,13 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabControlExtHoriz1.ResumeLayout(false);
             this.tabOverlayOptions.ResumeLayout(false);
             this.tabOverlayOptions.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
+            this.BarBackgroundBrightnessPanel.ResumeLayout(false);
+            this.BarBackgroundBrightnessPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BarBackgroundBrightnessNumericUpDown)).EndInit();
+            this.BarBackgroundColorPanel.ResumeLayout(false);
+            this.BarBackgroundColorPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TextBlurRateNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TextOutlineThicknessRateNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.OpacityNumericUpDown)).EndInit();
@@ -4095,5 +4211,13 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.CheckBox TemporarilyDisplayTickerCheckBox;
         private System.Windows.Forms.CheckBox TemporarilyDisplaySpellCheckBox;
         private System.Windows.Forms.Button ExportBySpellPanelButton;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Panel BarBackgroundBrightnessPanel;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.NumericUpDown BarBackgroundBrightnessNumericUpDown;
+        private System.Windows.Forms.CheckBox FixBackgroundColorOfBarCheckBox;
+        private System.Windows.Forms.Panel BarBackgroundColorPanel;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Button BarBackgroundColorButton;
     }
 }

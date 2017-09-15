@@ -250,6 +250,24 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   プログレスバーの背景の輝度 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string BarBackgroundBrightnessLabel {
+            get {
+                return ResourceManager.GetString("BarBackgroundBrightnessLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   プログレスバーの背景色 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string BarBackgroundColorLabel {
+            get {
+                return ResourceManager.GetString("BarBackgroundColorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ﾊﾞｰのｻｲｽﾞ に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string BarSize {
@@ -849,6 +867,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string FFXIVLogStylesGroupBox {
             get {
                 return ResourceManager.GetString("FFXIVLogStylesGroupBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   プログレスバーの背景色を固定する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string FixBackgroundColorOfBarCheckBox {
+            get {
+                return ResourceManager.GetString("FixBackgroundColorOfBarCheckBox", resourceCulture);
             }
         }
         
