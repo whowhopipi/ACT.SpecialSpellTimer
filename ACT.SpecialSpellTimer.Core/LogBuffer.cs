@@ -31,6 +31,11 @@ namespace ACT.SpecialSpellTimer
         /// ツールチップは計4charsで構成されるが先頭1文字目が可変で残り3文字が固定となっている</remarks>
         private const string TooltipSuffix = "\u0001\u0001\uFFFD";
 
+        /// <summary>
+        /// ツールチップで残るリプレースメントキャラ
+        /// </summary>
+        private const string TooltipReplacementChar = "\uFFFD";
+
 #if false
         /// <summary>
         /// ツールチップ文字を除去するための正規表現
@@ -304,6 +309,7 @@ namespace ACT.SpecialSpellTimer
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
                 {
+                    // 4文字分のツールチップ文字を除去する
                     int index;
                     if ((index = logLine.IndexOf(
                         TooltipSuffix,
@@ -312,6 +318,9 @@ namespace ACT.SpecialSpellTimer
                     {
                         logLine = logLine.Remove(index - 1, 4);
                     }
+
+                    // 残ったReplacementCharを除去する
+                    logLine = logLine.Replace(TooltipReplacementChar, string.Empty);
                 }
 #if false
                 // 正規表現方式
