@@ -23,7 +23,7 @@ namespace ACT.SpecialSpellTimer.Views
         {
             this.InitializeComponent();
 
-            this.Loaded += this.OnePointTelopWindow_Loaded;
+            this.Loaded += this.OnLoaded;
             this.MouseLeftButtonDown += (s1, e1) => this.DragMove();
         }
 
@@ -64,7 +64,6 @@ namespace ACT.SpecialSpellTimer.Views
                 Settings.Default.FontOutlineColor.ToWPF() :
                 this.DataSource.FontOutlineColor.FromHTMLWPF();
             var barColor = fontColor;
-            var barBackColor = barColor.ChangeBrightness(0.4d);
             var barOutlineColor = fontOutlineColor;
             var c = this.DataSource.BackgroundColor.FromHTML().ToWPF();
             var backGroundColor = Color.FromArgb(
@@ -147,7 +146,7 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         /// <param name="sender">イベント発生元</param>
         /// <param name="e">イベント引数</param>
-        private void OnePointTelopWindow_Loaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (this.DataSource != null)
             {

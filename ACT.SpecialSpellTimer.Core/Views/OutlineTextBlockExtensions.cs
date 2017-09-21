@@ -58,10 +58,14 @@ namespace ACT.SpecialSpellTimer.Views
 
             // 設定によって増幅させる
             var textOutlineThicknessGain = 1.0d;
+#if DEBUG
             if (!WPFHelper.IsDesignMode)
             {
                 textOutlineThicknessGain = Settings.Default.TextOutlineThicknessRate;
             }
+#else
+            textOutlineThicknessGain = Settings.Default.TextOutlineThicknessRate;
+#endif
 
             var newThickness = thickness * textOutlineThicknessGain;
 

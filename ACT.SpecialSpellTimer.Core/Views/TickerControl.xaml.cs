@@ -16,7 +16,7 @@ namespace ACT.SpecialSpellTimer.Views
         public TickerControl()
         {
             this.InitializeComponent();
-
+#if DEBUG
             if (WPFHelper.IsDesignMode)
             {
                 this.Message = "サンプルテロップ";
@@ -31,6 +31,7 @@ namespace ACT.SpecialSpellTimer.Views
                 this.FontOutlineBrush = new SolidColorBrush(Colors.White);
                 this.BarVisible = true;
             }
+#endif
         }
 
         public string Message
