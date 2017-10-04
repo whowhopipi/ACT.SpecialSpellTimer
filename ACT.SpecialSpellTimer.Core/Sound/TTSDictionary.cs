@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Microsoft.VisualBasic.FileIO;
 
@@ -24,6 +26,7 @@ namespace ACT.SpecialSpellTimer.Sound
 
         private readonly object locker = new object();
         private readonly Dictionary<string, string> ttsDictionary = new Dictionary<string, string>();
+        private readonly Dictionary<string, Regex> placeholderRegexDictionary = new Dictionary<string, Regex>();
 
         public string ResourcesDirectory
         {
@@ -60,9 +63,39 @@ namespace ACT.SpecialSpellTimer.Sound
         {
             lock (this.locker)
             {
+                var placeholderList = TableCompiler.Instance.PlaceholderList;
+
                 foreach (var item in this.ttsDictionary)
                 {
-                    textToSpeak = textToSpeak.Replace(item.Key, item.Value);
+                    // 通常の置換
+                    if (!item.Key.Contains("<") &&
+                        !item.Key.Contains(">"))
+                    {
+                        textToSpeak = textToSpeak.Replace(item.Key, item.Value);
+                        continue;
+                    }
+
+                    // プレースホルダによる置換
+                    var placeholder = placeholderList
+                        .FirstOrDefault(x => x.Placeholder == item.Key);
+                    if (placeholder == null)
+                    {
+                        continue;
+                    }
+
+                    var beforeRegex = default(Regex);
+                    if (this.placeholderRegexDictionary.ContainsKey(placeholder.ReplaceString))
+                    {
+                        beforeRegex = this.placeholderRegexDictionary[placeholder.ReplaceString];
+                    }
+                    else
+                    {
+                        beforeRegex = new Regex(placeholder.ReplaceString, RegexOptions.Compiled);
+                        this.placeholderRegexDictionary[placeholder.ReplaceString] = beforeRegex;
+                    }
+
+                    // プレースホルダの置換後の値から読み仮名に置換する
+                    textToSpeak = beforeRegex.Replace(textToSpeak, item.Value);
                 }
             }
 

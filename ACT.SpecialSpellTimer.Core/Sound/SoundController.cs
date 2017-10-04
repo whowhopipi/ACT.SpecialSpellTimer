@@ -142,15 +142,18 @@ namespace ACT.SpecialSpellTimer.Sound
                 }
 
                 var isWave = source.EndsWith(".wav");
-                if (!isWave)
-                {
-                    // TTSならば(wavじゃなければ)辞書で単語を置き換える
-                    source = TTSDictionary.Instance.ReplaceWordsTTS(source);
-                }
 
                 if (this.enabledYukkuri)
                 {
-                    Task.Run(() => ActGlobals.oFormActMain.TTS(source));
+                    Task.Run(() =>
+                    {
+                        if (!isWave)
+                        {
+                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
+                        }
+
+                        ActGlobals.oFormActMain.TTS(source);
+                    });
                 }
                 else
                 {
@@ -167,6 +170,7 @@ namespace ACT.SpecialSpellTimer.Sound
                         }
                         else
                         {
+                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
                             ActGlobals.oFormActMain.TTS(source);
                         }
                     });
