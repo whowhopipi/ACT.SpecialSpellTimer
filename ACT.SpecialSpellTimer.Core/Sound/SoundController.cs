@@ -141,6 +141,13 @@ namespace ACT.SpecialSpellTimer.Sound
                     return;
                 }
 
+                var isWave = source.EndsWith(".wav");
+                if (!isWave)
+                {
+                    // TTSならば(wavじゃなければ)辞書で単語を置き換える
+                    source = TTSDictionary.Instance.ReplaceWordsTTS(source);
+                }
+
                 if (this.enabledYukkuri)
                 {
                     Task.Run(() => ActGlobals.oFormActMain.TTS(source));
@@ -150,7 +157,7 @@ namespace ACT.SpecialSpellTimer.Sound
                     Task.Run(() =>
                     {
                         // wav？
-                        if (source.EndsWith(".wav"))
+                        if (isWave)
                         {
                             // ファイルが存在する？
                             if (File.Exists(source))
