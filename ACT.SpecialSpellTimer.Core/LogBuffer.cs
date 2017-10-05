@@ -31,24 +31,6 @@ namespace ACT.SpecialSpellTimer
         /// ツールチップは計4charsで構成されるが先頭1文字目が可変で残り3文字が固定となっている</remarks>
         private const string TooltipSuffix = "\u0001\u0001\uFFFD";
 
-#if false
-        /// <summary>
-        /// ツールチップ文字を除去するための正規表現
-        /// </summary>
-        private static readonly Regex TooltipCharsRegex =
-            new Regex($".{TooltipSuffix}",
-                RegexOptions.Compiled);
-#endif
-#if false
-        // 方式を変えたため封印
-        /// <summary>
-        /// Unknownスキルを補完するための正規表現
-        /// </summary>
-        private static readonly Regex UnknownSkillRegex =
-            new Regex(@"(?<UnknownSkill>Unknown_(?<UnknownSkillID>\w\w\w\w))",
-                RegexOptions.Compiled);
-#endif
-
         /// <summary>
         /// 内部バッファ
         /// </summary>
@@ -232,6 +214,8 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
+        private string previousLogLine = string.Empty;
+
         /// <summary>
         /// OnLogLineRead
         /// </summary>
@@ -247,6 +231,13 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
+            // 直前とまったく同じ行はすてる
+            if (logInfo.logLine == this.previousLogLine)
+            {
+                return;
+            }
+
+            this.previousLogLine = logInfo.logLine;
             this.logInfoQueue.Enqueue(logInfo);
 
             // 最初のログならば動作ログに出力する
