@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -214,7 +215,8 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-        private string previousLogLine = string.Empty;
+        private string[] previousLogLines = new string[8];
+        private int previousLogLinesIndex = 0;
 
         /// <summary>
         /// OnLogLineRead
@@ -231,13 +233,23 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
-            // 直前とまったく同じ行はすてる
-            if (logInfo.logLine == this.previousLogLine)
+            // 直近8行程度における同一のログを捨てる
+            lock (this.previousLogLines)
             {
-                return;
+                if (this.previousLogLines.Contains(logInfo.logLine))
+                {
+                    return;
+                }
+
+                if (this.previousLogLinesIndex >= this.previousLogLines.Length)
+                {
+                    this.previousLogLinesIndex = 0;
+                }
+
+                this.previousLogLines[this.previousLogLinesIndex] = logInfo.logLine;
+                this.previousLogLinesIndex++;
             }
 
-            this.previousLogLine = logInfo.logLine;
             this.logInfoQueue.Enqueue(logInfo);
 
             // 最初のログならば動作ログに出力する
