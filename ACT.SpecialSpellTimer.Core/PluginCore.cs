@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Forms;
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Dialog;
@@ -163,6 +164,9 @@ namespace ACT.SpecialSpellTimer
                 SpellTimerTable.Instance.Load();
                 OnePointTelopTable.Instance.Load();
                 PanelTable.Instance.Load();
+
+                // TTS辞書を読み込む
+                TTSDictionary.Instance.Load();
 
                 // 本体を開始する
                 PluginMainWorker.Instance.Begin();

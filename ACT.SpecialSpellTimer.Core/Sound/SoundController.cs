@@ -141,16 +141,26 @@ namespace ACT.SpecialSpellTimer.Sound
                     return;
                 }
 
+                var isWave = source.EndsWith(".wav");
+
                 if (this.enabledYukkuri)
                 {
-                    Task.Run(() => ActGlobals.oFormActMain.TTS(source));
+                    Task.Run(() =>
+                    {
+                        if (!isWave)
+                        {
+                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
+                        }
+
+                        ActGlobals.oFormActMain.TTS(source);
+                    });
                 }
                 else
                 {
                     Task.Run(() =>
                     {
                         // wav？
-                        if (source.EndsWith(".wav"))
+                        if (isWave)
                         {
                             // ファイルが存在する？
                             if (File.Exists(source))
@@ -160,6 +170,7 @@ namespace ACT.SpecialSpellTimer.Sound
                         }
                         else
                         {
+                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
                             ActGlobals.oFormActMain.TTS(source);
                         }
                     });
