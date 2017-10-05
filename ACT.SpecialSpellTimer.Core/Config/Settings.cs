@@ -258,6 +258,8 @@ namespace ACT.SpecialSpellTimer.Config
 
         public bool DisableStartCondition { get; set; }
 
+        public bool EnableMultiLineMaching { get; set; }
+
         #endregion Data
 
         #region Data - Hidden
@@ -465,6 +467,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.ToComplementUnknownSkill), true },
             { nameof(Settings.SingleTaskLogMatching), false },
             { nameof(Settings.DisableStartCondition), false },
+            { nameof(Settings.EnableMultiLineMaching), false },
 
             { nameof(Settings.BarBackgroundFixed), false },
             { nameof(Settings.BarBackgroundBrightness), 0.3 },

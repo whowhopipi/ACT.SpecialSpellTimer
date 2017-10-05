@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ACT.SpecialSpellTimer.Config;
@@ -38,21 +39,40 @@ namespace ACT.SpecialSpellTimer
             IReadOnlyList<Models.SpellTimer> spells,
             IReadOnlyList<string> logLines)
         {
-            spells.AsParallel().ForAll(spell =>
+            if (spells.Count < 1 ||
+                logLines.Count < 1)
             {
-                foreach (var logLine in logLines)
+                return;
+            }
+
+#if DEBUG
+            var sw = Stopwatch.StartNew();
+#endif
+            try
+            {
+                spells.AsParallel().ForAll(spell =>
                 {
-                    try
+                    foreach (var logLine in logLines)
                     {
-                        spell.StartMatching();
-                        this.MatchCore(spell, logLine);
+                        try
+                        {
+                            spell.StartMatching();
+                            this.MatchCore(spell, logLine);
+                        }
+                        finally
+                        {
+                            spell.EndMatching();
+                        }
                     }
-                    finally
-                    {
-                        spell.EndMatching();
-                    }
-                }
-            });
+                });
+            }
+            finally
+            {
+#if DEBUG
+                sw.Stop();
+                Debug.WriteLine($"●SpellsController.Match() {sw.Elapsed.TotalMilliseconds:N1}ms spells={spells.Count:N0} lines={logLines.Count:N0}");
+#endif
+            }
         }
 
         /// <summary>

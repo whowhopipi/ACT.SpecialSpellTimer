@@ -304,46 +304,18 @@ namespace ACT.SpecialSpellTimer
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
                 {
-                    int index;
-                    if ((index = logLine.IndexOf(
-                        TooltipSuffix,
-                        17,
-                        StringComparison.Ordinal)) > -1)
+                    if (logLine.Length > 17)
                     {
-                        logLine = logLine.Remove(index - 1, 4);
-                    }
-                }
-#if false
-                // 正規表現方式
-                if (Settings.Default.RemoveTooltipSymbols)
-                {
-                    logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
-                }
-#endif
-#if false
-                // 方式を変えたので封印する
-                // Unknownスキルを補完する？
-                if (Settings.Default.ToComplementUnknownSkill)
-                {
-                    if (logLine.Contains("Unknown_"))
-                    {
-                        var match = LogBuffer.UnknownSkillRegex.Match(logLine);
-                        if (match.Success)
+                        int index;
+                        if ((index = logLine.IndexOf(
+                            TooltipSuffix,
+                            17,
+                            StringComparison.Ordinal)) > -1)
                         {
-                            var unknownSkill = match.Groups["UnknownSkill"].Value;
-                            var unknownSkillID = match.Groups["UnknownSkillID"].Value;
-
-                            var skill = XIVDB.Instance.FindSkill(unknownSkillID);
-                            if (skill != null)
-                            {
-                                logLine = logLine.Replace(
-                                    unknownSkill,
-                                    skill.Name);
-                            }
+                            logLine = logLine.Remove(index - 1, 4);
                         }
                     }
                 }
-#endif
 
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV &&
