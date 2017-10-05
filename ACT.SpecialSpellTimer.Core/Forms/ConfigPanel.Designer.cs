@@ -233,6 +233,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage = new System.Windows.Forms.TabPage();
             this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabOverlayOptions = new System.Windows.Forms.TabPage();
+            this.DisableStartConditionCheckBox = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.BarBackgroundBrightnessPanel = new System.Windows.Forms.Panel();
             this.label69 = new System.Windows.Forms.Label();
@@ -335,7 +336,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.DisableStartConditionCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -2691,6 +2691,17 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.TabIndex = 0;
             this.tabOverlayOptions.Text = "tabOverlayOptions";
             // 
+            // DisableStartConditionCheckBox
+            // 
+            this.DisableStartConditionCheckBox.AutoSize = true;
+            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 537);
+            this.DisableStartConditionCheckBox.Name = "DisableStartConditionCheckBox";
+            this.DisableStartConditionCheckBox.Size = new System.Drawing.Size(187, 16);
+            this.DisableStartConditionCheckBox.TabIndex = 73;
+            this.DisableStartConditionCheckBox.Text = "DisableStartConditionCheckBox";
+            this.DisableStartConditionCheckBox.UseVisualStyleBackColor = true;
+            this.DisableStartConditionCheckBox.Visible = false;
+            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -3807,16 +3818,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.TabIndex = 6;
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
-            // 
-            // DisableStartConditionCheckBox
-            // 
-            this.DisableStartConditionCheckBox.AutoSize = true;
-            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 537);
-            this.DisableStartConditionCheckBox.Name = "DisableStartConditionCheckBox";
-            this.DisableStartConditionCheckBox.Size = new System.Drawing.Size(187, 16);
-            this.DisableStartConditionCheckBox.TabIndex = 73;
-            this.DisableStartConditionCheckBox.Text = "DisableStartConditionCheckBox";
-            this.DisableStartConditionCheckBox.UseVisualStyleBackColor = true;
             // 
             // ConfigPanel
             // 

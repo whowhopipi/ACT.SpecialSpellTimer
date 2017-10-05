@@ -42,27 +42,13 @@ namespace ACT.SpecialSpellTimer
             IReadOnlyList<OnePointTelop> telops,
             IReadOnlyList<string> logLines)
         {
-            /// 開始条件判定が無効？
-            if (Settings.Default.DisableStartCondition)
+            telops.AsParallel().ForAll(telop =>
             {
-                telops.AsParallel().ForAll(telop =>
-                {
-                    foreach (var log in logLines)
-                    {
-                        this.MatchCore(telop, log);
-                    }
-                });
-
-                return;
-            }
-
-            foreach (var log in logLines)
-            {
-                telops.AsParallel().ForAll(telop =>
+                foreach (var log in logLines)
                 {
                     this.MatchCore(telop, log);
-                });
-            }
+                }
+            });
         }
 
         /// <summary>
