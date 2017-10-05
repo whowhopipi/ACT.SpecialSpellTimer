@@ -1249,4 +1249,8 @@
     <value>To fix Background color of Progress bar.</value>
     <comment>プログレスバーの背景色を固定する</comment>
   </data>
+  <data name="DisableStartConditionCheckBox" xml:space="preserve">
+    <value>Disable start condition and to faster.</value>
+    <comment>開始条件機能を無効にしてより高速にする</comment>
+  </data>
 </root>

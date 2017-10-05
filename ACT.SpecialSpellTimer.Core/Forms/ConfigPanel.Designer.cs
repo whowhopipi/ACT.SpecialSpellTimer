@@ -335,6 +335,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
+            this.DisableStartConditionCheckBox = new System.Windows.Forms.CheckBox();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -2656,6 +2657,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.AutoScroll = true;
             this.tabOverlayOptions.AutoScrollMargin = new System.Drawing.Size(0, 40);
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.DisableStartConditionCheckBox);
             this.tabOverlayOptions.Controls.Add(this.flowLayoutPanel1);
             this.tabOverlayOptions.Controls.Add(this.FixBackgroundColorOfBarCheckBox);
             this.tabOverlayOptions.Controls.Add(this.RenderWithCPUOnlyCheckBox);
@@ -3806,6 +3808,16 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
+            // DisableStartConditionCheckBox
+            // 
+            this.DisableStartConditionCheckBox.AutoSize = true;
+            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 537);
+            this.DisableStartConditionCheckBox.Name = "DisableStartConditionCheckBox";
+            this.DisableStartConditionCheckBox.Size = new System.Drawing.Size(187, 16);
+            this.DisableStartConditionCheckBox.TabIndex = 73;
+            this.DisableStartConditionCheckBox.Text = "DisableStartConditionCheckBox";
+            this.DisableStartConditionCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4219,5 +4231,6 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.Panel BarBackgroundColorPanel;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.Button BarBackgroundColorButton;
+        private System.Windows.Forms.CheckBox DisableStartConditionCheckBox;
     }
 }

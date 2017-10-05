@@ -38,6 +38,30 @@ namespace ACT.SpecialSpellTimer
             IReadOnlyList<Models.SpellTimer> spells,
             IReadOnlyList<string> logLines)
         {
+            /// 開始条件判定が無効？
+            if (Settings.Default.DisableStartCondition)
+            {
+                // 外側を並列ループにして高速化する
+                spells.AsParallel().ForAll(spell =>
+                {
+                    foreach (var logLine in logLines)
+                    {
+                        try
+                        {
+                            spell.StartMatching();
+                            this.MatchCore(spell, logLine);
+                        }
+                        finally
+                        {
+                            spell.EndMatching();
+                        }
+                    }
+                });
+
+
+                return;
+            }
+
             foreach (var logLine in logLines)
             {
                 spells.AsParallel().ForAll(spell =>
