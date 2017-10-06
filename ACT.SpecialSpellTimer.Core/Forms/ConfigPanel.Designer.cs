@@ -233,6 +233,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage = new System.Windows.Forms.TabPage();
             this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabOverlayOptions = new System.Windows.Forms.TabPage();
+            this.DisableStartConditionCheckBox = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.BarBackgroundBrightnessPanel = new System.Windows.Forms.Panel();
             this.label69 = new System.Windows.Forms.Label();
@@ -2656,6 +2657,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.AutoScroll = true;
             this.tabOverlayOptions.AutoScrollMargin = new System.Drawing.Size(0, 40);
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.DisableStartConditionCheckBox);
             this.tabOverlayOptions.Controls.Add(this.flowLayoutPanel1);
             this.tabOverlayOptions.Controls.Add(this.FixBackgroundColorOfBarCheckBox);
             this.tabOverlayOptions.Controls.Add(this.RenderWithCPUOnlyCheckBox);
@@ -2688,6 +2690,17 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.Size = new System.Drawing.Size(1063, 708);
             this.tabOverlayOptions.TabIndex = 0;
             this.tabOverlayOptions.Text = "tabOverlayOptions";
+            // 
+            // DisableStartConditionCheckBox
+            // 
+            this.DisableStartConditionCheckBox.AutoSize = true;
+            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 537);
+            this.DisableStartConditionCheckBox.Name = "DisableStartConditionCheckBox";
+            this.DisableStartConditionCheckBox.Size = new System.Drawing.Size(187, 16);
+            this.DisableStartConditionCheckBox.TabIndex = 73;
+            this.DisableStartConditionCheckBox.Text = "DisableStartConditionCheckBox";
+            this.DisableStartConditionCheckBox.UseVisualStyleBackColor = true;
+            this.DisableStartConditionCheckBox.Visible = false;
             // 
             // flowLayoutPanel1
             // 
@@ -4219,5 +4232,6 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.Panel BarBackgroundColorPanel;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.Button BarBackgroundColorButton;
+        private System.Windows.Forms.CheckBox DisableStartConditionCheckBox;
     }
 }

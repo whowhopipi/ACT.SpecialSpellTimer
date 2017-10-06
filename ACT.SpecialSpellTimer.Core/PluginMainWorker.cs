@@ -397,7 +397,7 @@ namespace ACT.SpecialSpellTimer
             TickersController.Instance.RefreshTelopOverlays(telops);
         }
 
-#endregion Core
+        #endregion Core
 
         /// <summary>
         /// リスタートのときスペルのカウントをリセットする
@@ -449,7 +449,7 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-#region Misc
+        #region Misc
 
         /// <summary>
         /// FFXIVまたはACTがアクティブか？
@@ -479,10 +479,6 @@ namespace ACT.SpecialSpellTimer
                     var actFileName = Path.GetFileName(
                         Process.GetCurrentProcess().MainModule.FileName);
 
-                    Debug.WriteLine(
-                        DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss.fff]") + " " +
-                        "●WatchActive " + fileName);
-
                     if (fileName.ToLower() == "ffxiv.exe" ||
                         fileName.ToLower() == "ffxiv_dx11.exe" ||
                         fileName.ToLower() == "dqx.exe" ||
@@ -508,9 +504,9 @@ namespace ACT.SpecialSpellTimer
             return r;
         }
 
-#endregion Misc
+        #endregion Misc
 
-#region NativeMethods
+        #region NativeMethods
 
         /// <summary>
         /// フォアグラウンドWindowのハンドルを取得する
@@ -532,6 +528,6 @@ namespace ACT.SpecialSpellTimer
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
-#endregion NativeMethods
+        #endregion NativeMethods
     }
 }

@@ -90,6 +90,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.FixBackgroundColorOfBarCheckBox.Checked = Settings.Default.BarBackgroundFixed;
             this.BarBackgroundBrightnessNumericUpDown.Value = (decimal)Settings.Default.BarBackgroundBrightness;
             this.BarBackgroundColorButton.BackColor = Settings.Default.BarDefaultBackgroundColor.ToLegacy();
+            this.DisableStartConditionCheckBox.Checked = Settings.Default.DisableStartCondition;
 
             var sw1 = this.SaveLogCheckBox.Checked;
             this.SaveLogTextBox.Enabled = sw1;
@@ -157,6 +158,7 @@ namespace ACT.SpecialSpellTimer.Forms
             Settings.Default.BarBackgroundFixed = this.FixBackgroundColorOfBarCheckBox.Checked;
             Settings.Default.BarBackgroundBrightness = (double)this.BarBackgroundBrightnessNumericUpDown.Value;
             Settings.Default.BarDefaultBackgroundColor = this.BarBackgroundColorButton.BackColor.ToWPF();
+            Settings.Default.DisableStartCondition = this.DisableStartConditionCheckBox.Checked;
 
             // 有効状態から無効状態に変化する場合は、標準のスペルタイマーから設定を削除する
             if (Settings.Default.EnabledNotifyNormalSpellTimer &&

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACT.SpecialSpellTimer.Core", "ACT.SpecialSpellTimer.Core\ACT.SpecialSpellTimer.Core.csproj", "{EA12D333-F0ED-4524-8BAD-B986B0137EA5}"
 EndProject
@@ -72,7 +72,7 @@ Global
 		{DD7824D5-F74E-4412-9E87-C7B89E1C6165} = {E2873F90-2125-4C9D-ABCD-CF4DBDD6ECE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		    SolutionGuid = {32BB6EC1-12B3-4408-AE6B-AF2190C8F2FE}
 		SolutionGuid = {791D8943-D639-4AFC-AA3E-09C570AA10B7}
+		    SolutionGuid = {32BB6EC1-12B3-4408-AE6B-AF2190C8F2FE}
 	EndGlobalSection
 EndGlobal
