@@ -151,7 +151,11 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // 設定Panelを追加する
-                this.ConfigPanel = new ConfigPanel();
+                this.ConfigPanel = new ConfigPanel()
+                {
+                    AutoScaleMode = Settings.Default.UIAutoScaleMode
+                };
+
                 pluginScreenSpace.Controls.Add(this.ConfigPanel);
                 this.ConfigPanel.Dock = DockStyle.Fill;
 

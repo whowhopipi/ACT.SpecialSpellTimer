@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
@@ -260,6 +261,8 @@ namespace ACT.SpecialSpellTimer.Config
 
         public bool EnableMultiLineMaching { get; set; }
 
+        public AutoScaleMode UIAutoScaleMode { get; set; }
+
         #endregion Data
 
         #region Data - Hidden
@@ -468,6 +471,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.SingleTaskLogMatching), false },
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
+            { nameof(Settings.UIAutoScaleMode), AutoScaleMode.Inherit },
 
             { nameof(Settings.BarBackgroundFixed), false },
             { nameof(Settings.BarBackgroundBrightness), 0.3 },
