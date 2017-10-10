@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Microsoft.VisualBasic.FileIO;
@@ -12,7 +13,7 @@ namespace ACT.SpecialSpellTimer.Sound
 {
     public class TTSDictionary
     {
-        private const string SourceFileName = @"TTSDictionary.txt";
+        private const string SourceFileName = @"TTSDictionary.{0}.txt";
 
         #region Singleton
 
@@ -22,7 +23,9 @@ namespace ACT.SpecialSpellTimer.Sound
 
         #endregion Singleton
 
-        private string SourceFile => Path.Combine(this.ResourcesDirectory, SourceFileName);
+        private string SourceFile => Path.Combine(
+            this.ResourcesDirectory,
+            string.Format(SourceFileName, Settings.Default.Language.ToLocale()));
 
         private readonly object locker = new object();
         private readonly Dictionary<string, string> ttsDictionary = new Dictionary<string, string>();

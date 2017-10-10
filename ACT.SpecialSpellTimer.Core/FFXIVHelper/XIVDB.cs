@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -22,15 +23,15 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public string AreaFile => Path.Combine(
             this.ResourcesDirectory + @"\xivdb",
-            @"Instance.csv");
+            $@"Instance.{Settings.Default.Language.ToLocale()}.csv");
 
         public string PlacenameFile => Path.Combine(
             this.ResourcesDirectory + @"\xivdb",
-            @"Placename.csv");
+            $@"Placename.{Settings.Default.Language.ToLocale()}.csv");
 
         public string SkillFile => Path.Combine(
             this.ResourcesDirectory + @"\xivdb",
-            @"Action.csv");
+            $@"Action.{Settings.Default.Language.ToLocale()}.csv");
 
         #endregion Resources Files
 
