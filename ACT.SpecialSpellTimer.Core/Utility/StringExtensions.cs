@@ -14,8 +14,15 @@ namespace ACT.SpecialSpellTimer.Utility
 
             try
             {
+                var op = RegexOptions.Compiled;
+
+                if (Settings.Default.EnableMultiLineMaching)
+                {
+                    op |= RegexOptions.Multiline;
+                }
+
                 regex = !string.IsNullOrEmpty(s) ?
-                    new Regex(s, RegexOptions.Compiled) :
+                    new Regex(s, op) :
                     null;
             }
             catch (Exception ex)

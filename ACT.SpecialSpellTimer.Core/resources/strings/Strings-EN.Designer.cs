@@ -601,6 +601,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Disable start condition and to faster. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DisableStartConditionCheckBox {
+            get {
+                return ResourceManager.GetString("DisableStartConditionCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ※ Disabled when set to 0 (never hides) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string DisableWhenClear {

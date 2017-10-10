@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,24 +31,6 @@ namespace ACT.SpecialSpellTimer
         /// <remarks>
         /// ツールチップは計4charsで構成されるが先頭1文字目が可変で残り3文字が固定となっている</remarks>
         private const string TooltipSuffix = "\u0001\u0001\uFFFD";
-
-#if false
-        /// <summary>
-        /// ツールチップ文字を除去するための正規表現
-        /// </summary>
-        private static readonly Regex TooltipCharsRegex =
-            new Regex($".{TooltipSuffix}",
-                RegexOptions.Compiled);
-#endif
-#if false
-        // 方式を変えたため封印
-        /// <summary>
-        /// Unknownスキルを補完するための正規表現
-        /// </summary>
-        private static readonly Regex UnknownSkillRegex =
-            new Regex(@"(?<UnknownSkill>Unknown_(?<UnknownSkillID>\w\w\w\w))",
-                RegexOptions.Compiled);
-#endif
 
         /// <summary>
         /// 内部バッファ
@@ -232,6 +215,9 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
+        private string[] previousLogLines = new string[8];
+        private int previousLogLinesIndex = 0;
+
         /// <summary>
         /// OnLogLineRead
         /// </summary>
@@ -245,6 +231,23 @@ namespace ACT.SpecialSpellTimer
             if (logInfo.logLine.Length <= 18)
             {
                 return;
+            }
+
+            // 直近8行程度における同一のログを捨てる
+            lock (this.previousLogLines)
+            {
+                if (this.previousLogLines.Contains(logInfo.logLine))
+                {
+                    return;
+                }
+
+                if (this.previousLogLinesIndex >= this.previousLogLines.Length)
+                {
+                    this.previousLogLinesIndex = 0;
+                }
+
+                this.previousLogLines[this.previousLogLinesIndex] = logInfo.logLine;
+                this.previousLogLinesIndex++;
             }
 
             this.logInfoQueue.Enqueue(logInfo);
@@ -304,46 +307,18 @@ namespace ACT.SpecialSpellTimer
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
                 {
-                    int index;
-                    if ((index = logLine.IndexOf(
-                        TooltipSuffix,
-                        17,
-                        StringComparison.Ordinal)) > -1)
+                    if (logLine.Length > 17)
                     {
-                        logLine = logLine.Remove(index - 1, 4);
-                    }
-                }
-#if false
-                // 正規表現方式
-                if (Settings.Default.RemoveTooltipSymbols)
-                {
-                    logLine = TooltipCharsRegex.Replace(logLine, string.Empty);
-                }
-#endif
-#if false
-                // 方式を変えたので封印する
-                // Unknownスキルを補完する？
-                if (Settings.Default.ToComplementUnknownSkill)
-                {
-                    if (logLine.Contains("Unknown_"))
-                    {
-                        var match = LogBuffer.UnknownSkillRegex.Match(logLine);
-                        if (match.Success)
+                        int index;
+                        if ((index = logLine.IndexOf(
+                            TooltipSuffix,
+                            17,
+                            StringComparison.Ordinal)) > -1)
                         {
-                            var unknownSkill = match.Groups["UnknownSkill"].Value;
-                            var unknownSkillID = match.Groups["UnknownSkillID"].Value;
-
-                            var skill = XIVDB.Instance.FindSkill(unknownSkillID);
-                            if (skill != null)
-                            {
-                                logLine = logLine.Replace(
-                                    unknownSkill,
-                                    skill.Name);
-                            }
+                            logLine = logLine.Remove(index - 1, 4);
                         }
                     }
                 }
-#endif
 
                 // FFXIVでの使用？
                 if (!Settings.Default.UseOtherThanFFXIV &&

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
-
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 
 namespace ACT.SpecialSpellTimer.Utility
@@ -16,6 +16,11 @@ namespace ACT.SpecialSpellTimer.Utility
         public static bool CheckConditionsForSpell(
             SpellTimer spell)
         {
+            if (Settings.Default.DisableStartCondition)
+            {
+                return true;
+            }
+
             return CheckConditions(
                 spell.TimersMustRunningForStart,
                 spell.TimersMustStoppingForStart);
@@ -29,6 +34,11 @@ namespace ACT.SpecialSpellTimer.Utility
         public static bool CheckConditionsForTelop(
             OnePointTelop telop)
         {
+            if (Settings.Default.DisableStartCondition)
+            {
+                return true;
+            }
+
             return CheckConditions(
                 telop.TimersMustRunningForStart,
                 telop.TimersMustStoppingForStart);

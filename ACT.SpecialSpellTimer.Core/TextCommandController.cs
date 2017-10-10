@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Media;
 using System.Text.RegularExpressions;
 
@@ -29,18 +30,18 @@ namespace ACT.SpecialSpellTimer
             IReadOnlyList<string> logLines)
         {
             var commandDone = false;
-            foreach (var log in logLines)
+            logLines.AsParallel().ForAll(log =>
             {
                 // 正規表現の前にキーワードがなければ抜けてしまう
                 if (!log.ToLower().Contains("/spespe"))
                 {
-                    continue;
+                    return;
                 }
 
                 var match = regexCommand.Match(log);
                 if (!match.Success)
                 {
-                    continue;
+                    return;
                 }
 
                 var command = match.Groups["command"].ToString().ToLower();
@@ -206,7 +207,7 @@ namespace ACT.SpecialSpellTimer
                         commandDone = true;
                         break;
                 }
-            }   // loop end logLines
+            });   // loop end logLines
 
             // コマンドを実行したらシステム音を鳴らす
             if (commandDone)

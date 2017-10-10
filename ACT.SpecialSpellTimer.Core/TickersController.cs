@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
@@ -42,12 +41,31 @@ namespace ACT.SpecialSpellTimer
             IReadOnlyList<OnePointTelop> telops,
             IReadOnlyList<string> logLines)
         {
-            foreach (var log in logLines)
+            if (telops.Count < 1 ||
+                logLines.Count < 1)
+            {
+                return;
+            }
+
+#if DEBUG
+            var sw = Stopwatch.StartNew();
+#endif
+            try
             {
                 telops.AsParallel().ForAll(telop =>
                 {
-                    this.MatchCore(telop, log);
+                    foreach (var logLine in logLines)
+                    {
+                        this.MatchCore(telop, logLine);
+                    }
                 });
+            }
+            finally
+            {
+#if DEBUG
+                sw.Stop();
+                Debug.WriteLine($"●TickersController.Match() {sw.Elapsed.TotalMilliseconds:N1}ms spells={telops.Count:N0} lines={logLines.Count:N0}");
+#endif
             }
         }
 
