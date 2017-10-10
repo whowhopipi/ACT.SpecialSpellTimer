@@ -34,7 +34,7 @@ namespace ACT.SpecialSpellTimer
 
         public static void Free()
         {
-            instance.PluginRoot = null;
+            instance?.PluginRoot = null;
             instance = null;
         }
 
