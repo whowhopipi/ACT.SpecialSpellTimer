@@ -766,10 +766,12 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                         }
                     }
                 }
+
+                Logger.Write($"Additional zone list loaded. {file}");
             }
             catch (Exception ex)
             {
-                Logger.Write("error on Load Extra Zonelist.", ex);
+                Logger.Write("error on load additional zone list.", ex);
             }
         }
 

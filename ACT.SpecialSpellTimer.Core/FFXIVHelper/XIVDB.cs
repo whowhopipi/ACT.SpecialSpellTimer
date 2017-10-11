@@ -142,6 +142,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                     }
                 }
             }
+
+            Logger.Write($"Area list loaded. {this.AreaFile}");
         }
 
         private void LoadPlacename()
@@ -176,6 +178,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                     }
                 }
             }
+
+            Logger.Write($"Placement list loaded. {this.PlacenameFile}");
         }
 
         private void LoadSkill()
@@ -214,6 +218,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                     }
                 }
             }
+
+            Logger.Write($"Action list loaded. {this.SkillFile}");
         }
 
         #region Sub classes
