@@ -18,7 +18,7 @@ namespace ACT.SpecialSpellTimer
 
         public static void Free()
         {
-            instance.Dispose();
+            instance?.Dispose();
             instance = null;
         }
 
