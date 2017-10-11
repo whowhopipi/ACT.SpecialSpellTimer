@@ -288,7 +288,10 @@
     <Content Include="resources\presets\preset-tickers.一般.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\TTSDictionary.txt">
+    <Resource Include="resources\TTSDictionary.en-US.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="resources\TTSDictionary.ja-JP.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\wav\alarm.wav" />
@@ -345,16 +348,16 @@
     <Compile Include="Forms\ConfigPanel.DQXOption.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Content Include="resources\xivdb\Instance.csv">
+    <Content Include="resources\xivdb\Instance.ja-JP.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\xivdb\Placename.csv">
+    <Content Include="resources\xivdb\Placename.ja-JP.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\Zones.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\xivdb\Action.csv">
+    <Content Include="resources\xivdb\Action.ja-JP.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

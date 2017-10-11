@@ -131,7 +131,7 @@ namespace XIVDBDownloader.ViewModels
             // 取得したリストをCSVに保存する
             this.AppendLineMessages("Save to CSV.");
             model.SaveToCSV(
-                Path.Combine(this.viewModel.SaveDirectory, "Action.csv"));
+                Path.Combine(this.viewModel.SaveDirectory, $"Action.{this.viewModel.Language.ToLocale()}.csv"));
 
             this.AppendLineMessages("Download Action, Done.");
 
@@ -153,7 +153,7 @@ namespace XIVDBDownloader.ViewModels
 
             // 取得したリストをCSVに保存する
             model.SaveToCSV(
-                Path.Combine(this.viewModel.SaveDirectory, "Instance.csv"),
+                Path.Combine(this.viewModel.SaveDirectory, $"Instance.{this.viewModel.Language.ToLocale()}.csv"),
                 this.viewModel.Language);
 
             this.AppendLineMessages("Download Instance, Done.");
@@ -174,7 +174,7 @@ namespace XIVDBDownloader.ViewModels
 
             // 取得したリストをCSVに保存する
             model.SaveToCSV(
-                Path.Combine(this.viewModel.SaveDirectory, "Placename.csv"),
+                Path.Combine(this.viewModel.SaveDirectory, $"Placename.{this.viewModel.Language.ToLocale()}.csv"),
                 this.viewModel.Language);
 
             this.AppendLineMessages("Download Placename, Done.");
