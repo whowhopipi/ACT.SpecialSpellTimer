@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 
 namespace ACT.SpecialSpellTimer.Utility
 {
@@ -13,7 +13,7 @@ namespace ACT.SpecialSpellTimer.Utility
             return new Language[]
             {
                 new Language { FriendlyName = "English", Value = "EN", Locale = "en-US" },
-                new Language { FriendlyName = "日本語", Value = "JP", Locale = " ja-JP" },
+                new Language { FriendlyName = "日本語", Value = "JP", Locale = "ja-JP" },
                 new Language { FriendlyName = "한국어", Value = "KR", Locale = "kr-KR" },
             };
         }
