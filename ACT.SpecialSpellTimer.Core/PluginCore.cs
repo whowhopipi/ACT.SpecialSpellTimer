@@ -35,8 +35,11 @@ namespace ACT.SpecialSpellTimer
 
         public static void Free()
         {
-            instance?.PluginRoot = null;
-            instance = null;
+            if (instance != null)
+            {
+                instance.PluginRoot = null;
+                instance = null;
+            }
         }
 
         #endregion Singleton
