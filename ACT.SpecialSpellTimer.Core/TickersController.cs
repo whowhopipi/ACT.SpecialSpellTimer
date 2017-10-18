@@ -84,7 +84,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="telop">テロップ</param>
         /// <param name="log">ログ</param>
-        private void MatchCore(
+        public void MatchCore(
             OnePointTelop telop,
             string log)
         {

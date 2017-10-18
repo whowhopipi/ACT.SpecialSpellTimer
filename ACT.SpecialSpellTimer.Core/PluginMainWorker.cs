@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -276,9 +278,44 @@ namespace ACT.SpecialSpellTimer
                 var spells = TableCompiler.Instance.SpellList;
                 var telops = TableCompiler.Instance.TickerList;
 
+                // スペルリストとテロップリストを統合する
+                var triggers = new List<object>(spells.Count + telops.Count);
+                triggers.AddRange(spells);
+                triggers.AddRange(telops);
+
                 var logs = logsTask.Result;
                 if (logs.Count > 0)
                 {
+                    var doneCommand = false;
+                    logs.AsParallel().ForAll((logLine) =>
+                    {
+                        triggers.AsParallel().ForAll((trigger) =>
+                        {
+                            switch (trigger)
+                            {
+                                case OnePointTelop telop:
+                                    TickersController.Instance.MatchCore(
+                                        telop,
+                                        logLine);
+                                    break;
+
+                                case Models.SpellTimer spell:
+                                    SpellsController.Instance.MatchCore(
+                                        spell,
+                                        logLine);
+                                    break;
+                            }
+                        });
+
+                        // コマンドとマッチングする
+                        doneCommand |= TextCommandController.MatchCommandCore(logLine);
+                    });
+
+                    if (doneCommand)
+                    {
+                        SystemSounds.Asterisk.Play();
+                    }
+#if false
                     // テロップとマッチングする
                     var t1 = Task.Run(() => TickersController.Instance.Match(
                         telops,
@@ -294,6 +331,7 @@ namespace ACT.SpecialSpellTimer
                         logs));
 
                     Task.WaitAll(t1, t2, t3);
+#endif
 
                     existsLog = true;
                 }

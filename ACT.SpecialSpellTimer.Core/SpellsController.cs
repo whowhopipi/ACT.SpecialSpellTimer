@@ -98,7 +98,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spell">スペル</param>
         /// <param name="logLine">ログ</param>
-        private void MatchCore(
+        public void MatchCore(
             Models.SpellTimer spell,
             string logLine)
         {
