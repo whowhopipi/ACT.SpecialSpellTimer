@@ -33,6 +33,11 @@ namespace ACT.SpecialSpellTimer
         private const string TooltipSuffix = "\u0001\u0001\uFFFD";
 
         /// <summary>
+        /// ツールチップで残るリプレースメントキャラ
+        /// </summary>
+        private const string TooltipReplacementChar = "\uFFFD";
+
+        /// <summary>
         /// 内部バッファ
         /// </summary>
         private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
@@ -215,8 +220,10 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
+#if false
         private string[] previousLogLines = new string[8];
         private int previousLogLinesIndex = 0;
+#endif
 
         /// <summary>
         /// OnLogLineRead
@@ -232,7 +239,7 @@ namespace ACT.SpecialSpellTimer
             {
                 return;
             }
-
+#if false
             // 直近8行程度における同一のログを捨てる
             lock (this.previousLogLines)
             {
@@ -249,7 +256,7 @@ namespace ACT.SpecialSpellTimer
                 this.previousLogLines[this.previousLogLinesIndex] = logInfo.logLine;
                 this.previousLogLinesIndex++;
             }
-
+#endif
             this.logInfoQueue.Enqueue(logInfo);
 
             // 最初のログならば動作ログに出力する
@@ -309,6 +316,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     if (logLine.Length > 17)
                     {
+                        // 4文字分のツールチップ文字を除去する
                         int index;
                         if ((index = logLine.IndexOf(
                             TooltipSuffix,
@@ -317,6 +325,9 @@ namespace ACT.SpecialSpellTimer
                         {
                             logLine = logLine.Remove(index - 1, 4);
                         }
+
+                        // 残ったReplacementCharを除去する
+                        logLine = logLine.Replace(TooltipReplacementChar, string.Empty);
                     }
                 }
 

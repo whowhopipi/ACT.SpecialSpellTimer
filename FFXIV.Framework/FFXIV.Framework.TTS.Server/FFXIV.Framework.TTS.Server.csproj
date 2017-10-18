@@ -89,7 +89,6 @@
     </ApplicationDefinition>
     <Compile Include="Models\CevioModel.cs" />
     <Compile Include="Models\TTSModel.cs" />
-    <Compile Include="Models\YukkuriModel.cs" />
     <Compile Include="TaskTrayComponent.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -142,11 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="AquesTalk.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

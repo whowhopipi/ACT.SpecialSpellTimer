@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using FFXIV.Framework.Common;
@@ -65,11 +65,13 @@ namespace FFXIV.Framework.TTS.Server.Views
                 case WindowState.Normal:
                 case WindowState.Maximized:
                     this.ShowInTaskbar = true;
+                    this.WindowStyle = WindowStyle.SingleBorderWindow;
                     this.previousWindowState = this.WindowState;
                     break;
 
                 case WindowState.Minimized:
                     this.ShowInTaskbar = false;
+                    this.WindowStyle = WindowStyle.ToolWindow;
                     break;
             }
         }

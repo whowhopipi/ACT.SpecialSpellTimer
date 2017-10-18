@@ -1,4 +1,4 @@
-﻿using FFXIV.Framework.Common;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.TTS.Common;
 using FFXIV.Framework.TTS.Common.Models;
 using FFXIV.Framework.TTS.Server.Models;
@@ -30,7 +30,6 @@ namespace FFXIV.Framework.TTS.Server
         {
             this.UnregisterChannel();
 
-            YukkuriModel.Instance.Free();
             this.logger.Info($"IPC Channel Closed.");
         }
 
@@ -44,8 +43,6 @@ namespace FFXIV.Framework.TTS.Server
 
             var uri = $"{chan.GetChannelUri()}/{Constants.RemoteTTSObjectName}";
             MainView.Instance.ViewModel.IPCChannelUri = uri;
-
-            YukkuriModel.Instance.Load();
 
             this.logger.Info($"IPC Channel Listened. Uri={uri}");
         }
