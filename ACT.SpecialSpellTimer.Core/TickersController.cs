@@ -52,15 +52,6 @@ namespace ACT.SpecialSpellTimer
 #endif
             try
             {
-#if false
-                telops.AsParallel().ForAll(telop =>
-                {
-                    foreach (var logLine in logLines)
-                    {
-                        this.MatchCore(telop, logLine);
-                    }
-                });
-#else
                 logLines.AsParallel().ForAll(logLine =>
                 {
                     foreach (var telop in telops)
@@ -68,7 +59,6 @@ namespace ACT.SpecialSpellTimer
                         this.MatchCore(telop, logLine);
                     }
                 });
-#endif
             }
             finally
             {

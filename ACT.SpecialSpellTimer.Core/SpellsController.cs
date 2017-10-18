@@ -50,23 +50,6 @@ namespace ACT.SpecialSpellTimer
 #endif
             try
             {
-#if false
-                spells.AsParallel().ForAll(spell =>
-                {
-                    foreach (var logLine in logLines)
-                    {
-                        try
-                        {
-                            spell.StartMatching();
-                            this.MatchCore(spell, logLine);
-                        }
-                        finally
-                        {
-                            spell.EndMatching();
-                        }
-                    }
-                });
-#else
                 logLines.AsParallel().ForAll(logLine =>
                 {
                     foreach (var spell in spells)
@@ -82,7 +65,6 @@ namespace ACT.SpecialSpellTimer
                         }
                     }
                 });
-#endif
             }
             finally
             {
