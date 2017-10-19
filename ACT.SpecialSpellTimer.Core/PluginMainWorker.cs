@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -275,13 +274,7 @@ namespace ACT.SpecialSpellTimer
                 var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
 
                 // 有効なスペルとテロップのリストを取得する
-                var spells = TableCompiler.Instance.SpellList;
-                var telops = TableCompiler.Instance.TickerList;
-
-                // スペルリストとテロップリストを統合する
-                var triggers = new List<object>(spells.Count + telops.Count);
-                triggers.AddRange(spells);
-                triggers.AddRange(telops);
+                var triggers = TableCompiler.Instance.TriggerList;
 
                 var logs = logsTask.Result;
                 if (logs.Count > 0)

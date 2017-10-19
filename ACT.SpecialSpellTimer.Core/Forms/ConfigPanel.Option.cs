@@ -1,13 +1,12 @@
+using System;
+using System.Windows.Forms;
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.Dialog;
+using FFXIV.Framework.Extensions;
+
 namespace ACT.SpecialSpellTimer.Forms
 {
-    using System;
-    using System.Windows.Forms;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Utility;
-    using FFXIV.Framework.Dialog;
-    using FFXIV.Framework.Extensions;
-
     /// <summary>
     /// Configパネル オプション
     /// </summary>
@@ -85,6 +84,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TextOutlineThicknessRateNumericUpDown.Value = (decimal)Settings.Default.TextOutlineThicknessRate;
             this.TextBlurRateNumericUpDown.Value = (decimal)Settings.Default.TextBlurRate;
 
+            this.AnimationFPSNumericUpDown.Value = (decimal)Settings.Default.MaxFPS;
             this.RenderWithCPUOnlyCheckBox.Checked = Settings.Default.RenderCPUOnly;
 
             this.FixBackgroundColorOfBarCheckBox.Checked = Settings.Default.BarBackgroundFixed;
@@ -153,6 +153,7 @@ namespace ACT.SpecialSpellTimer.Forms
             Settings.Default.TextOutlineThicknessRate = (double)this.TextOutlineThicknessRateNumericUpDown.Value;
             Settings.Default.TextBlurRate = (double)this.TextBlurRateNumericUpDown.Value;
 
+            Settings.Default.MaxFPS = (int)this.AnimationFPSNumericUpDown.Value;
             Settings.Default.RenderCPUOnly = this.RenderWithCPUOnlyCheckBox.Checked;
 
             Settings.Default.BarBackgroundFixed = this.FixBackgroundColorOfBarCheckBox.Checked;

@@ -531,8 +531,8 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // FPSを制限する。しないと負荷が高くなる
-            Timeline.SetDesiredFrameRate(this.iconBlinkAnimation, 30);
-            Timeline.SetDesiredFrameRate(this.barBlinkAnimation, 30);
+            Timeline.SetDesiredFrameRate(this.iconBlinkAnimation, Settings.Default.MaxFPS);
+            Timeline.SetDesiredFrameRate(this.barBlinkAnimation, Settings.Default.MaxFPS);
         }
 
         #endregion Blink Animations

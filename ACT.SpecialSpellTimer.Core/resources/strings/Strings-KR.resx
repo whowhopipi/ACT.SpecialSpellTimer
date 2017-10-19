@@ -1253,4 +1253,8 @@
     <value>Disable start condition and to faster.</value>
     <comment>開始条件機能を無効にしてより高速にする</comment>
   </data>
+  <data name="AnimationFPS" xml:space="preserve">
+    <value>Animation frame rate</value>
+    <comment>アニメーションの最大FPS</comment>
+  </data>
 </root>

@@ -472,6 +472,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
             { nameof(Settings.UIAutoScaleMode), AutoScaleMode.Inherit },
+            { nameof(Settings.MaxFPS), 15 },
 
             { nameof(Settings.BarBackgroundFixed), false },
             { nameof(Settings.BarBackgroundBrightness), 0.3 },
@@ -479,7 +480,6 @@ namespace ACT.SpecialSpellTimer.Config
 
             // 設定画面のない設定項目
             { nameof(Settings.LastUpdateDateTime), DateTime.Parse("2000-1-1") },
-            { nameof(Settings.MaxFPS), 30 },
             { nameof(Settings.BlinkBrightnessDark), 0.3d },
             { nameof(Settings.BlinkBrightnessLight), 2.5d },
             { nameof(Settings.BlinkPitch), 0.5d },

@@ -336,6 +336,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
+            this.label71 = new System.Windows.Forms.Label();
+            this.AnimationFPSNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -408,6 +410,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.panel7.SuspendLayout();
             this.pnlLanguage.SuspendLayout();
             this.DQXOptionTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AnimationFPSNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // CombatAnalyzerContextMenuStrip
@@ -2657,6 +2660,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.AutoScroll = true;
             this.tabOverlayOptions.AutoScrollMargin = new System.Drawing.Size(0, 40);
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.label71);
+            this.tabOverlayOptions.Controls.Add(this.AnimationFPSNumericUpDown);
             this.tabOverlayOptions.Controls.Add(this.DisableStartConditionCheckBox);
             this.tabOverlayOptions.Controls.Add(this.flowLayoutPanel1);
             this.tabOverlayOptions.Controls.Add(this.FixBackgroundColorOfBarCheckBox);
@@ -2694,7 +2699,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // DisableStartConditionCheckBox
             // 
             this.DisableStartConditionCheckBox.AutoSize = true;
-            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 537);
+            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 565);
             this.DisableStartConditionCheckBox.Name = "DisableStartConditionCheckBox";
             this.DisableStartConditionCheckBox.Size = new System.Drawing.Size(187, 16);
             this.DisableStartConditionCheckBox.TabIndex = 73;
@@ -2711,7 +2716,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.flowLayoutPanel1.Controls.Add(this.BarBackgroundBrightnessPanel);
             this.flowLayoutPanel1.Controls.Add(this.BarBackgroundColorPanel);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(16, 467);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(16, 495);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(378, 57);
             this.flowLayoutPanel1.TabIndex = 72;
@@ -2789,7 +2794,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // FixBackgroundColorOfBarCheckBox
             // 
             this.FixBackgroundColorOfBarCheckBox.AutoSize = true;
-            this.FixBackgroundColorOfBarCheckBox.Location = new System.Drawing.Point(16, 445);
+            this.FixBackgroundColorOfBarCheckBox.Location = new System.Drawing.Point(16, 473);
             this.FixBackgroundColorOfBarCheckBox.Name = "FixBackgroundColorOfBarCheckBox";
             this.FixBackgroundColorOfBarCheckBox.Size = new System.Drawing.Size(209, 16);
             this.FixBackgroundColorOfBarCheckBox.TabIndex = 71;
@@ -3819,6 +3824,39 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Location = new System.Drawing.Point(15, 441);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(77, 12);
+            this.label71.TabIndex = 75;
+            this.label71.Text = "AnimationFPS";
+            // 
+            // AnimationFPSNumericUpDown
+            // 
+            this.AnimationFPSNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.AnimationFPSNumericUpDown.Location = new System.Drawing.Point(291, 439);
+            this.AnimationFPSNumericUpDown.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.AnimationFPSNumericUpDown.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.AnimationFPSNumericUpDown.Name = "AnimationFPSNumericUpDown";
+            this.AnimationFPSNumericUpDown.Size = new System.Drawing.Size(59, 19);
+            this.AnimationFPSNumericUpDown.TabIndex = 74;
+            this.AnimationFPSNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.AnimationFPSNumericUpDown.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3920,6 +3958,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.pnlLanguage.PerformLayout();
             this.DQXOptionTabPage.ResumeLayout(false);
             this.DQXOptionTabPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AnimationFPSNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4233,5 +4272,7 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.Button BarBackgroundColorButton;
         private System.Windows.Forms.CheckBox DisableStartConditionCheckBox;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.NumericUpDown AnimationFPSNumericUpDown;
     }
 }

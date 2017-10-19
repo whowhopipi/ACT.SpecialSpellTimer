@@ -187,6 +187,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   アニメーションの最大FPS に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string AnimationFPS {
+            get {
+                return ResourceManager.GetString("AnimationFPS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   適用する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ApplyButton {

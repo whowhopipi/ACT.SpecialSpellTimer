@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
@@ -119,6 +118,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         private object tickerListLocker = new object();
 
+        private List<object> triggerList = new List<object>(128);
+
         public event EventHandler OnTableChanged;
 
         public List<SpellTimer> SpellList
@@ -140,6 +141,26 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     return new List<OnePointTelop>(this.tickerList);
                 }
+            }
+        }
+
+        public IReadOnlyList<object> TriggerList
+        {
+            get
+            {
+                this.triggerList.Clear();
+
+                lock (this.spellListLocker)
+                {
+                    this.triggerList.AddRange(this.spellList);
+                }
+
+                lock (this.tickerListLocker)
+                {
+                    this.triggerList.AddRange(this.tickerList);
+                }
+
+                return this.triggerList;
             }
         }
 

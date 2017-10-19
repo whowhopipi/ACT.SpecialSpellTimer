@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
@@ -29,6 +30,11 @@ namespace FFXIV.Framework.TTS.Server
         #endregion Logger
 
         private TaskTrayComponent taskTrayComponet = new TaskTrayComponent();
+
+        private DispatcherTimer shutdownTimer = new DispatcherTimer(DispatcherPriority.Background)
+        {
+            Interval = TimeSpan.FromSeconds(10),
+        };
 
         public App()
         {
@@ -125,6 +131,11 @@ namespace FFXIV.Framework.TTS.Server
 
                 // サーバを開始する
                 RemoteTTSServer.Instance.Open();
+
+                // シャットダウンタイマーをセットする
+                this.shutdownTimer.Tick -= this.ShutdownTimerOnTick;
+                this.shutdownTimer.Tick += this.ShutdownTimerOnTick;
+                this.shutdownTimer.Start();
             }
             catch (Exception ex)
             {
@@ -135,6 +146,18 @@ namespace FFXIV.Framework.TTS.Server
             finally
             {
                 this.logger.Trace("end.");
+            }
+        }
+
+        private void ShutdownTimerOnTick(object sender, EventArgs e)
+        {
+            if (Process.GetProcessesByName("Advanced Combat Tracker").Length < 1 &&
+                Process.GetProcessesByName("ACTx86").Length < 1)
+            {
+                this.logger.Trace("ACT not found. shutdown server.");
+
+                this.shutdownTimer.Stop();
+                this.Shutdown();
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
 
 namespace ACT.SpecialSpellTimer.Views
@@ -152,7 +153,7 @@ namespace ACT.SpecialSpellTimer.Views
 
                 this.KeyFrame.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(timeToCount));
 
-                Timeline.SetDesiredFrameRate(this.animation, 30);
+                Timeline.SetDesiredFrameRate(this.animation, Settings.Default.MaxFPS);
 
                 this.BarRectangle.BeginAnimation(
                     Rectangle.WidthProperty,
