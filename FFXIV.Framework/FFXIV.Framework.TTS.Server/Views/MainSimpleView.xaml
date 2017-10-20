@@ -38,6 +38,26 @@
         Margin="5"
         Content="Start CeVIO Creative Studio"
         Command="{Binding StartCevioCommand}" />
+      <Label
+        Margin="5 5 0 0"
+        Content="CeVIO Volume Gain" />
+
+      <StackPanel Orientation="Horizontal" Margin="15 0 0 10">
+        <TextBlock
+          Margin="0 0 0 0"
+          VerticalAlignment="Center"
+          Text="{Binding ElementName=GainSlider, Path=Value, StringFormat={}{0:N1}, Mode=OneWay}" />
+        <Slider
+          Margin="15 0 0 0"
+          VerticalAlignment="Center"
+          x:Name="GainSlider"
+          Minimum="0" Maximum="9"
+          LargeChange="0.1"
+          SmallChange="0.1"
+          HorizontalAlignment="Left"
+          Width="150"
+          Value="{Binding Config.CevioVolumeGain, Mode=TwoWay}" />
+      </StackPanel>
     </StackPanel>
 
     <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical" VerticalAlignment="Bottom">

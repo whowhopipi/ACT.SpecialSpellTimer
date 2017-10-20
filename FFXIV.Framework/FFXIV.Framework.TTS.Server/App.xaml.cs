@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.TTS.Server.Config;
 using NLog;
 
 namespace FFXIV.Framework.TTS.Server
@@ -103,6 +104,9 @@ namespace FFXIV.Framework.TTS.Server
                     this.taskTrayComponet.Dispose();
                     this.taskTrayComponet = null;
                 }
+
+                // 設定ファイルを保存する
+                Settings.Instance.Save();
             }
             catch (Exception ex)
             {
@@ -125,6 +129,9 @@ namespace FFXIV.Framework.TTS.Server
             try
             {
                 this.logger.Trace("begin.");
+
+                // 設定ファイルを読み込む
+                Settings.Instance.Load();
 
                 // バージョンを出力する
                 this.logger.Info($"{EnvironmentHelper.GetProductName()} {EnvironmentHelper.GetVersion().ToStringShort()}");
