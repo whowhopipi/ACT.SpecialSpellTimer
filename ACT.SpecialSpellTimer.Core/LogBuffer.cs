@@ -346,6 +346,8 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 list.Add(logLine);
+
+                Thread.Yield();
             }
 
             if (summoned)
