@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Windows.Input;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.TTS.Server.Config;
 using FFXIV.Framework.TTS.Server.Models;
 using FFXIV.Framework.TTS.Server.Views;
 using Prism.Commands;
@@ -18,8 +19,9 @@ namespace FFXIV.Framework.TTS.Server.ViewModels
 
         #endregion View
 
-        private string ipcChannelUri;
+        public Settings Config => Settings.Instance;
 
+        private string ipcChannelUri;
         private DelegateCommand refreshIPCChannelCommand;
         private DelegateCommand startCevioCommand;
 

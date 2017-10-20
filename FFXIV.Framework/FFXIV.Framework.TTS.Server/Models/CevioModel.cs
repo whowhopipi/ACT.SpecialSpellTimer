@@ -1,9 +1,9 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using CeVIO.Talk.RemoteService;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.TTS.Common.Models;
-using FFXIV.Framework.TTS.Server.Properties;
+using FFXIV.Framework.TTS.Server.Config;
 using NAudio.Wave;
 using NLog;
 
@@ -164,14 +164,14 @@ namespace FFXIV.Framework.TTS.Server.Models
                 {
                     FileHelper.CreateDirectory(waveFileName);
 
-                    if (Settings.Default.CevioGain != 1.0)
+                    if (Settings.Instance.CevioVolumeGain != 1.0)
                     {
                         // ささらは音量が小さめなので増幅する
                         using (var reader = new WaveFileReader(tempWave))
                         {
                             var prov = new VolumeWaveProvider16(reader)
                             {
-                                Volume = Settings.Default.CevioGain
+                                Volume = Settings.Instance.CevioVolumeGain
                             };
 
                             WaveFileWriter.CreateWaveFile(
