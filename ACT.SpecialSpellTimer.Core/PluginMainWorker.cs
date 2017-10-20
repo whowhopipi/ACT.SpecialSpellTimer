@@ -268,71 +268,92 @@ namespace ACT.SpecialSpellTimer
             // 全滅によるリセットを判定する
             var resetTask = Task.Run(() => this.ResetCountAtRestart());
 
-            if (!this.LogBuffer.IsEmpty)
+            // ログがないなら抜ける
+            if (this.LogBuffer.IsEmpty)
             {
-                // ログを取り出す
-                var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
+                resetTask.Wait();
+                Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
+                return;
+            }
 
-                // 有効なスペルとテロップのリストを取得する
-                var triggers = TableCompiler.Instance.TriggerList;
+#if DEBUG
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+#endif
+            // ログを取り出す
+            var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
 
-                var logs = logsTask.Result;
-                if (logs.Count > 0)
+            // 有効なスペルとテロップのリストを取得する
+            var triggers = TableCompiler.Instance.TriggerList;
+
+            var logs = logsTask.Result;
+            if (logs.Count > 0)
+            {
+                var doneCommand = false;
+                logs.AsParallel().ForAll((logLine) =>
                 {
-                    var doneCommand = false;
-                    logs.AsParallel().ForAll((logLine) =>
+                    // 冒頭のタイムスタンプを除去する
+                    logLine = logLine.Remove(0, 15);
+
+                    triggers.AsParallel().ForAll((trigger) =>
                     {
-                        triggers.AsParallel().ForAll((trigger) =>
+                        switch (trigger)
                         {
-                            switch (trigger)
-                            {
-                                case OnePointTelop telop:
-                                    TickersController.Instance.MatchCore(
-                                        telop,
-                                        logLine);
-                                    break;
+                            case OnePointTelop telop:
+                                TickersController.Instance.MatchCore(
+                                    telop,
+                                    logLine);
+                                break;
 
-                                case Models.SpellTimer spell:
-                                    SpellsController.Instance.MatchCore(
-                                        spell,
-                                        logLine);
-                                    break;
-                            }
-                        });
-
-                        // コマンドとマッチングする
-                        doneCommand |= TextCommandController.MatchCommandCore(logLine);
+                            case Models.SpellTimer spell:
+                                SpellsController.Instance.MatchCore(
+                                    spell,
+                                    logLine);
+                                break;
+                        }
                     });
 
-                    if (doneCommand)
-                    {
-                        SystemSounds.Asterisk.Play();
-                    }
-#if false
-                    // テロップとマッチングする
-                    var t1 = Task.Run(() => TickersController.Instance.Match(
-                        telops,
-                        logs));
-
-                    // スペルリストとマッチングする
-                    var t2 = Task.Run(() => SpellsController.Instance.Match(
-                        spells,
-                        logs));
-
                     // コマンドとマッチングする
-                    var t3 = Task.Run(() => TextCommandController.MatchCommand(
-                        logs));
+                    doneCommand |= TextCommandController.MatchCommandCore(logLine);
 
-                    Task.WaitAll(t1, t2, t3);
+                    Thread.Yield();
+                });
+
+                if (doneCommand)
+                {
+                    SystemSounds.Asterisk.Play();
+                }
+#if false
+                // テロップとマッチングする
+                var t1 = Task.Run(() => TickersController.Instance.Match(
+                    telops,
+                    logs));
+
+                // スペルリストとマッチングする
+                var t2 = Task.Run(() => SpellsController.Instance.Match(
+                    spells,
+                    logs));
+
+                // コマンドとマッチングする
+                var t3 = Task.Run(() => TextCommandController.MatchCommand(
+                    logs));
+
+                Task.WaitAll(t1, t2, t3);
 #endif
 
-                    existsLog = true;
-                }
+                existsLog = true;
             }
+#if DEBUG
+            sw.Stop();
+            Debug.WriteLine($"●DetectLogs {sw.ElapsedMilliseconds:N1} ms, {logs.Count:N0} lines");
+#endif
 
             resetTask.Wait();
 
-            if (!existsLog)
+            if (existsLog)
+            {
+                Thread.Sleep(0);
+            }
+            else
             {
                 Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
             }
