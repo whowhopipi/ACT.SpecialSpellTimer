@@ -344,7 +344,7 @@ namespace ACT.SpecialSpellTimer
             }
 #if DEBUG
             sw.Stop();
-            Debug.WriteLine($"●DetectLogs {sw.ElapsedMilliseconds:N1} ms, {logs.Count:N0} lines");
+            Debug.WriteLine($"●DetectLogs\t{sw.ElapsedMilliseconds:N1} ms\t{logs.Count:N0} lines");
 #endif
 
             resetTask.Wait();

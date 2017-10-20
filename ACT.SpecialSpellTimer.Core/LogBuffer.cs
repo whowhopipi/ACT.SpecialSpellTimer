@@ -274,8 +274,6 @@ namespace ACT.SpecialSpellTimer
 
         public bool IsEmpty => this.logInfoQueue.IsEmpty;
 
-        private List<string> returnLogList = new List<string>(5120);
-
         /// <summary>
         /// ログ行を返す
         /// </summary>
@@ -301,7 +299,7 @@ namespace ACT.SpecialSpellTimer
                 }
             }
 
-            this.returnLogList.Clear();
+            var list = new List<string>(logInfoQueue.Count);
             var partyChangedAtDQX = false;
             var summoned = false;
 
@@ -347,7 +345,7 @@ namespace ACT.SpecialSpellTimer
                     partyChangedAtDQX = DQXUtility.IsPartyChanged(logLine);
                 }
 
-                this.returnLogList.Add(logLine);
+                list.Add(logLine);
             }
 
             if (summoned)
@@ -369,7 +367,7 @@ namespace ACT.SpecialSpellTimer
             {
                 Task.Run(() =>
                 {
-                    ChatLogWorker.Instance.AppendLines(this.returnLogList.ToList());
+                    ChatLogWorker.Instance.AppendLines(list);
                 });
             }
 
@@ -378,7 +376,7 @@ namespace ACT.SpecialSpellTimer
             System.Diagnostics.Debug.WriteLine($"★GetLogLines {sw.Elapsed.TotalMilliseconds:N1} ms");
 #endif
             // リストを返す
-            return this.returnLogList;
+            return list;
 
             // 召喚したか？
             bool isSummoned(string logLine)
