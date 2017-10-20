@@ -476,6 +476,8 @@ namespace ACT.SpecialSpellTimer.Views
 
                 if (this.Spell.BlinkIcon)
                 {
+                    Timeline.SetDesiredFrameRate(this.iconBlinkAnimation, Settings.Default.MaxFPS);
+
                     this.SpellIconImage.BeginAnimation(
                         System.Windows.Controls.Image.OpacityProperty,
                         this.iconBlinkAnimation);
@@ -483,6 +485,8 @@ namespace ACT.SpecialSpellTimer.Views
 
                 if (this.Spell.BlinkBar)
                 {
+                    Timeline.SetDesiredFrameRate(this.barBlinkAnimation, Settings.Default.MaxFPS);
+
                     this.BarRectangle.BeginAnimation(
                         Rectangle.OpacityProperty,
                         this.barBlinkAnimation);
@@ -529,10 +533,6 @@ namespace ACT.SpecialSpellTimer.Views
                 this.barBlinkAnimation.AutoReverse = true;
                 this.barBlinkAnimation.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
             }
-
-            // FPSを制限する。しないと負荷が高くなる
-            Timeline.SetDesiredFrameRate(this.iconBlinkAnimation, Settings.Default.MaxFPS);
-            Timeline.SetDesiredFrameRate(this.barBlinkAnimation, Settings.Default.MaxFPS);
         }
 
         #endregion Blink Animations
