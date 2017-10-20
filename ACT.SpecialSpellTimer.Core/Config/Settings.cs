@@ -472,7 +472,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
             { nameof(Settings.UIAutoScaleMode), AutoScaleMode.Inherit },
-            { nameof(Settings.MaxFPS), 15 },
+            { nameof(Settings.MaxFPS), 30 },
 
             { nameof(Settings.BarBackgroundFixed), false },
             { nameof(Settings.BarBackgroundBrightness), 0.3 },
