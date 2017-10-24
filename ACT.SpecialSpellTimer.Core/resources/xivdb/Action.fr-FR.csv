@@ -8220,6 +8220,79 @@ ID,ID_HEX,ClassJob,ClassJobCategory,Name
 9892,26A4,-1,0,Gyrocoup
 9893,26A5,-1,0,Frappe
 9894,26A6,-1,0,Hurlement Barbare
+9896,26A8,-1,0,Piqué
+9897,26A9,-1,0,Peine De Mort
+9898,26AA,-1,0,Grande Trombe
+9899,26AB,-1,0,Grande Trombe
+9900,26AC,-1,0,Boule De Feu
+9901,26AD,-1,0,Enfer Liquide
+9902,26AE,-1,0,Synthèse De Mana
+9903,26AF,-1,0,Explosion De Mana
+9904,26B0,-1,0,Déflagration De Mana
+9905,26B1,-1,0,Excès D'éther
+9906,26B2,-1,0,Plongeon-trombe
+9907,26B3,-1,0,Colère De Gémellia
+9909,26B5,-1,0,Griffe De Bahamut
+9910,26B6,-1,0,Bec Du Rapace
+9911,26B7,-1,0,Destruction Universelle
+9912,26B8,-1,0,Destruction Universelle
+9913,26B9,-1,0,Rafale Thermoïonique
+9914,26BA,-1,0,MégaBrasier
+9915,26BB,-1,0,Char De Fer
+9916,26BC,-1,0,Dynamo Lunaire
+9917,26BD,-1,0,Rayon Thermoïonique
+9918,26BE,-1,0,Fonte Du Rapace
+9919,26BF,-1,0,Supernova
+9920,26C0,-1,0,Rayon Météore
+9921,26C1,-1,0,Chute De Dalamud
+9922,26C2,-1,0,Auspice Du Dragon
+9923,26C3,-1,0,Plongeon Lunaire
+9924,26C4,-1,0,Colère De Nael
+9925,26C5,-1,0,Boule De Feu
+9926,26C6,-1,0,Orbe De Glace
+9927,26C7,-1,0,Chaîne D'éclairs
+9928,26C8,-1,0,Chaîne D'éclairs
+9929,26C9,-1,0,Tempête De La Mort
+9930,26CA,-1,0,Aile De La Salvation
+9931,26CB,-1,0,Cautérisation
+9932,26CC,-1,0,Cautérisation
+9933,26CD,-1,0,Cautérisation
+9934,26CE,-1,0,Cautérisation
+9935,26CF,-1,0,Cautérisation
+9937,26D1,-1,0,7e Fléau
+9938,26D2,-1,0,Flammes Du Fléau
+9939,26D3,-1,0,Brasier Du Fléau
+9940,26D4,-1,0,Souffle Brasier
+9941,26D5,-1,0,Compression
+9942,26D6,-1,0,GigaBrasier
+9943,26D7,-1,0,Aile De Tempête
+9944,26D8,-1,0,Aile De Tempête
+9945,26D9,-1,0,Secousse
+9946,26DA,-1,0,Secousse
+9947,26DB,-1,0,MégaBrasier
+9948,26DC,-1,0,MégaBrasier
+9949,26DD,-1,0,MégaBrasier
+9950,26DE,-1,0,MégaBrasier
+9951,26DF,-1,0,MégaBrasier
+9952,26E0,-1,0,Frappe MégaBrasier
+9953,26E1,-1,0,Plongeon MégaBrasier
+9954,26E2,-1,0,Trio De La Marche Militaire
+9955,26E3,-1,0,Trio Des Flammes Noires
+9956,26E4,-1,0,Trio Du Désastre
+9957,26E5,-1,0,Trio De L'univers
+9958,26E6,-1,0,Trio Des Attaques
+9959,26E7,-1,0,Octuors Des Dragons
+9960,26E8,-1,0,Auspice Du Dragon
+9961,26E9,-1,0,TéraBrasier
+9962,26EA,-1,0,Akh Morn
+9963,26EB,-1,0,Akh Morn
+9964,26EC,-1,0,Morn Afah
+9965,26ED,-1,0,Morn Afah
+9966,26EE,-1,0,Morn Afah
+9967,26EF,-1,0,ExaBrasier
+9968,26F0,-1,0,ExaBrasier
+9969,26F1,-1,0,ExaBrasier
+9970,26F2,-1,0,Feu Résurrecteur
 9987,2703,-1,0,Sanction
 9988,2704,-1,0,FF12マティウス：原種:氷の巫女水ギミック開始演出アクション：RTI1：ボス1
 9990,2706,-1,0,Refus Divin
@@ -8247,6 +8320,11 @@ ID,ID_HEX,ClassJob,ClassJobCategory,Name
 10034,2732,-1,0,Hekiryuzan
 10035,2733,-1,0,Hekiryuzan
 10036,2734,-1,0,Franc-tireur
+10037,2735,-1,0,ExaBrasier
+10038,2736,-1,0,ExaBrasier
+10039,2737,-1,0,ExaBrasier
+10040,2738,-1,0,ExaBrasier
+10041,2739,-1,0,Frappe ExaBrasier
 10042,273A,-1,0,Souffle Du Lion
 10043,273B,-1,0,Souffle Du Bélier
 10044,273C,-1,0,Souffle Du Dragon
@@ -8534,7 +8612,7 @@ ID,ID_HEX,ClassJob,ClassJobCategory,Name
 5475,1563,0,1,Torgnole
 5476,1564,0,1,Apothicaire
 5477,1565,0,1,Aile Tranchante
-5845,16D5,0,1,オーケストリオン譜入手
+5845,16D5,0,1,Obtention De Morceau D'orchestrion
 5872,16F0,0,1,Pulvérisation
 6143,17FF,0,1,Jet D'eau
 6273,1881,0,1,Torgnole
