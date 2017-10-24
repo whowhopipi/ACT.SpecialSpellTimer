@@ -8220,6 +8220,79 @@ ID,ID_HEX,ClassJob,ClassJobCategory,Name
 9892,26A4,-1,0,Verwirbeln
 9893,26A5,-1,0,Zottel-Randale
 9894,26A6,-1,0,Barbarisches Brüllen
+9896,26A8,-1,0,Herabstürzen
+9897,26A9,-1,0,Todesurteil
+9898,26AA,-1,0,Wirbelsturm
+9899,26AB,-1,0,Wirbelsturm
+9900,26AC,-1,0,Feuerball
+9901,26AD,-1,0,Höllenschmelze
+9902,26AE,-1,0,Formung
+9903,26AF,-1,0,Austritt
+9904,26B0,-1,0,Tiefenaustritt
+9905,26B1,-1,0,Ätherische Profusion
+9906,26B2,-1,0,Spiralschwinge
+9907,26B3,-1,0,Twintanias Zorn
+9909,26B5,-1,0,Klauen Bahamuts
+9910,26B6,-1,0,Bradamante
+9911,26B7,-1,0,Himmelssturz
+9912,26B8,-1,0,Himmelssturz
+9913,26B9,-1,0,Thermionische Eruption
+9914,26BA,-1,0,Megaflare
+9915,26BB,-1,0,Eiserner Streitwagen
+9916,26BC,-1,0,Lunarer Dynamo
+9917,26BD,-1,0,Thermionischer Strahl
+9918,26BE,-1,0,Bahamuts Schwinge
+9919,26BF,-1,0,Supernova
+9920,26C0,-1,0,Meteorflug
+9921,26C1,-1,0,Dalamud-Sturzflug
+9922,26C2,-1,0,Bahamuts Segen
+9923,26C3,-1,0,Lunarer Sturz
+9924,26C4,-1,0,Naels Zorn
+9925,26C5,-1,0,Feuerball
+9926,26C6,-1,0,Eisball
+9927,26C7,-1,0,Kettenblitz
+9928,26C8,-1,0,Kettenblitz
+9929,26C9,-1,0,Todessturm
+9930,26CA,-1,0,Rettende Schwinge
+9931,26CB,-1,0,Kauterisieren
+9932,26CC,-1,0,Kauterisieren
+9933,26CD,-1,0,Kauterisieren
+9934,26CE,-1,0,Kauterisieren
+9935,26CF,-1,0,Kauterisieren
+9937,26D1,-1,0,Siebte Ära Des Schattens
+9938,26D2,-1,0,Katastrophale Flammen
+9939,26D3,-1,0,Katastrophale Lohe
+9940,26D4,-1,0,Flare-Atem
+9941,26D5,-1,0,Einebnen
+9942,26D6,-1,0,Gigaflare
+9943,26D7,-1,0,Sturm-Schwinge
+9944,26D8,-1,0,Sturm-Schwinge
+9945,26D9,-1,0,Erdstoß
+9946,26DA,-1,0,Erdstoß
+9947,26DB,-1,0,Megaflare
+9948,26DC,-1,0,Megaflare
+9949,26DD,-1,0,Megaflare
+9950,26DE,-1,0,Megaflare
+9951,26DF,-1,0,Megaflare
+9952,26E0,-1,0,Megaflare-Stoß
+9953,26E1,-1,0,Megaflare-Sturz
+9954,26E2,-1,0,Todesmarsch-Trio
+9955,26E3,-1,0,Schwarzfeuer-Trio
+9956,26E4,-1,0,Untergangs-Trio
+9957,26E5,-1,0,Himmelssturz-Trio
+9958,26E6,-1,0,Zehnschlag-Trio
+9959,26E7,-1,0,Großes Oktett
+9960,26E8,-1,0,Bahamuts Segen
+9961,26E9,-1,0,Teraflare
+9962,26EA,-1,0,Akh Morn
+9963,26EB,-1,0,Akh Morn
+9964,26EC,-1,0,Morn Afah
+9965,26ED,-1,0,Morn Afah
+9966,26EE,-1,0,Morn Afah
+9967,26EF,-1,0,Exaflare
+9968,26F0,-1,0,Exaflare
+9969,26F1,-1,0,Exaflare
+9970,26F2,-1,0,Flammen Der Wiedergeburt
 9987,2703,-1,0,Sanktion
 9988,2704,-1,0,FF12マティウス：原種:氷の巫女水ギミック開始演出アクション：RTI1：ボス1
 9990,2706,-1,0,Göttliche Leugnung
@@ -8247,6 +8320,11 @@ ID,ID_HEX,ClassJob,ClassJobCategory,Name
 10034,2732,-1,0,Hundert Schnitte
 10035,2733,-1,0,Hundert Schnitte
 10036,2734,-1,0,Einzelgänger
+10037,2735,-1,0,Exaflare
+10038,2736,-1,0,Exaflare
+10039,2737,-1,0,Exaflare
+10040,2738,-1,0,Exaflare
+10041,2739,-1,0,Exaflare-Stoß
 10042,273A,-1,0,Atem Des Löwen
 10043,273B,-1,0,Atem Des Widders
 10044,273C,-1,0,Atem Des Drachen
@@ -8534,7 +8612,7 @@ ID,ID_HEX,ClassJob,ClassJobCategory,Name
 5475,1563,0,1,Deftige Dachtel
 5476,1564,0,1,Entgiften
 5477,1565,0,1,Flügelschnitt
-5845,16D5,0,1,オーケストリオン譜入手
+5845,16D5,0,1,Notenrolle Erhalten
 5872,16F0,0,1,Sprühen
 6143,17FF,0,1,Wasserfontäne
 6273,1881,0,1,Deftige Dachtel
