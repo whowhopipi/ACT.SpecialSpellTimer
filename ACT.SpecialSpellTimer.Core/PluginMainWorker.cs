@@ -289,7 +289,7 @@ namespace ACT.SpecialSpellTimer
             if (logs.Count > 0)
             {
                 var doneCommand = false;
-                logs.AsParallel().ForAll((logLine) =>
+                logs.AsParallel().AsOrdered().ForAll((logLine) =>
                 {
                     // 冒頭のタイムスタンプを除去する
                     logLine = logLine.Remove(0, 15);
