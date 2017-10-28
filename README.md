@@ -15,9 +15,21 @@ ACT.SpecialSpellTimer
 ※スペスペの動作には. NET Framework 4.7 以降が必要です。  
 
 2) インストール  
-resources  
-ACT.SpecialSpellTimer.dll  
+**resources**  
+**tools**  
+**FFXIV.Framework.Dialog.exe**  
+**ACT.SpecialSpellTimer.Core.dll**  
+**ACT.SpecialSpellTimer.dll**  
+**FFXIV.Framework.Dialog.Wrapper.dll**  
+**FFXIV.Framework.dll**  
+**FirstFloor.ModernUI.dll**  
+**NLog.dll**  
+**Prism.dll**  
+　  
 をACTのインストールディレクトリにコピーします  
+(配置の例)  
+![deploy_sample](https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/images/deploy.jpg)  
+　  
 その後、プラグインとしてACT.SpecialSpellTimer.dllを追加してください  
   
 3) DoTの開始にヒットさせてDoT継続時間を可視化したい  
@@ -285,8 +297,8 @@ http://maoudamashii.jokersounds.com/
 GitHubと連動しているためツイートは少々五月蠅いかもしれません  
 https://twitter.com/anoyetta  
 
-
-<a href="https://github.com/anoyetta/ACT.SpecialSpellTimer">
-  <img src="https://ga-beacon.appspot.com/UA-58705151-2/https://github.com/anoyetta/ACT.SpecialSpellTimer?pixel"/>
-</a>
-
+**Discord はじめました**  
+**ACT.SST Forum**  
+**https://discord.gg/n6Mut3F**  
+気軽にご参加ください。twitterよりもコミュニケーションし易いです。  
+公開では対応できないような案件の場合は別途プライベートルームに招待いたします。  

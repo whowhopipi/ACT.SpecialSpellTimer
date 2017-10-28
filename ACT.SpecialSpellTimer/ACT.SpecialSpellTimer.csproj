@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EA12D333-F0ED-4524-8BAD-B986B0137EA5}</ProjectGuid>
+    <ProjectGuid>{CCF72089-92FA-4AFB-BDE7-869CA0E394F9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ACT.SpecialSpellTimer</RootNamespace>
     <AssemblyName>ACT.SpecialSpellTimer</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -22,334 +21,76 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Advanced Combat Tracker">
-      <HintPath>.\Advanced Combat Tracker.exe</HintPath>
+      <HintPath>..\..\ACTv3\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CombatAnalyzer.cs" />
-    <Compile Include="CombatLog.cs" />
-    <Compile Include="ConfigPanel.CombatAnalyzer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ConfigPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ConfigPanel.Designer.cs">
-      <DependentUpon>ConfigPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ConfigPanel.Monitor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ConfigPanel.NameStyle.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ConfigPanel.NameStyle.Designer.cs">
-      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ConfigPanel.OnePointTelop.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ConfigPanel.Option.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Config\FontSerializationHelper.cs" />
-    <Compile Include="Config\SerializableSize.cs" />
-    <Compile Include="DQXUtility.cs" />
-    <Compile Include="FFXIVHelper\Buff.cs" />
-    <Compile Include="FFXIVHelper\Combatant.cs" />
-    <Compile Include="FFXIVHelper\FFXIV.cs" />
-    <Compile Include="FFXIVHelper\MobType.cs" />
-    <Compile Include="FFXIVHelper\NameStyles.cs" />
-    <Compile Include="FFXIVHelper\Skill.cs" />
-    <Compile Include="FFXIVHelper\Zone.cs" />
-    <Compile Include="Image\IconController.cs" />
-    <Compile Include="Job.cs" />
-    <Compile Include="LogBuffer.cs" />
-    <Compile Include="Models\PlaceholderTypes.cs" />
-    <Compile Include="Models\Spell.cs" />
-    <Compile Include="Models\TableCompiler.cs" />
-    <Compile Include="Models\Ticker.cs" />
-    <Compile Include="OnePointTelopController.cs" />
-    <Compile Include="Models\OnePointTelopTable.cs" />
-    <Compile Include="Config\Settings.cs" />
-    <Compile Include="Views\OnePointTelopWindow.xaml.cs">
-      <DependentUpon>OnePointTelopWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PanelSettings.cs" />
+    <Compile Include="AssemblyResolver.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="resources\strings\Strings-EN.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings-EN.resx</DependentUpon>
-    </Compile>
-    <Compile Include="resources\strings\Strings-JP.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings-JP.resx</DependentUpon>
-    </Compile>
-    <Compile Include="resources\strings\Strings-KR.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings-KR.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SetConditionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SetConditionForm.Designer.cs">
-      <DependentUpon>SetConditionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SelectZoneForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SelectZoneForm.Designer.cs">
-      <DependentUpon>SelectZoneForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SelectJobForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SelectJobForm.Designer.cs">
-      <DependentUpon>SelectJobForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Sound\SoundController.cs" />
-    <Compile Include="SpecialSpellTimerPlugin.cs" />
-    <Compile Include="Views\OutlineTextBlockExtensions.cs" />
-    <Compile Include="Views\SpellTimerControl.xaml.cs">
-      <DependentUpon>SpellTimerControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SpellTimerCore.cs" />
-    <Compile Include="Models\SpellTimerDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="TabControlExtHoriz.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="TabControlExt.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="TextCommandController.cs" />
-    <Compile Include="Utility\ActInvoker.cs" />
-    <Compile Include="Utility\CaptionButtonPanel.xaml.cs">
-      <DependentUpon>CaptionButtonPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Utility\ConditionUtility.cs" />
-    <Compile Include="Utility\FontDialogWindow.xaml.cs">
-      <DependentUpon>FontDialogWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Utility\Language.cs" />
-    <Compile Include="Utility\Logger.cs" />
-    <Compile Include="Utility\MetroWindow.cs" />
-    <Compile Include="Utility\StringExtensions.cs" />
-    <Compile Include="Utility\Translate.cs" />
-    <Compile Include="Views\OutlineTextBlock.cs" />
-    <Compile Include="Views\StrokeThicknessToBlurRadiusConverter.cs" />
-    <Compile Include="Views\WPFHelper.cs" />
-    <Compile Include="VisualSettingControl.cs" />
-    <Compile Include="VisualSettingControl.Designer.cs">
-      <DependentUpon>VisualSettingControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VisualSettingControlBackgoundColorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="VisualSettingControlBackgoundColorForm.Designer.cs">
-      <DependentUpon>VisualSettingControlBackgoundColorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WindowExtension.Visibility.cs" />
-    <Compile Include="WindowExtension.Transparent.cs" />
-    <Compile Include="Views\SpellTimerListWindow.xaml.cs">
-      <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SpellTimerTable.cs" />
-    <Compile Include="UpdateChecker.cs" />
-    <Compile Include="Utility\ColorUtility.cs" />
-    <Compile Include="Utility\FontUtility.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="resources\color\サンプル灰色系.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\color\サンプル紫色系.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\color\サンプル緑色系.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\color\サンプル青色系.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\color\テロップ茶色系.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\color\テロップ青色系.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\color\回復風緑系.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\icon\_blank.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\alarm.wav" />
-    <Content Include="resources\wav\chime13.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\onepoint14.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\onepoint23.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\onepoint24.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\onepoint26.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\onepoint30.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\onepoint32.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\onepoint33.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\system46.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\wav\system47.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\OnePointTelopWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SpellTimerControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SpellTimerListWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Utility\CaptionButtonPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Utility\FontDialogWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Utility\MetroStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ConfigPanel.DQXOption.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <None Include="Models\SpellTimerDataSet.xsc">
-      <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="Models\SpellTimerDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>SpellTimerDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Models\SpellTimerDataSet.xss">
-      <DependentUpon>SpellTimerDataSet.xsd</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ConfigPanel.NameStyle.resx">
-      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ConfigPanel.resx">
-      <DependentUpon>ConfigPanel.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="resources\strings\Strings-EN.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Strings-EN.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="resources\strings\Strings-JP.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings-JP.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="resources\strings\Strings-KR.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SetConditionForm.resx">
-      <DependentUpon>SetConditionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SelectZoneForm.resx">
-      <DependentUpon>SelectZoneForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SelectJobForm.resx">
-      <DependentUpon>SelectJobForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VisualSettingControl.resx">
-      <DependentUpon>VisualSettingControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VisualSettingControlBackgoundColorForm.resx">
-      <DependentUpon>VisualSettingControlBackgoundColorForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <ProjectReference Include="..\ACT.SpecialSpellTimer.Core\ACT.SpecialSpellTimer.Core.csproj">
+      <Project>{ea12d333-f0ed-4524-8bad-b986b0137ea5}</Project>
+      <Name>ACT.SpecialSpellTimer.Core</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework.Dialog.Wrapper\FFXIV.Framework.Dialog.Wrapper.csproj">
+      <Project>{dd7824d5-f74e-4412-9e87-c7b89e1c6165}</Project>
+      <Name>FFXIV.Framework.Dialog.Wrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework.Dialog\FFXIV.Framework.Dialog.csproj">
+      <Project>{5fc72c62-16d6-4f95-aa45-c7ad5f8a7901}</Project>
+      <Name>FFXIV.Framework.Dialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FFXIV.Framework\FFXIV.Framework\FFXIV.Framework.csproj">
+      <Project>{22ebf8a4-eed1-4cd1-99eb-99665163a315}</Project>
+      <Name>FFXIV.Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <PropertyGroup>
+    <PostBuildEvent>@ECHO OFF
+
+IF "$(ConfigurationName)"=="Debug" (
+    EXIT /B
+)
+
+SET OUTPUTDIR=$(SolutionDir)deploy\$(ConfigurationName)\
+
+IF NOT EXIST %25OUTPUTDIR%25 (
+    MKDIR %25OUTPUTDIR%25
+)
+
+DEL /Q /S %25OUTPUTDIR%25 &gt;NUL
+
+XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25* /EXCLUDE:$(SolutionDir)exclude.txt
+
+IF EXIST %25OUTPUTDIR%25locale (
+    RMDIR /S /Q %25OUTPUTDIR%25locale
+)
+DEL /Q /S %25OUTPUTDIR%25*.xml  &gt;NUL
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

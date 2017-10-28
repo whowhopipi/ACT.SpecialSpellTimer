@@ -1,0 +1,22 @@
+﻿<Window
+  x:Class="FFXIV.Framework.Dialog.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d"
+  Title="FFXIV.Framework.Dialog" Height="600" Width="800"
+  TextOptions.TextFormattingMode="Display"
+  TextOptions.TextHintingMode="Auto"
+  TextOptions.TextRenderingMode="ClearType"
+  RenderOptions.ClearTypeHint="Enabled"
+  RenderOptions.BitmapScalingMode="HighQuality"
+  RenderOptions.EdgeMode="Unspecified">
+
+  <StackPanel
+    VerticalAlignment="Center"
+    Orientation="Vertical">
+    <Button Margin="5" Click="OpenColorDialogButton_Click">open COLOR dialog</Button>
+    <Button Margin="5" Click="OpenFontDialogButton_Click">open FONT Dialog</Button>
+  </StackPanel>
+</Window>
