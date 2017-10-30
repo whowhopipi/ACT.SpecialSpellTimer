@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
+using System.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
@@ -226,8 +226,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             {
                 if (!this.IsAvalable)
                 {
-#if !DEBUG
                     Thread.Sleep(5000);
+#if !DEBUG
                     return;
 #endif
                 }
