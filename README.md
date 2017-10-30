@@ -14,17 +14,19 @@ ACT.SpecialSpellTimer
 **[.NET Framework 4.7](https://www.microsoft.com/en-us/download/details.aspx?id=55170)** をインストールします。  
 ※スペスペの動作には. NET Framework 4.7 以降が必要です。  
 
-2) インストール  
-**resources**  
-**tools**  
-**FFXIV.Framework.Dialog.exe**  
-**ACT.SpecialSpellTimer.Core.dll**  
-**ACT.SpecialSpellTimer.dll**  
-**FFXIV.Framework.Dialog.Wrapper.dll**  
-**FFXIV.Framework.dll**  
-**FirstFloor.ModernUI.dll**  
-**NLog.dll**  
-**Prism.dll**  
+2) インストール
+<pre><b>
+resources
+tools
+FFXIV.Framework.Dialog.exe
+ACT.SpecialSpellTimer.Core.dll
+ACT.SpecialSpellTimer.dll
+FFXIV.Framework.Dialog.Wrapper.dll
+FFXIV.Framework.dll
+FirstFloor.ModernUI.dll
+NLog.dll
+Prism.dll
+</b></pre>
 　  
 をACTのインストールディレクトリにコピーします  
 (配置の例)  
@@ -126,7 +128,7 @@ Jiro Paradin (ナイト)<br />
 </tr>
 
 <tr>
-<td>&lt;ROLE&gt;</td>
+<td>&lt;ROLE&gt;, &lt;ROLEn&gt;</td>
 <td>
 パーティ内の特定のロールの誰かにマッチします。<br />
 フルネーム、イニシャルを問わずマッチします。<br />
@@ -143,6 +145,7 @@ Shichiro Mazda (吟遊詩人)<br />
 Hachiro Mitsuoka (黒魔道士)<br />
 <br />
 &lt;TANK&gt; → Taro Yamada または Jiro Sato にマッチする<br />
+&lt;TANK1&gt; → 1番目のTANKである Taro Yamada にマッチする<br />
 &lt;HEALER&gt; → Sabro Suzuki または Sabro Suzuki にマッチする<br />
 &lt;DPS&gt; → Goro Toyota または Rokuro Nissan または Shichiro Mazda または Hachiro Mitsuoka にマッチする<br />
 &lt;MELEE&gt; → Goro Toyota または Rokuro Nissan にマッチする<br />
@@ -150,10 +153,14 @@ Hachiro Mitsuoka (黒魔道士)<br />
 &lt;MAGIC&gt; → Hachiro Mitsuoka にマッチする<br />
 <br />
 &lt;TANK&gt; は正規表現の (?&lt;_TANK&gt;Taro Yamada|Jiro Sato) に置換わってマッチングされます。<br />
+&lt;TANK1&gt; は正規表現の (?&lt;_TANK1&gt;Taro Yamada) に置換わってマッチングされます。<br />
 ex.<br />
 &lt;TANK&gt → (?&lt;_TANK&gt;Taro Yamada|Jiro Sato)<br />
+&lt;TANK1&gt → (?&lt;_TANK&gt;Taro Yamada)<br />
 &lt;HEALER&gt → (?&lt;_HEALER&gt;Sabro Suzuki|Sabro Suzuki)<br />
+&lt;HEALER1&gt → (?&lt;_HEALER&gt;Sabro Suzuki)<br />
 &lt;DPS&gt → (?&lt;_DPS&gt;Goro Toyota|Rokuro Nissan|Shichiro Mazda|Hachiro Mitsuoka)<br />
+&lt;DPS1&gt → (?&lt;_DPS&gt;Goro Toyota)<br />
 &lt;MELEE&gt → (?&lt;_MELEE&gt;Goro Toyota|Rokuro Nissan)<br />
 &lt;RANGE&gt → (?&lt;_RANGE&gt;Shichiro Mazda)<br />
 &lt;MAGIC&gt → (?&lt;_MAGIC&gt;Hachiro Mitsuoka)<br />
