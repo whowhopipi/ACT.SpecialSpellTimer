@@ -711,7 +711,7 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     var label = $"{role.RoleLabel}{i + 1}";
                     var o = $"<{label}>";
-                    var n = $"(?<_{label}{role.Combatants[i].NamesRegex}>)";
+                    var n = $"(?<_{label}>{role.Combatants[i].NamesRegex})";
 
                     newList.Add(new PlaceholderContainer(
                         o.ToUpper(),
