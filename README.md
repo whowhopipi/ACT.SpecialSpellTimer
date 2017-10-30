@@ -15,8 +15,7 @@ ACT.SpecialSpellTimer
 ※スペスペの動作には. NET Framework 4.7 以降が必要です。  
 
 2) インストール
-<pre><b>
-resources
+<pre><b>resources
 tools
 FFXIV.Framework.Dialog.exe
 ACT.SpecialSpellTimer.Core.dll
