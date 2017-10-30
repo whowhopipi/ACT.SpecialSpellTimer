@@ -660,7 +660,7 @@ namespace ACT.SpecialSpellTimer.Models
                     continue;
                 }
 
-                // <JOBn>形式を置換する
+                // <JOBn>形式を登録する
                 // ex. <PLD1> → Taro Paladin
                 // ex. <PLD2> → Jiro Paladin
                 for (int i = 0; i < combatantsByJob.Length; i++)
@@ -671,7 +671,7 @@ namespace ACT.SpecialSpellTimer.Models
                         PlaceholderTypes.Party));
                 }
 
-                // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする
+                // <JOB>形式を登録する ただし、この場合は正規表現のグループ形式とする
                 // また、グループ名にはジョブの略称を設定する
                 // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
                 var names = string.Join("|", combatantsByJob.Select(x => x.NamesRegex).ToArray());
@@ -704,6 +704,23 @@ namespace ACT.SpecialSpellTimer.Models
                     PlaceholderTypes.Party));
             }
 
+            // <RoleN>形式のプレースホルダを登録する
+            foreach (var role in partyListByRole)
+            {
+                for (int i = 0; i < role.Combatants.Count; i++)
+                {
+                    var label = $"{role.RoleLabel}{i + 1}";
+                    var o = $"<{label}>";
+                    var n = $"(?<_{label}{role.Combatants[i].NamesRegex}>)";
+
+                    newList.Add(new PlaceholderContainer(
+                        o.ToUpper(),
+                        n,
+                        PlaceholderTypes.Party));
+                }
+            }
+
+            // 新しく生成したプレースホルダを登録する
             lock (this.PlaceholderListSyncRoot)
             {
                 this.placeholderList.RemoveAll(x => x.Type == PlaceholderTypes.Party);
