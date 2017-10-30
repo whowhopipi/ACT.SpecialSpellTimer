@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
@@ -119,6 +118,74 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public object CurrentPartyIDListLock => this.currentPartyIDListLock;
 #endif
 
+#if DEBUG
+
+        private readonly IReadOnlyList<Combatant> DummyCombatants = new List<Combatant>()
+        {
+            new Combatant()
+            {
+                ID = 1,
+                Name = "Me Taro",
+                MaxHP = 30000,
+                CurrentHP = 30000,
+                MaxMP = 12000,
+                CurrentMP = 12000,
+                MaxTP = 3000,
+                CurrentTP = 3000,
+                Job = (int)JobIds.PLD,
+                type = (byte)MobType.Player,
+            },
+
+            new Combatant()
+            {
+                ID = 2,
+                Name = "Warrior Jiro",
+                MaxHP = 30000,
+                CurrentHP = 30000,
+                MaxMP = 12000,
+                CurrentMP = 12000,
+                MaxTP = 3000,
+                CurrentTP = 3000,
+                Job = (int)JobIds.WAR,
+                type = (byte)MobType.Player,
+            },
+
+            new Combatant()
+            {
+                ID = 3,
+                Name = "White Hanako",
+                MaxHP = 30000,
+                CurrentHP = 30000,
+                MaxMP = 12000,
+                CurrentMP = 12000,
+                MaxTP = 3000,
+                CurrentTP = 3000,
+                Job = (int)JobIds.WHM,
+                type = (byte)MobType.Player,
+            },
+
+            new Combatant()
+            {
+                ID = 4,
+                Name = "Astro Himeko",
+                MaxHP = 30000,
+                CurrentHP = 30000,
+                MaxMP = 12000,
+                CurrentMP = 12000,
+                MaxTP = 3000,
+                CurrentTP = 3000,
+                Job = (int)JobIds.AST,
+                type = (byte)MobType.Player,
+            },
+        };
+
+        private readonly uint[] DummyPartyList = new uint[]
+        {
+            1, 2, 3, 4, 5, 6, 7, 8
+        };
+
+#endif
+
         #endregion Combatants
 
         #region Resources
@@ -159,8 +226,10 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             {
                 if (!this.IsAvalable)
                 {
+#if !DEBUG
                     Thread.Sleep(5000);
                     return;
+#endif
                 }
 
                 this.RefreshCombatantList();
@@ -345,6 +414,19 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         {
             if (!this.IsAvalable)
             {
+#if DEBUG
+                lock (this.combatantListLock)
+                {
+                    foreach (var entity in this.DummyCombatants)
+                    {
+                        entity.SetName(entity.Name);
+                    }
+
+                    this.combatantList = this.DummyCombatants;
+                    this.combatantDictionary = this.DummyCombatants.ToDictionary(x => x.ID);
+                }
+#endif
+
                 return;
             }
 
@@ -398,6 +480,12 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         {
             if (!this.IsAvalable)
             {
+#if DEBUG
+                lock (this.currentPartyIDListLock)
+                {
+                    this.currentPartyIDList = new List<uint>(this.DummyPartyList);
+                }
+#endif
                 return;
             }
 
