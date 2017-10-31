@@ -31,7 +31,7 @@ Prism.dll
 その後、プラグインとしてACT.SpecialSpellTimer.dllを追加してください  
 
 ## DoTなどの設定方法が分からない
-**[こちら](EXAMPLES.md)** に高度な設定例を示します。  
+**[こちら](https://github.com/anoyetta/ACT.SpecialSpellTimer/wiki/Examples)** に高度な設定例を示します。  
 正規表現をフル活用することになりますので各正規表現の意味を理解して使用してください。
 <pre>
 <b>例1. バイオ系の設定例</b>
