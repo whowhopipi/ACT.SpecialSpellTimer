@@ -2,9 +2,9 @@
 =====================
 
 # 概要
-見やすさを改善した特別なスペルタイマーを提供します  
+見やすさを改善した特別なスペルタイマーを提供します。  
 愛称は「スペスペ」  
-  
+
 ![sample](https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/sample.png)  
 
 # 使い方
@@ -24,19 +24,15 @@ FirstFloor.ModernUI.dll
 NLog.dll
 Prism.dll
 </b></pre>
-　  
 をACTのインストールディレクトリにコピーします  
+　  
 (配置の例)  
 ![deploy_sample](https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/images/deploy.jpg)  
-　  
 その後、プラグインとしてACT.SpecialSpellTimer.dllを追加してください  
-  
-## DoTの開始にヒットさせてDoT継続時間を可視化したい  
-[エフェクトを受けた人の名前] gains the effect of フラクチャー from [エフェクトを与えた人の名前]  
-ACTが吐き出すログには上記のような独自のログがあります  
-これに対して正規表現を設定して、自身が与えたDoT（その他デバフも可）の開始を検出してください  
-  
-## 複数対象に対するDoTを個別に管理したい  
+
+## DoTなどの設定方法が分からない
+下記に高度な設定例を示します。  
+正規表現をフル活用することになります。各正規表現の意味を理解して使用してください。
 <pre>
 <b>例1. バイオ系の設定例</b>
 
@@ -119,8 +115,31 @@ TANK1とTANK2のバリアを個別に管理します。
 バリアはキャパシティを超えると効果が失われるため延長するマッチングワードを使用して効果の消失を検知させます。このとき複数人を対象としたグループでマッチングを行うと、TANK2のバリアが消失したときにTANK1のバリアも消失したように見えてしまいます。よってTANK1とTANK2を個別に設定し監視します。
 </pre>
 
-## ゲーム内のプレースホルダは使えないの？  
-一部は使えるように対応しています  
+## そもそも正規表現が分からない
+基本的には分からなくてよいです。正規表現とは専らプログラマなどがテキストを効率よく検索するときに使用する高度な検索キーワードで、開発用のエディタ内やプログラムの内部に埋め込んで使います。  
+よって一般の方には使いこなすのは難しいです。分からない場合は通常のキーワードマッチングの範囲内で使用するのがベターです。  
+
+#### どうしても正規表現を使いたい
+下記で学習できます。  
+
+* 正規表現とは？  
+[正規表現 - Wikipedia](https://ja.wikipedia.org/wiki/正規表現)  
+ざっくり説明すると \* などのワイルドカードをより強力にしたものです。C#等のプログラミング言語とは独立して体系化されて
+いるため、C#, JavaScript, PHP, Bash など言語を問わず使用できます。
+
+* 正規表現のリファレンス  
+[正規表現の構文 - MSDN](https://msdn.microsoft.com/ja-jp/library/cc392020.aspx)  
+[正規表現言語 クイックリファレンス - MSDN](https://msdn.microsoft.com/ja-jp/library/az24scfc(v=vs.110).aspx)  
+マイクロソフトの開発者向け情報（MSDN - Microsoft Developer Network）の正規表現のページです。分かりやすくまとまっているため学習には最適です。
+
+* 正規表現のテスト  
+正規表現を書いていきなりゲームのログとマッチさせようとしてもうまくいかないでしょう。またマッチしない原因を探ることも出来ないでしょう。正規表現を書いたらチェックツール等を使用して正規表現をテストしましょう。  
+[正規表現テストツール - DOBON.NET](https://dobon.net/vb/dotnet/string/files/RegexTest.exe)  
+まずはスペスペでログを収集します。ヒットさせたいログが出力されていることを確認し、その文字列を対象にして自分の書いた正規表現を前述のテストツールでテストします。これが基本です。  
+仮にプログラマだったとしても複雑な文字列に対してはテストしながらパターンを作ります。よって誰かに質問する場合も検査したいテキストを添えて「このテキストに対してこのパターンで正規表現を設定したがマッチしない」と質問するとよいでしょう。
+
+## ゲーム内のプレースホルダは使えないの？
+一部は使えるように対応しています
 
 <table>
 <tr>
@@ -250,7 +269,7 @@ ex.<br />
 <br />
 <br />
 
-## 俺の歌を聞かせたい  
+## 俺の歌を聞かせたい
 resources/wav にwaveファイルを投入するとスペスペで使用できるようになります  
 
 # テキストコマンド
@@ -347,19 +366,15 @@ FF14の内部からテキストコマンドで一部の機能を制御できま�
 </tr>
 
 </table>
-  
-  
-    
+
 # 最新リリース
 **[こちらからダウンロードしてください](https://github.com/anoyetta/ACT.SpecialSpellTimer/releases/latest)**  
-  
-  
+
 # ライセンス
 三条項BSDライセンス  
 Copryright (c) 2014, anoyetta  
 https://github.com/anoyetta/ACT.SpecialSpellTimer/blob/master/LICENSE  
-  
-  
+
 # Special Thanks
 ・GB19xx様  
 https://github.com/GB19xx/ACT.TPMonitor  
@@ -369,8 +384,7 @@ https://github.com/GB19xx/ACT.TPMonitor
 http://maoudamashii.jokersounds.com/  
 音楽素材といったら魔王魂。  
 同梱されたwaveサウンドファイルの著作権は魔王魂に帰属します  
-  
-  
+
 # お問合せ
 不具合報告、要望、質問及び最新版情報などはTwitterにて  
 GitHubと連動しているためツイートは少々五月蠅いかもしれません  
