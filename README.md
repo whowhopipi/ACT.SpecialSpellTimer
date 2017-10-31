@@ -1,20 +1,18 @@
-ACT.SpecialSpellTimer
+**ACT.SpecialSpellTimer**
 =====================
 
-概要
--------------
+# 概要
 見やすさを改善した特別なスペルタイマーを提供します  
 愛称は「スペスペ」  
   
 ![sample](https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/sample.png)  
 
-使い方
---------------
-1) 準備  
+# 使い方
+## 1. 準備
 **[.NET Framework 4.7](https://www.microsoft.com/en-us/download/details.aspx?id=55170)** をインストールします。  
 ※スペスペの動作には. NET Framework 4.7 以降が必要です。  
 
-2) インストール
+## 2. インストール
 <pre><b>resources
 tools
 FFXIV.Framework.Dialog.exe
@@ -33,15 +31,95 @@ Prism.dll
 　  
 その後、プラグインとしてACT.SpecialSpellTimer.dllを追加してください  
   
-3) DoTの開始にヒットさせてDoT継続時間を可視化したい  
+## DoTの開始にヒットさせてDoT継続時間を可視化したい  
 [エフェクトを受けた人の名前] gains the effect of フラクチャー from [エフェクトを与えた人の名前]  
 ACTが吐き出すログには上記のような独自のログがあります  
 これに対して正規表現を設定して、自身が与えたDoT（その他デバフも可）の開始を検出してください  
   
-4) 複数対象に対するDoTを個別に管理したい  
-[こちら](https://github.com/anoyetta/ACT.SpecialSpellTimer/releases/tag/v1.15.1) に従って設定してください  
+## 複数対象に対するDoTを個別に管理したい  
+<pre>
+<b>例1. バイオ系の設定例</b>
 
-5) ゲーム内のプレースホルダは使えないの？  
+スペルの名前
+${effect} ➡, ${victim}
+
+ログに対するマッチングワード
+1A:(?&lt;victim&gt;.+?) gains the effect of (?&lt;effect&gt;バイオ|バイオラ|バイオガ) from &lt;mex&gt; for (?&lt;duration&gt;\d+)
+
+その他設定
+・正規表現 ON
+・スペルの名前が異なるときにインスタンス化する ON
+・進行方向を逆にする ON
+
+解説
+レベルによってアクションが置き換わるバイオ系を一括で扱います。
+アクション名は バイオ|バイオラ|バイオガ でグループ化しどれでもヒットするようにします。効果時間はグループ名 &lt;duration&gt; を使用してログから動的に拾わせます。ゲーム内で発動したときの効果時間が拾われるためリキャスト時間の設定は関係なくなります。
+スペルの表示は正規表現でキャプチャーしたアクション名、対象を表示させます。
+例えば、Naoki Yoshida に対してバイオを使用した場合は
+
+バイオ ➡
+ Naoki Yoshida
+
+と表示されます。
+またインスタンス化にチェックを入れることで名前の異なる対象に対して使用したときにそれらを個別に表示させます。バイオ等はベインで複数対象に拡散するため表示が多すぎてしまう場合があります。その場合はインスタンス化のチェックを外せば最後にかけた対象だけを管理するようになります。
+
+エアロ、サンダー、ミアズマ に対しても同様に設定することが出来ます。
+</pre>
+
+<pre>
+<b>例2. HoTの設定例</b>
+
+スペルの名前
+${effect} ➡, ${_TANK}
+
+ログに対するマッチングワード
+1A:&lt;TANK&gt; gains the effect of (?&lt;effect&gt;リジェネ|アスペクト・ベネフィク) from &lt;mex&gt; for (?&lt;duration&gt;\d+)
+
+その他設定
+・正規表現 ON
+・スペルの名前が異なるときにインスタンス化する ON
+・進行方向を逆にする ON
+
+解説
+リジェネ、アスペクト・ベネフィクによるHoTを一括して扱います。
+基本はDoTと同じですが、対象を &lt;TANK&gt; とすることでタンクにかけたHoTだけが表示対象となります。DPSや自分にかけたHoTは継続的に管理する必要がないため、表示する対象を必要な対象に限定することで管理を容易にします。
+</pre>
+<pre>
+<b>例3. 単体バリアの設定例</b>
+<pre>
+<b>スペル1の設定</b>
+スペルの名前
+Nフィールド ➡, ${_TANK1}
+
+ログに対するマッチングワード
+1A:&lt;TANK1&gt; gains the effect of ノクターナルフィールド from &lt;mex&gt; for (?&lt;duration&gt;\d+)
+
+延長するマッチングワード
+&lt;TANK1&gt; loses the effect of ノクターナルフィールド from &lt;mex&gt;
+-60秒延長する
+</pre>
+<pre>
+<b>スペル2の設定</b>
+スペルの名前
+Nフィールド ➡, ${_TANK2}
+
+ログに対するマッチングワード
+1A:&lt;TANK2&gt; gains the effect of ノクターナルフィールド from &lt;mex&gt; for (?&lt;duration&gt;\d+)
+
+延長するマッチングワード
+&lt;TANK2&gt; loses the effect of ノクターナルフィールド from &lt;mex&gt;
+-60秒延長する
+</pre>
+その他設定
+・正規表現 ON
+・進行方向を逆にする ON
+
+解説
+TANK1とTANK2のバリアを個別に管理します。
+バリアはキャパシティを超えると効果が失われるため延長するマッチングワードを使用して効果の消失を検知させます。このとき複数人を対象としたグループでマッチングを行うと、TANK2のバリアが消失したときにTANK1のバリアも消失したように見えてしまいます。よってTANK1とTANK2を個別に設定し監視します。
+</pre>
+
+## ゲーム内のプレースホルダは使えないの？  
 一部は使えるように対応しています  
 
 <table>
@@ -172,11 +250,10 @@ ex.<br />
 <br />
 <br />
 
-6. 俺の歌を聞かせたい  
+## 俺の歌を聞かせたい  
 resources/wav にwaveファイルを投入するとスペスペで使用できるようになります  
 
-テキストコマンド
---------------
+# テキストコマンド
 FF14の内部からテキストコマンドで一部の機能を制御できます  
 /e コマンド  
 の書式でコマンドを発行してください  
@@ -273,20 +350,17 @@ FF14の内部からテキストコマンドで一部の機能を制御できま�
   
   
     
-最新リリース
---------------
+# 最新リリース
 **[こちらからダウンロードしてください](https://github.com/anoyetta/ACT.SpecialSpellTimer/releases/latest)**  
   
   
-ライセンス
---------------
+# ライセンス
 三条項BSDライセンス  
 Copryright (c) 2014, anoyetta  
 https://github.com/anoyetta/ACT.SpecialSpellTimer/blob/master/LICENSE  
   
   
-謝辞
---------------
+# Special Thanks
 ・GB19xx様  
 https://github.com/GB19xx/ACT.TPMonitor  
 のFF14ヘルパークラスを流用させていただきました  
@@ -297,8 +371,7 @@ http://maoudamashii.jokersounds.com/
 同梱されたwaveサウンドファイルの著作権は魔王魂に帰属します  
   
   
-お問合せ
---------------
+# お問合せ
 不具合報告、要望、質問及び最新版情報などはTwitterにて  
 GitHubと連動しているためツイートは少々五月蠅いかもしれません  
 https://twitter.com/anoyetta  
