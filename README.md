@@ -43,8 +43,7 @@ Prism.dll
 
 * 正規表現とは？  
 [正規表現 - Wikipedia](https://ja.wikipedia.org/wiki/正規表現)  
-ざっくり説明すると \* などのワイルドカードをより強力にしたものです。C#等のプログラミング言語とは独立して体系化されて
-いるため、C#, JavaScript, PHP, Bash など言語を問わず使用できます。
+ざっくり説明すると \* などのワイルドカードをより強力にしたものです。C#等のプログラミング言語とは独立して体系化されているため、C#, JavaScript, PHP, Bash など言語を問わず使用できます。
 
 * 正規表現のリファレンス  
 [正規表現の構文 - MSDN](https://msdn.microsoft.com/ja-jp/library/cc392020.aspx)  
