@@ -1,3 +1,4 @@
 [submodule "FFXIV.Framework"]
 	path = FFXIV.Framework
 	url = https://github.com/anoyetta/FFXIV.Framework.git
+
