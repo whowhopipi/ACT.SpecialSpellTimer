@@ -2,7 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
@@ -299,9 +301,19 @@ namespace ACT.SpecialSpellTimer
                 }
             }
 
+            // マッチング用のログリスト
             var list = new List<string>(logInfoQueue.Count);
+
+            // ファイル出力用のバッファ
+            var output = default(StringBuilder);
+            if (Settings.Default.SaveLogEnabled)
+            {
+                output = new StringBuilder(logInfoQueue.Count * 128);
+            }
+
             var partyChangedAtDQX = false;
             var summoned = false;
+            var doneCommand = false;
 
 #if DEBUG
             var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -345,7 +357,17 @@ namespace ACT.SpecialSpellTimer
                     partyChangedAtDQX = DQXUtility.IsPartyChanged(logLine);
                 }
 
-                list.Add(logLine);
+                // コマンドとマッチングする
+                doneCommand |= TextCommandController.MatchCommandCore(logLine);
+
+                // ファイル出力用のバッファに貯める
+                if (Settings.Default.SaveLogEnabled)
+                {
+                    output.AppendLine(logLine);
+                }
+
+                // 冒頭のタイムスタンプを除去してマッチング用リストに追加する
+                list.Add(logLine.Remove(0, 15));
 
                 Thread.Yield();
             }
@@ -364,12 +386,17 @@ namespace ACT.SpecialSpellTimer
                 });
             }
 
+            if (doneCommand)
+            {
+                SystemSounds.Asterisk.Play();
+            }
+
             // ログファイルに出力する
             if (Settings.Default.SaveLogEnabled)
             {
                 Task.Run(() =>
                 {
-                    ChatLogWorker.Instance.AppendLines(list);
+                    ChatLogWorker.Instance.Append(output.ToString());
                 });
             }
 

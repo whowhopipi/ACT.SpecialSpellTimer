@@ -36,6 +36,26 @@ namespace ACT.SpecialSpellTimer
                 $@"ACT.SpecialSpellTimer.Chatlog.{DateTime.Now.ToString("yyyy-MM-dd")}.log") :
             string.Empty;
 
+        public void Append(
+            string text)
+        {
+            try
+            {
+                if (!this.OutputEnabled)
+                {
+                    return;
+                }
+
+                lock (this.logBuffer)
+                {
+                    this.logBuffer.Append(text);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         public void AppendLine(
             string text)
         {

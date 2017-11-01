@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -288,13 +287,9 @@ namespace ACT.SpecialSpellTimer
             var logs = logsTask.Result;
             if (logs.Count > 0)
             {
-                var doneCommand = false;
-                logs.AsParallel().AsOrdered().ForAll((logLine) =>
+                triggers.AsParallel().ForAll((trigger) =>
                 {
-                    // 冒頭のタイムスタンプを除去する
-                    logLine = logLine.Remove(0, 15);
-
-                    triggers.AsParallel().ForAll((trigger) =>
+                    foreach (var logLine in logs)
                     {
                         switch (trigger)
                         {
@@ -310,38 +305,14 @@ namespace ACT.SpecialSpellTimer
                                     logLine);
                                 break;
                         }
-                    });
-
-                    // コマンドとマッチングする
-                    doneCommand |= TextCommandController.MatchCommandCore(logLine);
+                    }
 
                     Thread.Yield();
                 });
 
-                if (doneCommand)
-                {
-                    SystemSounds.Asterisk.Play();
-                }
-#if false
-                // テロップとマッチングする
-                var t1 = Task.Run(() => TickersController.Instance.Match(
-                    telops,
-                    logs));
-
-                // スペルリストとマッチングする
-                var t2 = Task.Run(() => SpellsController.Instance.Match(
-                    spells,
-                    logs));
-
-                // コマンドとマッチングする
-                var t3 = Task.Run(() => TextCommandController.MatchCommand(
-                    logs));
-
-                Task.WaitAll(t1, t2, t3);
-#endif
-
                 existsLog = true;
             }
+
 #if DEBUG
             sw.Stop();
             if (logs.Count != 0)
@@ -350,6 +321,7 @@ namespace ACT.SpecialSpellTimer
                 var count = logs.Count;
                 Debug.WriteLine($"●DetectLogs\t{time:N1} ms\t{count:N0} lines\tavg {time / count:N2}");
             }
+
 #endif
 
             resetTask.Wait();
