@@ -477,6 +477,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
         }
 
+        private byte[] dummyBuffer = new byte[15360];
+
         public void RefreshCurrentPartyIDList()
         {
             if (!this.IsAvalable)
@@ -491,6 +493,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             }
 
             var partyList = pluginScancombat.GetCurrentPartyList(
+                this.dummyBuffer,
                 out int partyCount) as List<uint>;
 
             lock (this.currentPartyIDListLock)
