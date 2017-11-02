@@ -1,6 +1,6 @@
-﻿using System.Net;
+using System.Net;
 using System.Runtime.Serialization.Json;
-using XIVDBDownloader.Constants;
+using FFXIV.Framework.Globalization;
 
 namespace XIVDBDownloader.Models
 {
@@ -10,7 +10,7 @@ namespace XIVDBDownloader.Models
         public abstract string Uri { get; }
 
         public T GET(
-            Language language)
+            Locales language)
         {
             var resultList = default(T);
 

@@ -1,10 +1,11 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Forms;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using FFXIV.Framework.FFXIVHelper;
 
+namespace ACT.SpecialSpellTimer.Forms
+{
     /// <summary>
     /// ジョブ選択Form
     /// </summary>
@@ -53,7 +54,7 @@
             var jobs = new List<string>();
             foreach (Job item in this.JobsCheckedListBox.CheckedItems)
             {
-                jobs.Add(item.JobId.ToString());
+                jobs.Add(item.ID.ToString());
             }
 
             this.JobFilter = string.Join(
@@ -71,11 +72,11 @@
             var jobs = this.JobFilter.Split(',');
 
             this.JobsCheckedListBox.Items.Clear();
-            foreach (var job in Job.Instance.JobList)
+            foreach (var job in Jobs.List)
             {
                 this.JobsCheckedListBox.Items.Add(
                     job,
-                    jobs.Any(x => x == job.JobId.ToString()));
+                    jobs.Any(x => x == job.ID.ToString()));
             }
         }
 

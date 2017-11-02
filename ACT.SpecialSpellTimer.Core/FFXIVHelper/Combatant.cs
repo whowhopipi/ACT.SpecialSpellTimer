@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -106,7 +107,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public Job AsJob()
         {
-            return SpecialSpellTimer.Job.Instance.FromId(this.Job);
+            return Jobs.Find(this.Job);
         }
 
         public double GetDistance(Combatant target) =>

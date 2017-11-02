@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
+using FFXIV.Framework.Globalization;
 using MahApps.Metro.Controls.Dialogs;
 using XIVDBDownloader.Constants;
 using XIVDBDownloader.Models;
@@ -131,7 +132,7 @@ namespace XIVDBDownloader.ViewModels
             // 取得したリストをCSVに保存する
             this.AppendLineMessages("Save to CSV.");
             model.SaveToCSV(
-                Path.Combine(this.viewModel.SaveDirectory, $"Action.{this.viewModel.Language.ToLocale()}.csv"));
+                Path.Combine(this.viewModel.SaveDirectory, $"Action.{this.viewModel.Language.ToText()}.csv"));
 
             this.AppendLineMessages("Download Action, Done.");
 
@@ -153,7 +154,7 @@ namespace XIVDBDownloader.ViewModels
 
             // 取得したリストをCSVに保存する
             model.SaveToCSV(
-                Path.Combine(this.viewModel.SaveDirectory, $"Instance.{this.viewModel.Language.ToLocale()}.csv"),
+                Path.Combine(this.viewModel.SaveDirectory, $"Instance.{this.viewModel.Language.ToText()}.csv"),
                 this.viewModel.Language);
 
             this.AppendLineMessages("Download Instance, Done.");
@@ -174,7 +175,7 @@ namespace XIVDBDownloader.ViewModels
 
             // 取得したリストをCSVに保存する
             model.SaveToCSV(
-                Path.Combine(this.viewModel.SaveDirectory, $"Placename.{this.viewModel.Language.ToLocale()}.csv"),
+                Path.Combine(this.viewModel.SaveDirectory, $"Placename.{this.viewModel.Language.ToText()}.csv"),
                 this.viewModel.Language);
 
             this.AppendLineMessages("Download Placename, Done.");

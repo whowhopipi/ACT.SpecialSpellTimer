@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -613,8 +614,8 @@ namespace ACT.SpecialSpellTimer.Models
             // FF14内部のPTメンバ自動ソート順で並び替える
             var partyListSorted =
                 from x in this.partyList
-                join y in Job.Instance.JobList on
-                    x.Job equals y.JobId
+                join y in Jobs.List on
+                    x.Job equals (int)y.ID
                 where
                 x.ID != this.player.ID
                 orderby
@@ -642,13 +643,13 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // ジョブ名によるプレースホルダを登録する
-            foreach (var job in Job.Instance.JobList)
+            foreach (var job in Jobs.List)
             {
                 // このジョブに該当するパーティメンバを抽出する
                 var combatantsByJob = (
                     from x in this.partyList
                     where
-                    x.Job == job.JobId
+                    x.Job == (int)job.ID
                     orderby
                     x.ID == this.player.ID ? 0 : 1,
                     x.ID descending
@@ -666,8 +667,8 @@ namespace ACT.SpecialSpellTimer.Models
                 for (int i = 0; i < combatantsByJob.Length; i++)
                 {
                     newList.Add(new PlaceholderContainer(
-                        $"<{job.JobName.ToUpper()}{i + 1}>",
-                        $"(?<_{job.JobName.ToUpper()}{i + 1}>{ combatantsByJob[i].NamesRegex})",
+                        $"<{job.ID.ToString().ToUpper()}{i + 1}>",
+                        $"(?<_{job.ID.ToString().ToUpper()}{i + 1}>{ combatantsByJob[i].NamesRegex})",
                         PlaceholderTypes.Party));
                 }
 
@@ -675,8 +676,8 @@ namespace ACT.SpecialSpellTimer.Models
                 // また、グループ名にはジョブの略称を設定する
                 // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
                 var names = string.Join("|", combatantsByJob.Select(x => x.NamesRegex).ToArray());
-                var oldValue = $"<{job.JobName.ToUpper()}>";
-                var newValue = $"(?<_{job.JobName.ToUpper()}>{names})";
+                var oldValue = $"<{job.ID.ToString().ToUpper()}>";
+                var newValue = $"(?<_{job.ID.ToString().ToUpper()}>{names})";
 
                 newList.Add(new PlaceholderContainer(
                     oldValue.ToUpper(),

@@ -11,6 +11,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -132,7 +133,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 CurrentMP = 12000,
                 MaxTP = 3000,
                 CurrentTP = 3000,
-                Job = (int)JobIds.PLD,
+                Job = (int)JobIDs.PLD,
                 type = (byte)MobType.Player,
             },
 
@@ -146,7 +147,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 CurrentMP = 12000,
                 MaxTP = 3000,
                 CurrentTP = 3000,
-                Job = (int)JobIds.WAR,
+                Job = (int)JobIDs.WAR,
                 type = (byte)MobType.Player,
             },
 
@@ -160,7 +161,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 CurrentMP = 12000,
                 MaxTP = 3000,
                 CurrentTP = 3000,
-                Job = (int)JobIds.WHM,
+                Job = (int)JobIDs.WHM,
                 type = (byte)MobType.Player,
             },
 
@@ -174,7 +175,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 CurrentMP = 12000,
                 MaxTP = 3000,
                 CurrentTP = 3000,
-                Job = (int)JobIds.AST,
+                Job = (int)JobIDs.AST,
                 type = (byte)MobType.Player,
             },
         };
@@ -320,36 +321,36 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             var partyList = this.GetPartyList();
 
             var tanks = partyList
-                .Where(x => x.AsJob().Role == JobRoles.Tank)
+                .Where(x => x.AsJob().Role == Roles.Tank)
                 .ToList();
 
             var dpses = partyList
                 .Where(x =>
-                    x.AsJob().Role == JobRoles.MeleeDPS ||
-                    x.AsJob().Role == JobRoles.RangeDPS ||
-                    x.AsJob().Role == JobRoles.MagicDPS)
+                    x.AsJob().Role == Roles.MeleeDPS ||
+                    x.AsJob().Role == Roles.RangeDPS ||
+                    x.AsJob().Role == Roles.MagicDPS)
                 .ToList();
 
             var melees = partyList
-                .Where(x => x.AsJob().Role == JobRoles.MeleeDPS)
+                .Where(x => x.AsJob().Role == Roles.MeleeDPS)
                 .ToList();
 
             var ranges = partyList
-                .Where(x => x.AsJob().Role == JobRoles.RangeDPS)
+                .Where(x => x.AsJob().Role == Roles.RangeDPS)
                 .ToList();
 
             var magics = partyList
-                .Where(x => x.AsJob().Role == JobRoles.MagicDPS)
+                .Where(x => x.AsJob().Role == Roles.MagicDPS)
                 .ToList();
 
             var healers = partyList
-                .Where(x => x.AsJob().Role == JobRoles.Healer)
+                .Where(x => x.AsJob().Role == Roles.Healer)
                 .ToList();
 
             if (tanks.Any())
             {
                 list.Add(new CombatantsByRole(
-                    JobRoles.Tank,
+                    Roles.Tank,
                     "TANK",
                     tanks));
             }
@@ -357,7 +358,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             if (dpses.Any())
             {
                 list.Add(new CombatantsByRole(
-                    JobRoles.DPS,
+                    Roles.DPS,
                     "DPS",
                     dpses));
             }
@@ -365,7 +366,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             if (melees.Any())
             {
                 list.Add(new CombatantsByRole(
-                    JobRoles.MeleeDPS,
+                    Roles.MeleeDPS,
                     "MELEE",
                     melees));
             }
@@ -373,7 +374,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             if (ranges.Any())
             {
                 list.Add(new CombatantsByRole(
-                    JobRoles.RangeDPS,
+                    Roles.RangeDPS,
                     "RANGE",
                     ranges));
             }
@@ -381,7 +382,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             if (magics.Any())
             {
                 list.Add(new CombatantsByRole(
-                    JobRoles.MagicDPS,
+                    Roles.MagicDPS,
                     "MAGIC",
                     magics));
             }
@@ -389,7 +390,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             if (healers.Any())
             {
                 list.Add(new CombatantsByRole(
-                    JobRoles.Healer,
+                    Roles.Healer,
                     "HEALER",
                     healers));
             }
@@ -959,7 +960,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
         public class CombatantsByRole
         {
             public CombatantsByRole(
-                JobRoles roleType,
+                Roles roleType,
                 string roleLabel,
                 IReadOnlyList<Combatant> combatants)
             {
@@ -970,7 +971,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
             public IReadOnlyList<Combatant> Combatants { get; set; }
             public string RoleLabel { get; set; }
-            public JobRoles RoleType { get; set; }
+            public Roles RoleType { get; set; }
         }
 
         #endregion Sub classes
