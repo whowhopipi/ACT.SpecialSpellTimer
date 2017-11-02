@@ -54,7 +54,8 @@ namespace ACT.SpecialSpellTimer.Forms
             var jobs = new List<string>();
             foreach (Job item in this.JobsCheckedListBox.CheckedItems)
             {
-                jobs.Add(item.ID.ToString());
+                var jobId = (int)item.ID;
+                jobs.Add(jobId.ToString());
             }
 
             this.JobFilter = string.Join(
@@ -74,9 +75,10 @@ namespace ACT.SpecialSpellTimer.Forms
             this.JobsCheckedListBox.Items.Clear();
             foreach (var job in Jobs.List)
             {
+                var jobId = (int)job.ID;
                 this.JobsCheckedListBox.Items.Add(
-                    job,
-                    jobs.Any(x => x == job.ID.ToString()));
+                    job.NameJA,
+                    jobs.Any(x => x == jobId.ToString()));
             }
         }
 
