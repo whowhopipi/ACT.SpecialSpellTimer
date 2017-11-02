@@ -35,6 +35,12 @@
       <HintPath>..\..\ACTv3\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.0-alpha04\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog.StructuredEvents, Version=0.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.StructuredEvents.0.3.1\lib\net35\NLog.StructuredEvents.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -68,6 +74,9 @@
       <Project>{22ebf8a4-eed1-4cd1-99eb-99665163a315}</Project>
       <Name>FFXIV.Framework</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

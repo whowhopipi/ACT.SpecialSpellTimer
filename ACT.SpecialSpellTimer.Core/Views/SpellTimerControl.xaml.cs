@@ -12,6 +12,7 @@ using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.WPF.Controls;
 
 namespace ACT.SpecialSpellTimer.Views
 {

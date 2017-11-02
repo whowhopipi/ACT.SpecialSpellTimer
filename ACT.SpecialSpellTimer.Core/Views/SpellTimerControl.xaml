@@ -5,6 +5,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:local="clr-namespace:ACT.SpecialSpellTimer.Views"
+  xmlns:ctrl="clr-namespace:FFXIV.Framework.WPF.Controls;assembly=FFXIV.Framework"
   d:DesignHeight="32"
   d:DesignWidth="300"
   Background="Transparent"
@@ -107,7 +108,7 @@
       HorizontalAlignment="Left"
       VerticalAlignment="Bottom"
       Visibility="{Binding ElementName=SpellTitleTextBlock, Path=Visibility, Mode=OneWay}">
-      <local:OutlineTextBlock
+      <ctrl:OutlineTextBlock
         x:Name="SpellTitleTextBlock"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
@@ -115,14 +116,14 @@
         Stroke="Blue"
         Text="Sample Spell"
         TextWrapping="Wrap">
-        <local:OutlineTextBlock.Effect>
+        <ctrl:OutlineTextBlock.Effect>
           <DropShadowEffect
             BlurRadius="{Binding ElementName=SpellTitleTextBlock, Path=StrokeThickness, Converter={StaticResource StrokeThicknessToBlurRadiusConverter}}"
             RenderingBias="Performance"
             ShadowDepth="0"
             Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />
-        </local:OutlineTextBlock.Effect>
-      </local:OutlineTextBlock>
+        </ctrl:OutlineTextBlock.Effect>
+      </ctrl:OutlineTextBlock>
     </DockPanel>
 
     <Viewbox
@@ -134,7 +135,7 @@
       Stretch="Uniform"
       StretchDirection="DownOnly">
 
-      <local:OutlineTextBlock
+      <ctrl:OutlineTextBlock
         x:Name="RecastTimeTextBlock"
         Margin="0,0,3,0"
         HorizontalAlignment="Right"
@@ -144,14 +145,14 @@
         Text="3.0"
         TextAlignment="Right"
         TextWrapping="NoWrap">
-        <local:OutlineTextBlock.Effect>
+        <ctrl:OutlineTextBlock.Effect>
           <DropShadowEffect
             BlurRadius="{Binding ElementName=RecastTimeTextBlock, Path=StrokeThickness, Converter={StaticResource StrokeThicknessToBlurRadiusConverter}}"
             RenderingBias="Performance"
             ShadowDepth="0"
             Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />
-        </local:OutlineTextBlock.Effect>
-      </local:OutlineTextBlock>
+        </ctrl:OutlineTextBlock.Effect>
+      </ctrl:OutlineTextBlock>
     </Viewbox>
   </Grid>
 </UserControl>

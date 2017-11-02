@@ -215,7 +215,6 @@
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\StringExtensions.cs" />
     <Compile Include="Utility\Translate.cs" />
-    <Compile Include="Views\OutlineTextBlock.cs" />
     <Compile Include="Views\StrokeThicknessToBlurRadiusConverter.cs" />
     <Compile Include="Forms\VisualSettingControl.cs">
       <SubType>UserControl</SubType>
