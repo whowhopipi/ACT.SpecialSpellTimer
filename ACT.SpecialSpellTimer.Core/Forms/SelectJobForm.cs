@@ -125,7 +125,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             public override string ToString()
             {
-                var text = $"[{ this.Job.ID.ToString()}]";
+                var text = string.Empty;
 
                 switch (Settings.Default.Language)
                 {
