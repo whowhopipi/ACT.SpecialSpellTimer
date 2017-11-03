@@ -78,7 +78,8 @@ namespace ACT.SpecialSpellTimer.Forms
                 this.JobsCheckedListBox.SuspendLayout();
 
                 this.JobsCheckedListBox.Items.Clear();
-                foreach (var job in Jobs.List)
+                foreach (var job in Jobs.List
+                    .OrderBy(x => x.Role))
                 {
                     if (job.ID != JobIDs.Unknown)
                     {
