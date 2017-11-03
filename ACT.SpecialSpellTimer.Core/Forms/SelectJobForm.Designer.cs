@@ -34,6 +34,7 @@
             this.AllONButton = new System.Windows.Forms.Button();
             this.AllOFFButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.DummyCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // JobsCheckedListBox
@@ -44,7 +45,6 @@
             this.JobsCheckedListBox.BackColor = System.Drawing.SystemColors.Control;
             this.JobsCheckedListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.JobsCheckedListBox.CheckOnClick = true;
-            this.JobsCheckedListBox.ColumnWidth = 210;
             this.JobsCheckedListBox.FormattingEnabled = true;
             this.JobsCheckedListBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.JobsCheckedListBox.Location = new System.Drawing.Point(18, 52);
@@ -111,6 +111,17 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "SelectJobSubtitle";
             // 
+            // DummyCheckBox
+            // 
+            this.DummyCheckBox.AutoSize = true;
+            this.DummyCheckBox.Location = new System.Drawing.Point(466, 502);
+            this.DummyCheckBox.Name = "DummyCheckBox";
+            this.DummyCheckBox.Size = new System.Drawing.Size(115, 22);
+            this.DummyCheckBox.TabIndex = 6;
+            this.DummyCheckBox.Text = "checkBox1";
+            this.DummyCheckBox.UseVisualStyleBackColor = true;
+            this.DummyCheckBox.Visible = false;
+            // 
             // SelectJobForm
             // 
             this.AcceptButton = this.OKButton;
@@ -118,6 +129,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.CloseButton;
             this.ClientSize = new System.Drawing.Size(978, 544);
+            this.Controls.Add(this.DummyCheckBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.AllONButton);
@@ -145,5 +157,6 @@
         private System.Windows.Forms.Button AllONButton;
         private System.Windows.Forms.Button AllOFFButton;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox DummyCheckBox;
     }
 }

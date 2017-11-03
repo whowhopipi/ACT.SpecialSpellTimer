@@ -83,9 +83,17 @@ namespace ACT.SpecialSpellTimer.Forms
                     if (job.ID != JobIDs.Unknown)
                     {
                         var jobId = (int)job.ID;
+                        var container = new JobContainer(job);
                         this.JobsCheckedListBox.Items.Add(
-                            new JobContainer(job),
+                            container,
                             jobs.Any(x => x == jobId.ToString()));
+
+                        this.DummyCheckBox.Text = container.ToString();
+                        if (this.DummyCheckBox.Width >
+                            this.JobsCheckedListBox.ColumnWidth)
+                        {
+                            this.JobsCheckedListBox.ColumnWidth = (int)(this.DummyCheckBox.Width * 1.5d);
+                        }
                     }
                 }
             }
