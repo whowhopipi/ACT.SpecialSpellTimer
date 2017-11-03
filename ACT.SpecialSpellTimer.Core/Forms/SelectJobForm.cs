@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.Forms
@@ -52,9 +53,9 @@ namespace ACT.SpecialSpellTimer.Forms
         private void OKButton_Click(object sender, EventArgs e)
         {
             var jobs = new List<string>();
-            foreach (Job item in this.JobsCheckedListBox.CheckedItems)
+            foreach (JobContainer container in this.JobsCheckedListBox.CheckedItems)
             {
-                var jobId = (int)item.ID;
+                var jobId = (int)container.Job.ID;
                 jobs.Add(jobId.ToString());
             }
 
@@ -72,13 +73,25 @@ namespace ACT.SpecialSpellTimer.Forms
         {
             var jobs = this.JobFilter.Split(',');
 
-            this.JobsCheckedListBox.Items.Clear();
-            foreach (var job in Jobs.List)
+            try
             {
-                var jobId = (int)job.ID;
-                this.JobsCheckedListBox.Items.Add(
-                    job.NameJA,
-                    jobs.Any(x => x == jobId.ToString()));
+                this.JobsCheckedListBox.SuspendLayout();
+
+                this.JobsCheckedListBox.Items.Clear();
+                foreach (var job in Jobs.List)
+                {
+                    if (job.ID != JobIDs.Unknown)
+                    {
+                        var jobId = (int)job.ID;
+                        this.JobsCheckedListBox.Items.Add(
+                            new JobContainer(job),
+                            jobs.Any(x => x == jobId.ToString()));
+                    }
+                }
+            }
+            finally
+            {
+                this.JobsCheckedListBox.ResumeLayout();
             }
         }
 
@@ -92,6 +105,32 @@ namespace ACT.SpecialSpellTimer.Forms
             if (this.Owner != null)
             {
                 this.Font = this.Owner.Font;
+            }
+        }
+
+        private class JobContainer
+        {
+            public JobContainer(Job job)
+                => this.Job = job;
+
+            public Job Job { get; set; }
+
+            public override string ToString()
+            {
+                var text = $"[{ this.Job.ID.ToString()}]";
+
+                switch (Settings.Default.Language)
+                {
+                    case "JP":
+                        text += this.Job.NameJA;
+                        break;
+
+                    default:
+                        text += this.Job.NameEN;
+                        break;
+                }
+
+                return text;
             }
         }
     }

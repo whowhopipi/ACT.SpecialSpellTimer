@@ -44,13 +44,14 @@
             this.JobsCheckedListBox.BackColor = System.Drawing.SystemColors.Control;
             this.JobsCheckedListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.JobsCheckedListBox.CheckOnClick = true;
+            this.JobsCheckedListBox.ColumnWidth = 210;
             this.JobsCheckedListBox.FormattingEnabled = true;
             this.JobsCheckedListBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.JobsCheckedListBox.Location = new System.Drawing.Point(18, 52);
-            this.JobsCheckedListBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.JobsCheckedListBox.Margin = new System.Windows.Forms.Padding(4);
             this.JobsCheckedListBox.MultiColumn = true;
             this.JobsCheckedListBox.Name = "JobsCheckedListBox";
-            this.JobsCheckedListBox.Size = new System.Drawing.Size(842, 360);
+            this.JobsCheckedListBox.Size = new System.Drawing.Size(942, 360);
             this.JobsCheckedListBox.TabIndex = 0;
             this.JobsCheckedListBox.ThreeDCheckBoxes = true;
             // 
@@ -58,8 +59,8 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(560, 483);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.OKButton.Location = new System.Drawing.Point(660, 483);
+            this.OKButton.Margin = new System.Windows.Forms.Padding(4);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(146, 42);
             this.OKButton.TabIndex = 1;
@@ -70,8 +71,8 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(715, 483);
-            this.CloseButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CloseButton.Location = new System.Drawing.Point(815, 483);
+            this.CloseButton.Margin = new System.Windows.Forms.Padding(4);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(146, 42);
             this.CloseButton.TabIndex = 2;
@@ -82,7 +83,7 @@
             // 
             this.AllONButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AllONButton.Location = new System.Drawing.Point(18, 483);
-            this.AllONButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.AllONButton.Margin = new System.Windows.Forms.Padding(4);
             this.AllONButton.Name = "AllONButton";
             this.AllONButton.Size = new System.Drawing.Size(112, 42);
             this.AllONButton.TabIndex = 3;
@@ -93,7 +94,7 @@
             // 
             this.AllOFFButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AllOFFButton.Location = new System.Drawing.Point(140, 483);
-            this.AllOFFButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.AllOFFButton.Margin = new System.Windows.Forms.Padding(4);
             this.AllOFFButton.Name = "AllOFFButton";
             this.AllOFFButton.Size = new System.Drawing.Size(112, 42);
             this.AllOFFButton.TabIndex = 4;
@@ -116,7 +117,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.CloseButton;
-            this.ClientSize = new System.Drawing.Size(878, 544);
+            this.ClientSize = new System.Drawing.Size(978, 544);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.AllONButton);
@@ -124,7 +125,7 @@
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.JobsCheckedListBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SelectJobForm";
