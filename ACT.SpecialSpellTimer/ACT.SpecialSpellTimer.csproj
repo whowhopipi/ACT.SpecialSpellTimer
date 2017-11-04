@@ -80,26 +80,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>@ECHO OFF
-
-IF "$(ConfigurationName)"=="Debug" (
-    EXIT /B
-)
-
-SET OUTPUTDIR=$(SolutionDir)deploy\$(ConfigurationName)\
-
-IF NOT EXIST %25OUTPUTDIR%25 (
-    MKDIR %25OUTPUTDIR%25
-)
-
-DEL /Q /S %25OUTPUTDIR%25 &gt;NUL
-
-XCOPY /E /Y $(TargetDir)* %25OUTPUTDIR%25* /EXCLUDE:$(SolutionDir)exclude.txt
-
-IF EXIST %25OUTPUTDIR%25locale (
-    RMDIR /S /Q %25OUTPUTDIR%25locale
-)
-DEL /Q /S %25OUTPUTDIR%25*.xml  &gt;NUL
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
