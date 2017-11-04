@@ -368,8 +368,6 @@ namespace ACT.SpecialSpellTimer
 
                 // 冒頭のタイムスタンプを除去してマッチング用リストに追加する
                 list.Add(logLine.Remove(0, 15));
-
-                Thread.Yield();
             }
 
             if (summoned)

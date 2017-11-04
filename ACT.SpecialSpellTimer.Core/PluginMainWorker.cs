@@ -306,8 +306,6 @@ namespace ACT.SpecialSpellTimer
                                 break;
                         }
                     }
-
-                    Thread.Yield();
                 });
 
                 existsLog = true;
