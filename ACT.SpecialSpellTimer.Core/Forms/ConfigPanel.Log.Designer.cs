@@ -84,7 +84,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(792, 550);
+            this.tabPage1.Size = new System.Drawing.Size(792, 522);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "__Placeholders & Logs　";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -103,8 +103,8 @@ namespace ACT.SpecialSpellTimer.Forms
             // SplitContainer.Panel2
             // 
             this.SplitContainer.Panel2.Controls.Add(this.LogTextBox);
-            this.SplitContainer.Size = new System.Drawing.Size(786, 544);
-            this.SplitContainer.SplitterDistance = 251;
+            this.SplitContainer.Size = new System.Drawing.Size(786, 516);
+            this.SplitContainer.SplitterDistance = 238;
             this.SplitContainer.TabIndex = 46;
             // 
             // PlaceholderListView
@@ -120,7 +120,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.PlaceholderListView.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.PlaceholderListView.Location = new System.Drawing.Point(0, 0);
             this.PlaceholderListView.Name = "PlaceholderListView";
-            this.PlaceholderListView.Size = new System.Drawing.Size(786, 251);
+            this.PlaceholderListView.Size = new System.Drawing.Size(786, 238);
             this.PlaceholderListView.TabIndex = 46;
             this.PlaceholderListView.UseCompatibleStateImageBehavior = false;
             this.PlaceholderListView.View = System.Windows.Forms.View.Details;
@@ -145,14 +145,16 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTextBox.BackColor = System.Drawing.Color.White;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LogTextBox.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.LogTextBox.Location = new System.Drawing.Point(0, 0);
             this.LogTextBox.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.LogTextBox.Multiline = true;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
             this.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.LogTextBox.Size = new System.Drawing.Size(786, 289);
+            this.LogTextBox.Size = new System.Drawing.Size(786, 274);
             this.LogTextBox.TabIndex = 44;
+            this.LogTextBox.Text = "ABC [TRACE]\r\nABC [INFO ]\r\n";
             // 
             // tabPage2
             // 
