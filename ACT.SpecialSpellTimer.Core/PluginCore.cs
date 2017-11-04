@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -10,7 +11,6 @@ using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
-using FFXIV.Framework.Common;
 using FFXIV.Framework.Dialog;
 
 namespace ACT.SpecialSpellTimer
@@ -368,7 +368,10 @@ namespace ACT.SpecialSpellTimer
             if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours
                 >= 12)
             {
-                var message = UpdateChecker.Update("ACT.SpecialSpellTimer", LastestReleaseUrl);
+                var message = FFXIV.Framework.Common.UpdateChecker.Update(
+                    "ACT.SpecialSpellTimer",
+                    LastestReleaseUrl,
+                    Assembly.GetExecutingAssembly());
                 if (!string.IsNullOrWhiteSpace(message))
                 {
                     Logger.Write(message);
