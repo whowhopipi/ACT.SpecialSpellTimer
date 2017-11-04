@@ -106,6 +106,8 @@ namespace ACT.SpecialSpellTimer
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+
+            Logger.DeInit();
         }
 
         /// <summary>
@@ -120,8 +122,11 @@ namespace ACT.SpecialSpellTimer
         {
             this.PluginStatusLabel = pluginStatusText;
 
+            AppLog.LoadConfiguration("ACT.SpecialSpellTimer.NLog.config");
+
             try
             {
+                Logger.Init();
                 Logger.Write("Plugin Start.");
 
                 // 設定ファイルを読み込む
