@@ -218,9 +218,16 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
             this.attachFFXIVPluginWorker.Interval = 5000;
             this.attachFFXIVPluginWorker.Elapsed += (s, e) =>
             {
-                this.Attach();
-                this.LoadZoneList();
-                this.LoadSkillToFFXIVPlugin();
+                try
+                {
+                    this.Attach();
+                    this.LoadZoneList();
+                    this.LoadSkillToFFXIVPlugin();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("Attach FFXIV_ACT_Plugin error", ex);
+                }
             };
 
             this.scanFFXIVWorker = new ThreadWorker(() =>
@@ -492,9 +499,14 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
                 return;
             }
 
-            var partyList = pluginScancombat.GetCurrentPartyList(
+            var partyList = pluginScancombat?.GetCurrentPartyList(
                 this.dummyBuffer,
                 out int partyCount) as List<uint>;
+
+            if (partyList == null)
+            {
+                return;
+            }
 
             lock (this.currentPartyIDListLock)
             {

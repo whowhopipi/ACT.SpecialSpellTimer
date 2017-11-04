@@ -544,32 +544,33 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var r = false;
 
-            var zoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
-            if (this.previousZoneID != zoneID)
+            var zoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+            if (zoneID != null &&
+                this.previousZoneID != zoneID)
             {
                 r = true;
             }
 
-            this.previousZoneID = zoneID;
+            this.previousZoneID = zoneID ?? 0;
 
             return r;
         }
 
         private void RefreshCombatants()
         {
-            var player = FFXIVPlugin.Instance.GetPlayer();
+            var player = FFXIVPlugin.Instance?.GetPlayer();
             if (player != null)
             {
                 this.player = player;
             }
 
-            var party = FFXIVPlugin.Instance.GetPartyList();
+            var party = FFXIVPlugin.Instance?.GetPartyList();
             if (party != null)
             {
                 var newList = new List<Combatant>(party);
 
                 if (newList.Count < 1 &&
-                    !string.IsNullOrEmpty(this.player.Name))
+                    !string.IsNullOrEmpty(this.player?.Name))
                 {
                     newList.Add(this.player);
                 }
