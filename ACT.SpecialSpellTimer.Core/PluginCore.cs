@@ -10,6 +10,7 @@ using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Dialog;
 
 namespace ACT.SpecialSpellTimer
@@ -355,14 +356,19 @@ namespace ACT.SpecialSpellTimer
         #endregion SpeSpeButton
 
         /// <summary>
+        /// 最終リリースのURL
+        /// </summary>
+        public const string LastestReleaseUrl = @"https://github.com/anoyetta/ACT.SpecialSpellTimer/releases/latest";
+
+        /// <summary>
         /// アップデートを行う
         /// </summary>
         private void Update()
         {
             if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours
-                >= Settings.UpdateCheckInterval)
+                >= 12)
             {
-                var message = UpdateChecker.Update();
+                var message = UpdateChecker.Update("ACT.SpecialSpellTimer", LastestReleaseUrl);
                 if (!string.IsNullOrWhiteSpace(message))
                 {
                     Logger.Write(message);

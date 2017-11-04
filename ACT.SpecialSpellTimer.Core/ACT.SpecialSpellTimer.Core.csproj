@@ -237,7 +237,6 @@
       <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\SpellTimerTable.cs" />
-    <Compile Include="UpdateChecker.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
