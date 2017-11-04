@@ -34,7 +34,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// <param name="text">書き込む内容</param>
         public static void Write(string text)
         {
-            AppLogger.Info(text);
+            AppLogger.Trace(text);
         }
 
         /// <summary>
