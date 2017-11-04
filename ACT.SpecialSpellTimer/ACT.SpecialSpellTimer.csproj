@@ -76,7 +76,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ACT.SpecialSpellTimer.NLog.config">
+    <Content Include="ACT.Hojoring.NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />

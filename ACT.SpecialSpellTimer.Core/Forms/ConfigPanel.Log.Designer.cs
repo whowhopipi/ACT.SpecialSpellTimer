@@ -36,7 +36,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.LogTextBox = new System.Windows.Forms.TextBox();
+            this.LogTextBox = new System.Windows.Forms.RichTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.SpellsListView = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -103,6 +103,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // SplitContainer.Panel2
             // 
             this.SplitContainer.Panel2.Controls.Add(this.LogTextBox);
+            this.SplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(6);
             this.SplitContainer.Size = new System.Drawing.Size(786, 516);
             this.SplitContainer.SplitterDistance = 238;
             this.SplitContainer.TabIndex = 46;
@@ -142,19 +143,17 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // LogTextBox
             // 
-            this.LogTextBox.BackColor = System.Drawing.Color.White;
             this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogTextBox.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.LogTextBox.Location = new System.Drawing.Point(0, 0);
-            this.LogTextBox.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.LogTextBox.Multiline = true;
+            this.LogTextBox.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LogTextBox.Location = new System.Drawing.Point(6, 6);
+            this.LogTextBox.Margin = new System.Windows.Forms.Padding(6);
+            this.LogTextBox.MaxLength = 0;
             this.LogTextBox.Name = "LogTextBox";
             this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.LogTextBox.Size = new System.Drawing.Size(786, 274);
-            this.LogTextBox.TabIndex = 44;
-            this.LogTextBox.Text = "ABC [TRACE]\r\nABC [INFO ]\r\n";
+            this.LogTextBox.Size = new System.Drawing.Size(774, 262);
+            this.LogTextBox.TabIndex = 0;
+            this.LogTextBox.Text = "";
             // 
             // tabPage2
             // 
@@ -233,7 +232,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabPage1.ResumeLayout(false);
             this.SplitContainer.Panel1.ResumeLayout(false);
             this.SplitContainer.Panel2.ResumeLayout(false);
-            this.SplitContainer.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
             this.SplitContainer.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
@@ -252,7 +250,6 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.TextBox LogTextBox;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ListView SpellsListView;
         private System.Windows.Forms.ColumnHeader columnHeader4;
@@ -261,5 +258,6 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.CheckBox AutoRefreshCheckBox;
+        private System.Windows.Forms.RichTextBox LogTextBox;
     }
 }

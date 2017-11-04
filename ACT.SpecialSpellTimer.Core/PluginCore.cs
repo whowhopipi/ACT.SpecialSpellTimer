@@ -122,7 +122,7 @@ namespace ACT.SpecialSpellTimer
         {
             this.PluginStatusLabel = pluginStatusText;
 
-            AppLog.LoadConfiguration("ACT.SpecialSpellTimer.NLog.config");
+            AppLog.LoadConfiguration(AppLog.HojoringConfig);
 
             try
             {
