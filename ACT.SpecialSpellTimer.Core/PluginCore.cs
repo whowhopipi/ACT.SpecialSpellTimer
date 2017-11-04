@@ -11,6 +11,7 @@ using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Dialog;
 
 namespace ACT.SpecialSpellTimer
@@ -127,15 +128,11 @@ namespace ACT.SpecialSpellTimer
                 Settings.Default.Load();
                 Settings.Default.ApplyRenderMode();
 
-                // WPFアプリケーションを開始する
-                if (System.Windows.Application.Current == null)
-                {
-                    new System.Windows.Application();
-                    System.Windows.Application.Current.ShutdownMode =
-                        System.Windows.ShutdownMode.OnExplicitShutdown;
-                }
-
                 pluginScreenSpace.Text = Translate.Get("LN_Tabname");
+
+                // HojoringのSplashを表示する
+                WPFHelper.Start();
+                UpdateChecker.ShowSplash();
 
                 // アップデートを確認する
                 Task.Run(() =>
@@ -366,9 +363,9 @@ namespace ACT.SpecialSpellTimer
         private void Update()
         {
             if ((DateTime.Now - Settings.Default.LastUpdateDateTime).TotalHours
-                >= 12)
+                >= Settings.UpdateCheckInterval)
             {
-                var message = FFXIV.Framework.Common.UpdateChecker.Update(
+                var message = UpdateChecker.Update(
                     "ACT.SpecialSpellTimer",
                     LastestReleaseUrl,
                     Assembly.GetExecutingAssembly());
