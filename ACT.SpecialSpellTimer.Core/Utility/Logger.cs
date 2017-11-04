@@ -25,7 +25,7 @@ namespace ACT.SpecialSpellTimer.Utility
             object sender,
             FFXIV.Framework.Common.AppendedLogEventArgs e)
         {
-            ConfigPanelLog.Instance?.AppendLog(e.AppendedLogEntry.ToString());
+            ConfigPanelLog.Instance?.AppendLog(e.AppendedLogEntry.ToString() + Environment.NewLine);
         }
 
         /// <summary>
