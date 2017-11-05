@@ -46,6 +46,12 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Singleton
 
+        #region Logger
+
+        private NLog.Logger AppLogger => AppLog.DefaultLogger;
+
+        #endregion Logger
+
         /// <summary>
         /// 設定パネル
         /// </summary>
@@ -123,6 +129,7 @@ namespace ACT.SpecialSpellTimer
             this.PluginStatusLabel = pluginStatusText;
 
             AppLog.LoadConfiguration(AppLog.HojoringConfig);
+            this.AppLogger.Trace(Assembly.GetExecutingAssembly().GetName().ToString() + " start.");
 
             try
             {
