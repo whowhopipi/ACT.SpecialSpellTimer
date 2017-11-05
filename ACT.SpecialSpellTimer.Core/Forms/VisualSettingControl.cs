@@ -354,9 +354,9 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.RefreshSampleImage();
 
-            this.ChangeFontItem.Click += async (s1, e1) =>
+            this.ChangeFontItem.Click += (s1, e1) =>
             {
-                var result = await FontDialogWrapper.ShowDialogAsync(this.GetFontInfo());
+                var result = FontDialogWrapper.ShowDialog(this.GetFontInfo());
                 if (result.Result)
                 {
                     this.SetFontInfo(result.Font);
@@ -364,9 +364,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             };
 
-            this.ChangeFontColorItem.Click += async (s1, e1) =>
+            this.ChangeFontColorItem.Click += (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.FontColor, true);
+                var result = ColorDialogWrapper.ShowDialog(this.FontColor, true);
                 if (result.Result)
                 {
                     this.FontColor = result.LegacyColor;
@@ -374,9 +374,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             };
 
-            this.ChangeFontOutlineColorItem.Click += async (s1, e1) =>
+            this.ChangeFontOutlineColorItem.Click += (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.FontOutlineColor, true);
+                var result = ColorDialogWrapper.ShowDialog(this.FontOutlineColor, true);
                 if (result.Result)
                 {
                     this.FontOutlineColor = result.LegacyColor;
@@ -384,9 +384,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             };
 
-            this.ChangeWarningFontColorItem.Click += async (s1, e1) =>
+            this.ChangeWarningFontColorItem.Click += (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.WarningFontColor, true);
+                var result = ColorDialogWrapper.ShowDialog(this.WarningFontColor, true);
                 if (result.Result)
                 {
                     this.WarningFontColor = result.LegacyColor;
@@ -394,9 +394,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             };
 
-            this.ChangeWarningFontOutlineColorItem.Click += async (s1, e1) =>
+            this.ChangeWarningFontOutlineColorItem.Click += (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.WarningFontOutlineColor, true);
+                var result = ColorDialogWrapper.ShowDialog(this.WarningFontOutlineColor, true);
                 if (result.Result)
                 {
                     this.WarningFontOutlineColor = result.LegacyColor;
@@ -404,9 +404,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             };
 
-            this.ChangeBarColorItem.Click += async (s1, e1) =>
+            this.ChangeBarColorItem.Click += (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.BarColor, true);
+                var result = ColorDialogWrapper.ShowDialog(this.BarColor, true);
                 if (result.Result)
                 {
                     this.BarColor = result.LegacyColor;
@@ -414,9 +414,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             };
 
-            this.ChangeBarOutlineColorItem.Click += async (s1, e1) =>
+            this.ChangeBarOutlineColorItem.Click += (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.BarOutlineColor, true);
+                var result = ColorDialogWrapper.ShowDialog(this.BarOutlineColor, true);
                 if (result.Result)
                 {
                     this.BarOutlineColor = result.LegacyColor;
@@ -424,9 +424,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
             };
 
-            this.ChangeBackgoundColorItem.Click += async (s1, e1) =>
+            this.ChangeBackgoundColorItem.Click += (s1, e1) =>
             {
-                var result = await ColorDialogWrapper.ShowDialogAsync(this.backgroundColor, true);
+                var result = ColorDialogWrapper.ShowDialog(this.backgroundColor, true);
                 if (result.Result)
                 {
                     this.backgroundColor = Color.FromArgb(
