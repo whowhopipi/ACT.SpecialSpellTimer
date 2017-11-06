@@ -251,7 +251,8 @@ namespace ACT.SpecialSpellTimer
             var existsLog = false;
 
             // FFXIVがいない？
-            if (!FFXIVPlugin.Instance.IsAvalable)
+            if (!Settings.Default.UseOtherThanFFXIV &&
+                !this.existFFXIVProcess)
             {
 #if !DEBUG
                 // importログの解析用にログを取り出しておく
@@ -259,6 +260,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     this.LogBuffer.GetLogLines();
                 }
+
                 Thread.Sleep(TimeSpan.FromSeconds(3));
                 return;
 #endif
@@ -326,7 +328,7 @@ namespace ACT.SpecialSpellTimer
 
             if (existsLog)
             {
-                Thread.Sleep(0);
+                Thread.Yield();
             }
             else
             {
