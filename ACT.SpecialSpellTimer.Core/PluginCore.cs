@@ -10,6 +10,7 @@ using ACT.SpecialSpellTimer.Forms;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
+using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 
@@ -80,6 +81,9 @@ namespace ACT.SpecialSpellTimer
         {
             try
             {
+                // LPSViewを閉じる
+                LPSView.CloseLPS();
+
                 PluginMainWorker.Instance.End();
                 PluginMainWorker.Free();
 
@@ -182,6 +186,9 @@ namespace ACT.SpecialSpellTimer
 
                 // 本体を開始する
                 PluginMainWorker.Instance.Begin();
+
+                // LPSViewを表示する
+                LPSView.ShowLPS();
 
                 this.SetSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Started";

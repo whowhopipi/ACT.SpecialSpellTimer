@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Media;
 using System.Reflection;
@@ -225,6 +226,60 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
+        private double[] lpss = new double[60];
+        private int currentLpsIndex;
+        private long currentLineCount;
+        private Stopwatch lineCountTimer = new Stopwatch();
+
+        /// <summary>
+        /// LPS lines/s
+        /// </summary>
+        public double LPS
+        {
+            get
+            {
+                var avalableLPSs = this.lpss.Where(x => x > 0);
+                if (!avalableLPSs.Any())
+                {
+                    return 0;
+                }
+
+                return avalableLPSs.Sum() / avalableLPSs.Count();
+            }
+        }
+
+        /// <summary>
+        /// LPSを計測する
+        /// </summary>
+        private void CountLPS()
+        {
+            this.currentLineCount++;
+
+            if (!this.lineCountTimer.IsRunning)
+            {
+                this.lineCountTimer.Restart();
+            }
+
+            if (this.lineCountTimer.Elapsed >= TimeSpan.FromSeconds(1))
+            {
+                this.lineCountTimer.Stop();
+
+                var lps = this.currentLineCount / this.lineCountTimer.Elapsed.TotalSeconds;
+                if (lps > 0)
+                {
+                    if (this.currentLpsIndex > this.lpss.GetUpperBound(0))
+                    {
+                        this.currentLpsIndex = 0;
+                    }
+
+                    this.lpss[this.currentLpsIndex] = lps;
+                    this.currentLpsIndex++;
+                }
+
+                this.currentLineCount = 0;
+            }
+        }
+
         /// <summary>
         /// OnLogLineRead
         /// </summary>
@@ -240,7 +295,11 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
+            // ログをキューに格納する
             this.logInfoQueue.Enqueue(logInfo);
+
+            // LPSを計測する
+            this.CountLPS();
 
             // 最初のログならば動作ログに出力する
             if (!this.firstLogArrived)

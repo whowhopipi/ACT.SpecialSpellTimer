@@ -70,7 +70,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログバッファ
         /// </summary>
-        private volatile LogBuffer LogBuffer;
+        public LogBuffer LogBuffer { get; private set; }
 
         #region Begin / End
 
@@ -414,6 +414,8 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Core
 
+        #region Misc
+
         /// <summary>
         /// リスタートのときスペルのカウントをリセットする
         /// </summary>
@@ -463,8 +465,6 @@ namespace ACT.SpecialSpellTimer
                 }
             }
         }
-
-        #region Misc
 
         /// <summary>
         /// FFXIVまたはACTがアクティブか？

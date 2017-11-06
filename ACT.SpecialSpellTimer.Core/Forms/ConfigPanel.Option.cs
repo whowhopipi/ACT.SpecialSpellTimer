@@ -56,6 +56,9 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DefaultVisualSetting.BackgroundColor = Settings.Default.BackgroundColor;
             this.DefaultVisualSetting.RefreshSampleImage();
 
+            this.VisibleLPSCheckBox.Checked = Settings.Default.LPSViewVisible;
+            this.LPScaleNumericUpDown.Value = (decimal)Settings.Default.LPSViewScale;
+
             this.OpacityNumericUpDown.Value = Settings.Default.Opacity;
             this.ReduceIconBrightnessNumericUpDown.Value = Settings.Default.ReduceIconBrightness;
             this.ClickThroughCheckBox.Checked = Settings.Default.ClickThroughEnabled;
@@ -125,6 +128,9 @@ namespace ACT.SpecialSpellTimer.Forms
             Settings.Default.WarningFontColor = this.DefaultVisualSetting.WarningFontColor;
             Settings.Default.WarningFontOutlineColor = this.DefaultVisualSetting.WarningFontOutlineColor;
             Settings.Default.BackgroundColor = this.DefaultVisualSetting.BackgroundColor;
+
+            Settings.Default.LPSViewVisible = this.VisibleLPSCheckBox.Checked;
+            Settings.Default.LPSViewScale = (double)this.LPScaleNumericUpDown.Value;
 
             Settings.Default.Opacity = (int)this.OpacityNumericUpDown.Value;
             Settings.Default.ReduceIconBrightness = (int)this.ReduceIconBrightnessNumericUpDown.Value;

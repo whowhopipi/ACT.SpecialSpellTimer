@@ -9,14 +9,15 @@ using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.FFXIVHelper;
-using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config
 {
     [Serializable]
-    public class Settings
+    public class Settings :
+        BindableBase
     {
         #region Singleton
 
@@ -263,6 +264,35 @@ namespace ACT.SpecialSpellTimer.Config
 
         public AutoScaleMode UIAutoScaleMode { get; set; }
 
+        private bool lpsViewVisible = false;
+        private double lpsViewX;
+        private double lpsViewY;
+        private double lpsViewScale = 1.0;
+
+        public bool LPSViewVisible
+        {
+            get => this.lpsViewVisible;
+            set => this.SetProperty(ref this.lpsViewVisible, value);
+        }
+
+        public double LPSViewX
+        {
+            get => this.lpsViewX;
+            set => this.SetProperty(ref this.lpsViewX, value);
+        }
+
+        public double LPSViewY
+        {
+            get => this.lpsViewY;
+            set => this.SetProperty(ref this.lpsViewY, value);
+        }
+
+        public double LPSViewScale
+        {
+            get => this.lpsViewScale;
+            set => this.SetProperty(ref this.lpsViewScale, value);
+        }
+
         #endregion Data
 
         #region Data - Hidden
@@ -472,7 +502,11 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
             { nameof(Settings.UIAutoScaleMode), AutoScaleMode.Inherit },
-            { nameof(Settings.MaxFPS), 30 },
+
+            { nameof(Settings.LPSViewVisible), false },
+            { nameof(Settings.LPSViewX), 0 },
+            { nameof(Settings.LPSViewY), 0 },
+            { nameof(Settings.LPSViewScale), 1.0 },
 
             { nameof(Settings.BarBackgroundFixed), false },
             { nameof(Settings.BarBackgroundBrightness), 0.3 },

@@ -233,6 +233,11 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage = new System.Windows.Forms.TabPage();
             this.tabControlExtHoriz1 = new ACT.SpecialSpellTimer.Forms.TabControlExtHoriz();
             this.tabOverlayOptions = new System.Windows.Forms.TabPage();
+            this.LPScaleNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label72 = new System.Windows.Forms.Label();
+            this.VisibleLPSCheckBox = new System.Windows.Forms.CheckBox();
+            this.label71 = new System.Windows.Forms.Label();
+            this.AnimationFPSNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.DisableStartConditionCheckBox = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.BarBackgroundBrightnessPanel = new System.Windows.Forms.Panel();
@@ -336,8 +341,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.label71 = new System.Windows.Forms.Label();
-            this.AnimationFPSNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -395,6 +398,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage.SuspendLayout();
             this.tabControlExtHoriz1.SuspendLayout();
             this.tabOverlayOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LPScaleNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AnimationFPSNumericUpDown)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.BarBackgroundBrightnessPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BarBackgroundBrightnessNumericUpDown)).BeginInit();
@@ -410,7 +415,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.panel7.SuspendLayout();
             this.pnlLanguage.SuspendLayout();
             this.DQXOptionTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AnimationFPSNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // CombatAnalyzerContextMenuStrip
@@ -2660,6 +2664,9 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.AutoScroll = true;
             this.tabOverlayOptions.AutoScrollMargin = new System.Drawing.Size(0, 40);
             this.tabOverlayOptions.BackColor = System.Drawing.Color.White;
+            this.tabOverlayOptions.Controls.Add(this.LPScaleNumericUpDown);
+            this.tabOverlayOptions.Controls.Add(this.label72);
+            this.tabOverlayOptions.Controls.Add(this.VisibleLPSCheckBox);
             this.tabOverlayOptions.Controls.Add(this.label71);
             this.tabOverlayOptions.Controls.Add(this.AnimationFPSNumericUpDown);
             this.tabOverlayOptions.Controls.Add(this.DisableStartConditionCheckBox);
@@ -2696,10 +2703,93 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.TabIndex = 0;
             this.tabOverlayOptions.Text = "tabOverlayOptions";
             // 
+            // LPScaleNumericUpDown
+            // 
+            this.LPScaleNumericUpDown.DecimalPlaces = 1;
+            this.LPScaleNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.LPScaleNumericUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.LPScaleNumericUpDown.Location = new System.Drawing.Point(291, 257);
+            this.LPScaleNumericUpDown.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
+            this.LPScaleNumericUpDown.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.LPScaleNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.LPScaleNumericUpDown.Name = "LPScaleNumericUpDown";
+            this.LPScaleNumericUpDown.Size = new System.Drawing.Size(59, 19);
+            this.LPScaleNumericUpDown.TabIndex = 78;
+            this.LPScaleNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.LPScaleNumericUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Location = new System.Drawing.Point(15, 259);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(65, 12);
+            this.label72.TabIndex = 77;
+            this.label72.Text = "__LPS Scale";
+            // 
+            // VisibleLPSCheckBox
+            // 
+            this.VisibleLPSCheckBox.AutoSize = true;
+            this.VisibleLPSCheckBox.Location = new System.Drawing.Point(17, 231);
+            this.VisibleLPSCheckBox.Name = "VisibleLPSCheckBox";
+            this.VisibleLPSCheckBox.Size = new System.Drawing.Size(88, 16);
+            this.VisibleLPSCheckBox.TabIndex = 76;
+            this.VisibleLPSCheckBox.Text = "__Visble LPS";
+            this.VisibleLPSCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Location = new System.Drawing.Point(15, 502);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(77, 12);
+            this.label71.TabIndex = 75;
+            this.label71.Text = "AnimationFPS";
+            // 
+            // AnimationFPSNumericUpDown
+            // 
+            this.AnimationFPSNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.AnimationFPSNumericUpDown.Location = new System.Drawing.Point(291, 500);
+            this.AnimationFPSNumericUpDown.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.AnimationFPSNumericUpDown.Minimum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.AnimationFPSNumericUpDown.Name = "AnimationFPSNumericUpDown";
+            this.AnimationFPSNumericUpDown.Size = new System.Drawing.Size(59, 19);
+            this.AnimationFPSNumericUpDown.TabIndex = 74;
+            this.AnimationFPSNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.AnimationFPSNumericUpDown.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
             // DisableStartConditionCheckBox
             // 
             this.DisableStartConditionCheckBox.AutoSize = true;
-            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 565);
+            this.DisableStartConditionCheckBox.Location = new System.Drawing.Point(16, 626);
             this.DisableStartConditionCheckBox.Name = "DisableStartConditionCheckBox";
             this.DisableStartConditionCheckBox.Size = new System.Drawing.Size(187, 16);
             this.DisableStartConditionCheckBox.TabIndex = 73;
@@ -2716,7 +2806,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.flowLayoutPanel1.Controls.Add(this.BarBackgroundBrightnessPanel);
             this.flowLayoutPanel1.Controls.Add(this.BarBackgroundColorPanel);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(16, 495);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(16, 556);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(378, 57);
             this.flowLayoutPanel1.TabIndex = 72;
@@ -2794,7 +2884,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // FixBackgroundColorOfBarCheckBox
             // 
             this.FixBackgroundColorOfBarCheckBox.AutoSize = true;
-            this.FixBackgroundColorOfBarCheckBox.Location = new System.Drawing.Point(16, 473);
+            this.FixBackgroundColorOfBarCheckBox.Location = new System.Drawing.Point(16, 534);
             this.FixBackgroundColorOfBarCheckBox.Name = "FixBackgroundColorOfBarCheckBox";
             this.FixBackgroundColorOfBarCheckBox.Size = new System.Drawing.Size(209, 16);
             this.FixBackgroundColorOfBarCheckBox.TabIndex = 71;
@@ -2804,7 +2894,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // RenderWithCPUOnlyCheckBox
             // 
             this.RenderWithCPUOnlyCheckBox.AutoSize = true;
-            this.RenderWithCPUOnlyCheckBox.Location = new System.Drawing.Point(291, 411);
+            this.RenderWithCPUOnlyCheckBox.Location = new System.Drawing.Point(291, 472);
             this.RenderWithCPUOnlyCheckBox.Name = "RenderWithCPUOnlyCheckBox";
             this.RenderWithCPUOnlyCheckBox.Size = new System.Drawing.Size(64, 16);
             this.RenderWithCPUOnlyCheckBox.TabIndex = 70;
@@ -2814,7 +2904,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(15, 412);
+            this.label27.Location = new System.Drawing.Point(15, 473);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(109, 12);
             this.label27.TabIndex = 69;
@@ -2823,7 +2913,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label107
             // 
             this.label107.AutoSize = true;
-            this.label107.Location = new System.Drawing.Point(15, 377);
+            this.label107.Location = new System.Drawing.Point(15, 438);
             this.label107.Name = "label107";
             this.label107.Size = new System.Drawing.Size(73, 12);
             this.label107.TabIndex = 68;
@@ -2832,7 +2922,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label106
             // 
             this.label106.AutoSize = true;
-            this.label106.Location = new System.Drawing.Point(15, 349);
+            this.label106.Location = new System.Drawing.Point(15, 410);
             this.label106.Name = "label106";
             this.label106.Size = new System.Drawing.Size(140, 12);
             this.label106.TabIndex = 67;
@@ -2847,7 +2937,7 @@ namespace ACT.SpecialSpellTimer.Forms
             0,
             0,
             65536});
-            this.TextBlurRateNumericUpDown.Location = new System.Drawing.Point(291, 375);
+            this.TextBlurRateNumericUpDown.Location = new System.Drawing.Point(291, 436);
             this.TextBlurRateNumericUpDown.Maximum = new decimal(new int[] {
             10,
             0,
@@ -2872,7 +2962,7 @@ namespace ACT.SpecialSpellTimer.Forms
             0,
             0,
             65536});
-            this.TextOutlineThicknessRateNumericUpDown.Location = new System.Drawing.Point(291, 347);
+            this.TextOutlineThicknessRateNumericUpDown.Location = new System.Drawing.Point(291, 408);
             this.TextOutlineThicknessRateNumericUpDown.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.TextOutlineThicknessRateNumericUpDown.Maximum = new decimal(new int[] {
             10,
@@ -2922,7 +3012,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // OpacityNumericUpDown
             // 
             this.OpacityNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.OpacityNumericUpDown.Location = new System.Drawing.Point(291, 228);
+            this.OpacityNumericUpDown.Location = new System.Drawing.Point(291, 289);
             this.OpacityNumericUpDown.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.OpacityNumericUpDown.Name = "OpacityNumericUpDown";
             this.OpacityNumericUpDown.Size = new System.Drawing.Size(59, 19);
@@ -2932,7 +3022,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(356, 229);
+            this.label20.Location = new System.Drawing.Point(356, 290);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(19, 12);
             this.label20.TabIndex = 16;
@@ -2941,7 +3031,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(14, 229);
+            this.label21.Location = new System.Drawing.Point(14, 290);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(89, 12);
             this.label21.TabIndex = 17;
@@ -2950,7 +3040,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // ClickThroughCheckBox
             // 
             this.ClickThroughCheckBox.AutoSize = true;
-            this.ClickThroughCheckBox.Location = new System.Drawing.Point(291, 288);
+            this.ClickThroughCheckBox.Location = new System.Drawing.Point(291, 349);
             this.ClickThroughCheckBox.Name = "ClickThroughCheckBox";
             this.ClickThroughCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ClickThroughCheckBox.TabIndex = 7;
@@ -2960,7 +3050,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(15, 289);
+            this.label22.Location = new System.Drawing.Point(15, 350);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(72, 12);
             this.label22.TabIndex = 20;
@@ -2969,7 +3059,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // EnabledSpellTimerNoDecimalCheckBox
             // 
             this.EnabledSpellTimerNoDecimalCheckBox.AutoSize = true;
-            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(291, 316);
+            this.EnabledSpellTimerNoDecimalCheckBox.Location = new System.Drawing.Point(291, 377);
             this.EnabledSpellTimerNoDecimalCheckBox.Name = "EnabledSpellTimerNoDecimalCheckBox";
             this.EnabledSpellTimerNoDecimalCheckBox.Size = new System.Drawing.Size(64, 16);
             this.EnabledSpellTimerNoDecimalCheckBox.TabIndex = 42;
@@ -2979,7 +3069,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(15, 317);
+            this.label31.Location = new System.Drawing.Point(15, 378);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(122, 12);
             this.label31.TabIndex = 43;
@@ -2988,7 +3078,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(373, 317);
+            this.label49.Location = new System.Drawing.Point(373, 378);
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(159, 12);
             this.label49.TabIndex = 44;
@@ -2997,7 +3087,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label93
             // 
             this.label93.AutoSize = true;
-            this.label93.Location = new System.Drawing.Point(14, 258);
+            this.label93.Location = new System.Drawing.Point(14, 319);
             this.label93.Name = "label93";
             this.label93.Size = new System.Drawing.Size(119, 12);
             this.label93.TabIndex = 61;
@@ -3018,7 +3108,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // ReduceIconBrightnessNumericUpDown
             // 
             this.ReduceIconBrightnessNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(291, 256);
+            this.ReduceIconBrightnessNumericUpDown.Location = new System.Drawing.Point(291, 317);
             this.ReduceIconBrightnessNumericUpDown.Name = "ReduceIconBrightnessNumericUpDown";
             this.ReduceIconBrightnessNumericUpDown.Size = new System.Drawing.Size(59, 19);
             this.ReduceIconBrightnessNumericUpDown.TabIndex = 62;
@@ -3027,7 +3117,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // label94
             // 
             this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(356, 258);
+            this.label94.Location = new System.Drawing.Point(356, 319);
             this.label94.Name = "label94";
             this.label94.Size = new System.Drawing.Size(19, 12);
             this.label94.TabIndex = 63;
@@ -3824,39 +3914,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // label71
-            // 
-            this.label71.AutoSize = true;
-            this.label71.Location = new System.Drawing.Point(15, 441);
-            this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(77, 12);
-            this.label71.TabIndex = 75;
-            this.label71.Text = "AnimationFPS";
-            // 
-            // AnimationFPSNumericUpDown
-            // 
-            this.AnimationFPSNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.AnimationFPSNumericUpDown.Location = new System.Drawing.Point(291, 439);
-            this.AnimationFPSNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.AnimationFPSNumericUpDown.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.AnimationFPSNumericUpDown.Name = "AnimationFPSNumericUpDown";
-            this.AnimationFPSNumericUpDown.Size = new System.Drawing.Size(59, 19);
-            this.AnimationFPSNumericUpDown.TabIndex = 74;
-            this.AnimationFPSNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.AnimationFPSNumericUpDown.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3937,6 +3994,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabControlExtHoriz1.ResumeLayout(false);
             this.tabOverlayOptions.ResumeLayout(false);
             this.tabOverlayOptions.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LPScaleNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.AnimationFPSNumericUpDown)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.BarBackgroundBrightnessPanel.ResumeLayout(false);
@@ -3958,7 +4017,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.pnlLanguage.PerformLayout();
             this.DQXOptionTabPage.ResumeLayout(false);
             this.DQXOptionTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AnimationFPSNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4274,5 +4332,8 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.CheckBox DisableStartConditionCheckBox;
         private System.Windows.Forms.Label label71;
         private System.Windows.Forms.NumericUpDown AnimationFPSNumericUpDown;
+        private System.Windows.Forms.CheckBox VisibleLPSCheckBox;
+        private System.Windows.Forms.NumericUpDown LPScaleNumericUpDown;
+        private System.Windows.Forms.Label label72;
     }
 }

@@ -157,6 +157,9 @@
     <Compile Include="Views\BarBackgroundConverter.cs" />
     <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\BrightnessConverter.cs" />
+    <Compile Include="Views\LPSView.xaml.cs">
+      <DependentUpon>LPSView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TickerWindow.xaml.cs">
       <DependentUpon>TickerWindow.xaml</DependentUpon>
     </Compile>
@@ -328,6 +331,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\LPSView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TickerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
