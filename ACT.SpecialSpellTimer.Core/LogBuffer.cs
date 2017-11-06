@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
@@ -22,6 +21,8 @@ namespace ACT.SpecialSpellTimer
     public class LogBuffer :
         IDisposable
     {
+        #region Constants
+
         /// <summary>
         /// 空のログリスト
         /// </summary>
@@ -38,6 +39,8 @@ namespace ACT.SpecialSpellTimer
         /// ツールチップで残るリプレースメントキャラ
         /// </summary>
         private const string TooltipReplacementChar = "\uFFFD";
+
+        #endregion Constants
 
         /// <summary>
         /// 内部バッファ
@@ -222,11 +225,6 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-#if false
-        private string[] previousLogLines = new string[8];
-        private int previousLogLinesIndex = 0;
-#endif
-
         /// <summary>
         /// OnLogLineRead
         /// </summary>
@@ -241,24 +239,7 @@ namespace ACT.SpecialSpellTimer
             {
                 return;
             }
-#if false
-            // 直近8行程度における同一のログを捨てる
-            lock (this.previousLogLines)
-            {
-                if (this.previousLogLines.Contains(logInfo.logLine))
-                {
-                    return;
-                }
 
-                if (this.previousLogLinesIndex >= this.previousLogLines.Length)
-                {
-                    this.previousLogLinesIndex = 0;
-                }
-
-                this.previousLogLines[this.previousLogLinesIndex] = logInfo.logLine;
-                this.previousLogLinesIndex++;
-            }
-#endif
             this.logInfoQueue.Enqueue(logInfo);
 
             // 最初のログならば動作ログに出力する
@@ -304,13 +285,6 @@ namespace ACT.SpecialSpellTimer
             // マッチング用のログリスト
             var list = new List<string>(logInfoQueue.Count);
 
-            // ファイル出力用のバッファ
-            var output = default(StringBuilder);
-            if (Settings.Default.SaveLogEnabled)
-            {
-                output = new StringBuilder(logInfoQueue.Count * 128);
-            }
-
             var partyChangedAtDQX = false;
             var summoned = false;
             var doneCommand = false;
@@ -321,7 +295,8 @@ namespace ACT.SpecialSpellTimer
             while (logInfoQueue.TryDequeue(
                 out LogLineEventArgs logInfo))
             {
-                var logLine = logInfo.logLine;
+                // 冒頭のタイムスタンプを除去する
+                var logLine = logInfo.logLine.Remove(0, 15);
 
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
@@ -360,15 +335,7 @@ namespace ACT.SpecialSpellTimer
                 // コマンドとマッチングする
                 doneCommand |= TextCommandController.MatchCommandCore(logLine);
 
-                // ファイル出力用のバッファに貯める
-                if (Settings.Default.SaveLogEnabled &&
-                    output != null)
-                {
-                    output.AppendLine(logLine);
-                }
-
-                // 冒頭のタイムスタンプを除去してマッチング用リストに追加する
-                list.Add(logLine.Remove(0, 15));
+                list.Add(logLine);
             }
 
             if (summoned)
@@ -391,13 +358,9 @@ namespace ACT.SpecialSpellTimer
             }
 
             // ログファイルに出力する
-            if (Settings.Default.SaveLogEnabled &&
-                output != null)
+            if (Settings.Default.SaveLogEnabled)
             {
-                Task.Run(() =>
-                {
-                    ChatLogWorker.Instance.Append(output.ToString());
-                });
+                Task.Run(() => ChatLogWorker.Instance.AppendLines(list));
             }
 
 #if DEBUG

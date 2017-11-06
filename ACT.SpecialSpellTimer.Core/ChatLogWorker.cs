@@ -18,8 +18,7 @@ namespace ACT.SpecialSpellTimer
 
         private readonly double FlushInterval = 10000;
         private readonly Encoding UTF8Encoding = new UTF8Encoding(false);
-
-        private volatile StringBuilder logBuffer = new StringBuilder();
+        private readonly StringBuilder LogBuffer = new StringBuilder(128 * 5120);
 
         private System.Timers.Timer worker;
 
@@ -33,48 +32,8 @@ namespace ACT.SpecialSpellTimer
             !string.IsNullOrEmpty(OutputDirectory) ?
             Path.Combine(
                 this.OutputDirectory,
-                $@"ACT.SpecialSpellTimer.Chatlog.{DateTime.Now.ToString("yyyy-MM-dd")}.log") :
+                $@"CombatLog.{DateTime.Now.ToString("yyyy-MM-dd")}.log") :
             string.Empty;
-
-        public void Append(
-            string text)
-        {
-            try
-            {
-                if (!this.OutputEnabled)
-                {
-                    return;
-                }
-
-                lock (this.logBuffer)
-                {
-                    this.logBuffer.Append(text);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        public void AppendLine(
-            string text)
-        {
-            try
-            {
-                if (!this.OutputEnabled)
-                {
-                    return;
-                }
-
-                lock (this.logBuffer)
-                {
-                    this.logBuffer.AppendLine(text);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
 
         public void AppendLines(
             List<string> logLineList)
@@ -86,11 +45,13 @@ namespace ACT.SpecialSpellTimer
                     return;
                 }
 
-                lock (this.logBuffer)
+                lock (this.LogBuffer)
                 {
-                    this.logBuffer.AppendLine(string.Join(
-                        Environment.NewLine,
-                        logLineList.ToArray()));
+                    var time = DateTime.Now.ToString("HH:mm:ss.fff");
+                    foreach (var line in logLineList)
+                    {
+                        this.LogBuffer.AppendLine($"[{time}] {line}");
+                    }
                 }
             }
             catch (Exception)
@@ -100,9 +61,9 @@ namespace ACT.SpecialSpellTimer
 
         public void Begin()
         {
-            lock (this.logBuffer)
+            lock (this.LogBuffer)
             {
-                this.logBuffer.Clear();
+                this.LogBuffer.Clear();
             }
 
             this.worker = new System.Timers.Timer();
@@ -138,19 +99,19 @@ namespace ACT.SpecialSpellTimer
                     }
                 }
 
-                lock (this.logBuffer)
+                lock (this.LogBuffer)
                 {
-                    if (this.logBuffer.Length <= 0)
+                    if (this.LogBuffer.Length <= 0)
                     {
                         return;
                     }
 
                     File.AppendAllText(
                         this.OutputFile,
-                        this.logBuffer.ToString(),
+                        this.LogBuffer.ToString(),
                         this.UTF8Encoding);
 
-                    this.logBuffer.Clear();
+                    this.LogBuffer.Clear();
                 }
             }
             catch (Exception)
