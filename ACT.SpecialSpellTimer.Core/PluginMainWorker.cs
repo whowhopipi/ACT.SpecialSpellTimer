@@ -224,6 +224,8 @@ namespace ACT.SpecialSpellTimer
 
         #region Core
 
+        private double lastLPS;
+
         private void BackgroundCore()
         {
             // FFXIVプロセスの有無を取得する
@@ -245,9 +247,11 @@ namespace ACT.SpecialSpellTimer
 
                 // ついでにLPSを出力する
                 var lps = this.LogBuffer.LPS;
-                if (lps > 0)
+                if (lps > 0 &&
+                    this.lastLPS != lps)
                 {
                     Logger.Write($"LPS={lps.ToString("N1")}");
+                    this.lastLPS = lps;
                 }
             }
         }

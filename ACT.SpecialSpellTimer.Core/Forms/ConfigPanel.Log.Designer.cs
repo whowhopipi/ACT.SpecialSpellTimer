@@ -154,6 +154,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTextBox.Size = new System.Drawing.Size(774, 262);
             this.LogTextBox.TabIndex = 0;
             this.LogTextBox.Text = "";
+            this.LogTextBox.WordWrap = false;
             // 
             // tabPage2
             // 
