@@ -361,7 +361,8 @@ namespace ACT.SpecialSpellTimer
                 doneCommand |= TextCommandController.MatchCommandCore(logLine);
 
                 // ファイル出力用のバッファに貯める
-                if (Settings.Default.SaveLogEnabled)
+                if (Settings.Default.SaveLogEnabled &&
+                    output != null)
                 {
                     output.AppendLine(logLine);
                 }
@@ -390,7 +391,8 @@ namespace ACT.SpecialSpellTimer
             }
 
             // ログファイルに出力する
-            if (Settings.Default.SaveLogEnabled)
+            if (Settings.Default.SaveLogEnabled &&
+                output != null)
             {
                 Task.Run(() =>
                 {

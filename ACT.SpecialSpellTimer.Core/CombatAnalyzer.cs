@@ -183,6 +183,72 @@ namespace ACT.SpecialSpellTimer
         private Dictionary<string, decimal> ActorHPRate { get; set; } = new Dictionary<string, decimal>();
 
         /// <summary>
+        /// 分析を開始する
+        /// </summary>
+        public void Initialize()
+        {
+            this.ClearLogBuffer();
+            this.CurrentCombatLogList.Clear();
+
+            if (Settings.Default.CombatLogEnabled)
+            {
+                this.StartPoller();
+                ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
+                ActGlobals.oFormActMain.OnLogLineRead += this.FormActMain_OnLogLineRead;
+                Logger.Write("start combat analyze.");
+            }
+        }
+
+        /// <summary>
+        /// 分析を停止する
+        /// </summary>
+        public void Denitialize()
+        {
+            ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
+
+            this.EndPoller();
+
+            this.ClearLogBuffer();
+            this.CurrentCombatLogList.Clear();
+            Logger.Write("end combat analyze.");
+        }
+
+        /// <summary>
+        /// ログのポーリングを開始する
+        /// </summary>
+        public void StartPoller()
+        {
+            this.ClearLogInfoQueue();
+
+            if (this.storeLogWorker != null &&
+                this.storeLogWorker.Enabled)
+            {
+                return;
+            }
+
+            this.storeLogWorker = new System.Timers.Timer();
+            this.storeLogWorker.AutoReset = true;
+            this.storeLogWorker.Interval = 1000;
+            this.storeLogWorker.Elapsed += (s, e) =>
+            {
+                this.StoreLogPoller();
+            };
+
+            this.storeLogWorker.Start();
+        }
+
+        /// <summary>
+        /// ログのポーリングを終了する
+        /// </summary>
+        public void EndPoller()
+        {
+            this.storeLogWorker?.Stop();
+            this.storeLogWorker?.Dispose();
+            this.storeLogWorker = null;
+            this.ClearLogInfoQueue();
+        }
+
+        /// <summary>
         /// ログを分析する
         /// </summary>
         public void AnalyzeLog()
@@ -248,64 +314,6 @@ namespace ACT.SpecialSpellTimer
                 this.CurrentCombatLogList.Clear();
                 this.ActorHPRate.Clear();
             }
-        }
-
-        /// <summary>
-        /// 分析を停止する
-        /// </summary>
-        public void Denitialize()
-        {
-            ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
-
-            this.EndPoller();
-
-            this.CurrentCombatLogList.Clear();
-            Logger.Write("end combat analyze.");
-        }
-
-        /// <summary>
-        /// ログのポーリングを終了する
-        /// </summary>
-        public void EndPoller()
-        {
-            this.storeLogWorker?.Stop();
-            this.storeLogWorker?.Dispose();
-            this.storeLogWorker = null;
-            this.ClearLogInfoQueue();
-        }
-
-        /// <summary>
-        /// 分析を開始する
-        /// </summary>
-        public void Initialize()
-        {
-            this.ClearLogBuffer();
-
-            if (Settings.Default.CombatLogEnabled)
-            {
-                this.StartPoller();
-            }
-
-            ActGlobals.oFormActMain.OnLogLineRead += this.FormActMain_OnLogLineRead;
-            Logger.Write("start combat analyze.");
-        }
-
-        /// <summary>
-        /// ログのポーリングを開始する
-        /// </summary>
-        public void StartPoller()
-        {
-            this.ClearLogInfoQueue();
-
-            this.storeLogWorker = new System.Timers.Timer();
-            this.storeLogWorker.AutoReset = true;
-            this.storeLogWorker.Interval = 1000;
-            this.storeLogWorker.Elapsed += (s, e) =>
-            {
-                this.StoreLogPoller();
-            };
-
-            this.storeLogWorker.Start();
         }
 
         /// <summary>

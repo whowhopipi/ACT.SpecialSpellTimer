@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Collections.Generic;
@@ -244,13 +244,11 @@
                 {
                     if (Settings.Default.CombatLogEnabled)
                     {
-                        CombatAnalyzer.Default.ClearLogBuffer();
-                        CombatAnalyzer.Default.StartPoller();
+                        CombatAnalyzer.Default.Initialize();
                     }
                     else
                     {
-                        CombatAnalyzer.Default.EndPoller();
-                        CombatAnalyzer.Default.ClearLogBuffer();
+                        CombatAnalyzer.Default.Denitialize();
                     }
                 });
 
