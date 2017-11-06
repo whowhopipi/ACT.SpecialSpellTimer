@@ -3,7 +3,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
 using System.Xml.Serialization;
-
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
 
@@ -18,7 +17,7 @@ namespace ACT.SpecialSpellTimer.Models
         ITrigger
     {
         public void MatchTrigger(string logLine)
-            => this.MatchTriggerCore(logLine);
+            => SpellsController.Instance.MatchCore(this, logLine);
 
         [XmlIgnore]
         public volatile bool UpdateDone;
