@@ -230,16 +230,19 @@ namespace ACT.SpecialSpellTimer
             // FFXIV及びACTがアクティブか取得する
             this.isFFXIVActive = this.IsActive();
 
-            // テロップの位置を保存するためテロップテーブルを保存する
             if ((DateTime.Now - this.lastSaveTickerTableDateTime).TotalMinutes >= 1)
             {
                 this.lastSaveTickerTableDateTime = DateTime.Now;
 
+                // テロップの位置を保存するためテロップテーブルを保存する
                 Task.Run(() =>
                 {
                     OnePointTelopTable.Instance.Save();
                     Debug.WriteLine("●Save telop table.");
                 });
+
+                // ついでにLPSを出力する
+                Logger.Write($"LPS={this.LogBuffer.LPS.ToString("N1")}");
             }
         }
 
