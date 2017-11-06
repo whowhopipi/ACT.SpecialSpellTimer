@@ -293,17 +293,17 @@ namespace ACT.SpecialSpellTimer
                 {
                     foreach (var logLine in logs)
                     {
-                        switch (trigger)
+                        switch (trigger.TriggerType)
                         {
-                            case OnePointTelop telop:
+                            case TriggerTypes.Ticker:
                                 TickersController.Instance.MatchCore(
-                                    telop,
+                                    trigger.GetTrigger<OnePointTelop>(),
                                     logLine);
                                 break;
 
-                            case Models.SpellTimer spell:
+                            case TriggerTypes.Spell:
                                 SpellsController.Instance.MatchCore(
-                                    spell,
+                                    trigger.GetTrigger<Models.SpellTimer>(),
                                     logLine);
                                 break;
                         }

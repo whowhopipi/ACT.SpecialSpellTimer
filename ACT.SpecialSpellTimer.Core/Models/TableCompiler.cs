@@ -12,6 +12,12 @@ using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.Models
 {
+    public enum TriggerTypes
+    {
+        Spell,
+        Ticker
+    }
+
     public class TableCompiler
     {
         #region Singleton
@@ -119,7 +125,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         private object tickerListLocker = new object();
 
-        private List<object> triggerList = new List<object>(128);
+        private readonly List<TriggerContainer> triggerList = new List<TriggerContainer>(128);
 
         public event EventHandler OnTableChanged;
 
@@ -145,23 +151,14 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        public IReadOnlyList<object> TriggerList
+        public IReadOnlyList<TriggerContainer> TriggerList
         {
             get
             {
-                this.triggerList.Clear();
-
-                lock (this.spellListLocker)
+                lock (this.triggerList)
                 {
-                    this.triggerList.AddRange(this.spellList);
+                    return this.triggerList.ToList();
                 }
-
-                lock (this.tickerListLocker)
-                {
-                    this.triggerList.AddRange(this.tickerList);
-                }
-
-                return this.triggerList;
             }
         }
 
@@ -271,6 +268,18 @@ namespace ACT.SpecialSpellTimer.Models
                 this.spellList = new List<SpellTimer>(query);
             }
 
+            // 統合トリガリストに登録する
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x => x.TriggerType == TriggerTypes.Spell);
+                this.triggerList.AddRange(query.Select(x =>
+                    new TriggerContainer()
+                    {
+                        TriggerType = TriggerTypes.Spell,
+                        Trigger = x
+                    }));
+            }
+
             this.RaiseTableChenged();
         }
 
@@ -362,6 +371,18 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this.tickerListLocker)
             {
                 this.tickerList = new List<OnePointTelop>(query);
+            }
+
+            // 統合トリガリストに登録する
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x => x.TriggerType == TriggerTypes.Ticker);
+                this.triggerList.AddRange(query.Select(x =>
+                    new TriggerContainer()
+                    {
+                        TriggerType = TriggerTypes.Ticker,
+                        Trigger = x
+                    }));
             }
 
             this.RaiseTableChenged();
@@ -914,5 +935,15 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion Sub classes
+    }
+
+    public class TriggerContainer
+    {
+        public TriggerTypes TriggerType { get; set; }
+
+        public object Trigger { get; set; }
+
+        public T GetTrigger<T>() where T : class
+            => this.Trigger as T;
     }
 }
