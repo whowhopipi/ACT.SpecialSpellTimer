@@ -12,12 +12,6 @@ using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.Models
 {
-    public enum TriggerTypes
-    {
-        Spell,
-        Ticker
-    }
-
     public class TableCompiler
     {
         #region Singleton
@@ -125,7 +119,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         private object tickerListLocker = new object();
 
-        private readonly List<TriggerContainer> triggerList = new List<TriggerContainer>(128);
+        private readonly List<ITrigger> triggerList = new List<ITrigger>(128);
 
         public event EventHandler OnTableChanged;
 
@@ -151,7 +145,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        public IReadOnlyList<TriggerContainer> TriggerList
+        public IReadOnlyList<ITrigger> TriggerList
         {
             get
             {
@@ -272,12 +266,7 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this.triggerList)
             {
                 this.triggerList.RemoveAll(x => x.TriggerType == TriggerTypes.Spell);
-                this.triggerList.AddRange(query.Select(x =>
-                    new TriggerContainer()
-                    {
-                        TriggerType = TriggerTypes.Spell,
-                        Trigger = x
-                    }));
+                this.triggerList.AddRange(query);
             }
 
             this.RaiseTableChenged();
@@ -377,12 +366,7 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this.triggerList)
             {
                 this.triggerList.RemoveAll(x => x.TriggerType == TriggerTypes.Ticker);
-                this.triggerList.AddRange(query.Select(x =>
-                    new TriggerContainer()
-                    {
-                        TriggerType = TriggerTypes.Ticker,
-                        Trigger = x
-                    }));
+                this.triggerList.AddRange(query);
             }
 
             this.RaiseTableChenged();
@@ -935,12 +919,5 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion Sub classes
-    }
-
-    public class TriggerContainer
-    {
-        public TriggerTypes TriggerType { get; set; }
-
-        public ITrigger Trigger { get; set; }
     }
 }

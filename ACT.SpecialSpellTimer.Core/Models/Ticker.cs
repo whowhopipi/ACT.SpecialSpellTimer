@@ -16,6 +16,9 @@ namespace ACT.SpecialSpellTimer.Models
         IDisposable,
         ITrigger
     {
+        [XmlIgnore]
+        public TriggerTypes TriggerType => TriggerTypes.Ticker;
+
         public void MatchTrigger(string logLine)
             => TickersController.Instance.MatchCore(this, logLine);
 

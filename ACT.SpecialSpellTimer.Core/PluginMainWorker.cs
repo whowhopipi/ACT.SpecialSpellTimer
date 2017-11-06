@@ -289,11 +289,11 @@ namespace ACT.SpecialSpellTimer
             var logs = logsTask.Result;
             if (logs.Count > 0)
             {
-                triggers.AsParallel().ForAll((container) =>
+                triggers.AsParallel().ForAll((trigger) =>
                 {
                     foreach (var logLine in logs)
                     {
-                        container.Trigger.MatchTrigger(logLine);
+                        trigger.MatchTrigger(logLine);
                     }
                 });
 
