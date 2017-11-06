@@ -289,24 +289,11 @@ namespace ACT.SpecialSpellTimer
             var logs = logsTask.Result;
             if (logs.Count > 0)
             {
-                triggers.AsParallel().ForAll((trigger) =>
+                triggers.AsParallel().ForAll((container) =>
                 {
                     foreach (var logLine in logs)
                     {
-                        switch (trigger.TriggerType)
-                        {
-                            case TriggerTypes.Ticker:
-                                TickersController.Instance.MatchCore(
-                                    trigger.GetTrigger<OnePointTelop>(),
-                                    logLine);
-                                break;
-
-                            case TriggerTypes.Spell:
-                                SpellsController.Instance.MatchCore(
-                                    trigger.GetTrigger<Models.SpellTimer>(),
-                                    logLine);
-                                break;
-                        }
+                        container.Trigger.MatchTrigger(logLine);
                     }
                 });
 
@@ -321,7 +308,6 @@ namespace ACT.SpecialSpellTimer
                 var count = logs.Count;
                 Debug.WriteLine($"●DetectLogs\t{time:N1} ms\t{count:N0} lines\tavg {time / count:N2}");
             }
-
 #endif
 
             resetTask.Wait();

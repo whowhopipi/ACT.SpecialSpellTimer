@@ -130,6 +130,7 @@
     <Compile Include="Image\IconController.cs" />
     <Compile Include="JobExtensions.cs" />
     <Compile Include="LogBuffer.cs" />
+    <Compile Include="Models\ITrigger.cs" />
     <Compile Include="Models\PanelSettings.cs" />
     <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="Models\Spell.cs" />

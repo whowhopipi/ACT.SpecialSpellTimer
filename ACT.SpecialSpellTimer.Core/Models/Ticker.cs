@@ -1,21 +1,25 @@
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Timers;
+using System.Xml.Serialization;
+
+using ACT.SpecialSpellTimer.Sound;
+using FFXIV.Framework.Common;
+
 namespace ACT.SpecialSpellTimer.Models
 {
-    using System;
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using System.Timers;
-    using System.Xml.Serialization;
-
-    using ACT.SpecialSpellTimer.Sound;
-    using FFXIV.Framework.Common;
-
     /// <summary>
     /// ワンポイントテロップ
     /// </summary>
     [Serializable]
     public class OnePointTelop :
-        IDisposable
+        IDisposable,
+        ITrigger
     {
+        public void MatchTrigger(string logLine)
+            => this.MatchTriggerCore(logLine);
+
         [XmlIgnore]
         private Timer delayedSoundTimer;
 

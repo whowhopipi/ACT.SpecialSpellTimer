@@ -941,9 +941,6 @@ namespace ACT.SpecialSpellTimer.Models
     {
         public TriggerTypes TriggerType { get; set; }
 
-        public object Trigger { get; set; }
-
-        public T GetTrigger<T>() where T : class
-            => this.Trigger as T;
+        public ITrigger Trigger { get; set; }
     }
 }
