@@ -50,7 +50,7 @@
           ShadowDepth="0" />
       </Border.Effect>
 
-      <Grid Width="180">
+      <Grid Width="190">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
           <ctrl:OutlineTextBlock
             x:Name="LPSTextBlock"

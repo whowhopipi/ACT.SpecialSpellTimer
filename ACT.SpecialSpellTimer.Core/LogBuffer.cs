@@ -264,16 +264,20 @@ namespace ACT.SpecialSpellTimer
             {
                 this.lineCountTimer.Stop();
 
-                var lps = this.currentLineCount / this.lineCountTimer.Elapsed.TotalSeconds;
-                if (lps > 0)
+                var secounds = this.lineCountTimer.Elapsed.TotalSeconds;
+                if (secounds > 0)
                 {
-                    if (this.currentLpsIndex > this.lpss.GetUpperBound(0))
+                    var lps = this.currentLineCount / secounds;
+                    if (lps > 0)
                     {
-                        this.currentLpsIndex = 0;
-                    }
+                        if (this.currentLpsIndex > this.lpss.GetUpperBound(0))
+                        {
+                            this.currentLpsIndex = 0;
+                        }
 
-                    this.lpss[this.currentLpsIndex] = lps;
-                    this.currentLpsIndex++;
+                        this.lpss[this.currentLpsIndex] = lps;
+                        this.currentLpsIndex++;
+                    }
                 }
 
                 this.currentLineCount = 0;
