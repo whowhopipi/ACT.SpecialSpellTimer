@@ -244,7 +244,11 @@ namespace ACT.SpecialSpellTimer
                 });
 
                 // ついでにLPSを出力する
-                Logger.Write($"LPS={this.LogBuffer.LPS.ToString("N1")}");
+                var lps = this.LogBuffer.LPS;
+                if (lps > 0)
+                {
+                    Logger.Write($"LPS={lps.ToString("N1")}");
+                }
             }
         }
 
