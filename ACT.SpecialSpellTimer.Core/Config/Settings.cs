@@ -9,6 +9,7 @@ using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using Prism.Mvvm;
@@ -272,7 +273,16 @@ namespace ACT.SpecialSpellTimer.Config
         public bool LPSViewVisible
         {
             get => this.lpsViewVisible;
-            set => this.SetProperty(ref this.lpsViewVisible, value);
+            set
+            {
+                if (this.SetProperty(ref this.lpsViewVisible, value))
+                {
+                    if (LPSView.Instance != null)
+                    {
+                        LPSView.Instance.OverlayVisible = value;
+                    }
+                }
+            }
         }
 
         public double LPSViewX

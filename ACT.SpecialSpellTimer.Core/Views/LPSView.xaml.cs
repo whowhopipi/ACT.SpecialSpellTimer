@@ -16,6 +16,8 @@ namespace ACT.SpecialSpellTimer.Views
     {
         private static LPSView instance;
 
+        public static LPSView Instance => instance;
+
         public static void ShowLPS()
         {
             instance = new LPSView();
@@ -43,6 +45,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             this.DataContext = new LPSViewModel();
 
+            this.Opacity = 0;
             this.ToNonActive();
             this.ToNotTransparent();
 
@@ -105,11 +108,13 @@ namespace ACT.SpecialSpellTimer.Views
             var lps = PluginMainWorker.Instance?.LogBuffer?.LPS ?? 0;
             this.LPSTextBlock.Text = lps.ToString("N0");
 
-            // 表示を切り替える
-            this.OverlayVisible = Settings.Default.LPSViewVisible;
-
             // ついでにクリック透過を切り替える
             this.ClickTransparent = Settings.Default.ClickThroughEnabled;
+
+            // アクティブによる表示切り替えは内側のグリッドで切り替える
+            this.BaseGrid.Visibility = PluginMainWorker.Instance.IsFFXIVActive ?
+                Visibility.Visible :
+                Visibility.Collapsed;
         }
     }
 

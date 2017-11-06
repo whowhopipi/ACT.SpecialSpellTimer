@@ -57,6 +57,8 @@ namespace ACT.SpecialSpellTimer
         private volatile bool existFFXIVProcess;
         private volatile bool isFFXIVActive;
 
+        public bool IsFFXIVActive => this.isFFXIVActive;
+
         /// <summary>
         /// 最後にテロップテーブルを保存した日時
         /// </summary>

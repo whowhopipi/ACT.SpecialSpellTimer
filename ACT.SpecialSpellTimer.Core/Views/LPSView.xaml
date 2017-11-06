@@ -29,7 +29,8 @@
     <cnv:BoolToCollapsedConverter x:Key="BoolToCollapsedConverter" />
   </Window.Resources>
 
-  <Grid 
+  <Grid
+    x:Name="BaseGrid"
     Margin="10"
     Background="#01FFFFFF">
     
