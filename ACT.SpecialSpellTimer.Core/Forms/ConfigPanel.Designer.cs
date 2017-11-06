@@ -2705,7 +2705,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // LPScaleNumericUpDown
             // 
-            this.LPScaleNumericUpDown.DecimalPlaces = 1;
+            this.LPScaleNumericUpDown.DecimalPlaces = 2;
             this.LPScaleNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.LPScaleNumericUpDown.Increment = new decimal(new int[] {
             1,
@@ -2739,18 +2739,18 @@ namespace ACT.SpecialSpellTimer.Forms
             this.label72.AutoSize = true;
             this.label72.Location = new System.Drawing.Point(15, 259);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(65, 12);
+            this.label72.Size = new System.Drawing.Size(108, 12);
             this.label72.TabIndex = 77;
-            this.label72.Text = "__LPS Scale";
+            this.label72.Text = "__LPS Overlay Scale";
             // 
             // VisibleLPSCheckBox
             // 
             this.VisibleLPSCheckBox.AutoSize = true;
             this.VisibleLPSCheckBox.Location = new System.Drawing.Point(17, 231);
             this.VisibleLPSCheckBox.Name = "VisibleLPSCheckBox";
-            this.VisibleLPSCheckBox.Size = new System.Drawing.Size(88, 16);
+            this.VisibleLPSCheckBox.Size = new System.Drawing.Size(134, 16);
             this.VisibleLPSCheckBox.TabIndex = 76;
-            this.VisibleLPSCheckBox.Text = "__Visble LPS";
+            this.VisibleLPSCheckBox.Text = "__Visible LPS Overlay";
             this.VisibleLPSCheckBox.UseVisualStyleBackColor = true;
             // 
             // label71
