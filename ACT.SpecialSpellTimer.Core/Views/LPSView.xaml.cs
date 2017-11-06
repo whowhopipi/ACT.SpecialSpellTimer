@@ -89,7 +89,7 @@ namespace ACT.SpecialSpellTimer.Views
 
         private void LPSView_Loaded(object sender, RoutedEventArgs e)
         {
-            this.timer.Interval = TimeSpan.FromSeconds(1.1);
+            this.timer.Interval = TimeSpan.FromSeconds(3.1);
             this.timer.Tick += this.Timer_Tick;
             this.timer.Start();
         }
