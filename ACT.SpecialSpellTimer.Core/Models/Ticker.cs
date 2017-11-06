@@ -236,8 +236,6 @@ namespace ACT.SpecialSpellTimer.Models
                 this.delayedSoundTimer.Dispose();
                 this.delayedSoundTimer = null;
             }
-
-            GC.SuppressFinalize(true);
         }
 
         /// <summary>

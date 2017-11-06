@@ -396,8 +396,6 @@ namespace ACT.SpecialSpellTimer.Models
                 this.garbageInstanceTimer.Dispose();
                 this.garbageInstanceTimer = null;
             }
-
-            GC.SuppressFinalize(true);
         }
 
         /// <summary>
