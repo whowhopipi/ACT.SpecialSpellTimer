@@ -301,21 +301,18 @@ namespace ACT.SpecialSpellTimer
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
                 {
-                    if (logLine.Length > 17)
+                    // 4文字分のツールチップ文字を除去する
+                    int index;
+                    if ((index = logLine.IndexOf(
+                        TooltipSuffix,
+                        0,
+                        StringComparison.Ordinal)) > -1)
                     {
-                        // 4文字分のツールチップ文字を除去する
-                        int index;
-                        if ((index = logLine.IndexOf(
-                            TooltipSuffix,
-                            17,
-                            StringComparison.Ordinal)) > -1)
-                        {
-                            logLine = logLine.Remove(index - 1, 4);
-                        }
-
-                        // 残ったReplacementCharを除去する
-                        logLine = logLine.Replace(TooltipReplacementChar, string.Empty);
+                        logLine = logLine.Remove(index - 1, 4);
                     }
+
+                    // 残ったReplacementCharを除去する
+                    logLine = logLine.Replace(TooltipReplacementChar, string.Empty);
                 }
 
                 // FFXIVでの使用？
