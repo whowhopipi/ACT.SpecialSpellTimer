@@ -163,6 +163,25 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 this.spellList.Add(instancedSpell);
             }
+
+            lock (this.triggerList)
+            {
+                this.triggerList.Add(instancedSpell);
+            }
+        }
+
+        public void RemoveInstanceSpell(
+            SpellTimer instancedSpell)
+        {
+            lock (this.spellListLocker)
+            {
+                this.spellList.Remove(instancedSpell);
+            }
+
+            lock (this.triggerList)
+            {
+                this.triggerList.Remove(instancedSpell);
+            }
         }
 
         public void CompileSpells()

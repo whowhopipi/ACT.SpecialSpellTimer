@@ -443,14 +443,16 @@ namespace ACT.SpecialSpellTimer.Models
                         return;
                     }
 
-                    SpellTimer o;
-                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out o);
+                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out SpellTimer o);
 
                     // スペルコレクション本体から除去する
                     lock (lockObject)
                     {
                         this.table.Remove(instance);
                     }
+
+                    // コンパイル済みリストから除去する
+                    TableCompiler.Instance.RemoveInstanceSpell(instance);
 
                     instance.Dispose();
                 }
