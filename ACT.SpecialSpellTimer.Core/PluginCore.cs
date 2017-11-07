@@ -143,7 +143,7 @@ namespace ACT.SpecialSpellTimer
                 Settings.Default.Load();
                 Settings.Default.ApplyRenderMode();
 
-                pluginScreenSpace.Text = Translate.Get("LN_Tabname");
+                pluginScreenSpace.Text = "SPESPE";
 
                 // HojoringのSplashを表示する
                 WPFHelper.Start();

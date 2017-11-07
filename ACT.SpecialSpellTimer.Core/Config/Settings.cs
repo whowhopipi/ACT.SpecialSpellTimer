@@ -512,6 +512,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
             { nameof(Settings.UIAutoScaleMode), AutoScaleMode.Inherit },
+            { nameof(Settings.MaxFPS), 30 },
 
             { nameof(Settings.LPSViewVisible), false },
             { nameof(Settings.LPSViewX), 0 },
