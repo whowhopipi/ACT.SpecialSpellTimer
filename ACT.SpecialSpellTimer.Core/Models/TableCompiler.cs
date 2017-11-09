@@ -193,7 +193,9 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.triggerList)
             {
-                this.triggerList.RemoveAll(x => (x as SpellTimer)?.IsInstance ?? false);
+                this.triggerList.RemoveAll(x => 
+                    (x is SpellTimer spell) &&
+                    spell.IsInstance);
             }
         }
 
