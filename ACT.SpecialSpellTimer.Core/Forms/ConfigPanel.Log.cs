@@ -51,14 +51,19 @@ namespace ACT.SpecialSpellTimer.Forms
         {
             void appendLog()
             {
-                this.LogTextBox.AppendText(text);
-            }
+                if (this.LogTextBox.Lines.Length >= 1024)
+                {
+                    this.LogTextBox.Lines = this.LogTextBox.Lines.Skip(32).ToArray();
+                }
 
-            this.logBuffer.Append(text);
+                this.LogTextBox.AppendText(text);
+                this.LogTextBox.ScrollToCaret();
+            }
 
             if (this.LogTextBox.IsDisposed ||
                 !this.LogTextBox.IsHandleCreated)
             {
+                this.logBuffer.Append(text);
                 return;
             }
 
