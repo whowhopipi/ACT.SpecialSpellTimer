@@ -400,7 +400,7 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     instance.ID = this.table.Max(y => y.ID) + 1;
                     this.table.Add(instance);
-                    TableCompiler.Instance.AddInstanceSpell(instance);
+                    TableCompiler.Instance.AddSpell(instance);
                 }
             }
 
@@ -410,7 +410,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// インスタンス化されたスペルをすべて削除する
         /// </summary>
-        public void RemoveAllInstanceSpells()
+        public void RemoveInstanceSpellsAll()
         {
             this.instanceSpells.Clear();
 
@@ -418,6 +418,8 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 this.table.RemoveAll(x => x.IsInstance);
             }
+
+            TableCompiler.Instance.RemoveInstanceSpells();
         }
 
         /// <summary>
@@ -452,7 +454,7 @@ namespace ACT.SpecialSpellTimer.Models
                     }
 
                     // コンパイル済みリストから除去する
-                    TableCompiler.Instance.RemoveInstanceSpell(instance);
+                    TableCompiler.Instance.RemoveSpell(instance);
 
                     instance.Dispose();
                 }

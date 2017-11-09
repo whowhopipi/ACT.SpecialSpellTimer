@@ -229,7 +229,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 SpellTimerTable.Instance.Table.Add(nr);
 
                 TableCompiler.Instance.RecompileSpells();
-                SpellTimerTable.Instance.RemoveAllInstanceSpells();
+                SpellTimerTable.Instance.RemoveInstanceSpellsAll();
                 SpellTimerTable.Instance.Save(true);
 
                 // 新しいノードを生成する
@@ -576,7 +576,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 {
                     SpellTimerTable.Instance.Table.Remove(src);
                     TableCompiler.Instance.RecompileSpells();
-                    SpellTimerTable.Instance.RemoveAllInstanceSpells();
+                    SpellTimerTable.Instance.RemoveInstanceSpellsAll();
                     SpellTimerTable.Instance.Save(true);
 
                     this.DetailGroupBox.Visible = false;

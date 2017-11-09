@@ -156,7 +156,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        public void AddInstanceSpell(
+        public void AddSpell(
             SpellTimer instancedSpell)
         {
             lock (this.spellListLocker)
@@ -170,7 +170,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        public void RemoveInstanceSpell(
+        public void RemoveSpell(
             SpellTimer instancedSpell)
         {
             lock (this.spellListLocker)
@@ -181,6 +181,19 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this.triggerList)
             {
                 this.triggerList.Remove(instancedSpell);
+            }
+        }
+
+        public void RemoveInstanceSpells()
+        {
+            lock (this.spellListLocker)
+            {
+                this.spellList.RemoveAll(x => x.IsInstance);
+            }
+
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x => (x as SpellTimer).IsInstance);
             }
         }
 
