@@ -35,7 +35,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     Locales.EN);
 
             this.HelpView.ViewModel.ConfigFile = Settings.Default.FileName;
-            this.HelpView.ViewModel.ReloadConfigAction = () => Settings.Default.Load();
+            this.HelpView.ViewModel.ReloadConfigAction = null;
         }
     }
 }
