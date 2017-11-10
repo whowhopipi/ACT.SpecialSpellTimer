@@ -31,12 +31,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.HeaderLabel = new System.Windows.Forms.Label();
             this.TabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.SplitContainer = new System.Windows.Forms.SplitContainer();
-            this.PlaceholderListView = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.LogTextBox = new System.Windows.Forms.RichTextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.SpellsListView = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -45,12 +39,12 @@ namespace ACT.SpecialSpellTimer.Forms
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.AutoRefreshCheckBox = new System.Windows.Forms.CheckBox();
+            this.PlaceholderListView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
-            this.SplitContainer.Panel1.SuspendLayout();
-            this.SplitContainer.Panel2.SuspendLayout();
-            this.SplitContainer.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,81 +74,14 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.SplitContainer);
+            this.tabPage1.Controls.Add(this.PlaceholderListView);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(792, 522);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "__Placeholders & Logs　";
+            this.tabPage1.Text = "__Placeholders";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // SplitContainer
-            // 
-            this.SplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SplitContainer.Location = new System.Drawing.Point(3, 3);
-            this.SplitContainer.Name = "SplitContainer";
-            this.SplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // SplitContainer.Panel1
-            // 
-            this.SplitContainer.Panel1.Controls.Add(this.PlaceholderListView);
-            // 
-            // SplitContainer.Panel2
-            // 
-            this.SplitContainer.Panel2.Controls.Add(this.LogTextBox);
-            this.SplitContainer.Panel2.Padding = new System.Windows.Forms.Padding(6);
-            this.SplitContainer.Size = new System.Drawing.Size(786, 516);
-            this.SplitContainer.SplitterDistance = 238;
-            this.SplitContainer.TabIndex = 46;
-            // 
-            // PlaceholderListView
-            // 
-            this.PlaceholderListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PlaceholderListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3});
-            this.PlaceholderListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PlaceholderListView.FullRowSelect = true;
-            this.PlaceholderListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.PlaceholderListView.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.PlaceholderListView.Location = new System.Drawing.Point(0, 0);
-            this.PlaceholderListView.Name = "PlaceholderListView";
-            this.PlaceholderListView.Size = new System.Drawing.Size(786, 238);
-            this.PlaceholderListView.TabIndex = 46;
-            this.PlaceholderListView.UseCompatibleStateImageBehavior = false;
-            this.PlaceholderListView.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "__Placeholder";
-            this.columnHeader1.Width = 120;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "__Value";
-            this.columnHeader2.Width = 430;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "__Type";
-            this.columnHeader3.Width = 100;
-            // 
-            // LogTextBox
-            // 
-            this.LogTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LogTextBox.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LogTextBox.Location = new System.Drawing.Point(6, 6);
-            this.LogTextBox.Margin = new System.Windows.Forms.Padding(6);
-            this.LogTextBox.MaxLength = 0;
-            this.LogTextBox.Name = "LogTextBox";
-            this.LogTextBox.ReadOnly = true;
-            this.LogTextBox.Size = new System.Drawing.Size(774, 262);
-            this.LogTextBox.TabIndex = 0;
-            this.LogTextBox.Text = "";
-            this.LogTextBox.WordWrap = false;
             // 
             // tabPage2
             // 
@@ -220,6 +147,39 @@ namespace ACT.SpecialSpellTimer.Forms
             this.AutoRefreshCheckBox.Text = "__Auto refresh";
             this.AutoRefreshCheckBox.UseVisualStyleBackColor = true;
             // 
+            // PlaceholderListView
+            // 
+            this.PlaceholderListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PlaceholderListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.PlaceholderListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PlaceholderListView.FullRowSelect = true;
+            this.PlaceholderListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.PlaceholderListView.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.PlaceholderListView.Location = new System.Drawing.Point(3, 3);
+            this.PlaceholderListView.Name = "PlaceholderListView";
+            this.PlaceholderListView.Size = new System.Drawing.Size(786, 516);
+            this.PlaceholderListView.TabIndex = 47;
+            this.PlaceholderListView.UseCompatibleStateImageBehavior = false;
+            this.PlaceholderListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "__Placeholder";
+            this.columnHeader1.Width = 120;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "__Value";
+            this.columnHeader2.Width = 430;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "__Type";
+            this.columnHeader3.Width = 100;
+            // 
             // ConfigPanelLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -231,10 +191,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.Size = new System.Drawing.Size(800, 600);
             this.TabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.SplitContainer.Panel1.ResumeLayout(false);
-            this.SplitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
-            this.SplitContainer.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -246,11 +202,6 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.Label HeaderLabel;
         private System.Windows.Forms.TabControl TabControl;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.SplitContainer SplitContainer;
-        private System.Windows.Forms.ListView PlaceholderListView;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ListView SpellsListView;
         private System.Windows.Forms.ColumnHeader columnHeader4;
@@ -259,6 +210,9 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.CheckBox AutoRefreshCheckBox;
-        private System.Windows.Forms.RichTextBox LogTextBox;
+        private System.Windows.Forms.ListView PlaceholderListView;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }

@@ -43,47 +43,6 @@ namespace ACT.SpecialSpellTimer.Forms
         public Func<bool> IsLogTabActiveDelegate { get; set; }
 
         /// <summary>
-        /// ログを追加する
-        /// </summary>
-        /// <param name="text">追加するテキスト</param>
-        public void AppendLog(
-            string text)
-        {
-            void appendLog()
-            {
-                if (this.LogTextBox.Lines.Length >= 1024)
-                {
-                    this.LogTextBox.Lines = this.LogTextBox.Lines.Skip(32).ToArray();
-                }
-
-                this.LogTextBox.AppendText(text);
-                this.LogTextBox.ScrollToCaret();
-            }
-
-            if (this.LogTextBox.IsDisposed ||
-                !this.LogTextBox.IsHandleCreated)
-            {
-                this.logBuffer.Append(text);
-                return;
-            }
-
-            try
-            {
-                if (this.LogTextBox.InvokeRequired)
-                {
-                    this.LogTextBox.Invoke((Action)appendLog);
-                }
-                else
-                {
-                    appendLog();
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        /// <summary>
         /// ログタブ用のロード
         /// </summary>
         public void LoadLogTab()
@@ -108,12 +67,6 @@ namespace ACT.SpecialSpellTimer.Forms
             };
 
             this.updatePlaceholderTimer.Start();
-
-            if (string.IsNullOrEmpty(this.LogTextBox.Text) &&
-                this.logBuffer.Length > 0)
-            {
-                this.LogTextBox.AppendText(this.logBuffer.ToString());
-            }
 
             this.UpdateSpells();
             TableCompiler.Instance.OnTableChanged -= this.TableCompilerOnTableChanged;

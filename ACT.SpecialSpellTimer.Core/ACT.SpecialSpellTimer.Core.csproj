@@ -78,11 +78,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatLogWorker.cs" />
     <Compile Include="CombatAnalyzer.cs" />
     <Compile Include="CombatLog.cs" />
+    <Compile Include="Forms\BaseView.xaml.cs">
+      <DependentUpon>BaseView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ConfigPanel.CombatAnalyzer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -294,6 +298,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Forms\BaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LPSView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

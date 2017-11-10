@@ -1141,7 +1141,8 @@
     <value>스펠타이머 설정</value>
   </data>
   <data name="LogTabPage" xml:space="preserve">
-    <value>로그</value>
+    <value>정보</value>
+    <comment>Info</comment>
   </data>
   <data name="tabDetailOptions" xml:space="preserve">
     <value>상세 설정</value>

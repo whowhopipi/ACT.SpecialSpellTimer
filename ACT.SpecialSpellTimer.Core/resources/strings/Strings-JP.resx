@@ -1141,7 +1141,7 @@
     <value>Spell Timer Setting</value>
   </data>
   <data name="LogTabPage" xml:space="preserve">
-    <value>Log</value>
+    <value>Info</value>
   </data>
   <data name="tabDetailOptions" xml:space="preserve">
     <value>Detail Options</value>

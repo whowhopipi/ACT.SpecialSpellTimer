@@ -12,20 +12,10 @@ namespace ACT.SpecialSpellTimer.Utility
 
         public static void Init()
         {
-            FFXIV.Framework.Common.AppLog.AppendedLog -= OnAppendedLog;
-            FFXIV.Framework.Common.AppLog.AppendedLog += OnAppendedLog;
         }
 
         public static void DeInit()
         {
-            FFXIV.Framework.Common.AppLog.AppendedLog -= OnAppendedLog;
-        }
-
-        private static void OnAppendedLog(
-            object sender,
-            FFXIV.Framework.Common.AppendedLogEventArgs e)
-        {
-            ConfigPanelLog.Instance?.AppendLog(e.AppendedLogEntry.ToString() + Environment.NewLine);
         }
 
         /// <summary>

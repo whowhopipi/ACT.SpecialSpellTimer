@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Forms;
 using ACT.SpecialSpellTimer.Models;
@@ -163,13 +164,15 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // 設定Panelを追加する
-                this.ConfigPanel = new ConfigPanel()
+                var baseView = new BaseView(pluginScreenSpace.Font);
+                pluginScreenSpace.Controls.Add(new ElementHost()
                 {
-                    AutoScaleMode = Settings.Default.UIAutoScaleMode
-                };
+                    Child = baseView,
+                    Dock = DockStyle.Fill,
+                    Font = pluginScreenSpace.Font,
+                });
 
-                pluginScreenSpace.Controls.Add(this.ConfigPanel);
-                this.ConfigPanel.Dock = DockStyle.Fill;
+                this.ConfigPanel = baseView.ConfigPanel;
 
                 // 設定ファイルのバックアップを作成する
                 SpellTimerTable.Instance.Backup();
