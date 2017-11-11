@@ -9,6 +9,7 @@ using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
+using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer
@@ -124,6 +125,12 @@ namespace ACT.SpecialSpellTimer
                             SoundController.Instance.Play(telop.MatchSound);
                             SoundController.Instance.Play(telop.MatchTextToSpeak);
 
+                            // DISCORDに通知する？
+                            if (telop.NotifyToDiscord)
+                            {
+                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(messageReplaced);
+                            }
+
                             matched = true;
                         }
                     }
@@ -165,6 +172,12 @@ namespace ACT.SpecialSpellTimer
                         {
                             var tts = match.Result(telop.MatchTextToSpeak);
                             SoundController.Instance.Play(tts);
+                        }
+
+                        // DISCORDに通知する？
+                        if (telop.NotifyToDiscord)
+                        {
+                            DiscordBridge.Instance.SendMessageDelegate?.Invoke(messageReplaced);
                         }
 
                         matched = true;

@@ -215,6 +215,8 @@ namespace ACT.SpecialSpellTimer.Forms
                         nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
                         nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
                         nr.ToInstance = baseRow.ToInstance;
+                        nr.NotifyToDiscord = baseRow.NotifyToDiscord;
+                        nr.NotifyToDiscordAtComplete = baseRow.NotifyToDiscordAtComplete;
                     }
                 }
 
@@ -811,6 +813,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpellVisualSetting.OverlapRecastTime = src.OverlapRecastTime;
 
             this.TemporarilyDisplaySpellCheckBox.Checked = src.IsTemporaryDisplay;
+            this.NotifyToDiscordCheckBox.Checked = src.NotifyToDiscord;
+            this.AlsoCompletionCheckBox.Checked = src.NotifyToDiscordAtComplete;
 
             this.SpellVisualSetting.RefreshSampleImage();
 
@@ -979,6 +983,8 @@ namespace ACT.SpecialSpellTimer.Forms
                     src.TimeupSound = (string)this.TimeupSoundComboBox.SelectedValue ?? string.Empty;
                     src.TimeupTextToSpeak = this.TimeupTextToSpeakTextBox.Text;
 
+                    src.NotifyToDiscord = this.NotifyToDiscordCheckBox.Checked;
+                    src.NotifyToDiscordAtComplete = this.AlsoCompletionCheckBox.Checked;
                     src.IsReverse = this.IsReverseCheckBox.Checked;
                     src.DontHide = this.DontHideCheckBox.Checked;
                     src.HideSpellName = this.HideSpellNameCheckBox.Checked;

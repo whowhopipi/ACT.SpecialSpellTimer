@@ -150,6 +150,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         public string ZoneFilter { get; set; }
 
+        public bool NotifyToDiscord { get; set; } = false;
+
         #region Soundfiles
 
         [XmlIgnore]

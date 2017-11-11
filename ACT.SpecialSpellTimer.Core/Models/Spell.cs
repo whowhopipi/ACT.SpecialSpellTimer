@@ -3,7 +3,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Sound;
+using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -250,6 +252,8 @@ namespace ACT.SpecialSpellTimer.Models
         public bool BlinkIcon { get; set; } = false;
         public bool BlinkBar { get; set; } = false;
         public string ZoneFilter { get; set; }
+        public bool NotifyToDiscord { get; set; } = false;
+        public bool NotifyToDiscordAtComplete { get; set; } = false;
 
         #region Sound files
 
@@ -520,7 +524,9 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             if (string.IsNullOrWhiteSpace(this.TimeupSound) &&
-                string.IsNullOrWhiteSpace(this.TimeupTextToSpeak))
+                string.IsNullOrWhiteSpace(this.TimeupTextToSpeak) &&
+                !this.NotifyToDiscord && 
+                !this.NotifyToDiscordAtComplete)
             {
                 return;
             }
@@ -592,6 +598,19 @@ namespace ACT.SpecialSpellTimer.Models
         private void TimeupSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             this.TimeupDone = true;
+
+            // DISCORDに通知する？
+            if (this.NotifyToDiscord)
+            {
+                var compText = !this.IsReverse ?
+                    Settings.Default.ReadyText :
+                    Settings.Default.OverText;
+                var title = string.IsNullOrEmpty(this.SpellTitleReplaced) ?
+                    this.SpellTitle :
+                    this.SpellTitleReplaced;
+                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
+                    $"{title} {compText}");
+            }
 
             var regex = this.Regex;
             var wave = this.TimeupSound;

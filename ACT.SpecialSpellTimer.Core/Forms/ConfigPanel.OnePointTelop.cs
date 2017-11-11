@@ -1,17 +1,17 @@
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
+using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.Extensions;
+
 namespace ACT.SpecialSpellTimer.Forms
 {
-    using System;
-    using System.Drawing;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Models;
-    using ACT.SpecialSpellTimer.Sound;
-    using ACT.SpecialSpellTimer.Utility;
-    using FFXIV.Framework.Extensions;
-
     /// <summary>
     /// Configパネル ワンポイントテロップ
     /// </summary>
@@ -236,6 +236,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
 
             this.TemporarilyDisplayTickerCheckBox.Checked = src.IsTemporaryDisplay;
+            this.TelopNotifyToDiscordCheckBox.Checked = src.NotifyToDiscord;
 
             this.TelopVisualSetting.RefreshSampleImage();
 
@@ -336,6 +337,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     nr.ZoneFilter = baseRow.ZoneFilter;
                     nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
                     nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
+                    nr.NotifyToDiscord = baseRow.NotifyToDiscord;
                 }
             }
 
@@ -505,6 +507,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 src.RegexEnabled = this.TelopRegexEnabledCheckBox.Checked;
                 src.Delay = (double)this.TelopDelayNumericUpDown.Value;
                 src.DisplayTime = (double)this.DisplayTimeNumericUpDown.Value;
+                src.NotifyToDiscord = this.TelopNotifyToDiscordCheckBox.Checked;
                 src.AddMessageEnabled = this.EnabledAddMessageCheckBox.Checked;
                 src.ProgressBarEnabled = this.TelopProgressBarEnabledCheckBox.Checked;
                 src.FontColor = this.TelopVisualSetting.FontColor.ToHTML();

@@ -10,6 +10,7 @@ using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer
@@ -136,6 +137,12 @@ namespace ACT.SpecialSpellTimer
                             this.Play(targetSpell.MatchSound);
                             this.Play(targetSpell.MatchTextToSpeak);
 
+                            // DISCORDに通知する？
+                            if (targetSpell.NotifyToDiscord)
+                            {
+                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(replacedTitle);
+                            }
+
                             notifyNeeded = true;
 
                             // 遅延サウンドタイマを開始する
@@ -214,6 +221,12 @@ namespace ACT.SpecialSpellTimer
                             {
                                 var tts = match.Result(targetSpell.MatchTextToSpeak);
                                 this.Play(tts);
+                            }
+
+                            // DISCORDに通知する？
+                            if (targetSpell.NotifyToDiscord)
+                            {
+                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(replacedTitle);
                             }
 
                             notifyNeeded = true;

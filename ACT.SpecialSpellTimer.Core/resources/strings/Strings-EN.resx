@@ -1255,4 +1255,12 @@
     <value>Animation frame rate</value>
     <comment>アニメーションの最大FPS</comment>
   </data>
+  <data name="NotifyToDiscordCheckBox" xml:space="preserve">
+    <value>Notify to Discord</value>
+    <comment>DISCORDに通知する</comment>
+  </data>
+  <data name="AlsoCompletionCheckBox" xml:space="preserve">
+    <value>Also completion</value>
+    <comment>完了時も通知する</comment>
+  </data>
 </root>

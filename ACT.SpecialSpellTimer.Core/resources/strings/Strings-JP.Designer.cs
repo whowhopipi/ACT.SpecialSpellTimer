@@ -19,7 +19,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings_JP {
@@ -165,6 +165,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string AllOnButton {
             get {
                 return ResourceManager.GetString("AllOnButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   完了時も通知する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string AlsoCompletionCheckBox {
+            get {
+                return ResourceManager.GetString("AlsoCompletionCheckBox", resourceCulture);
             }
         }
         
@@ -1488,6 +1497,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string NotifyToACTCheckBox {
             get {
                 return ResourceManager.GetString("NotifyToACTCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   DISCORDに通知する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string NotifyToDiscordCheckBox {
+            get {
+                return ResourceManager.GetString("NotifyToDiscordCheckBox", resourceCulture);
             }
         }
         

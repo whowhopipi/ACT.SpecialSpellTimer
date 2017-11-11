@@ -10,6 +10,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
+using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.WPF.Controls;
@@ -555,6 +556,13 @@ namespace ACT.SpecialSpellTimer.Views
                 // マッチ時点のサウンドを再生する
                 SoundController.Instance.Play(this.Spell.MatchSound);
                 SoundController.Instance.Play(this.Spell.MatchTextToSpeak);
+
+                // DISCORDへ通知する
+                if (this.Spell.NotifyToDiscord)
+                {
+                    DiscordBridge.Instance.SendMessageDelegate?.Invoke(
+                        this.Spell.SpellTitle);
+                }
 
                 // 遅延サウンドタイマを開始する
                 this.Spell.StartOverSoundTimer();
