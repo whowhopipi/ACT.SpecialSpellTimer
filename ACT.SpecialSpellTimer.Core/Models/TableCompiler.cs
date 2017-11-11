@@ -193,7 +193,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.triggerList)
             {
-                this.triggerList.RemoveAll(x => 
+                this.triggerList.RemoveAll(x =>
                     (x is SpellTimer spell) &&
                     spell.IsInstance);
             }
@@ -665,6 +665,15 @@ namespace ACT.SpecialSpellTimer.Models
                 select
                 x;
 
+            // 自分以外のPTメンバを示す <nex> を登録する
+            var names = string.Join("|", partyListSorted.Select(x => x.NamesRegex).ToArray());
+            var oldValue = $"<nex>";
+            var newValue = $"(?<_nex>{names})";
+            newList.Add(new PlaceholderContainer(
+                oldValue,
+                newValue,
+                PlaceholderTypes.Party));
+
             // 通常のPTメンバ代名詞 <2>～<8> を登録する
             var index = 2;
             foreach (var combatant in partyListSorted)
@@ -715,9 +724,9 @@ namespace ACT.SpecialSpellTimer.Models
                 // <JOB>形式を登録する ただし、この場合は正規表現のグループ形式とする
                 // また、グループ名にはジョブの略称を設定する
                 // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
-                var names = string.Join("|", combatantsByJob.Select(x => x.NamesRegex).ToArray());
-                var oldValue = $"<{job.ID.ToString().ToUpper()}>";
-                var newValue = $"(?<_{job.ID.ToString().ToUpper()}>{names})";
+                names = string.Join("|", combatantsByJob.Select(x => x.NamesRegex).ToArray());
+                oldValue = $"<{job.ID.ToString().ToUpper()}>";
+                newValue = $"(?<_{job.ID.ToString().ToUpper()}>{names})";
 
                 newList.Add(new PlaceholderContainer(
                     oldValue.ToUpper(),
@@ -735,9 +744,9 @@ namespace ACT.SpecialSpellTimer.Models
             var partyListByRole = FFXIVPlugin.Instance.GetPatryListByRole();
             foreach (var role in partyListByRole)
             {
-                var names = string.Join("|", role.Combatants.Select(x => x.NamesRegex).ToArray());
-                var oldValue = $"<{role.RoleLabel}>";
-                var newValue = $"(?<_{role.RoleLabel}>{names})";
+                names = string.Join("|", role.Combatants.Select(x => x.NamesRegex).ToArray());
+                oldValue = $"<{role.RoleLabel}>";
+                newValue = $"(?<_{role.RoleLabel}>{names})";
 
                 newList.Add(new PlaceholderContainer(
                     oldValue.ToUpper(),
