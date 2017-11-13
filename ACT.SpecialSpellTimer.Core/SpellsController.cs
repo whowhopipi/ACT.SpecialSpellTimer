@@ -140,7 +140,8 @@ namespace ACT.SpecialSpellTimer
                             // DISCORDに通知する？
                             if (targetSpell.NotifyToDiscord)
                             {
-                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(replacedTitle);
+                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
+                                    $"{replacedTitle} {targetSpell.RecastTime:N0}");
                             }
 
                             notifyNeeded = true;
@@ -226,7 +227,8 @@ namespace ACT.SpecialSpellTimer
                             // DISCORDに通知する？
                             if (targetSpell.NotifyToDiscord)
                             {
-                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(replacedTitle);
+                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
+                                    $"{replacedTitle} {targetSpell.RecastTime:N0}");
                             }
 
                             notifyNeeded = true;
