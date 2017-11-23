@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     partial class SelectZoneForm
     {
@@ -33,6 +33,7 @@
             this.CloseButton = new System.Windows.Forms.Button();
             this.AllONButton = new System.Windows.Forms.Button();
             this.AllOFFButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // ZonesCheckedListBox
@@ -46,10 +47,10 @@
             this.ZonesCheckedListBox.ColumnWidth = 400;
             this.ZonesCheckedListBox.FormattingEnabled = true;
             this.ZonesCheckedListBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ZonesCheckedListBox.Location = new System.Drawing.Point(12, 12);
+            this.ZonesCheckedListBox.Location = new System.Drawing.Point(12, 40);
             this.ZonesCheckedListBox.MultiColumn = true;
             this.ZonesCheckedListBox.Name = "ZonesCheckedListBox";
-            this.ZonesCheckedListBox.Size = new System.Drawing.Size(920, 476);
+            this.ZonesCheckedListBox.Size = new System.Drawing.Size(920, 448);
             this.ZonesCheckedListBox.TabIndex = 0;
             this.ZonesCheckedListBox.ThreeDCheckBoxes = true;
             // 
@@ -95,6 +96,15 @@
             this.AllOFFButton.Text = "AllOffButton";
             this.AllOFFButton.UseVisualStyleBackColor = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(101, 12);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "SelectZoneSubtitle";
+            // 
             // SelectZoneForm
             // 
             this.AcceptButton = this.OKButton;
@@ -102,6 +112,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.CloseButton;
             this.ClientSize = new System.Drawing.Size(944, 561);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.AllOFFButton);
             this.Controls.Add(this.AllONButton);
             this.Controls.Add(this.CloseButton);
@@ -116,6 +127,7 @@
             this.Text = "SelectZoneTitle";
             this.Shown += new System.EventHandler(this.SelectZoneForm_Shown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -126,5 +138,6 @@
         private System.Windows.Forms.Button CloseButton;
         private System.Windows.Forms.Button AllONButton;
         private System.Windows.Forms.Button AllOFFButton;
+        private System.Windows.Forms.Label label1;
     }
 }

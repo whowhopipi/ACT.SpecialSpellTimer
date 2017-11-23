@@ -539,7 +539,7 @@
   </data>
   <data name="SelectJobSubtitle" xml:space="preserve">
     <value>※対象とするジョブを限定したい場合はチェックをONにしてください</value>
-    <comment>※ If you want to limit the job of interest, please turn ON the check</comment>
+    <comment>※ If you want to limit the job of interest, please turn ON the check.</comment>
   </data>
   <data name="SelectJobTitle" xml:space="preserve">
     <value>対象のジョブを選択してください</value>
@@ -1264,5 +1264,9 @@
   <data name="AlsoCompletionCheckBox" xml:space="preserve">
     <value>完了時も通知する</value>
     <comment>Also completion</comment>
+  </data>
+  <data name="SelectZoneSubtitle" xml:space="preserve">
+    <value>※対象とするゾーンを限定したい場合はチェックをONにしてください</value>
+    <comment>※ If you want to limit the zone of interest, please turn ON the check.</comment>
   </data>
 </root>

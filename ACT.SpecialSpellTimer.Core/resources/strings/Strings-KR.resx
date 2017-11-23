@@ -1266,4 +1266,8 @@
     <value>Also completion</value>
     <comment>完了時も通知する</comment>
   </data>
+  <data name="SelectZoneSubtitle" xml:space="preserve">
+    <value>※ If you want to limit the zone of interest, please turn ON the check.</value>
+    <comment>※対象とするゾーンを限定したい場合はチェックをONにしてください</comment>
+  </data>
 </root>
