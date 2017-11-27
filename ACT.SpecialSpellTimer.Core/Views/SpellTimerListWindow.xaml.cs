@@ -1,18 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Interop;
+using System.Windows.Media;
+
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
+using FFXIV.Framework.Extensions;
+
 namespace ACT.SpecialSpellTimer.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Interop;
-    using System.Windows.Media;
-
-    using ACT.SpecialSpellTimer.Config;
-    using ACT.SpecialSpellTimer.Models;
-    using FFXIV.Framework.Extensions;
-
     /// <summary>
     /// SpellTimerList Window
     /// </summary>
@@ -70,6 +70,8 @@ namespace ACT.SpecialSpellTimer.Views
 
         /// <summary>背景色のBrush</summary>
         private SolidColorBrush BackgroundBrush { get; set; }
+
+        private DateTime lastTopmostTimestamp;
 
         /// <summary>
         /// SpellTimerの描画をRefreshする
@@ -364,6 +366,15 @@ namespace ACT.SpecialSpellTimer.Views
             if (spells.Count() > 0)
             {
                 this.ShowOverlay();
+
+                // 5秒毎にTommostを設定し直す
+                if ((DateTime.Now - this.lastTopmostTimestamp).TotalSeconds >= 5.0)
+                {
+                    this.Topmost = false;
+                    this.Topmost = true;
+
+                    this.lastTopmostTimestamp = DateTime.Now;
+                }
             }
         }
 
