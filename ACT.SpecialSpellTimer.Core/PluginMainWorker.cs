@@ -304,9 +304,9 @@ namespace ACT.SpecialSpellTimer
             {
                 triggers.AsParallel().ForAll((trigger) =>
                 {
-                    foreach (var logLine in logs)
+                    foreach (var log in logs)
                     {
-                        trigger.MatchTrigger(logLine);
+                        trigger.MatchTrigger(log.Log);
                     }
                 });
 

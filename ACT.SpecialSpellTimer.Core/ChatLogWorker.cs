@@ -36,7 +36,7 @@ namespace ACT.SpecialSpellTimer
             string.Empty;
 
         public void AppendLines(
-            List<string> logLineList)
+            List<XIVLog> logList)
         {
             try
             {
@@ -47,9 +47,9 @@ namespace ACT.SpecialSpellTimer
 
                 lock (this.LogBuffer)
                 {
-                    foreach (var line in logLineList)
+                    foreach (var log in logList)
                     {
-                        this.LogBuffer.AppendLine(line);
+                        this.LogBuffer.AppendLine(log.LogLine);
                     }
                 }
             }

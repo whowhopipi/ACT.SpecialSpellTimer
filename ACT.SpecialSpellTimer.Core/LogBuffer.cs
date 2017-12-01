@@ -27,7 +27,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 空のログリスト
         /// </summary>
-        private static readonly List<string> EmptyLogLineList = new List<string>();
+        private static readonly List<XIVLog> EmptyLogLineList = new List<XIVLog>();
 
         /// <summary>
         /// ツールチップのサフィックス
@@ -324,7 +324,7 @@ namespace ACT.SpecialSpellTimer
         /// ログ行を返す
         /// </summary>
         /// <returns>ログ行の配列</returns>
-        public IReadOnlyList<string> GetLogLines()
+        public IReadOnlyList<XIVLog> GetLogLines()
         {
             if (this.logInfoQueue.IsEmpty)
             {
@@ -346,7 +346,7 @@ namespace ACT.SpecialSpellTimer
             }
 
             // マッチング用のログリスト
-            var list = new List<string[]>(logInfoQueue.Count);
+            var list = new List<XIVLog>(logInfoQueue.Count);
 
             var partyChangedAtDQX = false;
             var summoned = false;
@@ -358,9 +358,7 @@ namespace ACT.SpecialSpellTimer
             while (logInfoQueue.TryDequeue(
                 out LogLineEventArgs logInfo))
             {
-                // ログとタイムスタンプを分離する
-                var timestamp = logInfo.logLine.Substring(0, 15).TrimEnd();
-                var logLine = logInfo.logLine.Remove(0, 15);
+                var logLine = logInfo.logLine;
 
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
@@ -396,7 +394,7 @@ namespace ACT.SpecialSpellTimer
                 // コマンドとマッチングする
                 doneCommand |= TextCommandController.MatchCommandCore(logLine);
 
-                list.Add(new[] { timestamp, logLine });
+                list.Add(new XIVLog(logLine));
             }
 
             if (summoned)
@@ -421,16 +419,15 @@ namespace ACT.SpecialSpellTimer
             // ログファイルに出力する
             if (Settings.Default.SaveLogEnabled)
             {
-                Task.Run(() => ChatLogWorker.Instance.AppendLines(
-                    list.Select(x => $"{x[0]} {x[1]}").ToList()));
+                Task.Run(() => ChatLogWorker.Instance.AppendLines(list));
             }
 
 #if DEBUG
             sw.Stop();
             System.Diagnostics.Debug.WriteLine($"★GetLogLines {sw.Elapsed.TotalMilliseconds:N1} ms");
 #endif
-            // リストを返す
-            return list.Select(x => x[1]).ToArray();
+            // 冒頭のタイムスタンプを除去して返す
+            return list;
 
             // 召喚したか？
             bool isSummoned(string logLine)
@@ -469,5 +466,28 @@ namespace ACT.SpecialSpellTimer
         }
 
         #endregion ログ処理
+    }
+
+    public class XIVLog
+    {
+        public XIVLog(
+            string logLine)
+        {
+            this.Timestamp = logLine.Substring(0, 15).TrimEnd();
+            this.Log = logLine.Remove(0, 15);
+        }
+
+        public XIVLog(
+            string timestamp,
+            string log)
+        {
+            this.Timestamp = timestamp;
+            this.Log = log;
+        }
+
+        public string Timestamp { get; set; } = string.Empty;
+        public string Log { get; set; } = string.Empty;
+
+        public string LogLine => $"{this.Timestamp} {this.Log}";
     }
 }
