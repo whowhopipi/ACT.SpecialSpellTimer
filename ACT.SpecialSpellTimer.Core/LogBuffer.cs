@@ -346,7 +346,7 @@ namespace ACT.SpecialSpellTimer
             }
 
             // マッチング用のログリスト
-            var list = new List<string>(logInfoQueue.Count);
+            var list = new List<string[]>(logInfoQueue.Count);
 
             var partyChangedAtDQX = false;
             var summoned = false;
@@ -358,7 +358,8 @@ namespace ACT.SpecialSpellTimer
             while (logInfoQueue.TryDequeue(
                 out LogLineEventArgs logInfo))
             {
-                // 冒頭のタイムスタンプを除去する
+                // ログとタイムスタンプを分離する
+                var timestamp = logInfo.logLine.Substring(0, 15).TrimEnd();
                 var logLine = logInfo.logLine.Remove(0, 15);
 
                 // エフェクトに付与されるツールチップ文字を除去する
@@ -395,7 +396,7 @@ namespace ACT.SpecialSpellTimer
                 // コマンドとマッチングする
                 doneCommand |= TextCommandController.MatchCommandCore(logLine);
 
-                list.Add(logLine);
+                list.Add(new[] { timestamp, logLine });
             }
 
             if (summoned)
@@ -420,7 +421,8 @@ namespace ACT.SpecialSpellTimer
             // ログファイルに出力する
             if (Settings.Default.SaveLogEnabled)
             {
-                Task.Run(() => ChatLogWorker.Instance.AppendLines(list));
+                Task.Run(() => ChatLogWorker.Instance.AppendLines(
+                    list.Select(x => $"{x[0]} {x[1]}").ToList()));
             }
 
 #if DEBUG
@@ -428,7 +430,7 @@ namespace ACT.SpecialSpellTimer
             System.Diagnostics.Debug.WriteLine($"★GetLogLines {sw.Elapsed.TotalMilliseconds:N1} ms");
 #endif
             // リストを返す
-            return list;
+            return list.Select(x => x[1]).ToArray();
 
             // 召喚したか？
             bool isSummoned(string logLine)

@@ -47,10 +47,9 @@ namespace ACT.SpecialSpellTimer
 
                 lock (this.LogBuffer)
                 {
-                    var time = DateTime.Now.ToString("HH:mm:ss.fff");
                     foreach (var line in logLineList)
                     {
-                        this.LogBuffer.AppendLine($"[{time}] {line}");
+                        this.LogBuffer.AppendLine(line);
                     }
                 }
             }
