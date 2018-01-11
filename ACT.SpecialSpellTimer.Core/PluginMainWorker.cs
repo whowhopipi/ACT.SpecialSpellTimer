@@ -225,6 +225,7 @@ namespace ACT.SpecialSpellTimer
         #region Core
 
         private double lastLPS;
+        private int lastActiveTriggerCount;
 
         private void BackgroundCore()
         {
@@ -252,6 +253,13 @@ namespace ACT.SpecialSpellTimer
                 {
                     Logger.Write($"LPS={lps.ToString("N1")}");
                     this.lastLPS = lps;
+                }
+
+                // ついでにアクティブなトリガ数を出力する
+                var count = this.lastActiveTriggerCount;
+                if (count > 0)
+                {
+                    Logger.Write($"ActiveTriggers={count.ToString("N0")}");
                 }
             }
         }
@@ -298,6 +306,7 @@ namespace ACT.SpecialSpellTimer
 
             // 有効なスペルとテロップのリストを取得する
             var triggers = TableCompiler.Instance.TriggerList;
+            this.lastActiveTriggerCount = triggers.Count;
 
             var logs = logsTask.Result;
             if (logs.Count > 0)
