@@ -156,6 +156,7 @@ namespace ACT.SpecialSpellTimer.Forms
             }
 
             var listItems = new List<ListViewItem>();
+            var activeTriggerCount = 0;
 
             await Task.Run(() =>
             {
@@ -199,6 +200,9 @@ namespace ACT.SpecialSpellTimer.Forms
 
                     listItems.Add(new ListViewItem(values));
                 }
+
+                // トリガの数を取得する
+                activeTriggerCount = TableCompiler.Instance.TriggerList.Count;
             });
 
             void refresh()
@@ -219,6 +223,9 @@ namespace ACT.SpecialSpellTimer.Forms
                                 ColumnHeaderAutoResizeStyle.ColumnContent);
                         }
                     }
+
+                    // 有効なトリガ数を表示する
+                    this.ActiveTriggerCountTextBox.Text = activeTriggerCount.ToString("N0");
                 }
                 finally
                 {
