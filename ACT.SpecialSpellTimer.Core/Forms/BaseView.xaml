@@ -14,7 +14,7 @@
   RenderOptions.BitmapScalingMode="HighQuality"
   RenderOptions.EdgeMode="Unspecified"
   Background="White"
-  FontFamily="Consolas"
+  FontFamily="Consolas, Yu Gothic UI, Meiryo UI"
   FontSize="17"
   d:DesignWidth="600">
   <TabControl>
