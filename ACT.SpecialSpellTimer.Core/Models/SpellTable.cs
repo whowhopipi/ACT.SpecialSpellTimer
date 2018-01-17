@@ -442,14 +442,14 @@ namespace ACT.SpecialSpellTimer.Models
                 if (instance.CompleteScheduledTime != DateTime.MinValue &&
                     (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
                 {
-                    // ガーベージタイマを止める
-                    instance.StopGarbageInstanceTimer();
-
                     if (!instance.IsInstance ||
                         instance.IsTemporaryDisplay)
                     {
                         return;
                     }
+
+                    // ガーベージタイマを止める
+                    instance.StopGarbageInstanceTimer();
 
                     this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out Spell o);
 
