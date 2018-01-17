@@ -12,6 +12,7 @@ using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.Globalization;
 using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config
@@ -217,6 +218,30 @@ namespace ACT.SpecialSpellTimer.Config
 
         #region Data
 
+        public string Language { get; set; }
+
+        [XmlIgnore]
+        public Locales UILocale
+        {
+            get
+            {
+                switch (this.Language)
+                {
+                    case "EN":
+                        return Locales.EN;
+
+                    case "JP":
+                        return Locales.JA;
+
+                    case "KR":
+                        return Locales.KO;
+
+                    default:
+                        return Locales.EN;
+                }
+            }
+        }
+
         public bool AutoSortEnabled { get; set; }
         public bool AutoSortReverse { get; set; }
         public bool ClickThroughEnabled { get; set; }
@@ -229,7 +254,6 @@ namespace ACT.SpecialSpellTimer.Config
         public bool EnabledPartyMemberPlaceholder { get; set; }
         public bool EnabledSpellTimerNoDecimal { get; set; }
         public bool HideWhenNotActive { get; set; }
-        public string Language { get; set; }
         public long LogPollSleepInterval { get; set; }
         public string NotifyNormalSpellTimerPrefix { get; set; }
         public int Opacity { get; set; }

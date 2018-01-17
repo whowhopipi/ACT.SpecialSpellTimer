@@ -1,8 +1,8 @@
 using System.Windows.Controls;
-using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Forms;
 using FFXIV.Framework.Globalization;
 
-namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Config
 {
     /// <summary>
     /// BaseView.xaml の相互作用ロジック

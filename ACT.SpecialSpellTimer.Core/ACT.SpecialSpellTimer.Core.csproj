@@ -87,7 +87,7 @@
     <Compile Include="ChatLogWorker.cs" />
     <Compile Include="CombatAnalyzer.cs" />
     <Compile Include="CombatLog.cs" />
-    <Compile Include="Forms\BaseView.xaml.cs">
+    <Compile Include="Config\BaseView.xaml.cs">
       <DependentUpon>BaseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\ConfigPanel.CombatAnalyzer.cs">
@@ -143,6 +143,8 @@
     <Compile Include="Models\Spell.cs" />
     <Compile Include="Models\TableCompiler.cs" />
     <Compile Include="Models\Ticker.cs" />
+    <Compile Include="resources\ILocalizable.cs" />
+    <Compile Include="resources\LocalizeExtensions.cs" />
     <Compile Include="Sound\TTSDictionary.cs" />
     <Compile Include="SpellsController.cs" />
     <Compile Include="TickersController.cs" />
@@ -252,7 +254,11 @@
     </Compile>
     <Compile Include="Models\SpellTimerTable.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Config\Models\" />
+    <Folder Include="Config\ViewModels\" />
+    <Folder Include="Config\Views\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="resources\color\サンプル灰色系.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -301,9 +307,21 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Forms\BaseView.xaml">
+    <Page Include="Config\BaseView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="resources\strings\Strings.en-US.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="resources\strings\Strings.ko-KR.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="resources\strings\Strings.ja-JP.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LPSView.xaml">
       <SubType>Designer</SubType>
