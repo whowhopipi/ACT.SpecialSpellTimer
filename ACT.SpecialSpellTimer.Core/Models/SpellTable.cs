@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        private volatile List<Spell> table = new List<Spell>();
+        private volatile ObservableCollection<Spell> table = new ObservableCollection<Spell>();
 
         /// <summary>
         /// デフォルトのファイル
@@ -40,7 +41,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        public List<Spell> Table => this.table;
+        public ObservableCollection<Spell> Table => this.table;
 
         /// <summary>
         /// カウントをリセットする
@@ -313,7 +314,6 @@ namespace ACT.SpecialSpellTimer.Models
                     var ns = new Spell();
 
                     ns.SpellTitleReplaced = instanceSpellTitle;
-                    ns.Guid = Guid.NewGuid();
 
                     ns.Panel = sourceSpell.Panel;
                     ns.SpellTitle = sourceSpell.SpellTitle;
@@ -418,7 +418,11 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (lockObject)
             {
-                this.table.RemoveAll(x => x.IsInstance);
+                var targets = this.table.Where(x => x.IsInstance).ToArray();
+                foreach (var item in targets)
+                {
+                    this.table.Remove(item);
+                }
             }
 
             TableCompiler.Instance.RemoveInstanceSpells();

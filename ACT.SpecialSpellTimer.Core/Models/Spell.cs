@@ -42,7 +42,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         public Spell()
         {
-            this.Guid = Guid.Empty;
             this.Panel = string.Empty;
             this.SpellTitle = string.Empty;
             this.SpellIcon = string.Empty;
@@ -115,6 +114,8 @@ namespace ACT.SpecialSpellTimer.Models
             this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
         }
 
+        public Guid Guid { get; set; } = Guid.NewGuid();
+
         [XmlIgnore]
         public bool IsTemporaryDisplay { get; set; } = false;
 
@@ -156,7 +157,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         public string FontOutlineColor { get; set; }
 
-        public Guid Guid { get; set; }
         public bool HideSpellName { get; set; }
         public long ID { get; set; }
 

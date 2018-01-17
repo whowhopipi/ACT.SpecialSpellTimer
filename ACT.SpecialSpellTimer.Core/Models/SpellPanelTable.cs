@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -20,7 +21,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// Panel設定データテーブル
         /// </summary>
-        private volatile List<SpellPanel> table = new List<SpellPanel>();
+        private volatile ObservableCollection<SpellPanel> table = new ObservableCollection<SpellPanel>();
 
         /// <summary>
         /// 唯一のinstance
@@ -37,7 +38,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// Panel設定データテーブル
         /// </summary>
-        public List<SpellPanel> SettingsTable => this.table;
+        public ObservableCollection<SpellPanel> SettingsTable => this.table;
 
         /// <summary>
         /// テーブルファイルをバックアップする

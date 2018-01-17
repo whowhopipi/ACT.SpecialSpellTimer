@@ -5,6 +5,7 @@ using System.Timers;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -14,6 +15,7 @@ namespace ACT.SpecialSpellTimer.Models
     [Serializable]
     [XmlType(TypeName = "OnePointTelop")]
     public class Ticker :
+        BindableBase,
         IDisposable,
         ITrigger
     {
@@ -31,7 +33,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         public Ticker()
         {
-            this.Guid = Guid.Empty;
             this.Title = string.Empty;
             this.Keyword = string.Empty;
             this.KeywordToHide = string.Empty;
@@ -65,6 +66,23 @@ namespace ACT.SpecialSpellTimer.Models
             this.delayedSoundTimer.Elapsed += this.DelayedSoundTimer_Elapsed;
         }
 
+        public Guid Guid { get; set; } = Guid.NewGuid();
+
+        private double left = 0;
+        private double top = 0;
+
+        public double Left
+        {
+            get => this.left;
+            set => this.SetProperty(ref this.left, value);
+        }
+
+        public double Top
+        {
+            get => this.top;
+            set => this.SetProperty(ref this.top, value);
+        }
+
         [XmlIgnore]
         public bool IsTemporaryDisplay { get; set; } = false;
 
@@ -94,8 +112,6 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public bool ForceHide { get; set; }
 
-        public Guid Guid { get; set; }
-
         public long ID { get; set; }
 
         public string JobFilter { get; set; }
@@ -109,8 +125,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         [XmlIgnore]
         public string KeywordToHideReplaced { get; set; }
-
-        public double Left { get; set; } = 0;
 
         [XmlIgnore]
         public DateTime MatchDateTime { get; set; }
@@ -146,8 +160,6 @@ namespace ACT.SpecialSpellTimer.Models
         public Guid[] TimersMustStoppingForStart { get; set; }
 
         public string Title { get; set; }
-
-        public double Top { get; set; } = 0;
 
         public string ZoneFilter { get; set; }
 

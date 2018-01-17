@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// データテーブル
         /// </summary>
-        private volatile List<Ticker> table = new List<Ticker>();
+        private volatile ObservableCollection<Ticker> table = new ObservableCollection<Ticker>();
 
         /// <summary>
         /// デフォルトのファイル
@@ -40,7 +41,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// 生のテーブル
         /// </summary>
-        public List<Ticker> Table => this.table;
+        public ObservableCollection<Ticker> Table => this.table;
 
         /// <summary>
         /// テーブルファイルをバックアップする
@@ -220,7 +221,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void Save(
             string file,
-            List<Ticker> list)
+            IList<Ticker> list)
         {
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))

@@ -295,7 +295,6 @@ namespace ACT.SpecialSpellTimer.Forms
             nr.ID = TickerTable.Instance.Table.Any() ?
                 TickerTable.Instance.Table.Max(x => x.ID) + 1 :
                 1;
-            nr.Guid = Guid.NewGuid();
             nr.Title = Translate.Get("NewTelop");
             nr.DisplayTime = 3;
             nr.FontColor = Settings.Default.FontColor.ToHTML();
