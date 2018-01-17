@@ -37,7 +37,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="spells">Spell</param>
         /// <param name="logLines">ログ</param>
         public void Match(
-            IReadOnlyList<Models.SpellTimer> spells,
+            IReadOnlyList<Models.Spell> spells,
             IReadOnlyList<string> logLines)
         {
             if (spells.Count < 1 ||
@@ -82,7 +82,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="spell">スペル</param>
         /// <param name="logLine">ログ</param>
         public void MatchCore(
-            Models.SpellTimer spell,
+            Models.Spell spell,
             string logLine)
         {
             var regex = spell.Regex;
@@ -174,7 +174,7 @@ namespace ACT.SpecialSpellTimer
                             {
                                 // 同じタイトルのインスタンススペルを探す
                                 // 存在すればそれを使用して、なければ新しいインスタンスを生成する
-                                targetSpell = SpellTimerTable.Instance.GetOrAddInstance(
+                                targetSpell = SpellTable.Instance.GetOrAddInstance(
                                     replacedTitle,
                                     spell);
 
@@ -350,7 +350,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="spells">
         /// 対象のスペル</param>
         public void RefreshSpellOverlays(
-            IReadOnlyList<Models.SpellTimer> spells)
+            IReadOnlyList<Models.Spell> spells)
         {
             var spellsGroupByPanel =
                 from s in spells
@@ -408,7 +408,7 @@ namespace ACT.SpecialSpellTimer
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in PanelTable.Instance.SettingsTable)
+                foreach (var setting in SpellPanelTable.Instance.SettingsTable)
                 {
                     setting.ToClose = true;
                 }
@@ -421,7 +421,7 @@ namespace ACT.SpecialSpellTimer
 
             lock (this.spellTimerPanels)
             {
-                var targets = PanelTable.Instance.SettingsTable
+                var targets = SpellPanelTable.Instance.SettingsTable
                     .Where(x => x.ToClose).ToList();
 
                 foreach (var setting in targets)
@@ -450,7 +450,7 @@ namespace ACT.SpecialSpellTimer
 
             if (closed)
             {
-                PanelTable.Instance.Save();
+                SpellPanelTable.Instance.Save();
             }
         }
 
@@ -459,11 +459,11 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spells">Spell</param>
         public void GarbageSpellPanelWindows(
-            IReadOnlyList<Models.SpellTimer> spells)
+            IReadOnlyList<Models.Spell> spells)
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in PanelTable.Instance.SettingsTable)
+                foreach (var setting in SpellPanelTable.Instance.SettingsTable)
                 {
                     // スペルリストに存在しないパネルを閉じる
                     if (!spells.Any(x =>
@@ -482,7 +482,7 @@ namespace ACT.SpecialSpellTimer
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in PanelTable.Instance.SettingsTable)
+                foreach (var setting in SpellPanelTable.Instance.SettingsTable)
                 {
                     setting.PanelWindow?.HideOverlay();
                 }
@@ -491,7 +491,7 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Close & Hide
 
-        public PanelSettings GetPanelSettings(
+        public SpellPanel GetPanelSettings(
             string panelName)
         {
             double normalize(double value)
@@ -516,7 +516,7 @@ namespace ACT.SpecialSpellTimer
                 return result;
             }
 
-            var settings = new PanelSettings()
+            var settings = new SpellPanel()
             {
                 PanelName = panelName,
                 Top = 10,
@@ -584,7 +584,7 @@ namespace ACT.SpecialSpellTimer
                     panel.SpellPositionFixed = fixedPositionSpell;
                 }
 
-                var panelSettings = PanelTable.Instance.SettingsTable
+                var panelSettings = SpellPanelTable.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
 
@@ -617,9 +617,9 @@ namespace ACT.SpecialSpellTimer
         /// PanelSettingsRowを取得する
         /// </summary>
         /// <param name="panelName">パネルの名前</param>
-        public PanelSettings FindPanelSettingByName(string panelName)
+        public SpellPanel FindPanelSettingByName(string panelName)
         {
-            var settings = new PanelSettings()
+            var settings = new SpellPanel()
             {
                 PanelName = panelName,
                 Top = 10,
@@ -631,7 +631,7 @@ namespace ACT.SpecialSpellTimer
 
             lock (this.spellTimerPanels)
             {
-                var s = PanelTable.Instance.SettingsTable
+                var s = SpellPanelTable.Instance.SettingsTable
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
 
@@ -641,7 +641,7 @@ namespace ACT.SpecialSpellTimer
                 }
                 else
                 {
-                    PanelTable.Instance.SettingsTable.Add(settings);
+                    SpellPanelTable.Instance.SettingsTable.Add(settings);
                 }
             }
 
@@ -666,13 +666,13 @@ namespace ACT.SpecialSpellTimer
             // 設定を一旦すべて削除する
             ClearNormalSpellTimer();
 
-            var spells = SpellTimerTable.Instance.Table.Where(x => x.Enabled);
+            var spells = SpellTable.Instance.Table.Where(x => x.Enabled);
             foreach (var spell in spells)
             {
                 UpdateNormalSpellTimer(spell, true);
             }
 
-            var telops = OnePointTelopTable.Instance.Table.Where(x => x.Enabled);
+            var telops = TickerTable.Instance.Table.Where(x => x.Enabled);
             foreach (var telop in telops)
             {
                 UpdateNormalSpellTimerForTelop(telop, false);
@@ -709,7 +709,7 @@ namespace ACT.SpecialSpellTimer
         /// ACT標準のスペルタイマーに通知する
         /// </summary>
         /// <param name="spellTimer">通知先に対応するスペルタイマー</param>
-        public void NotifyNormalSpellTimer(Models.SpellTimer spellTimer)
+        public void NotifyNormalSpellTimer(Models.Spell spellTimer)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -742,7 +742,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spellTimer">元になるスペルタイマー</param>
         /// <param name="useRecastTime">リキャスト時間にRecastの値を使うか。falseの場合はCompleteScheduledTimeから計算される</param>
-        public void UpdateNormalSpellTimer(Models.SpellTimer spellTimer, bool useRecastTime)
+        public void UpdateNormalSpellTimer(Models.Spell spellTimer, bool useRecastTime)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -780,7 +780,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spellTimer">元になるテロップ</param>
         /// <param name="forceHide">強制非表示か？</param>
-        public void UpdateNormalSpellTimerForTelop(OnePointTelop telop, bool forceHide)
+        public void UpdateNormalSpellTimerForTelop(Ticker telop, bool forceHide)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {

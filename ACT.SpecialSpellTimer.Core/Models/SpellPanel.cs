@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Views;
 
 namespace ACT.SpecialSpellTimer.Models
 {
     [Serializable]
-    public class PanelSettings
+    [XmlType(TypeName = "PanelSettings")]
+    public class SpellPanel
     {
         public bool FixedPositionSpell { get; set; } = false;
         public bool Horizontal { get; set; } = false;

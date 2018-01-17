@@ -102,18 +102,18 @@ namespace ACT.SpecialSpellTimer.Forms
         {
             if (this.AllRadioButton.Checked)
             {
-                SpellTimerTable.Instance.Save(fileName, true);
+                SpellTable.Instance.Save(fileName, true);
                 return;
             }
 
-            var list = new List<SpellTimer>();
+            var list = new List<Spell>();
             for (int i = 0; i < this.SelectionListView.SelectedItems.Count; i++)
             {
                 var item = this.SelectionListView.SelectedItems[i];
-                list.Add(item.Tag as SpellTimer);
+                list.Add(item.Tag as Spell);
             }
 
-            SpellTimerTable.Instance.Save(fileName, list);
+            SpellTable.Instance.Save(fileName, list);
         }
 
         private void ExportTickers(
@@ -121,18 +121,18 @@ namespace ACT.SpecialSpellTimer.Forms
         {
             if (this.AllRadioButton.Checked)
             {
-                OnePointTelopTable.Instance.Save(fileName, true);
+                TickerTable.Instance.Save(fileName, true);
                 return;
             }
 
-            var list = new List<OnePointTelop>();
+            var list = new List<Ticker>();
             for (int i = 0; i < this.SelectionListView.SelectedItems.Count; i++)
             {
                 var item = this.SelectionListView.SelectedItems[i];
-                list.Add(item.Tag as OnePointTelop);
+                list.Add(item.Tag as Ticker);
             }
 
-            OnePointTelopTable.Instance.Save(fileName, list);
+            TickerTable.Instance.Save(fileName, list);
         }
 
         private void SelectExportTargetForm_Load(object sender, EventArgs e)
@@ -155,7 +155,7 @@ namespace ACT.SpecialSpellTimer.Forms
             var list = new List<ListViewItem>();
 
             var q =
-                from x in SpellTimerTable.Instance.Table
+                from x in SpellTable.Instance.Table
                 where
                 !x.IsInstance
                 orderby
@@ -198,7 +198,7 @@ namespace ACT.SpecialSpellTimer.Forms
             var list = new List<ListViewItem>();
 
             var q =
-                from x in OnePointTelopTable.Instance.Table
+                from x in TickerTable.Instance.Table
                 orderby
                 x.Title,
                 x.ID

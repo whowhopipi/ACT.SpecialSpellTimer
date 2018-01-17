@@ -39,7 +39,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="telops">Telops</param>
         /// <param name="logLines">ログ行</param>
         public void Match(
-            IReadOnlyList<OnePointTelop> telops,
+            IReadOnlyList<Ticker> telops,
             IReadOnlyList<string> logLines)
         {
             if (telops.Count < 1 ||
@@ -76,7 +76,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="telop">テロップ</param>
         /// <param name="log">ログ</param>
         public void MatchCore(
-            OnePointTelop telop,
+            Ticker telop,
             string log)
         {
             var matched = false;
@@ -232,10 +232,10 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="telop">テロップ</param>
         public void RefreshTelopOverlays(
-            IReadOnlyList<OnePointTelop> telops)
+            IReadOnlyList<Ticker> telops)
         {
             void refreshTelop(
-                OnePointTelop telop)
+                Ticker telop)
             {
                 if (!this.telopWindowList.TryGetValue(telop.ID, out TickerWindow w))
                 {
@@ -373,7 +373,7 @@ namespace ACT.SpecialSpellTimer
 
             if (closed)
             {
-                OnePointTelopTable.Instance.Save();
+                TickerTable.Instance.Save();
             }
         }
 
@@ -382,7 +382,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="telops">Telops</param>
         public void GarbageWindows(
-            IReadOnlyList<OnePointTelop> telops)
+            IReadOnlyList<Ticker> telops)
         {
             // 不要になったWindowを閉じる
             foreach (var window in this.telopWindowList.Values)
@@ -433,7 +433,7 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
-            var telopSettings = OnePointTelopTable.Instance.Table
+            var telopSettings = TickerTable.Instance.Table
                 .FirstOrDefault(x => x.ID == telopID);
 
             if (telopSettings != null)
@@ -466,7 +466,7 @@ namespace ACT.SpecialSpellTimer
                 return;
             }
 
-            var telopSettings = OnePointTelopTable.Instance.Table
+            var telopSettings = TickerTable.Instance.Table
                 .FirstOrDefault(x => x.ID == telopID);
 
             if (telopSettings != null)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -10,22 +10,22 @@ namespace ACT.SpecialSpellTimer.Models
     /// <summary>
     /// Panel設定
     /// </summary>
-    public class PanelTable
+    public class SpellPanelTable
     {
         /// <summary>
         /// 唯一のinstance
         /// </summary>
-        private static PanelTable instance = new PanelTable();
+        private static SpellPanelTable instance = new SpellPanelTable();
 
         /// <summary>
         /// Panel設定データテーブル
         /// </summary>
-        private volatile List<PanelSettings> table = new List<PanelSettings>();
+        private volatile List<SpellPanel> table = new List<SpellPanel>();
 
         /// <summary>
         /// 唯一のinstance
         /// </summary>
-        public static PanelTable Instance => instance;
+        public static SpellPanelTable Instance => instance;
 
         /// <summary>
         /// デフォルトのファイル
@@ -37,7 +37,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// Panel設定データテーブル
         /// </summary>
-        public List<PanelSettings> SettingsTable => this.table;
+        public List<SpellPanel> SettingsTable => this.table;
 
         /// <summary>
         /// テーブルファイルをバックアップする
@@ -99,7 +99,7 @@ namespace ACT.SpecialSpellTimer.Models
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(this.table.GetType());
-                            var data = xs.Deserialize(sr) as List<PanelSettings>;
+                            var data = xs.Deserialize(sr) as List<SpellPanel>;
                             this.table.Clear();
                             this.table.AddRange(data);
                         }

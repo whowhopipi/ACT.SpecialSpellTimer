@@ -175,14 +175,14 @@ namespace ACT.SpecialSpellTimer
                 this.ConfigPanel = baseView.ConfigPanel;
 
                 // 設定ファイルのバックアップを作成する
-                SpellTimerTable.Instance.Backup();
-                OnePointTelopTable.Instance.Backup();
-                PanelTable.Instance.Backup();
+                SpellTable.Instance.Backup();
+                TickerTable.Instance.Backup();
+                SpellPanelTable.Instance.Backup();
 
                 // 設定ファイルを読み込む
-                SpellTimerTable.Instance.Load();
-                OnePointTelopTable.Instance.Load();
-                PanelTable.Instance.Load();
+                SpellTable.Instance.Load();
+                TickerTable.Instance.Load();
+                SpellPanelTable.Instance.Load();
 
                 // TTS辞書を読み込む
                 TTSDictionary.Instance.Load();

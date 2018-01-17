@@ -28,7 +28,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                 this.TelopTreeView.Nodes.Clear();
 
-                var telops = OnePointTelopTable.Instance.Table.OrderBy(x => x.Title);
+                var telops = TickerTable.Instance.Table.OrderBy(x => x.Title);
                 foreach (var telop in telops)
                 {
                     var n = new TreeNode();
@@ -93,7 +93,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.TelopTreeView.AfterCheck += (s1, e1) =>
             {
-                var source = e1.Node.Tag as OnePointTelop;
+                var source = e1.Node.Tag as Ticker;
                 if (source != null)
                 {
                     source.Enabled = e1.Node.Checked;
@@ -109,12 +109,12 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TelopTreeView.AfterSelect += (s1, e1) =>
             {
                 this.ShowTelopDetail(
-                    e1.Node.Tag as OnePointTelop);
+                    e1.Node.Tag as Ticker);
             };
 
             this.TelopSelectJobButton.Click += async (s1, e1) =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
                     using (var f = new SelectJobForm())
@@ -134,7 +134,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.TelopSelectZoneButton.Click += async (s1, e1) =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
                     using (var f = new SelectZoneForm())
@@ -154,7 +154,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.TelopSetConditionButton.Click += async (s1, e1) =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
                     using (var f = new SetConditionForm())
@@ -180,7 +180,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // テロップの一時表示チェックボックス
             this.TemporarilyDisplayTickerCheckBox.CheckedChanged += (s1, e1) =>
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src == null)
                 {
                     return;
@@ -204,7 +204,7 @@ namespace ACT.SpecialSpellTimer.Forms
         /// </summary>
         /// <param name="dataSource"></param>
         private void ShowTelopDetail(
-            OnePointTelop dataSource)
+            Ticker dataSource)
         {
             var src = dataSource;
             if (src == null)
@@ -290,10 +290,10 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private void TelopAddButton_Click(object sender, EventArgs e)
         {
-            var nr = new OnePointTelop();
+            var nr = new Ticker();
 
-            nr.ID = OnePointTelopTable.Instance.Table.Any() ?
-                OnePointTelopTable.Instance.Table.Max(x => x.ID) + 1 :
+            nr.ID = TickerTable.Instance.Table.Any() ?
+                TickerTable.Instance.Table.Max(x => x.ID) + 1 :
                 1;
             nr.Guid = Guid.NewGuid();
             nr.Title = Translate.Get("NewTelop");
@@ -312,8 +312,8 @@ namespace ACT.SpecialSpellTimer.Forms
             if (this.TelopTreeView.SelectedNode != null)
             {
                 var baseRow = this.TelopTreeView.SelectedNode.Tag != null ?
-                    this.TelopTreeView.SelectedNode.Tag as OnePointTelop :
-                    this.TelopTreeView.SelectedNode.Nodes[0].Tag as OnePointTelop;
+                    this.TelopTreeView.SelectedNode.Tag as Ticker :
+                    this.TelopTreeView.SelectedNode.Nodes[0].Tag as Ticker;
 
                 if (baseRow != null)
                 {
@@ -348,10 +348,10 @@ namespace ACT.SpecialSpellTimer.Forms
             nr.RegexToHide = null;
             nr.RegexPatternToHide = string.Empty;
 
-            OnePointTelopTable.Instance.Table.Add(nr);
+            TickerTable.Instance.Table.Add(nr);
 
             TableCompiler.Instance.RecompileTickers();
-            OnePointTelopTable.Instance.Save(true);
+            TickerTable.Instance.Save(true);
 
             // 新しいノードを生成する
             var node = new TreeNode(nr.Title)
@@ -395,10 +395,10 @@ namespace ACT.SpecialSpellTimer.Forms
                     MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2)) == DialogResult.OK)
             {
-                lock (OnePointTelopTable.Instance.Table)
+                lock (TickerTable.Instance.Table)
                 {
                     this.TelopDetailGroupBox.Visible = false;
-                    OnePointTelopTable.Instance.Table.Clear();
+                    TickerTable.Instance.Table.Clear();
                 }
 
                 TickersController.Instance.CloseTelops();
@@ -413,14 +413,14 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private void TelopDeleteButton_Click(object sender, EventArgs e)
         {
-            lock (OnePointTelopTable.Instance.Table)
+            lock (TickerTable.Instance.Table)
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src != null)
                 {
-                    OnePointTelopTable.Instance.Table.Remove(src);
+                    TickerTable.Instance.Table.Remove(src);
                     TableCompiler.Instance.RecompileTickers();
-                    OnePointTelopTable.Instance.Save(true);
+                    TickerTable.Instance.Save(true);
 
                     TickersController.Instance.CloseTelops();
 
@@ -470,7 +470,7 @@ namespace ACT.SpecialSpellTimer.Forms
             if (await Task.Run(() => this.OpenFileDialog.ShowDialog(this)) !=
                 DialogResult.Cancel)
             {
-                OnePointTelopTable.Instance.Load(
+                TickerTable.Instance.Load(
                     this.OpenFileDialog.FileName,
                     false);
 
@@ -497,7 +497,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 return;
             }
 
-            var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+            var src = this.TelopDetailGroupBox.Tag as Ticker;
             if (src != null)
             {
                 src.Title = this.TelopTitleTextBox.Text;
@@ -532,7 +532,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
 
                 TableCompiler.Instance.RecompileTickers();
-                OnePointTelopTable.Instance.Save(true);
+                TickerTable.Instance.Save(true);
                 this.LoadTelopTable();
 
                 // 一度全てのテロップを閉じる
@@ -540,7 +540,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                 foreach (TreeNode node in this.TelopTreeView.Nodes)
                 {
-                    var ds = node.Tag as OnePointTelop;
+                    var ds = node.Tag as Ticker;
                     if (ds != null)
                     {
                         if (ds.ID == src.ID)

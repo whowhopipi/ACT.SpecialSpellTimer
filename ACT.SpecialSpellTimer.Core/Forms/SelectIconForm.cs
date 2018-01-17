@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -40,14 +40,14 @@ namespace ACT.SpecialSpellTimer.Forms
             };
         }
 
-        public SpellTimer ParrentSpell { get; set; }
+        public Spell ParrentSpell { get; set; }
 
         public string SelectedIconRelativePath { get; set; }
 
         public static Task<IconDialogResult> ShowDialogAsync(
             string iconRelativePath,
             IWin32Window owner = null,
-            SpellTimer spell = null)
+            Spell spell = null)
         {
             return Task.Run(() =>
             {

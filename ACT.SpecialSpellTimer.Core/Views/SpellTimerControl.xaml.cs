@@ -184,7 +184,7 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public string SpellTitle { get; set; }
 
-        public SpellTimer Spell { get; set; }
+        public Spell Spell { get; set; }
 
         /// <summary>
         /// 描画を更新する

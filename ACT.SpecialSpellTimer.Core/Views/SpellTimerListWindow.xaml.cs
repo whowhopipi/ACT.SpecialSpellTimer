@@ -66,7 +66,7 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// 扱うSpellTimerのリスト
         /// </summary>
-        public SpellTimer[] SpellTimers { get; set; }
+        public Spell[] SpellTimers { get; set; }
 
         /// <summary>背景色のBrush</summary>
         private SolidColorBrush BackgroundBrush { get; set; }

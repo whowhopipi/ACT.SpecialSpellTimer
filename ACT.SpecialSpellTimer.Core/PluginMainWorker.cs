@@ -205,8 +205,8 @@ namespace ACT.SpecialSpellTimer
 
             // 設定を保存する
             Settings.Default.Save();
-            SpellTimerTable.Instance.Save();
-            OnePointTelopTable.Instance.Save();
+            SpellTable.Instance.Save();
+            TickerTable.Instance.Save();
 
             // サウンドコントローラを停止する
             SoundController.Instance.End();
@@ -242,7 +242,7 @@ namespace ACT.SpecialSpellTimer
                 // テロップの位置を保存するためテロップテーブルを保存する
                 Task.Run(() =>
                 {
-                    OnePointTelopTable.Instance.Save();
+                    TickerTable.Instance.Save();
                     Debug.WriteLine("●Save telop table.");
                 });
 
@@ -471,8 +471,8 @@ namespace ACT.SpecialSpellTimer
                 // 暗転中もずっとリセットし続けてしまうので
                 if ((DateTime.Now - this.lastWipeOutDateTime).TotalSeconds >= 15.0)
                 {
-                    SpellTimerTable.ResetCount();
-                    OnePointTelopTable.Instance.ResetCount();
+                    SpellTable.ResetCount();
+                    TickerTable.Instance.ResetCount();
 
                     // ACT本体に戦闘終了を通知する
                     if (Settings.Default.WipeoutNotifyToACT)

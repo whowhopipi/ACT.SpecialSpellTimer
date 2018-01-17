@@ -30,7 +30,7 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// 表示するデータソース
         /// </summary>
-        public OnePointTelop DataSource { get; set; }
+        public Ticker DataSource { get; set; }
 
         /// <summary>背景色のBrush</summary>
         private SolidColorBrush BackgroundBrush { get; set; }

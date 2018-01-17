@@ -14,7 +14,8 @@ namespace ACT.SpecialSpellTimer.Models
     /// スペルタイマ
     /// </summary>
     [Serializable]
-    public class SpellTimer :
+    [XmlType(TypeName = "SpellTimer")]
+    public class Spell :
         IDisposable,
         ITrigger
     {
@@ -39,7 +40,7 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         private Timer timeupSoundTimer = new Timer();
 
-        public SpellTimer()
+        public Spell()
         {
             this.Guid = Guid.Empty;
             this.Panel = string.Empty;
@@ -525,7 +526,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             if (string.IsNullOrWhiteSpace(this.TimeupSound) &&
                 string.IsNullOrWhiteSpace(this.TimeupTextToSpeak) &&
-                !this.NotifyToDiscord && 
+                !this.NotifyToDiscord &&
                 !this.NotifyToDiscordAtComplete)
             {
                 return;
@@ -681,14 +682,14 @@ namespace ACT.SpecialSpellTimer.Models
 
         private void GarbageInstanceTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            SpellTimerTable.Instance.TryRemoveInstance(this);
+            SpellTable.Instance.TryRemoveInstance(this);
         }
 
         #endregion To Instance Spells
 
         #region Clone
 
-        public SpellTimer Clone() => (SpellTimer)this.MemberwiseClone();
+        public Spell Clone() => (Spell)this.MemberwiseClone();
 
         #endregion Clone
     }

@@ -83,7 +83,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                 this.SpellTimerTreeView.Nodes.Clear();
 
-                var panels = SpellTimerTable.Instance.Table
+                var panels = SpellTable.Instance.Table
                     .Where(x => !x.IsInstance)
                     .OrderBy(x => x.Panel)
                     .Select(x => x.Panel)
@@ -91,7 +91,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 foreach (var panelName in panels)
                 {
                     var children = new List<TreeNode>();
-                    var spells = SpellTimerTable.Instance.Table
+                    var spells = SpellTable.Instance.Table
                         .Where(x => !x.IsInstance)
                         .OrderBy(x => x.DisplayNo)
                         .Where(x => x.Panel == panelName);
@@ -118,7 +118,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
 
                 // スペルの再描画を行わせる
-                SpellTimerTable.Instance.ClearUpdateFlags();
+                SpellTable.Instance.ClearUpdateFlags();
 
                 // 標準のスペルタイマーへ変更を反映する
                 SpellsController.Instance.ApplyToNormalSpellTimer();
@@ -138,12 +138,12 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private void AddButton_Click(object sender, EventArgs e)
         {
-            lock (SpellTimerTable.Instance.Table)
+            lock (SpellTable.Instance.Table)
             {
-                var nr = new SpellTimer();
+                var nr = new Spell();
 
-                nr.ID = SpellTimerTable.Instance.Table.Any() ?
-                    SpellTimerTable.Instance.Table.Max(x => x.ID) + 1 :
+                nr.ID = SpellTable.Instance.Table.Any() ?
+                    SpellTable.Instance.Table.Max(x => x.ID) + 1 :
                     1;
                 nr.Guid = Guid.NewGuid();
                 nr.Panel = "General";
@@ -169,8 +169,8 @@ namespace ACT.SpecialSpellTimer.Forms
                 if (this.SpellTimerTreeView.SelectedNode != null)
                 {
                     var baseRow = this.SpellTimerTreeView.SelectedNode.Tag != null ?
-                        this.SpellTimerTreeView.SelectedNode.Tag as SpellTimer :
-                        this.SpellTimerTreeView.SelectedNode.Nodes[0].Tag as SpellTimer;
+                        this.SpellTimerTreeView.SelectedNode.Tag as Spell :
+                        this.SpellTimerTreeView.SelectedNode.Nodes[0].Tag as Spell;
 
                     if (baseRow != null)
                     {
@@ -223,16 +223,16 @@ namespace ACT.SpecialSpellTimer.Forms
                 nr.MatchDateTime = DateTime.MinValue;
                 nr.UpdateDone = false;
                 nr.Enabled = true;
-                nr.DisplayNo = SpellTimerTable.Instance.Table.Any() ?
-                    SpellTimerTable.Instance.Table.Max(x => x.DisplayNo) + 1 :
+                nr.DisplayNo = SpellTable.Instance.Table.Any() ?
+                    SpellTable.Instance.Table.Max(x => x.DisplayNo) + 1 :
                     50;
                 nr.Regex = null;
                 nr.RegexPattern = string.Empty;
-                SpellTimerTable.Instance.Table.Add(nr);
+                SpellTable.Instance.Table.Add(nr);
 
                 TableCompiler.Instance.RecompileSpells();
-                SpellTimerTable.Instance.RemoveInstanceSpellsAll();
-                SpellTimerTable.Instance.Save(true);
+                SpellTable.Instance.RemoveInstanceSpellsAll();
+                SpellTable.Instance.Save(true);
 
                 // 新しいノードを生成する
                 var node = new TreeNode(nr.SpellTitle)
@@ -301,11 +301,11 @@ namespace ACT.SpecialSpellTimer.Forms
                 MessageBoxIcon.Question,
                 MessageBoxDefaultButton.Button2)) == DialogResult.OK)
             {
-                lock (SpellTimerTable.Instance.Table)
+                lock (SpellTable.Instance.Table)
                 {
                     this.DetailGroupBox.Visible = false;
                     this.DetailPanelGroupBox.Visible = false;
-                    SpellTimerTable.Instance.Table.Clear();
+                    SpellTable.Instance.Table.Clear();
                 }
 
                 this.LoadSpellTimerTable();
@@ -389,7 +389,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.SpellTimerTreeView.AfterCheck += (s1, e1) =>
             {
-                var source = e1.Node.Tag as SpellTimer;
+                var source = e1.Node.Tag as Spell;
                 if (source != null)
                 {
                     source.Enabled = e1.Node.Checked;
@@ -399,7 +399,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 {
                     foreach (TreeNode node in e1.Node.Nodes)
                     {
-                        var sourceChild = node.Tag as SpellTimer;
+                        var sourceChild = node.Tag as Spell;
                         if (sourceChild != null)
                         {
                             sourceChild.Enabled = e1.Node.Checked;
@@ -418,7 +418,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.SelectJobButton.Click += async (s1, e1) =>
             {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
+                var src = this.DetailGroupBox.Tag as Spell;
                 if (src != null)
                 {
                     using (var f = new SelectJobForm())
@@ -438,7 +438,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.SelectZoneButton.Click += async (s1, e1) =>
             {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
+                var src = this.DetailGroupBox.Tag as Spell;
                 if (src != null)
                 {
                     using (var f = new SelectZoneForm())
@@ -458,7 +458,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.SetConditionButton.Click += async (s1, e1) =>
             {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
+                var src = this.DetailGroupBox.Tag as Spell;
                 if (src != null)
                 {
                     using (var f = new SetConditionForm())
@@ -486,7 +486,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SelectIconButton.Click += async (s1, e1) =>
             {
                 var selectedIcon = (string)this.SelectIconButton.Tag;
-                var spell = this.DetailGroupBox.Tag as SpellTimer;
+                var spell = this.DetailGroupBox.Tag as Spell;
 
                 var result = await SelectIconForm.ShowDialogAsync(
                     selectedIcon,
@@ -538,7 +538,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // スペルの一時表示チェックボックス
             this.TemporarilyDisplaySpellCheckBox.CheckedChanged += (s1, e1) =>
             {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
+                var src = this.DetailGroupBox.Tag as Spell;
                 if (src == null)
                 {
                     return;
@@ -571,15 +571,15 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            lock (SpellTimerTable.Instance.Table)
+            lock (SpellTable.Instance.Table)
             {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
+                var src = this.DetailGroupBox.Tag as Spell;
                 if (src != null)
                 {
-                    SpellTimerTable.Instance.Table.Remove(src);
+                    SpellTable.Instance.Table.Remove(src);
                     TableCompiler.Instance.RecompileSpells();
-                    SpellTimerTable.Instance.RemoveInstanceSpellsAll();
-                    SpellTimerTable.Instance.Save(true);
+                    SpellTable.Instance.RemoveInstanceSpellsAll();
+                    SpellTable.Instance.Save(true);
 
                     this.DetailGroupBox.Visible = false;
                     this.DetailPanelGroupBox.Visible = false;
@@ -644,7 +644,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             if (result != DialogResult.Cancel)
             {
-                SpellTimerTable.Instance.Save(
+                SpellTable.Instance.Save(
                     this.SaveFileDialog.FileName,
                     true,
                     panelName);
@@ -667,7 +667,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             if (result != DialogResult.Cancel)
             {
-                SpellTimerTable.Instance.Load(
+                SpellTable.Instance.Load(
                     this.OpenFileDialog.FileName,
                     false);
 
@@ -709,7 +709,7 @@ namespace ACT.SpecialSpellTimer.Forms
         /// </summary>
         /// <param name="dataSource">データソース</param>
         private void ShowDetail(
-            SpellTimer dataSource)
+            Spell dataSource)
         {
             var src = dataSource;
             if (src == null)
@@ -838,7 +838,7 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private void SpellTimerTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            var ds = e.Node.Tag as SpellTimer;
+            var ds = e.Node.Tag as Spell;
 
             // スペルの詳細？
             if (ds != null)
@@ -846,7 +846,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 this.DetailPanelGroupBox.Visible = false;
 
                 this.ShowDetail(
-                    e.Node.Tag as SpellTimer);
+                    e.Node.Tag as Spell);
 
                 return;
             }
@@ -924,7 +924,7 @@ namespace ACT.SpecialSpellTimer.Forms
         /// <param name="e">イベント引数</param>
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-            lock (SpellTimerTable.Instance.Table)
+            lock (SpellTable.Instance.Table)
             {
                 if (string.IsNullOrWhiteSpace(this.PanelNameTextBox.Text))
                 {
@@ -948,7 +948,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
-                var src = this.DetailGroupBox.Tag as SpellTimer;
+                var src = this.DetailGroupBox.Tag as Spell;
                 if (src != null)
                 {
                     src.Panel = this.PanelNameTextBox.Text;
@@ -1010,7 +1010,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     src.BlinkIcon = this.BlinkIconCheckBox.Checked;
                     src.BlinkBar = this.BlinkBarCheckBox.Checked;
 
-                    var panel = SpellTimerTable.Instance.Table.Where(x => x.Panel == src.Panel);
+                    var panel = SpellTable.Instance.Table.Where(x => x.Panel == src.Panel);
                     foreach (var s in panel)
                     {
                         s.BackgroundColor = src.BackgroundColor;
@@ -1018,7 +1018,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                     TableCompiler.Instance.RecompileSpells();
 
-                    SpellTimerTable.Instance.Save(true);
+                    SpellTable.Instance.Save(true);
                     this.LoadSpellTimerTable();
 
                     // 一度全てのパネルを閉じる
@@ -1030,7 +1030,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         {
                             foreach (TreeNode node in root.Nodes)
                             {
-                                var ds = node.Tag as SpellTimer;
+                                var ds = node.Tag as Spell;
                                 if (ds != null)
                                 {
                                     if (ds.ID == src.ID)

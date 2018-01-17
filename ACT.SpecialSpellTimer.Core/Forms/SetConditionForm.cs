@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     using System;
     using System.Collections.Generic;
@@ -64,7 +64,7 @@
                 {
                     if (node.Checked)
                     {
-                        var spell = (SpellTimer)node.Tag;
+                        var spell = (Spell)node.Tag;
                         spells.Add(spell.Guid);
                     }
                 }
@@ -85,7 +85,7 @@
             {
                 if (node.Checked)
                 {
-                    var telop = (OnePointTelop)node.Tag;
+                    var telop = (Ticker)node.Tag;
                     telops.Add(telop.Guid);
                 }
             }
@@ -103,14 +103,14 @@
         {
             treeView.Nodes.Clear();
 
-            var panels = SpellTimerTable.Instance.Table
+            var panels = SpellTable.Instance.Table
                 .OrderBy(x => x.Panel)
                 .Select(x => x.Panel)
                 .Distinct();
             foreach (var panelName in panels)
             {
                 var children = new List<TreeNode>();
-                var spells = SpellTimerTable.Instance.Table
+                var spells = SpellTable.Instance.Table
                     .OrderBy(x => x.DisplayNo)
                     .Where(x => x.Panel == panelName);
                 foreach (var spell in spells)
@@ -148,7 +148,7 @@
         {
             treeView.Nodes.Clear();
 
-            var telops = OnePointTelopTable.Instance.Table.OrderBy(x => x.Title);
+            var telops = TickerTable.Instance.Table.OrderBy(x => x.Title);
             foreach (var telop in telops)
             {
                 var n = new TreeNode();

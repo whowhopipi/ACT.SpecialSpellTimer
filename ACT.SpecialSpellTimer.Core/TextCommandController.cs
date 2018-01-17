@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Text.RegularExpressions;
@@ -108,7 +108,7 @@ namespace ACT.SpecialSpellTimer
                     switch (target)
                     {
                         case "spells":
-                            foreach (var spell in SpellTimerTable.Instance.Table)
+                            foreach (var spell in SpellTable.Instance.Table)
                             {
                                 if (spell.Panel.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     spell.SpellTitle.Trim().ToLower() == windowname.Trim().ToLower() ||
@@ -132,7 +132,7 @@ namespace ACT.SpecialSpellTimer
                             break;
 
                         case "telops":
-                            foreach (var telop in OnePointTelopTable.Instance.Table)
+                            foreach (var telop in TickerTable.Instance.Table)
                             {
                                 if (telop.Title.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     windowname.Trim().ToLower() == "all")

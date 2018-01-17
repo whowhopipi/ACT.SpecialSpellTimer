@@ -16,19 +16,19 @@ namespace ACT.SpecialSpellTimer.Models
     /// <summary>
     /// SpellTimerテーブル
     /// </summary>
-    public class SpellTimerTable
+    public class SpellTable
     {
         #region Singleton
 
-        private static SpellTimerTable instance = new SpellTimerTable();
-        public static SpellTimerTable Instance => instance;
+        private static SpellTable instance = new SpellTable();
+        public static SpellTable Instance => instance;
 
         #endregion Singleton
 
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        private volatile List<SpellTimer> table = new List<SpellTimer>();
+        private volatile List<Spell> table = new List<Spell>();
 
         /// <summary>
         /// デフォルトのファイル
@@ -40,7 +40,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// SpellTimerデータテーブル
         /// </summary>
-        public List<SpellTimer> Table => this.table;
+        public List<Spell> Table => this.table;
 
         /// <summary>
         /// カウントをリセットする
@@ -114,7 +114,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// 指定されたGuidを持つSpellTimerを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public SpellTimer GetSpellTimerByGuid(
+        public Spell GetSpellTimerByGuid(
             Guid guid)
         {
             return this.table
@@ -156,7 +156,7 @@ namespace ACT.SpecialSpellTimer.Models
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<SpellTimer>;
+                            var data = xs.Deserialize(sr) as List<Spell>;
 
                             if (isClear)
                             {
@@ -258,7 +258,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void Save(
             string file,
-            List<SpellTimer> list)
+            List<Spell> list)
         {
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))
@@ -280,8 +280,8 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
-        private volatile ConcurrentDictionary<string, SpellTimer> instanceSpells =
-            new ConcurrentDictionary<string, SpellTimer>();
+        private volatile ConcurrentDictionary<string, Spell> instanceSpells =
+            new ConcurrentDictionary<string, Spell>();
 
         /// <summary>
         /// 同じスペル表示名のインスタンスを取得するか新たに作成する
@@ -289,9 +289,9 @@ namespace ACT.SpecialSpellTimer.Models
         /// <param name="spellTitle">スペル表示名</param>
         /// <param name="sourceSpell">インスタンスの元となるスペル</param>
         /// <returns>インスタンススペル</returns>
-        public SpellTimer GetOrAddInstance(
+        public Spell GetOrAddInstance(
             string spellTitle,
-            SpellTimer sourceSpell)
+            Spell sourceSpell)
         {
             var instance = this.instanceSpells.GetOrAdd(
                 spellTitle,
@@ -310,7 +310,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                     return ns;
 #else
-                    var ns = new SpellTimer();
+                    var ns = new Spell();
 
                     ns.SpellTitleReplaced = instanceSpellTitle;
                     ns.Guid = Guid.NewGuid();
@@ -429,7 +429,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         /// <param name="instance">インスタンス</param>
         public void TryRemoveInstance(
-            SpellTimer instance)
+            Spell instance)
         {
             var ttl = Settings.Default.TimeOfHideSpell + 30;
 
@@ -447,7 +447,7 @@ namespace ACT.SpecialSpellTimer.Models
                         return;
                     }
 
-                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out SpellTimer o);
+                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out Spell o);
 
                     // スペルコレクション本体から除去する
                     lock (lockObject)

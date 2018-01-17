@@ -14,20 +14,20 @@ namespace ACT.SpecialSpellTimer.Models
     /// <summary>
     /// ワンポイントテレロップ設定テーブル
     /// </summary>
-    public class OnePointTelopTable
+    public class TickerTable
     {
         #region Singleton
 
-        private static OnePointTelopTable instance = new OnePointTelopTable();
+        private static TickerTable instance = new TickerTable();
 
-        public static OnePointTelopTable Instance => instance;
+        public static TickerTable Instance => instance;
 
         #endregion Singleton
 
         /// <summary>
         /// データテーブル
         /// </summary>
-        private volatile List<OnePointTelop> table = new List<OnePointTelop>();
+        private volatile List<Ticker> table = new List<Ticker>();
 
         /// <summary>
         /// デフォルトのファイル
@@ -40,7 +40,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// 生のテーブル
         /// </summary>
-        public List<OnePointTelop> Table => this.table;
+        public List<Ticker> Table => this.table;
 
         /// <summary>
         /// テーブルファイルをバックアップする
@@ -82,7 +82,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// 指定されたGuidを持つOnePointTelopを取得する
         /// </summary>
         /// <param name="guid">Guid</param>
-        public OnePointTelop GetOnePointTelopByGuid(Guid guid)
+        public Ticker GetOnePointTelopByGuid(Guid guid)
         {
             return table
                 .AsParallel()
@@ -123,7 +123,7 @@ namespace ACT.SpecialSpellTimer.Models
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<OnePointTelop>;
+                            var data = xs.Deserialize(sr) as List<Ticker>;
 
                             if (isClear)
                             {
@@ -220,7 +220,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void Save(
             string file,
-            List<OnePointTelop> list)
+            List<Ticker> list)
         {
             var dir = Path.GetDirectoryName(file);
             if (!Directory.Exists(dir))

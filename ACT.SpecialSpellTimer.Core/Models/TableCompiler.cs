@@ -111,11 +111,11 @@ namespace ACT.SpecialSpellTimer.Models
 
         private volatile Combatant player = new Combatant();
 
-        private volatile List<SpellTimer> spellList = new List<SpellTimer>();
+        private volatile List<Spell> spellList = new List<Spell>();
 
         private object spellListLocker = new object();
 
-        private volatile List<OnePointTelop> tickerList = new List<OnePointTelop>();
+        private volatile List<Ticker> tickerList = new List<Ticker>();
 
         private object tickerListLocker = new object();
 
@@ -123,24 +123,24 @@ namespace ACT.SpecialSpellTimer.Models
 
         public event EventHandler OnTableChanged;
 
-        public List<SpellTimer> SpellList
+        public List<Spell> SpellList
         {
             get
             {
                 lock (this.spellListLocker)
                 {
-                    return new List<SpellTimer>(this.spellList);
+                    return new List<Spell>(this.spellList);
                 }
             }
         }
 
-        public List<OnePointTelop> TickerList
+        public List<Ticker> TickerList
         {
             get
             {
                 lock (this.tickerListLocker)
                 {
-                    return new List<OnePointTelop>(this.tickerList);
+                    return new List<Ticker>(this.tickerList);
                 }
             }
         }
@@ -157,7 +157,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         public void AddSpell(
-            SpellTimer instancedSpell)
+            Spell instancedSpell)
         {
             lock (this.spellListLocker)
             {
@@ -171,7 +171,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         public void RemoveSpell(
-            SpellTimer instancedSpell)
+            Spell instancedSpell)
         {
             lock (this.spellListLocker)
             {
@@ -194,7 +194,7 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this.triggerList)
             {
                 this.triggerList.RemoveAll(x =>
-                    (x is SpellTimer spell) &&
+                    (x is Spell spell) &&
                     spell.IsInstance);
             }
         }
@@ -203,7 +203,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var currentZoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
 
-            bool filter(SpellTimer spell)
+            bool filter(Spell spell)
             {
                 var enabledByJob = false;
                 var enabledByZone = false;
@@ -243,7 +243,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // 元のリストの複製を得る
-            var sourceList = new List<SpellTimer>(SpellTimerTable.Instance.Table);
+            var sourceList = new List<Spell>(SpellTable.Instance.Table);
 
             var query =
                 from x in sourceList
@@ -293,7 +293,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.spellListLocker)
             {
-                this.spellList = new List<SpellTimer>(query);
+                this.spellList = new List<Spell>(query);
             }
 
             // 統合トリガリストに登録する
@@ -310,7 +310,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var currentZoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
 
-            bool filter(OnePointTelop spell)
+            bool filter(Ticker spell)
             {
                 var enabledByJob = false;
                 var enabledByZone = false;
@@ -350,7 +350,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // 元のリストの複製を得る
-            var sourceList = new List<OnePointTelop>(OnePointTelopTable.Instance.Table);
+            var sourceList = new List<Ticker>(TickerTable.Instance.Table);
 
             var query =
                 from x in sourceList
@@ -393,7 +393,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             lock (this.tickerListLocker)
             {
-                this.tickerList = new List<OnePointTelop>(query);
+                this.tickerList = new List<Ticker>(query);
             }
 
             // 統合トリガリストに登録する
@@ -415,7 +415,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             lock (this)
             {
-                var rawTable = new List<SpellTimer>(SpellTimerTable.Instance.Table);
+                var rawTable = new List<Spell>(SpellTable.Instance.Table);
                 foreach (var spell in rawTable.AsParallel())
                 {
                     spell.KeywordReplaced = string.Empty;
@@ -432,7 +432,7 @@ namespace ACT.SpecialSpellTimer.Models
                 this.CompileSpells();
 
                 // スペルタイマの描画済みフラグを落とす
-                SpellTimerTable.Instance.ClearUpdateFlags();
+                SpellTable.Instance.ClearUpdateFlags();
             }
         }
 
@@ -440,7 +440,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             lock (this)
             {
-                var rawTable = new List<OnePointTelop>(OnePointTelopTable.Instance.Table);
+                var rawTable = new List<Ticker>(TickerTable.Instance.Table);
                 foreach (var spell in rawTable.AsParallel())
                 {
                     spell.KeywordReplaced = string.Empty;

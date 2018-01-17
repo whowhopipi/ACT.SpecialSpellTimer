@@ -518,30 +518,30 @@ namespace ACT.SpecialSpellTimer.Forms
 
             this.ResetSpellFontItem.Click += (s1, e1) =>
             {
-                foreach (var s in SpellTimerTable.Instance.Table)
+                foreach (var s in SpellTable.Instance.Table)
                 {
                     s.Font = this.GetFontInfo();
                 }
 
                 SpellsController.Instance.ClosePanels();
-                SpellTimerTable.Instance.Save(true);
+                SpellTable.Instance.Save(true);
             };
 
             this.ResetSpellBarSizeItem.Click += (s1, e1) =>
             {
-                foreach (var s in SpellTimerTable.Instance.Table)
+                foreach (var s in SpellTable.Instance.Table)
                 {
                     s.BarWidth = this.BarSize.Width;
                     s.BarHeight = this.BarSize.Height;
                 }
 
                 SpellsController.Instance.ClosePanels();
-                SpellTimerTable.Instance.Save(true);
+                SpellTable.Instance.Save(true);
             };
 
             this.ResetSpellColorItem.Click += (s1, e1) =>
             {
-                foreach (var s in SpellTimerTable.Instance.Table)
+                foreach (var s in SpellTable.Instance.Table)
                 {
                     s.FontColor = this.FontColor.ToHTML();
                     s.FontOutlineColor = this.FontOutlineColor.ToHTML();
@@ -554,23 +554,23 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
 
                 SpellsController.Instance.ClosePanels();
-                SpellTimerTable.Instance.Save(true);
+                SpellTable.Instance.Save(true);
             };
 
             this.ResetTelopFontItem.Click += (s1, e1) =>
             {
-                foreach (var s in OnePointTelopTable.Instance.Table)
+                foreach (var s in TickerTable.Instance.Table)
                 {
                     s.Font = this.GetFontInfo();
                 }
 
                 TickersController.Instance.CloseTelops();
-                OnePointTelopTable.Instance.Save(true);
+                TickerTable.Instance.Save(true);
             };
 
             this.ResetTelopColorItem.Click += (s1, e1) =>
             {
-                foreach (var s in OnePointTelopTable.Instance.Table)
+                foreach (var s in TickerTable.Instance.Table)
                 {
                     s.FontColor = this.FontColor.ToHTML();
                     s.FontOutlineColor = this.FontOutlineColor.ToHTML();
@@ -579,7 +579,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
 
                 TickersController.Instance.CloseTelops();
-                OnePointTelopTable.Instance.Save(true);
+                TickerTable.Instance.Save(true);
             };
         }
     }

@@ -12,7 +12,8 @@ namespace ACT.SpecialSpellTimer.Models
     /// ワンポイントテロップ
     /// </summary>
     [Serializable]
-    public class OnePointTelop :
+    [XmlType(TypeName = "OnePointTelop")]
+    public class Ticker :
         IDisposable,
         ITrigger
     {
@@ -28,7 +29,7 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public bool ToClose { get; set; } = false;
 
-        public OnePointTelop()
+        public Ticker()
         {
             this.Guid = Guid.Empty;
             this.Title = string.Empty;
@@ -309,7 +310,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region Clone
 
-        public OnePointTelop Clone() => (OnePointTelop)this.MemberwiseClone();
+        public Ticker Clone() => (Ticker)this.MemberwiseClone();
 
         #endregion Clone
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using ACT.SpecialSpellTimer.Config;
@@ -14,7 +14,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// <param name="spell">SpellTimer</param>
         /// <returns>条件を満たしていればtrue</returns>
         public static bool CheckConditionsForSpell(
-            SpellTimer spell)
+            Spell spell)
         {
             if (Settings.Default.DisableStartCondition)
             {
@@ -32,7 +32,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// <param name="telop">OnePointTelop</param>
         /// <returns>条件を満たしていればtrue</returns>
         public static bool CheckConditionsForTelop(
-            OnePointTelop telop)
+            Ticker telop)
         {
             if (Settings.Default.DisableStartCondition)
             {
@@ -50,7 +50,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// <param name="telop">OnePointTelop</param>
         /// <returns>置換後のMessage</returns>
         public static string GetReplacedMessage(
-            OnePointTelop telop)
+            Ticker telop)
         {
             var builder = new StringBuilder(telop.Message);
 
@@ -69,7 +69,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// <param name="spell">SpellTimer</param>
         /// <returns>置換後のTitle</returns>
         public static string GetReplacedTitle(
-            SpellTimer spell)
+            Spell spell)
         {
             var builder = new StringBuilder(spell.SpellTitle);
 
@@ -102,13 +102,13 @@ namespace ACT.SpecialSpellTimer.Utility
             var condition = true;
             foreach (var guid in timersMustRunning)
             {
-                var spell = SpellTimerTable.Instance.GetSpellTimerByGuid(guid);
+                var spell = SpellTable.Instance.GetSpellTimerByGuid(guid);
                 if (spell != null)
                 {
                     condition = condition & IsRunning(spell);
                 }
 
-                var telop = OnePointTelopTable.Instance.GetOnePointTelopByGuid(guid);
+                var telop = TickerTable.Instance.GetOnePointTelopByGuid(guid);
                 if (telop != null)
                 {
                     condition = condition & IsRunning(telop);
@@ -118,13 +118,13 @@ namespace ACT.SpecialSpellTimer.Utility
             // 停止中か確認する（稼働中でなければ停止中として扱う）
             foreach (var guid in timersMustStopping)
             {
-                var spell = SpellTimerTable.Instance.GetSpellTimerByGuid(guid);
+                var spell = SpellTable.Instance.GetSpellTimerByGuid(guid);
                 if (spell != null)
                 {
                     condition = condition & !IsRunning(spell);
                 }
 
-                var telop = OnePointTelopTable.Instance.GetOnePointTelopByGuid(guid);
+                var telop = TickerTable.Instance.GetOnePointTelopByGuid(guid);
                 if (telop != null)
                 {
                     condition = condition & !IsRunning(telop);
@@ -140,7 +140,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// <param name="spell">SpellTimer</param>
         /// <returns>稼働中であればtrue</returns>
         private static bool IsRunning(
-            SpellTimer spell)
+            Spell spell)
         {
             var recastTime = (spell.CompleteScheduledTime - DateTime.Now).TotalSeconds;
             return recastTime >= 0;
@@ -153,7 +153,7 @@ namespace ACT.SpecialSpellTimer.Utility
         /// <param name="telop">OnePointTelop</param>
         /// <returns>稼働中であればtrue</returns>
         private static bool IsRunning(
-            OnePointTelop telop)
+            Ticker telop)
         {
             if (telop.MatchDateTime > DateTime.MinValue && !telop.ForceHide)
             {
@@ -187,7 +187,7 @@ namespace ACT.SpecialSpellTimer.Utility
 
             for (int i = 0; i < timers.Length; i++)
             {
-                var spell = SpellTimerTable.Instance.GetSpellTimerByGuid(timers[i]);
+                var spell = SpellTable.Instance.GetSpellTimerByGuid(timers[i]);
                 if (spell != null)
                 {
                     count++;
@@ -226,7 +226,7 @@ namespace ACT.SpecialSpellTimer.Utility
 
             for (int i = 0; i < timers.Length; i++)
             {
-                var telop = OnePointTelopTable.Instance.GetOnePointTelopByGuid(timers[i]);
+                var telop = TickerTable.Instance.GetOnePointTelopByGuid(timers[i]);
                 if (telop != null)
                 {
                     count++;
