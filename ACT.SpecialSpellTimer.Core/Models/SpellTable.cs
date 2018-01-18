@@ -143,13 +143,6 @@ namespace ACT.SpecialSpellTimer.Models
         {
             if (File.Exists(file))
             {
-#if false
-                // 旧フォーマットを置換する
-                var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
-                    "DocumentElement",
-                    "ArrayOfSpellTimer");
-                File.WriteAllText(file, content, new UTF8Encoding(false));
-#endif
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
                     try
@@ -157,14 +150,17 @@ namespace ACT.SpecialSpellTimer.Models
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<Spell>;
+                            var data = xs.Deserialize(sr) as IList<Spell>;
 
                             if (isClear)
                             {
                                 this.table.Clear();
                             }
 
-                            this.table.AddRange(data);
+                            foreach (var item in data)
+                            {
+                                this.table.Add(item);
+                            }
                         }
                     }
                     catch (Exception ex)

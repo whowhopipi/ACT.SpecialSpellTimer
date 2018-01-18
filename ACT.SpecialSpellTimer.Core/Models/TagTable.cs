@@ -83,7 +83,7 @@ namespace ACT.SpecialSpellTimer.Models
                     if (sr.BaseStream.Length > 0)
                     {
                         var xs = new XmlSerializer(table.GetType());
-                        var data = xs.Deserialize(sr) as List<Tag>;
+                        var data = xs.Deserialize(sr) as IList<Tag>;
 
                         this.table.Clear();
                         foreach (var item in data)

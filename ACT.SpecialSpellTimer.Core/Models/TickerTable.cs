@@ -124,14 +124,17 @@ namespace ACT.SpecialSpellTimer.Models
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<Ticker>;
+                            var data = xs.Deserialize(sr) as IList<Ticker>;
 
                             if (isClear)
                             {
                                 this.table.Clear();
                             }
 
-                            table.AddRange(data);
+                            foreach (var item in data)
+                            {
+                                this.table.Add(item);
+                            }
                         }
                     }
                     catch (Exception ex)

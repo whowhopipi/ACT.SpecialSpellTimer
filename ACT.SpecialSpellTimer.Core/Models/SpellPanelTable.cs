@@ -100,9 +100,13 @@ namespace ACT.SpecialSpellTimer.Models
                         if (sr.BaseStream.Length > 0)
                         {
                             var xs = new XmlSerializer(this.table.GetType());
-                            var data = xs.Deserialize(sr) as List<SpellPanel>;
+                            var data = xs.Deserialize(sr) as IList<SpellPanel>;
+
                             this.table.Clear();
-                            this.table.AddRange(data);
+                            foreach (var item in data)
+                            {
+                                this.table.Add(item);
+                            }
                         }
                     }
                     catch (Exception ex)
