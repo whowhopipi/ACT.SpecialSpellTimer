@@ -24,6 +24,9 @@ namespace ACT.SpecialSpellTimer.Models
             this.SetupChildrenSource();
         }
 
+        [XmlIgnore]
+        public ItemTypes ItemType => ItemTypes.SpellPanel;
+
         public Guid ID { get; set; } = Guid.NewGuid();
 
         public double Left

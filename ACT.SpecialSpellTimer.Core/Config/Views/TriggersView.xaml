@@ -72,7 +72,9 @@
             DataType="{x:Type model:TriggersTreeRoot}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
             <StackPanel Orientation="Horizontal">
-              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+              <TextBlock
+                FontWeight="Black"
+                Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
             </StackPanel>
           </HierarchicalDataTemplate>
 
@@ -80,7 +82,9 @@
             DataType="{x:Type triggerModel:SpellPanel}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
             <StackPanel Orientation="Horizontal">
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <CheckBox
+                IsTabStop="False"
+                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
             </StackPanel>
           </HierarchicalDataTemplate>
@@ -89,7 +93,9 @@
             DataType="{x:Type triggerModel:Spell}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
             <StackPanel Orientation="Horizontal">
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <CheckBox
+                IsTabStop="False"
+                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
             </StackPanel>
           </HierarchicalDataTemplate>
@@ -98,7 +104,9 @@
             DataType="{x:Type triggerModel:Ticker}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
             <StackPanel Orientation="Horizontal">
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <CheckBox
+                IsTabStop="False"
+                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
             </StackPanel>
           </HierarchicalDataTemplate>
@@ -107,7 +115,9 @@
             DataType="{x:Type triggerModel:Tag}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
             <StackPanel Orientation="Horizontal">
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <CheckBox
+                IsTabStop="False"
+                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
             </StackPanel>
           </HierarchicalDataTemplate>

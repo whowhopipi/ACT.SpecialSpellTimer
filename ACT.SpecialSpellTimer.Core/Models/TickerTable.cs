@@ -110,13 +110,6 @@ namespace ACT.SpecialSpellTimer.Models
         {
             if (File.Exists(file))
             {
-#if false
-                // 旧フォーマットを置換する
-                var content = File.ReadAllText(file, new UTF8Encoding(false)).Replace(
-                    "DocumentElement",
-                    "ArrayOfOnePointTelop");
-                File.WriteAllText(file, content, new UTF8Encoding(false));
-#endif
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
                     try

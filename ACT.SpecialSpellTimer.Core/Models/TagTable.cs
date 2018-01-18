@@ -54,7 +54,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             if (parent != null)
             {
-                tag.ParentTagID = parent.ID;
+                this.itemTags.Add(new ItemTags(parent.ID, tag.ID));
             }
 
             this.Add(tag);

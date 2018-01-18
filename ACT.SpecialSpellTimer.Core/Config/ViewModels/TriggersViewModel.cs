@@ -18,14 +18,13 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         private ObservableCollection<TriggersTreeRoot> treeRoot = new ObservableCollection<TriggersTreeRoot>();
 
-        public ObservableCollection<TriggersTreeRoot> TreeRoot => this.treeRoot;
+        public ObservableCollection<TriggersTreeRoot> TreeRoot => treeRoot;
 
         private void SetupTreeRoot()
         {
             var spells = new TriggersTreeRoot()
             {
                 DisplayText = "All Spells",
-                IsExpanded = true,
                 Children = new CollectionViewSource()
                 {
                     Source = SpellPanelTable.Instance.Table,
@@ -35,7 +34,6 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             var tickers = new TriggersTreeRoot()
             {
                 DisplayText = "All Tickers",
-                IsExpanded = true,
                 Children = new CollectionViewSource()
                 {
                     Source = TickerTable.Instance.Table,
@@ -45,7 +43,6 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             var tags = new TriggersTreeRoot()
             {
                 DisplayText = "Tags",
-                IsExpanded = true,
                 Children = new CollectionViewSource()
                 {
                     Source = TagTable.Instance.Tags,
@@ -76,9 +73,9 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 Direction = ListSortDirection.Ascending,
             });
 
-            this.treeRoot.Add(spells);
-            this.treeRoot.Add(tickers);
-            this.treeRoot.Add(tags);
+            this.TreeRoot.Add(spells);
+            this.TreeRoot.Add(tickers);
+            this.TreeRoot.Add(tags);
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Data;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -27,25 +26,7 @@ namespace ACT.SpecialSpellTimer.Models
         private Tag tag;
 
         [XmlIgnore]
-        public ItemTypes ItemType
-        {
-            get
-            {
-                switch (this.Item)
-                {
-                    case Tag tag:
-                        return ItemTypes.Tag;
-                    case SpellPanel p:
-                        return ItemTypes.SpellPanel;
-                    case Spell s:
-                        return ItemTypes.Spell;
-                    case Ticker t:
-                        return ItemTypes.Ticker;
-                    default:
-                        return ItemTypes.Root;
-                }
-            }
-        }
+        public ItemTypes ItemType => this.item?.ItemType ?? ItemTypes.Root;
 
         [XmlIgnore]
         public ITreeItem Item

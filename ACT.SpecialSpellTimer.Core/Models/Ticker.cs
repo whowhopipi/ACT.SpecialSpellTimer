@@ -24,7 +24,7 @@ namespace ACT.SpecialSpellTimer.Models
         #region ITrigger
 
         [XmlIgnore]
-        public ItemTypes TriggerType => ItemTypes.Ticker;
+        public ItemTypes ItemType => ItemTypes.Ticker;
 
         public void MatchTrigger(string logLine)
             => TickersController.Instance.MatchCore(this, logLine);

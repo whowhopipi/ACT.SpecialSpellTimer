@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Common;
@@ -241,6 +242,12 @@ namespace ACT.SpecialSpellTimer.Config
                 }
             }
         }
+
+        public List<ExpandedContainer> ExpandedList
+        {
+            get;
+            set;
+        } = new List<ExpandedContainer>();
 
         public bool AutoSortEnabled { get; set; }
         public bool AutoSortReverse { get; set; }

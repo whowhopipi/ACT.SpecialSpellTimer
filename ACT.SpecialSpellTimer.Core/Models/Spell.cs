@@ -26,7 +26,7 @@ namespace ACT.SpecialSpellTimer.Models
         #region ITrigger
 
         [XmlIgnore]
-        public ItemTypes TriggerType => ItemTypes.Spell;
+        public ItemTypes ItemType => ItemTypes.Spell;
 
         public void MatchTrigger(string logLine)
             => SpellsController.Instance.MatchCore(this, logLine);

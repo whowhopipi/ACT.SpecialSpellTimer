@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
@@ -15,25 +14,20 @@ namespace ACT.SpecialSpellTimer.Models
         ITreeItem
     {
         private Guid id = Guid.NewGuid();
-        private Guid parentTagID = Guid.Empty;
         private string name = string.Empty;
+
+        public Tag()
+        {
+            this.SetupChildrenSource();
+        }
+
+        [XmlIgnore]
+        public ItemTypes ItemType => ItemTypes.Tag;
 
         public Guid ID
         {
             get => this.id;
             set => this.SetProperty(ref this.id, value);
-        }
-
-        public Guid ParentTagID
-        {
-            get => this.parentTagID;
-            set
-            {
-                if (this.SetProperty(ref this.parentTagID, value))
-                {
-                    this.RaisePropertyChanged(nameof(this.FullName));
-                }
-            }
         }
 
         public string Name
@@ -74,11 +68,12 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
+        public Guid ParentTagID =>
+            TagTable.Instance.ItemTags.FirstOrDefault(x => x.TagID == this.ID)?.ItemID ?? Guid.Empty;
+
+        [XmlIgnore]
         public Tag ParentTag =>
-            this.ParentTagID == Guid.Empty ?
-            null :
-            TagTable.Instance.Tags
-                .FirstOrDefault(x => x.ID == this.ParentTagID);
+            TagTable.Instance.ItemTags.FirstOrDefault(x => x.TagID == this.ID)?.Item as Tag;
 
         #region ITreeItem
 

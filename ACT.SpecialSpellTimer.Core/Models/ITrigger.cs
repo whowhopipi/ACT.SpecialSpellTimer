@@ -2,7 +2,7 @@ namespace ACT.SpecialSpellTimer.Models
 {
     public interface ITrigger
     {
-        ItemTypes TriggerType { get; }
+        ItemTypes ItemType { get; }
 
         void MatchTrigger(string logLine);
     }

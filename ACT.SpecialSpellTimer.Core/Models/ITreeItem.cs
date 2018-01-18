@@ -13,6 +13,8 @@ namespace ACT.SpecialSpellTimer.Models
 
     public interface ITreeItem
     {
+        ItemTypes ItemType { get; }
+
         string DisplayText { get; }
 
         bool IsExpanded { get; set; }

@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Windows.Data;
+using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Models;
 using Prism.Mvvm;
 
@@ -8,9 +10,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
         BindableBase,
         ITreeItem
     {
-        private bool isExpanded = false;
         private string displayText = string.Empty;
         private CollectionViewSource children;
+
+        [XmlIgnore]
+        public ItemTypes ItemType => ItemTypes.Root;
 
         public string DisplayText
         {
@@ -26,8 +30,42 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         public bool IsExpanded
         {
-            get => this.isExpanded;
-            set => this.SetProperty(ref this.isExpanded, value);
+            get
+            {
+                var entry = Settings.Default.ExpandedList.FirstOrDefault(x => x.Key == this.DisplayText);
+                if (entry == null)
+                {
+                    entry = new ExpandedContainer()
+                    {
+                        Key = this.DisplayText,
+                        IsExpanded = true,
+                    };
+
+                    Settings.Default.ExpandedList.Add(entry);
+                }
+
+                return entry.IsExpanded;
+            }
+            set
+            {
+                var entry = Settings.Default.ExpandedList.FirstOrDefault(x => x.Key == this.DisplayText);
+                if (entry == null)
+                {
+                    entry = new ExpandedContainer()
+                    {
+                        Key = this.DisplayText,
+                        IsExpanded = value,
+                    };
+
+                    Settings.Default.ExpandedList.Add(entry);
+                }
+
+                if (entry.IsExpanded != value)
+                {
+                    entry.IsExpanded = value;
+                    this.RaisePropertyChanged();
+                }
+            }
         }
 
         public bool IsEnabled
