@@ -142,6 +142,8 @@
     <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="Models\Spell.cs" />
     <Compile Include="Models\TableCompiler.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\TagTable.cs" />
     <Compile Include="Models\Ticker.cs" />
     <Compile Include="resources\ILocalizable.cs" />
     <Compile Include="resources\LocalizeExtensions.cs" />
