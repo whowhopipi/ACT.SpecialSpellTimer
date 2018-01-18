@@ -6,6 +6,7 @@
   xmlns:fw="clr-namespace:FFXIV.Framework.WPF.Views;assembly=FFXIV.Framework"
   xmlns:local="clr-namespace:ACT.SpecialSpellTimer.Forms"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:views="clr-namespace:ACT.SpecialSpellTimer.Config.Views"
   d:DesignWidth="600"
   Background="White"
   FontFamily="Consolas, Yu Gothic UI, Meiryo UI"
@@ -18,8 +19,17 @@
   TextOptions.TextRenderingMode="ClearType"
   mc:Ignorable="d">
   <TabControl>
-    <TabItem Header="Config">
+    <TabItem Header="Config(OLD)">
       <WindowsFormsHost x:Name="WindowsFormsHost" Margin="0" />
+    </TabItem>
+    <TabItem Header="Triggers">
+      <views:TriggersView x:Name="TriggersView" />
+    </TabItem>
+    <TabItem Header="Options">
+      <views:OptionsView x:Name="OptionsView" />
+    </TabItem>
+    <TabItem Header="Informations">
+      <views:InformationsView x:Name="InfomationsView" />
     </TabItem>
     <TabItem Header="Help">
       <fw:HelpView x:Name="HelpView" />

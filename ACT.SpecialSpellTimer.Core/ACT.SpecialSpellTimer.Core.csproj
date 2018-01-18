@@ -90,6 +90,18 @@
     <Compile Include="Config\BaseView.xaml.cs">
       <DependentUpon>BaseView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\ViewModels\InformationsViewModel.cs" />
+    <Compile Include="Config\ViewModels\OptionsViewModel.cs" />
+    <Compile Include="Config\ViewModels\TriggersViewModel.cs" />
+    <Compile Include="Config\Views\InformationsView.xaml.cs">
+      <DependentUpon>InformationsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\OptionsView.xaml.cs">
+      <DependentUpon>OptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\TriggersView.xaml.cs">
+      <DependentUpon>TriggersView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ConfigPanel.CombatAnalyzer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -258,8 +270,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Config\Models\" />
-    <Folder Include="Config\ViewModels\" />
-    <Folder Include="Config\Views\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\color\サンプル灰色系.xml">
@@ -310,6 +320,18 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Config\BaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\InformationsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\OptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TriggersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
