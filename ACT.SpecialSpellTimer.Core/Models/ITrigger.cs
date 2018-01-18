@@ -1,9 +1,13 @@
+using System;
+using System.Collections.ObjectModel;
+
 namespace ACT.SpecialSpellTimer.Models
 {
     public enum TriggerTypes
     {
         Spell,
-        Ticker
+        Ticker,
+        SpellPanel
     }
 
     public interface ITrigger
@@ -11,5 +15,7 @@ namespace ACT.SpecialSpellTimer.Models
         TriggerTypes TriggerType { get; }
 
         void MatchTrigger(string logLine);
+
+        ObservableCollection<Guid> Tags { get; }
     }
 }

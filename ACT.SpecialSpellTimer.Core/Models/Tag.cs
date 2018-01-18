@@ -8,7 +8,8 @@ namespace ACT.SpecialSpellTimer.Models
 {
     [Serializable]
     public class Tag :
-        BindableBase
+        BindableBase,
+        ITreeItem
     {
         private Guid id = Guid.NewGuid();
         private Guid parentID = Guid.Empty;
@@ -77,9 +78,61 @@ namespace ACT.SpecialSpellTimer.Models
                 .FirstOrDefault(x => x.ID == this.ParentID);
 
         [XmlIgnore]
-        public IReadOnlyList<Tag> Children =>
+        public IReadOnlyList<Tag> Tags =>
             TagTable.Instance.Table
                 .Where(x => x.ParentID == this.ID)
                 .ToList();
+
+        [XmlIgnore]
+        public IReadOnlyList<Tag> AllTags
+        {
+            get
+            {
+                var tags = new List<Tag>();
+                foreach (var tag in this.Tags)
+                {
+                    tags.AddRange(tag.AllTags);
+                }
+
+                return tags;
+            }
+        }
+
+        #region ITreeItem
+
+        private bool isExpanded = false;
+
+        [XmlIgnore]
+        public string DisplayText => this.Name;
+
+        public bool IsExpanded
+        {
+            get => this.isExpanded;
+            set => this.SetProperty(ref this.isExpanded, value);
+        }
+
+        [XmlIgnore]
+        public bool IsEnabled
+        {
+            get
+            {
+                var tags = this.AllTags;
+                return tags.Count == tags.Count(x => x.IsEnabled);
+            }
+            set
+            {
+                foreach (var tag in this.AllTags)
+                {
+                    tag.IsEnabled = value;
+                }
+
+                this.RaisePropertyChanged();
+            }
+        }
+
+        [XmlIgnore]
+        public IReadOnlyList<ITreeItem> Children => this.Tags;
+
+        #endregion ITreeItem
     }
 }

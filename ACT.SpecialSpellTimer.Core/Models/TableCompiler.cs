@@ -250,7 +250,7 @@ namespace ACT.SpecialSpellTimer.Models
                 where
                 x.IsTemporaryDisplay ||
                 (
-                    x.Enabled &&
+                    x.IsEnabled &&
                     filter(x)
                 )
                 orderby
@@ -357,7 +357,7 @@ namespace ACT.SpecialSpellTimer.Models
                 where
                 x.IsTemporaryDisplay ||
                 (
-                    x.Enabled &&
+                    x.IsEnabled &&
                     filter(x)
                 )
                 orderby

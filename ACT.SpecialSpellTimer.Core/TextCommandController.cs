@@ -115,7 +115,7 @@ namespace ACT.SpecialSpellTimer
                                     windowname.Trim().ToLower() == "all")
                                 {
                                     changed = true;
-                                    spell.Enabled = value;
+                                    spell.IsEnabled = value;
                                 }
                             }
 
@@ -138,7 +138,7 @@ namespace ACT.SpecialSpellTimer
                                     windowname.Trim().ToLower() == "all")
                                 {
                                     changed = true;
-                                    telop.Enabled = value;
+                                    telop.IsEnabled = value;
                                 }
                             }
 

@@ -36,7 +36,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     n.Tag = telop;
                     n.Text = telop.Title;
                     n.ToolTipText = telop.Message;
-                    n.Checked = telop.Enabled;
+                    n.Checked = telop.IsEnabled;
 
                     this.TelopTreeView.Nodes.Add(n);
                 }
@@ -96,7 +96,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 var source = e1.Node.Tag as Ticker;
                 if (source != null)
                 {
-                    source.Enabled = e1.Node.Checked;
+                    source.IsEnabled = e1.Node.Checked;
                 }
 
                 // キャッシュを無効にする
@@ -341,7 +341,7 @@ namespace ACT.SpecialSpellTimer.Forms
             }
 
             nr.MatchDateTime = DateTime.MinValue;
-            nr.Enabled = true;
+            nr.IsEnabled = true;
             nr.Regex = null;
             nr.RegexPattern = string.Empty;
             nr.RegexToHide = null;
@@ -357,7 +357,7 @@ namespace ACT.SpecialSpellTimer.Forms
             {
                 Tag = nr,
                 ToolTipText = nr.Message,
-                Checked = nr.Enabled
+                Checked = nr.IsEnabled
             };
 
             this.TelopTreeView.Nodes.Add(node);

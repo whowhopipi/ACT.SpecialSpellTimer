@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
@@ -17,13 +19,52 @@ namespace ACT.SpecialSpellTimer.Models
     public class Ticker :
         BindableBase,
         IDisposable,
-        ITrigger
+        ITrigger,
+        ITreeItem
     {
+        #region ITrigger
+
+        private ObservableCollection<Guid> tags = new ObservableCollection<Guid>();
+
         [XmlIgnore]
         public TriggerTypes TriggerType => TriggerTypes.Ticker;
 
+        public ObservableCollection<Guid> Tags
+        {
+            get => this.tags;
+            set => this.SetProperty(ref this.tags, value);
+        }
+
         public void MatchTrigger(string logLine)
             => TickersController.Instance.MatchCore(this, logLine);
+
+        #endregion ITrigger
+
+        #region ITreeItem
+
+        private bool isEnabled = false;
+
+        [XmlIgnore]
+        public string DisplayText => this.Title;
+
+        [XmlIgnore]
+        public bool IsExpanded
+        {
+            get => false;
+            set { }
+        }
+
+        [XmlElement(ElementName = "Enabled")]
+        public bool IsEnabled
+        {
+            get => this.isEnabled;
+            set => this.SetProperty(ref this.isEnabled, value);
+        }
+
+        [XmlIgnore]
+        public IReadOnlyList<ITreeItem> Children => null;
+
+        #endregion ITreeItem
 
         [XmlIgnore]
         private Timer delayedSoundTimer;
@@ -100,8 +141,6 @@ namespace ACT.SpecialSpellTimer.Models
         public string DelayTextToSpeak { get; set; }
 
         public double DisplayTime { get; set; } = 0;
-
-        public bool Enabled { get; set; }
 
         public FontInfo Font { get; set; } = FontInfo.DefaultFont;
 

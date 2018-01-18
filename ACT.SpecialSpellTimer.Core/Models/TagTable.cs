@@ -59,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Models
         public void Remove(
             Tag tag)
         {
-            foreach (var child in tag.Children)
+            foreach (var child in tag.Tags)
             {
                 this.Remove(child);
             }

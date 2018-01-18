@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
@@ -7,6 +9,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -16,14 +19,54 @@ namespace ACT.SpecialSpellTimer.Models
     [Serializable]
     [XmlType(TypeName = "SpellTimer")]
     public class Spell :
+        BindableBase,
         IDisposable,
-        ITrigger
+        ITrigger,
+        ITreeItem
     {
+        #region ITrigger
+
+        private ObservableCollection<Guid> tags = new ObservableCollection<Guid>();
+
         [XmlIgnore]
         public TriggerTypes TriggerType => TriggerTypes.Spell;
 
+        public ObservableCollection<Guid> Tags
+        {
+            get => this.tags;
+            set => this.SetProperty(ref this.tags, value);
+        }
+
         public void MatchTrigger(string logLine)
             => SpellsController.Instance.MatchCore(this, logLine);
+
+        #endregion ITrigger
+
+        #region ITreeItem
+
+        private bool isEnabled = false;
+
+        [XmlIgnore]
+        public string DisplayText => this.SpellTitle;
+
+        [XmlIgnore]
+        public bool IsExpanded
+        {
+            get => false;
+            set { }
+        }
+
+        [XmlElement(ElementName = "Enabled")]
+        public bool IsEnabled
+        {
+            get => this.isEnabled;
+            set => this.SetProperty(ref this.isEnabled, value);
+        }
+
+        [XmlIgnore]
+        public IReadOnlyList<ITreeItem> Children => null;
+
+        #endregion ITreeItem
 
         [XmlIgnore]
         public volatile bool UpdateDone;
@@ -146,8 +189,6 @@ namespace ACT.SpecialSpellTimer.Models
         public long DisplayNo { get; set; }
 
         public bool DontHide { get; set; }
-
-        public bool Enabled { get; set; }
 
         public bool ExtendBeyondOriginalRecastTime { get; set; }
 

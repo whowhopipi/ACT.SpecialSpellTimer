@@ -362,7 +362,7 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.ZoneFilter = sourceSpell.ZoneFilter;
                     ns.TimersMustRunningForStart = sourceSpell.TimersMustRunningForStart;
                     ns.TimersMustStoppingForStart = sourceSpell.TimersMustStoppingForStart;
-                    ns.Enabled = sourceSpell.Enabled;
+                    ns.IsEnabled = sourceSpell.IsEnabled;
                     ns.NotifyToDiscord = sourceSpell.NotifyToDiscord;
                     ns.NotifyToDiscordAtComplete = sourceSpell.NotifyToDiscordAtComplete;
 

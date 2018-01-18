@@ -25,5 +25,43 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   mc:Ignorable="d">
-  <Grid />
+
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
+
+      <fwcnv:BoolToCollapsedConverter x:Key="VisibilityConverter" />
+      <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
+
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="20*" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="80*" />
+    </Grid.ColumnDefinitions>
+
+    <!--  スプリッタ  -->
+    <GridSplitter
+      Grid.Column="1"
+      Width="3"
+      HorizontalAlignment="Center"
+      Background="GhostWhite" />
+
+    <!--  ツリー  -->
+    <DockPanel Name="TriggersTreePanel" Grid.Column="0">
+      <TreeView Name="TriggersTreeView" BorderThickness="0">
+        <TreeView.ItemTemplate>
+          <HierarchicalDataTemplate>
+            <TextBlock Text="{Binding Text, Mode=OneWay}" />
+          </HierarchicalDataTemplate>
+        </TreeView.ItemTemplate>
+      </TreeView>
+    </DockPanel>
+  </Grid>
 </UserControl>
