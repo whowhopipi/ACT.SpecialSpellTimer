@@ -84,17 +84,14 @@ namespace ACT.SpecialSpellTimer.Models
                 .ToList();
 
         [XmlIgnore]
-        public IReadOnlyList<Tag> AllTags
+        public IReadOnlyList<ITrigger> Triggers
         {
             get
             {
-                var tags = new List<Tag>();
-                foreach (var tag in this.Tags)
-                {
-                    tags.AddRange(tag.AllTags);
-                }
-
-                return tags;
+                var triggers = new List<ITrigger>();
+                triggers.AddRange(SpellPanelTable.Instance.Table.Where(x => x.Tags.Contains(this.ID)));
+                triggers.AddRange(TickerTable.Instance.Table.Where(x => x.Tags.Contains(this.ID)));
+                return triggers;
             }
         }
 
@@ -114,24 +111,37 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public bool IsEnabled
         {
-            get
-            {
-                var tags = this.AllTags;
-                return tags.Count == tags.Count(x => x.IsEnabled);
-            }
+            get => false;
             set
             {
-                foreach (var tag in this.AllTags)
+                foreach (var item in this.Children)
                 {
-                    tag.IsEnabled = value;
+                    item.IsEnabled = value;
                 }
-
-                this.RaisePropertyChanged();
             }
         }
 
         [XmlIgnore]
-        public IReadOnlyList<ITreeItem> Children => this.Tags;
+        public IReadOnlyList<ITreeItem> Children
+        {
+            get
+            {
+                var items = new List<ITreeItem>();
+
+                items.AddRange(this.Tags);
+                if (items.Any())
+                {
+                    return items;
+                }
+
+                foreach (var trigger in this.Triggers)
+                {
+                    items.Add(trigger as ITreeItem);
+                }
+
+                return items;
+            }
+        }
 
         #endregion ITreeItem
     }

@@ -38,7 +38,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// Panel設定データテーブル
         /// </summary>
-        public ObservableCollection<SpellPanel> SettingsTable => this.table;
+        public ObservableCollection<SpellPanel> Table => this.table;
 
         /// <summary>
         /// テーブルファイルをバックアップする

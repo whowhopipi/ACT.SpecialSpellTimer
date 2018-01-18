@@ -408,7 +408,7 @@ namespace ACT.SpecialSpellTimer
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in SpellPanelTable.Instance.SettingsTable)
+                foreach (var setting in SpellPanelTable.Instance.Table)
                 {
                     setting.ToClose = true;
                 }
@@ -421,7 +421,7 @@ namespace ACT.SpecialSpellTimer
 
             lock (this.spellTimerPanels)
             {
-                var targets = SpellPanelTable.Instance.SettingsTable
+                var targets = SpellPanelTable.Instance.Table
                     .Where(x => x.ToClose).ToList();
 
                 foreach (var setting in targets)
@@ -463,7 +463,7 @@ namespace ACT.SpecialSpellTimer
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in SpellPanelTable.Instance.SettingsTable)
+                foreach (var setting in SpellPanelTable.Instance.Table)
                 {
                     // スペルリストに存在しないパネルを閉じる
                     if (!spells.Any(x =>
@@ -482,7 +482,7 @@ namespace ACT.SpecialSpellTimer
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in SpellPanelTable.Instance.SettingsTable)
+                foreach (var setting in SpellPanelTable.Instance.Table)
                 {
                     setting.PanelWindow?.HideOverlay();
                 }
@@ -584,7 +584,7 @@ namespace ACT.SpecialSpellTimer
                     panel.SpellPositionFixed = fixedPositionSpell;
                 }
 
-                var panelSettings = SpellPanelTable.Instance.SettingsTable
+                var panelSettings = SpellPanelTable.Instance.Table
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
 
@@ -631,7 +631,7 @@ namespace ACT.SpecialSpellTimer
 
             lock (this.spellTimerPanels)
             {
-                var s = SpellPanelTable.Instance.SettingsTable
+                var s = SpellPanelTable.Instance.Table
                     .Where(x => x.PanelName == panelName)
                     .FirstOrDefault();
 
@@ -641,7 +641,7 @@ namespace ACT.SpecialSpellTimer
                 }
                 else
                 {
-                    SpellPanelTable.Instance.SettingsTable.Add(settings);
+                    SpellPanelTable.Instance.Table.Add(settings);
                 }
             }
 
