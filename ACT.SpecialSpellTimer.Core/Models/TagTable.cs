@@ -71,9 +71,10 @@ namespace ACT.SpecialSpellTimer.Models
         public void Remove(
             Tag tag)
         {
-            foreach (var child in tag.ChildTags)
+            var targets = this.itemTags.Where(x => x.TagID == tag.ID).ToArray();
+            foreach (var item in targets)
             {
-                this.Remove(child);
+                this.itemTags.Remove(item);
             }
 
             this.Tags.Remove(tag);

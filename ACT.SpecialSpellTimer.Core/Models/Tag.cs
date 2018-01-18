@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Xml.Serialization;
@@ -78,24 +80,6 @@ namespace ACT.SpecialSpellTimer.Models
             TagTable.Instance.Tags
                 .FirstOrDefault(x => x.ID == this.ParentTagID);
 
-        [XmlIgnore]
-        public IReadOnlyList<Tag> ChildTags =>
-            TagTable.Instance.Tags
-                .Where(x => x.ParentTagID == this.ID)
-                .ToList();
-
-        [XmlIgnore]
-        public IReadOnlyList<ITrigger> Triggers
-        {
-            get
-            {
-                var triggers = new List<ITrigger>();
-                triggers.AddRange(SpellPanelTable.Instance.Table.Where(x => x.Tags.Contains(this.ID)));
-                triggers.AddRange(TickerTable.Instance.Table.Where(x => x.Tags.Contains(this.ID)));
-                return triggers;
-            }
-        }
-
         #region ITreeItem
 
         private bool isExpanded = false;
@@ -115,9 +99,12 @@ namespace ACT.SpecialSpellTimer.Models
             get => false;
             set
             {
-                foreach (var item in this.ChildrenSource)
+                foreach (ItemTags itemTags in this.Children.View)
                 {
-                    item.IsEnabled = value;
+                    if (itemTags.Item != null)
+                    {
+                        itemTags.Item.IsEnabled = value;
+                    }
                 }
             }
         }
@@ -129,36 +116,22 @@ namespace ACT.SpecialSpellTimer.Models
             private set;
         } = new CollectionViewSource()
         {
-            Source = TagTable.Instance.ItemTags
+            Source = TagTable.Instance.ItemTags,
         };
 
         private void SetupChildrenSource()
         {
             this.Children.Filter += (x, y) =>
             {
+                var item = y.Item as ItemTags;
+                y.Accepted = item.TagID == this.ID;
             };
-        }
 
-        [XmlIgnore]
-        public IReadOnlyList<ITreeItem> ChildrenSource
-        {
-            get
+            this.Children.SortDescriptions.Add(new SortDescription()
             {
-                var items = new List<ITreeItem>();
-
-                items.AddRange(this.ChildTags);
-                if (items.Any())
-                {
-                    return items;
-                }
-
-                foreach (var trigger in this.Triggers)
-                {
-                    items.Add(trigger as ITreeItem);
-                }
-
-                return items;
-            }
+                PropertyName = nameof(ItemTags.ItemType),
+                Direction = ListSortDirection.Ascending
+            });
         }
 
         #endregion ITreeItem

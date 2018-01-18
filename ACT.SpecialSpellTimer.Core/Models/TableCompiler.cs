@@ -299,7 +299,7 @@ namespace ACT.SpecialSpellTimer.Models
             // 統合トリガリストに登録する
             lock (this.triggerList)
             {
-                this.triggerList.RemoveAll(x => x.TriggerType == TriggerTypes.Spell);
+                this.triggerList.RemoveAll(x => x.TriggerType == ItemTypes.Spell);
                 this.triggerList.AddRange(query);
             }
 
@@ -399,7 +399,7 @@ namespace ACT.SpecialSpellTimer.Models
             // 統合トリガリストに登録する
             lock (this.triggerList)
             {
-                this.triggerList.RemoveAll(x => x.TriggerType == TriggerTypes.Ticker);
+                this.triggerList.RemoveAll(x => x.TriggerType == ItemTypes.Ticker);
                 this.triggerList.AddRange(query);
             }
 

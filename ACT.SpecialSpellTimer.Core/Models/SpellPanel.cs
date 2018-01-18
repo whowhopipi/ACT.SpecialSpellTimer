@@ -14,7 +14,7 @@ namespace ACT.SpecialSpellTimer.Models
     [XmlType(TypeName = "PanelSettings")]
     public class SpellPanel :
         BindableBase,
-        ITrigger
+        ITreeItem
     {
         private double left = 0;
         private double top = 0;
@@ -59,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Models
         #region ITrigger
 
         [XmlIgnore]
-        public TriggerTypes TriggerType => TriggerTypes.SpellPanel;
+        public ItemTypes TriggerType => ItemTypes.SpellPanel;
 
         public void MatchTrigger(string logLine)
         {

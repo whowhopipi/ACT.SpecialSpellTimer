@@ -67,18 +67,51 @@
             <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
             <Setter Property="Padding" Value="5 1 5 1" />
           </Style>
-        </TreeView.Resources>
 
-        <TreeView.ItemTemplate>
           <HierarchicalDataTemplate
-            DataType="{x:Type triggerModel:ITreeItem}"
+            DataType="{x:Type model:TriggersTreeRoot}"
+            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:SpellPanel}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
             <StackPanel Orientation="Horizontal">
               <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
             </StackPanel>
           </HierarchicalDataTemplate>
-        </TreeView.ItemTemplate>
+
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:Spell}"
+            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal">
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:Ticker}"
+            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal">
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:Tag}"
+            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal">
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+        </TreeView.Resources>
       </TreeView>
     </DockPanel>
   </Grid>
