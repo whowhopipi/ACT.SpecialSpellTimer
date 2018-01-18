@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
+using System.Windows.Data;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
@@ -24,16 +23,8 @@ namespace ACT.SpecialSpellTimer.Models
     {
         #region ITrigger
 
-        private ObservableCollection<Guid> tags = new ObservableCollection<Guid>();
-
         [XmlIgnore]
         public TriggerTypes TriggerType => TriggerTypes.Ticker;
-
-        public ObservableCollection<Guid> Tags
-        {
-            get => this.tags;
-            set => this.SetProperty(ref this.tags, value);
-        }
 
         public void MatchTrigger(string logLine)
             => TickersController.Instance.MatchCore(this, logLine);
@@ -62,7 +53,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public IReadOnlyList<ITreeItem> Children => null;
+        public CollectionViewSource Children => null;
 
         #endregion ITreeItem
 

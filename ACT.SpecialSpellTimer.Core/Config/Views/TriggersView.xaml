@@ -8,12 +8,13 @@
   xmlns:global="clr-namespace:FFXIV.Framework.Globalization;assembly=FFXIV.Framework"
   xmlns:local="clr-namespace:ACT.SpecialSpellTimer.Config.Views"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:model="clr-namespace:ACT.SpecialSpellTimer.Config.Models"
+  xmlns:triggerModel="clr-namespace:ACT.SpecialSpellTimer.Models"
   xmlns:resources="clr-namespace:ACT.SpecialSpellTimer.resources"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
-  d:DataContext="{d:DesignInstance Type=vm:TriggersViewModel,
-                                   IsDesignTimeCreatable=True}"
-  d:DesignWidth="600"
+  d:DataContext="{d:DesignInstance Type=vm:TriggersViewModel, IsDesignTimeCreatable=True}"
+  d:DesignWidth="1280"
   Background="White"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   FontFamily="Consolas, Yu Gothic UI, Meiryo UI"
@@ -41,7 +42,7 @@
 
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="20*" />
+      <ColumnDefinition Width="Auto" MinWidth="450" />
       <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="80*" />
     </Grid.ColumnDefinitions>
@@ -54,11 +55,28 @@
       Background="GhostWhite" />
 
     <!--  ツリー  -->
-    <DockPanel Name="TriggersTreePanel" Grid.Column="0">
-      <TreeView Name="TriggersTreeView" BorderThickness="0">
+    <DockPanel
+      Name="TriggersTreePanel" Grid.Column="0">
+      <TreeView
+        Name="TriggersTreeView"
+        BorderThickness="0"
+        ItemsSource="{Binding TreeRoot, Mode=OneWay}">
+
+        <TreeView.Resources>
+          <Style TargetType="TreeViewItem">
+            <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
+            <Setter Property="Padding" Value="5 1 5 1" />
+          </Style>
+        </TreeView.Resources>
+
         <TreeView.ItemTemplate>
-          <HierarchicalDataTemplate>
-            <TextBlock Text="{Binding Text, Mode=OneWay}" />
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:ITreeItem}"
+            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            <StackPanel Orientation="Horizontal">
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+            </StackPanel>
           </HierarchicalDataTemplate>
         </TreeView.ItemTemplate>
       </TreeView>

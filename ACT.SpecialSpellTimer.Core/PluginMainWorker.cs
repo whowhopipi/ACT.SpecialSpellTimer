@@ -205,8 +205,10 @@ namespace ACT.SpecialSpellTimer
 
             // 設定を保存する
             Settings.Default.Save();
+            SpellPanelTable.Instance.Save();
             SpellTable.Instance.Save();
             TickerTable.Instance.Save();
+            TagTable.Instance.Save();
 
             // サウンドコントローラを停止する
             SoundController.Instance.End();

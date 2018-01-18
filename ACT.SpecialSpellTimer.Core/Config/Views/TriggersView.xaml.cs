@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ACT.SpecialSpellTimer.Config.ViewModels;
+using ACT.SpecialSpellTimer.resources;
+using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.Config.Views
 {
     /// <summary>
     /// TriggersView.xaml の相互作用ロジック
     /// </summary>
-    public partial class TriggersView : UserControl
+    public partial class TriggersView : UserControl, ILocalizable
     {
         public TriggersView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            this.DataContext = new TriggersViewModel();
+            this.SetLocale(Settings.Default.UILocale);
         }
+
+        public TriggersViewModel ViewModel => this.DataContext as TriggersViewModel;
+
+        public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);
     }
 }

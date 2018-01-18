@@ -163,6 +163,21 @@ namespace ACT.SpecialSpellTimer
                     this.Location = plugin.pluginFile.DirectoryName;
                 }
 
+                // 設定ファイルのバックアップを作成する
+                SpellPanelTable.Instance.Backup();
+                SpellTable.Instance.Backup();
+                TickerTable.Instance.Backup();
+                TagTable.Instance.Backup();
+
+                // 設定ファイルを読み込む
+                SpellPanelTable.Instance.Load();
+                SpellTable.Instance.Load();
+                TickerTable.Instance.Load();
+                TagTable.Instance.Load();
+
+                // TTS辞書を読み込む
+                TTSDictionary.Instance.Load();
+
                 // 設定Panelを追加する
                 var baseView = new BaseView(pluginScreenSpace.Font);
                 pluginScreenSpace.Controls.Add(new ElementHost()
@@ -173,19 +188,6 @@ namespace ACT.SpecialSpellTimer
                 });
 
                 this.ConfigPanel = baseView.ConfigPanel;
-
-                // 設定ファイルのバックアップを作成する
-                SpellTable.Instance.Backup();
-                TickerTable.Instance.Backup();
-                SpellPanelTable.Instance.Backup();
-
-                // 設定ファイルを読み込む
-                SpellTable.Instance.Load();
-                TickerTable.Instance.Load();
-                SpellPanelTable.Instance.Load();
-
-                // TTS辞書を読み込む
-                TTSDictionary.Instance.Load();
 
                 // 本体を開始する
                 PluginMainWorker.Instance.Begin();

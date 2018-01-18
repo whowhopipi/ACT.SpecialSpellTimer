@@ -13,72 +13,22 @@ namespace ACT.SpecialSpellTimer.Models
     /// </summary>
     public class SpellPanelTable
     {
-        /// <summary>
-        /// 唯一のinstance
-        /// </summary>
+        #region Singleton
+
         private static SpellPanelTable instance = new SpellPanelTable();
 
-        /// <summary>
-        /// Panel設定データテーブル
-        /// </summary>
-        private volatile ObservableCollection<SpellPanel> table = new ObservableCollection<SpellPanel>();
-
-        /// <summary>
-        /// 唯一のinstance
-        /// </summary>
         public static SpellPanelTable Instance => instance;
 
-        /// <summary>
-        /// デフォルトのファイル
-        /// </summary>
+        #endregion Singleton
+
+        private volatile ObservableCollection<SpellPanel> table = new ObservableCollection<SpellPanel>();
+
+        public ObservableCollection<SpellPanel> Table => this.table;
+
         public string DefaultFile => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             @"anoyetta\ACT\ACT.SpecialSpellTimer.Panels.xml");
 
-        /// <summary>
-        /// Panel設定データテーブル
-        /// </summary>
-        public ObservableCollection<SpellPanel> Table => this.table;
-
-        /// <summary>
-        /// テーブルファイルをバックアップする
-        /// </summary>
-        public void Backup()
-        {
-            var file = this.DefaultFile;
-
-            if (File.Exists(file))
-            {
-                var backupFile = Path.Combine(
-                    Path.Combine(Path.GetDirectoryName(file), "backup"),
-                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyy-MM-dd") + ".bak");
-
-                if (!Directory.Exists(Path.GetDirectoryName(backupFile)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(backupFile));
-                }
-
-                File.Copy(
-                    file,
-                    backupFile,
-                    true);
-
-                // 古いバックアップを消す
-                foreach (var bak in
-                    Directory.GetFiles(Path.GetDirectoryName(backupFile), "*.bak"))
-                {
-                    var timeStamp = File.GetCreationTime(bak);
-                    if ((DateTime.Now - timeStamp).TotalDays >= 3.0d)
-                    {
-                        File.Delete(bak);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// ロード
-        /// </summary>
         public void Load()
         {
             if (File.Exists(this.DefaultFile))
@@ -125,9 +75,6 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        /// <summary>
-        /// セーブ
-        /// </summary>
         public void Save()
         {
             if (this.table == null ||
@@ -147,6 +94,39 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 var xs = new XmlSerializer(this.table.GetType());
                 xs.Serialize(sw, this.table);
+            }
+        }
+
+        public void Backup()
+        {
+            var file = this.DefaultFile;
+
+            if (File.Exists(file))
+            {
+                var backupFile = Path.Combine(
+                    Path.Combine(Path.GetDirectoryName(file), "backup"),
+                    Path.GetFileNameWithoutExtension(file) + "." + DateTime.Now.ToString("yyyy-MM-dd") + ".bak");
+
+                if (!Directory.Exists(Path.GetDirectoryName(backupFile)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(backupFile));
+                }
+
+                File.Copy(
+                    file,
+                    backupFile,
+                    true);
+
+                // 古いバックアップを消す
+                foreach (var bak in
+                    Directory.GetFiles(Path.GetDirectoryName(backupFile), "*.bak"))
+                {
+                    var timeStamp = File.GetCreationTime(bak);
+                    if ((DateTime.Now - timeStamp).TotalDays >= 3.0d)
+                    {
+                        File.Delete(bak);
+                    }
+                }
             }
         }
     }

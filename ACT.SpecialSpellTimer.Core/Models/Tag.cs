@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Data;
 using System.Xml.Serialization;
 using Prism.Mvvm;
 
@@ -12,7 +13,7 @@ namespace ACT.SpecialSpellTimer.Models
         ITreeItem
     {
         private Guid id = Guid.NewGuid();
-        private Guid parentID = Guid.Empty;
+        private Guid parentTagID = Guid.Empty;
         private string name = string.Empty;
 
         public Guid ID
@@ -21,12 +22,12 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.id, value);
         }
 
-        public Guid ParentID
+        public Guid ParentTagID
         {
-            get => this.parentID;
+            get => this.parentTagID;
             set
             {
-                if (this.SetProperty(ref this.parentID, value))
+                if (this.SetProperty(ref this.parentTagID, value))
                 {
                     this.RaisePropertyChanged(nameof(this.FullName));
                 }
@@ -50,7 +51,7 @@ namespace ACT.SpecialSpellTimer.Models
         {
             get
             {
-                if (this.ParentID == Guid.Empty)
+                if (this.ParentTagID == Guid.Empty)
                 {
                     return this.Name;
                 }
@@ -58,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Models
                 var names = new List<string>();
                 var current = this;
                 var parent = default(Tag);
-                while ((parent = current.Parent) != null)
+                while ((parent = current.ParentTag) != null)
                 {
                     names.Add(parent.Name);
                     current = parent;
@@ -71,16 +72,16 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public Tag Parent =>
-            this.ParentID == Guid.Empty ?
+        public Tag ParentTag =>
+            this.ParentTagID == Guid.Empty ?
             null :
-            TagTable.Instance.Table
-                .FirstOrDefault(x => x.ID == this.ParentID);
+            TagTable.Instance.Tags
+                .FirstOrDefault(x => x.ID == this.ParentTagID);
 
         [XmlIgnore]
-        public IReadOnlyList<Tag> Tags =>
-            TagTable.Instance.Table
-                .Where(x => x.ParentID == this.ID)
+        public IReadOnlyList<Tag> ChildTags =>
+            TagTable.Instance.Tags
+                .Where(x => x.ParentTagID == this.ID)
                 .ToList();
 
         [XmlIgnore]
@@ -114,7 +115,7 @@ namespace ACT.SpecialSpellTimer.Models
             get => false;
             set
             {
-                foreach (var item in this.Children)
+                foreach (var item in this.ChildrenSource)
                 {
                     item.IsEnabled = value;
                 }
@@ -122,13 +123,30 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public IReadOnlyList<ITreeItem> Children
+        public CollectionViewSource Children
+        {
+            get;
+            private set;
+        } = new CollectionViewSource()
+        {
+            Source = TagTable.Instance.ItemTags
+        };
+
+        private void SetupChildrenSource()
+        {
+            this.Children.Filter += (x, y) =>
+            {
+            };
+        }
+
+        [XmlIgnore]
+        public IReadOnlyList<ITreeItem> ChildrenSource
         {
             get
             {
                 var items = new List<ITreeItem>();
 
-                items.AddRange(this.Tags);
+                items.AddRange(this.ChildTags);
                 if (items.Any())
                 {
                     return items;

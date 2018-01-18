@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Windows.Data;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -10,6 +10,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         bool IsEnabled { get; set; }
 
-        IReadOnlyList<ITreeItem> Children { get; }
+        CollectionViewSource Children { get; }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -11,6 +10,7 @@ using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models
 {
+    [Serializable]
     public class TagTable :
         BindableBase
     {
@@ -22,10 +22,22 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Singleton
 
-        private ObservableCollection<Tag> table = new ObservableCollection<Tag>();
+        private ObservableCollection<Tag> tags = new ObservableCollection<Tag>();
+        private ObservableCollection<ItemTags> itemTags = new ObservableCollection<ItemTags>();
 
-        public ObservableCollection<Tag> Table => this.table;
+        public ObservableCollection<Tag> Tags
+        {
+            get => this.tags;
+            set => this.SetProperty(ref this.tags, value);
+        }
 
+        public ObservableCollection<ItemTags> ItemTags
+        {
+            get => this.itemTags;
+            set => this.SetProperty(ref this.itemTags, value);
+        }
+
+        [XmlIgnore]
         public string DefaultFile =>
             Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -33,7 +45,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void Add(
             Tag tag)
-            => this.Table.Add(tag);
+            => this.Tags.Add(tag);
 
         public Tag AddNew(
             Tag parent)
@@ -42,7 +54,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             if (parent != null)
             {
-                tag.ParentID = parent.ID;
+                tag.ParentTagID = parent.ID;
             }
 
             this.Add(tag);
@@ -52,19 +64,19 @@ namespace ACT.SpecialSpellTimer.Models
 
         public Tag AddNew(
             Guid parentID)
-            => this.AddNew(this.table.FirstOrDefault(x => x.ID == parentID));
+            => this.AddNew(this.Tags.FirstOrDefault(x => x.ID == parentID));
 
         public Tag AddNew() => this.AddNew(null);
 
         public void Remove(
             Tag tag)
         {
-            foreach (var child in tag.Tags)
+            foreach (var child in tag.ChildTags)
             {
                 this.Remove(child);
             }
 
-            this.table.Remove(tag);
+            this.Tags.Remove(tag);
         }
 
         public void Load()
@@ -82,14 +94,14 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     if (sr.BaseStream.Length > 0)
                     {
-                        var xs = new XmlSerializer(table.GetType());
-                        var data = xs.Deserialize(sr) as IList<Tag>;
+                        var xs = new XmlSerializer(this.GetType());
+                        var data = xs.Deserialize(sr) as TagTable;
 
-                        this.table.Clear();
-                        foreach (var item in data)
-                        {
-                            this.table.Add(item);
-                        }
+                        this.Tags.Clear();
+                        this.Tags.AddRange(data.Tags);
+
+                        this.ItemTags.Clear();
+                        this.ItemTags.AddRange(data.ItemTags);
                     }
                 }
                 catch (Exception ex)
@@ -107,8 +119,8 @@ namespace ACT.SpecialSpellTimer.Models
 
             using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
             {
-                var xs = new XmlSerializer(this.table.GetType());
-                xs.Serialize(sw, this.table);
+                var xs = new XmlSerializer(this.GetType());
+                xs.Serialize(sw, this);
             }
         }
 

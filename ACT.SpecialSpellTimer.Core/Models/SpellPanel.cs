@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Views;
 using Prism.Mvvm;
@@ -16,6 +18,13 @@ namespace ACT.SpecialSpellTimer.Models
     {
         private double left = 0;
         private double top = 0;
+
+        public SpellPanel()
+        {
+            this.SetupChildrenSource();
+        }
+
+        public Guid ID { get; set; } = Guid.NewGuid();
 
         public double Left
         {
@@ -49,16 +58,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region ITrigger
 
-        private ObservableCollection<Guid> tags = new ObservableCollection<Guid>();
-
         [XmlIgnore]
         public TriggerTypes TriggerType => TriggerTypes.SpellPanel;
-
-        public ObservableCollection<Guid> Tags
-        {
-            get => this.tags;
-            set => this.SetProperty(ref this.tags, value);
-        }
 
         public void MatchTrigger(string logLine)
         {
@@ -82,10 +83,10 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public bool IsEnabled
         {
-            get => this.Children.Count == this.Children.Where(x => x.IsEnabled).Count();
+            get => this.Spells.Count == this.Spells.Where(x => x.IsEnabled).Count();
             set
             {
-                foreach (var spell in this.Children)
+                foreach (var spell in this.Spells)
                 {
                     spell.IsEnabled = value;
                 }
@@ -95,7 +96,37 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public IReadOnlyList<ITreeItem> Children => this.Spells;
+        public CollectionViewSource Children
+        {
+            get;
+            private set;
+        } = new CollectionViewSource()
+        {
+            Source = SpellTable.Instance.Table
+        };
+
+        private void SetupChildrenSource()
+        {
+            this.Children.Filter += (x, y) =>
+            {
+                var spell = y.Item as Spell;
+                y.Accepted = spell.Panel == this.PanelName;
+            };
+
+            this.Children.SortDescriptions.AddRange(new SortDescription[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = nameof(Spell.DisplayNo),
+                    Direction = ListSortDirection.Ascending
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(Spell.SpellTitle),
+                    Direction = ListSortDirection.Ascending
+                },
+            });
+        }
 
         #endregion ITreeItem
     }
