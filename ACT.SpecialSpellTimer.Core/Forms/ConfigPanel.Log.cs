@@ -165,7 +165,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     where
                     !s.IsInstance
                     orderby
-                    s.Panel,
+                    s.Panel.PanelName,
                     s.DisplayNo,
                     s.ID
                     select

@@ -39,6 +39,9 @@ namespace ACT.SpecialSpellTimer.Models
         public string DisplayText => this.Title;
 
         [XmlIgnore]
+        public int SortPriority { get; set; }
+
+        [XmlIgnore]
         public bool IsExpanded
         {
             get => false;

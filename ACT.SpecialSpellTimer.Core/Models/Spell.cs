@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
 using System.Windows.Data;
@@ -41,6 +42,9 @@ namespace ACT.SpecialSpellTimer.Models
         public string DisplayText => this.SpellTitle;
 
         [XmlIgnore]
+        public int SortPriority { get; set; }
+
+        [XmlIgnore]
         public bool IsExpanded
         {
             get => false;
@@ -76,7 +80,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         public Spell()
         {
-            this.Panel = string.Empty;
             this.SpellTitle = string.Empty;
             this.SpellIcon = string.Empty;
             this.Keyword = string.Empty;
@@ -149,6 +152,40 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         public Guid Guid { get; set; } = Guid.NewGuid();
+
+        private Guid panelID = Guid.Empty;
+
+        public Guid PanelID
+        {
+            get => this.panelID;
+            set => this.SetProperty(ref this.panelID, value);
+        }
+
+        [XmlIgnore]
+        public SpellPanel Panel => SpellPanelTable.Instance.Table.FirstOrDefault(x => x.ID == this.PanelID);
+
+        private string panelName = string.Empty;
+
+        [XmlElement(ElementName = "Panel")]
+        public string PanelName
+        {
+            get
+            {
+                if (this.PanelID == Guid.Empty)
+                {
+                    return this.panelName;
+                }
+
+                return this.Panel?.PanelName;
+            }
+
+            set => this.panelName = value;
+        }
+
+        public string SpellTitle { get; set; }
+
+        [XmlIgnore]
+        public string SpellTitleReplaced { get; set; }
 
         [XmlIgnore]
         public bool IsTemporaryDisplay { get; set; } = false;
@@ -224,7 +261,6 @@ namespace ACT.SpecialSpellTimer.Models
         public bool OverlapRecastTime { get; set; }
         public string OverTextToSpeak { get; set; }
         public double OverTime { get; set; } = 0;
-        public string Panel { get; set; }
         public bool ProgressBarVisible { get; set; }
         public double RecastTime { get; set; } = 0;
         public double RecastTimeExtending1 { get; set; } = 0;
@@ -254,10 +290,6 @@ namespace ACT.SpecialSpellTimer.Models
         public bool RepeatEnabled { get; set; }
         public string SpellIcon { get; set; }
         public int SpellIconSize { get; set; }
-        public string SpellTitle { get; set; }
-
-        [XmlIgnore]
-        public string SpellTitleReplaced { get; set; }
 
         /// <summary>スペルが作用した対象</summary>
         [XmlIgnore]

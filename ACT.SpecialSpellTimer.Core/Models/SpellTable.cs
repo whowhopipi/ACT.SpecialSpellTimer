@@ -159,6 +159,14 @@ namespace ACT.SpecialSpellTimer.Models
 
                             foreach (var item in data)
                             {
+                                // パネルIDを補完する
+                                if (item.PanelID == Guid.Empty)
+                                {
+                                    item.PanelID = SpellPanelTable.Instance.Table
+                                        .FirstOrDefault(x => x.PanelName == item.PanelName)?
+                                        .ID ?? Guid.Empty;
+                                }
+
                                 this.table.Add(item);
                             }
                         }
@@ -247,7 +255,7 @@ namespace ACT.SpecialSpellTimer.Models
                 !x.IsInstance &&
                 (
                     string.IsNullOrEmpty(panelName) ||
-                    x.Panel == panelName
+                    x.PanelName == panelName
                 )).ToList();
 
             this.Save(file, work);
@@ -311,7 +319,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                     ns.SpellTitleReplaced = instanceSpellTitle;
 
-                    ns.Panel = sourceSpell.Panel;
+                    ns.PanelID = sourceSpell.PanelID;
                     ns.SpellTitle = sourceSpell.SpellTitle;
                     ns.SpellIcon = sourceSpell.SpellIcon;
                     ns.SpellIconSize = sourceSpell.SpellIconSize;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
@@ -13,6 +14,28 @@ namespace ACT.SpecialSpellTimer.Models
         BindableBase,
         ITreeItem
     {
+        #region プリセットタグ
+
+        /// <summary>
+        /// インポートタグ
+        /// </summary>
+        private static Tag importsTag = new Tag()
+        {
+            Name = "+Imports",
+            SortPriority = 100,
+        };
+
+        public static Tag ImportsTag => importsTag;
+
+        public static void SetImportTag(
+            Tag tag)
+        {
+            tag.SortPriority = importsTag.SortPriority;
+            importsTag = tag;
+        }
+
+        #endregion プリセットタグ
+
         private Guid id = Guid.NewGuid();
         private string name = string.Empty;
 
@@ -82,6 +105,8 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string DisplayText => this.Name;
 
+        public int SortPriority { get; set; }
+
         public bool IsExpanded
         {
             get => this.isExpanded;
@@ -122,10 +147,23 @@ namespace ACT.SpecialSpellTimer.Models
                 y.Accepted = item.TagID == this.ID;
             };
 
-            this.Children.SortDescriptions.Add(new SortDescription()
+            this.Children.SortDescriptions.AddRange(new SortDescription[]
             {
-                PropertyName = nameof(ItemTags.ItemType),
-                Direction = ListSortDirection.Ascending
+                new SortDescription()
+                {
+                    PropertyName = nameof(ItemTags.ItemType),
+                    Direction = ListSortDirection.Ascending
+                },
+                new SortDescription()
+                {
+                    PropertyName = "Item.SortPriority",
+                    Direction = ListSortDirection.Descending
+                },
+                new SortDescription()
+                {
+                    PropertyName = "Item.DisplayText",
+                    Direction = ListSortDirection.Ascending
+                },
             });
         }
 

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Linq;
 using ACT.SpecialSpellTimer.Models;
 
 namespace ACT.SpecialSpellTimer.Forms
@@ -149,7 +149,6 @@ namespace ACT.SpecialSpellTimer.Forms
             }
         }
 
-
         private void LoadSpells()
         {
             var list = new List<ListViewItem>();
@@ -159,7 +158,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 where
                 !x.IsInstance
                 orderby
-                x.Panel,
+                x.Panel.PanelName,
                 x.DisplayNo,
                 x.ID
                 select
@@ -168,7 +167,7 @@ namespace ACT.SpecialSpellTimer.Forms
             foreach (var spell in q)
             {
                 list.Add(new ListViewItem(
-                    $"[{spell.Panel}] {spell.SpellTitle}")
+                    $"[{spell.Panel.PanelName}] {spell.SpellTitle}")
                 {
                     Tag = spell
                 });

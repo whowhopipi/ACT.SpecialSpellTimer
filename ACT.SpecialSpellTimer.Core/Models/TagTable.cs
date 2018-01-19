@@ -84,30 +84,46 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var file = this.DefaultFile;
 
-            if (!File.Exists(file))
+            try
             {
-                return;
-            }
-
-            using (var sr = new StreamReader(file, new UTF8Encoding(false)))
-            {
-                try
+                if (!File.Exists(file))
                 {
-                    if (sr.BaseStream.Length > 0)
+                    return;
+                }
+
+                using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+                {
+                    try
                     {
-                        var xs = new XmlSerializer(this.GetType());
-                        var data = xs.Deserialize(sr) as TagTable;
+                        if (sr.BaseStream.Length > 0)
+                        {
+                            var xs = new XmlSerializer(this.GetType());
+                            var data = xs.Deserialize(sr) as TagTable;
 
-                        this.Tags.Clear();
-                        this.Tags.AddRange(data.Tags);
+                            this.Tags.Clear();
+                            this.Tags.AddRange(data.Tags);
 
-                        this.ItemTags.Clear();
-                        this.ItemTags.AddRange(data.ItemTags);
+                            this.ItemTags.Clear();
+                            this.ItemTags.AddRange(data.ItemTags);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write(Translate.Get("LoadXMLError"), ex);
                     }
                 }
-                catch (Exception ex)
+            }
+            finally
+            {
+                // インポートタグを追加する
+                var importsTag = this.Tags.FirstOrDefault(x => x.Name == Tag.ImportsTag.Name);
+                if (importsTag == null)
                 {
-                    Logger.Write(Translate.Get("LoadXMLError"), ex);
+                    this.Tags.Add(Tag.ImportsTag);
+                }
+                else
+                {
+                    Tag.SetImportTag(importsTag);
                 }
             }
         }

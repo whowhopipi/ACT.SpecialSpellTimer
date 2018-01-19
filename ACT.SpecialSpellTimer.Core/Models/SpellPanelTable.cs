@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Utility;
@@ -31,8 +32,13 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void Load()
         {
-            if (File.Exists(this.DefaultFile))
+            try
             {
+                if (!File.Exists(this.DefaultFile))
+                {
+                    return;
+                }
+
                 // 旧形式を置換する
                 var text = File.ReadAllText(
                     this.DefaultFile,
@@ -55,6 +61,12 @@ namespace ACT.SpecialSpellTimer.Models
                             this.table.Clear();
                             foreach (var item in data)
                             {
+                                // 旧Generalパネルの名前を置換える
+                                if (item.PanelName == "General")
+                                {
+                                    item.PanelName = SpellPanel.GeneralPanel.PanelName;
+                                }
+
                                 this.table.Add(item);
                             }
                         }
@@ -64,13 +76,26 @@ namespace ACT.SpecialSpellTimer.Models
                         Logger.Write(Translate.Get("LoadXMLError"), ex);
                     }
                 }
-
+            }
+            finally
+            {
                 // NaNを潰す
                 foreach (var x in this.table)
                 {
                     x.Top = double.IsNaN(x.Top) ? 0 : x.Top;
                     x.Left = double.IsNaN(x.Left) ? 0 : x.Left;
                     x.Margin = double.IsNaN(x.Margin) ? 0 : x.Margin;
+                }
+
+                // プリセットパネルを作る
+                var generalPanel = this.Table.FirstOrDefault(x => x.PanelName == SpellPanel.GeneralPanel.PanelName);
+                if (generalPanel == null)
+                {
+                    this.Table.Add(SpellPanel.GeneralPanel);
+                }
+                else
+                {
+                    SpellPanel.SetGeneralPanel(generalPanel);
                 }
             }
         }

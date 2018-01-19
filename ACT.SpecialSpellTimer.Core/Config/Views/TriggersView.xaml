@@ -13,6 +13,7 @@
   xmlns:resources="clr-namespace:ACT.SpecialSpellTimer.resources"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
+  xmlns:fa="http://schemas.fontawesome.io/icons/"
   d:DataContext="{d:DesignInstance Type=vm:TriggersViewModel, IsDesignTimeCreatable=True}"
   d:DesignWidth="1280"
   Background="White"
@@ -25,7 +26,8 @@
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
-  mc:Ignorable="d">
+  mc:Ignorable="d"
+  Padding="3">
 
   <UserControl.Resources>
     <ResourceDictionary>
@@ -51,6 +53,7 @@
     <GridSplitter
       Grid.Column="1"
       Width="3"
+      IsTabStop="False"
       HorizontalAlignment="Center"
       Background="GhostWhite" />
 
@@ -68,61 +71,175 @@
             <Setter Property="Padding" Value="5 1 5 1" />
           </Style>
 
+          <!-- ルート要素 -->
           <HierarchicalDataTemplate
             DataType="{x:Type model:TriggersTreeRoot}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
+
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+
             <StackPanel Orientation="Horizontal">
-              <TextBlock
-                FontWeight="Black"
-                Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+              <TextBlock FontWeight="Black" FontSize="19" Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
           </HierarchicalDataTemplate>
 
+          <!-- スペルパネル -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:SpellPanel}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
+
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+                <Setter Property="Foreground" Value="DarkViolet" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+
             <StackPanel Orientation="Horizontal">
-              <CheckBox
-                IsTabStop="False"
-                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
-              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="ThList" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
           </HierarchicalDataTemplate>
 
+          <!-- スペル -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:Spell}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
+
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+                <Setter Property="Foreground" Value="MediumBlue" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+
             <StackPanel Orientation="Horizontal">
-              <CheckBox
-                IsTabStop="False"
-                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
-              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="Magic" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
           </HierarchicalDataTemplate>
 
+          <!-- ティッカー -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:Ticker}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
+
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+                <Setter Property="Foreground" Value="OliveDrab" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+
             <StackPanel Orientation="Horizontal">
-              <CheckBox
-                IsTabStop="False"
-                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
-              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="Comment" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
           </HierarchicalDataTemplate>
 
+          <!-- タグ -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:Tag}"
             ItemsSource="{Binding Children.View, Mode=OneWay}">
+
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+                <Setter Property="Foreground" Value="Orange" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+
             <StackPanel Orientation="Horizontal">
-              <CheckBox
-                IsTabStop="False"
-                IsChecked="{Binding IsEnabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0 0 5 0" />
-              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" VerticalAlignment="Center" />
+              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="Tag" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
           </HierarchicalDataTemplate>
         </TreeView.Resources>
       </TreeView>
     </DockPanel>
+
+    <Border
+      x:Name="ContentBorder"
+      Grid.Column="2"
+      Margin="3 0 0 0"
+      Padding="8"
+      BorderThickness="2"
+      CornerRadius="2"
+      BorderBrush="Transparent">
+      <Grid x:Name="ContentGrid" />
+    </Border>
   </Grid>
 </UserControl>

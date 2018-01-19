@@ -1,6 +1,9 @@
+using Prism.Mvvm;
+
 namespace ACT.SpecialSpellTimer.Config.ViewModels
 {
-    internal class InformationsViewModel
+    public class InformationsViewModel :
+        BindableBase
     {
     }
 }

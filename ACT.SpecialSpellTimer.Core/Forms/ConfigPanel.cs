@@ -85,16 +85,16 @@ namespace ACT.SpecialSpellTimer.Forms
 
                 var panels = SpellTable.Instance.Table
                     .Where(x => !x.IsInstance)
-                    .OrderBy(x => x.Panel)
-                    .Select(x => x.Panel)
+                    .OrderBy(x => x.Panel.PanelName)
+                    .Select(x => x.PanelID)
                     .Distinct();
-                foreach (var panelName in panels)
+                foreach (var panelID in panels)
                 {
                     var children = new List<TreeNode>();
                     var spells = SpellTable.Instance.Table
                         .Where(x => !x.IsInstance)
                         .OrderBy(x => x.DisplayNo)
-                        .Where(x => x.Panel == panelName);
+                        .Where(x => x.PanelID == panelID);
                     foreach (var spell in spells)
                     {
                         var nc = new TreeNode()
@@ -109,7 +109,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     }
 
                     var n = new TreeNode(
-                        panelName,
+                        spells.First().Panel.PanelName,
                         children.ToArray());
 
                     n.Checked = children.Any(x => x.Checked);
@@ -145,7 +145,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 nr.ID = SpellTable.Instance.Table.Any() ?
                     SpellTable.Instance.Table.Max(x => x.ID) + 1 :
                     1;
-                nr.Panel = "General";
+                nr.PanelID = SpellPanel.GeneralPanel.ID;
                 nr.SpellTitle = "New Spell";
                 nr.SpellIcon = string.Empty;
                 nr.SpellIconSize = 24;
@@ -173,7 +173,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                     if (baseRow != null)
                     {
-                        nr.Panel = baseRow.Panel;
+                        nr.PanelID = baseRow.PanelID;
                         nr.SpellTitle = baseRow.SpellTitle + " New";
                         nr.SpellIcon = baseRow.SpellIcon;
                         nr.SpellIconSize = baseRow.SpellIconSize;
@@ -241,10 +241,13 @@ namespace ACT.SpecialSpellTimer.Forms
                     Checked = nr.IsEnabled
                 };
 
+                // 新しいパネル名
+                var newPanelName = nr.Panel.PanelName;
+
                 // 親ノードがあれば追加する
                 foreach (TreeNode item in this.SpellTimerTreeView.Nodes)
                 {
-                    if (item.Text == nr.Panel)
+                    if (item.Text == newPanelName)
                     {
                         item.Nodes.Add(node);
                         this.SpellTimerTreeView.SelectedNode = node;
@@ -256,12 +259,12 @@ namespace ACT.SpecialSpellTimer.Forms
                 // 親ノードがなかった
                 if (this.SpellTimerTreeView.SelectedNode != node)
                 {
-                    var parentNode = new TreeNode(nr.Panel, new TreeNode[] { node })
+                    var parentNode = new TreeNode(newPanelName, new TreeNode[] { node })
                     {
                         Checked = true
                     };
 
-                    SpellsController.Instance.GetPanelSettings(nr.Panel);
+                    SpellsController.Instance.GetPanelSettings(newPanelName);
 
                     this.SpellTimerTreeView.Nodes.Add(parentNode);
                     this.SpellTimerTreeView.SelectedNode = node;
@@ -736,7 +739,9 @@ namespace ACT.SpecialSpellTimer.Forms
                 this.SelectIconButton.FlatAppearance.BorderSize = 0;
             }
 
-            this.PanelNameTextBox.Text = src.Panel;
+            this.PanelNameTextBox.Text = src.Panel.PanelName;
+            this.PanelNameTextBox.ReadOnly = true;
+
             this.SpellTitleTextBox.Text = src.SpellTitle;
             this.SpellIconSizeUpDown.Value = src.SpellIconSize;
             this.DisplayNoNumericUpDown.Value = src.DisplayNo;
@@ -950,7 +955,6 @@ namespace ACT.SpecialSpellTimer.Forms
                 var src = this.DetailGroupBox.Tag as Spell;
                 if (src != null)
                 {
-                    src.Panel = this.PanelNameTextBox.Text;
                     src.SpellTitle = this.SpellTitleTextBox.Text;
                     src.SpellIcon = (string)this.SelectIconButton.Tag;
                     src.SpellIconSize = (int)this.SpellIconSizeUpDown.Value;
@@ -1009,7 +1013,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     src.BlinkIcon = this.BlinkIconCheckBox.Checked;
                     src.BlinkBar = this.BlinkBarCheckBox.Checked;
 
-                    var panel = SpellTable.Instance.Table.Where(x => x.Panel == src.Panel);
+                    var panel = SpellTable.Instance.Table.Where(x => x.PanelID == src.PanelID);
                     foreach (var s in panel)
                     {
                         s.BackgroundColor = src.BackgroundColor;

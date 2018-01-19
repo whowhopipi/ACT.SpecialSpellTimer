@@ -16,6 +16,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
         [XmlIgnore]
         public ItemTypes ItemType => ItemTypes.Root;
 
+        public int SortPriority { get; set; }
+
         public string DisplayText
         {
             get => this.displayText;

@@ -357,19 +357,20 @@ namespace ACT.SpecialSpellTimer
                 where
                 !s.ToInstance ||
                 s.IsTemporaryDisplay
-                group s by s.Panel.Trim();
+                group s by s.Panel.PanelName.Trim();
 
             foreach (var panel in spellsGroupByPanel)
             {
                 var f = panel.First();
 
-                var w = this.FindPanelByName(f.Panel);
+                var panelName = f.Panel.PanelName;
+                var w = this.FindPanelByName(panelName);
                 if (w == null)
                 {
                     w = new SpellTimerListWindow()
                     {
-                        Title = "SpecialSpellTimer - " + f.Panel,
-                        PanelName = f.Panel,
+                        Title = "SpecialSpellTimer - " + panelName,
+                        PanelName = panelName,
                     };
 
                     lock (this.spellTimerPanels)
@@ -463,13 +464,13 @@ namespace ACT.SpecialSpellTimer
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in SpellPanelTable.Instance.Table)
+                foreach (var panel in SpellPanelTable.Instance.Table)
                 {
                     // スペルリストに存在しないパネルを閉じる
                     if (!spells.Any(x =>
-                        x.Panel == setting.PanelName))
+                        x.PanelID == panel.ID))
                     {
-                        setting.ToClose = true;
+                        panel.ToClose = true;
                     }
                 }
             }
@@ -482,9 +483,9 @@ namespace ACT.SpecialSpellTimer
         {
             lock (this.spellTimerPanels)
             {
-                foreach (var setting in SpellPanelTable.Instance.Table)
+                foreach (var panel in SpellPanelTable.Instance.Table)
                 {
-                    setting.PanelWindow?.HideOverlay();
+                    panel.PanelWindow?.HideOverlay();
                 }
             }
         }
@@ -751,7 +752,7 @@ namespace ACT.SpecialSpellTimer
 
             var prefix = Settings.Default.NotifyNormalSpellTimerPrefix;
             var spellName = prefix + "spell_" + spellTimer.SpellTitle;
-            var categoryName = prefix + spellTimer.Panel;
+            var categoryName = prefix + spellTimer.Panel.PanelName;
             var recastTime = useRecastTime ? spellTimer.RecastTime : (spellTimer.CompleteScheduledTime - DateTime.Now).TotalSeconds;
 
             var timerData = new TimerData(spellName, categoryName);

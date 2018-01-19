@@ -104,15 +104,15 @@ namespace ACT.SpecialSpellTimer.Forms
             treeView.Nodes.Clear();
 
             var panels = SpellTable.Instance.Table
-                .OrderBy(x => x.Panel)
-                .Select(x => x.Panel)
+                .OrderBy(x => x.Panel.PanelName)
+                .Select(x => x.PanelID)
                 .Distinct();
-            foreach (var panelName in panels)
+            foreach (var panelID in panels)
             {
                 var children = new List<TreeNode>();
                 var spells = SpellTable.Instance.Table
                     .OrderBy(x => x.DisplayNo)
-                    .Where(x => x.Panel == panelName);
+                    .Where(x => x.PanelID == panelID);
                 foreach (var spell in spells)
                 {
                     var nc = new TreeNode()
@@ -127,7 +127,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 }
 
                 var n = new TreeNode(
-                    panelName,
+                    spells.First().Panel.PanelName,
                     children.ToArray());
 
                 n.Checked = false;

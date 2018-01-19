@@ -254,7 +254,7 @@ namespace ACT.SpecialSpellTimer.Models
                     filter(x)
                 )
                 orderby
-                x.Panel,
+                x.Panel.PanelName,
                 x.DisplayNo,
                 x.ID
                 select

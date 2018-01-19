@@ -110,7 +110,7 @@ namespace ACT.SpecialSpellTimer
                         case "spells":
                             foreach (var spell in SpellTable.Instance.Table)
                             {
-                                if (spell.Panel.Trim().ToLower() == windowname.Trim().ToLower() ||
+                                if (spell.Panel.PanelName.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     spell.SpellTitle.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     windowname.Trim().ToLower() == "all")
                                 {

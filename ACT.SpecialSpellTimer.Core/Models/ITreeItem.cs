@@ -15,6 +15,8 @@ namespace ACT.SpecialSpellTimer.Models
     {
         ItemTypes ItemType { get; }
 
+        int SortPriority { get; set; }
+
         string DisplayText { get; }
 
         bool IsExpanded { get; set; }

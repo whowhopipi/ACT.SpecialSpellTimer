@@ -49,16 +49,37 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 }
             };
 
-            spells.Children.SortDescriptions.Add(new SortDescription()
+            spells.Children.SortDescriptions.AddRange(new[]
             {
-                PropertyName = nameof(SpellPanel.PanelName),
-                Direction = ListSortDirection.Ascending,
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.SortPriority),
+                    Direction = ListSortDirection.Descending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.PanelName),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
             });
 
-            tickers.Children.SortDescriptions.Add(new SortDescription()
+            tickers.Children.SortDescriptions.AddRange(new[]
             {
-                PropertyName = nameof(Ticker.Title),
-                Direction = ListSortDirection.Ascending,
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.Title),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
             });
 
             tags.Children.Filter += (x, y) =>
@@ -67,10 +88,23 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 y.Accepted = item.ParentTagID == Guid.Empty;
             };
 
-            tags.Children.SortDescriptions.Add(new SortDescription()
+            tags.Children.SortDescriptions.AddRange(new[]
             {
-                PropertyName = nameof(Tag.Name),
-                Direction = ListSortDirection.Ascending,
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.SortPriority),
+                    Direction = ListSortDirection.Descending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(Tag.Name),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(Tag.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
             });
 
             this.TreeRoot.Add(spells);

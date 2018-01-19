@@ -93,6 +93,9 @@
     <Compile Include="Config\Models\ExpandedContainer.cs" />
     <Compile Include="Config\Models\TriggersTreeRoot.cs" />
     <Compile Include="Config\ViewModels\InformationsViewModel.cs" />
+    <Compile Include="Config\ViewModels\TickerConfigViewModel.cs" />
+    <Compile Include="Config\ViewModels\SpellConfigViewModel.cs" />
+    <Compile Include="Config\ViewModels\SpellPanelConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\OptionsViewModel.cs" />
     <Compile Include="Config\ViewModels\TriggersViewModel.cs" />
     <Compile Include="Config\Views\InformationsView.xaml.cs">
@@ -100,6 +103,15 @@
     </Compile>
     <Compile Include="Config\Views\OptionsView.xaml.cs">
       <DependentUpon>OptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\SpellConfigView.xaml.cs">
+      <DependentUpon>SpellConfigView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\SpellPanelConfigView.xaml.cs">
+      <DependentUpon>SpellPanelConfigView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\TickerConfigView.xaml.cs">
+      <DependentUpon>TickerConfigView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\Views\TriggersView.xaml.cs">
       <DependentUpon>TriggersView.xaml</DependentUpon>
@@ -330,6 +342,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Views\OptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\SpellConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\SpellPanelConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TickerConfigView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
