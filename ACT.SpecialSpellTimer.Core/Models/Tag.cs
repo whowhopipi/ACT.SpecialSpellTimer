@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
@@ -50,7 +51,13 @@ namespace ACT.SpecialSpellTimer.Models
         public Guid ID
         {
             get => this.id;
-            set => this.SetProperty(ref this.id, value);
+            set
+            {
+                if (this.SetProperty(ref this.id, value))
+                {
+                    this.RefreshChildren();
+                }
+            }
         }
 
         public string Name
@@ -92,11 +99,17 @@ namespace ACT.SpecialSpellTimer.Models
 
         [XmlIgnore]
         public Guid ParentTagID =>
-            TagTable.Instance.ItemTags.FirstOrDefault(x => x.TagID == this.ID)?.ItemID ?? Guid.Empty;
+            TagTable.Instance.ItemTags
+                .FirstOrDefault(x =>
+                    x.TagID == this.ID &&
+                    x.ItemType == ItemTypes.Tag)?.ItemID ?? Guid.Empty;
 
         [XmlIgnore]
         public Tag ParentTag =>
-            TagTable.Instance.ItemTags.FirstOrDefault(x => x.TagID == this.ID)?.Item as Tag;
+            TagTable.Instance.ItemTags
+                .FirstOrDefault(x =>
+                    x.TagID == this.ID &&
+                    x.ItemType == ItemTypes.Tag)?.Item as Tag;
 
         #region ITreeItem
 
@@ -116,55 +129,105 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public bool IsEnabled
         {
-            get => false;
+            get
+            {
+                if (!this.children.Any())
+                {
+                    return false;
+                }
+
+                var value = true;
+                foreach (ITreeItem child in this.Children)
+                {
+                    value &= child.IsEnabled;
+                }
+
+                return value;
+            }
             set
             {
-                foreach (ItemTags itemTags in this.Children.View)
+                foreach (ITreeItem child in this.Children)
                 {
-                    if (itemTags.Item != null)
-                    {
-                        itemTags.Item.IsEnabled = value;
-                    }
+                    child.IsEnabled = value;
                 }
             }
         }
 
         [XmlIgnore]
-        public CollectionViewSource Children
-        {
-            get;
-            private set;
-        } = new CollectionViewSource()
-        {
-            Source = TagTable.Instance.ItemTags,
-        };
+        public ICollectionView Children => this.childrenSource.View;
+
+        private ObservableCollection<ITreeItem> children = new ObservableCollection<ITreeItem>();
+        private CollectionViewSource childrenSource = new CollectionViewSource();
 
         private void SetupChildrenSource()
         {
-            this.Children.Filter += (x, y) =>
-            {
-                var item = y.Item as ItemTags;
-                y.Accepted = item.TagID == this.ID;
-            };
+            this.childrenSource.Source = this.children;
+            this.childrenSource.IsLiveSortingRequested = true;
 
-            this.Children.SortDescriptions.AddRange(new SortDescription[]
+            this.childrenSource.SortDescriptions.AddRange(new[]
             {
                 new SortDescription()
                 {
-                    PropertyName = nameof(ItemTags.ItemType),
-                    Direction = ListSortDirection.Ascending
+                    PropertyName = nameof(ITreeItem.ItemType),
+                    Direction = ListSortDirection.Ascending,
                 },
                 new SortDescription()
                 {
-                    PropertyName = "Item.SortPriority",
-                    Direction = ListSortDirection.Descending
+                    PropertyName = nameof(ITreeItem.SortPriority),
+                    Direction = ListSortDirection.Descending,
                 },
                 new SortDescription()
                 {
-                    PropertyName = "Item.DisplayText",
-                    Direction = ListSortDirection.Ascending
+                    PropertyName = nameof(ITreeItem.DisplayText),
+                    Direction = ListSortDirection.Ascending,
                 },
             });
+
+            TagTable.Instance.ItemTags.CollectionChanged += this.ItemTagsOnCollectionChanged;
+        }
+
+        private void ItemTagsOnCollectionChanged(
+            object sender,
+            NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (ItemTags item in e.NewItems)
+                {
+                    if (item.TagID == this.ID)
+                    {
+                        this.RefreshChildren();
+                        return;
+                    }
+                }
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (ItemTags item in e.OldItems)
+                {
+                    if (item.TagID == this.ID)
+                    {
+                        this.RefreshChildren();
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void RefreshChildren()
+        {
+            var items =
+                from x in TagTable.Instance.ItemTags
+                where
+                x.TagID == this.ID
+                select
+                x.Item;
+
+            this.children.Clear();
+            this.children.AddRange(items);
+
+            this.RaisePropertyChanged(nameof(this.IsEnabled));
         }
 
         #endregion ITreeItem

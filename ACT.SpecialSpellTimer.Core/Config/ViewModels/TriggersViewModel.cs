@@ -20,36 +20,48 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         public ObservableCollection<TriggersTreeRoot> TreeRoot => treeRoot;
 
+        private CollectionViewSource spellsSource = new CollectionViewSource()
+        {
+            Source = SpellPanelTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
+        private CollectionViewSource tickersSource = new CollectionViewSource()
+        {
+            Source = TickerTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
+        private CollectionViewSource tagsSource = new CollectionViewSource()
+        {
+            Source = TagTable.Instance.Tags,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
         private void SetupTreeRoot()
         {
             var spells = new TriggersTreeRoot()
             {
                 DisplayText = "All Spells",
-                Children = new CollectionViewSource()
-                {
-                    Source = SpellPanelTable.Instance.Table,
-                }
+                Children = this.spellsSource.View,
             };
 
             var tickers = new TriggersTreeRoot()
             {
                 DisplayText = "All Tickers",
-                Children = new CollectionViewSource()
-                {
-                    Source = TickerTable.Instance.Table,
-                }
+                Children = this.tickersSource.View,
             };
 
             var tags = new TriggersTreeRoot()
             {
                 DisplayText = "Tags",
-                Children = new CollectionViewSource()
-                {
-                    Source = TagTable.Instance.Tags,
-                }
+                Children = this.tagsSource.View,
             };
 
-            spells.Children.SortDescriptions.AddRange(new[]
+            this.spellsSource.SortDescriptions.AddRange(new[]
             {
                 new SortDescription()
                 {
@@ -68,7 +80,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 },
             });
 
-            tickers.Children.SortDescriptions.AddRange(new[]
+            this.tickersSource.SortDescriptions.AddRange(new[]
             {
                 new SortDescription()
                 {
@@ -82,13 +94,13 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 },
             });
 
-            tags.Children.Filter += (x, y) =>
+            this.tagsSource.Filter += (x, y) =>
             {
                 var item = y.Item as Tag;
                 y.Accepted = item.ParentTagID == Guid.Empty;
             };
 
-            tags.Children.SortDescriptions.AddRange(new[]
+            this.tagsSource.SortDescriptions.AddRange(new[]
             {
                 new SortDescription()
                 {

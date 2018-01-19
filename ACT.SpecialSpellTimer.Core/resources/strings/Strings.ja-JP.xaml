@@ -7,7 +7,21 @@
   <system:String x:Key="UILanguage">UI Language (* requires restart)</system:String>
   <system:String x:Key="FFXIVLanguage">FFXIV Language (* requires restart)</system:String>
 
-  <system:String x:Key="General_TTSType">TTSの種類</system:String>
+  <system:String x:Key="Common_Location">位置</system:String>
+  <system:String x:Key="Common_AddTags">タグを付ける</system:String>
+  <system:String x:Key="Common_Apply">適用する</system:String>
+  <system:String x:Key="Common_Cancel">キャンセル</system:String>
+  <system:String x:Key="Common_CreateNew">新規作成</system:String>
+  <system:String x:Key="Common_ManageTags">タグの管理</system:String>
+
+  <system:String x:Key="Tag_Title">タグを付ける</system:String>
+
+  <system:String x:Key="SpellPanel_Name">スペルパネルの名前</system:String>
+  <system:String x:Key="SpellPanel_Margin">スペル間のマージン</system:String>
+  <system:String x:Key="SpellPanel_FixedLayout">固定レイアウト（残り時間でソートしない、非表示のスペルの間を詰めない）</system:String>
+  <system:String x:Key="SpellPanel_HorizontalLayout">水平レイアウト</system:String>
+
+
   <system:String x:Key="General_ClearCache">終了時にキャッシュをクリアする</system:String>
   <system:String x:Key="General_OpenCacheDirectory">キャッシュディレクトリを開く</system:String>
   <system:String x:Key="General_ClearCacheNow">キャッシュをクリアする</system:String>

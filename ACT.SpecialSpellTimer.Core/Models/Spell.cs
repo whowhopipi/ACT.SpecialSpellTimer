@@ -1,9 +1,9 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
-using System.Windows.Data;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Sound;
@@ -59,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public CollectionViewSource Children => null;
+        public ICollectionView Children => null;
 
         #endregion ITreeItem
 

@@ -1,8 +1,8 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
-using System.Windows.Data;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
@@ -56,7 +56,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public CollectionViewSource Children => null;
+        public ICollectionView Children => null;
 
         #endregion ITreeItem
 
@@ -109,13 +109,13 @@ namespace ACT.SpecialSpellTimer.Models
         public double Left
         {
             get => this.left;
-            set => this.SetProperty(ref this.left, value);
+            set => this.SetProperty(ref this.left, Math.Round(value));
         }
 
         public double Top
         {
             get => this.top;
-            set => this.SetProperty(ref this.top, value);
+            set => this.SetProperty(ref this.top, Math.Round(value));
         }
 
         [XmlIgnore]

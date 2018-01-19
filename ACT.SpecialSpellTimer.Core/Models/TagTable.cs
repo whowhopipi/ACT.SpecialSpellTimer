@@ -101,10 +101,10 @@ namespace ACT.SpecialSpellTimer.Models
                             var data = xs.Deserialize(sr) as TagTable;
 
                             this.Tags.Clear();
-                            this.Tags.AddRange(data.Tags);
-
                             this.ItemTags.Clear();
+
                             this.ItemTags.AddRange(data.ItemTags);
+                            this.Tags.AddRange(data.Tags);
                         }
                     }
                     catch (Exception ex)

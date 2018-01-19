@@ -28,6 +28,23 @@
   TextOptions.TextRenderingMode="ClearType"
   mc:Ignorable="d">
 
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <Style TargetType="Label">
+        <Setter Property="Padding" Value="0" />
+      </Style>
+
+      <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
+
+      <fwcnv:BoolToCollapsedConverter x:Key="VisibilityConverter" />
+      <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
+
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+
   <ScrollViewer
     HorizontalScrollBarVisibility="Disabled"
     VerticalScrollBarVisibility="Auto">

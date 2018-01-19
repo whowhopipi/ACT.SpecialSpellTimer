@@ -110,6 +110,9 @@
     <Compile Include="Config\Views\SpellPanelConfigView.xaml.cs">
       <DependentUpon>SpellPanelConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Views\TagView.xaml.cs">
+      <DependentUpon>TagView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\TickerConfigView.xaml.cs">
       <DependentUpon>TickerConfigView.xaml</DependentUpon>
     </Compile>
@@ -350,6 +353,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Views\SpellPanelConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TagView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

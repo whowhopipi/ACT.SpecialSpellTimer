@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Windows.Input;
 using System.Xml.Serialization;
+using Prism.Commands;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -76,5 +78,19 @@ namespace ACT.SpecialSpellTimer.Models
                 return this.tag;
             }
         }
+
+        private ICommand removeTagCommand;
+
+        [XmlIgnore]
+        public ICommand RemoveTagCommand =>
+            this.removeTagCommand ?? (this.removeTagCommand = new DelegateCommand<ItemTags>(itemTags =>
+            {
+                if (itemTags == null)
+                {
+                    return;
+                }
+
+                TagTable.Instance.ItemTags.Remove(itemTags);
+            }));
     }
 }

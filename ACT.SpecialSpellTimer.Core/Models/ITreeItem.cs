@@ -1,4 +1,4 @@
-using System.Windows.Data;
+using System.ComponentModel;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -23,6 +23,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         bool IsEnabled { get; set; }
 
-        CollectionViewSource Children { get; }
+        ICollectionView Children { get; }
     }
 }

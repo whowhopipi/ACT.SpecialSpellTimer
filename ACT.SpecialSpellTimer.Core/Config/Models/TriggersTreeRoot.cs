@@ -1,5 +1,5 @@
+using System.ComponentModel;
 using System.Linq;
-using System.Windows.Data;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Models;
 using Prism.Mvvm;
@@ -11,7 +11,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
         ITreeItem
     {
         private string displayText = string.Empty;
-        private CollectionViewSource children;
+        private ICollectionView children;
 
         [XmlIgnore]
         public ItemTypes ItemType => ItemTypes.Root;
@@ -24,7 +24,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
             set => this.SetProperty(ref this.displayText, value);
         }
 
-        public CollectionViewSource Children
+        public ICollectionView Children
         {
             get => this.children;
             set => this.SetProperty(ref this.children, value);

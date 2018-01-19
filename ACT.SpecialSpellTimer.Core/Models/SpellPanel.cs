@@ -37,6 +37,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         private double left = 0;
         private double top = 0;
+        private string panelName = string.Empty;
 
         public SpellPanel()
         {
@@ -51,16 +52,26 @@ namespace ACT.SpecialSpellTimer.Models
         public double Left
         {
             get => this.left;
-            set => this.SetProperty(ref this.left, value);
+            set => this.SetProperty(ref this.left, Math.Round(value));
         }
 
         public double Top
         {
             get => this.top;
-            set => this.SetProperty(ref this.top, value);
+            set => this.SetProperty(ref this.top, Math.Round(value));
         }
 
-        public string PanelName { get; set; } = string.Empty;
+        public string PanelName
+        {
+            get => this.panelName;
+            set
+            {
+                if (this.SetProperty(ref this.panelName, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.DisplayText));
+                }
+            }
+        }
 
         public bool FixedPositionSpell { get; set; } = false;
 
@@ -123,24 +134,24 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public CollectionViewSource Children
+        public ICollectionView Children => this.childrenSource.View;
+
+        private CollectionViewSource childrenSource = new CollectionViewSource()
         {
-            get;
-            private set;
-        } = new CollectionViewSource()
-        {
-            Source = SpellTable.Instance.Table
+            Source = SpellTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
         };
 
         private void SetupChildrenSource()
         {
-            this.Children.Filter += (x, y) =>
-            {
-                var spell = y.Item as Spell;
-                y.Accepted = spell.PanelID == this.ID;
-            };
+            this.childrenSource.Filter += (x, y) =>
+             {
+                 var spell = y.Item as Spell;
+                 y.Accepted = spell.PanelID == this.ID;
+             };
 
-            this.Children.SortDescriptions.AddRange(new SortDescription[]
+            this.childrenSource.SortDescriptions.AddRange(new SortDescription[]
             {
                 new SortDescription()
                 {

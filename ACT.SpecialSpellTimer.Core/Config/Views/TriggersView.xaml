@@ -74,7 +74,7 @@
           <!-- ルート要素 -->
           <HierarchicalDataTemplate
             DataType="{x:Type model:TriggersTreeRoot}"
-            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            ItemsSource="{Binding Children, Mode=OneWay}">
 
             <HierarchicalDataTemplate.Resources>
               <Style TargetType="TextBlock">
@@ -83,6 +83,7 @@
 
               <Style TargetType="CheckBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="IsTabStop" Value="False" />
                 <Setter Property="Margin" Value="0 0 5 0" />
               </Style>
@@ -103,7 +104,7 @@
           <!-- スペルパネル -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:SpellPanel}"
-            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            ItemsSource="{Binding Children, Mode=OneWay}">
 
             <HierarchicalDataTemplate.Resources>
               <Style TargetType="TextBlock">
@@ -112,6 +113,7 @@
 
               <Style TargetType="CheckBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="IsTabStop" Value="False" />
                 <Setter Property="Margin" Value="0 0 5 0" />
               </Style>
@@ -135,7 +137,7 @@
           <!-- スペル -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:Spell}"
-            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            ItemsSource="{Binding Children, Mode=OneWay}">
 
             <HierarchicalDataTemplate.Resources>
               <Style TargetType="TextBlock">
@@ -144,6 +146,7 @@
 
               <Style TargetType="CheckBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="IsTabStop" Value="False" />
                 <Setter Property="Margin" Value="0 0 5 0" />
               </Style>
@@ -167,7 +170,7 @@
           <!-- ティッカー -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:Ticker}"
-            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            ItemsSource="{Binding Children, Mode=OneWay}">
 
             <HierarchicalDataTemplate.Resources>
               <Style TargetType="TextBlock">
@@ -176,6 +179,7 @@
 
               <Style TargetType="CheckBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="IsTabStop" Value="False" />
                 <Setter Property="Margin" Value="0 0 5 0" />
               </Style>
@@ -199,7 +203,7 @@
           <!-- タグ -->
           <HierarchicalDataTemplate
             DataType="{x:Type triggerModel:Tag}"
-            ItemsSource="{Binding Children.View, Mode=OneWay}">
+            ItemsSource="{Binding Children, Mode=OneWay}">
 
             <HierarchicalDataTemplate.Resources>
               <Style TargetType="TextBlock">
@@ -208,6 +212,7 @@
 
               <Style TargetType="CheckBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="IsTabStop" Value="False" />
                 <Setter Property="Margin" Value="0 0 5 0" />
               </Style>
