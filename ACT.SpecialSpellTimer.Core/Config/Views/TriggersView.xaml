@@ -227,9 +227,21 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+              <StackPanel.InputBindings>
+              </StackPanel.InputBindings>
+
+              <StackPanel.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding DataContext.RemoveTagCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+                  <MenuItem Header="{StaticResource Common_Rename}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" />
+                </ContextMenu>
+              </StackPanel.ContextMenu>
+
               <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Tag" />
-              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
+              <TextBlock Text="{Binding Name, Mode=OneWay}" />
+              <TextBox Text="{Binding Name, Mode=TwoWay}" Visibility="Collapsed" />
             </StackPanel>
           </HierarchicalDataTemplate>
         </TreeView.Resources>

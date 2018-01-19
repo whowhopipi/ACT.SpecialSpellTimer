@@ -34,8 +34,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.Loaded += this.TagViewOnLoaded;
             this.CloseButton.Click += (x, y) => this.Close();
             this.ApplyButton.Click += ApplyButtonOnClick;
-
-            this.ApplyButton.Visibility = Visibility.Collapsed;
         }
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);
@@ -79,8 +77,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
             RoutedEventArgs e)
         {
             this.ApplyButton.Visibility = Visibility.Visible;
-            this.CreateNewButton.Visibility = Visibility.Collapsed;
-            this.ManageTagsButton.Visibility = Visibility.Collapsed;
         }
 
         private void ApplyButtonOnClick(

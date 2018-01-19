@@ -11,8 +11,14 @@
   <system:String x:Key="Common_AddTags">タグを付ける</system:String>
   <system:String x:Key="Common_Apply">適用する</system:String>
   <system:String x:Key="Common_Cancel">キャンセル</system:String>
-  <system:String x:Key="Common_CreateNew">新規作成</system:String>
   <system:String x:Key="Common_ManageTags">タグの管理</system:String>
+
+  <system:String x:Key="Common_CreateNew">新規作成</system:String>
+  <system:String x:Key="Common_Rename">名前の変更</system:String>
+  <system:String x:Key="Common_Delete">削除</system:String>
+  <system:String x:Key="Common_Import">インポート</system:String>
+  <system:String x:Key="Common_Export">エクスポート</system:String>
+  
 
   <system:String x:Key="Tag_Title">タグを付ける</system:String>
 

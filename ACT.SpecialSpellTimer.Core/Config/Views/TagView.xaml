@@ -107,8 +107,6 @@
       <!-- ボタンエリア -->
       <StackPanel Grid.Row="2" Orientation="Vertical">
         <Button x:Name="ApplyButton" Content="{DynamicResource Common_Apply}" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" Margin="5" />
-        <Button x:Name="CreateNewButton" Content="{DynamicResource Common_CreateNew}" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" Margin="5" />
-        <Button x:Name="ManageTagsButton" Content="{DynamicResource Common_ManageTags}" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" Margin="5" />
       </StackPanel>
     </Grid>
   </Border>
