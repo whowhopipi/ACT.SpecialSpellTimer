@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Timers;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;

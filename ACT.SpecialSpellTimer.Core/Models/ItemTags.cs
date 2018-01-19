@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config.Models;
 using Prism.Commands;
 
 namespace ACT.SpecialSpellTimer.Models

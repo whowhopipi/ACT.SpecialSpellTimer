@@ -1,3 +1,5 @@
+using ACT.SpecialSpellTimer.Config.Models;
+
 namespace ACT.SpecialSpellTimer.Models
 {
     public interface ITrigger

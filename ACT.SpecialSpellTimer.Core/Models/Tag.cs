@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config.Models;
 using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models

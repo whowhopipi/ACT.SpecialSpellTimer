@@ -2,10 +2,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.Windows.Input;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Models;
-using Prism.Commands;
 using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config.ViewModels
@@ -125,43 +123,5 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             this.TreeRoot.Add(tickers);
             this.TreeRoot.Add(tags);
         }
-
-        private ICommand createNewCommand;
-
-        public ICommand CreateNewCommand =>
-            this.createNewCommand ?? (this.createNewCommand = new DelegateCommand<ITreeItem>(item =>
-            {
-                switch (item)
-                {
-                    case SpellPanel spellPanel:
-                        break;
-
-                    case Spell spell:
-                        break;
-
-                    case Ticker ticker:
-                        break;
-
-                    case Tag tag:
-                        TagTable.Instance.AddNew(tag).Name = "New Tag";
-                        break;
-
-                    default:
-                        switch (item.DisplayText)
-                        {
-                            case "All Spells":
-                                break;
-
-                            case "All Tickers":
-                                break;
-
-                            case "Tags":
-                                TagTable.Instance.AddNew().Name = "New Tag";
-                                break;
-                        }
-
-                        break;
-                }
-            }));
     }
 }

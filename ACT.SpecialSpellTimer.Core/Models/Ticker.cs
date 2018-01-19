@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Timers;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
 using Prism.Mvvm;

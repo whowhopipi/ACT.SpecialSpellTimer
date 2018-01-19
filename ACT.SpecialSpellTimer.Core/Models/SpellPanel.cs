@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Views;
 using Prism.Mvvm;
 
