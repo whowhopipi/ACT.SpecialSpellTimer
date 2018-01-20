@@ -122,17 +122,19 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public override ICollectionView Children => this.childrenSource.View;
+        public override ICollectionView Children => this.childrenSource?.View;
 
-        private CollectionViewSource childrenSource = new CollectionViewSource()
-        {
-            Source = SpellTable.Instance.Table,
-            IsLiveFilteringRequested = true,
-            IsLiveSortingRequested = true,
-        };
+        private CollectionViewSource childrenSource;
 
-        private void SetupChildrenSource()
+        public void SetupChildrenSource()
         {
+            this.childrenSource = new CollectionViewSource()
+            {
+                Source = SpellTable.Instance.Table,
+                IsLiveFilteringRequested = true,
+                IsLiveSortingRequested = true,
+            };
+
             this.childrenSource.Filter += (x, y) =>
              {
                  var spell = y.Item as Spell;

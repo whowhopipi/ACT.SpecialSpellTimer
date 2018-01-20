@@ -129,6 +129,13 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+              <StackPanel.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                </ContextMenu>
+              </StackPanel.ContextMenu>
+
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="ThList" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
@@ -162,6 +169,13 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+              <StackPanel.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                </ContextMenu>
+              </StackPanel.ContextMenu>
+
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Magic" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
@@ -195,6 +209,13 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+              <StackPanel.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                </ContextMenu>
+              </StackPanel.ContextMenu>
+
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Comment" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
@@ -240,7 +261,7 @@
                     <MenuItem Header="{StaticResource Common_Tag}" Command="{Binding CreateNewTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   </MenuItem>
                   <MenuItem Header="{StaticResource Common_Rename}" Command="{Binding RenameCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Common_Delete}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 

@@ -110,15 +110,19 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public override ICollectionView Children => this.childrenSource.View;
+        public override ICollectionView Children => this.childrenSource?.View;
 
-        private ObservableCollection<ITreeItem> children = new ObservableCollection<ITreeItem>();
-        private CollectionViewSource childrenSource = new CollectionViewSource();
+        private ObservableCollection<ITreeItem> children;
+        private CollectionViewSource childrenSource;
 
-        private void SetupChildrenSource()
+        public void SetupChildrenSource()
         {
-            this.childrenSource.Source = this.children;
-            this.childrenSource.IsLiveSortingRequested = true;
+            this.children = new ObservableCollection<ITreeItem>();
+            this.childrenSource = new CollectionViewSource()
+            {
+                Source = this.children,
+                IsLiveSortingRequested = true
+            };
 
             this.childrenSource.SortDescriptions.AddRange(new[]
             {

@@ -1,4 +1,7 @@
+using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Models;
@@ -90,15 +93,37 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public ICommand CreateNewSpellPanelCommand =>
             this.createNewSpellPanelCommand ?? (this.createNewSpellPanelCommand = new DelegateCommand<ITreeItem>(item =>
             {
+                var newPanel = default(SpellPanel);
+
                 switch (item.ItemType)
                 {
                     case ItemTypes.SpellsRoot:
+                        newPanel = new SpellPanel()
+                        {
+                            PanelName = "New Panel"
+                        };
+
+                        SpellPanelTable.Instance.Table.Add(newPanel);
                         break;
 
                     case ItemTypes.SpellPanel:
+                        var currentPanel = item as SpellPanel;
+                        newPanel = currentPanel.MemberwiseClone() as SpellPanel;
+                        newPanel.ID = Guid.NewGuid();
+                        newPanel.PanelName += " New";
+                        newPanel.SetupChildrenSource();
+                        SpellPanelTable.Instance.Table.Add(newPanel);
                         break;
 
                     case ItemTypes.Tag:
+                        newPanel = new SpellPanel()
+                        {
+                            PanelName = "New Panel"
+                        };
+
+                        var tag = item as Tag;
+                        TagTable.Instance.ItemTags.Add(new ItemTags(newPanel.ID, tag.ID));
+                        SpellPanelTable.Instance.Table.Add(newPanel);
                         break;
                 }
             }));
@@ -176,6 +201,94 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             item.IsInEditMode = true;
                         }
 
+                        break;
+                }
+            }));
+
+        private ICommand deleteCommand;
+
+        [XmlIgnore]
+        public ICommand DeleteCommand =>
+            this.deleteCommand ?? (this.deleteCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                var result = default(MessageBoxResult);
+
+                switch (item.ItemType)
+                {
+                    case ItemTypes.Tag:
+                        var tag = item as Tag;
+                        if (tag.ID == Tag.ImportsTag.ID)
+                        {
+                            return;
+                        }
+
+                        result = MessageBox.Show(
+                            $@"Delete ""{ item.DisplayText }"" tag ?",
+                            "Confirm",
+                            MessageBoxButton.OKCancel,
+                            MessageBoxImage.Question);
+                        if (result != MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+
+                        TagTable.Instance.Remove(tag);
+                        break;
+
+                    case ItemTypes.SpellPanel:
+                        var panel = item as SpellPanel;
+                        if (panel.ID == SpellPanel.GeneralPanel.ID)
+                        {
+                            return;
+                        }
+
+                        result = MessageBox.Show(
+                            $@"Delete ""{ item.DisplayText }"" panel and spells ?",
+                            "Confirm",
+                            MessageBoxButton.OKCancel,
+                            MessageBoxImage.Question);
+                        if (result != MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+
+                        var targets = SpellTable.Instance.Table.Where(x => x.PanelID == panel.ID).ToArray();
+                        foreach (var target in targets)
+                        {
+                            SpellTable.Instance.Table.Remove(target);
+                        }
+
+                        SpellPanelTable.Instance.Table.Remove(panel);
+                        break;
+
+                    case ItemTypes.Spell:
+                        result = MessageBox.Show(
+                            $@"Delete ""{ item.DisplayText }"" ?",
+                            "Confirm",
+                            MessageBoxButton.OKCancel,
+                            MessageBoxImage.Question);
+                        if (result != MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+
+                        var spell = item as Spell;
+                        SpellTable.Instance.Table.Remove(spell);
+                        break;
+
+                    case ItemTypes.Ticker:
+                        result = MessageBox.Show(
+                            $@"Delete ""{ item.DisplayText }"" ?",
+                            "Confirm",
+                            MessageBoxButton.OKCancel,
+                            MessageBoxImage.Question);
+                        if (result != MessageBoxResult.OK)
+                        {
+                            return;
+                        }
+
+                        var ticker = item as Ticker;
+                        TickerTable.Instance.Table.Remove(ticker);
                         break;
                 }
             }));
