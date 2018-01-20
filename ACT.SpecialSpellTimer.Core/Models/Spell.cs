@@ -763,9 +763,16 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var n = new Spell();
 
-            n.ID = SpellTable.Instance.Table.Any() ?
-                SpellTable.Instance.Table.Max(x => x.ID) + 1 :
-                1;
+            lock (SpellTable.Instance.Table)
+            {
+                n.ID = SpellTable.Instance.Table.Any() ?
+                    SpellTable.Instance.Table.Max(x => x.ID) + 1 :
+                    1;
+
+                n.DisplayNo = SpellTable.Instance.Table.Any() ?
+                    SpellTable.Instance.Table.Max(x => x.DisplayNo) + 1 :
+                    50;
+            }
 
             n.PanelID = SpellPanel.GeneralPanel.ID;
 
@@ -777,14 +784,11 @@ namespace ACT.SpecialSpellTimer.Models
             n.WarningFontOutlineColor = Colors.OrangeRed.ToLegacy().ToHTML();
             n.BarColor = Colors.White.ToLegacy().ToHTML();
             n.BarOutlineColor = Colors.MidnightBlue.ToLegacy().ToHTML();
+            n.BackgroundColor = Colors.Transparent.ToLegacy().ToHTML();
             n.BarWidth = 190;
             n.BarHeight = 8;
-            n.BackgroundColor = Colors.Transparent.ToLegacy().ToHTML();
 
             n.Enabled = true;
-            n.DisplayNo = SpellTable.Instance.Table.Any() ?
-                SpellTable.Instance.Table.Max(x => x.DisplayNo) + 1 :
-                50;
 
             return n;
         }
@@ -794,7 +798,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         /// <returns>
         /// 同様のインスタンス</returns>
-        public Spell ToSimilar()
+        public Spell CreateSimilarNew()
         {
             var n = Spell.CreateNew();
 

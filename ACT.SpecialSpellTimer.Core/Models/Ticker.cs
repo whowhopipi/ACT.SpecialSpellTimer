@@ -1,12 +1,15 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
+using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -357,5 +360,60 @@ namespace ACT.SpecialSpellTimer.Models
         public Ticker Clone() => (Ticker)this.MemberwiseClone();
 
         #endregion Clone
+
+        #region NewTicker
+
+        public static Ticker CreateNew()
+        {
+            var n = new Ticker();
+
+            lock (TickerTable.Instance.Table)
+            {
+                n.ID = TickerTable.Instance.Table.Any() ?
+                    TickerTable.Instance.Table.Max(x => x.ID) + 1 :
+                    1;
+            }
+
+            n.Title = "New Ticker";
+            n.DisplayTime = 3;
+            n.FontColor = Colors.White.ToLegacy().ToHTML();
+            n.FontOutlineColor = Colors.Crimson.ToLegacy().ToHTML();
+            n.BackgroundColor = Colors.Transparent.ToLegacy().ToHTML();
+            n.Top = 30.0d;
+            n.Left = 40.0d;
+
+            return n;
+        }
+
+        public Ticker CreateSimilarNew()
+        {
+            var n = Ticker.CreateNew();
+
+            n.Title = this.Title + " New";
+            n.Message = this.Message;
+            n.Keyword = this.Keyword;
+            n.KeywordToHide = this.KeywordToHide;
+            n.RegexEnabled = this.RegexEnabled;
+            n.Delay = this.Delay;
+            n.DisplayTime = this.DisplayTime;
+            n.AddMessageEnabled = this.AddMessageEnabled;
+            n.ProgressBarEnabled = this.ProgressBarEnabled;
+            n.FontColor = this.FontColor;
+            n.FontOutlineColor = this.FontOutlineColor;
+            n.Font = this.Font;
+            n.BackgroundColor = this.BackgroundColor;
+            n.BackgroundAlpha = this.BackgroundAlpha;
+            n.Left = this.Left;
+            n.Top = this.Top;
+            n.JobFilter = this.JobFilter;
+            n.ZoneFilter = this.ZoneFilter;
+            n.TimersMustRunningForStart = this.TimersMustRunningForStart;
+            n.TimersMustStoppingForStart = this.TimersMustStoppingForStart;
+            n.NotifyToDiscord = this.NotifyToDiscord;
+
+            return n;
+        }
+
+        #endregion NewTicker
     }
 }
