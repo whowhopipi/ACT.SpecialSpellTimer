@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
+using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -259,7 +261,7 @@ namespace ACT.SpecialSpellTimer.Models
         public bool OverlapRecastTime { get; set; }
         public string OverTextToSpeak { get; set; }
         public double OverTime { get; set; } = 0;
-        public bool ProgressBarVisible { get; set; }
+        public bool ProgressBarVisible { get; set; } = true;
         public double RecastTime { get; set; } = 0;
         public double RecastTimeExtending1 { get; set; } = 0;
         public double RecastTimeExtending2 { get; set; } = 0;
@@ -287,7 +289,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         public bool RepeatEnabled { get; set; }
         public string SpellIcon { get; set; }
-        public int SpellIconSize { get; set; }
+        public int SpellIconSize { get; set; } = 24;
 
         /// <summary>スペルが作用した対象</summary>
         [XmlIgnore]
@@ -754,5 +756,95 @@ namespace ACT.SpecialSpellTimer.Models
         public Spell Clone() => (Spell)this.MemberwiseClone();
 
         #endregion Clone
+
+        #region NewSpell
+
+        public static Spell CreateNew()
+        {
+            var n = new Spell();
+
+            n.ID = SpellTable.Instance.Table.Any() ?
+                SpellTable.Instance.Table.Max(x => x.ID) + 1 :
+                1;
+
+            n.PanelID = SpellPanel.GeneralPanel.ID;
+
+            n.SpellTitle = "New Spell";
+            n.SpellIconSize = 24;
+            n.FontColor = Colors.White.ToLegacy().ToHTML();
+            n.FontOutlineColor = Colors.MidnightBlue.ToLegacy().ToHTML();
+            n.WarningFontColor = Colors.White.ToLegacy().ToHTML();
+            n.WarningFontOutlineColor = Colors.OrangeRed.ToLegacy().ToHTML();
+            n.BarColor = Colors.White.ToLegacy().ToHTML();
+            n.BarOutlineColor = Colors.MidnightBlue.ToLegacy().ToHTML();
+            n.BarWidth = 190;
+            n.BarHeight = 8;
+            n.BackgroundColor = Colors.Transparent.ToLegacy().ToHTML();
+
+            n.Enabled = true;
+            n.DisplayNo = SpellTable.Instance.Table.Any() ?
+                SpellTable.Instance.Table.Max(x => x.DisplayNo) + 1 :
+                50;
+
+            return n;
+        }
+
+        /// <summary>
+        /// 同様のインスタンスを作る（新規スペルの登録用）
+        /// </summary>
+        /// <returns>
+        /// 同様のインスタンス</returns>
+        public Spell ToSimilar()
+        {
+            var n = Spell.CreateNew();
+
+            n.PanelID = this.PanelID;
+            n.SpellTitle = this.SpellTitle + " New";
+            n.SpellIcon = this.SpellIcon;
+            n.SpellIconSize = this.SpellIconSize;
+            n.Keyword = this.Keyword;
+            n.RegexEnabled = this.RegexEnabled;
+            n.RecastTime = this.RecastTime;
+            n.KeywordForExtend1 = this.KeywordForExtend1;
+            n.RecastTimeExtending1 = this.RecastTimeExtending1;
+            n.KeywordForExtend2 = this.KeywordForExtend2;
+            n.RecastTimeExtending2 = this.RecastTimeExtending2;
+            n.ExtendBeyondOriginalRecastTime = this.ExtendBeyondOriginalRecastTime;
+            n.UpperLimitOfExtension = this.UpperLimitOfExtension;
+            n.RepeatEnabled = this.RepeatEnabled;
+            n.ProgressBarVisible = this.ProgressBarVisible;
+            n.IsReverse = this.IsReverse;
+            n.FontColor = this.FontColor;
+            n.FontOutlineColor = this.FontOutlineColor;
+            n.WarningFontColor = this.WarningFontColor;
+            n.WarningFontOutlineColor = this.WarningFontOutlineColor;
+            n.BarColor = this.BarColor;
+            n.BarOutlineColor = this.BarOutlineColor;
+            n.DontHide = this.DontHide;
+            n.HideSpellName = this.HideSpellName;
+            n.WarningTime = this.WarningTime;
+            n.BlinkTime = this.BlinkTime;
+            n.BlinkIcon = this.BlinkIcon;
+            n.BlinkBar = this.BlinkBar;
+            n.ChangeFontColorsWhenWarning = this.ChangeFontColorsWhenWarning;
+            n.OverlapRecastTime = this.OverlapRecastTime;
+            n.ReduceIconBrightness = this.ReduceIconBrightness;
+            n.Font = this.Font;
+            n.BarWidth = this.BarWidth;
+            n.BarHeight = this.BarHeight;
+            n.BackgroundColor = this.BackgroundColor;
+            n.BackgroundAlpha = this.BackgroundAlpha;
+            n.JobFilter = this.JobFilter;
+            n.ZoneFilter = this.ZoneFilter;
+            n.TimersMustRunningForStart = this.TimersMustRunningForStart;
+            n.TimersMustStoppingForStart = this.TimersMustStoppingForStart;
+            n.ToInstance = this.ToInstance;
+            n.NotifyToDiscord = this.NotifyToDiscord;
+            n.NotifyToDiscordAtComplete = this.NotifyToDiscordAtComplete;
+
+            return n;
+        }
+
+        #endregion NewSpell
     }
 }
