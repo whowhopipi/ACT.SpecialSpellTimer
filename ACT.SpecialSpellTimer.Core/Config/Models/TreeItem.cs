@@ -98,12 +98,15 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 switch (item.ItemType)
                 {
                     case ItemTypes.SpellsRoot:
+                    case ItemTypes.TickersRoot:
+                    case ItemTypes.TagsRoot:
                         newPanel = new SpellPanel()
                         {
                             PanelName = "New Panel"
                         };
 
                         SpellPanelTable.Instance.Table.Add(newPanel);
+                        newPanel.IsSelected = true;
                         break;
 
                     case ItemTypes.SpellPanel:
@@ -113,6 +116,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         newPanel.PanelName += " New";
                         newPanel.SetupChildrenSource();
                         SpellPanelTable.Instance.Table.Add(newPanel);
+                        newPanel.IsSelected = true;
                         break;
 
                     case ItemTypes.Tag:
@@ -124,6 +128,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         var tag = item as Tag;
                         TagTable.Instance.ItemTags.Add(new ItemTags(newPanel.ID, tag.ID));
                         SpellPanelTable.Instance.Table.Add(newPanel);
+                        newPanel.IsSelected = true;
                         break;
                 }
             }));
@@ -137,6 +142,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 switch (item.ItemType)
                 {
                     case ItemTypes.SpellsRoot:
+                    case ItemTypes.TickersRoot:
+                    case ItemTypes.TagsRoot:
                         break;
 
                     case ItemTypes.SpellPanel:
@@ -179,6 +186,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                 switch (item.ItemType)
                 {
+                    case ItemTypes.SpellsRoot:
+                    case ItemTypes.TickersRoot:
                     case ItemTypes.TagsRoot:
                     case ItemTypes.Tag:
                         newItem = TagTable.Instance.AddNew("New Tag");

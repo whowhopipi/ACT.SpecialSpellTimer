@@ -98,6 +98,19 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+
+              <!-- ルート要素のコンテキストメニュー -->
+              <StackPanel.ContextMenu>
+                <ContextMenu>
+                  <MenuItem Header="{StaticResource Common_CreateNew}">
+                    <MenuItem Header="{StaticResource Common_SpellPanel}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Tag}" Command="{Binding CreateNewTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  </MenuItem>
+                </ContextMenu>
+              </StackPanel.ContextMenu>
+
               <TextBlock FontWeight="Black" FontSize="19" Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
           </HierarchicalDataTemplate>
@@ -129,6 +142,8 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+
+              <!-- スペルパネルのコンテキストメニュー -->
               <StackPanel.ContextMenu>
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
@@ -169,6 +184,8 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+
+              <!-- スペルのコンテキストメニュー -->
               <StackPanel.ContextMenu>
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
@@ -209,6 +226,8 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
+
+              <!-- テロップのコンテキストメニュー -->
               <StackPanel.ContextMenu>
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
@@ -252,6 +271,7 @@
               <StackPanel.InputBindings>
               </StackPanel.InputBindings>
 
+              <!-- タグのコンテキストメニュー -->
               <StackPanel.ContextMenu>
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}">
