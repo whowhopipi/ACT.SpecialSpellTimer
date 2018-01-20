@@ -48,7 +48,6 @@ namespace ACT.SpecialSpellTimer.Models
             => this.Tags.Add(tag);
 
         public Tag AddNew(
-            Tag parent,
             string newTagName)
         {
             var tag = new Tag()
@@ -56,26 +55,10 @@ namespace ACT.SpecialSpellTimer.Models
                 Name = newTagName
             };
 
-            if (parent != null)
-            {
-                this.itemTags.Add(new ItemTags(parent.ID, tag.ID));
-            }
-
             this.Add(tag);
-            parent?.RefreshChildren();
 
             return tag;
         }
-
-        public Tag AddNew(
-            Guid parentID,
-            string newTagName)
-            => this.AddNew(
-                this.Tags.FirstOrDefault(x => x.ID == parentID),
-                newTagName);
-
-        public Tag AddNew(
-            string newTagName) => this.AddNew(null, newTagName);
 
         public void Remove(
             Tag tag)

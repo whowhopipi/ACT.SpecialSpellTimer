@@ -155,13 +155,9 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 switch (item.ItemType)
                 {
                     case ItemTypes.TagsRoot:
-                        newItem = TagTable.Instance.AddNew("New Tag");
-                        newItem.isSelected = true;
-                        break;
-
                     case ItemTypes.Tag:
-                        newItem = TagTable.Instance.AddNew(item as Tag, "New Tag");
-                        newItem.isSelected = true;
+                        newItem = TagTable.Instance.AddNew("New Tag");
+                        newItem.IsSelected = true;
                         break;
                 }
             }));

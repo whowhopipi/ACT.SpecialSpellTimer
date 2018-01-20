@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -62,53 +61,8 @@ namespace ACT.SpecialSpellTimer.Models
         public string Name
         {
             get => this.name;
-            set
-            {
-                if (this.SetProperty(ref this.name, value))
-                {
-                    this.RaisePropertyChanged(nameof(this.FullName));
-                }
-            }
+            set => this.SetProperty(ref this.name, value);
         }
-
-        [XmlIgnore]
-        public string FullName
-        {
-            get
-            {
-                if (this.ParentTagID == Guid.Empty)
-                {
-                    return this.Name;
-                }
-
-                var names = new List<string>();
-                var current = this;
-                var parent = default(Tag);
-                while ((parent = current.ParentTag) != null)
-                {
-                    names.Add(parent.Name);
-                    current = parent;
-                }
-
-                names.Reverse();
-
-                return $"{string.Join("/", names)}/{this.Name}";
-            }
-        }
-
-        [XmlIgnore]
-        public Guid ParentTagID =>
-            TagTable.Instance.ItemTags
-                .FirstOrDefault(x =>
-                    x.TagID == this.ID &&
-                    x.ItemType == ItemTypes.Tag)?.ItemID ?? Guid.Empty;
-
-        [XmlIgnore]
-        public Tag ParentTag =>
-            TagTable.Instance.ItemTags
-                .FirstOrDefault(x =>
-                    x.TagID == this.ID &&
-                    x.ItemType == ItemTypes.Tag)?.Item as Tag;
 
         #region ITreeItem
 

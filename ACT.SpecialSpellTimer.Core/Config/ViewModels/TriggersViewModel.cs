@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
@@ -90,12 +89,6 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                     Direction = ListSortDirection.Ascending,
                 },
             });
-
-            this.tagsSource.Filter += (x, y) =>
-            {
-                var item = y.Item as Tag;
-                y.Accepted = item.ParentTagID == Guid.Empty;
-            };
 
             this.tagsSource.SortDescriptions.AddRange(new[]
             {

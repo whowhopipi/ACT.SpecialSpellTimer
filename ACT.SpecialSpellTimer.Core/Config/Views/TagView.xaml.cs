@@ -53,7 +53,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 from x in TagTable.Instance.Tags
                 orderby
                 x.SortPriority descending,
-                x.FullName ascending
+                x.Name ascending
                 select
                 x;
 
@@ -119,7 +119,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             public bool IsSelected { get; set; }
 
-            public string Text => this.Tag?.FullName;
+            public string Text => this.Tag?.Name;
 
             public override string ToString() => this.Text;
         }
