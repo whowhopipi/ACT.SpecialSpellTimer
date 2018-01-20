@@ -29,7 +29,7 @@ namespace ACT.SpecialSpellTimer.Models
         private Tag tag;
 
         [XmlIgnore]
-        public ItemTypes ItemType => this.item?.ItemType ?? ItemTypes.Root;
+        public ItemTypes ItemType => this.item?.ItemType ?? ItemTypes.Unknown;
 
         [XmlIgnore]
         public ITreeItem Item

@@ -10,7 +10,6 @@ using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
-using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -20,15 +19,14 @@ namespace ACT.SpecialSpellTimer.Models
     [Serializable]
     [XmlType(TypeName = "SpellTimer")]
     public class Spell :
-        BindableBase,
+        TreeItemBase,
         IDisposable,
-        ITrigger,
-        ITreeItem
+        ITrigger
     {
-        #region ITrigger
-
         [XmlIgnore]
-        public ItemTypes ItemType => ItemTypes.Spell;
+        public override ItemTypes ItemType => ItemTypes.Spell;
+
+        #region ITrigger
 
         public void MatchTrigger(string logLine)
             => SpellsController.Instance.MatchCore(this, logLine);
@@ -40,27 +38,27 @@ namespace ACT.SpecialSpellTimer.Models
         private bool isEnabled = false;
 
         [XmlIgnore]
-        public string DisplayText => this.SpellTitle;
+        public override string DisplayText => this.SpellTitle;
 
         [XmlIgnore]
-        public int SortPriority { get; set; }
+        public override int SortPriority { get; set; }
 
         [XmlIgnore]
-        public bool IsExpanded
+        public override bool IsExpanded
         {
             get => false;
             set { }
         }
 
         [XmlElement(ElementName = "Enabled")]
-        public bool IsEnabled
+        public override bool IsEnabled
         {
             get => this.isEnabled;
             set => this.SetProperty(ref this.isEnabled, value);
         }
 
         [XmlIgnore]
-        public ICollectionView Children => null;
+        public override ICollectionView Children => null;
 
         #endregion ITreeItem
 

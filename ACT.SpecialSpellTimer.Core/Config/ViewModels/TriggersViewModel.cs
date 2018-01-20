@@ -43,23 +43,20 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         private void SetupTreeRoot()
         {
-            var spells = new TriggersTreeRoot()
-            {
-                DisplayText = "All Spells",
-                Children = this.spellsSource.View,
-            };
+            var spells = new TriggersTreeRoot(
+                ItemTypes.SpellsRoot,
+                "All Spells",
+                this.spellsSource.View);
 
-            var tickers = new TriggersTreeRoot()
-            {
-                DisplayText = "All Tickers",
-                Children = this.tickersSource.View,
-            };
+            var tickers = new TriggersTreeRoot(
+                ItemTypes.TickersRoot,
+                "All Tickers",
+                this.tickersSource.View);
 
-            var tags = new TriggersTreeRoot()
-            {
-                DisplayText = "Tags",
-                Children = this.tagsSource.View,
-            };
+            var tags = new TriggersTreeRoot(
+                ItemTypes.TagsRoot,
+                "Tags",
+                this.tagsSource.View);
 
             this.spellsSource.SortDescriptions.AddRange(new[]
             {

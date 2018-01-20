@@ -7,15 +7,13 @@ using System.Windows.Data;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Views;
-using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models
 {
     [Serializable]
     [XmlType(TypeName = "PanelSettings")]
     public class SpellPanel :
-        BindableBase,
-        ITreeItem
+        TreeItemBase
     {
         #region プリセットパネル
 
@@ -46,7 +44,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public ItemTypes ItemType => ItemTypes.SpellPanel;
+        public override ItemTypes ItemType => ItemTypes.SpellPanel;
 
         public Guid ID { get; set; } = Guid.NewGuid();
 
@@ -90,34 +88,23 @@ namespace ACT.SpecialSpellTimer.Models
         public IReadOnlyList<Spell> Spells
             => SpellTable.Instance.Table.Where(x => x.PanelID == this.ID).ToList();
 
-        #region ITrigger
-
-        [XmlIgnore]
-        public ItemTypes TriggerType => ItemTypes.SpellPanel;
-
-        public void MatchTrigger(string logLine)
-        {
-        }
-
-        #endregion ITrigger
-
         #region ITreeItem
 
         private bool isExpanded = false;
 
         [XmlIgnore]
-        public string DisplayText => this.PanelName;
+        public override string DisplayText => this.PanelName;
 
-        public int SortPriority { get; set; }
+        public override int SortPriority { get; set; }
 
-        public bool IsExpanded
+        public override bool IsExpanded
         {
             get => this.isExpanded;
             set => this.SetProperty(ref this.isExpanded, value);
         }
 
         [XmlIgnore]
-        public bool IsEnabled
+        public override bool IsEnabled
         {
             get =>
                 this.Spells.Count < 1 ?
@@ -135,7 +122,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public ICollectionView Children => this.childrenSource.View;
+        public override ICollectionView Children => this.childrenSource.View;
 
         private CollectionViewSource childrenSource = new CollectionViewSource()
         {

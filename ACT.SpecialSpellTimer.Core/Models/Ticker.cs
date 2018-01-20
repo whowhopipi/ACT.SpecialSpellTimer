@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Common;
-using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -17,15 +16,14 @@ namespace ACT.SpecialSpellTimer.Models
     [Serializable]
     [XmlType(TypeName = "OnePointTelop")]
     public class Ticker :
-        BindableBase,
+        TreeItemBase,
         IDisposable,
-        ITrigger,
-        ITreeItem
+        ITrigger
     {
-        #region ITrigger
-
         [XmlIgnore]
-        public ItemTypes ItemType => ItemTypes.Ticker;
+        public override ItemTypes ItemType => ItemTypes.Ticker;
+
+        #region ITrigger
 
         public void MatchTrigger(string logLine)
             => TickersController.Instance.MatchCore(this, logLine);
@@ -37,27 +35,27 @@ namespace ACT.SpecialSpellTimer.Models
         private bool isEnabled = false;
 
         [XmlIgnore]
-        public string DisplayText => this.Title;
+        public override string DisplayText => this.Title;
 
         [XmlIgnore]
-        public int SortPriority { get; set; }
+        public override int SortPriority { get; set; }
 
         [XmlIgnore]
-        public bool IsExpanded
+        public override bool IsExpanded
         {
             get => false;
             set { }
         }
 
         [XmlElement(ElementName = "Enabled")]
-        public bool IsEnabled
+        public override bool IsEnabled
         {
             get => this.isEnabled;
             set => this.SetProperty(ref this.isEnabled, value);
         }
 
         [XmlIgnore]
-        public ICollectionView Children => null;
+        public override ICollectionView Children => null;
 
         #endregion ITreeItem
 

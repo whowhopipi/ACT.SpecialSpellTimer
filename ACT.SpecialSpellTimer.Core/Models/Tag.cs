@@ -7,14 +7,12 @@ using System.Linq;
 using System.Windows.Data;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Models;
-using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Models
 {
     [Serializable]
     public class Tag :
-        BindableBase,
-        ITreeItem
+        TreeItemBase
     {
         #region プリセットタグ
 
@@ -47,7 +45,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public ItemTypes ItemType => ItemTypes.Tag;
+        public override ItemTypes ItemType => ItemTypes.Tag;
 
         public Guid ID
         {
@@ -117,18 +115,18 @@ namespace ACT.SpecialSpellTimer.Models
         private bool isExpanded = false;
 
         [XmlIgnore]
-        public string DisplayText => this.Name;
+        public override string DisplayText => this.Name;
 
-        public int SortPriority { get; set; }
+        public override int SortPriority { get; set; }
 
-        public bool IsExpanded
+        public override bool IsExpanded
         {
             get => this.isExpanded;
             set => this.SetProperty(ref this.isExpanded, value);
         }
 
         [XmlIgnore]
-        public bool IsEnabled
+        public override bool IsEnabled
         {
             get
             {
@@ -155,7 +153,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public ICollectionView Children => this.childrenSource.View;
+        public override ICollectionView Children => this.childrenSource.View;
 
         private ObservableCollection<ITreeItem> children = new ObservableCollection<ITreeItem>();
         private CollectionViewSource childrenSource = new CollectionViewSource();

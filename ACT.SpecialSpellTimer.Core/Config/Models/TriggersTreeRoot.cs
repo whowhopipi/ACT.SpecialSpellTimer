@@ -1,36 +1,36 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.Models;
-using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config.Models
 {
     public class TriggersTreeRoot :
-        BindableBase,
-        ITreeItem
+        TreeItemBase
     {
+        private ItemTypes itemType;
         private string displayText = string.Empty;
         private ICollectionView children;
 
+        public TriggersTreeRoot(
+            ItemTypes itemType,
+            string displayText,
+            ICollectionView children)
+        {
+            this.itemType = itemType;
+            this.displayText = displayText;
+            this.children = children;
+        }
+
         [XmlIgnore]
-        public ItemTypes ItemType => ItemTypes.Root;
+        public override ItemTypes ItemType => this.itemType;
 
-        public int SortPriority { get; set; }
+        public override int SortPriority { get; set; }
 
-        public string DisplayText
-        {
-            get => this.displayText;
-            set => this.SetProperty(ref this.displayText, value);
-        }
+        public override string DisplayText => this.displayText;
 
-        public ICollectionView Children
-        {
-            get => this.children;
-            set => this.SetProperty(ref this.children, value);
-        }
+        public override ICollectionView Children => this.children;
 
-        public bool IsExpanded
+        public override bool IsExpanded
         {
             get
             {
@@ -70,7 +70,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
             }
         }
 
-        public bool IsEnabled
+        public override bool IsEnabled
         {
             get => false;
             set { }
