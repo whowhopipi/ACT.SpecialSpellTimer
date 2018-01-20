@@ -32,6 +32,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         bool IsEnabled { get; set; }
 
+        bool IsSelected { get; set; }
+
         ICollectionView Children { get; }
     }
 
@@ -40,6 +42,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
         BindableBase,
         ITreeItem
     {
+        private bool isSelected;
+
         public abstract ItemTypes ItemType { get; }
 
         public abstract int SortPriority { get; set; }
@@ -51,10 +55,20 @@ namespace ACT.SpecialSpellTimer.Config.Models
         [XmlElement(ElementName = "Enabled")]
         public abstract bool IsEnabled { get; set; }
 
+        [XmlIgnore]
+        public bool IsSelected
+        {
+            get => this.isSelected;
+            set => this.SetProperty(ref this.isSelected, value);
+        }
+
         public abstract ICollectionView Children { get; }
+
+        #region Commands
 
         private ICommand createNewSpellPanelCommand;
 
+        [XmlIgnore]
         public ICommand CreateNewSpellPanelCommand =>
             this.createNewSpellPanelCommand ?? (this.createNewSpellPanelCommand = new DelegateCommand<ITreeItem>(item =>
             {
@@ -73,6 +87,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         private ICommand createNewSpellCommand;
 
+        [XmlIgnore]
         public ICommand CreateNewSpellCommand =>
             this.createNewSpellCommand ?? (this.createNewSpellCommand = new DelegateCommand<ITreeItem>(item =>
             {
@@ -94,6 +109,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         private ICommand createNewTickerCommand;
 
+        [XmlIgnore]
         public ICommand CreateNewTickerCommand =>
             this.createNewTickerCommand ?? (this.createNewTickerCommand = new DelegateCommand<ITreeItem>(item =>
             {
@@ -112,19 +128,28 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         private ICommand createNewTagCommand;
 
+        [XmlIgnore]
         public ICommand CreateNewTagCommand =>
             this.createNewTagCommand ?? (this.createNewTagCommand = new DelegateCommand<ITreeItem>(item =>
             {
+                var newItem = default(Tag);
+
                 switch (item.ItemType)
                 {
                     case ItemTypes.TagsRoot:
-                        TagTable.Instance.AddNew().Name = "New Tag";
+                        newItem = TagTable.Instance.AddNew();
+                        newItem.Name = "New Tag";
+                        newItem.isSelected = true;
                         break;
 
                     case ItemTypes.Tag:
-                        TagTable.Instance.AddNew(item as Tag).Name = "New Tag";
+                        newItem = TagTable.Instance.AddNew(item as Tag);
+                        newItem.Name = "New Tag";
+                        newItem.isSelected = true;
                         break;
                 }
             }));
+
+        #endregion Commands
     }
 }

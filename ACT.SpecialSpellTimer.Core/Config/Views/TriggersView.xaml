@@ -68,6 +68,7 @@
         <TreeView.Resources>
           <Style TargetType="TreeViewItem">
             <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
+            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
             <Setter Property="Padding" Value="5 1 5 1" />
           </Style>
 

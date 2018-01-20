@@ -7,6 +7,11 @@
   <system:String x:Key="UILanguage">UI Language (* requires restart)</system:String>
   <system:String x:Key="FFXIVLanguage">FFXIV Language (* requires restart)</system:String>
 
+  <system:String x:Key="Common_SpellPanel">スペルパネル</system:String>
+  <system:String x:Key="Common_Spell">スペル</system:String>
+  <system:String x:Key="Common_Ticker">テロップ</system:String>
+  <system:String x:Key="Common_Tag">タグ</system:String>
+
   <system:String x:Key="Common_Location">位置</system:String>
   <system:String x:Key="Common_AddTags">タグを付ける</system:String>
   <system:String x:Key="Common_Apply">適用する</system:String>
