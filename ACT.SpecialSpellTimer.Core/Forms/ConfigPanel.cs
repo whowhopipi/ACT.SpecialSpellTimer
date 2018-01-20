@@ -101,7 +101,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         {
                             Text = spell.SpellTitle,
                             ToolTipText = spell.Keyword,
-                            Checked = spell.IsEnabled,
+                            Checked = spell.Enabled,
                             Tag = spell,
                         };
 
@@ -221,7 +221,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                 nr.MatchDateTime = DateTime.MinValue;
                 nr.UpdateDone = false;
-                nr.IsEnabled = true;
+                nr.Enabled = true;
                 nr.DisplayNo = SpellTable.Instance.Table.Any() ?
                     SpellTable.Instance.Table.Max(x => x.DisplayNo) + 1 :
                     50;
@@ -238,7 +238,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 {
                     Tag = nr,
                     ToolTipText = nr.Keyword,
-                    Checked = nr.IsEnabled
+                    Checked = nr.Enabled
                 };
 
                 // 新しいパネル名
@@ -394,7 +394,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 var source = e1.Node.Tag as Spell;
                 if (source != null)
                 {
-                    source.IsEnabled = e1.Node.Checked;
+                    source.Enabled = e1.Node.Checked;
                     source.UpdateDone = false;
                 }
                 else
@@ -404,7 +404,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         var sourceChild = node.Tag as Spell;
                         if (sourceChild != null)
                         {
-                            sourceChild.IsEnabled = e1.Node.Checked;
+                            sourceChild.Enabled = e1.Node.Checked;
                         }
 
                         node.Checked = e1.Node.Checked;

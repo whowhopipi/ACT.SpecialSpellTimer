@@ -1,7 +1,5 @@
-using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -30,19 +28,23 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         bool IsExpanded { get; set; }
 
-        bool IsEnabled { get; set; }
+        bool Enabled { get; set; }
 
         bool IsSelected { get; set; }
+
+        bool IsInEditMode { get; set; }
+
+        bool IsInViewMode { get; }
 
         ICollectionView Children { get; }
     }
 
-    [Serializable]
     public abstract class TreeItemBase :
         BindableBase,
         ITreeItem
     {
         private bool isSelected;
+        private bool isInEditMode;
 
         public abstract ItemTypes ItemType { get; }
 
@@ -52,15 +54,27 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         public abstract bool IsExpanded { get; set; }
 
-        [XmlElement(ElementName = "Enabled")]
-        public abstract bool IsEnabled { get; set; }
+        public abstract bool Enabled { get; set; }
 
-        [XmlIgnore]
         public bool IsSelected
         {
             get => this.isSelected;
             set => this.SetProperty(ref this.isSelected, value);
         }
+
+        public bool IsInEditMode
+        {
+            get => this.isInEditMode;
+            set
+            {
+                if (this.SetProperty(ref this.isInEditMode, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.IsInViewMode));
+                }
+            }
+        }
+
+        public bool IsInViewMode => !this.IsInEditMode;
 
         public abstract ICollectionView Children { get; }
 
@@ -68,7 +82,6 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         private ICommand createNewSpellPanelCommand;
 
-        [XmlIgnore]
         public ICommand CreateNewSpellPanelCommand =>
             this.createNewSpellPanelCommand ?? (this.createNewSpellPanelCommand = new DelegateCommand<ITreeItem>(item =>
             {
@@ -87,7 +100,6 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         private ICommand createNewSpellCommand;
 
-        [XmlIgnore]
         public ICommand CreateNewSpellCommand =>
             this.createNewSpellCommand ?? (this.createNewSpellCommand = new DelegateCommand<ITreeItem>(item =>
             {
@@ -109,7 +121,6 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         private ICommand createNewTickerCommand;
 
-        [XmlIgnore]
         public ICommand CreateNewTickerCommand =>
             this.createNewTickerCommand ?? (this.createNewTickerCommand = new DelegateCommand<ITreeItem>(item =>
             {
@@ -128,7 +139,6 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         private ICommand createNewTagCommand;
 
-        [XmlIgnore]
         public ICommand CreateNewTagCommand =>
             this.createNewTagCommand ?? (this.createNewTagCommand = new DelegateCommand<ITreeItem>(item =>
             {
@@ -137,15 +147,30 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 switch (item.ItemType)
                 {
                     case ItemTypes.TagsRoot:
-                        newItem = TagTable.Instance.AddNew();
-                        newItem.Name = "New Tag";
+                        newItem = TagTable.Instance.AddNew("New Tag");
                         newItem.isSelected = true;
                         break;
 
                     case ItemTypes.Tag:
-                        newItem = TagTable.Instance.AddNew(item as Tag);
-                        newItem.Name = "New Tag";
+                        newItem = TagTable.Instance.AddNew(item as Tag, "New Tag");
                         newItem.isSelected = true;
+                        break;
+                }
+            }));
+
+        private ICommand renameCommand;
+
+        public ICommand RenameCommand =>
+            this.renameCommand ?? (this.renameCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                switch (item.ItemType)
+                {
+                    case ItemTypes.Tag:
+                        if ((item as Tag).ID != Tag.ImportsTag.ID)
+                        {
+                            item.IsInEditMode = true;
+                        }
+
                         break;
                 }
             }));

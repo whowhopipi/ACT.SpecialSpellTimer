@@ -70,7 +70,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
             }
         }
 
-        public override bool IsEnabled
+        public override bool Enabled
         {
             get => false;
             set { }

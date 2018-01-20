@@ -667,13 +667,13 @@ namespace ACT.SpecialSpellTimer
             // 設定を一旦すべて削除する
             ClearNormalSpellTimer();
 
-            var spells = SpellTable.Instance.Table.Where(x => x.IsEnabled);
+            var spells = SpellTable.Instance.Table.Where(x => x.Enabled);
             foreach (var spell in spells)
             {
                 UpdateNormalSpellTimer(spell, true);
             }
 
-            var telops = TickerTable.Instance.Table.Where(x => x.IsEnabled);
+            var telops = TickerTable.Instance.Table.Where(x => x.Enabled);
             foreach (var telop in telops)
             {
                 UpdateNormalSpellTimerForTelop(telop, false);

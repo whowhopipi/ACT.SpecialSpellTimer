@@ -33,7 +33,7 @@
     <ResourceDictionary>
       <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
 
-      <fwcnv:BoolToCollapsedConverter x:Key="VisibilityConverter" />
+      <fwcnv:BoolToCollapsedConverter x:Key="CollapsedConverter" />
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
 
       <ResourceDictionary.MergedDictionaries>
@@ -129,7 +129,7 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="ThList" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
@@ -162,7 +162,7 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Magic" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
@@ -195,7 +195,7 @@
             </HierarchicalDataTemplate.Resources>
 
             <StackPanel Orientation="Horizontal">
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Comment" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
             </StackPanel>
@@ -233,16 +233,21 @@
 
               <StackPanel.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding DataContext.RemoveTagCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
-                  <MenuItem Header="{StaticResource Common_Rename}" />
+                  <MenuItem Header="{StaticResource Common_CreateNew}">
+                    <MenuItem Header="{StaticResource Common_SpellPanel}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Tag}" Command="{Binding CreateNewTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  </MenuItem>
+                  <MenuItem Header="{StaticResource Common_Rename}" Command="{Binding RenameCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   <MenuItem Header="{StaticResource Common_Delete}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
-              <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+              <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Tag" />
-              <TextBlock Text="{Binding Name, Mode=OneWay}" />
-              <TextBox Text="{Binding Name, Mode=TwoWay}" Visibility="Collapsed" />
+              <TextBlock Text="{Binding Name, Mode=OneWay}" Visibility="{Binding IsInViewMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" />
+              <TextBox Text="{Binding Name, Mode=TwoWay}" Tag="{Binding}" MinWidth="120" Visibility="{Binding IsInEditMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" LostFocus="RenameTextBoxOnLostFocus" KeyDown="RenameTextBoxOnKeyDown" IsVisibleChanged="RenameTextBoxOnIsVisibleChanged" />
             </StackPanel>
           </HierarchicalDataTemplate>
         </TreeView.Resources>

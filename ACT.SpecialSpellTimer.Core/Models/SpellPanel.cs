@@ -104,17 +104,17 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public override bool IsEnabled
+        public override bool Enabled
         {
             get =>
                 this.Spells.Count < 1 ?
                 false :
-                this.Spells.Count == this.Spells.Where(x => x.IsEnabled).Count();
+                this.Spells.Count == this.Spells.Where(x => x.Enabled).Count();
             set
             {
                 foreach (var spell in this.Spells)
                 {
-                    spell.IsEnabled = value;
+                    spell.Enabled = value;
                 }
 
                 this.RaisePropertyChanged();

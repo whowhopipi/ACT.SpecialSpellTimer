@@ -32,7 +32,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region ITreeItem
 
-        private bool isEnabled = false;
+        private bool enabled = false;
 
         [XmlIgnore]
         public override string DisplayText => this.Title;
@@ -48,10 +48,10 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlElement(ElementName = "Enabled")]
-        public override bool IsEnabled
+        public override bool Enabled
         {
-            get => this.isEnabled;
-            set => this.SetProperty(ref this.isEnabled, value);
+            get => this.enabled;
+            set => this.SetProperty(ref this.enabled, value);
         }
 
         [XmlIgnore]

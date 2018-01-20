@@ -126,7 +126,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public override bool IsEnabled
+        public override bool Enabled
         {
             get
             {
@@ -138,7 +138,7 @@ namespace ACT.SpecialSpellTimer.Models
                 var value = true;
                 foreach (ITreeItem child in this.Children)
                 {
-                    value &= child.IsEnabled;
+                    value &= child?.Enabled ?? false;
                 }
 
                 return value;
@@ -147,7 +147,10 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 foreach (ITreeItem child in this.Children)
                 {
-                    child.IsEnabled = value;
+                    if (child != null)
+                    {
+                        child.Enabled = value;
+                    }
                 }
             }
         }
@@ -214,19 +217,20 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        private void RefreshChildren()
+        public void RefreshChildren()
         {
             var items =
                 from x in TagTable.Instance.ItemTags
                 where
-                x.TagID == this.ID
+                x.TagID == this.ID &&
+                x.Item != null
                 select
                 x.Item;
 
             this.children.Clear();
             this.children.AddRange(items);
 
-            this.RaisePropertyChanged(nameof(this.IsEnabled));
+            this.RaisePropertyChanged(nameof(this.Enabled));
         }
 
         #endregion ITreeItem

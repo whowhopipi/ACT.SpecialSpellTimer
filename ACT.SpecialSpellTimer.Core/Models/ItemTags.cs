@@ -22,14 +22,33 @@ namespace ACT.SpecialSpellTimer.Models
             this.TagID = tagID;
         }
 
-        public Guid ItemID { get; set; }
-        public Guid TagID { get; set; }
-
+        private Guid itemID;
+        private Guid tagID;
         private ITreeItem item;
         private Tag tag;
 
+        public Guid ItemID
+        {
+            get => this.itemID;
+            set
+            {
+                this.itemID = value;
+                this.item = null;
+            }
+        }
+
+        public Guid TagID
+        {
+            get => this.tagID;
+            set
+            {
+                this.tagID = value;
+                this.tag = null;
+            }
+        }
+
         [XmlIgnore]
-        public ItemTypes ItemType => this.item?.ItemType ?? ItemTypes.Unknown;
+        public ItemTypes ItemType => this.Item?.ItemType ?? ItemTypes.Unknown;
 
         [XmlIgnore]
         public ITreeItem Item

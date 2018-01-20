@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using ACT.SpecialSpellTimer.Config.ViewModels;
 using ACT.SpecialSpellTimer.Models;
@@ -81,6 +82,47 @@ namespace ACT.SpecialSpellTimer.Config.Views
             {
                 this.ContentGrid.Children.Clear();
                 this.ContentGrid.Children.Add(content);
+            }
+        }
+
+        private void RenameTextBoxOnLostFocus(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (sender is TextBox t)
+            {
+                if (t.Tag is Tag tag)
+                {
+                    tag.IsInEditMode = false;
+                }
+            }
+        }
+
+        private void RenameTextBoxOnKeyDown(
+            object sender,
+            KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape ||
+                e.Key == Key.Enter)
+            {
+                if (sender is TextBox t)
+                {
+                    if (t.Tag is Tag tag)
+                    {
+                        tag.IsInEditMode = false;
+                    }
+                }
+            }
+        }
+
+        private void RenameTextBoxOnIsVisibleChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is TextBox t)
+            {
+                t.SelectAll();
+                t.Focus();
             }
         }
     }
