@@ -6,6 +6,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:local="clr-namespace:ACT.SpecialSpellTimer.Forms"
   xmlns:fw="clr-namespace:FFXIV.Framework.WPF.Views;assembly=FFXIV.Framework"
+  xmlns:views="clr-namespace:ACT.SpecialSpellTimer.Config.Views"
   mc:Ignorable="d"
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
@@ -20,6 +21,9 @@
   <TabControl>
     <TabItem Header="Config">
       <WindowsFormsHost x:Name="WindowsFormsHost" Margin="0" />
+    </TabItem>
+    <TabItem Header="TTS Dictionary">
+      <views:TTSDictionaryView x:Name="TTSDictionaryView" />
     </TabItem>
     <TabItem Header="Help">
       <fw:HelpView x:Name="HelpView" />

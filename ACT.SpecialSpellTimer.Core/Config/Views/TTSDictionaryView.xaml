@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
   x:Class="ACT.SpecialSpellTimer.Config.Views.TTSDictionaryView"
   xmlns:local="clr-namespace:ACT.SpecialSpellTimer.Config.Views"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,6 +7,9 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:global="clr-namespace:FFXIV.Framework.Globalization;assembly=FFXIV.Framework"
+  xmlns:fwcmn="clr-namespace:FFXIV.Framework.Common;assembly=FFXIV.Framework"
+  xmlns:fwcnv="clr-namespace:FFXIV.Framework.WPF.Converters;assembly=FFXIV.Framework"
+  xmlns:fa="http://schemas.fontawesome.io/icons/"
   mc:Ignorable="d"
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
@@ -20,6 +23,51 @@
   d:DesignWidth="600"
   d:DataContext="{d:DesignInstance Type=local:TTSDictionaryView, IsDesignTimeCreatable=True}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}">
-  <ScrollViewer>
-  </ScrollViewer>
+
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <Style TargetType="Label">
+        <Setter Property="Padding" Value="0" />
+      </Style>
+
+      <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
+
+      <fwcnv:BoolToCollapsedConverter x:Key="VisibilityConverter" />
+      <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
+    </ResourceDictionary>
+  </UserControl.Resources>
+
+  <Border
+    x:Name="ContentBorder"
+    Margin="1"
+    Padding="8"
+    BorderThickness="2"
+    CornerRadius="2"
+    BorderBrush="SaddleBrown">
+
+    <ScrollViewer
+      HorizontalScrollBarVisibility="Disabled"
+      VerticalScrollBarVisibility="Auto">
+      <StackPanel Orientation="Vertical">
+
+        <Label Content="Party member phonetics" FontWeight="Bold" />
+        <ItemsControl
+          Margin="0 10 0 0"
+          Padding="0"
+          ItemsSource="{Binding PartyList, Mode=OneWay}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Margin="0 3 0 3" Orientation="Horizontal">
+                <Label Content="&lt;" FontWeight="SemiBold" />
+                <Label Content="{Binding JobID, Mode=OneWay}" FontWeight="SemiBold" />
+                <Label Content="&gt;" FontWeight="SemiBold" />
+                <Label Margin="10 0 0 0" Content="{Binding Name, Mode=OneWay}" MinWidth="250" />
+                <TextBox Text="{Binding Phonetic, Mode=TwoWay}" MinWidth="200" />
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+  </Border>
 </UserControl>

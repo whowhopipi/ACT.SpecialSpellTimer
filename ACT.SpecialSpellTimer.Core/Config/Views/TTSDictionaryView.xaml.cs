@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ACT.SpecialSpellTimer.Sound;
+using Prism.Commands;
+using static ACT.SpecialSpellTimer.Sound.TTSDictionary;
 
 namespace ACT.SpecialSpellTimer.Config.Views
 {
@@ -22,7 +16,29 @@ namespace ACT.SpecialSpellTimer.Config.Views
     {
         public TTSDictionaryView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
+
+        public ObservableCollection<PCPhonetic> PartyList => TTSDictionary.Instance.Phonetics;
+
+        private ICommand openTTSDictionaryCommand;
+
+        public ICommand OpenTTSDictionaryCommand =>
+            this.openTTSDictionaryCommand ?? (this.openTTSDictionaryCommand = new DelegateCommand(() =>
+            {
+                var file = TTSDictionary.Instance.SourceFile;
+                if (File.Exists(file))
+                {
+                    Process.Start(file);
+                }
+            }));
+
+        private ICommand reloadTTSDictinaryCommand;
+
+        public ICommand ReloadTTSDictinaryCommand =>
+            this.reloadTTSDictinaryCommand ?? (this.reloadTTSDictinaryCommand = new DelegateCommand(() =>
+            {
+                TTSDictionary.Instance.Load();
+            }));
     }
 }

@@ -1,14 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.FFXIVHelper;
+using static ACT.SpecialSpellTimer.Sound.TTSDictionary;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -18,9 +22,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         private static TableCompiler instance;
 
-        public static TableCompiler Instance => instance;
-
-        public static void Initialize() => instance = new TableCompiler();
+        public static TableCompiler Instance => instance ?? (instance = new TableCompiler());
 
         public static void Free() => instance = null;
 
@@ -62,40 +64,43 @@ namespace ACT.SpecialSpellTimer.Models
         {
             try
             {
-                this.RefreshCombatants();
-
-                var isPlayerChanged = this.IsPlayerChanged();
-                var isPartyChanged = this.IsPartyChanged();
-                var isZoneChanged = this.IsZoneChanged();
-
-                if (isZoneChanged)
+                lock (this)
                 {
-                    this.RefreshPetPlaceholder();
-                }
+                    this.RefreshCombatants();
 
-                if (isPlayerChanged)
-                {
-                    this.RefreshPlayerPlacceholder();
-                }
+                    var isPlayerChanged = this.IsPlayerChanged();
+                    var isPartyChanged = this.IsPartyChanged();
+                    var isZoneChanged = this.IsZoneChanged();
 
-                if (isPartyChanged)
-                {
-                    this.RefreshPartyPlaceholders();
-                    this.RefreshPetPlaceholder();
-                }
-
-                if (isPlayerChanged ||
-                    isPartyChanged ||
-                    isZoneChanged)
-                {
-                    this.RecompileSpells();
-                    this.RecompileTickers();
-
-                    // 不要なWindowを閉じる
-                    if (!Settings.Default.OverlayForceVisible)
+                    if (isZoneChanged)
                     {
-                        TickersController.Instance.GarbageWindows(this.TickerList);
-                        SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
+                        this.RefreshPetPlaceholder();
+                    }
+
+                    if (isPlayerChanged)
+                    {
+                        this.RefreshPlayerPlacceholder();
+                    }
+
+                    if (isPartyChanged)
+                    {
+                        this.RefreshPartyPlaceholders();
+                        this.RefreshPetPlaceholder();
+                    }
+
+                    if (isPlayerChanged ||
+                        isPartyChanged ||
+                        isZoneChanged)
+                    {
+                        this.RecompileSpells();
+                        this.RecompileTickers();
+
+                        // 不要なWindowを閉じる
+                        if (!Settings.Default.OverlayForceVisible)
+                        {
+                            TickersController.Instance.GarbageWindows(this.TickerList);
+                            SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
+                        }
                     }
                 }
             }
@@ -107,15 +112,15 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region Compilers
 
-        private volatile List<Combatant> partyList = new List<Combatant>();
+        private List<Combatant> partyList = new List<Combatant>();
 
-        private volatile Combatant player = new Combatant();
+        private Combatant player = new Combatant();
 
-        private volatile List<SpellTimer> spellList = new List<SpellTimer>();
+        private List<SpellTimer> spellList = new List<SpellTimer>();
 
         private object spellListLocker = new object();
 
-        private volatile List<OnePointTelop> tickerList = new List<OnePointTelop>();
+        private List<OnePointTelop> tickerList = new List<OnePointTelop>();
 
         private object tickerListLocker = new object();
 
@@ -614,7 +619,35 @@ namespace ACT.SpecialSpellTimer.Models
                     newList.Add(this.player);
                 }
 
-                this.partyList = newList;
+                // パーティリストを入れ替える
+                this.partyList.Clear();
+                this.partyList.AddRange(newList);
+
+                // 読み仮名リストをメンテナンスする
+                var newPhonetics =
+                    from x in newList
+                    select new PCPhonetic()
+                    {
+                        Name = x.Name,
+                        NameFI = x.NameFI,
+                        NameIF = x.NameIF,
+                        NameII = x.NameII,
+                        JobID = x.JobID,
+                    };
+
+                WPFHelper.BeginInvoke(() =>
+                {
+                    var phonetics = TTSDictionary.Instance.Phonetics;
+
+                    var toAdd = newPhonetics.Where(x => !phonetics.Any(y => y.Name == x.Name));
+                    phonetics.AddRange(toAdd);
+
+                    var toRemove = phonetics.Where(x => !newPhonetics.Any(y => y.Name == x.Name)).ToArray();
+                    foreach (var item in toRemove)
+                    {
+                        phonetics.Remove(item);
+                    }
+                });
             }
         }
 
