@@ -73,7 +73,16 @@ namespace ACT.SpecialSpellTimer.Sound
             {
                 var placeholderList = TableCompiler.Instance.PlaceholderList;
 
-                foreach (var item in this.ttsDictionary)
+                var q =
+                    from x in this.ttsDictionary
+                    orderby
+                    !x.Key.Contains("<") && !x.Key.Contains(">") ?
+                    0 :
+                    1
+                    select
+                    x;
+
+                foreach (var item in q)
                 {
                     // 通常の置換
                     if (!item.Key.Contains("<") &&
