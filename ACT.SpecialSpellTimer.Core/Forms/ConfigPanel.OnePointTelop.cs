@@ -73,7 +73,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             void play(string source)
             {
-                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                var src = this.TelopDetailGroupBox.Tag as Ticker;
                 src?.Play(source);
             }
 

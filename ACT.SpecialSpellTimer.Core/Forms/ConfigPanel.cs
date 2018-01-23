@@ -352,7 +352,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
             void play(string source)
             {
-                var src = this.DetailGroupBox.Tag as SpellTimer;
+                var src = this.DetailGroupBox.Tag as Spell;
                 src?.Play(source);
             }
 
@@ -1035,7 +1035,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
         private void TestSequencialTTS()
         {
-            var src = this.DetailGroupBox.Tag as SpellTimer;
+            var src = this.DetailGroupBox.Tag as Spell;
             src?.Play("おしらせ1");
             src?.Play("おしらせ2");
             src?.Play("おしらせ3");
@@ -1044,7 +1044,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
         private void TestSequencialTTSTicker()
         {
-            var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+            var src = this.TelopDetailGroupBox.Tag as Ticker;
             src?.Play("おしらせ1");
             src?.Play("おしらせ2");
             src?.Play("おしらせ3");
