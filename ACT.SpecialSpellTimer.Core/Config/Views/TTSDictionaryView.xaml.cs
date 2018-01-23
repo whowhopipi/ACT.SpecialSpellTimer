@@ -1,10 +1,11 @@
 using System;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Sound;
 using Prism.Commands;
@@ -19,9 +20,19 @@ namespace ACT.SpecialSpellTimer.Config.Views
         public TTSDictionaryView()
         {
             this.InitializeComponent();
+
+            this.partyListSource.SortDescriptions.Add(new SortDescription(
+                nameof(TTSDictionary.PCPhonetic.SortOrder),
+                ListSortDirection.Ascending));
         }
 
-        public ObservableCollection<TTSDictionary.PCPhonetic> PartyList => TTSDictionary.Instance.Phonetics;
+        private CollectionViewSource partyListSource = new CollectionViewSource()
+        {
+            Source = TTSDictionary.Instance.Phonetics,
+            IsLiveSortingRequested = true,
+        };
+
+        public ICollectionView PartyList => this.partyListSource.View;
 
         private ICommand testPhoneticsCommand;
 
@@ -29,7 +40,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.testPhoneticsCommand ?? (this.testPhoneticsCommand = new DelegateCommand(() =>
             {
                 var tts = string.Empty;
-                foreach (var pc in this.PartyList.Where(x => !string.IsNullOrEmpty(x.Phonetic)))
+                foreach (var pc in TTSDictionary.Instance.Phonetics.Where(x => !string.IsNullOrEmpty(x.Phonetic)))
                 {
                     tts += $"{pc.JobID.ToString()}、頭文字{pc.Name.Substring(0, 1)}の読み仮名は、{pc.Name}です。" + Environment.NewLine;
                 }

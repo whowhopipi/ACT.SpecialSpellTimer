@@ -196,7 +196,7 @@ namespace ACT.SpecialSpellTimer.Sound
         public class PCPhonetic :
             BindableBase
         {
-            private int id;
+            private uint id;
             private string name;
             private string nameFI;
             private string nameIF;
@@ -204,7 +204,7 @@ namespace ACT.SpecialSpellTimer.Sound
             private string phonetic;
             private JobIDs jobID;
 
-            public int ID
+            public uint ID
             {
                 get => this.id;
                 set => this.SetProperty(ref this.id, value);
@@ -253,6 +253,25 @@ namespace ACT.SpecialSpellTimer.Sound
             {
                 get => this.jobID;
                 set => this.SetProperty(ref this.jobID, value);
+            }
+
+            public int SortOrder
+            {
+                get
+                {
+                    if ((TableCompiler.Instance?.Player?.ID ?? 0) == this.ID)
+                    {
+                        return 0;
+                    }
+
+                    var job = Jobs.Find(this.JobID);
+                    if (job == null)
+                    {
+                        return (int)this.JobID;
+                    }
+
+                    return ((int)job.Role * 100) + (int)this.JobID;
+                }
             }
         }
     }

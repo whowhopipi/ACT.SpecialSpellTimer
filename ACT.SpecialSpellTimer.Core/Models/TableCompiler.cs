@@ -112,6 +112,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region Compilers
 
+        public Combatant Player => this.player;
+
         private List<Combatant> partyList = new List<Combatant>();
 
         private Combatant player = new Combatant();
@@ -628,6 +630,7 @@ namespace ACT.SpecialSpellTimer.Models
                     from x in newList
                     select new PCPhonetic()
                     {
+                        ID = x.ID,
                         Name = x.Name,
                         NameFI = x.NameFI,
                         NameIF = x.NameIF,
