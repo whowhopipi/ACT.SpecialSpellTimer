@@ -1024,6 +1024,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   TTSをシーケンシャルに再生する（同時再生をしない） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string IsSequentialTTSCheckBox {
+            get {
+                return ResourceManager.GetString("IsSequentialTTSCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   停止中 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string IsStopping {

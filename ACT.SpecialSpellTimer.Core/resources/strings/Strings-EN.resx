@@ -1267,4 +1267,8 @@
     <value>※ If you want to limit the zone of interest, please turn ON the check.</value>
     <comment>※対象とするゾーンを限定したい場合はチェックをONにしてください</comment>
   </data>
+  <data name="IsSequentialTTSCheckBox" xml:space="preserve">
+    <value>Playback TTS sequentialy (Disable simultaneous playback)</value>
+    <comment>TTSをシーケンシャルに再生する（同時再生をしない）</comment>
+  </data>
 </root>

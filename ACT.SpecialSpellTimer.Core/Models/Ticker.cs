@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Sound;
@@ -152,6 +153,84 @@ namespace ACT.SpecialSpellTimer.Models
 
         public bool NotifyToDiscord { get; set; } = false;
 
+        #region Sequential TTS
+
+        /// <summary>
+        /// 同時再生を抑制してシーケンシャルにTTSを再生する
+        /// </summary>
+        public bool IsSequentialTTS { get; set; } = false;
+
+        public delegate void DoPlay(string source);
+
+        /// <summary>
+        /// 再生処理のデリゲート
+        /// </summary>
+        [XmlIgnore]
+        public DoPlay PlayDelegate { get; set; } = null;
+
+        private string tts;
+        private Task speakTask;
+
+        /// <summary>
+        /// TTSを発声する
+        /// </summary>
+        /// <param name="tts">
+        /// TTS</param>
+        public void Play(
+            string tts)
+        {
+            if (this.PlayDelegate != null)
+            {
+                this.PlayDelegate(tts);
+                return;
+            }
+
+            if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
+                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
+            {
+                SoundController.Instance.Play(tts);
+                return;
+            }
+
+            if (!this.IsSequentialTTS)
+            {
+                SoundController.Instance.Play(tts);
+                return;
+            }
+
+            lock (this)
+            {
+                if (!tts.EndsWith("。") &&
+                    !tts.EndsWith(".") &&
+                    !tts.EndsWith("、") &&
+                    !tts.EndsWith(","))
+                {
+                    tts += ".";
+                }
+
+                this.tts += tts + Environment.NewLine;
+
+                if (this.speakTask == null)
+                {
+                    this.speakTask = Task.Run(async () =>
+                    {
+                        await Task.Delay(50);
+                        SoundController.Instance.Play(tts);
+                    }).ContinueWith((task) =>
+                    {
+                        lock (this)
+                        {
+                            this.speakTask.Dispose();
+                            this.speakTask = null;
+                            this.tts = string.Empty;
+                        }
+                    });
+                }
+            }
+        }
+
+        #endregion Sequential TTS
+
         #region Soundfiles
 
         [XmlIgnore]
@@ -289,21 +368,21 @@ namespace ACT.SpecialSpellTimer.Models
             var wave = this.DelaySound;
             var speak = this.DelayTextToSpeak;
 
-            SoundController.Instance.Play(this.DelaySound);
+            this.Play(this.DelaySound);
 
             if (!string.IsNullOrWhiteSpace(this.DelayTextToSpeak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Instance.Play(speak);
+                    this.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Instance.Play(speak);
+                this.Play(speak);
             }
         }
 
