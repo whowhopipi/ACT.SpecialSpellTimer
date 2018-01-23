@@ -255,6 +255,35 @@ namespace ACT.SpecialSpellTimer.Models
         public bool NotifyToDiscord { get; set; } = false;
         public bool NotifyToDiscordAtComplete { get; set; } = false;
 
+        #region Sequential TTS
+
+        /// <summary>
+        /// 同時再生を抑制してシーケンシャルにTTSを再生する
+        /// </summary>
+        public bool IsSequentialTTS { get; set; } = false;
+
+        /// <summary>
+        /// TTS
+        /// </summary>
+        private string tts;
+
+        /// <summary>
+        /// TTSを発声する
+        /// </summary>
+        /// <param name="tts">
+        /// TTS</param>
+        public void Speak(
+            string tts)
+        {
+            if (!this.IsSequentialTTS)
+            {
+                SoundController.Instance.Play(tts);
+                return;
+            }
+        }
+
+        #endregion Sequential TTS
+
         #region Sound files
 
         [XmlIgnore]
@@ -525,7 +554,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             if (string.IsNullOrWhiteSpace(this.TimeupSound) &&
                 string.IsNullOrWhiteSpace(this.TimeupTextToSpeak) &&
-                !this.NotifyToDiscord && 
+                !this.NotifyToDiscord &&
                 !this.NotifyToDiscordAtComplete)
             {
                 return;
