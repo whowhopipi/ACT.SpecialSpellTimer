@@ -320,6 +320,92 @@ namespace ACT.SpecialSpellTimer.Models
         public bool NotifyToDiscord { get; set; } = false;
         public bool NotifyToDiscordAtComplete { get; set; } = false;
 
+        #region Sequential TTS
+
+        /// <summary>
+        /// 同時再生を抑制してシーケンシャルにTTSを再生する
+        /// </summary>
+        public bool IsSequentialTTS { get; set; } = false;
+
+        public delegate void DoPlay(string source);
+
+        /// <summary>
+        /// 再生処理のデリゲート
+        /// </summary>
+        [XmlIgnore]
+        public DoPlay PlayDelegate { get; set; } = null;
+
+        private volatile string tts;
+        private Timer speakTimer;
+
+        /// <summary>
+        /// TTSを発声する
+        /// </summary>
+        /// <param name="tts">
+        /// TTS</param>
+        public void Play(
+            string tts)
+        {
+            if (this.PlayDelegate != null)
+            {
+                this.PlayDelegate(tts);
+                return;
+            }
+
+            if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
+                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
+            {
+                SoundController.Instance.Play(tts);
+                return;
+            }
+
+            if (!this.IsSequentialTTS)
+            {
+                SoundController.Instance.Play(tts);
+                return;
+            }
+
+            this.speakTimer?.Stop();
+
+            lock (this)
+            {
+                if (this.speakTimer == null)
+                {
+                    this.speakTimer = new Timer(50)
+                    {
+                        AutoReset = false
+                    };
+
+                    this.speakTimer.Elapsed += (x, y) =>
+                    {
+                        SoundController.Instance.Play(this.tts);
+                        this.tts = string.Empty;
+                    };
+                }
+
+                if (!tts.EndsWith("。") &&
+                    !tts.EndsWith(".") &&
+                    !tts.EndsWith("、") &&
+                    !tts.EndsWith(","))
+                {
+                    tts += ".";
+                }
+
+                if (string.IsNullOrEmpty(this.tts))
+                {
+                    this.tts = tts;
+                }
+                else
+                {
+                    this.tts += Environment.NewLine + tts;
+                }
+            }
+
+            this.speakTimer?.Start();
+        }
+
+        #endregion Sequential TTS
+
         #region Sound files
 
         [XmlIgnore]
@@ -616,21 +702,21 @@ namespace ACT.SpecialSpellTimer.Models
             var wave = this.BeforeSound;
             var speak = this.BeforeTextToSpeak;
 
-            SoundController.Instance.Play(wave);
+            this.Play(wave);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Instance.Play(speak);
+                    this.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Instance.Play(speak);
+                this.Play(speak);
             }
         }
 
@@ -642,21 +728,21 @@ namespace ACT.SpecialSpellTimer.Models
             var wave = this.OverSound;
             var speak = this.OverTextToSpeak;
 
-            SoundController.Instance.Play(wave);
+            this.Play(wave);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Instance.Play(speak);
+                    this.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Instance.Play(speak);
+                this.Play(speak);
             }
         }
 
@@ -681,21 +767,21 @@ namespace ACT.SpecialSpellTimer.Models
             var wave = this.TimeupSound;
             var speak = this.TimeupTextToSpeak;
 
-            SoundController.Instance.Play(wave);
+            this.Play(wave);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    SoundController.Instance.Play(speak);
+                    this.Play(speak);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                SoundController.Instance.Play(speak);
+                this.Play(speak);
             }
         }
 

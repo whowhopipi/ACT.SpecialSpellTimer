@@ -91,7 +91,6 @@ namespace ACT.SpecialSpellTimer
             this.LogBuffer = new LogBuffer();
 
             // テーブルコンパイラを開始する
-            TableCompiler.Initialize();
             TableCompiler.Instance.Begin();
 
             // 戦闘分析を初期化する

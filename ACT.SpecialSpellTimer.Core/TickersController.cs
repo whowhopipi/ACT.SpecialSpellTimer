@@ -6,7 +6,6 @@ using System.Linq;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
-using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Bridge;
@@ -122,8 +121,8 @@ namespace ACT.SpecialSpellTimer
                             // マッチング計測終了
                             telop.EndMatching();
 
-                            SoundController.Instance.Play(telop.MatchSound);
-                            SoundController.Instance.Play(telop.MatchTextToSpeak);
+                            telop.Play(telop.MatchSound);
+                            telop.Play(telop.MatchTextToSpeak);
 
                             // DISCORDに通知する？
                             if (telop.NotifyToDiscord)
@@ -167,11 +166,11 @@ namespace ACT.SpecialSpellTimer
                         // マッチング計測終了
                         telop.EndMatching();
 
-                        SoundController.Instance.Play(telop.MatchSound);
+                        telop.Play(telop.MatchSound);
                         if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
                         {
                             var tts = match.Result(telop.MatchTextToSpeak);
-                            SoundController.Instance.Play(tts);
+                            telop.Play(tts);
                         }
 
                         // DISCORDに通知する？

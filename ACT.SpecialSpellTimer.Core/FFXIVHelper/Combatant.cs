@@ -105,6 +105,8 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public Combatant Player { get; set; }
 
+        public JobIDs JobID => this.AsJob()?.ID ?? JobIDs.Unknown;
+
         public Job AsJob()
         {
             return Jobs.Find(this.Job);

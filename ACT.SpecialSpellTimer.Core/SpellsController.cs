@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
-using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
@@ -134,8 +133,8 @@ namespace ACT.SpecialSpellTimer
                             spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
-                            this.Play(targetSpell.MatchSound);
-                            this.Play(targetSpell.MatchTextToSpeak);
+                            targetSpell.Play(targetSpell.MatchSound);
+                            targetSpell.Play(targetSpell.MatchTextToSpeak);
 
                             // DISCORDに通知する？
                             if (targetSpell.NotifyToDiscord)
@@ -216,12 +215,12 @@ namespace ACT.SpecialSpellTimer
                             spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
-                            this.Play(targetSpell.MatchSound);
+                            targetSpell.Play(targetSpell.MatchSound);
 
                             if (!string.IsNullOrWhiteSpace(targetSpell.MatchTextToSpeak))
                             {
                                 var tts = match.Result(targetSpell.MatchTextToSpeak);
-                                this.Play(tts);
+                                targetSpell.Play(tts);
                             }
 
                             // DISCORDに通知する？
@@ -814,15 +813,5 @@ namespace ACT.SpecialSpellTimer
         }
 
         #endregion To Normal SpellTimer
-
-        /// <summary>
-        /// 再生する
-        /// </summary>
-        /// <param name="source">再生するSource</param>
-        private void Play(
-            string source)
-        {
-            SoundController.Instance.Play(source);
-        }
     }
 }

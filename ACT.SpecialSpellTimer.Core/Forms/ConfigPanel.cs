@@ -216,6 +216,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         nr.ToInstance = baseRow.ToInstance;
                         nr.NotifyToDiscord = baseRow.NotifyToDiscord;
                         nr.NotifyToDiscordAtComplete = baseRow.NotifyToDiscordAtComplete;
+                        nr.IsSequentialTTS = baseRow.IsSequentialTTS;
                     }
                 }
 
@@ -349,45 +350,23 @@ namespace ACT.SpecialSpellTimer.Forms
             this.UpdateButton.Click += this.UpdateButton_Click;
             this.DeleteButton.Click += this.DeleteButton_Click;
 
-            this.Play1Button.Click += (s1, e1) =>
+            void play(string source)
             {
-                SoundController.Instance.Play((string)this.MatchSoundComboBox.SelectedValue ?? string.Empty);
-            };
+                var src = this.DetailGroupBox.Tag as SpellTimer;
+                src?.Play(source);
+            }
 
-            this.Play2Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play((string)this.OverSoundComboBox.SelectedValue ?? string.Empty);
-            };
+            this.Play1Button.Click += (s1, e1) => play((string)this.MatchSoundComboBox.SelectedValue ?? string.Empty);
+            this.Play2Button.Click += (s1, e1) => play((string)this.OverSoundComboBox.SelectedValue ?? string.Empty);
+            this.Play3Button.Click += (s1, e1) => play((string)this.TimeupSoundComboBox.SelectedValue ?? string.Empty);
+            this.Play4Button.Click += (s1, e1) => play((string)this.BeforeSoundComboBox.SelectedValue ?? string.Empty);
+            this.Speak1Button.Click += (s1, e1) => play(this.MatchTextToSpeakTextBox.Text);
+            this.Speak2Button.Click += (s1, e1) => play(this.OverTextToSpeakTextBox.Text);
+            this.Speak3Button.Click += (s1, e1) => play(this.TimeupTextToSpeakTextBox.Text);
+            this.Speak4Button.Click += (s1, e1) => play(this.BeforeTextToSpeakTextBox.Text);
 
-            this.Play3Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play((string)this.TimeupSoundComboBox.SelectedValue ?? string.Empty);
-            };
-
-            this.Play4Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play((string)this.BeforeSoundComboBox.SelectedValue ?? string.Empty);
-            };
-
-            this.Speak1Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play(this.MatchTextToSpeakTextBox.Text);
-            };
-
-            this.Speak2Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play(this.OverTextToSpeakTextBox.Text);
-            };
-
-            this.Speak3Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play(this.TimeupTextToSpeakTextBox.Text);
-            };
-
-            this.Speak4Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play(this.BeforeTextToSpeakTextBox.Text);
-            };
+            this.TestSequentialTTSButton.Click += (x, y) => this.TestSequencialTTS();
+            this.TestSequentialTTSTickerButton.Click += (x, y) => this.TestSequencialTTSTicker();
 
             this.SpellTimerTreeView.AfterCheck += (s1, e1) =>
             {
@@ -774,6 +753,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TimeupSoundComboBox.SelectedValue = src.TimeupSound;
             this.TimeupTextToSpeakTextBox.Text = src.TimeupTextToSpeak;
 
+            this.IsSequentialTTSCheckBox.Checked = src.IsSequentialTTS;
+
             this.IsReverseCheckBox.Checked = src.IsReverse;
             this.DontHideCheckBox.Checked = src.DontHide;
             this.HideSpellNameCheckBox.Checked = src.HideSpellName;
@@ -986,6 +967,8 @@ namespace ACT.SpecialSpellTimer.Forms
                     src.TimeupSound = (string)this.TimeupSoundComboBox.SelectedValue ?? string.Empty;
                     src.TimeupTextToSpeak = this.TimeupTextToSpeakTextBox.Text;
 
+                    src.IsSequentialTTS = this.IsSequentialTTSCheckBox.Checked;
+
                     src.NotifyToDiscord = this.NotifyToDiscordCheckBox.Checked;
                     src.NotifyToDiscordAtComplete = this.AlsoCompletionCheckBox.Checked;
                     src.IsReverse = this.IsReverseCheckBox.Checked;
@@ -1048,6 +1031,24 @@ namespace ACT.SpecialSpellTimer.Forms
                     }
                 }
             }
+        }
+
+        private void TestSequencialTTS()
+        {
+            var src = this.DetailGroupBox.Tag as SpellTimer;
+            src?.Play("おしらせ1");
+            src?.Play("おしらせ2");
+            src?.Play("おしらせ3");
+            src?.Play("おしらせ4");
+        }
+
+        private void TestSequencialTTSTicker()
+        {
+            var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+            src?.Play("おしらせ1");
+            src?.Play("おしらせ2");
+            src?.Play("おしらせ3");
+            src?.Play("おしらせ4");
         }
     }
 }

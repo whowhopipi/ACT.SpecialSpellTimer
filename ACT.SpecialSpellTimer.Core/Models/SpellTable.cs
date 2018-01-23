@@ -385,6 +385,8 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.RegexForExtendPattern2 = sourceSpell.RegexForExtendPattern2;
                     ns.KeywordForExtendReplaced2 = sourceSpell.KeywordForExtendReplaced2;
 
+                    ns.IsSequentialTTS = sourceSpell.IsSequentialTTS;
+                    ns.PlayDelegate = sourceSpell.Play;
                     ns.ToInstance = false;
                     ns.IsInstance = true;
                     ns.IsTemporaryDisplay = false;

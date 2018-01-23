@@ -25,6 +25,9 @@
     <TabItem Header="Triggers">
       <views:TriggersView x:Name="TriggersView" />
     </TabItem>
+    <TabItem Header="TTS Dictionary">
+      <views:TTSDictionaryView x:Name="TTSDictionaryView" />
+    </TabItem>
     <TabItem Header="Options">
       <views:OptionsView x:Name="OptionsView" />
     </TabItem>

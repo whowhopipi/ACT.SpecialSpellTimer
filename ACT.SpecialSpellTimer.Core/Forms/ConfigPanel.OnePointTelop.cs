@@ -71,25 +71,16 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TelopDelaySoundComboBox.ValueMember = "FullPath";
             this.TelopDelaySoundComboBox.DisplayMember = "Name";
 
-            this.TelopPlay1Button.Click += (s1, e1) =>
+            void play(string source)
             {
-                SoundController.Instance.Play((string)this.TelopMatchSoundComboBox.SelectedValue ?? string.Empty);
-            };
+                var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+                src?.Play(source);
+            }
 
-            this.TelopPlay2Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play((string)this.TelopDelaySoundComboBox.SelectedValue ?? string.Empty);
-            };
-
-            this.TelopSpeak1Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play(this.TelopMatchTTSTextBox.Text);
-            };
-
-            this.TelopSpeak2Button.Click += (s1, e1) =>
-            {
-                SoundController.Instance.Play(this.TelopDelayTTSTextBox.Text);
-            };
+            this.TelopPlay1Button.Click += (s1, e1) => play((string)this.TelopMatchSoundComboBox.SelectedValue ?? string.Empty);
+            this.TelopPlay2Button.Click += (s1, e1) => play((string)this.TelopDelaySoundComboBox.SelectedValue ?? string.Empty);
+            this.TelopSpeak1Button.Click += (s1, e1) => play(this.TelopMatchTTSTextBox.Text);
+            this.TelopSpeak2Button.Click += (s1, e1) => play(this.TelopDelayTTSTextBox.Text);
 
             this.TelopTreeView.AfterCheck += (s1, e1) =>
             {
@@ -270,6 +261,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TelopDelaySoundComboBox.SelectedValue = src.DelaySound;
             this.TelopDelayTTSTextBox.Text = src.DelayTextToSpeak;
 
+            this.IsSequentialTTSTickerCheckBox.Checked = src.IsSequentialTTS;
+
             // ジョブ限定ボタンの色を変える（未設定：黒、設定有：青）
             this.TelopSelectJobButton.ForeColor = src.JobFilter != string.Empty ? Color.Blue : Button.DefaultForeColor;
 
@@ -337,6 +330,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
                     nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
                     nr.NotifyToDiscord = baseRow.NotifyToDiscord;
+                    nr.IsSequentialTTS = baseRow.IsSequentialTTS;
                 }
             }
 
@@ -520,6 +514,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 src.MatchTextToSpeak = this.TelopMatchTTSTextBox.Text;
                 src.DelaySound = (string)this.TelopDelaySoundComboBox.SelectedValue ?? string.Empty;
                 src.DelayTextToSpeak = this.TelopDelayTTSTextBox.Text;
+                src.IsSequentialTTS = this.IsSequentialTTSTickerCheckBox.Checked;
 
                 if ((int)this.TelopLeftNumericUpDown.Tag != src.Left ||
                     (int)this.TelopTopNumericUpDown.Tag != src.Top)
