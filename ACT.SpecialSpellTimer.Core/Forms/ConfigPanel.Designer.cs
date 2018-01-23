@@ -118,6 +118,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.label4 = new System.Windows.Forms.Label();
             this.label59 = new System.Windows.Forms.Label();
             this.AlarmTab = new System.Windows.Forms.TabPage();
+            this.TestSequentialTTSButton = new System.Windows.Forms.Button();
+            this.IsSequentialTTSCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.BeforeTextToSpeakTextBox = new System.Windows.Forms.TextBox();
             this.BeforeSoundComboBox = new System.Windows.Forms.ComboBox();
@@ -196,6 +198,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TelopRegexEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.label44 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.IsSequentialTTSTickerCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.TelopDelayTTSTextBox = new System.Windows.Forms.TextBox();
             this.TelopDelaySoundComboBox = new System.Windows.Forms.ComboBox();
@@ -344,8 +347,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.IsSequentialTTSCheckBox = new System.Windows.Forms.CheckBox();
-            this.IsSequentialTTSTickerCheckBox = new System.Windows.Forms.CheckBox();
+            this.TestSequentialTTSTickerButton = new System.Windows.Forms.Button();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -533,7 +535,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpecialSpellTabPage.Controls.Add(this.panel5);
             this.SpecialSpellTabPage.Location = new System.Drawing.Point(264, 4);
             this.SpecialSpellTabPage.Name = "SpecialSpellTabPage";
-            this.SpecialSpellTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SpecialSpellTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.SpecialSpellTabPage.Size = new System.Drawing.Size(1065, 829);
             this.SpecialSpellTabPage.TabIndex = 0;
             this.SpecialSpellTabPage.Text = "SpellTimerTabTitle";
@@ -803,7 +805,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.GeneralTab.Controls.Add(this.SpellDetailPanel);
             this.GeneralTab.Location = new System.Drawing.Point(-1, 31);
             this.GeneralTab.Name = "GeneralTab";
-            this.GeneralTab.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GeneralTab.Padding = new System.Windows.Forms.Padding(2);
             this.GeneralTab.Size = new System.Drawing.Size(541, 763);
             this.GeneralTab.TabIndex = 0;
             this.GeneralTab.Text = "GeneralTab";
@@ -936,7 +938,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.BlinkTimeNumericUpDown.DecimalPlaces = 1;
             this.BlinkTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.BlinkTimeNumericUpDown.Location = new System.Drawing.Point(5, 392);
-            this.BlinkTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.BlinkTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.BlinkTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -991,7 +993,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.WarningTimeNumericUpDown.DecimalPlaces = 1;
             this.WarningTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.WarningTimeNumericUpDown.Location = new System.Drawing.Point(5, 364);
-            this.WarningTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.WarningTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.WarningTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1024,7 +1026,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.ExpandSecounds1NumericUpDown.DecimalPlaces = 1;
             this.ExpandSecounds1NumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.ExpandSecounds1NumericUpDown.Location = new System.Drawing.Point(426, 260);
-            this.ExpandSecounds1NumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ExpandSecounds1NumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.ExpandSecounds1NumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1069,7 +1071,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.ExpandSecounds2NumericUpDown.DecimalPlaces = 1;
             this.ExpandSecounds2NumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.ExpandSecounds2NumericUpDown.Location = new System.Drawing.Point(426, 286);
-            this.ExpandSecounds2NumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ExpandSecounds2NumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.ExpandSecounds2NumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1132,7 +1134,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.RecastTimeNumericUpDown.DecimalPlaces = 1;
             this.RecastTimeNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.RecastTimeNumericUpDown.Location = new System.Drawing.Point(5, 207);
-            this.RecastTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.RecastTimeNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.RecastTimeNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1148,7 +1150,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.UpperLimitOfExtensionNumericUpDown.DecimalPlaces = 1;
             this.UpperLimitOfExtensionNumericUpDown.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.UpperLimitOfExtensionNumericUpDown.Location = new System.Drawing.Point(5, 337);
-            this.UpperLimitOfExtensionNumericUpDown.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.UpperLimitOfExtensionNumericUpDown.Margin = new System.Windows.Forms.Padding(6);
             this.UpperLimitOfExtensionNumericUpDown.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1409,6 +1411,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // AlarmTab
             // 
+            this.AlarmTab.Controls.Add(this.TestSequentialTTSButton);
             this.AlarmTab.Controls.Add(this.IsSequentialTTSCheckBox);
             this.AlarmTab.Controls.Add(this.groupBox4);
             this.AlarmTab.Controls.Add(this.groupBox1);
@@ -1416,11 +1419,31 @@ namespace ACT.SpecialSpellTimer.Forms
             this.AlarmTab.Controls.Add(this.groupBox2);
             this.AlarmTab.Location = new System.Drawing.Point(-1, 31);
             this.AlarmTab.Name = "AlarmTab";
-            this.AlarmTab.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.AlarmTab.Padding = new System.Windows.Forms.Padding(3);
             this.AlarmTab.Size = new System.Drawing.Size(541, 763);
             this.AlarmTab.TabIndex = 1;
             this.AlarmTab.Text = "AlarmTab";
             this.AlarmTab.UseVisualStyleBackColor = true;
+            // 
+            // TestSequentialTTSButton
+            // 
+            this.TestSequentialTTSButton.Location = new System.Drawing.Point(11, 443);
+            this.TestSequentialTTSButton.Name = "TestSequentialTTSButton";
+            this.TestSequentialTTSButton.Size = new System.Drawing.Size(159, 23);
+            this.TestSequentialTTSButton.TabIndex = 5;
+            this.TestSequentialTTSButton.Text = "__TEST Sequential TTS";
+            this.TestSequentialTTSButton.UseVisualStyleBackColor = true;
+            // 
+            // IsSequentialTTSCheckBox
+            // 
+            this.IsSequentialTTSCheckBox.AutoSize = true;
+            this.IsSequentialTTSCheckBox.Location = new System.Drawing.Point(11, 421);
+            this.IsSequentialTTSCheckBox.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.IsSequentialTTSCheckBox.Name = "IsSequentialTTSCheckBox";
+            this.IsSequentialTTSCheckBox.Size = new System.Drawing.Size(159, 16);
+            this.IsSequentialTTSCheckBox.TabIndex = 4;
+            this.IsSequentialTTSCheckBox.Text = "IsSequentialTTSCheckBox";
+            this.IsSequentialTTSCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -1708,7 +1731,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Location = new System.Drawing.Point(5, 332);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(530, 75);
             this.groupBox2.TabIndex = 3;
@@ -1808,7 +1831,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OnPointTelopTabPage.Controls.Add(this.splitContainer2);
             this.OnPointTelopTabPage.Location = new System.Drawing.Point(264, 4);
             this.OnPointTelopTabPage.Name = "OnPointTelopTabPage";
-            this.OnPointTelopTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OnPointTelopTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.OnPointTelopTabPage.Size = new System.Drawing.Size(1065, 829);
             this.OnPointTelopTabPage.TabIndex = 2;
             this.OnPointTelopTabPage.Text = "TelopTabPageTitle";
@@ -1975,7 +1998,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabPage1.Controls.Add(this.label44);
             this.tabPage1.Location = new System.Drawing.Point(-1, 31);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(541, 795);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "GeneralTab";
@@ -2291,16 +2314,28 @@ namespace ACT.SpecialSpellTimer.Forms
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.TestSequentialTTSTickerButton);
             this.tabPage2.Controls.Add(this.IsSequentialTTSTickerCheckBox);
             this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.groupBox7);
             this.tabPage2.Location = new System.Drawing.Point(-1, 31);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(541, 795);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "AlarmTab";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // IsSequentialTTSTickerCheckBox
+            // 
+            this.IsSequentialTTSTickerCheckBox.AutoSize = true;
+            this.IsSequentialTTSTickerCheckBox.Location = new System.Drawing.Point(12, 179);
+            this.IsSequentialTTSTickerCheckBox.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
+            this.IsSequentialTTSTickerCheckBox.Name = "IsSequentialTTSTickerCheckBox";
+            this.IsSequentialTTSTickerCheckBox.Size = new System.Drawing.Size(159, 16);
+            this.IsSequentialTTSTickerCheckBox.TabIndex = 80;
+            this.IsSequentialTTSTickerCheckBox.Text = "IsSequentialTTSCheckBox";
+            this.IsSequentialTTSTickerCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox5
             // 
@@ -2459,7 +2494,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.CombatAnalyzerTabPage.Controls.Add(this.lblCombatAnalyzer);
             this.CombatAnalyzerTabPage.Location = new System.Drawing.Point(264, 4);
             this.CombatAnalyzerTabPage.Name = "CombatAnalyzerTabPage";
-            this.CombatAnalyzerTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CombatAnalyzerTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.CombatAnalyzerTabPage.Size = new System.Drawing.Size(1065, 829);
             this.CombatAnalyzerTabPage.TabIndex = 3;
             this.CombatAnalyzerTabPage.Text = "CombatAnalyzerTabTitle";
@@ -2670,7 +2705,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.NameStyleTabPage.Location = new System.Drawing.Point(264, 4);
             this.NameStyleTabPage.Name = "NameStyleTabPage";
-            this.NameStyleTabPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.NameStyleTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.NameStyleTabPage.Size = new System.Drawing.Size(1065, 829);
             this.NameStyleTabPage.TabIndex = 7;
             this.NameStyleTabPage.Text = "NameStyleTabPage";
@@ -2685,7 +2720,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.OptionTabPage.Controls.Add(this.lblLanguage);
             this.OptionTabPage.Location = new System.Drawing.Point(264, 4);
             this.OptionTabPage.Name = "OptionTabPage";
-            this.OptionTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.OptionTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.OptionTabPage.Size = new System.Drawing.Size(1065, 829);
             this.OptionTabPage.TabIndex = 1;
             this.OptionTabPage.Text = "OptionTabPageTitle";
@@ -2741,7 +2776,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabOverlayOptions.Controls.Add(this.HideWhenNotActiceCheckBox);
             this.tabOverlayOptions.Location = new System.Drawing.Point(-1, 31);
             this.tabOverlayOptions.Name = "tabOverlayOptions";
-            this.tabOverlayOptions.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabOverlayOptions.Padding = new System.Windows.Forms.Padding(3);
             this.tabOverlayOptions.Size = new System.Drawing.Size(1063, 708);
             this.tabOverlayOptions.TabIndex = 0;
             this.tabOverlayOptions.Text = "tabOverlayOptions";
@@ -3252,8 +3287,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabDetailOptions.Controls.Add(this.label66);
             this.tabDetailOptions.Location = new System.Drawing.Point(-1, 31);
             this.tabDetailOptions.Name = "tabDetailOptions";
-            this.tabDetailOptions.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabDetailOptions.Size = new System.Drawing.Size(1153, 711);
+            this.tabDetailOptions.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDetailOptions.Size = new System.Drawing.Size(1063, 708);
             this.tabDetailOptions.TabIndex = 1;
             this.tabDetailOptions.Text = "tabDetailOptions";
             // 
@@ -3261,7 +3296,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.ToComplementUnknownSkillCheckBox.AutoSize = true;
             this.ToComplementUnknownSkillCheckBox.Location = new System.Drawing.Point(325, 381);
-            this.ToComplementUnknownSkillCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ToComplementUnknownSkillCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.ToComplementUnknownSkillCheckBox.Name = "ToComplementUnknownSkillCheckBox";
             this.ToComplementUnknownSkillCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ToComplementUnknownSkillCheckBox.TabIndex = 75;
@@ -3343,7 +3378,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.DetectPacketDumpcheckBox.AutoSize = true;
             this.DetectPacketDumpcheckBox.Location = new System.Drawing.Point(325, 409);
-            this.DetectPacketDumpcheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DetectPacketDumpcheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.DetectPacketDumpcheckBox.Name = "DetectPacketDumpcheckBox";
             this.DetectPacketDumpcheckBox.Size = new System.Drawing.Size(64, 16);
             this.DetectPacketDumpcheckBox.TabIndex = 71;
@@ -3363,7 +3398,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.RemoveTooltipSymbolsCheckBox.AutoSize = true;
             this.RemoveTooltipSymbolsCheckBox.Location = new System.Drawing.Point(325, 353);
-            this.RemoveTooltipSymbolsCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.RemoveTooltipSymbolsCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.RemoveTooltipSymbolsCheckBox.Name = "RemoveTooltipSymbolsCheckBox";
             this.RemoveTooltipSymbolsCheckBox.Size = new System.Drawing.Size(64, 16);
             this.RemoveTooltipSymbolsCheckBox.TabIndex = 70;
@@ -3403,7 +3438,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.SimpleRegexCheckBox.AutoSize = true;
             this.SimpleRegexCheckBox.Location = new System.Drawing.Point(325, 325);
-            this.SimpleRegexCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SimpleRegexCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.SimpleRegexCheckBox.Name = "SimpleRegexCheckBox";
             this.SimpleRegexCheckBox.Size = new System.Drawing.Size(64, 16);
             this.SimpleRegexCheckBox.TabIndex = 68;
@@ -3474,7 +3509,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.ResetOnWipeOutCheckBox.AutoSize = true;
             this.ResetOnWipeOutCheckBox.Location = new System.Drawing.Point(325, 297);
-            this.ResetOnWipeOutCheckBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ResetOnWipeOutCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.ResetOnWipeOutCheckBox.Name = "ResetOnWipeOutCheckBox";
             this.ResetOnWipeOutCheckBox.Size = new System.Drawing.Size(64, 16);
             this.ResetOnWipeOutCheckBox.TabIndex = 65;
@@ -3724,7 +3759,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LanguageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.LanguageComboBox.FormattingEnabled = true;
             this.LanguageComboBox.Location = new System.Drawing.Point(163, 6);
-            this.LanguageComboBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LanguageComboBox.Margin = new System.Windows.Forms.Padding(2);
             this.LanguageComboBox.Name = "LanguageComboBox";
             this.LanguageComboBox.Size = new System.Drawing.Size(142, 20);
             this.LanguageComboBox.TabIndex = 40;
@@ -3775,7 +3810,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXOptionTabPage.Controls.Add(this.DQXAppleyButton);
             this.DQXOptionTabPage.Location = new System.Drawing.Point(264, 4);
             this.DQXOptionTabPage.Name = "DQXOptionTabPage";
-            this.DQXOptionTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.DQXOptionTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.DQXOptionTabPage.Size = new System.Drawing.Size(1065, 829);
             this.DQXOptionTabPage.TabIndex = 5;
             this.DQXOptionTabPage.Text = "DQXOptionTabPage";
@@ -3951,33 +3986,20 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             this.LogTabPage.Location = new System.Drawing.Point(264, 4);
             this.LogTabPage.Name = "LogTabPage";
-            this.LogTabPage.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LogTabPage.Padding = new System.Windows.Forms.Padding(2);
             this.LogTabPage.Size = new System.Drawing.Size(1065, 829);
             this.LogTabPage.TabIndex = 6;
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // IsSequentialTTSCheckBox
+            // TestSequentialTTSTickerButton
             // 
-            this.IsSequentialTTSCheckBox.AutoSize = true;
-            this.IsSequentialTTSCheckBox.Location = new System.Drawing.Point(11, 421);
-            this.IsSequentialTTSCheckBox.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
-            this.IsSequentialTTSCheckBox.Name = "IsSequentialTTSCheckBox";
-            this.IsSequentialTTSCheckBox.Size = new System.Drawing.Size(159, 16);
-            this.IsSequentialTTSCheckBox.TabIndex = 4;
-            this.IsSequentialTTSCheckBox.Text = "IsSequentialTTSCheckBox";
-            this.IsSequentialTTSCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // IsSequentialTTSTickerCheckBox
-            // 
-            this.IsSequentialTTSTickerCheckBox.AutoSize = true;
-            this.IsSequentialTTSTickerCheckBox.Location = new System.Drawing.Point(12, 179);
-            this.IsSequentialTTSTickerCheckBox.Margin = new System.Windows.Forms.Padding(3, 8, 3, 3);
-            this.IsSequentialTTSTickerCheckBox.Name = "IsSequentialTTSTickerCheckBox";
-            this.IsSequentialTTSTickerCheckBox.Size = new System.Drawing.Size(159, 16);
-            this.IsSequentialTTSTickerCheckBox.TabIndex = 80;
-            this.IsSequentialTTSTickerCheckBox.Text = "IsSequentialTTSCheckBox";
-            this.IsSequentialTTSTickerCheckBox.UseVisualStyleBackColor = true;
+            this.TestSequentialTTSTickerButton.Location = new System.Drawing.Point(12, 201);
+            this.TestSequentialTTSTickerButton.Name = "TestSequentialTTSTickerButton";
+            this.TestSequentialTTSTickerButton.Size = new System.Drawing.Size(159, 23);
+            this.TestSequentialTTSTickerButton.TabIndex = 81;
+            this.TestSequentialTTSTickerButton.Text = "__TEST Sequential TTS";
+            this.TestSequentialTTSTickerButton.UseVisualStyleBackColor = true;
             // 
             // ConfigPanel
             // 
@@ -4407,5 +4429,7 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.CheckBox AlsoCompletionCheckBox;
         private System.Windows.Forms.CheckBox IsSequentialTTSCheckBox;
         private System.Windows.Forms.CheckBox IsSequentialTTSTickerCheckBox;
+        private System.Windows.Forms.Button TestSequentialTTSButton;
+        private System.Windows.Forms.Button TestSequentialTTSTickerButton;
     }
 }

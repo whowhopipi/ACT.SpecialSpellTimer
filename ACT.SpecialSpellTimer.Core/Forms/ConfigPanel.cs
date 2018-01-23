@@ -363,6 +363,9 @@ namespace ACT.SpecialSpellTimer.Forms
             this.Speak3Button.Click += (s1, e1) => play(this.TimeupTextToSpeakTextBox.Text);
             this.Speak4Button.Click += (s1, e1) => play(this.BeforeTextToSpeakTextBox.Text);
 
+            this.TestSequentialTTSButton.Click += (x, y) => this.TestSequencialTTS();
+            this.TestSequentialTTSTickerButton.Click += (x, y) => this.TestSequencialTTSTicker();
+
             this.SpellTimerTreeView.AfterCheck += (s1, e1) =>
             {
                 var source = e1.Node.Tag as SpellTimer;
@@ -1025,6 +1028,24 @@ namespace ACT.SpecialSpellTimer.Forms
                     }
                 }
             }
+        }
+
+        private void TestSequencialTTS()
+        {
+            var src = this.DetailGroupBox.Tag as SpellTimer;
+            src?.Play("おしらせ1");
+            src?.Play("おしらせ2");
+            src?.Play("おしらせ3");
+            src?.Play("おしらせ4");
+        }
+
+        private void TestSequencialTTSTicker()
+        {
+            var src = this.TelopDetailGroupBox.Tag as OnePointTelop;
+            src?.Play("おしらせ1");
+            src?.Play("おしらせ2");
+            src?.Play("おしらせ3");
+            src?.Play("おしらせ4");
         }
     }
 }

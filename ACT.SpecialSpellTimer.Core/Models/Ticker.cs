@@ -168,8 +168,8 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public DoPlay PlayDelegate { get; set; } = null;
 
-        private string tts;
-        private Task speakTask;
+        private volatile string tts;
+        private Timer speakTimer;
 
         /// <summary>
         /// TTSを発声する
@@ -198,8 +198,24 @@ namespace ACT.SpecialSpellTimer.Models
                 return;
             }
 
+            this.speakTimer?.Stop();
+
             lock (this)
             {
+                if (this.speakTimer == null)
+                {
+                    this.speakTimer = new Timer(50)
+                    {
+                        AutoReset = false
+                    };
+
+                    this.speakTimer.Elapsed += (x, y) =>
+                    {
+                        SoundController.Instance.Play(this.tts);
+                        this.tts = string.Empty;
+                    };
+                }
+
                 if (!tts.EndsWith("。") &&
                     !tts.EndsWith(".") &&
                     !tts.EndsWith("、") &&
@@ -208,25 +224,17 @@ namespace ACT.SpecialSpellTimer.Models
                     tts += ".";
                 }
 
-                this.tts += tts + Environment.NewLine;
-
-                if (this.speakTask == null)
+                if (string.IsNullOrEmpty(this.tts))
                 {
-                    this.speakTask = Task.Run(async () =>
-                    {
-                        await Task.Delay(50);
-                        SoundController.Instance.Play(tts);
-                    }).ContinueWith((task) =>
-                    {
-                        lock (this)
-                        {
-                            this.speakTask.Dispose();
-                            this.speakTask = null;
-                            this.tts = string.Empty;
-                        }
-                    });
+                    this.tts = tts;
+                }
+                else
+                {
+                    this.tts += Environment.NewLine + tts;
                 }
             }
+
+            this.speakTimer?.Start();
         }
 
         #endregion Sequential TTS
