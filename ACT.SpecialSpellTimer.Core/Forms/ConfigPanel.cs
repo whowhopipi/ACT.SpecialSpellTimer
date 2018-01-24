@@ -25,6 +25,7 @@ namespace ACT.SpecialSpellTimer.Forms
         #region SpellPanel sort order
 
         private Dictionary<SpellOrders, RadioButton> spellOrderRadioButtons;
+
         private Dictionary<SpellOrders, RadioButton> SpellOrderRadioButtons =>
             this.spellOrderRadioButtons ?? (this.spellOrderRadioButtons = new Dictionary<SpellOrders, RadioButton>()
             {
@@ -35,7 +36,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 { SpellOrders.Fixed, this.SpellOrderFixedRadioButton },
             });
 
-        #endregion
+        #endregion SpellPanel sort order
 
         /// <summary>
         /// コンストラクタ
@@ -875,7 +876,14 @@ namespace ACT.SpecialSpellTimer.Forms
                 rd.Checked = false;
             }
 
-            this.SpellOrderRadioButtons[panelSettings.SortOrder].Checked = true;
+            if (panelSettings.SortOrder != SpellOrders.None)
+            {
+                this.SpellOrderRadioButtons[panelSettings.SortOrder].Checked = true;
+            }
+            else
+            {
+                this.SpellOrderRadioButtons[SpellOrders.SortRecastTimeASC].Checked = true;
+            }
 
             // 更新ボタンの挙動をセットする
             if (this.UpdatePanelButton.Tag == null ||
