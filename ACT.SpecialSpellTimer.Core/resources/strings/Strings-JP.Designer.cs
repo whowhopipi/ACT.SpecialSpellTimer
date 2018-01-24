@@ -2275,6 +2275,51 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   固定配置（マッチしていないスペルを詰めない） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderFixedRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderFixedRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   マッチ順でソートする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortMatchTimeRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortMatchTimeRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   表示順でソートする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortPriorityRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortPriorityRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   リキャストの残り時間でソートする（昇順） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortRecastTimeASCRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortRecastTimeASCRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   リキャストの残り時間でソートする（降順） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortRecastTimeDESCRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortRecastTimeDESCRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ※描画の負荷が下がります（要再起動） に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string SpellTimerFormatExplainLabel {

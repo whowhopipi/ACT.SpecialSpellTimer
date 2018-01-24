@@ -22,6 +22,21 @@ namespace ACT.SpecialSpellTimer.Forms
     public partial class ConfigPanel :
         UserControl
     {
+        #region SpellPanel sort order
+
+        private Dictionary<SpellOrders, RadioButton> spellOrderRadioButtons;
+        private Dictionary<SpellOrders, RadioButton> SpellOrderRadioButtons =>
+            this.spellOrderRadioButtons ?? (this.spellOrderRadioButtons = new Dictionary<SpellOrders, RadioButton>()
+            {
+                { SpellOrders.SortRecastTimeASC, this.SpellOrderSortRecastTimeASCRadioButton },
+                { SpellOrders.SortRecastTimeDESC, this.SpellOrderSortRecastTimeDESCRadioButton },
+                { SpellOrders.SortPriority, this.SpellOrderSortPriorityRadioButton },
+                { SpellOrders.SortMatchTime, this.SpellOrderSortMatchTimeRadioButton },
+                { SpellOrders.Fixed, this.SpellOrderFixedRadioButton },
+            });
+
+        #endregion
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -855,6 +870,13 @@ namespace ACT.SpecialSpellTimer.Forms
             this.HorizontalLayoutCheckBox.Checked = panelSettings.Horizontal;
             this.FixedPositionSpellCheckBox.Checked = panelSettings.FixedPositionSpell;
 
+            foreach (var rd in this.SpellOrderRadioButtons.Values)
+            {
+                rd.Checked = false;
+            }
+
+            this.SpellOrderRadioButtons[panelSettings.SortOrder].Checked = true;
+
             // 更新ボタンの挙動をセットする
             if (this.UpdatePanelButton.Tag == null ||
                 !(bool)(this.UpdatePanelButton.Tag))
@@ -866,6 +888,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     var margin = (int)this.MarginUpDown.Value;
                     var horizontal = this.HorizontalLayoutCheckBox.Checked;
                     var fixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
+                    var sortOrder = this.SpellOrderRadioButtons.FirstOrDefault(x => x.Value.Checked).Key;
 
                     if (this.DetailPanelGroupBox.Tag != null)
                     {
@@ -876,7 +899,8 @@ namespace ACT.SpecialSpellTimer.Forms
                             top,
                             margin,
                             horizontal,
-                            fixedPositionSpell);
+                            fixedPositionSpell,
+                            sortOrder);
                     }
                 });
 
@@ -1046,6 +1070,11 @@ namespace ACT.SpecialSpellTimer.Forms
             src?.Play("おしらせ2");
             src?.Play("おしらせ3");
             src?.Play("おしらせ4");
+        }
+
+        private void ExportCSVButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

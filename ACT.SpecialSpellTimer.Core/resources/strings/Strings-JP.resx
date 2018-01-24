@@ -1273,4 +1273,24 @@
     <value>TTSをシーケンシャルに再生する（同時再生をしない）</value>
     <comment>Playback TTS sequentialy (Disable simultaneous playback)</comment>
   </data>
+  <data name="SpellOrderFixedRadioButton" xml:space="preserve">
+    <value>固定配置（マッチしていないスペルを詰めない）</value>
+    <comment>Fixed</comment>
+  </data>
+  <data name="SpellOrderSortMatchTimeRadioButton" xml:space="preserve">
+    <value>マッチ順でソートする</value>
+    <comment>Sort by match time</comment>
+  </data>
+  <data name="SpellOrderSortPriorityRadioButton" xml:space="preserve">
+    <value>表示順でソートする</value>
+    <comment>Sort by priority</comment>
+  </data>
+  <data name="SpellOrderSortRecastTimeASCRadioButton" xml:space="preserve">
+    <value>リキャストの残り時間でソートする（昇順）</value>
+    <comment>Sort by recast time (ascending)</comment>
+  </data>
+  <data name="SpellOrderSortRecastTimeDESCRadioButton" xml:space="preserve">
+    <value>リキャストの残り時間でソートする（降順）</value>
+    <comment>Sort by recast time (decending)</comment>
+  </data>
 </root>

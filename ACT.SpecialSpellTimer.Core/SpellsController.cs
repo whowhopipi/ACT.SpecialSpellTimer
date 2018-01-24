@@ -566,7 +566,8 @@ namespace ACT.SpecialSpellTimer
             double top,
             double margin,
             bool horizontal,
-            bool fixedPositionSpell)
+            bool fixedPositionSpell,
+            SpellOrders spellOrder)
         {
             lock (this.spellTimerPanels)
             {
@@ -594,6 +595,7 @@ namespace ACT.SpecialSpellTimer
                     panelSettings.Margin = margin;
                     panelSettings.Horizontal = horizontal;
                     panelSettings.FixedPositionSpell = fixedPositionSpell;
+                    panelSettings.SortOrder = spellOrder;
                 }
             }
         }

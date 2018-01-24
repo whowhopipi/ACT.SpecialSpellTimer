@@ -47,6 +47,12 @@ namespace ACT.SpecialSpellTimer.Forms
             this.panel5 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.DetailPanelGroupBox = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.SpellOrderFixedRadioButton = new System.Windows.Forms.RadioButton();
+            this.SpellOrderSortMatchTimeRadioButton = new System.Windows.Forms.RadioButton();
+            this.SpellOrderSortPriorityRadioButton = new System.Windows.Forms.RadioButton();
+            this.SpellOrderSortRecastTimeDESCRadioButton = new System.Windows.Forms.RadioButton();
+            this.SpellOrderSortRecastTimeASCRadioButton = new System.Windows.Forms.RadioButton();
             this.ExportBySpellPanelButton = new System.Windows.Forms.Button();
             this.FixedPositionSpellCheckBox = new System.Windows.Forms.CheckBox();
             this.HorizontalLayoutCheckBox = new System.Windows.Forms.CheckBox();
@@ -198,6 +204,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.TelopRegexEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.label44 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.TestSequentialTTSTickerButton = new System.Windows.Forms.Button();
             this.IsSequentialTTSTickerCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.TelopDelayTTSTextBox = new System.Windows.Forms.TextBox();
@@ -347,7 +354,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DQXPlayerNameLabel = new System.Windows.Forms.Label();
             this.DQXAppleyButton = new System.Windows.Forms.Button();
             this.LogTabPage = new System.Windows.Forms.TabPage();
-            this.TestSequentialTTSTickerButton = new System.Windows.Forms.Button();
             this.CombatAnalyzerContextMenuStrip.SuspendLayout();
             this.TabControl.SuspendLayout();
             this.SpecialSpellTabPage.SuspendLayout();
@@ -357,6 +363,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.DetailPanelGroupBox.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MarginUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PanelTopNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PanelLeftNumericUpDown)).BeginInit();
@@ -575,6 +582,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // DetailPanelGroupBox
             // 
+            this.DetailPanelGroupBox.Controls.Add(this.groupBox6);
             this.DetailPanelGroupBox.Controls.Add(this.ExportBySpellPanelButton);
             this.DetailPanelGroupBox.Controls.Add(this.FixedPositionSpellCheckBox);
             this.DetailPanelGroupBox.Controls.Add(this.HorizontalLayoutCheckBox);
@@ -586,15 +594,84 @@ namespace ACT.SpecialSpellTimer.Forms
             this.DetailPanelGroupBox.Controls.Add(this.PanelLeftNumericUpDown);
             this.DetailPanelGroupBox.Controls.Add(this.label16);
             this.DetailPanelGroupBox.Controls.Add(this.UpdatePanelButton);
-            this.DetailPanelGroupBox.Location = new System.Drawing.Point(93, 257);
+            this.DetailPanelGroupBox.Location = new System.Drawing.Point(55, 73);
             this.DetailPanelGroupBox.Name = "DetailPanelGroupBox";
-            this.DetailPanelGroupBox.Size = new System.Drawing.Size(312, 257);
+            this.DetailPanelGroupBox.Size = new System.Drawing.Size(438, 421);
             this.DetailPanelGroupBox.TabIndex = 6;
             this.DetailPanelGroupBox.TabStop = false;
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.SpellOrderFixedRadioButton);
+            this.groupBox6.Controls.Add(this.SpellOrderSortMatchTimeRadioButton);
+            this.groupBox6.Controls.Add(this.SpellOrderSortPriorityRadioButton);
+            this.groupBox6.Controls.Add(this.SpellOrderSortRecastTimeDESCRadioButton);
+            this.groupBox6.Controls.Add(this.SpellOrderSortRecastTimeASCRadioButton);
+            this.groupBox6.Location = new System.Drawing.Point(9, 113);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(409, 147);
+            this.groupBox6.TabIndex = 49;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "__Sort order";
+            // 
+            // SpellOrderFixedRadioButton
+            // 
+            this.SpellOrderFixedRadioButton.AutoSize = true;
+            this.SpellOrderFixedRadioButton.Location = new System.Drawing.Point(11, 114);
+            this.SpellOrderFixedRadioButton.Name = "SpellOrderFixedRadioButton";
+            this.SpellOrderFixedRadioButton.Size = new System.Drawing.Size(167, 16);
+            this.SpellOrderFixedRadioButton.TabIndex = 4;
+            this.SpellOrderFixedRadioButton.TabStop = true;
+            this.SpellOrderFixedRadioButton.Text = "SpellOrderFixedRadioButton";
+            this.SpellOrderFixedRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // SpellOrderSortMatchTimeRadioButton
+            // 
+            this.SpellOrderSortMatchTimeRadioButton.AutoSize = true;
+            this.SpellOrderSortMatchTimeRadioButton.Location = new System.Drawing.Point(11, 92);
+            this.SpellOrderSortMatchTimeRadioButton.Name = "SpellOrderSortMatchTimeRadioButton";
+            this.SpellOrderSortMatchTimeRadioButton.Size = new System.Drawing.Size(216, 16);
+            this.SpellOrderSortMatchTimeRadioButton.TabIndex = 3;
+            this.SpellOrderSortMatchTimeRadioButton.TabStop = true;
+            this.SpellOrderSortMatchTimeRadioButton.Text = "SpellOrderSortMatchTimeRadioButton";
+            this.SpellOrderSortMatchTimeRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // SpellOrderSortPriorityRadioButton
+            // 
+            this.SpellOrderSortPriorityRadioButton.AutoSize = true;
+            this.SpellOrderSortPriorityRadioButton.Location = new System.Drawing.Point(11, 70);
+            this.SpellOrderSortPriorityRadioButton.Name = "SpellOrderSortPriorityRadioButton";
+            this.SpellOrderSortPriorityRadioButton.Size = new System.Drawing.Size(197, 16);
+            this.SpellOrderSortPriorityRadioButton.TabIndex = 2;
+            this.SpellOrderSortPriorityRadioButton.TabStop = true;
+            this.SpellOrderSortPriorityRadioButton.Text = "SpellOrderSortPriorityRadioButton";
+            this.SpellOrderSortPriorityRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // SpellOrderSortRecastTimeDESCRadioButton
+            // 
+            this.SpellOrderSortRecastTimeDESCRadioButton.AutoSize = true;
+            this.SpellOrderSortRecastTimeDESCRadioButton.Location = new System.Drawing.Point(11, 48);
+            this.SpellOrderSortRecastTimeDESCRadioButton.Name = "SpellOrderSortRecastTimeDESCRadioButton";
+            this.SpellOrderSortRecastTimeDESCRadioButton.Size = new System.Drawing.Size(251, 16);
+            this.SpellOrderSortRecastTimeDESCRadioButton.TabIndex = 1;
+            this.SpellOrderSortRecastTimeDESCRadioButton.TabStop = true;
+            this.SpellOrderSortRecastTimeDESCRadioButton.Text = "SpellOrderSortRecastTimeDESCRadioButton";
+            this.SpellOrderSortRecastTimeDESCRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // SpellOrderSortRecastTimeASCRadioButton
+            // 
+            this.SpellOrderSortRecastTimeASCRadioButton.AutoSize = true;
+            this.SpellOrderSortRecastTimeASCRadioButton.Location = new System.Drawing.Point(11, 26);
+            this.SpellOrderSortRecastTimeASCRadioButton.Name = "SpellOrderSortRecastTimeASCRadioButton";
+            this.SpellOrderSortRecastTimeASCRadioButton.Size = new System.Drawing.Size(244, 16);
+            this.SpellOrderSortRecastTimeASCRadioButton.TabIndex = 0;
+            this.SpellOrderSortRecastTimeASCRadioButton.TabStop = true;
+            this.SpellOrderSortRecastTimeASCRadioButton.Text = "SpellOrderSortRecastTimeASCRadioButton";
+            this.SpellOrderSortRecastTimeASCRadioButton.UseVisualStyleBackColor = true;
+            // 
             // ExportBySpellPanelButton
             // 
-            this.ExportBySpellPanelButton.Location = new System.Drawing.Point(6, 179);
+            this.ExportBySpellPanelButton.Location = new System.Drawing.Point(9, 297);
             this.ExportBySpellPanelButton.Name = "ExportBySpellPanelButton";
             this.ExportBySpellPanelButton.Size = new System.Drawing.Size(102, 25);
             this.ExportBySpellPanelButton.TabIndex = 48;
@@ -604,12 +681,13 @@ namespace ACT.SpecialSpellTimer.Forms
             // FixedPositionSpellCheckBox
             // 
             this.FixedPositionSpellCheckBox.AutoSize = true;
-            this.FixedPositionSpellCheckBox.Location = new System.Drawing.Point(9, 113);
+            this.FixedPositionSpellCheckBox.Location = new System.Drawing.Point(131, 302);
             this.FixedPositionSpellCheckBox.Name = "FixedPositionSpellCheckBox";
             this.FixedPositionSpellCheckBox.Size = new System.Drawing.Size(118, 16);
             this.FixedPositionSpellCheckBox.TabIndex = 47;
             this.FixedPositionSpellCheckBox.Text = "FixedPositionSpell";
             this.FixedPositionSpellCheckBox.UseVisualStyleBackColor = true;
+            this.FixedPositionSpellCheckBox.Visible = false;
             // 
             // HorizontalLayoutCheckBox
             // 
@@ -716,7 +794,7 @@ namespace ACT.SpecialSpellTimer.Forms
             // 
             // UpdatePanelButton
             // 
-            this.UpdatePanelButton.Location = new System.Drawing.Point(6, 148);
+            this.UpdatePanelButton.Location = new System.Drawing.Point(9, 266);
             this.UpdatePanelButton.Name = "UpdatePanelButton";
             this.UpdatePanelButton.Size = new System.Drawing.Size(102, 25);
             this.UpdatePanelButton.TabIndex = 13;
@@ -2325,6 +2403,15 @@ namespace ACT.SpecialSpellTimer.Forms
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "AlarmTab";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // TestSequentialTTSTickerButton
+            // 
+            this.TestSequentialTTSTickerButton.Location = new System.Drawing.Point(12, 201);
+            this.TestSequentialTTSTickerButton.Name = "TestSequentialTTSTickerButton";
+            this.TestSequentialTTSTickerButton.Size = new System.Drawing.Size(159, 23);
+            this.TestSequentialTTSTickerButton.TabIndex = 81;
+            this.TestSequentialTTSTickerButton.Text = "__TEST Sequential TTS";
+            this.TestSequentialTTSTickerButton.UseVisualStyleBackColor = true;
             // 
             // IsSequentialTTSTickerCheckBox
             // 
@@ -3992,15 +4079,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.LogTabPage.Text = "LogTabPage";
             this.LogTabPage.UseVisualStyleBackColor = true;
             // 
-            // TestSequentialTTSTickerButton
-            // 
-            this.TestSequentialTTSTickerButton.Location = new System.Drawing.Point(12, 201);
-            this.TestSequentialTTSTickerButton.Name = "TestSequentialTTSTickerButton";
-            this.TestSequentialTTSTickerButton.Size = new System.Drawing.Size(159, 23);
-            this.TestSequentialTTSTickerButton.TabIndex = 81;
-            this.TestSequentialTTSTickerButton.Text = "__TEST Sequential TTS";
-            this.TestSequentialTTSTickerButton.UseVisualStyleBackColor = true;
-            // 
             // ConfigPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -4019,6 +4097,8 @@ namespace ACT.SpecialSpellTimer.Forms
             this.splitContainer1.ResumeLayout(false);
             this.DetailPanelGroupBox.ResumeLayout(false);
             this.DetailPanelGroupBox.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MarginUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PanelTopNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PanelLeftNumericUpDown)).EndInit();
@@ -4431,5 +4511,11 @@ namespace ACT.SpecialSpellTimer.Forms
         private System.Windows.Forms.CheckBox IsSequentialTTSTickerCheckBox;
         private System.Windows.Forms.Button TestSequentialTTSButton;
         private System.Windows.Forms.Button TestSequentialTTSTickerButton;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.RadioButton SpellOrderSortRecastTimeASCRadioButton;
+        private System.Windows.Forms.RadioButton SpellOrderFixedRadioButton;
+        private System.Windows.Forms.RadioButton SpellOrderSortMatchTimeRadioButton;
+        private System.Windows.Forms.RadioButton SpellOrderSortPriorityRadioButton;
+        private System.Windows.Forms.RadioButton SpellOrderSortRecastTimeDESCRadioButton;
     }
 }
