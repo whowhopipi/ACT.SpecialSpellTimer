@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -110,12 +111,39 @@ namespace ACT.SpecialSpellTimer.Models
                     }
                 }
 
-                // NaNを潰す
                 foreach (var x in this.table)
                 {
+                    // NaNを潰す
                     x.Top = double.IsNaN(x.Top) ? 0 : x.Top;
                     x.Left = double.IsNaN(x.Left) ? 0 : x.Left;
                     x.Margin = double.IsNaN(x.Margin) ? 0 : x.Margin;
+
+                    // ソートオーダーを初期化する
+                    if (x.SortOrder == SpellOrders.None)
+                    {
+                        if (x.FixedPositionSpell)
+                        {
+                            x.SortOrder = SpellOrders.Fixed;
+                        }
+                        else
+                        {
+                            if (!Settings.Default.AutoSortEnabled)
+                            {
+                                x.SortOrder = SpellOrders.SortMatchTime;
+                            }
+                            else
+                            {
+                                if (!Settings.Default.AutoSortReverse)
+                                {
+                                    x.SortOrder = SpellOrders.SortRecastTimeASC;
+                                }
+                                else
+                                {
+                                    x.SortOrder = SpellOrders.SortRecastTimeDESC;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
