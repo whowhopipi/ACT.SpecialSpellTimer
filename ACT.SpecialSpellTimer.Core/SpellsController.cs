@@ -523,6 +523,7 @@ namespace ACT.SpecialSpellTimer
                 Margin = 5,
                 Horizontal = false,
                 FixedPositionSpell = false,
+                SortOrder = SpellOrders.SortRecastTimeASC,
             };
 
             lock (this.spellTimerPanels)
@@ -535,6 +536,7 @@ namespace ACT.SpecialSpellTimer
                     settings.Margin = panel.SpellMargin;
                     settings.Horizontal = panel.IsHorizontal;
                     settings.FixedPositionSpell = panel.SpellPositionFixed;
+                    settings.SortOrder = panel.PanelConfig?.SortOrder ?? SpellOrders.SortRecastTimeASC;
                 }
                 else
                 {
@@ -628,6 +630,7 @@ namespace ACT.SpecialSpellTimer
                 Margin = 5,
                 Horizontal = false,
                 FixedPositionSpell = false,
+                SortOrder = SpellOrders.SortRecastTimeASC
             };
 
             lock (this.spellTimerPanels)

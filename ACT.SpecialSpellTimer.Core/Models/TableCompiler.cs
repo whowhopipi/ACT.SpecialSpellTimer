@@ -268,7 +268,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in query)
+            query.AsParallel().ForAll(spell =>
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
@@ -296,7 +296,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexForExtend2 = r3.Regex;
                     spell.KeywordForExtendReplaced2 = r3.RegexPattern;
                 }
-            }
+            });
 
             lock (this.spellListLocker)
             {
@@ -374,7 +374,7 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // コンパイル済みの正規表現をセットする
-            foreach (var spell in query)
+            query.AsParallel().ForAll(spell =>
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
@@ -396,7 +396,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexToHide = r2.Regex;
                     spell.RegexPatternToHide = r2.RegexPattern;
                 }
-            }
+            });
 
             lock (this.tickerListLocker)
             {

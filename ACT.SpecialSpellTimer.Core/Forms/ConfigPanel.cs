@@ -531,7 +531,7 @@ namespace ACT.SpecialSpellTimer.Forms
             };
 
             // スペルの一時表示チェックボックス
-            this.TemporarilyDisplaySpellCheckBox.CheckedChanged += (s1, e1) =>
+            this.TemporarilyDisplaySpellCheckBox.CheckedChanged += (x, y) =>
             {
                 var src = this.DetailGroupBox.Tag as SpellTimer;
                 if (src == null)
@@ -542,7 +542,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 src.IsTemporaryDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
                 src.UpdateDone = false;
 
-                TableCompiler.Instance.RecompileSpells();
+                Task.Run(() => TableCompiler.Instance.RecompileSpells());
             };
 
             // スペルパネル単位のエクスポート
