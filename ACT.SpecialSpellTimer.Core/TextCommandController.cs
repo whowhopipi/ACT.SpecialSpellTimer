@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Text.RegularExpressions;
 
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer
@@ -18,6 +19,14 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private readonly static Regex regexCommand = new Regex(
             @".*/spespe (?<command>refresh|changeenabled|analyze|set|clear|on|off) ?(?<target>spells|telops|me|pt|pet|on|off|placeholder|$) ?(?<windowname>"".*""|all)? ?(?<value>.*)",
+            RegexOptions.Compiled |
+            RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// TTS読み仮名コマンド
+        /// </summary>
+        private readonly static Regex phoneticsCommand = new Regex(
+            @".*/spespe phonetic ""(?<pcname>.+?)"" ""(?<phonetic>.+?)""",
             RegexOptions.Compiled |
             RegexOptions.IgnoreCase);
 
@@ -38,6 +47,14 @@ namespace ACT.SpecialSpellTimer
                 return r;
             }
 
+            // 読み仮名コマンドとマッチングする
+            var isPhonetic = MatchPhoneticCommand(logLine);
+            if (isPhonetic)
+            {
+                return isPhonetic;
+            }
+
+            // その他の通常コマンドとマッチングする
             var match = regexCommand.Match(logLine);
             if (!match.Success)
             {
@@ -206,6 +223,46 @@ namespace ACT.SpecialSpellTimer
                     PluginCore.Instance.ChangeSwitchVisibleButton(false);
                     r = true;
                     break;
+            }
+
+            return r;
+        }
+
+        /// <summary>
+        /// 読み仮名設定コマンドとマッチングする
+        /// </summary>
+        /// <param name="logLine">ログ1行</param>
+        /// <returns>
+        /// マッチした？</returns>
+        public static  bool MatchPhoneticCommand(
+            string logLine)
+        {
+
+            var r = false;
+
+            var match = phoneticsCommand.Match(logLine);
+            if (!match.Success)
+            {
+                return r;
+            }
+
+            var pcName = match.Groups["pcname"].ToString().ToLower();
+            var phonetic = match.Groups["phonetic"].ToString().ToLower();
+
+            if (!string.IsNullOrEmpty(pcName) &&
+                !string.IsNullOrEmpty(phonetic))
+            {
+                r = true;
+
+                var p = TTSDictionary.Instance.Phonetics.FirstOrDefault(x => x.Name == pcName);
+                if (p != null)
+                {
+                    p.Phonetic = phonetic;
+                }
+                else
+                {
+                    TTSDictionary.Instance.Dictionary[pcName] = phonetic;
+                }
             }
 
             return r;

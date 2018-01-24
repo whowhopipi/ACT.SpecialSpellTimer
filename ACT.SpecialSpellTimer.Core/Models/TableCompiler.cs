@@ -631,10 +631,10 @@ namespace ACT.SpecialSpellTimer.Models
                     select new PCPhonetic()
                     {
                         ID = x.ID,
-                        Name = x.Name,
                         NameFI = x.NameFI,
                         NameIF = x.NameIF,
                         NameII = x.NameII,
+                        Name = x.Name,
                         JobID = x.JobID,
                     };
 
