@@ -1071,10 +1071,5 @@ namespace ACT.SpecialSpellTimer.Forms
             src?.Play("おしらせ3");
             src?.Play("おしらせ4");
         }
-
-        private void ExportCSVButton_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -118,24 +118,17 @@ namespace ACT.SpecialSpellTimer.Models
 #endif
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
-                    try
+                    if (sr.BaseStream.Length > 0)
                     {
-                        if (sr.BaseStream.Length > 0)
+                        var xs = new XmlSerializer(table.GetType());
+                        var data = xs.Deserialize(sr) as List<OnePointTelop>;
+
+                        if (isClear)
                         {
-                            var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as List<OnePointTelop>;
-
-                            if (isClear)
-                            {
-                                this.table.Clear();
-                            }
-
-                            table.AddRange(data);
+                            this.table.Clear();
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(Translate.Get("LoadXMLError"), ex);
+
+                        table.AddRange(data);
                     }
                 }
 
