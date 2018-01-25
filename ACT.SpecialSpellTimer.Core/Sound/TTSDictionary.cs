@@ -35,6 +35,7 @@ namespace ACT.SpecialSpellTimer.Sound
         private readonly Dictionary<string, Regex> placeholderRegexDictionary = new Dictionary<string, Regex>();
 
         public ObservableCollection<PCPhonetic> Phonetics { get; private set; } = new ObservableCollection<PCPhonetic>();
+        public Dictionary<string, string> Dictionary => this.ttsDictionary;
 
         public string ResourcesDirectory
         {
@@ -213,7 +214,16 @@ namespace ACT.SpecialSpellTimer.Sound
             public string Name
             {
                 get => this.name;
-                set => this.SetProperty(ref this.name, value);
+                set
+                {
+                    if (this.SetProperty(ref this.name, value))
+                    {
+                        if (TTSDictionary.Instance.ttsDictionary.ContainsKey(this.name))
+                        {
+                            this.Phonetic = TTSDictionary.Instance.ttsDictionary[this.name];
+                        }
+                    }
+                }
             }
 
             public string NameFI

@@ -22,6 +22,22 @@ namespace ACT.SpecialSpellTimer.Forms
     public partial class ConfigPanel :
         UserControl
     {
+        #region SpellPanel sort order
+
+        private Dictionary<SpellOrders, RadioButton> spellOrderRadioButtons;
+
+        private Dictionary<SpellOrders, RadioButton> SpellOrderRadioButtons =>
+            this.spellOrderRadioButtons ?? (this.spellOrderRadioButtons = new Dictionary<SpellOrders, RadioButton>()
+            {
+                { SpellOrders.SortRecastTimeASC, this.SpellOrderSortRecastTimeASCRadioButton },
+                { SpellOrders.SortRecastTimeDESC, this.SpellOrderSortRecastTimeDESCRadioButton },
+                { SpellOrders.SortPriority, this.SpellOrderSortPriorityRadioButton },
+                { SpellOrders.SortMatchTime, this.SpellOrderSortMatchTimeRadioButton },
+                { SpellOrders.Fixed, this.SpellOrderFixedRadioButton },
+            });
+
+        #endregion SpellPanel sort order
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -517,7 +533,7 @@ namespace ACT.SpecialSpellTimer.Forms
             };
 
             // スペルの一時表示チェックボックス
-            this.TemporarilyDisplaySpellCheckBox.CheckedChanged += (s1, e1) =>
+            this.TemporarilyDisplaySpellCheckBox.CheckedChanged += (x, y) =>
             {
                 var src = this.DetailGroupBox.Tag as Spell;
                 if (src == null)
@@ -528,7 +544,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 src.IsTemporaryDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
                 src.UpdateDone = false;
 
-                TableCompiler.Instance.RecompileSpells();
+                Task.Run(() => TableCompiler.Instance.RecompileSpells());
             };
 
             // スペルパネル単位のエクスポート
@@ -859,6 +875,20 @@ namespace ACT.SpecialSpellTimer.Forms
             this.HorizontalLayoutCheckBox.Checked = panelSettings.Horizontal;
             this.FixedPositionSpellCheckBox.Checked = panelSettings.FixedPositionSpell;
 
+            foreach (var rd in this.SpellOrderRadioButtons.Values)
+            {
+                rd.Checked = false;
+            }
+
+            if (panelSettings.SortOrder != SpellOrders.None)
+            {
+                this.SpellOrderRadioButtons[panelSettings.SortOrder].Checked = true;
+            }
+            else
+            {
+                this.SpellOrderRadioButtons[SpellOrders.SortRecastTimeASC].Checked = true;
+            }
+
             // 更新ボタンの挙動をセットする
             if (this.UpdatePanelButton.Tag == null ||
                 !(bool)(this.UpdatePanelButton.Tag))
@@ -870,6 +900,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     var margin = (int)this.MarginUpDown.Value;
                     var horizontal = this.HorizontalLayoutCheckBox.Checked;
                     var fixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
+                    var sortOrder = this.SpellOrderRadioButtons.FirstOrDefault(x => x.Value.Checked).Key;
 
                     if (this.DetailPanelGroupBox.Tag != null)
                     {
@@ -880,7 +911,8 @@ namespace ACT.SpecialSpellTimer.Forms
                             top,
                             margin,
                             horizontal,
-                            fixedPositionSpell);
+                            fixedPositionSpell,
+                            sortOrder);
                     }
                 });
 

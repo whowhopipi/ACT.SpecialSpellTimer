@@ -169,7 +169,7 @@ namespace ACT.SpecialSpellTimer.Forms
             };
 
             // テロップの一時表示チェックボックス
-            this.TemporarilyDisplayTickerCheckBox.CheckedChanged += (s1, e1) =>
+            this.TemporarilyDisplayTickerCheckBox.CheckedChanged += (x, y) =>
             {
                 var src = this.TelopDetailGroupBox.Tag as Ticker;
                 if (src == null)
@@ -179,7 +179,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                 src.IsTemporaryDisplay = this.TemporarilyDisplayTickerCheckBox.Checked;
 
-                TableCompiler.Instance.RecompileTickers();
+                Task.Run(() => TableCompiler.Instance.RecompileTickers());
             };
 
             this.TelopExportButton.Click += this.TelopExportButton_Click;

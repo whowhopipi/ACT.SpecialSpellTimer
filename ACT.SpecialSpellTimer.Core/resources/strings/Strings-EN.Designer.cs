@@ -2275,6 +2275,51 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   Fixed に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderFixedRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderFixedRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sort by match time に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortMatchTimeRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortMatchTimeRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sort by priority に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortPriorityRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortPriorityRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sort by recast time (ascending) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortRecastTimeASCRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortRecastTimeASCRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sort by recast time (decending) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortRecastTimeDESCRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortRecastTimeDESCRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ※ A performance of drawing improves. (Requires restart) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string SpellTimerFormatExplainLabel {

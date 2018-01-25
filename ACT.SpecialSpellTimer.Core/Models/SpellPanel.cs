@@ -10,6 +10,16 @@ using ACT.SpecialSpellTimer.Views;
 
 namespace ACT.SpecialSpellTimer.Models
 {
+    public enum SpellOrders
+    {
+        None = 0,
+        SortRecastTimeASC,
+        SortRecastTimeDESC,
+        SortPriority,
+        SortMatchTime,
+        Fixed
+    }
+
     [Serializable]
     [XmlType(TypeName = "PanelSettings")]
     public class SpellPanel :
@@ -70,6 +80,14 @@ namespace ACT.SpecialSpellTimer.Models
                     this.RaisePropertyChanged(nameof(this.DisplayText));
                 }
             }
+        }
+
+        private SpellOrders sortOrder = SpellOrders.None;
+
+        public SpellOrders SortOrder 
+        { 
+            get => this.sortOrder;
+            set => this.SetProperty(ref this.sortOrder, value);
         }
 
         public bool FixedPositionSpell { get; set; } = false;

@@ -49,6 +49,11 @@ namespace ACT.SpecialSpellTimer.Views
         public string PanelName { get; set; }
 
         /// <summary>
+        /// パネルの設定
+        /// </summary>
+        public PanelSettings PanelConfig { get; set; }
+
+        /// <summary>
         /// 扱うSpellTimer間のマージン
         /// </summary>
         public double SpellMargin { get; set; }
@@ -93,7 +98,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // タイムアップしたものを除外する
             if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
-                !this.SpellPositionFixed)
+                this.PanelConfig.SortOrder != SpellOrders.Fixed)
             {
                 spells =
                     from x in spells
@@ -111,40 +116,55 @@ namespace ACT.SpecialSpellTimer.Views
                 return;
             }
 
-            // リキャストの近いもの順でソートする
-            if (Settings.Default.AutoSortEnabled && !this.SpellPositionFixed)
+            // ソートする
+            switch (this.PanelConfig.SortOrder)
             {
-                // 昇順？
-                if (!Settings.Default.AutoSortReverse)
-                {
+                case SpellOrders.None:
+                case SpellOrders.SortPriority:
+                case SpellOrders.Fixed:
+                    spells =
+                        from x in spells
+                        orderby
+                        x.DisplayNo,
+                        x.ID
+                        select
+                        x;
+                    break;
+
+                case SpellOrders.SortRecastTimeASC:
                     spells =
                         from x in spells
                         orderby
                         x.CompleteScheduledTime,
-                        x.DisplayNo
+                        x.DisplayNo,
+                        x.ID
                         select
                         x;
-                }
-                else
-                {
+                    break;
+
+                case SpellOrders.SortRecastTimeDESC:
                     spells =
                         from x in spells
                         orderby
                         x.CompleteScheduledTime descending,
-                        x.DisplayNo
+                        x.DisplayNo,
+                        x.ID
                         select
                         x;
-                }
-            }
-            else
-            {
-                // 固定の表示順でソートする
-                spells =
-                    from x in spells
-                    orderby
-                    x.DisplayNo
-                    select
-                    x;
+                    break;
+
+                case SpellOrders.SortMatchTime:
+                    spells =
+                        from x in spells
+                        orderby
+                        x.MatchDateTime == DateTime.MinValue ?
+                            DateTime.MaxValue :
+                            x.MatchDateTime,
+                        x.DisplayNo,
+                        x.ID
+                        select
+                        x;
+                    break;
             }
 
             // Brushを生成する
@@ -384,6 +404,8 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (setting != null)
             {
+                this.PanelConfig = setting;
+
                 this.Left = setting.Left;
                 this.Top = setting.Top;
                 this.SpellMargin = setting.Margin;
