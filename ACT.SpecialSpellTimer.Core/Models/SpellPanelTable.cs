@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -32,70 +33,72 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void Load()
         {
-            try
+            if (!File.Exists(this.DefaultFile))
             {
-                if (!File.Exists(this.DefaultFile))
-                {
-                    return;
-                }
+                return;
+            }
 
-                // 旧形式を置換する
-                var text = File.ReadAllText(
-                    this.DefaultFile,
-                    new UTF8Encoding(false));
-                text = text.Replace("DocumentElement", "ArrayOfPanelSettings");
-                File.WriteAllText(
-                    this.DefaultFile,
-                    text,
-                    new UTF8Encoding(false));
+            // 旧形式を置換する
+            var text = File.ReadAllText(
+                this.DefaultFile,
+                new UTF8Encoding(false));
+            text = text.Replace("DocumentElement", "ArrayOfPanelSettings");
+            File.WriteAllText(
+                this.DefaultFile,
+                text,
+                new UTF8Encoding(false));
 
-                using (var sr = new StreamReader(this.DefaultFile, new UTF8Encoding(false)))
+            using (var sr = new StreamReader(this.DefaultFile, new UTF8Encoding(false)))
+            {
+                if (sr.BaseStream.Length > 0)
                 {
-                    try
+                    var xs = new XmlSerializer(this.table.GetType());
+                    var data = xs.Deserialize(sr) as IList<SpellPanel>;
+
+                    this.table.Clear();
+
+                    foreach (var x in data)
                     {
-                        if (sr.BaseStream.Length > 0)
+                        // 旧Generalパネルの名前を置換える
+                        if (x.PanelName == "General")
                         {
-                            var xs = new XmlSerializer(this.table.GetType());
-                            var data = xs.Deserialize(sr) as IList<SpellPanel>;
+                            x.PanelName = SpellPanel.GeneralPanel.PanelName;
+                        }
 
-                            this.table.Clear();
-                            foreach (var item in data)
+                        // NaNを潰す
+                        x.Top = double.IsNaN(x.Top) ? 0 : x.Top;
+                        x.Left = double.IsNaN(x.Left) ? 0 : x.Left;
+                        x.Margin = double.IsNaN(x.Margin) ? 0 : x.Margin;
+
+                        // ソートオーダーを初期化する
+                        if (x.SortOrder == SpellOrders.None)
+                        {
+                            if (x.FixedPositionSpell)
                             {
-                                // 旧Generalパネルの名前を置換える
-                                if (item.PanelName == "General")
+                                x.SortOrder = SpellOrders.Fixed;
+                            }
+                            else
+                            {
+                                if (!Settings.Default.AutoSortEnabled)
                                 {
-                                    item.PanelName = SpellPanel.GeneralPanel.PanelName;
+                                    x.SortOrder = SpellOrders.SortMatchTime;
                                 }
-
-                                this.table.Add(item);
+                                else
+                                {
+                                    if (!Settings.Default.AutoSortReverse)
+                                    {
+                                        x.SortOrder = SpellOrders.SortRecastTimeASC;
+                                    }
+                                    else
+                                    {
+                                        x.SortOrder = SpellOrders.SortRecastTimeDESC;
+                                    }
+                                }
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(Translate.Get("LoadXMLError"), ex);
-                    }
-                }
-            }
-            finally
-            {
-                // NaNを潰す
-                foreach (var x in this.table)
-                {
-                    x.Top = double.IsNaN(x.Top) ? 0 : x.Top;
-                    x.Left = double.IsNaN(x.Left) ? 0 : x.Left;
-                    x.Margin = double.IsNaN(x.Margin) ? 0 : x.Margin;
-                }
 
-                // プリセットパネルを作る
-                var generalPanel = this.Table.FirstOrDefault(x => x.PanelName == SpellPanel.GeneralPanel.PanelName);
-                if (generalPanel == null)
-                {
-                    this.Table.Add(SpellPanel.GeneralPanel);
-                }
-                else
-                {
-                    SpellPanel.SetGeneralPanel(generalPanel);
+                        this.table.Add(x);
+                    }
                 }
             }
         }

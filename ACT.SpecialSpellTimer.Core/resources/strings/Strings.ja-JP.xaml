@@ -31,6 +31,7 @@
   <system:String x:Key="SpellPanel_Margin">スペル間のマージン</system:String>
   <system:String x:Key="SpellPanel_FixedLayout">固定レイアウト（残り時間でソートしない、非表示のスペルの間を詰めない）</system:String>
   <system:String x:Key="SpellPanel_HorizontalLayout">水平レイアウト</system:String>
+  <system:String x:Key="SpellPanel_SortOrder">ソート順</system:String>
 
 
   <system:String x:Key="General_ClearCache">終了時にキャッシュをクリアする</system:String>

@@ -112,27 +112,20 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
-                    try
+                    if (sr.BaseStream.Length > 0)
                     {
-                        if (sr.BaseStream.Length > 0)
+                        var xs = new XmlSerializer(table.GetType());
+                        var data = xs.Deserialize(sr) as IList<Ticker>;
+
+                        if (isClear)
                         {
-                            var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as IList<Ticker>;
-
-                            if (isClear)
-                            {
-                                this.table.Clear();
-                            }
-
-                            foreach (var item in data)
-                            {
-                                this.table.Add(item);
-                            }
+                            this.table.Clear();
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(Translate.Get("LoadXMLError"), ex);
+
+                        foreach (var item in data)
+                        {
+                            this.table.Add(item);
+                        }
                     }
                 }
 

@@ -145,35 +145,28 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
-                    try
+                    if (sr.BaseStream.Length > 0)
                     {
-                        if (sr.BaseStream.Length > 0)
+                        var xs = new XmlSerializer(table.GetType());
+                        var data = xs.Deserialize(sr) as IList<Spell>;
+
+                        if (isClear)
                         {
-                            var xs = new XmlSerializer(table.GetType());
-                            var data = xs.Deserialize(sr) as IList<Spell>;
-
-                            if (isClear)
-                            {
-                                this.table.Clear();
-                            }
-
-                            foreach (var item in data)
-                            {
-                                // パネルIDを補完する
-                                if (item.PanelID == Guid.Empty)
-                                {
-                                    item.PanelID = SpellPanelTable.Instance.Table
-                                        .FirstOrDefault(x => x.PanelName == item.PanelName)?
-                                        .ID ?? Guid.Empty;
-                                }
-
-                                this.table.Add(item);
-                            }
+                            this.table.Clear();
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(Translate.Get("LoadXMLError"), ex);
+
+                        foreach (var item in data)
+                        {
+                            // パネルIDを補完する
+                            if (item.PanelID == Guid.Empty)
+                            {
+                                item.PanelID = SpellPanelTable.Instance.Table
+                                    .FirstOrDefault(x => x.PanelName == item.PanelName)?
+                                    .ID ?? Guid.Empty;
+                            }
+
+                            this.table.Add(item);
+                        }
                     }
                 }
 

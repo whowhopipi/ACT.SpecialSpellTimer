@@ -51,7 +51,7 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// パネルの設定
         /// </summary>
-        public PanelSettings PanelConfig { get; set; }
+        public SpellPanel PanelConfig { get; set; }
 
         /// <summary>
         /// 扱うSpellTimer間のマージン

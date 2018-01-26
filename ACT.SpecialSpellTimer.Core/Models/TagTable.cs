@@ -85,23 +85,16 @@ namespace ACT.SpecialSpellTimer.Models
 
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
-                    try
+                    if (sr.BaseStream.Length > 0)
                     {
-                        if (sr.BaseStream.Length > 0)
-                        {
-                            var xs = new XmlSerializer(this.GetType());
-                            var data = xs.Deserialize(sr) as TagTable;
+                        var xs = new XmlSerializer(this.GetType());
+                        var data = xs.Deserialize(sr) as TagTable;
 
-                            this.Tags.Clear();
-                            this.ItemTags.Clear();
+                        this.Tags.Clear();
+                        this.ItemTags.Clear();
 
-                            this.ItemTags.AddRange(data.ItemTags);
-                            this.Tags.AddRange(data.Tags);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(Translate.Get("LoadXMLError"), ex);
+                        this.ItemTags.AddRange(data.ItemTags);
+                        this.Tags.AddRange(data.Tags);
                     }
                 }
             }

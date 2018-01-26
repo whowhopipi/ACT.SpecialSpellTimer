@@ -126,11 +126,22 @@
         <TextBox TextAlignment="Right" Text="{Binding Model.Margin, Mode=TwoWay}" Width="73" HorizontalAlignment="Left" />
       </StackPanel>
 
-      <!-- FixLayout -->
-      <CheckBox Margin="0 20 0 0" IsChecked="{Binding Model.FixedPositionSpell, Mode=TwoWay}" Content="{DynamicResource SpellPanel_FixedLayout}" />
-
       <!-- HorizontalLayout -->
-      <CheckBox Margin="0 10 0 0" IsChecked="{Binding Model.Horizontal, Mode=TwoWay}" Content="{DynamicResource SpellPanel_HorizontalLayout}" />
+      <CheckBox Margin="0 20 0 0" IsChecked="{Binding Model.Horizontal, Mode=TwoWay}" Content="{DynamicResource SpellPanel_HorizontalLayout}" />
+
+      <!-- FixLayout -->
+      <Label Margin="0 20 0 0" Content="{DynamicResource SpellPanel_SortOrder}" />
+      <ComboBox
+        SelectedValue="{Binding Model.SortOrder, Mode=TwoWay}"
+        HorizontalAlignment="Left"
+        MinWidth="350"
+        SelectedValuePath="Tag">
+        <ComboBoxItem Tag="1" Content="SortRecastTimeASC" />
+        <ComboBoxItem Tag="2" Content="SortRecastTimeDESC" />
+        <ComboBoxItem Tag="3" Content="SortPriority" />
+        <ComboBoxItem Tag="4" Content="SortMatchTime" />
+        <ComboBoxItem Tag="5" Content="Fixed" />
+      </ComboBox>
     </StackPanel>
   </ScrollViewer>
 </UserControl>

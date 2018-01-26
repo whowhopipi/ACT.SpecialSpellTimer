@@ -163,17 +163,17 @@ namespace ACT.SpecialSpellTimer
                     this.Location = plugin.pluginFile.DirectoryName;
                 }
 
-                // 設定ファイルのバックアップを作成する
-                SpellPanelTable.Instance.Backup();
-                SpellTable.Instance.Backup();
-                TickerTable.Instance.Backup();
-                TagTable.Instance.Backup();
-
                 // 設定ファイルを読み込む
                 SpellPanelTable.Instance.Load();
                 SpellTable.Instance.Load();
                 TickerTable.Instance.Load();
                 TagTable.Instance.Load();
+
+                // 設定ファイルのバックアップを作成する
+                SpellPanelTable.Instance.Backup();
+                SpellTable.Instance.Backup();
+                TickerTable.Instance.Backup();
+                TagTable.Instance.Backup();
 
                 // TTS辞書を読み込む
                 TTSDictionary.Instance.Load();
