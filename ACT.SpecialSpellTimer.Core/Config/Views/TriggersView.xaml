@@ -16,6 +16,7 @@
   xmlns:fa="http://schemas.fontawesome.io/icons/"
   d:DataContext="{d:DesignInstance Type=vm:TriggersViewModel, IsDesignTimeCreatable=True}"
   d:DesignWidth="1280"
+  d:DesignHeight="800"
   Background="White"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   FontFamily="Consolas, Yu Gothic UI, Meiryo UI"
@@ -58,9 +59,14 @@
       Background="GhostWhite" />
 
     <!--  ツリー  -->
-    <DockPanel
-      Name="TriggersTreePanel" Grid.Column="0">
+    <Grid Name="TriggersTreePanel" Grid.Column="0">
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
       <TreeView
+        Grid.Row="0"
         Name="TriggersTreeView"
         BorderThickness="0"
         ItemsSource="{Binding TreeRoot, Mode=OneWay}">
@@ -295,7 +301,23 @@
           </HierarchicalDataTemplate>
         </TreeView.Resources>
       </TreeView>
-    </DockPanel>
+
+      <!-- デザインモード -->
+      <CheckBox
+        Grid.Row="1"
+        Margin="10"
+        Padding="5"
+        Content="DESIGN MODE"
+        FontWeight="Bold"
+        Foreground="Green"
+        VerticalAlignment="Bottom"
+        VerticalContentAlignment="Center"
+        IsChecked="{Binding RootConfig.InDesignMode, Mode=TwoWay}">
+        <CheckBox.LayoutTransform>
+          <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+        </CheckBox.LayoutTransform>
+      </CheckBox>
+    </Grid>
 
     <Border
       x:Name="ContentBorder"

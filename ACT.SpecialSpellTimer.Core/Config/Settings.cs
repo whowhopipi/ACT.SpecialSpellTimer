@@ -9,6 +9,7 @@ using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Common;
@@ -248,6 +249,32 @@ namespace ACT.SpecialSpellTimer.Config
             get;
             set;
         } = new List<ExpandedContainer>();
+
+        private DesignGridView gridView;
+        private bool inDesignMode;
+
+        [XmlIgnore]
+        public bool InDesignMode
+        {
+            get => this.inDesignMode;
+            set
+            {
+                if (this.SetProperty(ref this.inDesignMode, value))
+                {
+                    if (this.inDesignMode)
+                    {
+                        this.gridView = new DesignGridView();
+                        this.gridView.ToTransparentWindow();
+                        this.gridView.Show();
+                        this.gridView.ShowOverlay();
+                    }
+                    else
+                    {
+                        this.gridView?.Close();
+                    }
+                }
+            }
+        }
 
         public bool AutoSortEnabled { get; set; }
         public bool AutoSortReverse { get; set; }

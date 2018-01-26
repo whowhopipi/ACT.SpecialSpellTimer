@@ -15,6 +15,8 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             this.SetupTreeRoot();
         }
 
+        public Settings RootConfig => Settings.Default;
+
         private ObservableCollection<TriggersTreeRoot> treeRoot = new ObservableCollection<TriggersTreeRoot>();
 
         public ObservableCollection<TriggersTreeRoot> TreeRoot => treeRoot;
