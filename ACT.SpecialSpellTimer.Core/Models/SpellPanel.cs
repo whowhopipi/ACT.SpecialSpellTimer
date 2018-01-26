@@ -84,8 +84,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         private SpellOrders sortOrder = SpellOrders.None;
 
-        public SpellOrders SortOrder 
-        { 
+        public SpellOrders SortOrder
+        {
             get => this.sortOrder;
             set => this.SetProperty(ref this.sortOrder, value);
         }

@@ -93,6 +93,7 @@
     <Compile Include="Config\BaseView.xaml.cs">
       <DependentUpon>BaseView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Converters\SpellOrdersConverter.cs" />
     <Compile Include="Config\Models\ExpandedContainer.cs" />
     <Compile Include="Config\Models\TriggersTreeRoot.cs" />
     <Compile Include="Config\ViewModels\InformationsViewModel.cs" />

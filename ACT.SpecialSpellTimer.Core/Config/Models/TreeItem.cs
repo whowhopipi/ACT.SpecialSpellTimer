@@ -106,7 +106,6 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         };
 
                         SpellPanelTable.Instance.Table.Add(newPanel);
-                        newPanel.IsSelected = true;
                         break;
 
                     case ItemTypes.SpellPanel:
@@ -116,20 +115,36 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         newPanel.PanelName += " New";
                         newPanel.SetupChildrenSource();
                         SpellPanelTable.Instance.Table.Add(newPanel);
-                        newPanel.IsSelected = true;
+
+                        foreach (var tagID in
+                            TagTable.Instance.ItemTags
+                                .Where(x => x.ItemID == currentPanel.ID).ToArray()
+                                .Select(x => x.TagID)
+                                .Distinct())
+                        {
+                            TagTable.Instance.ItemTags.Add(new ItemTags(newPanel.ID, tagID));
+                        }
+
                         break;
 
                     case ItemTypes.Tag:
+                        var currentTag = item as Tag;
+
                         newPanel = new SpellPanel()
                         {
                             PanelName = "New Panel"
                         };
 
-                        var tag = item as Tag;
-                        TagTable.Instance.ItemTags.Add(new ItemTags(newPanel.ID, tag.ID));
                         SpellPanelTable.Instance.Table.Add(newPanel);
-                        newPanel.IsSelected = true;
+
+                        TagTable.Instance.ItemTags.Add(new ItemTags(newPanel.ID, currentTag.ID));
+                        currentTag.IsExpanded = true;
                         break;
+                }
+
+                if (newPanel != null)
+                {
+                    newPanel.IsSelected = true;
                 }
             }));
 
@@ -139,21 +154,94 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public ICommand CreateNewSpellCommand =>
             this.createNewSpellCommand ?? (this.createNewSpellCommand = new DelegateCommand<ITreeItem>(item =>
             {
+                var newSpell = default(Spell);
+                var currentSpell = default(Spell);
+                var currentPanel = default(SpellPanel);
+
                 switch (item.ItemType)
                 {
                     case ItemTypes.SpellsRoot:
                     case ItemTypes.TickersRoot:
                     case ItemTypes.TagsRoot:
+                        newSpell = Spell.CreateNew();
+                        newSpell.PanelID = SpellPanel.GeneralPanel.ID;
                         break;
 
                     case ItemTypes.SpellPanel:
+                        currentPanel = item as SpellPanel;
+                        currentSpell = (
+                            from x in SpellTable.Instance.Table
+                            where
+                            x.PanelID == currentPanel.ID
+                            orderby
+                            x.SortPriority descending,
+                            x.ID descending
+                            select
+                            x).FirstOrDefault();
+                        if (currentSpell != null)
+                        {
+                            newSpell = currentSpell.CreateSimilarNew();
+                        }
+                        else
+                        {
+                            newSpell = Spell.CreateNew();
+                            newSpell.PanelID = currentPanel.ID;
+                        }
+
+                        currentPanel.IsExpanded = true;
                         break;
 
                     case ItemTypes.Spell:
+                        currentSpell = item as Spell;
+                        newSpell = currentSpell.CreateSimilarNew();
                         break;
 
                     case ItemTypes.Tag:
+                        var currentTag = item as Tag;
+                        currentPanel = (
+                            from x in SpellPanelTable.Instance.Table
+                            join y in TagTable.Instance.ItemTags on
+                            x.ID equals y.ItemID
+                            where
+                            y.TagID == currentTag.ID
+                            orderby
+                            x.PanelName
+                            select
+                            x).FirstOrDefault();
+
+                        if (currentPanel != null)
+                        {
+                            currentSpell = (
+                                from x in SpellTable.Instance.Table
+                                where
+                                x.PanelID == currentPanel.ID
+                                orderby
+                                x.SortPriority descending,
+                                x.ID descending
+                                select
+                                x).FirstOrDefault();
+                        }
+
+                        if (currentSpell != null)
+                        {
+                            newSpell = currentSpell.CreateSimilarNew();
+                        }
+                        else
+                        {
+                            newSpell = Spell.CreateNew();
+                            newSpell.PanelID = currentPanel != null ?
+                                currentPanel.ID :
+                                SpellPanel.GeneralPanel.ID;
+                        }
+
+                        currentTag.IsExpanded = true;
                         break;
+                }
+
+                if (newSpell != null)
+                {
+                    SpellTable.Instance.Table.Add(newSpell);
+                    newSpell.IsSelected = true;
                 }
             }));
 
@@ -163,16 +251,65 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public ICommand CreateNewTickerCommand =>
             this.createNewTickerCommand ?? (this.createNewTickerCommand = new DelegateCommand<ITreeItem>(item =>
             {
+                var newTicker = default(Ticker);
+                var currentTicker = default(Ticker);
+
                 switch (item.ItemType)
                 {
+                    case ItemTypes.SpellsRoot:
                     case ItemTypes.TickersRoot:
+                    case ItemTypes.TagsRoot:
+                        newTicker = Ticker.CreateNew();
+                        TickerTable.Instance.Table.Add(newTicker);
                         break;
 
                     case ItemTypes.Ticker:
+                        currentTicker = item as Ticker;
+                        newTicker = currentTicker.CreateSimilarNew();
+                        TickerTable.Instance.Table.Add(newTicker);
+
+                        foreach (var tagID in
+                            TagTable.Instance.ItemTags
+                                .Where(x => x.ItemID == currentTicker.Guid).ToArray()
+                                .Select(x => x.TagID)
+                                .Distinct())
+                        {
+                            TagTable.Instance.ItemTags.Add(new ItemTags(newTicker.Guid, tagID));
+                        }
+
                         break;
 
                     case ItemTypes.Tag:
+                        var currentTag = item as Tag;
+                        currentTicker = (
+                            from x in TickerTable.Instance.Table
+                            join y in TagTable.Instance.ItemTags on
+                            x.Guid equals y.ItemID
+                            where
+                            y.TagID == currentTag.ID
+                            orderby
+                            x.Title
+                            select
+                            x).FirstOrDefault();
+
+                        if (currentTicker != null)
+                        {
+                            newTicker = currentTicker.CreateSimilarNew();
+                        }
+                        else
+                        {
+                            newTicker = Ticker.CreateNew();
+                        }
+
+                        TickerTable.Instance.Table.Add(newTicker);
+                        TagTable.Instance.ItemTags.Add(new ItemTags(newTicker.Guid, currentTag.ID));
+                        currentTag.IsExpanded = true;
                         break;
+                }
+
+                if (newTicker != null)
+                {
+                    newTicker.IsSelected = true;
                 }
             }));
 
@@ -235,10 +372,17 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             $@"Delete ""{ item.DisplayText }"" tag ?",
                             "Confirm",
                             MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question);
+                            MessageBoxImage.Question,
+                            MessageBoxResult.Cancel);
                         if (result != MessageBoxResult.OK)
                         {
                             return;
+                        }
+
+                        foreach (var toRemove in
+                            TagTable.Instance.ItemTags.Where(x => x.TagID == tag.ID).ToArray())
+                        {
+                            TagTable.Instance.ItemTags.Remove(toRemove);
                         }
 
                         TagTable.Instance.Remove(tag);
@@ -255,7 +399,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             $@"Delete ""{ item.DisplayText }"" panel and spells ?",
                             "Confirm",
                             MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question);
+                            MessageBoxImage.Question,
+                            MessageBoxResult.Cancel);
                         if (result != MessageBoxResult.OK)
                         {
                             return;
@@ -267,6 +412,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             SpellTable.Instance.Table.Remove(target);
                         }
 
+                        foreach (var toRemove in
+                            TagTable.Instance.ItemTags.Where(x => x.ItemID == panel.ID).ToArray())
+                        {
+                            TagTable.Instance.ItemTags.Remove(toRemove);
+                        }
+
                         SpellPanelTable.Instance.Table.Remove(panel);
                         break;
 
@@ -275,7 +426,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             $@"Delete ""{ item.DisplayText }"" ?",
                             "Confirm",
                             MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question);
+                            MessageBoxImage.Question,
+                            MessageBoxResult.Cancel);
                         if (result != MessageBoxResult.OK)
                         {
                             return;
@@ -290,13 +442,21 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             $@"Delete ""{ item.DisplayText }"" ?",
                             "Confirm",
                             MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question);
+                            MessageBoxImage.Question,
+                            MessageBoxResult.Cancel);
                         if (result != MessageBoxResult.OK)
                         {
                             return;
                         }
 
                         var ticker = item as Ticker;
+
+                        foreach (var toRemove in
+                            TagTable.Instance.ItemTags.Where(x => x.ItemID == ticker.Guid).ToArray())
+                        {
+                            TagTable.Instance.ItemTags.Remove(toRemove);
+                        }
+
                         TickerTable.Instance.Table.Remove(ticker);
                         break;
                 }

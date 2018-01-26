@@ -146,7 +146,10 @@
               <!-- スペルパネルのコンテキストメニュー -->
               <StackPanel.ContextMenu>
                 <ContextMenu>
-                  <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_CreateNew}">
+                    <MenuItem Header="{StaticResource Common_SpellPanel}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  </MenuItem>
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
@@ -276,7 +279,6 @@
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}">
                     <MenuItem Header="{StaticResource Common_SpellPanel}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                    <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                     <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                     <MenuItem Header="{StaticResource Common_Tag}" Command="{Binding CreateNewTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   </MenuItem>

@@ -14,6 +14,7 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
+  xmlns:cnv="clr-namespace:ACT.SpecialSpellTimer.Config.Converters"
   d:DataContext="{d:DesignInstance Type=vm:SpellPanelConfigViewModel, IsDesignTimeCreatable=True}"
   d:DesignWidth="800"
   Background="White"
@@ -50,6 +51,7 @@
 
       <fwcnv:BoolToCollapsedConverter x:Key="VisibilityConverter" />
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
+      <cnv:SpellOrdersConverter x:Key="SpellOrdersConverter" />
 
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
@@ -132,15 +134,15 @@
       <!-- FixLayout -->
       <Label Margin="0 20 0 0" Content="{DynamicResource SpellPanel_SortOrder}" />
       <ComboBox
-        SelectedValue="{Binding Model.SortOrder, Mode=TwoWay}"
         HorizontalAlignment="Left"
-        MinWidth="350"
+        MinWidth="370"
+        SelectedValue="{Binding Model.SortOrder, Mode=TwoWay, Converter={StaticResource SpellOrdersConverter}}"
         SelectedValuePath="Tag">
-        <ComboBoxItem Tag="1" Content="SortRecastTimeASC" />
-        <ComboBoxItem Tag="2" Content="SortRecastTimeDESC" />
-        <ComboBoxItem Tag="3" Content="SortPriority" />
-        <ComboBoxItem Tag="4" Content="SortMatchTime" />
-        <ComboBoxItem Tag="5" Content="Fixed" />
+        <ComboBoxItem Tag="1" Content="{DynamicResource SpellPanel_SortOrdersSortRecastTimeASC}" />
+        <ComboBoxItem Tag="2" Content="{DynamicResource SpellPanel_SortOrdersSortRecastTimeDESC}" />
+        <ComboBoxItem Tag="3" Content="{DynamicResource SpellPanel_SortOrdersSortPriority}" />
+        <ComboBoxItem Tag="4" Content="{DynamicResource SpellPanel_SortOrdersSortMatchTime}" />
+        <ComboBoxItem Tag="5" Content="{DynamicResource SpellPanel_SortOrdersFixed}" />
       </ComboBox>
     </StackPanel>
   </ScrollViewer>

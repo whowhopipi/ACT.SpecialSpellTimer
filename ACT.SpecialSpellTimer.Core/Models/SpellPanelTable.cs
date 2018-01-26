@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -98,6 +97,16 @@ namespace ACT.SpecialSpellTimer.Models
                         }
 
                         this.table.Add(x);
+                    }
+
+                    var generalPanel = this.table.FirstOrDefault(x => x.PanelName == SpellPanel.GeneralPanel.PanelName);
+                    if (generalPanel != null)
+                    {
+                        SpellPanel.SetGeneralPanel(generalPanel);
+                    }
+                    else
+                    {
+                        this.table.Add(SpellPanel.GeneralPanel);
                     }
                 }
             }
