@@ -251,17 +251,17 @@ namespace ACT.SpecialSpellTimer.Config
         } = new List<ExpandedContainer>();
 
         private DesignGridView gridView;
-        private bool inDesignMode;
+        private bool visibleDesignGrid;
 
         [XmlIgnore]
-        public bool InDesignMode
+        public bool VisibleDesignGrid
         {
-            get => this.inDesignMode;
+            get => this.visibleDesignGrid;
             set
             {
-                if (this.SetProperty(ref this.inDesignMode, value))
+                if (this.SetProperty(ref this.visibleDesignGrid, value))
                 {
-                    if (this.inDesignMode)
+                    if (this.visibleDesignGrid)
                     {
                         this.gridView = new DesignGridView();
                         this.gridView.ToTransparentWindow();

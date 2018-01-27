@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
@@ -466,10 +467,27 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         [XmlIgnore]
         public ICommand DesignModeCommand =>
-            this.designModeCommand ?? (this.designModeCommand = new DelegateCommand<ITreeItem>(item =>
+            this.designModeCommand ?? (this.designModeCommand = new DelegateCommand<ITreeItem>(async item =>
             {
+                if (item == null)
+                {
+                    return;
+                }
+
                 var itemAsDynamic = item as dynamic;
                 itemAsDynamic.IsDesignMode = !itemAsDynamic.IsDesignMode;
+
+                await Task.Run(() =>
+                {
+                    TableCompiler.Instance.CompileSpells();
+                    TableCompiler.Instance.CompileTickers();
+                });
+
+                var showGrid =
+                    TableCompiler.Instance.SpellList.Any(x => x.IsDesignMode) ||
+                    TableCompiler.Instance.TickerList.Any(x => x.IsDesignMode);
+
+                Settings.Default.VisibleDesignGrid = showGrid & itemAsDynamic.IsDesignMode;
             }));
 
         #endregion Commands

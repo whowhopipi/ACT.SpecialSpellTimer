@@ -161,6 +161,16 @@
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
+              <!-- Designモードボタン -->
+              <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
+                <Button.Content>
+                  <Grid>
+                    <fa:FontAwesome Icon="Eye" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
+                    <fa:FontAwesome Icon="EyeSlash" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedNegativeConverter}}" Foreground="DimGray" />
+                  </Grid>
+                </Button.Content>
+              </Button>
+
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="ThList" />
               <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
@@ -203,14 +213,14 @@
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
-              <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}">
+              <!-- Designモードボタン -->
+              <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
                 <Button.Content>
                   <Grid>
-                    <fa:FontAwesome Icon="Eye" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="Green" />
+                    <fa:FontAwesome Icon="Eye" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
                     <fa:FontAwesome Icon="EyeSlash" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedNegativeConverter}}" Foreground="DimGray" />
                   </Grid>
                 </Button.Content>
-                <Button.ToolTip>Design mode</Button.ToolTip>
               </Button>
 
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
@@ -254,6 +264,16 @@
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
+
+              <!-- Designモードボタン -->
+              <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
+                <Button.Content>
+                  <Grid>
+                    <fa:FontAwesome Icon="Eye" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
+                    <fa:FontAwesome Icon="EyeSlash" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedNegativeConverter}}" Foreground="DimGray" />
+                  </Grid>
+                </Button.Content>
+              </Button>
 
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Comment" />
@@ -304,6 +324,16 @@
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
+              <!-- Designモードボタン -->
+              <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
+                <Button.Content>
+                  <Grid>
+                    <fa:FontAwesome Icon="Eye" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
+                    <fa:FontAwesome Icon="EyeSlash" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedNegativeConverter}}" Foreground="DimGray" />
+                  </Grid>
+                </Button.Content>
+              </Button>
+
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" />
               <fa:ImageAwesome Icon="Tag" />
               <TextBlock Text="{Binding Name, Mode=OneWay}" Visibility="{Binding IsInViewMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" />
@@ -316,18 +346,15 @@
       <!-- デザインモード -->
       <CheckBox
         Grid.Row="1"
-        Margin="10"
+        Margin="5"
         Padding="5"
         Content="Design Grid"
         FontWeight="Bold"
-        Foreground="Green"
+        Foreground="OrangeRed"
         VerticalAlignment="Bottom"
         VerticalContentAlignment="Center"
-        IsChecked="{Binding RootConfig.InDesignMode, Mode=TwoWay}">
-        <CheckBox.LayoutTransform>
-          <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
-        </CheckBox.LayoutTransform>
-      </CheckBox>
+        IsChecked="{Binding RootConfig.VisibleDesignGrid, Mode=TwoWay}"
+        ToolTip="{DynamicResource Tree_DesignGridDescription}" />
     </Grid>
 
     <Border

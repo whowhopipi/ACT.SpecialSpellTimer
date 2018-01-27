@@ -250,11 +250,8 @@ namespace ACT.SpecialSpellTimer.Models
                 return enabledByJob && enabledByZone;
             }
 
-            // 元のリストの複製を得る
-            var sourceList = new List<Spell>(SpellTable.Instance.Table);
-
             var query =
-                from x in sourceList
+                from x in SpellTable.Instance.Table
                 where
                 x.IsDesignMode ||
                 (
@@ -262,14 +259,27 @@ namespace ACT.SpecialSpellTimer.Models
                     filter(x)
                 )
                 orderby
-                x.Panel.PanelName,
+                x.Panel?.PanelName,
                 x.DisplayNo,
                 x.ID
                 select
                 x;
 
-            // コンパイル済みの正規表現をセットする
-            query.AsParallel().ForAll(spell =>
+            lock (this.spellListLocker)
+            {
+                this.spellList.Clear();
+                this.spellList.AddRange(query);
+            }
+
+            // 統合トリガリストに登録する
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x => x.ItemType == ItemTypes.Spell);
+                this.triggerList.AddRange(this.spellList);
+            }
+
+            // コンパイルする
+            this.spellList.AsParallel().ForAll(spell =>
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
@@ -298,18 +308,6 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.KeywordForExtendReplaced2 = r3.RegexPattern;
                 }
             });
-
-            lock (this.spellListLocker)
-            {
-                this.spellList = new List<Spell>(query);
-            }
-
-            // 統合トリガリストに登録する
-            lock (this.triggerList)
-            {
-                this.triggerList.RemoveAll(x => x.ItemType == ItemTypes.Spell);
-                this.triggerList.AddRange(query);
-            }
 
             this.RaiseTableChenged();
         }
@@ -357,11 +355,8 @@ namespace ACT.SpecialSpellTimer.Models
                 return enabledByJob && enabledByZone;
             }
 
-            // 元のリストの複製を得る
-            var sourceList = new List<Ticker>(TickerTable.Instance.Table);
-
             var query =
-                from x in sourceList
+                from x in TickerTable.Instance.Table
                 where
                 x.IsDesignMode ||
                 (
@@ -374,8 +369,21 @@ namespace ACT.SpecialSpellTimer.Models
                 select
                 x;
 
-            // コンパイル済みの正規表現をセットする
-            query.AsParallel().ForAll(spell =>
+            lock (this.tickerListLocker)
+            {
+                this.tickerList.Clear();
+                this.tickerList.AddRange(query);
+            }
+
+            // 統合トリガリストに登録する
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x => x.ItemType == ItemTypes.Ticker);
+                this.triggerList.AddRange(this.tickerList);
+            }
+
+            // コンパイルする
+            this.tickerList.AsParallel().ForAll(spell =>
             {
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
@@ -398,18 +406,6 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexPatternToHide = r2.RegexPattern;
                 }
             });
-
-            lock (this.tickerListLocker)
-            {
-                this.tickerList = new List<Ticker>(query);
-            }
-
-            // 統合トリガリストに登録する
-            lock (this.triggerList)
-            {
-                this.triggerList.RemoveAll(x => x.ItemType == ItemTypes.Ticker);
-                this.triggerList.AddRange(query);
-            }
 
             this.RaiseTableChenged();
         }

@@ -358,7 +358,11 @@ namespace ACT.SpecialSpellTimer
             // 有効なスペルを取得する
             var spells = TableCompiler.Instance.SpellList;
 
-            // FFXIVでの使用？
+            var isHideOverlay =
+                !Settings.Default.OverlayVisible ||
+                (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
+
+            // FFXIVが実行されていない？
             if (!Settings.Default.UseOtherThanFFXIV &&
                 !this.existFFXIVProcess &&
                 !Settings.Default.OverlayForceVisible)
@@ -369,18 +373,17 @@ namespace ACT.SpecialSpellTimer
                     SpellsController.Instance.ClosePanels();
                     return;
                 }
+
+                if (!isHideOverlay)
+                {
+                    // 一時表示スペルだけ表示する
+                    SpellsController.Instance.RefreshSpellOverlays(
+                        spells.Where(x => x.IsDesignMode).ToList());
+                    return;
+                }
             }
 
-            // オーバーレイが非表示？
-            if (!Settings.Default.OverlayVisible)
-            {
-                SpellsController.Instance.HidePanels();
-                return;
-            }
-
-            // 非アクティブのとき非表示にする？
-            if (Settings.Default.HideWhenNotActive &&
-                !this.isFFXIVActive)
+            if (isHideOverlay)
             {
                 SpellsController.Instance.HidePanels();
                 return;
@@ -403,7 +406,11 @@ namespace ACT.SpecialSpellTimer
             // 有効なテロップを取得する
             var telops = TableCompiler.Instance.TickerList;
 
-            // FFXIVでの使用？
+            var isHideOverlay =
+                !Settings.Default.OverlayVisible ||
+                (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
+
+            // FFXIVが実行されていない？
             if (!Settings.Default.UseOtherThanFFXIV &&
                 !this.existFFXIVProcess &&
                 !Settings.Default.OverlayForceVisible)
@@ -414,18 +421,17 @@ namespace ACT.SpecialSpellTimer
                     TickersController.Instance.CloseTelops();
                     return;
                 }
+
+                if (!isHideOverlay)
+                {
+                    // 一時表示テロップだけ表示する
+                    TickersController.Instance.RefreshTelopOverlays(
+                        telops.Where(x => x.IsDesignMode).ToList());
+                    return;
+                }
             }
 
-            // オーバーレイが非表示？
-            if (!Settings.Default.OverlayVisible)
-            {
-                TickersController.Instance.HideTelops();
-                return;
-            }
-
-            // 非アクティブのとき非表示にする？
-            if (Settings.Default.HideWhenNotActive &&
-                !this.isFFXIVActive)
+            if (isHideOverlay)
             {
                 TickersController.Instance.HideTelops();
                 return;

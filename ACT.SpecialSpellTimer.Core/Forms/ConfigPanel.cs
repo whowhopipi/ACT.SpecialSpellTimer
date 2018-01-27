@@ -101,7 +101,7 @@ namespace ACT.SpecialSpellTimer.Forms
 
                 var panels = SpellTable.Instance.Table
                     .Where(x => !x.IsInstance)
-                    .OrderBy(x => x.Panel.PanelName)
+                    .OrderBy(x => x.Panel?.PanelName)
                     .Select(x => x.PanelID)
                     .Distinct();
                 foreach (var panelID in panels)
@@ -125,7 +125,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     }
 
                     var n = new TreeNode(
-                        spells.First().Panel.PanelName,
+                        spells.First().Panel?.PanelName,
                         children.ToArray());
 
                     n.Checked = children.Any(x => x.Checked);
