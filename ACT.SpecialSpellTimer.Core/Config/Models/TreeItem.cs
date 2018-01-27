@@ -462,6 +462,16 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
             }));
 
+        private ICommand designModeCommand;
+
+        [XmlIgnore]
+        public ICommand DesignModeCommand =>
+            this.designModeCommand ?? (this.designModeCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                var itemAsDynamic = item as dynamic;
+                itemAsDynamic.IsDesignMode = !itemAsDynamic.IsDesignMode;
+            }));
+
         #endregion Commands
     }
 }

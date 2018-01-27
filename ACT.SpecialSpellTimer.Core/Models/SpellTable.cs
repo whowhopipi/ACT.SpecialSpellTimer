@@ -382,7 +382,7 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.PlayDelegate = sourceSpell.Play;
                     ns.ToInstance = false;
                     ns.IsInstance = true;
-                    ns.IsTemporaryDisplay = false;
+                    ns.IsDesignMode = false;
 
                     return ns;
 #endif
@@ -442,7 +442,7 @@ namespace ACT.SpecialSpellTimer.Models
                     (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
                 {
                     if (!instance.IsInstance ||
-                        instance.IsTemporaryDisplay)
+                        instance.IsDesignMode)
                     {
                         return;
                     }

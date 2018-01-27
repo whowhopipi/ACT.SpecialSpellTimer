@@ -182,13 +182,19 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.panelName = value;
         }
 
+        private bool isDesignMode = false;
+
+        [XmlIgnore]
+        public bool IsDesignMode
+        {
+            get => this.isDesignMode;
+            set => this.SetProperty(ref this.isDesignMode, value);
+        }
+
         public string SpellTitle { get; set; }
 
         [XmlIgnore]
         public string SpellTitleReplaced { get; set; }
-
-        [XmlIgnore]
-        public bool IsTemporaryDisplay { get; set; } = false;
 
         public int BackgroundAlpha { get; set; }
 

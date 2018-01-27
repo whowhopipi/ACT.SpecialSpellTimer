@@ -355,7 +355,7 @@ namespace ACT.SpecialSpellTimer
                 from s in spells
                 where
                 !s.ToInstance ||
-                s.IsTemporaryDisplay
+                s.IsDesignMode
                 group s by s.Panel.PanelName.Trim();
 
             foreach (var panel in spellsGroupByPanel)

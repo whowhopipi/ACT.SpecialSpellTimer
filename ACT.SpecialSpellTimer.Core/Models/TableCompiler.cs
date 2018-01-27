@@ -256,7 +256,7 @@ namespace ACT.SpecialSpellTimer.Models
             var query =
                 from x in sourceList
                 where
-                x.IsTemporaryDisplay ||
+                x.IsDesignMode ||
                 (
                     x.Enabled &&
                     filter(x)
@@ -363,7 +363,7 @@ namespace ACT.SpecialSpellTimer.Models
             var query =
                 from x in sourceList
                 where
-                x.IsTemporaryDisplay ||
+                x.IsDesignMode ||
                 (
                     x.Enabled &&
                     filter(x)

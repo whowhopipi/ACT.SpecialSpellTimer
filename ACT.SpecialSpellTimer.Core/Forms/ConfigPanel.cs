@@ -541,7 +541,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
-                src.IsTemporaryDisplay = this.TemporarilyDisplaySpellCheckBox.Checked;
+                src.IsDesignMode = this.TemporarilyDisplaySpellCheckBox.Checked;
                 src.UpdateDone = false;
 
                 Task.Run(() => TableCompiler.Instance.RecompileSpells());
@@ -813,7 +813,7 @@ namespace ACT.SpecialSpellTimer.Forms
             this.SpellVisualSetting.HideSpellName = src.HideSpellName;
             this.SpellVisualSetting.OverlapRecastTime = src.OverlapRecastTime;
 
-            this.TemporarilyDisplaySpellCheckBox.Checked = src.IsTemporaryDisplay;
+            this.TemporarilyDisplaySpellCheckBox.Checked = src.IsDesignMode;
             this.NotifyToDiscordCheckBox.Checked = src.NotifyToDiscord;
             this.AlsoCompletionCheckBox.Checked = src.NotifyToDiscordAtComplete;
 

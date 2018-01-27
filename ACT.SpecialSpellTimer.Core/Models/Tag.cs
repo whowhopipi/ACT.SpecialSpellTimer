@@ -64,6 +64,36 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.name, value);
         }
 
+        [XmlIgnore]
+        public bool IsDesignMode
+        {
+            get
+            {
+                if (!this.children.Any())
+                {
+                    return false;
+                }
+
+                var value = true;
+                foreach (dynamic child in this.Children)
+                {
+                    value &= child?.IsDesignMode ?? false;
+                }
+
+                return value;
+            }
+            set
+            {
+                foreach (dynamic child in this.Children)
+                {
+                    if (child != null)
+                    {
+                        child.IsDesignMode = value;
+                    }
+                }
+            }
+        }
+
         #region ITreeItem
 
         private bool isExpanded = false;

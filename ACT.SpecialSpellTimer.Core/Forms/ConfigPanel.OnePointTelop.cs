@@ -177,7 +177,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     return;
                 }
 
-                src.IsTemporaryDisplay = this.TemporarilyDisplayTickerCheckBox.Checked;
+                src.IsDesignMode = this.TemporarilyDisplayTickerCheckBox.Checked;
 
                 Task.Run(() => TableCompiler.Instance.RecompileTickers());
             };
@@ -226,7 +226,7 @@ namespace ACT.SpecialSpellTimer.Forms
                 Settings.Default.BackgroundColor :
                 Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
 
-            this.TemporarilyDisplayTickerCheckBox.Checked = src.IsTemporaryDisplay;
+            this.TemporarilyDisplayTickerCheckBox.Checked = src.IsDesignMode;
             this.TelopNotifyToDiscordCheckBox.Checked = src.NotifyToDiscord;
 
             this.TelopVisualSetting.RefreshSampleImage();

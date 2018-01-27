@@ -90,6 +90,24 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.sortOrder, value);
         }
 
+        [XmlIgnore]
+        public bool IsDesignMode
+        {
+            get =>
+                this.Spells.Count < 1 ?
+                false :
+                this.Spells.Count == this.Spells.Where(x => x.IsDesignMode).Count();
+            set
+            {
+                foreach (var spell in this.Spells)
+                {
+                    spell.IsDesignMode = value;
+                }
+
+                this.RaisePropertyChanged();
+            }
+        }
+
         public bool FixedPositionSpell { get; set; } = false;
 
         public bool Horizontal { get; set; } = false;

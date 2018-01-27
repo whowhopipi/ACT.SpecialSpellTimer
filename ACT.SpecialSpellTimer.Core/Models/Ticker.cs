@@ -120,8 +120,14 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.top, Math.Round(value));
         }
 
+        private bool isDesignMode = false;
+
         [XmlIgnore]
-        public bool IsTemporaryDisplay { get; set; } = false;
+        public bool IsDesignMode
+        {
+            get => this.isDesignMode;
+            set => this.SetProperty(ref this.isDesignMode, value);
+        }
 
         public bool AddMessageEnabled { get; set; }
 
