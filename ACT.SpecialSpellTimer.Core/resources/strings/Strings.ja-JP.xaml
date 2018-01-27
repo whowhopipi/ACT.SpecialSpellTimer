@@ -24,7 +24,7 @@
   <system:String x:Key="Common_Import">インポート</system:String>
   <system:String x:Key="Common_Export">エクスポート</system:String>
   
-
+  <system:String x:Key="Tree_EnabledDescription">このトリガを有効にする。</system:String>
   <system:String x:Key="Tree_DesignModeDescription">レイアウト、ビジュアルの調整向けに強制的にオーバーレイを表示します。</system:String>
   <system:String x:Key="Tree_DesignGridDescription">レイアウトの調整向けのガイドグリッドを表示します。</system:String>
   
