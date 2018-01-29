@@ -14,6 +14,6 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             Spell model)
             => this.Model = model;
 
-        public Spell Model { get; private set; }
+        public Spell Model { get; set; }
     }
 }

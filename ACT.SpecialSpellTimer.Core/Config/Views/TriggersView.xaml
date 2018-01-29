@@ -365,7 +365,12 @@
       BorderThickness="2"
       CornerRadius="2"
       BorderBrush="Transparent">
-      <Grid x:Name="ContentGrid" />
+      <Grid>
+        <local:SpellPanelConfigView x:Name="SpellPanelView" Visibility="Collapsed" />
+        <local:SpellConfigView x:Name="SpellView" Visibility="Collapsed" />
+        <local:TickerConfigView x:Name="TickerView" Visibility="Collapsed" />
+        <local:TagView x:Name="TagView" Visibility="Collapsed" />
+      </Grid>
     </Border>
   </Grid>
 </UserControl>

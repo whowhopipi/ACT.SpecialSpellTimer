@@ -14,6 +14,6 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             Ticker model)
             => this.Model = model;
 
-        public Ticker Model { get; private set; }
+        public Ticker Model { get; set; }
     }
 }
