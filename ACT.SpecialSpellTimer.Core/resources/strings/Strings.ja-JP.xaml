@@ -42,6 +42,27 @@
   <system:String x:Key="SpellPanel_SortOrdersSortMatchTime">マッチした時間を最優先にする</system:String>
   <system:String x:Key="SpellPanel_SortOrdersFixed">固定配置（表示順でソートし間を詰めない）</system:String>
 
+  <system:String x:Key="Spell_Name">スペルの名前</system:String>
+  <system:String x:Key="Spell_ToInstance">動的に設定されたスペル名が異なるときにインスタンス化する</system:String>
+  <system:String x:Key="Spell_SortPriority">表示の優先順位</system:String>
+  <system:String x:Key="Spell_TextToMatch">マッチングワード</system:String>
+  <system:String x:Key="Spell_UserRegex">正規表現を使用する</system:String>
+  <system:String x:Key="Spell_RecastTime">リキャスト時間</system:String>
+  <system:String x:Key="Spell_TextToExtend">延長マッチングワード</system:String>
+  <system:String x:Key="Spell_Secounds">秒</system:String>
+  <system:String x:Key="Spell_ExtendSecounds">秒延長する</system:String>
+  <system:String x:Key="Spell_ExtendRecastTimeOverOrigal">元のリキャスト時間を超えて延長する</system:String>
+  <system:String x:Key="Spell_UpperLimitOfRecastTime">リキャスト時間の最大値</system:String>
+  <system:String x:Key="Spell_WarningTime">秒未満のとき警告色に変える</system:String>
+  <system:String x:Key="Spell_WarningTimeChangeFontColor">フォントを警告色に変える</system:String>
+  <system:String x:Key="Spell_BlinkTime">秒未満のときブリンクさせる</system:String>
+  <system:String x:Key="Spell_BlinkIcon">アイコンをブリンクさせる</system:String>
+  <system:String x:Key="Spell_BlinkBar">バーをブリンクさせる</system:String>
+
+  <system:String x:Key="Trigger_JobFilter">ジョブフィルタ</system:String>
+  <system:String x:Key="Trigger_ZoneFilter">ゾーンフィルタ</system:String>
+  <system:String x:Key="Trigger_ClearFilter">フィルタを解除する</system:String>
+
 
   <system:String x:Key="General_ClearCache">終了時にキャッシュをクリアする</system:String>
   <system:String x:Key="General_OpenCacheDirectory">キャッシュディレクトリを開く</system:String>

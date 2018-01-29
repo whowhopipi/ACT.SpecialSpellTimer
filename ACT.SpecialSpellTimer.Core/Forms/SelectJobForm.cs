@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Config.Models;
 using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.Forms
@@ -53,7 +53,7 @@ namespace ACT.SpecialSpellTimer.Forms
         private void OKButton_Click(object sender, EventArgs e)
         {
             var jobs = new List<string>();
-            foreach (JobContainer container in this.JobsCheckedListBox.CheckedItems)
+            foreach (JobSelector container in this.JobsCheckedListBox.CheckedItems)
             {
                 var jobId = (int)container.Job.ID;
                 jobs.Add(jobId.ToString());
@@ -84,7 +84,7 @@ namespace ACT.SpecialSpellTimer.Forms
                     if (job.ID != JobIDs.Unknown)
                     {
                         var jobId = (int)job.ID;
-                        var container = new JobContainer(job);
+                        var container = new JobSelector(job);
                         this.JobsCheckedListBox.Items.Add(
                             container,
                             jobs.Any(x => x == jobId.ToString()));
@@ -114,32 +114,6 @@ namespace ACT.SpecialSpellTimer.Forms
             if (this.Owner != null)
             {
                 this.Font = this.Owner.Font;
-            }
-        }
-
-        private class JobContainer
-        {
-            public JobContainer(Job job)
-                => this.Job = job;
-
-            public Job Job { get; set; }
-
-            public override string ToString()
-            {
-                var text = string.Empty;
-
-                switch (Settings.Default.Language)
-                {
-                    case "JP":
-                        text += this.Job.NameJA;
-                        break;
-
-                    default:
-                        text += this.Job.NameEN;
-                        break;
-                }
-
-                return text;
             }
         }
     }

@@ -98,7 +98,6 @@ namespace ACT.SpecialSpellTimer.Models
             this.BarColor = string.Empty;
             this.BarOutlineColor = string.Empty;
             this.BackgroundColor = string.Empty;
-            this.JobFilter = string.Empty;
             this.SpellTitleReplaced = string.Empty;
             this.MatchedLog = string.Empty;
             this.RegexPattern = string.Empty;
@@ -191,6 +190,22 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.isDesignMode, value);
         }
 
+        private string jobFilter;
+
+        public string JobFilter
+        {
+            get => this.jobFilter;
+            set => this.SetProperty(ref this.jobFilter, value);
+        }
+
+        private string zoneFilter;
+
+        public string ZoneFilter
+        {
+            get => this.zoneFilter;
+            set => this.SetProperty(ref this.zoneFilter, value);
+        }
+
         public string SpellTitle { get; set; }
 
         [XmlIgnore]
@@ -240,7 +255,6 @@ namespace ACT.SpecialSpellTimer.Models
         public bool IsInstance { get; set; }
 
         public bool IsReverse { get; set; }
-        public string JobFilter { get; set; }
         public string Keyword { get; set; }
         public string KeywordForExtend1 { get; set; }
         public string KeywordForExtend2 { get; set; }
@@ -322,7 +336,6 @@ namespace ACT.SpecialSpellTimer.Models
         public double BlinkTime { get; set; } = 0;
         public bool BlinkIcon { get; set; } = false;
         public bool BlinkBar { get; set; } = false;
-        public string ZoneFilter { get; set; }
         public bool NotifyToDiscord { get; set; } = false;
         public bool NotifyToDiscordAtComplete { get; set; } = false;
 
