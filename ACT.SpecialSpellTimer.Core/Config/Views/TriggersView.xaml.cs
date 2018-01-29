@@ -32,56 +32,76 @@ namespace ACT.SpecialSpellTimer.Config.Views
             RoutedPropertyChangedEventArgs<object> e)
             => this.ShowContent(e.NewValue);
 
+        private SpellPanelConfigViewModel spellPanelViewModel;
+        private SpellConfigViewModel spellViewModel;
+        private TickerConfigViewModel tickerViewModel;
+
         private void ShowContent(
             object model)
         {
-            var content = default(UIElement);
-
             switch (model)
             {
                 case SpellPanel panel:
-                    this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.DarkViolet);
-                    this.ContentGrid.Visibility = Visibility.Visible;
-
-                    content = new SpellPanelConfigView()
+                    if (this.spellPanelViewModel == null)
                     {
-                        DataContext = new SpellPanelConfigViewModel(model as SpellPanel)
-                    };
+                        this.spellPanelViewModel = new SpellPanelConfigViewModel(model as SpellPanel);
+                        this.SpellPanelView.DataContext = this.spellPanelViewModel;
+                    }
+                    else
+                    {
+                        this.spellPanelViewModel.Model = model as SpellPanel;
+                    }
 
+                    this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.DarkViolet);
+                    this.SpellPanelView.Visibility = Visibility.Visible;
+                    this.SpellView.Visibility = Visibility.Collapsed;
+                    this.TickerView.Visibility = Visibility.Collapsed;
+                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
 
                 case Spell spell:
-                    this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.MediumBlue);
-                    this.ContentGrid.Visibility = Visibility.Visible;
-
-                    content = new SpellConfigView()
+                    if (this.spellViewModel == null)
                     {
-                        DataContext = new SpellConfigViewModel(model as Spell)
-                    };
+                        this.spellViewModel = new SpellConfigViewModel(model as Spell);
+                        this.SpellView.DataContext = this.spellViewModel;
+                    }
+                    else
+                    {
+                        this.spellViewModel.Model = model as Spell;
+                    }
 
+                    this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.MediumBlue);
+                    this.SpellPanelView.Visibility = Visibility.Collapsed;
+                    this.SpellView.Visibility = Visibility.Visible;
+                    this.TickerView.Visibility = Visibility.Collapsed;
+                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
 
                 case Ticker ticker:
-                    this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.OliveDrab);
-                    this.ContentGrid.Visibility = Visibility.Visible;
-
-                    content = new SpellPanelConfigView()
+                    if (this.tickerViewModel == null)
                     {
-                        DataContext = new TickerConfigViewModel(model as Ticker)
-                    };
+                        this.tickerViewModel = new TickerConfigViewModel(model as Ticker);
+                        this.TickerView.DataContext = this.tickerViewModel;
+                    }
+                    else
+                    {
+                        this.tickerViewModel.Model = model as Ticker;
+                    }
 
+                    this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.OliveDrab);
+                    this.SpellPanelView.Visibility = Visibility.Collapsed;
+                    this.SpellView.Visibility = Visibility.Collapsed;
+                    this.TickerView.Visibility = Visibility.Visible;
+                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
 
                 default:
                     this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.Transparent);
-                    this.ContentGrid.Visibility = Visibility.Hidden;
+                    this.SpellPanelView.Visibility = Visibility.Collapsed;
+                    this.SpellView.Visibility = Visibility.Collapsed;
+                    this.TickerView.Visibility = Visibility.Collapsed;
+                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
-            }
-
-            if (content != null)
-            {
-                this.ContentGrid.Children.Clear();
-                this.ContentGrid.Children.Add(content);
             }
         }
 
