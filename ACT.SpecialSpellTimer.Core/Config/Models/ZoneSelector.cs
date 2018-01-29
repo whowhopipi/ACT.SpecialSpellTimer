@@ -7,7 +7,6 @@ namespace ACT.SpecialSpellTimer.Config.Models
         BindableBase
     {
         private bool isSelected;
-        private Action selectedChangedDelegate;
 
         public ZoneSelector(
             string id,
@@ -18,7 +17,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
             this.ID = id;
             this.Name = name;
             this.isSelected = isSelected;
-            this.selectedChangedDelegate = selectedChangedDelegate;
+            this.SelectedChangedDelegate = selectedChangedDelegate;
         }
 
         public string ID { get; set; }
@@ -31,10 +30,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
             {
                 if (this.SetProperty(ref this.isSelected, value))
                 {
-                    this.selectedChangedDelegate?.Invoke();
+                    this.SelectedChangedDelegate?.Invoke();
                 }
             }
         }
+
+        public Action SelectedChangedDelegate { get; set; }
 
         public override string ToString() => this.Name;
     }

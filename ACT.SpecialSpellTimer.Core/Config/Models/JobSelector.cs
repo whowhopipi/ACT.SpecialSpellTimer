@@ -8,7 +8,6 @@ namespace ACT.SpecialSpellTimer.Config.Models
         BindableBase
     {
         private bool isSelected;
-        private Action selectedChangedDelegate;
 
         public JobSelector(
             Job job,
@@ -17,7 +16,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
         {
             this.Job = job;
             this.isSelected = isSelected;
-            this.selectedChangedDelegate = selectedChangedDelegate;
+            this.SelectedChangedDelegate = selectedChangedDelegate;
         }
 
         public Job Job { get; set; }
@@ -29,10 +28,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
             {
                 if (this.SetProperty(ref this.isSelected, value))
                 {
-                    this.selectedChangedDelegate?.Invoke();
+                    this.SelectedChangedDelegate?.Invoke();
                 }
             }
         }
+
+        public Action SelectedChangedDelegate { get; set; }
 
         public string Text => Job.GetName(Settings.Default.UILocale);
 

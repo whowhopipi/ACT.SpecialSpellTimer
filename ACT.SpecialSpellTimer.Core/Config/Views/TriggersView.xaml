@@ -79,6 +79,10 @@
             <Setter Property="Padding" Value="5 1 5 1" />
           </Style>
 
+          <Style TargetType="Button">
+            <Setter Property="IsTabStop" Value="False" />
+          </Style>
+
           <!-- ルート要素 -->
           <HierarchicalDataTemplate
             DataType="{x:Type model:TriggersTreeRoot}"

@@ -22,8 +22,17 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             Spell model)
         {
             this.Model = model;
-            this.SetJobSeelectors();
-            this.SetZoneSeelectors();
+
+            try
+            {
+                this.isInitialize = true;
+                this.SetJobSelectors();
+                this.SetZoneSelectors();
+            }
+            finally
+            {
+                this.isInitialize = false;
+            }
         }
 
         public Spell Model { get; private set; }
@@ -34,25 +43,32 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         public bool IsJobFiltered => !string.IsNullOrEmpty(this.Model?.JobFilter);
 
-        public List<JobSelector> JobSelectors { get; private set; } = new List<JobSelector>();
+        private static List<JobSelector> jobSelectors;
 
-        private void SetJobSeelectors()
+        public List<JobSelector> JobSelectors => jobSelectors;
+
+        private void SetJobSelectors()
         {
-            var jobFilter = this.Model.JobFilter.Split(',');
-            foreach (var job in Jobs.List.OrderBy(x => x.Role))
+            if (jobSelectors == null)
             {
-                if (job.ID == JobIDs.Unknown ||
-                    job.ID == JobIDs.ADV)
+                jobSelectors = new List<JobSelector>();
+
+                foreach (var job in Jobs.List.OrderBy(x => x.Role))
                 {
-                    continue;
+                    if (job.ID == JobIDs.Unknown ||
+                        job.ID == JobIDs.ADV)
+                    {
+                        continue;
+                    }
+
+                    jobSelectors.Add(new JobSelector(job));
                 }
+            }
 
-                var selector = new JobSelector(
-                    job,
-                    jobFilter.Contains(job.ID.ToString()),
-                    () => this.JobFilterChanged());
-
-                this.JobSelectors.Add(selector);
+            foreach (var selector in this.JobSelectors)
+            {
+                selector.IsSelected = this.Model.JobFilter.Contains(selector.Job.ID.ToString());
+                selector.SelectedChangedDelegate = this.JobFilterChanged;
             }
         }
 
@@ -100,27 +116,37 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         public bool IsZoneFiltered => !string.IsNullOrEmpty(this.Model?.ZoneFilter);
 
-        public List<ZoneSelector> ZoneSelectors { get; private set; } = new List<ZoneSelector>();
+        private static List<ZoneSelector> zoneSelectors;
 
-        private void SetZoneSeelectors()
+        public List<ZoneSelector> ZoneSelectors => zoneSelectors;
+
+        private void SetZoneSelectors()
         {
-            var zoneFilter = this.Model.ZoneFilter.Split(',');
-            foreach (var zone in
-                from x in FFXIVPlugin.Instance.ZoneList
-                orderby
-                x.IsAddedByUser ? 0 : 1,
-                x.Rank,
-                x.ID descending
-                select
-                x)
+            if (zoneSelectors == null)
             {
-                var selector = new ZoneSelector(
-                    zone.ID.ToString(),
-                    zone.Name,
-                    zoneFilter.Contains(zone.ID.ToString()),
-                    () => this.ZoneFilterChanged());
+                zoneSelectors = new List<ZoneSelector>();
 
-                this.ZoneSelectors.Add(selector);
+                foreach (var zone in
+                    from x in FFXIVPlugin.Instance.ZoneList
+                    orderby
+                    x.IsAddedByUser ? 0 : 1,
+                    x.Rank,
+                    x.ID descending
+                    select
+                    x)
+                {
+                    var selector = new ZoneSelector(
+                        zone.ID.ToString(),
+                        zone.Name);
+
+                    zoneSelectors.Add(selector);
+                }
+            }
+
+            foreach (var selector in this.ZoneSelectors)
+            {
+                selector.IsSelected = this.Model.ZoneFilter.Contains(selector.ID);
+                selector.SelectedChangedDelegate = this.ZoneFilterChanged;
             }
         }
 
