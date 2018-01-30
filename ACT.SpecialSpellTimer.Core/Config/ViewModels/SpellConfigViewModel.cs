@@ -34,11 +34,13 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                     try
                     {
                         this.isInitialize = true;
+
+                        // ジョブ・ゾーン・前提条件のセレクタを初期化する
                         this.SetJobSelectors();
                         this.SetZoneSelectors();
-
                         PreconditionSelectors.Instance.SetModel(this.model);
 
+                        // Designモード？（Visualタブがアクティブか？）
                         this.model.IsDesignMode = this.IsActiveVisualTab;
                         this.SwitchDesignGrid();
                     }

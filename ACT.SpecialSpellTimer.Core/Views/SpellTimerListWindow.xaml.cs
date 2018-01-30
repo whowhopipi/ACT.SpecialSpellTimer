@@ -212,53 +212,27 @@ namespace ACT.SpecialSpellTimer.Views
                 }
                 else
                 {
-                    c = new SpellTimerControl();
+                    c = new SpellTimerControl()
+                    {
+                        Spell = spell,
+                        Visibility = Visibility.Collapsed,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Margin = new Thickness(0, 0, 0, 0),
+                    };
+
                     this.SpellTimerControls.Add(spell.ID, c);
-
-                    c.Visibility = Visibility.Collapsed;
-
-                    c.HorizontalAlignment = HorizontalAlignment.Left;
-                    c.VerticalAlignment = VerticalAlignment.Top;
-                    c.Margin = new Thickness(0, 0, 0, 0);
-
                     this.BaseGrid.Children.Add(c);
 
                     c.SetValue(Grid.ColumnProperty, 0);
                     c.SetValue(Grid.RowProperty, 0);
                 }
 
-                c.Spell = spell;
-
-                c.SpellTitle = string.IsNullOrWhiteSpace(spell.SpellTitleReplaced) ?
-                    spell.SpellTitle :
-                    spell.SpellTitleReplaced;
-                c.SpellIcon = spell.SpellIcon;
-                c.SpellIconSize = spell.SpellIconSize;
-                c.IsReverse = spell.IsReverse;
-                c.HideSpellName = spell.HideSpellName;
-                c.WarningTime = spell.WarningTime;
-                c.ChangeFontColorsWhenWarning = spell.ChangeFontColorsWhenWarning;
-                c.OverlapRecastTime = spell.OverlapRecastTime;
-                c.ReduceIconBrightness = spell.ReduceIconBrightness;
-                c.RecastTime = 0;
-                c.Progress = 1.0d;
-
-                c.BarWidth = spell.BarWidth;
-                c.BarHeight = spell.BarHeight;
-                c.FontInfo = spell.Font;
-                c.FontColor = spell.FontColor;
-                c.FontOutlineColor = spell.FontOutlineColor;
-                c.WarningFontColor = spell.WarningFontColor;
-                c.WarningFontOutlineColor = spell.WarningFontOutlineColor;
-                c.BlinkTime = spell.BlinkTime;
-                c.BarColor = spell.BarColor;
-                c.BarOutlineColor = spell.BarOutlineColor;
-
                 // 一度もログにマッチしていない時はバーを初期化する
                 if (spell.MatchDateTime == DateTime.MinValue &&
                     !spell.UpdateDone)
                 {
-                    c.Progress = 1.0;
+                    c.Progress = 1.0d;
                     c.RecastTime = 0;
                     c.Update();
                     c.StartBarAnimation();
@@ -289,6 +263,12 @@ namespace ACT.SpecialSpellTimer.Views
 
                         spell.UpdateDone = true;
                     }
+                }
+
+                // Designモードならばかならず描画を更新する
+                if (spell.IsDesignMode)
+                {
+                    c.Update();
                 }
 
                 c.Refresh();

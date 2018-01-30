@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
@@ -211,6 +212,13 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string SpellTitleReplaced { get; set; }
 
+        /// <summary>
+        /// ※注意が必要な項目※
+        /// 昔の名残で項目名と異なる動作になっている。
+        /// プログレスバーの表示／非表示ではなく、スペル全体の表示／非表示を司る重要な項目として動作している
+        /// </summary>
+        public bool ProgressBarVisible { get; set; } = true;
+
         public int BackgroundAlpha { get; set; }
 
         public string BackgroundColor { get; set; }
@@ -281,7 +289,6 @@ namespace ACT.SpecialSpellTimer.Models
         public bool OverlapRecastTime { get; set; }
         public string OverTextToSpeak { get; set; }
         public double OverTime { get; set; } = 0;
-        public bool ProgressBarVisible { get; set; } = true;
         public double RecastTime { get; set; } = 0;
         public double RecastTimeExtending1 { get; set; } = 0;
         public double RecastTimeExtending2 { get; set; } = 0;
@@ -308,7 +315,27 @@ namespace ACT.SpecialSpellTimer.Models
         public string RegexPattern { get; set; }
 
         public bool RepeatEnabled { get; set; }
-        public string SpellIcon { get; set; }
+
+        private string spellIcon;
+
+        public string SpellIcon
+        {
+            get => this.spellIcon;
+            set
+            {
+                if (this.SetProperty(ref this.spellIcon, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.SpellIconFullPath));
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string SpellIconFullPath =>
+            string.IsNullOrEmpty(this.SpellIcon) ?
+            string.Empty :
+            IconController.Instance.GetIconFile(this.SpellIcon)?.FullPath;
+
         public int SpellIconSize { get; set; } = 24;
 
         /// <summary>スペルが作用した対象</summary>

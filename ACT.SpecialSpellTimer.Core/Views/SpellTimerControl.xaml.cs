@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,7 +12,6 @@ using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Bridge;
-using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.WPF.Controls;
 
@@ -37,36 +37,6 @@ namespace ACT.SpecialSpellTimer.Views
 
         #region Colors
 
-        /// <summary>
-        /// バーの色
-        /// </summary>
-        public string BarColor { get; set; }
-
-        /// <summary>
-        /// バーOutlineの色
-        /// </summary>
-        public string BarOutlineColor { get; set; }
-
-        /// <summary>
-        /// Fontの色
-        /// </summary>
-        public string FontColor { get; set; }
-
-        /// <summary>
-        /// FontOutlineの色
-        /// </summary>
-        public string FontOutlineColor { get; set; }
-
-        /// <summary>
-        /// WarningFontの色
-        /// </summary>
-        public string WarningFontColor { get; set; }
-
-        /// <summary>
-        /// WarningFontOutlineの色
-        /// </summary>
-        public string WarningFontOutlineColor { get; set; }
-
         /// <summary>バーのBrush</summary>
         private SolidColorBrush BarBrush { get; set; }
 
@@ -85,106 +55,28 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>フォントのアウトラインBrush</summary>
         private SolidColorBrush WarningFontOutlineBrush { get; set; }
 
-        /// <summary>
-        /// Should font color change when warning?
-        /// </summary>
-        public bool ChangeFontColorsWhenWarning { get; set; }
-
-        /// <summary>
-        /// リキャスト中にアイコンの明度を下げるか？
-        /// </summary>
-        public bool ReduceIconBrightness { get; set; }
-
         #endregion Colors
 
         #region Sizes
 
         /// <summary>
-        /// バーの高さ
-        /// </summary>
-        public int BarHeight { get; set; }
-
-        /// <summary>
-        /// バーの幅
-        /// </summary>
-        public int BarWidth { get; set; }
-
-        /// <summary>
-        /// スペルのIcon
-        /// </summary>
-        public string SpellIcon { get; set; }
-
-        /// <summary>
-        /// スペルIconサイズ
-        /// </summary>
-        public int SpellIconSize { get; set; }
-
-        /// <summary>
         /// スペル表示領域の幅
         /// </summary>
         public int SpellWidth =>
-            this.BarWidth > this.SpellIconSize ?
-            this.BarWidth :
-            this.SpellIconSize;
+            this.Spell.BarWidth > this.Spell.SpellIconSize ?
+            this.Spell.BarWidth :
+            this.Spell.SpellIconSize;
 
         #endregion Sizes
 
-        #region Times
+        public Spell Spell { get; set; }
 
-        /// <summary>
-        /// リキャストの進捗率
-        /// </summary>
         public double Progress { get; set; }
 
-        /// <summary>
-        /// リキャストタイムを重ねて表示するか？
-        /// </summary>
-        public bool OverlapRecastTime { get; set; }
-
-        /// <summary>
-        /// 残りリキャストTime(秒数)
-        /// </summary>
         public double RecastTime { get; set; }
 
-        /// <summary>
-        /// Time left warning in seconds
-        /// </summary>
-        public double WarningTime { get; set; }
-
-        /// <summary>
-        /// Time left blink in seconds
-        /// </summary>
-        public double BlinkTime { get; set; }
-
-        /// <summary>
-        /// リキャスト秒数の書式
-        /// </summary>
         private static string RecastTimeFormat =>
             Settings.Default.EnabledSpellTimerNoDecimal ? "N0" : "N1";
-
-        #endregion Times
-
-        /// <summary>
-        /// フォント
-        /// </summary>
-        public FontInfo FontInfo { get; set; }
-
-        /// <summary>
-        /// スペル名を非表示とするか？
-        /// </summary>
-        public bool HideSpellName { get; set; }
-
-        /// <summary>
-        /// プログレスバーを逆にするか？
-        /// </summary>
-        public bool IsReverse { get; set; }
-
-        /// <summary>
-        /// スペルのTitle
-        /// </summary>
-        public string SpellTitle { get; set; }
-
-        public Spell Spell { get; set; }
 
         /// <summary>
         /// 描画を更新する
@@ -196,17 +88,17 @@ namespace ACT.SpecialSpellTimer.Views
             {
                 // アイコンの不透明度を設定する
                 var opacity = 1.0;
-                if (this.ReduceIconBrightness)
+                if (this.Spell.ReduceIconBrightness)
                 {
                     if (this.RecastTime > 0)
                     {
-                        opacity = this.IsReverse ?
+                        opacity = this.Spell.IsReverse ?
                             1.0 :
                             ((double)Settings.Default.ReduceIconBrightness / 100d);
                     }
                     else
                     {
-                        opacity = this.IsReverse ?
+                        opacity = this.Spell.IsReverse ?
                             ((double)Settings.Default.ReduceIconBrightness / 100d) :
                             1.0;
                     }
@@ -222,17 +114,17 @@ namespace ACT.SpecialSpellTimer.Views
             var tb = this.RecastTimeTextBlock;
             var recast = this.RecastTime > 0 ?
                 this.RecastTime.ToString(RecastTimeFormat) :
-                this.IsReverse ? Settings.Default.OverText : Settings.Default.ReadyText;
+                this.Spell.IsReverse ? Settings.Default.OverText : Settings.Default.ReadyText;
 
             if (tb.Text != recast) tb.Text = recast;
-            tb.SetFontInfo(this.FontInfo);
+            tb.SetFontInfo(this.Spell.Font);
             tb.SetAutoStrokeThickness();
 
             var fill = this.FontBrush;
             var stroke = this.FontOutlineBrush;
 
-            if (this.ChangeFontColorsWhenWarning &&
-                this.RecastTime < this.WarningTime)
+            if (this.Spell.ChangeFontColorsWhenWarning &&
+                this.RecastTime < this.Spell.WarningTime)
             {
                 fill = this.WarningFontBrush;
                 stroke = this.WarningFontOutlineBrush;
@@ -250,25 +142,25 @@ namespace ACT.SpecialSpellTimer.Views
             this.Width = this.SpellWidth;
 
             // Brushを生成する
-            var fontColor = string.IsNullOrWhiteSpace(this.FontColor) ?
+            var fontColor = string.IsNullOrWhiteSpace(this.Spell.FontColor) ?
                 Settings.Default.FontColor.ToWPF() :
-                this.FontColor.FromHTMLWPF();
-            var fontOutlineColor = string.IsNullOrWhiteSpace(this.FontOutlineColor) ?
+                this.Spell.FontColor.FromHTMLWPF();
+            var fontOutlineColor = string.IsNullOrWhiteSpace(this.Spell.FontOutlineColor) ?
                 Settings.Default.FontOutlineColor.ToWPF() :
-                this.FontOutlineColor.FromHTMLWPF();
-            var warningFontColor = string.IsNullOrWhiteSpace(this.WarningFontColor) ?
+                this.Spell.FontOutlineColor.FromHTMLWPF();
+            var warningFontColor = string.IsNullOrWhiteSpace(this.Spell.WarningFontColor) ?
                 Settings.Default.WarningFontColor.ToWPF() :
-                this.WarningFontColor.FromHTMLWPF();
-            var warningFontOutlineColor = string.IsNullOrWhiteSpace(this.WarningFontOutlineColor) ?
+                this.Spell.WarningFontColor.FromHTMLWPF();
+            var warningFontOutlineColor = string.IsNullOrWhiteSpace(this.Spell.WarningFontOutlineColor) ?
                 Settings.Default.WarningFontOutlineColor.ToWPF() :
-                this.WarningFontOutlineColor.FromHTMLWPF();
+                this.Spell.WarningFontOutlineColor.FromHTMLWPF();
 
-            var barColor = string.IsNullOrWhiteSpace(this.BarColor) ?
+            var barColor = string.IsNullOrWhiteSpace(this.Spell.BarColor) ?
                 Settings.Default.ProgressBarColor.ToWPF() :
-                this.BarColor.FromHTMLWPF();
-            var barOutlineColor = string.IsNullOrWhiteSpace(this.BarOutlineColor) ?
+                this.Spell.BarColor.FromHTMLWPF();
+            var barOutlineColor = string.IsNullOrWhiteSpace(this.Spell.BarOutlineColor) ?
                 Settings.Default.ProgressBarOutlineColor.ToWPF() :
-                this.BarOutlineColor.FromHTMLWPF();
+                this.Spell.BarOutlineColor.FromHTMLWPF();
 
             this.FontBrush = this.GetBrush(fontColor);
             this.FontOutlineBrush = this.GetBrush(fontOutlineColor);
@@ -278,25 +170,36 @@ namespace ACT.SpecialSpellTimer.Views
             this.BarOutlineBrush = this.GetBrush(barOutlineColor);
 
             var tb = default(OutlineTextBlock);
-            var font = this.FontInfo;
+            var font = this.Spell.Font;
 
             // アイコンを描画する
             var image = this.SpellIconImage;
-            var iconFile = IconController.Instance.GetIconFile(this.SpellIcon);
-            if (image.Source == null &&
-                iconFile != null)
+            var iconFile = IconController.Instance.GetIconFile(this.Spell.SpellIcon);
+            if (iconFile != null &&
+                File.Exists(iconFile.FullPath))
             {
-                var bitmap = new BitmapImage(new Uri(iconFile.FullPath));
-                image.Source = bitmap;
-                image.Height = this.SpellIconSize;
-                image.Width = this.SpellIconSize;
+                if (image.Source == null ||
+                    image.Height != this.Spell.SpellIconSize ||
+                    image.Width != this.Spell.SpellIconSize ||
+                    (image.Source as BitmapImage).UriSource.LocalPath != iconFile.FullPath)
+                {
+                    var bitmap = new BitmapImage(new Uri(iconFile.FullPath));
+                    image.Source = bitmap;
+                    image.Height = this.Spell.SpellIconSize;
+                    image.Width = this.Spell.SpellIconSize;
 
-                this.SpellIconPanel.OpacityMask = new ImageBrush(bitmap);
+                    this.SpellIconPanel.OpacityMask = new ImageBrush(bitmap);
+                }
             }
 
             // Titleを描画する
             tb = this.SpellTitleTextBlock;
-            var title = string.IsNullOrWhiteSpace(this.SpellTitle) ? "　" : this.SpellTitle;
+
+            var title =
+                string.IsNullOrWhiteSpace(this.Spell.SpellTitleReplaced) ?
+                this.Spell.SpellTitle :
+                this.Spell.SpellTitleReplaced;
+            title = string.IsNullOrWhiteSpace(title) ? "　" : title;
             title = title.Replace(",", Environment.NewLine);
 
             if (tb.Text != title) tb.Text = title;
@@ -305,17 +208,16 @@ namespace ACT.SpecialSpellTimer.Views
             tb.SetFontInfo(font);
             tb.SetAutoStrokeThickness();
 
-            if (this.HideSpellName)
-            {
-                tb.Visibility = Visibility.Collapsed;
-            }
+            tb.Visibility = this.Spell.HideSpellName ?
+                Visibility.Collapsed :
+                Visibility.Visible;
 
-            if (this.OverlapRecastTime)
+            if (this.Spell.OverlapRecastTime)
             {
                 this.RecastTimePanel.SetValue(Grid.ColumnProperty, 0);
                 this.RecastTimePanel.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
                 this.RecastTimePanel.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-                this.RecastTimePanel.Width = this.SpellIconSize >= 6 ? this.SpellIconSize - 6 : double.NaN;
+                this.RecastTimePanel.Width = this.Spell.SpellIconSize >= 6 ? this.Spell.SpellIconSize - 6 : double.NaN;
                 this.RecastTimePanel.Height = this.RecastTimePanel.Width;
             }
             else
@@ -327,11 +229,11 @@ namespace ACT.SpecialSpellTimer.Views
             // ProgressBarを描画する
             var foreRect = this.BarRectangle;
             if (foreRect.Fill != this.BarBrush) foreRect.Fill = this.BarBrush;
-            if (foreRect.Width != this.BarWidth) foreRect.Width = this.BarWidth;
-            if (foreRect.Height != this.BarHeight) foreRect.Height = this.BarHeight;
+            if (foreRect.Width != this.Spell.BarWidth) foreRect.Width = this.Spell.BarWidth;
+            if (foreRect.Height != this.Spell.BarHeight) foreRect.Height = this.Spell.BarHeight;
 
             var backRect = this.BarBackRectangle;
-            if (backRect.Width != this.BarWidth) backRect.Width = this.BarWidth;
+            if (backRect.Width != this.Spell.BarWidth) backRect.Width = this.Spell.BarWidth;
 
             var outlineRect = this.BarOutlineRectangle;
             if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
@@ -352,7 +254,7 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void StartBarAnimation()
         {
-            if (this.BarWidth == 0)
+            if (this.Spell.BarWidth == 0)
             {
                 return;
             }
@@ -363,7 +265,7 @@ namespace ACT.SpecialSpellTimer.Views
                 this.BarAnimation.AutoReverse = false;
             }
 
-            var fps = (int)Math.Ceiling(this.BarWidth / this.RecastTime);
+            var fps = (int)Math.Ceiling(this.Spell.BarWidth / this.RecastTime);
             if (fps <= 0 || fps > Settings.Default.MaxFPS)
             {
                 fps = Settings.Default.MaxFPS;
@@ -371,17 +273,17 @@ namespace ACT.SpecialSpellTimer.Views
 
             Timeline.SetDesiredFrameRate(this.BarAnimation, fps);
 
-            var currentWidth = this.IsReverse ?
-                (double)(this.BarWidth * (1.0d - this.Progress)) :
-                (double)(this.BarWidth * this.Progress);
-            if (this.IsReverse)
+            var currentWidth = this.Spell.IsReverse ?
+                (double)(this.Spell.BarWidth * (1.0d - this.Progress)) :
+                (double)(this.Spell.BarWidth * this.Progress);
+            if (this.Spell.IsReverse)
             {
-                this.BarAnimation.From = currentWidth / this.BarWidth;
+                this.BarAnimation.From = currentWidth / this.Spell.BarWidth;
                 this.BarAnimation.To = 0;
             }
             else
             {
-                this.BarAnimation.From = currentWidth / this.BarWidth;
+                this.BarAnimation.From = currentWidth / this.Spell.BarWidth;
                 this.BarAnimation.To = 1.0;
             }
 
@@ -450,9 +352,9 @@ namespace ACT.SpecialSpellTimer.Views
         {
             this.InitializeBlinkAnimation();
 
-            if (this.BlinkTime == 0 ||
+            if (this.Spell.BlinkTime == 0 ||
                 this.RecastTime == 0 ||
-                this.RecastTime > this.BlinkTime)
+                this.RecastTime > this.Spell.BlinkTime)
             {
                 if (this.isBlinking)
                 {
@@ -505,35 +407,35 @@ namespace ACT.SpecialSpellTimer.Views
         private void InitializeBlinkAnimation()
         {
             // アイコンのアニメを設定する
-            if (this.SpellIconSize > 0 &&
+            if (this.Spell.SpellIconSize > 0 &&
                 this.Spell.BlinkIcon)
             {
-                var value1 = !this.IsReverse ? SpellTimerControl.IconDarkValue : SpellTimerControl.IconLightValue;
-                var value2 = !this.IsReverse ? SpellTimerControl.IconLightValue : SpellTimerControl.IconDarkValue;
+                var value1 = !this.Spell.IsReverse ? SpellTimerControl.IconDarkValue : SpellTimerControl.IconLightValue;
+                var value2 = !this.Spell.IsReverse ? SpellTimerControl.IconLightValue : SpellTimerControl.IconDarkValue;
 
                 this.IconKeyframe1.Value = value2;
                 this.IconKeyframe2.Value = value1;
 
                 this.iconBlinkAnimation.AutoReverse = true;
-                this.iconBlinkAnimation.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
+                this.iconBlinkAnimation.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.Spell.BlinkTime));
             }
 
             // バーのアニメを設定する
-            if ((this.BarWidth > 0 || this.BarHeight > 0) &&
+            if ((this.Spell.BarWidth > 0 || this.Spell.BarHeight > 0) &&
                 this.Spell.BlinkBar)
             {
                 // バーのエフェクト強度を設定する
                 var weekEffect = 0.0;
                 var strongEffect = 1.0;
 
-                var effect1 = !this.IsReverse ? weekEffect : strongEffect;
-                var effect2 = !this.IsReverse ? strongEffect : weekEffect;
+                var effect1 = !this.Spell.IsReverse ? weekEffect : strongEffect;
+                var effect2 = !this.Spell.IsReverse ? strongEffect : weekEffect;
 
                 this.BarKeyframe1.Value = effect2;
                 this.BarKeyframe2.Value = effect1;
 
                 this.barBlinkAnimation.AutoReverse = true;
-                this.barBlinkAnimation.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.BlinkTime));
+                this.barBlinkAnimation.RepeatBehavior = new RepeatBehavior(TimeSpan.FromSeconds(this.Spell.BlinkTime));
             }
         }
 
@@ -546,7 +448,7 @@ namespace ACT.SpecialSpellTimer.Views
                 // 擬似的にマッチ状態にする
                 var now = DateTime.Now;
                 this.Spell.MatchDateTime = now;
-                this.Spell.CompleteScheduledTime = now.AddSeconds(this.Spell.RecastTime);
+                this.Spell.CompleteScheduledTime = now.AddSeconds(this.RecastTime);
 
                 this.Spell.UpdateDone = false;
                 this.Spell.OverDone = false;

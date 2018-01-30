@@ -445,7 +445,6 @@
               <!-- プログレスバー -->
               <Label Margin="0 20 0 0" Content="{DynamicResource Common_ProgressBar}" FontSize="20" FontWeight="Bold" />
               <StackPanel Margin="10 0 0 0">
-                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_VisibleProgressBar}" IsChecked="{Binding Model.ProgressBarVisible, Mode=TwoWay}" />
                 <CheckBox Margin="0 5 0 5" Content="{DynamicResource Common_IsReverseProgressBar}" IsChecked="{Binding Model.IsReverse, Mode=TwoWay}" />
 
                 <StackPanel Margin="0 8 0 8" Orientation="Horizontal">
@@ -486,9 +485,21 @@
               <Label Margin="0 0 0 0" Content="{DynamicResource Common_Icon}" FontSize="20" FontWeight="Bold" />
               <StackPanel Margin="10 0 0 0">
                 <StackPanel Margin="0 8 0 8" Orientation="Horizontal">
-                  <Button Height="72" Width="72" HorizontalAlignment="Left" BorderThickness="1" Background="Transparent" BorderBrush="LightGray" />
-                  <TextBlock Margin="10 0 5 2" Text="Size" VerticalAlignment="Bottom" />
-                  <xctk:DoubleUpDown Value="{Binding Model.SpellIconSize, Mode=TwoWay}" Increment="1" MinWidth="65" VerticalAlignment="Bottom" />
+                  <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="6">
+                    <Image Source="{Binding Model.SpellIconFullPath, Mode=OneWay}" Height="72" Width="72" />
+                  </Border>
+                  <StackPanel VerticalAlignment="Bottom">
+                    <TextBlock Margin="10 0 0 10" HorizontalAlignment="Left">
+                      <Hyperlink Command="{Binding SelectIconCommand, Mode=OneWay}">
+                        <TextBlock Text="{DynamicResource Common_SelectIcon}" />
+                      </Hyperlink>
+                    </TextBlock>
+
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Margin="10 0 5 2" Text="Size" VerticalAlignment="Bottom" />
+                      <xctk:DoubleUpDown Value="{Binding Model.SpellIconSize, Mode=TwoWay}" Increment="1" MinWidth="65" VerticalAlignment="Bottom" />
+                    </StackPanel>
+                  </StackPanel>
                 </StackPanel>
 
                 <CheckBox Margin="0 0 0 0" Content="{DynamicResource Common_HideSpellName}" IsChecked="{Binding Model.HideSpellName, Mode=TwoWay}" />
@@ -499,6 +510,7 @@
               <!-- その他 -->
               <Label Margin="0 20 0 0" Content="{DynamicResource Common_Misc}" FontSize="20" FontWeight="Bold" />
               <StackPanel Margin="10 0 0 0">
+                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_VisibleSpell}" IsChecked="{Binding Model.ProgressBarVisible, Mode=TwoWay}" ToolTip="{DynamicResource Common_VisibleSpellDiscription}" />
                 <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_DontHide}" IsChecked="{Binding Model.DontHide, Mode=TwoWay}" />
               </StackPanel>
             </StackPanel>

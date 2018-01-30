@@ -44,6 +44,41 @@ namespace ACT.SpecialSpellTimer.Forms
 
         public string SelectedIconRelativePath { get; set; }
 
+        public static IconDialogResult ShowDialog(
+            string iconRelativePath,
+            IWin32Window owner = null,
+            Spell spell = null)
+        {
+            var result = new IconDialogResult()
+            {
+                Result = false,
+                Icon = iconRelativePath,
+            };
+
+            if (owner != null)
+            {
+                var font = (owner as Control)?.Font;
+                instance.Font = font;
+                instance.FolderTreeView.Font = font;
+                instance.FolderTreeView.ItemHeight = (int)(font.Size * 3);
+                instance.ClearButton.Font = font;
+                instance.CloseButton.Font = font;
+                instance.IconsFlowLayoutPanel.Font = font;
+            }
+
+            instance.SelectedIconRelativePath = iconRelativePath;
+            instance.ParrentSpell = spell;
+
+            if (instance.ShowDialog(owner) ==
+                DialogResult.OK)
+            {
+                result.Result = true;
+                result.Icon = instance.SelectedIconRelativePath;
+            }
+
+            return result;
+        }
+
         public static Task<IconDialogResult> ShowDialogAsync(
             string iconRelativePath,
             IWin32Window owner = null,
