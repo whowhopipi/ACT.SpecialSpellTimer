@@ -214,16 +214,13 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (this.Spell.OverlapRecastTime)
             {
-                this.RecastTimePanel.SetValue(Grid.ColumnProperty, 0);
-                this.RecastTimePanel.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
-                this.RecastTimePanel.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-                this.RecastTimePanel.Width = this.Spell.SpellIconSize >= 6 ? this.Spell.SpellIconSize - 6 : double.NaN;
-                this.RecastTimePanel.Height = this.RecastTimePanel.Width;
+                this.RecastTimePanelOnIcon.Visibility = Visibility.Visible;
+                this.RecastTimePanel.Visibility = Visibility.Collapsed;
             }
             else
             {
-                this.RecastTimePanel.Width = double.NaN;
-                this.RecastTimePanel.Height = double.NaN;
+                this.RecastTimePanelOnIcon.Visibility = Visibility.Collapsed;
+                this.RecastTimePanel.Visibility = Visibility.Visible;
             }
 
             // ProgressBarを描画する
@@ -448,7 +445,7 @@ namespace ACT.SpecialSpellTimer.Views
                 // 擬似的にマッチ状態にする
                 var now = DateTime.Now;
                 this.Spell.MatchDateTime = now;
-                this.Spell.CompleteScheduledTime = now.AddSeconds(this.RecastTime);
+                this.Spell.CompleteScheduledTime = now.AddSeconds(this.Spell.RecastTime);
 
                 this.Spell.UpdateDone = false;
                 this.Spell.OverDone = false;

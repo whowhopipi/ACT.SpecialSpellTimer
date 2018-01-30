@@ -219,6 +219,8 @@ namespace ACT.SpecialSpellTimer.Views
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
                         Margin = new Thickness(0, 0, 0, 0),
+                        Progress = 1.0d,
+                        RecastTime = 0d,
                     };
 
                     this.SpellTimerControls.Add(spell.ID, c);
@@ -226,6 +228,23 @@ namespace ACT.SpecialSpellTimer.Views
 
                     c.SetValue(Grid.ColumnProperty, 0);
                     c.SetValue(Grid.RowProperty, 0);
+                }
+
+                // Designモードならば必ず再描画する
+                if (spell.IsDesignMode)
+                {
+                    if (spell.MatchDateTime == DateTime.MinValue)
+                    {
+                        c.Update();
+                        c.StartBarAnimation();
+                    }
+                    else
+                    {
+                        if ((DateTime.Now - spell.CompleteScheduledTime).TotalSeconds > 1.0d)
+                        {
+                            spell.MatchDateTime = DateTime.MinValue;
+                        }
+                    }
                 }
 
                 // 一度もログにマッチしていない時はバーを初期化する
@@ -265,14 +284,7 @@ namespace ACT.SpecialSpellTimer.Views
                     }
                 }
 
-                // Designモードならばかならず描画を更新する
-                if (spell.IsDesignMode)
-                {
-                    c.Update();
-                }
-
                 c.Refresh();
-
                 displayList.Add(c);
 
                 if ((Settings.Default.TimeOfHideSpell > 0.0d) &&

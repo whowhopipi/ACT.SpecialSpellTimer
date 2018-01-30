@@ -99,6 +99,7 @@
       <Image
         x:Name="SpellIconImage"
         RenderOptions.BitmapScalingMode="HighQuality"
+        RenderOptions.ClearTypeHint="Enabled"
         RenderOptions.EdgeMode="Unspecified" />
     </DockPanel>
 
@@ -145,6 +146,43 @@
         Text="3.0"
         TextAlignment="Right"
         TextWrapping="NoWrap">
+        <ctrl:OutlineTextBlock.Effect>
+          <DropShadowEffect
+            BlurRadius="{Binding ElementName=RecastTimeTextBlock, Path=StrokeThickness, Converter={StaticResource StrokeThicknessToBlurRadiusConverter}}"
+            RenderingBias="Performance"
+            ShadowDepth="0"
+            Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />
+        </ctrl:OutlineTextBlock.Effect>
+      </ctrl:OutlineTextBlock>
+    </Viewbox>
+
+    <Viewbox
+      x:Name="RecastTimePanelOnIcon"
+      Visibility="Collapsed"
+      Grid.Row="0"
+      Grid.Column="0"
+      Height="{Binding ElementName=SpellIconImage, Path=Height, Mode=OneWay}"
+      Width="{Binding ElementName=SpellIconImage, Path=Width, Mode=OneWay}"
+      RenderOptions.BitmapScalingMode="HighQuality"
+      RenderOptions.ClearTypeHint="Enabled"
+      RenderOptions.EdgeMode="Unspecified"
+      Stretch="Uniform"
+      StretchDirection="DownOnly">
+
+      <ctrl:OutlineTextBlock
+        RenderOptions.BitmapScalingMode="HighQuality"
+        RenderOptions.ClearTypeHint="Enabled"
+        RenderOptions.EdgeMode="Unspecified"
+        Margin="5 0 5 0"
+        Opacity="0.99"
+        Fill="{Binding ElementName=RecastTimeTextBlock, Path=Fill, Mode=OneWay}"
+        Stroke="{Binding ElementName=RecastTimeTextBlock, Path=Stroke, Mode=OneWay}"
+        Text="{Binding ElementName=RecastTimeTextBlock, Path=Text, Mode=OneWay}"
+        FontFamily="{Binding ElementName=RecastTimeTextBlock, Path=FontFamily, Mode=OneWay}"
+        FontSize="{Binding ElementName=RecastTimeTextBlock, Path=FontSize, Mode=OneWay}"
+        FontStyle="{Binding ElementName=RecastTimeTextBlock, Path=FontStyle, Mode=OneWay}"
+        FontWeight="{Binding ElementName=RecastTimeTextBlock, Path=FontWeight, Mode=OneWay}"
+        FontStretch="{Binding ElementName=RecastTimeTextBlock, Path=FontStretch, Mode=OneWay}">
         <ctrl:OutlineTextBlock.Effect>
           <DropShadowEffect
             BlurRadius="{Binding ElementName=RecastTimeTextBlock, Path=StrokeThickness, Converter={StaticResource StrokeThicknessToBlurRadiusConverter}}"

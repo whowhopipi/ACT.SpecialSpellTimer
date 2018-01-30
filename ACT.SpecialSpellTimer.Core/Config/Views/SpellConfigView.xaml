@@ -405,31 +405,31 @@
               <Label Content="{DynamicResource Common_Font}" FontSize="20" FontWeight="Bold" />
               <StackPanel Margin="10 0 0 0">
                 <TextBlock HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextFontCommand}">
+                  <Hyperlink Command="{Binding ChangeFontCommand}">
                     <TextBlock Text="{Binding Model.Font.DisplayText}" />
                   </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                  <Hyperlink Command="{Binding ChangeFontColorCommand}">
                     <TextBlock Text="{DynamicResource Common_FillColor}" />
                   </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextOutlineColorCommand}">
+                  <Hyperlink Command="{Binding ChangeFontOutlineColorCommand}">
                     <TextBlock Text="{DynamicResource Common_StrokeColor}" />
                   </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Margin="0 8 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                  <Hyperlink Command="{Binding ChangeWarnningFontColorCommand}">
                     <TextBlock Text="{DynamicResource Common_WarnningFillColor}" />
                   </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextOutlineColorCommand}">
+                  <Hyperlink Command="{Binding ChangeWarnningFontOutlineColorCommand}">
                     <TextBlock Text="{DynamicResource Common_WarnningStrokeColor}" />
                   </Hyperlink>
                 </TextBlock>
@@ -455,13 +455,13 @@
                 </StackPanel>
 
                 <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                  <Hyperlink Command="{Binding ChangeBarColorCommand}">
                     <TextBlock Text="{DynamicResource Common_FillColor}" />
                   </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextOutlineColorCommand}">
+                  <Hyperlink Command="{Binding ChangeBarOutlineColorCommand}">
                     <TextBlock Text="{DynamicResource Common_StrokeColor}" />
                   </Hyperlink>
                 </TextBlock>
@@ -471,7 +471,7 @@
               <Label Margin="0 20 0 0" Content="{DynamicResource Common_Background}" FontSize="20" FontWeight="Bold" />
               <StackPanel Margin="10 0 0 0">
                 <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                  <Hyperlink Command="{Binding ChangeBackgroundColorCommand}">
                     <TextBlock Text="{DynamicResource Common_FillColor}" />
                   </Hyperlink>
                 </TextBlock>
