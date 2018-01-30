@@ -38,6 +38,9 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                         this.SetZoneSelectors();
 
                         PreconditionSelectors.Instance.SetModel(this.model);
+
+                        this.model.IsDesignMode = this.IsActiveVisualTab;
+                        this.SwitchDesignGrid();
                     }
                     finally
                     {
@@ -58,6 +61,30 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             this.simulateMatchCommand ?? (this.simulateMatchCommand = new DelegateCommand(() =>
             {
             }));
+
+        private bool isActiveVisualTab;
+
+        public bool IsActiveVisualTab
+        {
+            get => this.isActiveVisualTab;
+            set
+            {
+                if (this.SetProperty(ref this.isActiveVisualTab, value))
+                {
+                    this.Model.IsDesignMode = this.isActiveVisualTab;
+                    this.SwitchDesignGrid();
+                }
+            }
+        }
+
+        private void SwitchDesignGrid()
+        {
+            var showGrid =
+                TableCompiler.Instance.SpellList.Any(x => x.IsDesignMode) ||
+                TableCompiler.Instance.TickerList.Any(x => x.IsDesignMode);
+
+            Settings.Default.VisibleDesignGrid = showGrid;
+        }
 
         #region Job filter
 

@@ -23,6 +23,23 @@
   <system:String x:Key="Common_Delete">削除</system:String>
   <system:String x:Key="Common_Import">インポート</system:String>
   <system:String x:Key="Common_Export">エクスポート</system:String>
+
+  <system:String x:Key="Common_Font">フォント</system:String>
+  <system:String x:Key="Common_FillColor">塗りつぶし(内側)のカラー</system:String>
+  <system:String x:Key="Common_StrokeColor">アウトラインのカラー</system:String>
+  <system:String x:Key="Common_WarnningFillColor">警告時の塗りつぶし(内側)のカラー</system:String>
+  <system:String x:Key="Common_WarnningStrokeColor">警告時のアウトラインのカラー</system:String>
+  <system:String x:Key="Common_ProgressBar">プログレスバー</system:String>
+  <system:String x:Key="Common_VisibleProgressBar">プログレスバーを表示する</system:String>
+  <system:String x:Key="Common_IsReverseProgressBar">進行方向を逆にする</system:String>
+  <system:String x:Key="Common_Background">背景</system:String>
+  <system:String x:Key="Common_Icon">アイコン</system:String>
+  <system:String x:Key="Common_VisibleIcon">アイコン</system:String>
+  <system:String x:Key="Common_RecastTimeOverIcon">リキャスト時間をアイコンに重ねる</system:String>
+  <system:String x:Key="Common_ToDarkBetweenRecast">リキャスト中はアイコンを暗くする</system:String>
+  <system:String x:Key="Common_HideSpellName">スペル名を表示しない</system:String>
+  <system:String x:Key="Common_Misc">その他</system:String>
+  <system:String x:Key="Common_DontHide">リキャスト完了後も表示し続ける</system:String>
   
   <system:String x:Key="Tree_EnabledDescription">このトリガを有効にする。</system:String>
   <system:String x:Key="Tree_DesignModeDescription">レイアウト、ビジュアルの調整向けに強制的にオーバーレイを表示します。</system:String>

@@ -69,7 +69,7 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <TabControl Grid.Row="0" BorderThickness="0" Margin="2 2 0 0">
+    <TabControl Grid.Row="0" BorderThickness="0" Margin="2 2 0 0" SelectionChanged="TabControl_SelectionChanged">
 
       <!-- General タブ start -->
       <TabItem Header="General" Padding="20 2 20 2">
@@ -386,7 +386,124 @@
       <!-- General タブ end -->
 
       <!-- Visual タブ start -->
-      <TabItem Header="Visual" Padding="20 2 20 2">
+      <TabItem x:Name="VisualTab" Header="Visual" Padding="20 2 20 2">
+        <ScrollViewer
+          HorizontalScrollBarVisibility="Disabled"
+          VerticalScrollBarVisibility="Auto"
+          Margin="5"
+          Padding="0 0 0 20">
+
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Visualタブの左側 -->
+            <StackPanel Grid.Column="0" Margin="0 0 90 0">
+              <!-- フォント -->
+              <Label Content="{DynamicResource Common_Font}" FontSize="20" FontWeight="Bold" />
+              <StackPanel Margin="10 0 0 0">
+                <TextBlock HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextFontCommand}">
+                    <TextBlock Text="{Binding Model.Font.DisplayText}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_FillColor}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextOutlineColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_StrokeColor}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Margin="0 8 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_WarnningFillColor}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextOutlineColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_WarnningStrokeColor}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <!-- Warning -->
+                <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
+                  <xctk:DoubleUpDown Value="{Binding Model.WarningTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+                  <Label Content="{DynamicResource Spell_WarningTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
+                </StackPanel>
+                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_WarningTimeChangeFontColor}" IsChecked="{Binding Model.ChangeFontColorsWhenWarning}" />
+              </StackPanel>
+
+              <!-- プログレスバー -->
+              <Label Margin="0 20 0 0" Content="{DynamicResource Common_ProgressBar}" FontSize="20" FontWeight="Bold" />
+              <StackPanel Margin="10 0 0 0">
+                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_VisibleProgressBar}" IsChecked="{Binding Model.ProgressBarVisible, Mode=TwoWay}" />
+                <CheckBox Margin="0 5 0 5" Content="{DynamicResource Common_IsReverseProgressBar}" IsChecked="{Binding Model.IsReverse, Mode=TwoWay}" />
+
+                <StackPanel Margin="0 8 0 8" Orientation="Horizontal">
+                  <TextBlock Margin="6 0 5 0" Text="W" VerticalAlignment="Center" />
+                  <xctk:DoubleUpDown Value="{Binding Model.BarWidth, Mode=TwoWay}" Increment="1" MinWidth="80" />
+                  <TextBlock Margin="10 0 5 0" Text="H" VerticalAlignment="Center" />
+                  <xctk:DoubleUpDown Value="{Binding Model.BarHeight, Mode=TwoWay}" Increment="1" MinWidth="80" />
+                </StackPanel>
+
+                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_FillColor}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextOutlineColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_StrokeColor}" />
+                  </Hyperlink>
+                </TextBlock>
+              </StackPanel>
+
+              <!-- 背景色 -->
+              <Label Margin="0 20 0 0" Content="{DynamicResource Common_Background}" FontSize="20" FontWeight="Bold" />
+              <StackPanel Margin="10 0 0 0">
+                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding TargetActionDisplayTextColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_FillColor}" />
+                  </Hyperlink>
+                </TextBlock>
+              </StackPanel>
+            </StackPanel>
+            <!-- Visualタブの左側 end -->
+
+            <!-- Visualタブの右側 -->
+            <StackPanel Grid.Column="1" Margin="0 0 40 0">
+              <!-- アイコン -->
+              <Label Margin="0 0 0 0" Content="{DynamicResource Common_Icon}" FontSize="20" FontWeight="Bold" />
+              <StackPanel Margin="10 0 0 0">
+                <StackPanel Margin="0 8 0 8" Orientation="Horizontal">
+                  <Button Height="72" Width="72" HorizontalAlignment="Left" BorderThickness="1" Background="Transparent" BorderBrush="LightGray" />
+                  <TextBlock Margin="10 0 5 2" Text="Size" VerticalAlignment="Bottom" />
+                  <xctk:DoubleUpDown Value="{Binding Model.SpellIconSize, Mode=TwoWay}" Increment="1" MinWidth="65" VerticalAlignment="Bottom" />
+                </StackPanel>
+
+                <CheckBox Margin="0 0 0 0" Content="{DynamicResource Common_HideSpellName}" IsChecked="{Binding Model.HideSpellName, Mode=TwoWay}" />
+                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_RecastTimeOverIcon}" IsChecked="{Binding Model.OverlapRecastTime, Mode=TwoWay}" />
+                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_ToDarkBetweenRecast}" IsChecked="{Binding Model.ReduceIconBrightness, Mode=TwoWay}" />
+              </StackPanel>
+
+              <!-- その他 -->
+              <Label Margin="0 20 0 0" Content="{DynamicResource Common_Misc}" FontSize="20" FontWeight="Bold" />
+              <StackPanel Margin="10 0 0 0">
+                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_DontHide}" IsChecked="{Binding Model.DontHide, Mode=TwoWay}" />
+              </StackPanel>
+            </StackPanel>
+          </Grid>
+        </ScrollViewer>
       </TabItem>
       <!-- Visual タブ end -->
 
