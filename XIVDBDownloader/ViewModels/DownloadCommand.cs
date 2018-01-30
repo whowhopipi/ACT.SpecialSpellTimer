@@ -75,22 +75,30 @@ namespace XIVDBDownloader.ViewModels
         private void ExecuteCore(
             bool alsoDownloadActionIcons)
         {
-            switch (this.viewModel.DataModel)
+            try
             {
-                case DataModels.Action:
-                    this.DownloadAction(alsoDownloadActionIcons);
-                    break;
+                switch (this.viewModel.DataModel)
+                {
+                    case DataModels.Action:
+                        this.DownloadAction(alsoDownloadActionIcons);
+                        break;
 
-                case DataModels.Instance:
-                    this.DownloadInstance();
-                    break;
+                    case DataModels.Instance:
+                        this.DownloadInstance();
+                        break;
 
-                case DataModels.Placename:
-                    this.DownloadPlacename();
-                    break;
+                    case DataModels.Placename:
+                        this.DownloadPlacename();
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.AppendLineMessages("Download Error!");
+                this.AppendLineMessages(ex.ToString());
             }
         }
 
