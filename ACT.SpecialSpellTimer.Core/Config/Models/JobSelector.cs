@@ -35,7 +35,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         public Action SelectedChangedDelegate { get; set; }
 
-        public string Text => Job.GetName(Settings.Default.UILocale);
+        public string Text => $"[{Job.Role.ToText()}]{Job.GetName(Settings.Default.UILocale)}";
 
         public override string ToString() => this.Text;
     }

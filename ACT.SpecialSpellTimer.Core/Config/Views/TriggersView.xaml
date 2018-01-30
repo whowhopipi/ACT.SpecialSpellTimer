@@ -365,7 +365,6 @@
       x:Name="ContentBorder"
       Grid.Column="2"
       Margin="3 0 0 0"
-      Padding="8"
       BorderThickness="2"
       CornerRadius="2"
       BorderBrush="Transparent">
@@ -373,7 +372,6 @@
         <local:SpellPanelConfigView x:Name="SpellPanelView" Visibility="Collapsed" />
         <local:SpellConfigView x:Name="SpellView" Visibility="Collapsed" />
         <local:TickerConfigView x:Name="TickerView" Visibility="Collapsed" />
-        <local:TagView x:Name="TagView" Visibility="Collapsed" />
       </Grid>
     </Border>
   </Grid>

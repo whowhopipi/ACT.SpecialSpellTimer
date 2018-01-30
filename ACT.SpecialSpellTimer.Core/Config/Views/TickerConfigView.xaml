@@ -26,6 +26,7 @@
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
+  IsTabStop="False"
   mc:Ignorable="d">
 
   <ScrollViewer

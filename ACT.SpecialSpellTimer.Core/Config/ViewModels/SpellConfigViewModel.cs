@@ -11,7 +11,7 @@ using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config.ViewModels
 {
-    public class SpellConfigViewModel :
+    public partial class SpellConfigViewModel :
         BindableBase
     {
         public SpellConfigViewModel() : this(new Spell())
@@ -20,24 +20,44 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         public SpellConfigViewModel(
             Spell model)
-        {
-            this.Model = model;
+            => this.Model = model;
 
-            try
+        private Spell model;
+
+        public Spell Model
+        {
+            get => this.model;
+            set
             {
-                this.isInitialize = true;
-                this.SetJobSelectors();
-                this.SetZoneSelectors();
-            }
-            finally
-            {
-                this.isInitialize = false;
+                if (this.SetProperty(ref this.model, value))
+                {
+                    try
+                    {
+                        this.isInitialize = true;
+                        this.SetJobSelectors();
+                        this.SetZoneSelectors();
+
+                        PreconditionSelectors.Instance.SetModel(this.model);
+                    }
+                    finally
+                    {
+                        this.isInitialize = false;
+                    }
+
+                    this.RaisePropertyChanged(nameof(this.IsJobFiltered));
+                    this.RaisePropertyChanged(nameof(this.IsZoneFiltered));
+                }
             }
         }
 
-        public Spell Model { get; private set; }
-
         private bool isInitialize = false;
+
+        private ICommand simulateMatchCommand;
+
+        public ICommand SimulateMatchCommand =>
+            this.simulateMatchCommand ?? (this.simulateMatchCommand = new DelegateCommand(() =>
+            {
+            }));
 
         #region Job filter
 
@@ -53,21 +73,25 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             {
                 jobSelectors = new List<JobSelector>();
 
-                foreach (var job in Jobs.List.OrderBy(x => x.Role))
+                foreach (var job in
+                    from x in Jobs.List
+                    where
+                    x.ID != JobIDs.Unknown &&
+                    x.ID != JobIDs.ADV
+                    orderby
+                    x.Role.ToSortOrder(),
+                    x.ID
+                    select
+                    x)
                 {
-                    if (job.ID == JobIDs.Unknown ||
-                        job.ID == JobIDs.ADV)
-                    {
-                        continue;
-                    }
-
                     jobSelectors.Add(new JobSelector(job));
                 }
             }
 
+            var jobFilters = this.Model.JobFilter?.Split(',');
             foreach (var selector in this.JobSelectors)
             {
-                selector.IsSelected = this.Model.JobFilter.Contains(selector.Job.ID.ToString());
+                selector.IsSelected = jobFilters.Contains(selector.Job.ID.ToString());
                 selector.SelectedChangedDelegate = this.JobFilterChanged;
             }
         }
@@ -127,7 +151,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 zoneSelectors = new List<ZoneSelector>();
 
                 foreach (var zone in
-                    from x in FFXIVPlugin.Instance.ZoneList
+                    from x in FFXIVPlugin.Instance?.ZoneList
                     orderby
                     x.IsAddedByUser ? 0 : 1,
                     x.Rank,
@@ -143,9 +167,10 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 }
             }
 
+            var zoneFilters = this.Model.ZoneFilter?.Split(',');
             foreach (var selector in this.ZoneSelectors)
             {
-                selector.IsSelected = this.Model.ZoneFilter.Contains(selector.ID);
+                selector.IsSelected = zoneFilters.Contains(selector.ID);
                 selector.SelectedChangedDelegate = this.ZoneFilterChanged;
             }
         }
@@ -189,5 +214,19 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             }));
 
         #endregion Zone filter
+
+        #region Precondition selector
+
+        public PreconditionSelectors PreconditionSelectors => PreconditionSelectors.Instance;
+
+        private ICommand clearPreconditionsCommand;
+
+        public ICommand ClearPreconditionsCommand =>
+            this.clearPreconditionsCommand ?? (this.clearPreconditionsCommand = new DelegateCommand(() =>
+            {
+                PreconditionSelectors.Instance.ClearSelect();
+            }));
+
+        #endregion Precondition selector
     }
 }

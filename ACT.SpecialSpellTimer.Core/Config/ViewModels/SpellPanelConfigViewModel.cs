@@ -24,7 +24,13 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             this.SetupTagsSource();
         }
 
-        public SpellPanel Model { get; set; }
+        private SpellPanel model;
+
+        public SpellPanel Model
+        {
+            get => this.model;
+            set => this.SetProperty(ref this.model, value);
+        }
 
         public bool IsPreset => this.Model.ID == SpellPanel.GeneralPanel.ID;
 

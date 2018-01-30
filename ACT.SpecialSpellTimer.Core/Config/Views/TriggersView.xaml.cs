@@ -56,7 +56,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     this.SpellPanelView.Visibility = Visibility.Visible;
                     this.SpellView.Visibility = Visibility.Collapsed;
                     this.TickerView.Visibility = Visibility.Collapsed;
-                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
 
                 case Spell spell:
@@ -74,7 +73,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     this.SpellPanelView.Visibility = Visibility.Collapsed;
                     this.SpellView.Visibility = Visibility.Visible;
                     this.TickerView.Visibility = Visibility.Collapsed;
-                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
 
                 case Ticker ticker:
@@ -92,7 +90,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     this.SpellPanelView.Visibility = Visibility.Collapsed;
                     this.SpellView.Visibility = Visibility.Collapsed;
                     this.TickerView.Visibility = Visibility.Visible;
-                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
 
                 default:
@@ -100,7 +97,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     this.SpellPanelView.Visibility = Visibility.Collapsed;
                     this.SpellView.Visibility = Visibility.Collapsed;
                     this.TickerView.Visibility = Visibility.Collapsed;
-                    this.TagView.Visibility = Visibility.Collapsed;
                     break;
             }
         }

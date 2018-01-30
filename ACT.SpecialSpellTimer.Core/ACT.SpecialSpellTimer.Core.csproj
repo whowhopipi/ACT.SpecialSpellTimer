@@ -113,10 +113,13 @@
     </Compile>
     <Compile Include="Config\Converters\SpellOrdersConverter.cs" />
     <Compile Include="Config\Models\ExpandedContainer.cs" />
+    <Compile Include="Config\Models\PreconditionSelector.cs" />
     <Compile Include="Config\Models\ZoneSelector.cs" />
     <Compile Include="Config\Models\JobSelector.cs" />
     <Compile Include="Config\Models\TriggersTreeRoot.cs" />
     <Compile Include="Config\ViewModels\InformationsViewModel.cs" />
+    <Compile Include="Config\ViewModels\SpellConfigViewModel.Sound.cs" />
+    <Compile Include="Config\ViewModels\SpellConfigViewModel.Visual.cs" />
     <Compile Include="Config\ViewModels\TickerConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellPanelConfigViewModel.cs" />

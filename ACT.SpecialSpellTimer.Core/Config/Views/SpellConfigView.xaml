@@ -15,7 +15,7 @@
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
   xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-  d:DataContext="{d:DesignInstance Type=vm:SpellConfigViewModel, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=vm:SpellConfigViewModel}"
   d:DesignWidth="800"
   Background="White"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -27,6 +27,7 @@
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
+  IsTabStop="False"
   mc:Ignorable="d">
 
   <UserControl.Resources>
@@ -37,6 +38,7 @@
 
       <Style TargetType="CheckBox">
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
       </Style>
 
       <Style TargetType="TextBox">
@@ -61,174 +63,347 @@
     </ResourceDictionary>
   </UserControl.Resources>
 
-  <ScrollViewer
-    HorizontalScrollBarVisibility="Disabled"
-    VerticalScrollBarVisibility="Auto">
-    <StackPanel>
-      <!-- Name -->
-      <Label Content="{DynamicResource Spell_Name}" />
-      <TextBox Text="{Binding Model.SpellTitle, Mode=TwoWay}" />
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
 
-      <!-- ToInstance -->
-      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToInstance}" IsChecked="{Binding Model.ToInstance}" />
+    <TabControl Grid.Row="0" BorderThickness="0" Margin="2 2 0 0">
 
-      <!-- Priority -->
-      <Label Margin="0 15 0 0" Content="{DynamicResource Spell_SortPriority}" VerticalAlignment="Center" />
-      <xctk:DoubleUpDown Value="{Binding Model.DisplayNo, Mode=TwoWay}" MinWidth="80" Increment="1" HorizontalAlignment="Left" />
+      <!-- General タブ start -->
+      <TabItem Header="General" Padding="20 2 20 2">
+        <ScrollViewer
+          HorizontalScrollBarVisibility="Disabled"
+          VerticalScrollBarVisibility="Auto"
+          Margin="5"
+          Padding="0 0 0 20">
+          <StackPanel>
+            <!-- Name -->
+            <Label Content="{DynamicResource Spell_Name}" />
+            <TextBox Text="{Binding Model.SpellTitle, Mode=TwoWay}" />
 
-      <!-- マッチングワード -->
-      <Label Margin="0 15 0 0" Content="{DynamicResource Spell_TextToMatch}" />
-      <TextBox Text="{Binding Model.Keyword, Mode=TwoWay}" />
+            <!-- ToInstance -->
+            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToInstance}" IsChecked="{Binding Model.ToInstance}" />
 
-      <!-- Use Regex -->
-      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_UserRegex}" IsChecked="{Binding Model.RegexEnabled}" />
+            <!-- Priority -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Spell_SortPriority}" VerticalAlignment="Center" />
+            <xctk:DoubleUpDown Value="{Binding Model.DisplayNo, Mode=TwoWay}" MinWidth="80" Increment="1" HorizontalAlignment="Left" />
 
-      <!-- Recast Time -->
-      <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-        <Label Content="{DynamicResource Spell_RecastTime}" VerticalAlignment="Center" Margin="0 0 10 0" />
-        <xctk:DoubleUpDown Value="{Binding Model.RecastTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-        <Label Content="{DynamicResource Spell_Secounds}" VerticalAlignment="Center" Margin="5 0 0 0" />
-      </StackPanel>
+            <!-- マッチングワード -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Spell_TextToMatch}" />
+            <TextBox Text="{Binding Model.Keyword, Mode=TwoWay}" />
 
-      <!-- 延長のマッチングワード -->
-      <Label Margin="0 15 0 0" Content="{DynamicResource Spell_TextToExtend}" />
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition />
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Label Grid.Column="0" Margin="0 0 5 0" Content="1" />
-        <TextBox Grid.Column="1" Margin="0 0 5 0" Text="{Binding Model.KeywordForExtend1, Mode=TwoWay}" />
-        <xctk:DoubleUpDown Grid.Column="2" Value="{Binding Model.RecastTimeExtending1, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-        <Label Grid.Column="3" Margin="5 0 0 0" Content="{DynamicResource Spell_ExtendSecounds}" VerticalAlignment="Center" />
-      </Grid>
-      <Grid Margin="0 5 0 0">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition />
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Label Grid.Column="0" Margin="0 0 5 0" Content="2" />
-        <TextBox Grid.Column="1" Margin="0 0 5 0" Text="{Binding Model.KeywordForExtend2, Mode=TwoWay}" />
-        <xctk:DoubleUpDown Grid.Column="2" Value="{Binding Model.RecastTimeExtending1, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-        <Label Grid.Column="3" Margin="5 0 0 0" Content="{DynamicResource Spell_ExtendSecounds}" VerticalAlignment="Center" />
-      </Grid>
+            <!-- Use Regex -->
+            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_UserRegex}" IsChecked="{Binding Model.RegexEnabled}" />
 
-      <!-- 元のリキャストタイムを超えて延長する -->
-      <CheckBox Margin="0 10 0 0" Content="{DynamicResource Spell_ExtendRecastTimeOverOrigal}" IsChecked="{Binding Model.ExtendBeyondOriginalRecastTime}" />
+            <!-- Recast Time -->
+            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
+              <Label Content="{DynamicResource Spell_RecastTime}" VerticalAlignment="Center" Margin="0 0 10 0" />
+              <xctk:DoubleUpDown Value="{Binding Model.RecastTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Content="{DynamicResource Spell_Secounds}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            </StackPanel>
 
-      <!-- Recast Time -->
-      <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-        <Label Content="{DynamicResource Spell_UpperLimitOfRecastTime}" VerticalAlignment="Center" Margin="0 0 10 0" />
-        <xctk:DoubleUpDown Value="{Binding Model.UpperLimitOfExtension, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-        <Label Content="{DynamicResource Spell_Secounds}" VerticalAlignment="Center" Margin="5 0 0 0" />
-      </StackPanel>
+            <!-- 延長のマッチングワード -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Spell_TextToExtend}" />
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <Label Grid.Column="0" Margin="0 0 5 0" Content="1" />
+              <TextBox Grid.Column="1" Margin="0 0 5 0" Text="{Binding Model.KeywordForExtend1, Mode=TwoWay}" />
+              <xctk:DoubleUpDown Grid.Column="2" Value="{Binding Model.RecastTimeExtending1, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Grid.Column="3" Margin="5 0 0 0" Content="{DynamicResource Spell_ExtendSecounds}" VerticalAlignment="Center" />
+            </Grid>
+            <Grid Margin="0 5 0 0">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <Label Grid.Column="0" Margin="0 0 5 0" Content="2" />
+              <TextBox Grid.Column="1" Margin="0 0 5 0" Text="{Binding Model.KeywordForExtend2, Mode=TwoWay}" />
+              <xctk:DoubleUpDown Grid.Column="2" Value="{Binding Model.RecastTimeExtending1, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Grid.Column="3" Margin="5 0 0 0" Content="{DynamicResource Spell_ExtendSecounds}" VerticalAlignment="Center" />
+            </Grid>
 
-      <!-- Warning -->
-      <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-        <xctk:DoubleUpDown Value="{Binding Model.WarningTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-        <Label Content="{DynamicResource Spell_WarningTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
-      </StackPanel>
-      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_WarningTimeChangeFontColor}" IsChecked="{Binding Model.ChangeFontColorsWhenWarning}" />
+            <!-- 元のリキャストタイムを超えて延長する -->
+            <CheckBox Margin="0 10 0 0" Content="{DynamicResource Spell_ExtendRecastTimeOverOrigal}" IsChecked="{Binding Model.ExtendBeyondOriginalRecastTime}" />
 
-      <!-- Blink -->
-      <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-        <xctk:DoubleUpDown Value="{Binding Model.BlinkTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-        <Label Content="{DynamicResource Spell_BlinkTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
-      </StackPanel>
-      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_BlinkIcon}" IsChecked="{Binding Model.BlinkIcon}" />
-      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_BlinkBar}" IsChecked="{Binding Model.BlinkTime}" />
+            <!-- Recast Time -->
+            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+              <Label Content="{DynamicResource Spell_UpperLimitOfRecastTime}" VerticalAlignment="Center" Margin="0 0 10 0" />
+              <xctk:DoubleUpDown Value="{Binding Model.UpperLimitOfExtension, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Content="{DynamicResource Spell_Secounds}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            </StackPanel>
 
-      <!-- Jobフィルタ start -->
-      <Expander Margin="0 20 0 0">
-        <Expander.Header>
-          <StackPanel Orientation="Horizontal">
-            <Label Content="{DynamicResource Trigger_JobFilter}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Margin="20 0 0 0" Content="filtered!" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="Crimson" FontStyle="Italic" FontWeight="Black" Visibility="{Binding IsJobFiltered, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
+            <!-- Warning -->
+            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
+              <xctk:DoubleUpDown Value="{Binding Model.WarningTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Content="{DynamicResource Spell_WarningTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            </StackPanel>
+            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_WarningTimeChangeFontColor}" IsChecked="{Binding Model.ChangeFontColorsWhenWarning}" />
+
+            <!-- Blink -->
+            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
+              <xctk:DoubleUpDown Value="{Binding Model.BlinkTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Content="{DynamicResource Spell_BlinkTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            </StackPanel>
+            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_BlinkIcon}" IsChecked="{Binding Model.BlinkIcon}" />
+            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_BlinkBar}" IsChecked="{Binding Model.BlinkTime}" />
+
+            <!-- Jobフィルタ start -->
+            <Expander Margin="0 20 0 0">
+              <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                  <Label Content="{DynamicResource Trigger_JobFilter}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                  <Label Margin="20 0 0 0" Content="filtered!" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="Crimson" FontStyle="Italic" FontWeight="Black" Visibility="{Binding IsJobFiltered, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
+                </StackPanel>
+              </Expander.Header>
+
+              <StackPanel Orientation="Vertical">
+
+                <TextBlock Margin="0 3 0 5">
+                  <Hyperlink
+                    Command="{Binding ClearJobFilterCommand, Mode=OneWay}">
+                    <TextBlock Text="{DynamicResource Trigger_ClearFilter}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <ItemsControl
+                  BorderThickness="0"
+                  ItemsSource="{Binding JobSelectors, Mode=OneWay}"
+                  Height="150">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <CheckBox
+                        Margin="0 2 20 2"
+                        FontSize="15"
+                        Content="{Binding Text, Mode=OneWay}"
+                        IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Expander>
+            <!-- Jobフィルタ end -->
+
+            <!-- Zoneフィルタ start -->
+            <Expander Margin="0 10 0 0">
+              <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                  <Label Content="{DynamicResource Trigger_ZoneFilter}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                  <Label Margin="20 0 0 0" Content="filtered!" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="Crimson" FontStyle="Italic" FontWeight="Black" Visibility="{Binding IsZoneFiltered, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
+                </StackPanel>
+              </Expander.Header>
+
+              <StackPanel Orientation="Vertical">
+                <TextBlock Margin="0 3 0 5">
+                  <Hyperlink
+                    Command="{Binding ClearZoneFilterCommand, Mode=OneWay}">
+                    <TextBlock Text="{DynamicResource Trigger_ClearFilter}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <ScrollViewer
+                  HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Disabled"
+                  Height="400">
+                  <ItemsControl
+                    BorderThickness="0"
+                    ItemsSource="{Binding ZoneSelectors, Mode=OneWay}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Vertical" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <CheckBox
+                          Margin="0 2 20 2"
+                          FontSize="15"
+                          Content="{Binding Name, Mode=OneWay}"
+                          IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center" />
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </ScrollViewer>
+              </StackPanel>
+            </Expander>
+            <!-- Zoneフィルタ end -->
+
+            <!-- Preconditionフィルタ start -->
+            <Expander Margin="0 10 0 0">
+              <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                  <Label Content="{DynamicResource Trigger_Preconditions}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                  <Label Margin="20 0 0 0" Content="filtered!" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="Crimson" FontStyle="Italic" FontWeight="Black" Visibility="{Binding PreconditionSelectors.IsFiltered, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
+                </StackPanel>
+              </Expander.Header>
+
+              <StackPanel Orientation="Vertical">
+                <TextBlock Margin="0 3 0 5">
+                  <Hyperlink
+                    Command="{Binding ClearPreconditionsCommand, Mode=OneWay}">
+                    <TextBlock Text="{DynamicResource Trigger_ClearFilter}" />
+                  </Hyperlink>
+                </TextBlock>
+
+                <Grid Margin="0 5 0 0">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                  </Grid.RowDefinitions>
+
+                  <!-- 稼働スペル -->
+                  <StackPanel Grid.Row="0" Grid.Column="0">
+                    <Label Content="{DynamicResource Trigger_ForMustStartRunningSpell}" />
+                    <ScrollViewer
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Height="250">
+                      <ItemsControl
+                        BorderThickness="0"
+                        Margin="0 5 0 0"
+                        ItemsSource="{Binding PreconditionSelectors.ActiveSpells, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <CheckBox
+                              Margin="2 0 10 0"
+                              Content="{Binding Text, Mode=OneWay}"
+                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                              FontSize="15"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </StackPanel>
+
+                  <!-- 非稼働スペル -->
+                  <StackPanel Grid.Row="0" Grid.Column="1" Margin="10 0 0 0">
+                    <Label Content="{DynamicResource Trigger_ForMustStartStoppingSpell}" />
+                    <ScrollViewer
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Height="250">
+                      <ItemsControl
+                        BorderThickness="0"
+                        Margin="0 5 0 0"
+                        ItemsSource="{Binding PreconditionSelectors.InactiveSpells, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <CheckBox
+                              Margin="2 0 10 0"
+                              Content="{Binding Text, Mode=OneWay}"
+                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                              FontSize="15"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </StackPanel>
+
+                  <!-- 稼働テロップ -->
+                  <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 10 0 0">
+                    <Label Content="{DynamicResource Trigger_ForMustStartRunningTicker}" />
+                    <ScrollViewer
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Height="250">
+                      <ItemsControl
+                        BorderThickness="0"
+                        Margin="0 5 0 0"
+                        ItemsSource="{Binding PreconditionSelectors.ActiveTickers, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <CheckBox
+                              Margin="2 0 10 0"
+                              Content="{Binding Text, Mode=OneWay}"
+                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                              FontSize="15"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </StackPanel>
+
+                  <!-- 非稼働テロップ -->
+                  <StackPanel Grid.Row="1" Grid.Column="1" Margin="10 10 0 0">
+                    <Label Content="{DynamicResource Trigger_ForMustStartStoppingTicker}" />
+                    <ScrollViewer
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto"
+                      Height="250">
+                      <ItemsControl
+                        BorderThickness="0"
+                        Margin="0 5 0 0"
+                        ItemsSource="{Binding PreconditionSelectors.InactiveTickers, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <CheckBox
+                              Margin="2 0 10 0"
+                              Content="{Binding Text, Mode=OneWay}"
+                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                              FontSize="15"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </StackPanel>
+                </Grid>
+              </StackPanel>
+            </Expander>
+            <!-- Preconditionフィルタ end -->
           </StackPanel>
-        </Expander.Header>
+        </ScrollViewer>
+      </TabItem>
+      <!-- General タブ end -->
 
-        <StackPanel Orientation="Vertical">
+      <!-- Visual タブ start -->
+      <TabItem Header="Visual" Padding="20 2 20 2">
+      </TabItem>
+      <!-- Visual タブ end -->
 
-          <TextBlock Margin="0 3 0 5">
-            <Hyperlink
-              Command="{Binding ClearJobFilterCommand, Mode=OneWay}">
-              <TextBlock Text="{DynamicResource Trigger_ClearFilter}" />
-            </Hyperlink>
-          </TextBlock>
+      <!-- Sound タブ start -->
+      <TabItem Header="Sound"  Padding="20 2 20 2">
+      </TabItem>
+      <!-- Sound タブ end -->
+    </TabControl>
 
-          <ItemsControl
-            BorderThickness="0"
-            ItemsSource="{Binding JobSelectors, Mode=OneWay}"
-            Height="150">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <WrapPanel Orientation="Vertical" />
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <CheckBox
-                  Margin="0 3 30 3"
-                  Content="{Binding Text, Mode=OneWay}"
-                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Center" />
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </StackPanel>
-      </Expander>
-      <!-- Jobフィルタ end -->
-
-      <!-- Zoneフィルタ start -->
-      <Expander Margin="0 10 0 0">
-        <Expander.Header>
-          <StackPanel Orientation="Horizontal">
-            <Label Content="{DynamicResource Trigger_ZoneFilter}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-            <Label Margin="20 0 0 0" Content="filtered!" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="Crimson" FontStyle="Italic" FontWeight="Black" Visibility="{Binding IsZoneFiltered, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
-          </StackPanel>
-        </Expander.Header>
-
-        <StackPanel Orientation="Vertical">
-          <TextBlock Margin="0 3 0 5">
-            <Hyperlink
-              Command="{Binding ClearZoneFilterCommand, Mode=OneWay}">
-              <TextBlock Text="{DynamicResource Trigger_ClearFilter}" />
-            </Hyperlink>
-          </TextBlock>
-
-          <ScrollViewer
-            HorizontalScrollBarVisibility="Auto"
-            VerticalScrollBarVisibility="Disabled"
-            Height="400">
-            <ItemsControl
-              BorderThickness="0"
-              ItemsSource="{Binding ZoneSelectors, Mode=OneWay}"
-              ScrollViewer.HorizontalScrollBarVisibility="Auto">
-              <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                  <WrapPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-              </ItemsControl.ItemsPanel>
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <CheckBox
-                  Margin="0 3 30 3"
-                  Content="{Binding Name, Mode=OneWay}"
-                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Center" />
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </ScrollViewer>
-        </StackPanel>
-      </Expander>
-      <!-- Zoneフィルタ end -->
+    <!-- Bottom Buttons start -->
+    <StackPanel Grid.Row="1" Orientation="Horizontal">
+      <TextBlock Margin="5 5 0 5">
+        <Hyperlink Command="{Binding SimulateMatchCommand, Mode=OneWay}">
+          <TextBlock Text="{DynamicResource Trigger_SimulateMatch}" />
+        </Hyperlink>
+      </TextBlock>
     </StackPanel>
-  </ScrollViewer>
+    <!-- Bottom Buttons end -->
+  </Grid>
 </UserControl>

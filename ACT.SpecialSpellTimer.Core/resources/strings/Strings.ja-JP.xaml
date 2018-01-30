@@ -61,7 +61,13 @@
 
   <system:String x:Key="Trigger_JobFilter">ジョブフィルタ</system:String>
   <system:String x:Key="Trigger_ZoneFilter">ゾーンフィルタ</system:String>
+  <system:String x:Key="Trigger_Preconditions">前提条件</system:String>
   <system:String x:Key="Trigger_ClearFilter">フィルタを解除する</system:String>
+  <system:String x:Key="Trigger_ForMustStartRunningSpell">⚪ 稼働を前提とするスペル</system:String>
+  <system:String x:Key="Trigger_ForMustStartStoppingSpell">✖ 非稼働を前提とするスペル</system:String>
+  <system:String x:Key="Trigger_ForMustStartRunningTicker">⚪ 稼働を前提とするテロップ</system:String>
+  <system:String x:Key="Trigger_ForMustStartStoppingTicker">✖ 非稼働を前提とするテロップ</system:String>
+  <system:String x:Key="Trigger_SimulateMatch">擬似的にマッチさせる</system:String>
 
 
   <system:String x:Key="General_ClearCache">終了時にキャッシュをクリアする</system:String>
