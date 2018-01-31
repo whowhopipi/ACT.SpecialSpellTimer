@@ -76,6 +76,17 @@
   <system:String x:Key="Spell_BlinkTime">秒未満のときブリンクさせる</system:String>
   <system:String x:Key="Spell_BlinkIcon">アイコンをブリンクさせる</system:String>
   <system:String x:Key="Spell_BlinkBar">バーをブリンクさせる</system:String>
+  <system:String x:Key="Spell_NoticeOnMatch">マッチしたときの通知</system:String>
+  <system:String x:Key="Spell_NoticeOnOver">マッチｎ秒後の通知</system:String>
+  <system:String x:Key="Spell_NoticeOnBefore">カウント完了ｎ秒前の通知</system:String>
+  <system:String x:Key="Spell_NoticeOnTimeup">カウントが完了したときの通知</system:String>
+  <system:String x:Key="Spell_UseAdvancedNotice">高度な通知を使用する</system:String>
+  <system:String x:Key="Spell_ToMainPlaybackDevice">メイン再生デバイスに通知する</system:String>
+  <system:String x:Key="Spell_ToSubPlaybackDevice">サブ再生デバイスに通知する</system:String>
+  <system:String x:Key="Spell_ToDicordTextChannel">TTSをDISCORDのテキストチャンネルに通知する</system:String>
+  <system:String x:Key="Spell_NoticeOnOverThisScounds">秒後に通知する</system:String>
+  <system:String x:Key="Spell_NoticeOnBeforeThisScounds">秒前に通知する</system:String>
+  
 
   <system:String x:Key="Trigger_JobFilter">ジョブフィルタ</system:String>
   <system:String x:Key="Trigger_ZoneFilter">ゾーンフィルタ</system:String>

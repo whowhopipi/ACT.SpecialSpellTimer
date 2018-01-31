@@ -18,7 +18,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
             set => this.SetProperty(ref this.isEnabled, value);
         }
 
-        private bool toMainDevice;
+        private bool toMainDevice = true;
 
         public bool ToMainDevice
         {
@@ -85,7 +85,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
             if (this.ToDicordTextChat)
             {
-                DiscordBridge.Instance.SendMessageDelegate(tts);
+                DiscordBridge.Instance.SendMessageDelegate?.Invoke(tts);
             }
         }
     }
