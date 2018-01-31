@@ -521,110 +521,127 @@
 
       <!-- Notice タブ start -->
       <TabItem Header="Notice"  Padding="20 2 20 2">
-        <ScrollViewer
-          HorizontalScrollBarVisibility="Disabled"
-          VerticalScrollBarVisibility="Auto"
-          Margin="5"
-          Padding="0 0 0 20">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
 
-          <WrapPanel Orientation="Horizontal">
-            <!-- Match start -->
-            <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-              <Label Content="{DynamicResource Spell_NoticeOnMatch}" FontSize="20" FontWeight="Bold" />
-              <StackPanel Margin="5 10 0 0" Width="450">
-                <Label Content="WAVE" />
-                <ComboBox
-                  ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="FullPath"
-                  SelectedValue="{Binding Model.MatchSound, Mode=TwoWay}" />
-                <Label Margin="0 10 0 0" Content="TTS" />
-                <TextBox Text="{Binding Model.MatchTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
-                <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.MatchAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+          <ScrollViewer
+            Grid.Row="0"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto"
+            Margin="5"
+            Padding="0 0 0 20">
+
+            <WrapPanel Orientation="Horizontal">
+              <!-- Match start -->
+              <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
+                <Label Content="{DynamicResource Spell_NoticeOnMatch}" FontSize="20" FontWeight="Bold" />
+                <StackPanel Margin="5 10 0 0" Width="450">
+                  <Label Content="WAVE" />
+                  <ComboBox
+                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                    DisplayMemberPath="Name"
+                    SelectedValuePath="FullPath"
+                    SelectedValue="{Binding Model.MatchSound, Mode=TwoWay}" />
+                  <Label Margin="0 10 0 0" Content="TTS" />
+                  <TextBox Text="{Binding Model.MatchTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=TwoWay}" />
+                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.MatchAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                  </StackPanel>
                 </StackPanel>
               </StackPanel>
-            </StackPanel>
-            <!-- Match end -->
+              <!-- Match end -->
 
-            <!-- Over start -->
-            <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-              <Label Content="{DynamicResource Spell_NoticeOnOver}" FontSize="20" FontWeight="Bold" />
-              <StackPanel Margin="5 10 0 0" Width="450">
-                <Label Content="WAVE" />
-                <ComboBox
-                  ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="FullPath"
-                  SelectedValue="{Binding Model.OverSound, Mode=TwoWay}" />
-                <Label Margin="0 10 0 0" Content="TTS" />
-                <TextBox Text="{Binding Model.OverTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
-                <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
-                  <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.OverTime, Mode=TwoWay}" />
-                  <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnOverThisScounds}" VerticalAlignment="Center" />
-                </StackPanel>
-                <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.OverAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.OverAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.OverAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.OverAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.OverAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+              <!-- Over start -->
+              <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
+                <Label Content="{DynamicResource Spell_NoticeOnOver}" FontSize="20" FontWeight="Bold" />
+                <StackPanel Margin="5 10 0 0" Width="450">
+                  <Label Content="WAVE" />
+                  <ComboBox
+                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                    DisplayMemberPath="Name"
+                    SelectedValuePath="FullPath"
+                    SelectedValue="{Binding Model.OverSound, Mode=TwoWay}" />
+                  <Label Margin="0 10 0 0" Content="TTS" />
+                  <TextBox Text="{Binding Model.OverTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
+                    <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.OverTime, Mode=TwoWay}" />
+                    <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnOverThisScounds}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.OverAdvancedConfig.IsEnabled, Mode=TwoWay}" />
+                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.OverAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.OverAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.OverAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.OverAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                  </StackPanel>
                 </StackPanel>
               </StackPanel>
-            </StackPanel>
-            <!-- Over end -->
+              <!-- Over end -->
 
-            <!-- Before start -->
-            <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-              <Label Content="{DynamicResource Spell_NoticeOnBefore}" FontSize="20" FontWeight="Bold" />
-              <StackPanel Margin="5 10 0 0" Width="450">
-                <Label Content="WAVE" />
-                <ComboBox
-                  ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="FullPath"
-                  SelectedValue="{Binding Model.BeforeSound, Mode=TwoWay}" />
-                <Label Margin="0 10 0 0" Content="TTS" />
-                <TextBox Text="{Binding Model.BeforeTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
-                <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
-                  <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.BeforeTime, Mode=TwoWay}" />
-                  <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnBeforeThisScounds}" VerticalAlignment="Center" />
-                </StackPanel>
-                <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.BeforeAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.BeforeAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+              <!-- Before start -->
+              <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
+                <Label Content="{DynamicResource Spell_NoticeOnBefore}" FontSize="20" FontWeight="Bold" />
+                <StackPanel Margin="5 10 0 0" Width="450">
+                  <Label Content="WAVE" />
+                  <ComboBox
+                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                    DisplayMemberPath="Name"
+                    SelectedValuePath="FullPath"
+                    SelectedValue="{Binding Model.BeforeSound, Mode=TwoWay}" />
+                  <Label Margin="0 10 0 0" Content="TTS" />
+                  <TextBox Text="{Binding Model.BeforeTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
+                    <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.BeforeTime, Mode=TwoWay}" />
+                    <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnBeforeThisScounds}" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.BeforeAdvancedConfig.IsEnabled, Mode=TwoWay}" />
+                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.BeforeAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                  </StackPanel>
                 </StackPanel>
               </StackPanel>
-            </StackPanel>
-            <!-- Before end -->
+              <!-- Before end -->
 
-            <!-- Timeup start -->
-            <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-              <Label Content="{DynamicResource Spell_NoticeOnTimeup}" FontSize="20" FontWeight="Bold" />
-              <StackPanel Margin="5 10 0 0" Width="450">
-                <Label Content="WAVE" />
-                <ComboBox
-                  ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                  DisplayMemberPath="Name"
-                  SelectedValuePath="FullPath"
-                  SelectedValue="{Binding Model.TimeupSound, Mode=TwoWay}" />
-                <Label Margin="0 10 0 0" Content="TTS" />
-                <TextBox Text="{Binding Model.TimeupTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
-                <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                  <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+              <!-- Timeup start -->
+              <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
+                <Label Content="{DynamicResource Spell_NoticeOnTimeup}" FontSize="20" FontWeight="Bold" />
+                <StackPanel Margin="5 10 0 0" Width="450">
+                  <Label Content="WAVE" />
+                  <ComboBox
+                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                    DisplayMemberPath="Name"
+                    SelectedValuePath="FullPath"
+                    SelectedValue="{Binding Model.TimeupSound, Mode=TwoWay}" />
+                  <Label Margin="0 10 0 0" Content="TTS" />
+                  <TextBox Text="{Binding Model.TimeupTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=TwoWay}" />
+                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                  </StackPanel>
                 </StackPanel>
               </StackPanel>
-            </StackPanel>
-            <!-- Before end -->
-          </WrapPanel>
-        </ScrollViewer>
+              <!-- Before end -->
+            </WrapPanel>
+          </ScrollViewer>
+
+          <StackPanel Margin="5" Grid.Row="1" Orientation="Horizontal">
+            <CheckBox Content="{DynamicResource Spell_UseSequencialTTS}" IsChecked="{Binding Model.IsSequentialTTS, Mode=TwoWay}" HorizontalAlignment="Center" />
+            <TextBlock Margin="15 0 0 0" HorizontalAlignment="Center">
+              <Hyperlink Command="{Binding TestSequencialTTSCommand, Mode=OneWay}">
+                <TextBlock Text="{DynamicResource Spell_TestSequencialTTS}" />
+              </Hyperlink>
+            </TextBlock>
+          </StackPanel>
+        </Grid>
       </TabItem>
       <!-- Notice タブ end -->
     </TabControl>

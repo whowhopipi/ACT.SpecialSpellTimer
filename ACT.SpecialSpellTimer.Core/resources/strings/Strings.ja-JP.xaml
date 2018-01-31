@@ -48,6 +48,16 @@
   
   <system:String x:Key="Tag_Title">タグを付ける</system:String>
 
+  <system:String x:Key="Trigger_JobFilter">ジョブフィルタ</system:String>
+  <system:String x:Key="Trigger_ZoneFilter">ゾーンフィルタ</system:String>
+  <system:String x:Key="Trigger_Preconditions">前提条件</system:String>
+  <system:String x:Key="Trigger_ClearFilter">フィルタを解除する</system:String>
+  <system:String x:Key="Trigger_ForMustStartRunningSpell">⚪ 稼働を前提とするスペル</system:String>
+  <system:String x:Key="Trigger_ForMustStartStoppingSpell">✖ 非稼働を前提とするスペル</system:String>
+  <system:String x:Key="Trigger_ForMustStartRunningTicker">⚪ 稼働を前提とするテロップ</system:String>
+  <system:String x:Key="Trigger_ForMustStartStoppingTicker">✖ 非稼働を前提とするテロップ</system:String>
+  <system:String x:Key="Trigger_SimulateMatch">擬似的にマッチさせる</system:String>
+
   <system:String x:Key="SpellPanel_Name">スペルパネルの名前</system:String>
   <system:String x:Key="SpellPanel_Margin">スペル間のマージン</system:String>
   <system:String x:Key="SpellPanel_FixedLayout">固定レイアウト（残り時間でソートしない、非表示のスペルの間を詰めない）</system:String>
@@ -86,18 +96,9 @@
   <system:String x:Key="Spell_ToDicordTextChannel">TTSをDISCORDのテキストチャンネルに通知する</system:String>
   <system:String x:Key="Spell_NoticeOnOverThisScounds">秒後に通知する</system:String>
   <system:String x:Key="Spell_NoticeOnBeforeThisScounds">秒前に通知する</system:String>
+  <system:String x:Key="Spell_UseSequencialTTS">TTSをシーケンシャルに再生する（同時に再生しない）</system:String>
+  <system:String x:Key="Spell_TestSequencialTTS">シーケンシャルTTSをテストする</system:String>
   
-
-  <system:String x:Key="Trigger_JobFilter">ジョブフィルタ</system:String>
-  <system:String x:Key="Trigger_ZoneFilter">ゾーンフィルタ</system:String>
-  <system:String x:Key="Trigger_Preconditions">前提条件</system:String>
-  <system:String x:Key="Trigger_ClearFilter">フィルタを解除する</system:String>
-  <system:String x:Key="Trigger_ForMustStartRunningSpell">⚪ 稼働を前提とするスペル</system:String>
-  <system:String x:Key="Trigger_ForMustStartStoppingSpell">✖ 非稼働を前提とするスペル</system:String>
-  <system:String x:Key="Trigger_ForMustStartRunningTicker">⚪ 稼働を前提とするテロップ</system:String>
-  <system:String x:Key="Trigger_ForMustStartStoppingTicker">✖ 非稼働を前提とするテロップ</system:String>
-  <system:String x:Key="Trigger_SimulateMatch">擬似的にマッチさせる</system:String>
-
 
   <system:String x:Key="General_ClearCache">終了時にキャッシュをクリアする</system:String>
   <system:String x:Key="General_OpenCacheDirectory">キャッシュディレクトリを開く</system:String>
