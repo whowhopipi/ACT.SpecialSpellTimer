@@ -893,28 +893,15 @@ namespace ACT.SpecialSpellTimer.Forms
             if (this.UpdatePanelButton.Tag == null ||
                 !(bool)(this.UpdatePanelButton.Tag))
             {
-                this.UpdatePanelButton.Click += new EventHandler((s1, e1) =>
+                this.UpdatePanelButton.Click += (x, y) =>
                 {
-                    var left = (double)this.PanelLeftNumericUpDown.Value;
-                    var top = (double)this.PanelTopNumericUpDown.Value;
-                    var margin = (int)this.MarginUpDown.Value;
-                    var horizontal = this.HorizontalLayoutCheckBox.Checked;
-                    var fixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
-                    var sortOrder = this.SpellOrderRadioButtons.FirstOrDefault(x => x.Value.Checked).Key;
-
-                    if (this.DetailPanelGroupBox.Tag != null)
-                    {
-                        var panelNameToUpdate = (string)this.DetailPanelGroupBox.Tag;
-                        SpellsController.Instance.SetPanelSettings(
-                            panelNameToUpdate,
-                            left,
-                            top,
-                            margin,
-                            horizontal,
-                            fixedPositionSpell,
-                            sortOrder);
-                    }
-                });
+                    panelSettings.Left = (double)this.PanelLeftNumericUpDown.Value;
+                    panelSettings.Top = (double)this.PanelTopNumericUpDown.Value;
+                    panelSettings.Margin = (int)this.MarginUpDown.Value;
+                    panelSettings.Horizontal = this.HorizontalLayoutCheckBox.Checked;
+                    panelSettings.FixedPositionSpell = this.FixedPositionSpellCheckBox.Checked;
+                    panelSettings.SortOrder = this.SpellOrderRadioButtons.FirstOrDefault(z => z.Value.Checked).Key;
+                };
 
                 this.UpdatePanelButton.Tag = true;
             }

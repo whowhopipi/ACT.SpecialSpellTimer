@@ -27,7 +27,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// SpellTimerのPanelリスト
         /// </summary>
-        private volatile List<SpellTimerListWindow> spellTimerPanels =
+        private volatile List<SpellTimerListWindow> spellPanels =
             new List<SpellTimerListWindow>();
 
         /// <summary>
@@ -351,49 +351,46 @@ namespace ACT.SpecialSpellTimer
         public void RefreshSpellOverlays(
             IReadOnlyList<Models.Spell> spells)
         {
-            var spellsGroupByPanel =
+            var query =
                 from s in spells
                 where
                 !s.ToInstance ||
                 s.IsDesignMode
-                group s by s.Panel.PanelName.Trim();
+                group s by s.Panel;
 
-            foreach (var panel in spellsGroupByPanel)
+            foreach (var spellsByPanel in query)
             {
-                var f = panel.First();
-
-                var panelName = f.Panel.PanelName;
-                var w = this.FindPanelByName(panelName);
-                if (w == null)
+                var panel = spellsByPanel.Key;
+                var view = panel.View;
+                if (view == null)
                 {
-                    w = new SpellTimerListWindow()
+                    view = new SpellTimerListWindow(panel)
                     {
-                        Title = "SpecialSpellTimer - " + panelName,
-                        PanelName = panelName,
+                        Title = "Spell Panel - " + panel.PanelName
                     };
 
-                    lock (this.spellTimerPanels)
+                    lock (this.spellPanels)
                     {
-                        this.spellTimerPanels.Add(w);
+                        this.spellPanels.Add(view);
                     }
 
                     // クリックスルー？
                     if (Settings.Default.ClickThroughEnabled)
                     {
-                        w.ToTransparentWindow();
+                        view.ToTransparentWindow();
                     }
 
                     /// このパネルに属するスペルを再描画させる
-                    foreach (var spell in panel)
+                    foreach (var spell in spellsByPanel)
                     {
                         spell.UpdateDone = false;
                     }
 
-                    w.Show();
+                    view.Show();
                 }
 
-                w.SpellTimers = panel.ToArray();
-                w.RefreshSpellTimer();
+                view.Spells = spellsByPanel.ToArray();
+                view.RefreshSpellTimer();
             }
         }
 
@@ -406,7 +403,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void ClosePanels()
         {
-            lock (this.spellTimerPanels)
+            lock (this.spellPanels)
             {
                 foreach (var setting in SpellPanelTable.Instance.Table)
                 {
@@ -419,14 +416,14 @@ namespace ACT.SpecialSpellTimer
         {
             var closed = false;
 
-            lock (this.spellTimerPanels)
+            lock (this.spellPanels)
             {
                 var targets = SpellPanelTable.Instance.Table
                     .Where(x => x.ToClose).ToList();
 
                 foreach (var setting in targets)
                 {
-                    var panel = setting.PanelWindow;
+                    var panel = setting.View;
                     if (panel == null)
                     {
                         continue;
@@ -436,12 +433,8 @@ namespace ACT.SpecialSpellTimer
                     {
                         setting.ToClose = false;
 
-                        setting.PanelName = panel.PanelName;
-                        setting.Left = panel.Left;
-                        setting.Top = panel.Top;
-
                         panel.Close();
-                        this.spellTimerPanels.Remove(panel);
+                        this.spellPanels.Remove(panel);
 
                         closed = true;
                     }
@@ -461,13 +454,12 @@ namespace ACT.SpecialSpellTimer
         public void GarbageSpellPanelWindows(
             IReadOnlyList<Models.Spell> spells)
         {
-            lock (this.spellTimerPanels)
+            lock (this.spellPanels)
             {
                 foreach (var panel in SpellPanelTable.Instance.Table)
                 {
                     // スペルリストに存在しないパネルを閉じる
-                    if (!spells.Any(x =>
-                        x.PanelID == panel.ID))
+                    if (!spells.Any(x => x.PanelID == panel.ID))
                     {
                         panel.ToClose = true;
                     }
@@ -480,11 +472,11 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void HidePanels()
         {
-            lock (this.spellTimerPanels)
+            lock (this.spellPanels)
             {
                 foreach (var panel in SpellPanelTable.Instance.Table)
                 {
-                    panel.PanelWindow?.HideOverlay();
+                    panel.View?.HideOverlay();
                 }
             }
         }
@@ -527,22 +519,26 @@ namespace ACT.SpecialSpellTimer
                 SortOrder = SpellOrders.SortRecastTimeASC,
             };
 
-            lock (this.spellTimerPanels)
+            lock (this.spellPanels)
             {
-                var panel = this.FindPanelByName(panelName);
-                if (panel != null)
+                var window = this.spellPanels
+                    .Where(x => x.Config.PanelName == panelName)
+                    .FirstOrDefault();
+                if (window != null)
                 {
-                    settings.Top = panel.Top;
-                    settings.Left = panel.Left;
-                    settings.Margin = panel.SpellMargin;
-                    settings.Horizontal = panel.IsHorizontal;
-                    settings.FixedPositionSpell = panel.SpellPositionFixed;
-                    settings.SortOrder = panel.PanelConfig?.SortOrder ?? SpellOrders.SortRecastTimeASC;
+                    settings.SortOrder = window.Config?.SortOrder ?? SpellOrders.SortRecastTimeASC;
                 }
                 else
                 {
-                    var s = this.FindPanelSettingByName(panelName);
-                    if (s != null)
+                    var s = SpellPanelTable.Instance.Table
+                        .Where(x => x.PanelName == panelName)
+                        .FirstOrDefault();
+
+                    if (s == null)
+                    {
+                        SpellPanelTable.Instance.Table.Add(settings);
+                    }
+                    else
                     {
                         settings = s;
                     }
@@ -553,102 +549,6 @@ namespace ACT.SpecialSpellTimer
             settings.Top = normalize(settings.Top);
             settings.Left = normalize(settings.Left);
             settings.Margin = normalize(settings.Margin);
-
-            return settings;
-        }
-
-        /// <summary>
-        /// Panelの位置を設定する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        /// <param name="left">Left</param>
-        /// <param name="top">Top</param>
-        public void SetPanelSettings(
-            string panelName,
-            double left,
-            double top,
-            double margin,
-            bool horizontal,
-            bool fixedPositionSpell,
-            SpellOrders spellOrder)
-        {
-            lock (this.spellTimerPanels)
-            {
-                var panel = this.spellTimerPanels
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-
-                if (panel != null)
-                {
-                    panel.Left = left;
-                    panel.Top = top;
-                    panel.SpellMargin = margin;
-                    panel.IsHorizontal = horizontal;
-                    panel.SpellPositionFixed = fixedPositionSpell;
-                }
-
-                var panelSettings = SpellPanelTable.Instance.Table
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-
-                if (panelSettings != null)
-                {
-                    panelSettings.Left = left;
-                    panelSettings.Top = top;
-                    panelSettings.Margin = margin;
-                    panelSettings.Horizontal = horizontal;
-                    panelSettings.FixedPositionSpell = fixedPositionSpell;
-                    panelSettings.SortOrder = spellOrder;
-                }
-            }
-        }
-
-        /// <summary>
-        /// SpellTimerListWindowを取得する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        private SpellTimerListWindow FindPanelByName(string panelName)
-        {
-            lock (this.spellTimerPanels)
-            {
-                return this.spellTimerPanels
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-            }
-        }
-
-        /// <summary>
-        /// PanelSettingsRowを取得する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        public SpellPanel FindPanelSettingByName(string panelName)
-        {
-            var settings = new SpellPanel()
-            {
-                PanelName = panelName,
-                Top = 10,
-                Left = 10,
-                Margin = 5,
-                Horizontal = false,
-                FixedPositionSpell = false,
-                SortOrder = SpellOrders.SortRecastTimeASC
-            };
-
-            lock (this.spellTimerPanels)
-            {
-                var s = SpellPanelTable.Instance.Table
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-
-                if (s != null)
-                {
-                    settings = s;
-                }
-                else
-                {
-                    SpellPanelTable.Instance.Table.Add(settings);
-                }
-            }
 
             return settings;
         }

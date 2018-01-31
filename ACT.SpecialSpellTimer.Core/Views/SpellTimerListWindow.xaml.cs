@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Extensions;
@@ -21,60 +20,33 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public SpellTimerListWindow()
+        public SpellTimerListWindow(
+            SpellPanel config)
         {
+            this.Config = config;
+            config.View = this;
+
             this.InitializeComponent();
 
-            this.SpellTimerControls = new Dictionary<long, SpellTimerControl>();
-
-            this.Loaded += this.SpellTimerListWindow_Loaded;
-            this.MouseLeftButtonDown += (s1, e1) => this.DragMove();
-            this.Closed += (s1, e1) =>
+            this.MouseLeftButtonDown += (x, y) => this.DragMove();
+            this.Closed += (x, y) =>
             {
-                if (this.SpellTimerControls != null)
+                if (this.SpellControls != null)
                 {
-                    this.SpellTimerControls.Clear();
+                    this.SpellControls.Clear();
                 }
             };
+
+            this.Opacity = 0;
         }
 
-        /// <summary>
-        /// 水平レイアウトか？
-        /// </summary>
-        public bool IsHorizontal { get; set; }
+        public SpellPanel Config { get; set; }
 
-        /// <summary>
-        /// このPanelの名前
-        /// </summary>
-        public string PanelName { get; set; }
+        public Dictionary<long, SpellTimerControl> SpellControls { get; private set; } = new Dictionary<long, SpellTimerControl>();
 
-        /// <summary>
-        /// パネルの設定
-        /// </summary>
-        public SpellPanel PanelConfig { get; set; }
+        public Spell[] Spells { get; set; }
 
-        /// <summary>
-        /// 扱うSpellTimer間のマージン
-        /// </summary>
-        public double SpellMargin { get; set; }
-
-        /// <summary>
-        /// SpellTimerを固定位置に表示するか？
-        /// </summary>
-        public bool SpellPositionFixed { get; set; }
-
-        /// <summary>
-        /// 扱っているスペルタイマコントロールのリスト
-        /// </summary>
-        public Dictionary<long, SpellTimerControl> SpellTimerControls { get; private set; }
-
-        /// <summary>
-        /// 扱うSpellTimerのリスト
-        /// </summary>
-        public Spell[] SpellTimers { get; set; }
-
-        /// <summary>背景色のBrush</summary>
-        private SolidColorBrush BackgroundBrush { get; set; }
+        private SolidColorBrush backgroundBrush;
 
         /// <summary>
         /// SpellTimerの描画をRefreshする
@@ -82,7 +54,7 @@ namespace ACT.SpecialSpellTimer.Views
         public void RefreshSpellTimer()
         {
             // 表示するものがなければ何もしない
-            if (this.SpellTimers == null)
+            if (this.Spells == null)
             {
                 this.HideOverlay();
                 return;
@@ -90,7 +62,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // 表示対象だけに絞る
             var spells =
-                from x in this.SpellTimers
+                from x in this.Spells
                 where
                 x.ProgressBarVisible
                 select
@@ -98,7 +70,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // タイムアップしたものを除外する
             if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
-                this.PanelConfig.SortOrder != SpellOrders.Fixed)
+                this.Config.SortOrder != SpellOrders.Fixed)
             {
                 spells =
                     from x in spells
@@ -117,7 +89,7 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // ソートする
-            switch (this.PanelConfig.SortOrder)
+            switch (this.Config.SortOrder)
             {
                 case SpellOrders.None:
                 case SpellOrders.SortPriority:
@@ -180,24 +152,24 @@ namespace ACT.SpecialSpellTimer.Views
                         c.G,
                         c.B);
 
-                    this.BackgroundBrush = this.GetBrush(backGroundColor);
+                    this.backgroundBrush = this.GetBrush(backGroundColor);
                 }
             }
 
             // 背景色を設定する
             var nowbackground = this.BaseColorRectangle.Fill as SolidColorBrush;
             if (nowbackground == null ||
-                nowbackground.Color != this.BackgroundBrush.Color)
+                nowbackground.Color != this.backgroundBrush.Color)
             {
-                if (this.BackgroundBrush != null)
+                if (this.backgroundBrush != null)
                 {
-                    this.BaseColorRectangle.Fill = this.BackgroundBrush;
+                    this.BaseColorRectangle.Fill = this.backgroundBrush;
                 }
             }
 
             // 水平レイアウト時のマージンを調整する
             var m = this.BaseGrid.Margin;
-            m.Bottom = this.IsHorizontal ? 0 : 6;
+            m.Bottom = this.Config.Horizontal ? 0 : 6;
             this.BaseGrid.Margin = m;
 
             // スペルタイマコントロールのリストを生成する
@@ -206,9 +178,9 @@ namespace ACT.SpecialSpellTimer.Views
             foreach (var spell in spells)
             {
                 SpellTimerControl c;
-                if (this.SpellTimerControls.ContainsKey(spell.ID))
+                if (this.SpellControls.ContainsKey(spell.ID))
                 {
-                    c = this.SpellTimerControls[spell.ID];
+                    c = this.SpellControls[spell.ID];
                 }
                 else
                 {
@@ -223,7 +195,7 @@ namespace ACT.SpecialSpellTimer.Views
                         RecastTime = 0d,
                     };
 
-                    this.SpellTimerControls.Add(spell.ID, c);
+                    this.SpellControls.Add(spell.ID, c);
                     this.BaseGrid.Children.Add(c);
 
                     c.SetValue(Grid.ColumnProperty, 0);
@@ -288,7 +260,7 @@ namespace ACT.SpecialSpellTimer.Views
                 displayList.Add(c);
 
                 if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
-                    this.SpellPositionFixed)
+                    this.Config.FixedPositionSpell)
                 {
                     if (!spell.IsDesignMode)
                     {
@@ -302,7 +274,7 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // 今回表示しないスペルを隠す
-            foreach (var c in this.SpellTimerControls)
+            foreach (var c in this.SpellControls)
             {
                 if (!spells.Any(x => x.ID == c.Key))
                 {
@@ -312,7 +284,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // 行・列の個数がスペル表示数より小さい場合に拡張する
             // また不要な行・列を削除する
-            if (this.IsHorizontal)
+            if (this.Config.Horizontal)
             {
                 if (this.BaseGrid.RowDefinitions.Count > 1)
                 {
@@ -348,8 +320,8 @@ namespace ACT.SpecialSpellTimer.Views
                 var margin = displaySpell.Margin;
                 if (index != 0)
                 {
-                    margin.Left = this.IsHorizontal ? this.SpellMargin : 0;
-                    margin.Top = this.IsHorizontal ? 0 : this.SpellMargin;
+                    margin.Left = this.Config.Horizontal ? this.Config.Margin : 0;
+                    margin.Top = this.Config.Horizontal ? 0 : this.Config.Margin;
                 }
                 else
                 {
@@ -358,10 +330,10 @@ namespace ACT.SpecialSpellTimer.Views
                 }
 
                 displaySpell.Margin = margin;
-                displaySpell.VerticalAlignment = this.IsHorizontal ? VerticalAlignment.Bottom : VerticalAlignment.Top;
+                displaySpell.VerticalAlignment = this.Config.Horizontal ? VerticalAlignment.Bottom : VerticalAlignment.Top;
 
-                displaySpell.SetValue(Grid.RowProperty, this.IsHorizontal ? 0 : index);
-                displaySpell.SetValue(Grid.ColumnProperty, this.IsHorizontal ? index : 0);
+                displaySpell.SetValue(Grid.RowProperty, this.Config.Horizontal ? 0 : index);
+                displaySpell.SetValue(Grid.ColumnProperty, this.Config.Horizontal ? index : 0);
                 displaySpell.Visibility = Visibility.Visible;
 
                 index++;
@@ -381,33 +353,6 @@ namespace ACT.SpecialSpellTimer.Views
             {
                 this.HideOverlay();
             }
-        }
-
-        /// <summary>
-        /// Loaded
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void SpellTimerListWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Panelの位置を復元する
-            var setting = SpellsController.Instance.FindPanelSettingByName(
-                this.PanelName);
-
-            if (setting != null)
-            {
-                this.PanelConfig = setting;
-
-                this.Left = setting.Left;
-                this.Top = setting.Top;
-                this.SpellMargin = setting.Margin;
-                this.IsHorizontal = setting.Horizontal;
-                this.SpellPositionFixed = setting.FixedPositionSpell;
-
-                setting.PanelWindow = this;
-            }
-
-            this.RefreshSpellTimer();
         }
 
         #region フォーカスを奪わない対策

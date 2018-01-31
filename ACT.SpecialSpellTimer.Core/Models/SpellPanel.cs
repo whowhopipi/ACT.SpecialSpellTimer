@@ -118,7 +118,7 @@ namespace ACT.SpecialSpellTimer.Models
         public bool ToClose { get; set; } = false;
 
         [XmlIgnore]
-        public SpellTimerListWindow PanelWindow { get; set; } = null;
+        public SpellTimerListWindow View { get; set; } = null;
 
         [XmlIgnore]
         public IReadOnlyList<Spell> Spells
