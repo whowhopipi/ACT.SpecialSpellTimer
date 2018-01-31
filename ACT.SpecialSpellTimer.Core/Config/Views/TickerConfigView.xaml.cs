@@ -42,5 +42,12 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             (sender as TextBox)?.SelectAll();
         }
+
+        private void TabControl_SelectionChanged(
+            object sender,
+            SelectionChangedEventArgs e)
+        {
+            this.ViewModel.IsActiveVisualTab = this.VisualTab.IsSelected;
+        }
     }
 }

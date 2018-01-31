@@ -121,6 +121,8 @@
     <Compile Include="Config\ViewModels\InformationsViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellConfigViewModel.Notice.cs" />
     <Compile Include="Config\ViewModels\SpellConfigViewModel.Visual.cs" />
+    <Compile Include="Config\ViewModels\TickerConfigViewModel.Notice.cs" />
+    <Compile Include="Config\ViewModels\TickerConfigViewModel.Visual.cs" />
     <Compile Include="Config\ViewModels\TickerConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellPanelConfigViewModel.cs" />
