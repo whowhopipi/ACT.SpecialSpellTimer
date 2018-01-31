@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Extensions;
@@ -21,12 +20,14 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public TickerWindow()
+        public TickerWindow(
+            Ticker ticker)
         {
+            this.Ticker = ticker;
+
             this.InitializeComponent();
 
-            this.Loaded += this.OnLoaded;
-            this.MouseLeftButtonDown += (s1, e1) => this.DragMove();
+            this.MouseLeftButtonDown += (x, y) => this.DragMove();
 
             this.Opacity = 0;
             this.Topmost = false;
@@ -43,21 +44,12 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// 表示するデータソース
         /// </summary>
-        public Ticker DataSource { get; set; }
+        public Ticker Ticker { get; set; }
 
-        /// <summary>背景色のBrush</summary>
         private SolidColorBrush BackgroundBrush { get; set; }
-
-        /// <summary>バーのBrush</summary>
         private SolidColorBrush BarBrush { get; set; }
-
-        /// <summary>バーのアウトラインのBrush</summary>
         private SolidColorBrush BarOutlineBrush { get; set; }
-
-        /// <summary>フォントのBrush</summary>
         private SolidColorBrush FontBrush { get; set; }
-
-        /// <summary>フォントのアウトラインBrush</summary>
         private SolidColorBrush FontOutlineBrush { get; set; }
 
         /// <summary>
@@ -65,22 +57,22 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void Refresh()
         {
-            if (this.DataSource == null)
+            if (this.Ticker == null)
             {
                 this.HideOverlay();
                 return;
             }
 
             // Brushを生成する
-            var fontColor = this.DataSource.FontColor.FromHTML().ToWPF();
-            var fontOutlineColor = string.IsNullOrWhiteSpace(this.DataSource.FontOutlineColor) ?
+            var fontColor = this.Ticker.FontColor.FromHTML().ToWPF();
+            var fontOutlineColor = string.IsNullOrWhiteSpace(this.Ticker.FontOutlineColor) ?
                 Settings.Default.FontOutlineColor.ToWPF() :
-                this.DataSource.FontOutlineColor.FromHTMLWPF();
+                this.Ticker.FontOutlineColor.FromHTMLWPF();
             var barColor = fontColor;
             var barOutlineColor = fontOutlineColor;
-            var c = this.DataSource.BackgroundColor.FromHTML().ToWPF();
+            var c = this.Ticker.BackgroundColor.FromHTML().ToWPF();
             var backGroundColor = Color.FromArgb(
-                (byte)this.DataSource.BackgroundAlpha,
+                (byte)this.Ticker.BackgroundAlpha,
                 c.R,
                 c.G,
                 c.B);
@@ -101,15 +93,15 @@ namespace ACT.SpecialSpellTimer.Views
 
             var forceVisible =
                 Settings.Default.TelopAlwaysVisible ||
-                this.DataSource.IsDesignMode;
+                this.Ticker.IsDesignMode;
 
             var message = forceVisible ?
-                this.DataSource.Message.Replace(",", Environment.NewLine) :
-                this.DataSource.MessageReplaced.Replace(",", Environment.NewLine);
+                this.Ticker.Message.Replace(",", Environment.NewLine) :
+                this.Ticker.MessageReplaced.Replace(",", Environment.NewLine);
 
             // カウントダウンプレースホルダを置換する
             var count = (
-                this.DataSource.MatchDateTime.AddSeconds(DataSource.Delay + DataSource.DisplayTime) -
+                this.Ticker.MatchDateTime.AddSeconds(Ticker.Delay + Ticker.DisplayTime) -
                 DateTime.Now).TotalSeconds;
 
             if (count < 0.0d)
@@ -123,11 +115,11 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             var countAsText = count.ToString("N1");
-            var displayTimeAsText = this.DataSource.DisplayTime.ToString("N1");
+            var displayTimeAsText = this.Ticker.DisplayTime.ToString("N1");
             countAsText = countAsText.PadLeft(displayTimeAsText.Length, '0');
 
             var count0AsText = count.ToString("N0");
-            var displayTime0AsText = this.DataSource.DisplayTime.ToString("N0");
+            var displayTime0AsText = this.Ticker.DisplayTime.ToString("N0");
             count0AsText = count0AsText.PadLeft(displayTime0AsText.Length, '0');
 
             message = message.Replace("{COUNT}", countAsText);
@@ -135,13 +127,13 @@ namespace ACT.SpecialSpellTimer.Views
 
             // テキストブロックにセットする
             this.TickerControl.Message = message;
-            this.TickerControl.Font = this.DataSource.Font;
+            this.TickerControl.Font = this.Ticker.Font;
             this.TickerControl.FontBrush = this.FontBrush;
             this.TickerControl.FontOutlineBrush = this.FontOutlineBrush;
 
             // プログレスバーを表示しない？
-            if (!this.DataSource.ProgressBarEnabled ||
-                this.DataSource.DisplayTime <= 0)
+            if (!this.Ticker.ProgressBarEnabled ||
+                this.Ticker.DisplayTime <= 0)
             {
                 this.TickerControl.BarVisible = false;
             }
@@ -154,22 +146,6 @@ namespace ACT.SpecialSpellTimer.Views
             this.TickerControl.BarHeight = Settings.Default.ProgressBarSize.Height;
         }
 
-        /// <summary>
-        /// Loaded
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            if (this.DataSource != null)
-            {
-                this.Left = this.DataSource.Left;
-                this.Top = this.DataSource.Top;
-            }
-
-            this.Refresh();
-        }
-
         #region Animation
 
         private DateTime previousMatchDateTime = DateTime.MinValue;
@@ -177,14 +153,14 @@ namespace ACT.SpecialSpellTimer.Views
         public void StartProgressBar(
             bool force = false)
         {
-            if (this.DataSource == null ||
-                !this.DataSource.ProgressBarEnabled)
+            if (this.Ticker == null ||
+                !this.Ticker.ProgressBarEnabled)
             {
                 this.TickerControl.BarVisible = false;
                 return;
             }
 
-            var matchDateTime = this.DataSource.MatchDateTime;
+            var matchDateTime = this.Ticker.MatchDateTime;
 
             // 強制アニメーションならば強制マッチ状態にする
             if (force)
@@ -196,7 +172,7 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             var timeToHide = matchDateTime.AddSeconds(
-                this.DataSource.Delay + this.DataSource.DisplayTime);
+                this.Ticker.Delay + this.Ticker.DisplayTime);
             var timeToLive = (timeToHide - DateTime.Now).TotalMilliseconds;
 
             if (this.previousMatchDateTime != matchDateTime)

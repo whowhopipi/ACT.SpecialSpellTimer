@@ -245,10 +245,9 @@ namespace ACT.SpecialSpellTimer
                     var exists = this.telopWindowList.ContainsKey(telop.ID);
                     w = exists ?
                         this.telopWindowList[telop.ID] :
-                        new TickerWindow()
+                        new TickerWindow(telop)
                         {
                             Title = "Ticker - " + telop.Title,
-                            DataSource = telop
                         };
 
                     if (!exists)
@@ -283,10 +282,6 @@ namespace ACT.SpecialSpellTimer
 
                     return;
                 }
-
-                // 実際のテロップの位置を取得しておく
-                telop.Left = w.Left;
-                telop.Top = w.Top;
 
                 if (telop.MatchDateTime > DateTime.MinValue)
                 {
@@ -354,7 +349,7 @@ namespace ACT.SpecialSpellTimer
             {
                 foreach (var window in this.telopWindowList.Values)
                 {
-                    window.DataSource.ToClose = true;
+                    window.Ticker.ToClose = true;
                 }
             }
         }
@@ -366,7 +361,7 @@ namespace ACT.SpecialSpellTimer
             lock (this.telopWindowList)
             {
                 var targets = this.telopWindowList
-                    .Where(x => x.Value.DataSource.ToClose).ToList();
+                    .Where(x => x.Value.Ticker.ToClose).ToList();
 
                 foreach (var entry in targets)
                 {
@@ -376,17 +371,11 @@ namespace ACT.SpecialSpellTimer
                         continue;
                     }
 
-                    if (window.DataSource.ToClose)
+                    if (window.Ticker.ToClose)
                     {
-                        window.DataSource.ToClose = false;
-
-                        window.DataSource.Left = window.Left;
-                        window.DataSource.Top = window.Top;
-
+                        window.Ticker.ToClose = false;
                         window.Close();
-
                         telopWindowList.Remove(entry.Key);
-
                         closed = true;
                     }
                 }
@@ -409,9 +398,9 @@ namespace ACT.SpecialSpellTimer
             {
                 foreach (var window in this.telopWindowList.Values)
                 {
-                    if (!telops.Any(x => x.ID == window.DataSource.ID))
+                    if (!telops.Any(x => x.ID == window.Ticker.ID))
                     {
-                        window.DataSource.ToClose = true;
+                        window.Ticker.ToClose = true;
                     }
                 }
             }
