@@ -42,6 +42,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
                         // Designモード？（Visualタブがアクティブか？）
                         this.model.IsDesignMode = this.IsActiveVisualTab;
+                        Task.Run(() => TableCompiler.Instance.CompileSpells());
                         this.SwitchDesignGrid();
                     }
                     finally
@@ -62,6 +63,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
         public ICommand SimulateMatchCommand =>
             this.simulateMatchCommand ?? (this.simulateMatchCommand = new DelegateCommand(() =>
             {
+                this.Model.SimulateMatch();
             }));
 
         private bool isActiveVisualTab;
@@ -74,6 +76,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 if (this.SetProperty(ref this.isActiveVisualTab, value))
                 {
                     this.Model.IsDesignMode = this.isActiveVisualTab;
+                    Task.Run(() => TableCompiler.Instance.CompileSpells());
                     this.SwitchDesignGrid();
                 }
             }

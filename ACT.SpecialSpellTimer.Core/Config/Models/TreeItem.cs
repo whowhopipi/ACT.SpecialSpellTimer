@@ -474,8 +474,29 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     return;
                 }
 
-                var itemAsDynamic = item as dynamic;
-                itemAsDynamic.IsDesignMode = !itemAsDynamic.IsDesignMode;
+                var isDesignMode = false;
+                switch (item)
+                {
+                    case SpellPanel p:
+                        p.IsDesignMode = !p.IsDesignMode;
+                        isDesignMode = p.IsDesignMode;
+                        break;
+
+                    case Spell s:
+                        s.IsDesignMode = !s.IsDesignMode;
+                        isDesignMode = s.IsDesignMode;
+                        break;
+
+                    case Ticker t:
+                        t.IsDesignMode = !t.IsDesignMode;
+                        isDesignMode = t.IsDesignMode;
+                        break;
+
+                    case Tag tag:
+                        tag.IsDesignMode = !tag.IsDesignMode;
+                        isDesignMode = tag.IsDesignMode;
+                        break;
+                }
 
                 await Task.Run(() =>
                 {
@@ -487,7 +508,43 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     TableCompiler.Instance.SpellList.Any(x => x.IsDesignMode) ||
                     TableCompiler.Instance.TickerList.Any(x => x.IsDesignMode);
 
-                Settings.Default.VisibleDesignGrid = showGrid & itemAsDynamic.IsDesignMode;
+                if (!Settings.Default.VisibleDesignGrid && !isDesignMode)
+                {
+                    // NO-OP
+                    // 元々OFFで今回個別にOFF化する場合は何もしない
+                }
+                else
+                {
+                    Settings.Default.VisibleDesignGrid = showGrid;
+                }
+            }));
+
+        private ICommand changeEnabledCommand;
+
+        [XmlIgnore]
+        public ICommand ChangeEnabledCommand =>
+            this.changeEnabledCommand ?? (this.changeEnabledCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                if (item == null)
+                {
+                    return;
+                }
+
+                switch (item)
+                {
+                    case Spell s:
+                        Task.Run(() => TableCompiler.Instance.CompileSpells());
+                        break;
+
+                    case Ticker t:
+                        Task.Run(() => TableCompiler.Instance.CompileTickers());
+                        break;
+
+                    default:
+                        Task.Run(() => TableCompiler.Instance.CompileSpells());
+                        Task.Run(() => TableCompiler.Instance.CompileTickers());
+                        break;
+                }
             }));
 
         #endregion Commands

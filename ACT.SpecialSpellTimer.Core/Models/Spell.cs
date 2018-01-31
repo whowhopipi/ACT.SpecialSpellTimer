@@ -982,5 +982,34 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion NewSpell
+
+        public void SimulateMatch()
+        {
+            // 擬似的にマッチ状態にする
+            var now = DateTime.Now;
+            this.MatchDateTime = now;
+            this.CompleteScheduledTime = now.AddSeconds(this.RecastTime);
+
+            this.UpdateDone = false;
+            this.OverDone = false;
+            this.BeforeDone = false;
+            this.TimeupDone = false;
+
+            // マッチ時点のサウンドを再生する
+            SoundController.Instance.Play(this.MatchSound);
+            SoundController.Instance.Play(this.MatchTextToSpeak);
+
+            // DISCORDへ通知する
+            if (this.NotifyToDiscord)
+            {
+                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
+                    this.SpellTitle);
+            }
+
+            // 遅延サウンドタイマを開始する
+            this.StartOverSoundTimer();
+            this.StartBeforeSoundTimer();
+            this.StartTimeupSoundTimer();
+        }
     }
 }

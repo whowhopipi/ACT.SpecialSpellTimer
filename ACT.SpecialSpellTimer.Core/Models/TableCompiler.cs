@@ -420,7 +420,7 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this)
             {
                 var rawTable = new List<Spell>(SpellTable.Instance.Table);
-                foreach (var spell in rawTable.AsParallel())
+                rawTable.AsParallel().ForAll(spell =>
                 {
                     spell.KeywordReplaced = string.Empty;
                     spell.KeywordForExtendReplaced1 = string.Empty;
@@ -431,7 +431,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexForExtendPattern1 = string.Empty;
                     spell.RegexForExtend2 = null;
                     spell.RegexForExtendPattern2 = string.Empty;
-                }
+                });
 
                 this.CompileSpells();
 
@@ -445,7 +445,7 @@ namespace ACT.SpecialSpellTimer.Models
             lock (this)
             {
                 var rawTable = new List<Ticker>(TickerTable.Instance.Table);
-                foreach (var spell in rawTable.AsParallel())
+                rawTable.AsParallel().ForAll(spell =>
                 {
                     spell.KeywordReplaced = string.Empty;
                     spell.KeywordToHideReplaced = string.Empty;
@@ -453,7 +453,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexPattern = string.Empty;
                     spell.RegexToHide = null;
                     spell.RegexPatternToHide = string.Empty;
-                }
+                });
 
                 this.CompileTickers();
             }
