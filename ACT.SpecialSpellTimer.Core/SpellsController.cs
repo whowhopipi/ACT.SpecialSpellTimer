@@ -392,6 +392,15 @@ namespace ACT.SpecialSpellTimer
                 panelWindow.Spells = spellsByPanel.ToArray();
                 panelWindow.RefreshSpellTimer();
             }
+
+            lock (this.spellPanelWindows)
+            {
+                var toHide = this.spellPanelWindows.Where(x => !query.Any(y => y.Key == x.Config.PanelName));
+                foreach (var window in toHide)
+                {
+                    window.HideOverlay();
+                }
+            }
         }
 
         #region Panel controller

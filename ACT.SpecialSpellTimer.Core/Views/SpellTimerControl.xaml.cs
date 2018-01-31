@@ -28,11 +28,6 @@ namespace ACT.SpecialSpellTimer.Views
             this.InitializeComponent();
         }
 
-        /// <summary>
-        /// 設定モードか？
-        /// </summary>
-        public bool IsSettingMode { get; set; } = false;
-
         #region Colors
 
         /// <summary>バーのBrush</summary>
