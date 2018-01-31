@@ -27,7 +27,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// SpellTimerのPanelリスト
         /// </summary>
-        private volatile List<SpellTimerListWindow> spellPanels =
+        private volatile List<SpellTimerListWindow> spellPanelWindows =
             new List<SpellTimerListWindow>();
 
         /// <summary>
@@ -356,28 +356,28 @@ namespace ACT.SpecialSpellTimer
                 where
                 !s.ToInstance ||
                 s.IsDesignMode
-                group s by s.Panel;
+                group s by s.Panel.PanelName.Trim();
 
             foreach (var spellsByPanel in query)
             {
-                var panel = spellsByPanel.Key;
-                var view = panel.View;
-                if (view == null)
+                var panel = spellsByPanel.First().Panel;
+                var panelWindow = panel.PanelWindow;
+                if (panelWindow == null)
                 {
-                    view = new SpellTimerListWindow(panel)
+                    panelWindow = new SpellTimerListWindow(panel)
                     {
-                        Title = "Spell Panel - " + panel.PanelName
+                        Title = "Spell Panel - " + panel.PanelName,
                     };
 
-                    lock (this.spellPanels)
+                    lock (this.spellPanelWindows)
                     {
-                        this.spellPanels.Add(view);
+                        this.spellPanelWindows.Add(panelWindow);
                     }
 
                     // クリックスルー？
                     if (Settings.Default.ClickThroughEnabled)
                     {
-                        view.ToTransparentWindow();
+                        panelWindow.ToTransparentWindow();
                     }
 
                     /// このパネルに属するスペルを再描画させる
@@ -386,11 +386,11 @@ namespace ACT.SpecialSpellTimer
                         spell.UpdateDone = false;
                     }
 
-                    view.Show();
+                    panelWindow.Show();
                 }
 
-                view.Spells = spellsByPanel.ToArray();
-                view.RefreshSpellTimer();
+                panelWindow.Spells = spellsByPanel.ToArray();
+                panelWindow.RefreshSpellTimer();
             }
         }
 
@@ -403,11 +403,11 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void ClosePanels()
         {
-            lock (this.spellPanels)
+            lock (this.spellPanelWindows)
             {
-                foreach (var setting in SpellPanelTable.Instance.Table)
+                foreach (var panel in SpellPanelTable.Instance.Table)
                 {
-                    setting.ToClose = true;
+                    panel.ToClose = true;
                 }
             }
         }
@@ -416,25 +416,25 @@ namespace ACT.SpecialSpellTimer
         {
             var closed = false;
 
-            lock (this.spellPanels)
+            lock (this.spellPanelWindows)
             {
                 var targets = SpellPanelTable.Instance.Table
                     .Where(x => x.ToClose).ToList();
 
-                foreach (var setting in targets)
+                foreach (var panel in targets)
                 {
-                    var panel = setting.View;
-                    if (panel == null)
+                    var window = panel.PanelWindow;
+                    if (window == null)
                     {
                         continue;
                     }
 
-                    if (setting.ToClose)
+                    if (panel.ToClose)
                     {
-                        setting.ToClose = false;
+                        panel.ToClose = false;
 
-                        panel.Close();
-                        this.spellPanels.Remove(panel);
+                        window.Close();
+                        this.spellPanelWindows.Remove(window);
 
                         closed = true;
                     }
@@ -454,7 +454,7 @@ namespace ACT.SpecialSpellTimer
         public void GarbageSpellPanelWindows(
             IReadOnlyList<Models.Spell> spells)
         {
-            lock (this.spellPanels)
+            lock (this.spellPanelWindows)
             {
                 foreach (var panel in SpellPanelTable.Instance.Table)
                 {
@@ -472,11 +472,11 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void HidePanels()
         {
-            lock (this.spellPanels)
+            lock (this.spellPanelWindows)
             {
                 foreach (var panel in SpellPanelTable.Instance.Table)
                 {
-                    panel.View?.HideOverlay();
+                    panel.PanelWindow?.HideOverlay();
                 }
             }
         }
@@ -519,14 +519,14 @@ namespace ACT.SpecialSpellTimer
                 SortOrder = SpellOrders.SortRecastTimeASC,
             };
 
-            lock (this.spellPanels)
+            lock (this.spellPanelWindows)
             {
-                var window = this.spellPanels
+                var panel = this.spellPanelWindows
                     .Where(x => x.Config.PanelName == panelName)
                     .FirstOrDefault();
-                if (window != null)
+                if (panel != null)
                 {
-                    settings.SortOrder = window.Config?.SortOrder ?? SpellOrders.SortRecastTimeASC;
+                    settings.SortOrder = panel.Config?.SortOrder ?? SpellOrders.SortRecastTimeASC;
                 }
                 else
                 {
@@ -534,13 +534,13 @@ namespace ACT.SpecialSpellTimer
                         .Where(x => x.PanelName == panelName)
                         .FirstOrDefault();
 
-                    if (s == null)
+                    if (s != null)
                     {
-                        SpellPanelTable.Instance.Table.Add(settings);
+                        settings = s;
                     }
                     else
                     {
-                        settings = s;
+                        SpellPanelTable.Instance.Table.Add(settings);
                     }
                 }
             }

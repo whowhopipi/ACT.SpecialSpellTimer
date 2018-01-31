@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Extensions;
@@ -15,7 +18,9 @@ namespace ACT.SpecialSpellTimer.Views
     /// <summary>
     /// SpellTimerList Window
     /// </summary>
-    public partial class SpellTimerListWindow : Window
+    public partial class SpellTimerListWindow :
+        Window,
+        INotifyPropertyChanged
     {
         /// <summary>
         /// コンストラクタ
@@ -24,7 +29,7 @@ namespace ACT.SpecialSpellTimer.Views
             SpellPanel config)
         {
             this.Config = config;
-            config.View = this;
+            this.Config.PanelWindow = this;
 
             this.InitializeComponent();
 
@@ -35,9 +40,13 @@ namespace ACT.SpecialSpellTimer.Views
                 {
                     this.SpellControls.Clear();
                 }
-            };
 
-            this.Opacity = 0;
+                if (this.Config != null)
+                {
+                    this.Config.PanelWindow = null;
+                    this.Config = null;
+                }
+            };
         }
 
         public SpellPanel Config { get; set; }
@@ -47,6 +56,12 @@ namespace ACT.SpecialSpellTimer.Views
         public Spell[] Spells { get; set; }
 
         private SolidColorBrush backgroundBrush;
+
+        public SolidColorBrush BackgroundBrush
+        {
+            get => this.backgroundBrush;
+            set => this.SetProperty(ref this.backgroundBrush, value);
+        }
 
         /// <summary>
         /// SpellTimerの描画をRefreshする
@@ -139,7 +154,7 @@ namespace ACT.SpecialSpellTimer.Views
                     break;
             }
 
-            // Brushを生成する
+            // 背景色を設定する
             if (spells.Count() > 0)
             {
                 var s = spells.FirstOrDefault();
@@ -152,18 +167,7 @@ namespace ACT.SpecialSpellTimer.Views
                         c.G,
                         c.B);
 
-                    this.backgroundBrush = this.GetBrush(backGroundColor);
-                }
-            }
-
-            // 背景色を設定する
-            var nowbackground = this.BaseColorRectangle.Fill as SolidColorBrush;
-            if (nowbackground == null ||
-                nowbackground.Color != this.backgroundBrush.Color)
-            {
-                if (this.backgroundBrush != null)
-                {
-                    this.BaseColorRectangle.Fill = this.backgroundBrush;
+                    this.BackgroundBrush = this.GetBrush(backGroundColor);
                 }
             }
 
@@ -375,5 +379,38 @@ namespace ACT.SpecialSpellTimer.Views
         private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         #endregion フォーカスを奪わない対策
+
+        #region INotifyPropertyChanged
+
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged(
+            [CallerMemberName]string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected virtual bool SetProperty<T>(
+            ref T field,
+            T value,
+            [CallerMemberName]string propertyName = null)
+        {
+            if (Equals(field, value))
+            {
+                return false;
+            }
+
+            field = value;
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+
+            return true;
+        }
+
+        #endregion INotifyPropertyChanged
     }
 }
