@@ -231,13 +231,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         public int BarWidth { get; set; }
 
-        [XmlIgnore]
-        public bool BeforeDone { get; set; }
-
-        public string BeforeTextToSpeak { get; set; }
-
-        public double BeforeTime { get; set; } = 0;
-
         public bool ChangeFontColorsWhenWarning { get; set; }
 
         [XmlIgnore]
@@ -281,14 +274,7 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string MatchedLog { get; set; }
 
-        public string MatchTextToSpeak { get; set; }
-
-        [XmlIgnore]
-        public bool OverDone { get; set; }
-
         public bool OverlapRecastTime { get; set; }
-        public string OverTextToSpeak { get; set; }
-        public double OverTime { get; set; } = 0;
         public double RecastTime { get; set; } = 0;
         public double RecastTimeExtending1 { get; set; } = 0;
         public double RecastTimeExtending2 { get; set; } = 0;
@@ -345,11 +331,7 @@ namespace ACT.SpecialSpellTimer.Models
         public Guid[] TimersMustRunningForStart { get; set; }
         public Guid[] TimersMustStoppingForStart { get; set; }
 
-        [XmlIgnore]
-        public bool TimeupDone { get; set; }
-
         public bool TimeupHide { get; set; }
-        public string TimeupTextToSpeak { get; set; }
 
         /// <summary>インスタンス化する</summary>
         /// <remarks>表示テキストが異なる条件でマッチングした場合に当該スペルの新しいインスタンスを生成する</remarks>
@@ -373,7 +355,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public bool IsSequentialTTS { get; set; } = false;
 
-        public delegate void DoPlay(string source);
+        public delegate void DoPlay(string source, AdvancedNoticeConfig noticeConfig = null);
 
         /// <summary>
         /// 再生処理のデリゲート
@@ -390,24 +372,37 @@ namespace ACT.SpecialSpellTimer.Models
         /// <param name="tts">
         /// TTS</param>
         public void Play(
-            string tts)
+            string tts,
+            AdvancedNoticeConfig noticeConfig = null)
         {
             if (this.PlayDelegate != null)
             {
-                this.PlayDelegate(tts);
+                this.PlayDelegate(tts, noticeConfig);
                 return;
+            }
+
+            void play(string source)
+            {
+                if (noticeConfig == null)
+                {
+                    SoundController.Instance.Play(tts);
+                }
+                else
+                {
+                    noticeConfig.PlayWave(tts);
+                }
             }
 
             if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
                 tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
             {
-                SoundController.Instance.Play(tts);
+                play(tts);
                 return;
             }
 
             if (!this.IsSequentialTTS)
             {
-                SoundController.Instance.Play(tts);
+                play(tts);
                 return;
             }
 
@@ -424,7 +419,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                     this.speakTimer.Elapsed += (x, y) =>
                     {
-                        SoundController.Instance.Play(this.tts);
+                        play(tts);
                         this.tts = string.Empty;
                     };
                 }
@@ -452,10 +447,40 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Sequential TTS
 
-        #region Sound files
+        #region to Notice
+
+        public string MatchTextToSpeak { get; set; }
+
+        public AdvancedNoticeConfig MatchAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
+
+        public double OverTime { get; set; } = 0;
+
+        public string OverTextToSpeak { get; set; }
 
         [XmlIgnore]
-        private string beforeSound = string.Empty;
+        public bool OverDone { get; set; }
+
+        public AdvancedNoticeConfig OverAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
+
+        public double BeforeTime { get; set; } = 0;
+
+        public string BeforeTextToSpeak { get; set; }
+
+        [XmlIgnore]
+        public bool BeforeDone { get; set; }
+
+        public AdvancedNoticeConfig BeforeAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
+
+        public string TimeupTextToSpeak { get; set; }
+
+        [XmlIgnore]
+        public bool TimeupDone { get; set; }
+
+        public AdvancedNoticeConfig TimeupAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
+
+        #endregion to Notice
+
+        #region to Notice wave files
 
         [XmlIgnore]
         private string matchSound = string.Empty;
@@ -464,23 +489,10 @@ namespace ACT.SpecialSpellTimer.Models
         private string overSound = string.Empty;
 
         [XmlIgnore]
-        private string timeupSound = string.Empty;
+        private string beforeSound = string.Empty;
 
         [XmlIgnore]
-        public string BeforeSound { get => this.beforeSound; set => this.beforeSound = value; }
-
-        [XmlElement(ElementName = "BeforeSound")]
-        public string BeforeSoundToFile
-        {
-            get => Path.GetFileName(this.beforeSound);
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    this.beforeSound = Path.Combine(SoundController.Instance.WaveDirectory, value);
-                }
-            }
-        }
+        private string timeupSound = string.Empty;
 
         [XmlIgnore]
         public string MatchSound { get => this.matchSound; set => this.matchSound = value; }
@@ -515,6 +527,22 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
+        public string BeforeSound { get => this.beforeSound; set => this.beforeSound = value; }
+
+        [XmlElement(ElementName = "BeforeSound")]
+        public string BeforeSoundToFile
+        {
+            get => Path.GetFileName(this.beforeSound);
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.beforeSound = Path.Combine(SoundController.Instance.WaveDirectory, value);
+                }
+            }
+        }
+
+        [XmlIgnore]
         public string TimeupSound { get => this.timeupSound; set => this.timeupSound = value; }
 
         [XmlElement(ElementName = "TimeupSound")]
@@ -530,7 +558,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        #endregion Sound files
+        #endregion to Notice wave files
 
         #region Performance Monitor
 
@@ -996,8 +1024,8 @@ namespace ACT.SpecialSpellTimer.Models
             this.TimeupDone = false;
 
             // マッチ時点のサウンドを再生する
-            SoundController.Instance.Play(this.MatchSound);
-            SoundController.Instance.Play(this.MatchTextToSpeak);
+            this.MatchAdvancedConfig.PlayWave(this.MatchSound);
+            this.MatchAdvancedConfig.Speak(this.MatchTextToSpeak);
 
             // DISCORDへ通知する
             if (this.NotifyToDiscord)

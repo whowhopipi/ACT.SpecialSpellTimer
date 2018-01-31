@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
@@ -23,44 +22,14 @@ namespace ACT.SpecialSpellTimer.Sound
 
         #endregion Singleton
 
-        private readonly double existYukkuriWorkerInterval = 10000;
-
-        /// <summary>
-        /// ゆっくりが有効かどうか？
-        /// </summary>
-        private volatile bool enabledYukkuri = false;
-
-        private System.Timers.Timer existYukkuriWorker;
-
         #region Begin / End
 
         public void Begin()
         {
-            this.existYukkuriWorker = new System.Timers.Timer();
-            this.existYukkuriWorker.AutoReset = true;
-            this.existYukkuriWorker.Interval = existYukkuriWorkerInterval;
-            this.existYukkuriWorker.Elapsed += (s, e) =>
-            {
-                if (ActGlobals.oFormActMain != null &&
-                    ActGlobals.oFormActMain.Visible &&
-                    ActGlobals.oFormActMain.ActPlugins != null)
-                {
-                    this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
-                        .Where(x =>
-                            x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
-                            x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
-                        .Any();
-                }
-            };
-
-            this.existYukkuriWorker.Start();
         }
 
         public void End()
         {
-            this.existYukkuriWorker?.Stop();
-            this.existYukkuriWorker?.Dispose();
-            this.existYukkuriWorker = null;
         }
 
         #endregion Begin / End
@@ -141,39 +110,19 @@ namespace ACT.SpecialSpellTimer.Sound
                     return;
                 }
 
-                var isWave = source.EndsWith(".wav");
-
-                if (this.enabledYukkuri)
+                // wav？
+                if (source.EndsWith(".wav"))
                 {
-                    Task.Run(() =>
+                    // ファイルが存在する？
+                    if (File.Exists(source))
                     {
-                        if (!isWave)
-                        {
-                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
-                        }
-
-                        ActGlobals.oFormActMain.TTS(source);
-                    });
+                        ActGlobals.oFormActMain.PlaySound(source);
+                    }
                 }
                 else
                 {
-                    Task.Run(() =>
-                    {
-                        // wav？
-                        if (isWave)
-                        {
-                            // ファイルが存在する？
-                            if (File.Exists(source))
-                            {
-                                ActGlobals.oFormActMain.PlaySound(source);
-                            }
-                        }
-                        else
-                        {
-                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
-                            ActGlobals.oFormActMain.TTS(source);
-                        }
-                    });
+                    source = TTSDictionary.Instance.ReplaceWordsTTS(source);
+                    ActGlobals.oFormActMain.TTS(source);
                 }
             }
             catch (Exception ex)
@@ -204,10 +153,7 @@ namespace ACT.SpecialSpellTimer.Sound
             /// ToString()
             /// </summary>
             /// <returns>一般化された文字列</returns>
-            public override string ToString()
-            {
-                return this.Name;
-            }
+            public override string ToString() => this.Name;
         }
     }
 }

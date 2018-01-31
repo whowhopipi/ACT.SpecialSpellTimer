@@ -137,11 +137,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         public double Delay { get; set; } = 0;
 
-        [XmlIgnore]
-        public bool Delayed { get; set; }
-
-        public string DelayTextToSpeak { get; set; }
-
         public double DisplayTime { get; set; } = 0;
 
         public FontInfo Font { get; set; } = FontInfo.DefaultFont;
@@ -172,8 +167,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         [XmlIgnore]
         public string MatchedLog { get; set; }
-
-        public string MatchTextToSpeak { get; set; }
 
         public string Message { get; set; }
 
@@ -213,7 +206,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public bool IsSequentialTTS { get; set; } = false;
 
-        public delegate void DoPlay(string source);
+        public delegate void DoPlay(string source, AdvancedNoticeConfig noticeConfig = null);
 
         /// <summary>
         /// 再生処理のデリゲート
@@ -230,24 +223,37 @@ namespace ACT.SpecialSpellTimer.Models
         /// <param name="tts">
         /// TTS</param>
         public void Play(
-            string tts)
+            string tts,
+            AdvancedNoticeConfig noticeConfig = null)
         {
             if (this.PlayDelegate != null)
             {
-                this.PlayDelegate(tts);
+                this.PlayDelegate(tts, noticeConfig);
                 return;
+            }
+
+            void play(string source)
+            {
+                if (noticeConfig == null)
+                {
+                    SoundController.Instance.Play(tts);
+                }
+                else
+                {
+                    noticeConfig.PlayWave(tts);
+                }
             }
 
             if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
                 tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
             {
-                SoundController.Instance.Play(tts);
+                play(tts);
                 return;
             }
 
             if (!this.IsSequentialTTS)
             {
-                SoundController.Instance.Play(tts);
+                play(tts);
                 return;
             }
 
@@ -264,7 +270,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                     this.speakTimer.Elapsed += (x, y) =>
                     {
-                        SoundController.Instance.Play(this.tts);
+                        play(tts);
                         this.tts = string.Empty;
                     };
                 }
@@ -292,7 +298,22 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Sequential TTS
 
-        #region Soundfiles
+        #region to Notice
+
+        public string MatchTextToSpeak { get; set; }
+
+        [XmlIgnore]
+        public bool Delayed { get; set; }
+
+        public string DelayTextToSpeak { get; set; }
+
+        public AdvancedNoticeConfig MatchAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
+
+        public AdvancedNoticeConfig DelayAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
+
+        #endregion to Notice
+
+        #region to Notice wave files
 
         [XmlIgnore]
         private string delaySound = string.Empty;
@@ -332,7 +353,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        #endregion Soundfiles
+        #endregion to Notice wave files
 
         #region Performance Monitor
 

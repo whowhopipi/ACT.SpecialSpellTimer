@@ -519,10 +519,10 @@
       </TabItem>
       <!-- Visual タブ end -->
 
-      <!-- Sound タブ start -->
-      <TabItem Header="Sound"  Padding="20 2 20 2">
+      <!-- Notice タブ start -->
+      <TabItem Header="Notice"  Padding="20 2 20 2">
       </TabItem>
-      <!-- Sound タブ end -->
+      <!-- Notice タブ end -->
     </TabControl>
 
     <!-- Bottom Buttons start -->
