@@ -27,6 +27,9 @@ namespace ACT.SpecialSpellTimer.Views
 
             this.Loaded += this.OnLoaded;
             this.MouseLeftButtonDown += (s1, e1) => this.DragMove();
+
+            this.Opacity = 0;
+            this.Topmost = false;
         }
 
         private bool overlayVisible;

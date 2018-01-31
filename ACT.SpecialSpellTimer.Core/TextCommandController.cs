@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Text.RegularExpressions;
-
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
@@ -234,10 +233,9 @@ namespace ACT.SpecialSpellTimer
         /// <param name="logLine">ログ1行</param>
         /// <returns>
         /// マッチした？</returns>
-        public static  bool MatchPhoneticCommand(
+        public static bool MatchPhoneticCommand(
             string logLine)
         {
-
             var r = false;
 
             var match = phoneticsCommand.Match(logLine);

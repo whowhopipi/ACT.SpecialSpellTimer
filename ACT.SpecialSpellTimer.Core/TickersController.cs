@@ -30,8 +30,8 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// テロップWindowのリスト
         /// </summary>
-        private ConcurrentDictionary<long, TickerWindow> telopWindowList =
-            new ConcurrentDictionary<long, TickerWindow>();
+        private Dictionary<long, TickerWindow> telopWindowList =
+            new Dictionary<long, TickerWindow>();
 
         /// <summary>
         /// ログとマッチングする
@@ -239,19 +239,23 @@ namespace ACT.SpecialSpellTimer
             void refreshTelop(
                 Ticker telop)
             {
-                if (!this.telopWindowList.TryGetValue(telop.ID, out TickerWindow w))
+                var w = default(TickerWindow);
+                lock (this.telopWindowList)
                 {
-                    w = new TickerWindow()
+                    var exists = this.telopWindowList.ContainsKey(telop.ID);
+                    w = exists ?
+                        this.telopWindowList[telop.ID] :
+                        new TickerWindow()
+                        {
+                            Title = "Ticker - " + telop.Title,
+                            DataSource = telop
+                        };
+
+                    if (!exists)
                     {
-                        Title = "Ticker - " + telop.Title,
-                        DataSource = telop,
-                        Opacity = 0,
-                        Topmost = false,
-                    };
-
-                    this.telopWindowList.TryAdd(telop.ID, w);
-
-                    w.Show();
+                        this.telopWindowList.Add(telop.ID, w);
+                        w.Show();
+                    }
                 }
 
                 // クリックスルーを適用する
@@ -346,9 +350,12 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void CloseTelops()
         {
-            foreach (var window in this.telopWindowList.Values)
+            lock (this.telopWindowList)
             {
-                window.DataSource.ToClose = true;
+                foreach (var window in this.telopWindowList.Values)
+                {
+                    window.DataSource.ToClose = true;
+                }
             }
         }
 
@@ -356,29 +363,32 @@ namespace ACT.SpecialSpellTimer
         {
             var closed = false;
 
-            var targets = this.telopWindowList
-                .Where(x => x.Value.DataSource.ToClose).ToList();
-
-            foreach (var entry in targets)
+            lock (this.telopWindowList)
             {
-                var window = entry.Value;
-                if (window == null)
+                var targets = this.telopWindowList
+                    .Where(x => x.Value.DataSource.ToClose).ToList();
+
+                foreach (var entry in targets)
                 {
-                    continue;
-                }
+                    var window = entry.Value;
+                    if (window == null)
+                    {
+                        continue;
+                    }
 
-                if (window.DataSource.ToClose)
-                {
-                    window.DataSource.ToClose = false;
+                    if (window.DataSource.ToClose)
+                    {
+                        window.DataSource.ToClose = false;
 
-                    window.DataSource.Left = window.Left;
-                    window.DataSource.Top = window.Top;
+                        window.DataSource.Left = window.Left;
+                        window.DataSource.Top = window.Top;
 
-                    window.Close();
+                        window.Close();
 
-                    telopWindowList.TryRemove(entry.Key, out TickerWindow w);
+                        telopWindowList.Remove(entry.Key);
 
-                    closed = true;
+                        closed = true;
+                    }
                 }
             }
 
@@ -395,12 +405,14 @@ namespace ACT.SpecialSpellTimer
         public void GarbageWindows(
             IReadOnlyList<Ticker> telops)
         {
-            // 不要になったWindowを閉じる
-            foreach (var window in this.telopWindowList.Values)
+            lock (this.telopWindowList)
             {
-                if (!telops.Any(x => x.ID == window.DataSource.ID))
+                foreach (var window in this.telopWindowList.Values)
                 {
-                    window.DataSource.ToClose = true;
+                    if (!telops.Any(x => x.ID == window.DataSource.ID))
+                    {
+                        window.DataSource.ToClose = true;
+                    }
                 }
             }
         }
@@ -410,9 +422,12 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void HideTelops()
         {
-            foreach (var telop in this.telopWindowList.Values)
+            lock (this.telopWindowList)
             {
-                telop.HideOverlay();
+                foreach (var telop in this.telopWindowList.Values)
+                {
+                    telop.HideOverlay();
+                }
             }
         }
 
@@ -432,9 +447,13 @@ namespace ACT.SpecialSpellTimer
             left = 0;
             top = 0;
 
-            var telop = this.telopWindowList.ContainsKey(telopID) ?
-                this.telopWindowList[telopID] :
-                null;
+            var telop = default(TickerWindow);
+            lock (this.telopWindowList)
+            {
+                telop = this.telopWindowList.ContainsKey(telopID) ?
+                    this.telopWindowList[telopID] :
+                    null;
+            }
 
             if (telop != null)
             {
@@ -465,9 +484,13 @@ namespace ACT.SpecialSpellTimer
             double left,
             double top)
         {
-            var telop = this.telopWindowList.ContainsKey(telopID) ?
-                this.telopWindowList[telopID] :
-                null;
+            var telop = default(TickerWindow);
+            lock (this.telopWindowList)
+            {
+                telop = this.telopWindowList.ContainsKey(telopID) ?
+                    this.telopWindowList[telopID] :
+                    null;
+            }
 
             if (telop != null)
             {
