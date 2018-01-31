@@ -13,6 +13,7 @@ using ACT.SpecialSpellTimer.Sound;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -385,11 +386,11 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 if (noticeConfig == null)
                 {
-                    SoundController.Instance.Play(tts);
+                    SoundController.Instance.Play(source);
                 }
                 else
                 {
-                    noticeConfig.PlayWave(tts);
+                    noticeConfig.PlayWave(source);
                 }
             }
 
@@ -419,7 +420,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                     this.speakTimer.Elapsed += (x, y) =>
                     {
-                        play(tts);
+                        play(this.tts);
                         this.tts = string.Empty;
                     };
                 }
@@ -429,7 +430,8 @@ namespace ACT.SpecialSpellTimer.Models
                     !tts.EndsWith("、") &&
                     !tts.EndsWith(","))
                 {
-                    tts += ".";
+                    tts += Settings.Default.UILocale == Locales.JA ?
+                        "。" : ".";
                 }
 
                 if (string.IsNullOrEmpty(this.tts))
