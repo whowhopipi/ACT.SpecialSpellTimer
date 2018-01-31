@@ -277,9 +277,16 @@ namespace ACT.SpecialSpellTimer.Config
             }
         }
 
+        private bool clickThroughEnabled;
+
+        public bool ClickThroughEnabled
+        {
+            get => this.clickThroughEnabled;
+            set => this.SetProperty(ref this.clickThroughEnabled, value);
+        }
+
         public bool AutoSortEnabled { get; set; }
         public bool AutoSortReverse { get; set; }
-        public bool ClickThroughEnabled { get; set; }
         public long CombatLogBufferSize { get; set; }
         public bool CombatLogEnabled { get; set; }
         public bool DetectPacketDump { get; set; }

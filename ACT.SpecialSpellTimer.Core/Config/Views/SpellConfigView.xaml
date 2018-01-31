@@ -539,14 +539,23 @@
               <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
                 <Label Content="{DynamicResource Spell_NoticeOnMatch}" FontSize="20" FontWeight="Bold" />
                 <StackPanel Margin="5 10 0 0" Width="450">
-                  <Label Content="WAVE" />
-                  <ComboBox
-                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                    DisplayMemberPath="Name"
-                    SelectedValuePath="FullPath"
-                    SelectedValue="{Binding Model.MatchSound, Mode=TwoWay}" />
+                  <Label DockPanel.Dock="Left" Content="WAVE" />
+                  <DockPanel>
+                    <ComboBox
+                      DockPanel.Dock="Left"
+                      HorizontalAlignment="Left"
+                      Width="415"
+                      ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="FullPath"
+                      SelectedValue="{Binding Model.MatchSound, Mode=TwoWay}" />
+                    <Button DockPanel.Dock="Right" Content="♪" HorizontalAlignment="Right" Width="28" FontWeight="Black" Command="{Binding TestWave1Command}" />
+                  </DockPanel>
                   <Label Margin="0 10 0 0" Content="TTS" />
-                  <TextBox Text="{Binding Model.MatchTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <DockPanel>
+                    <TextBox DockPanel.Dock="Left" Width="415" HorizontalAlignment="Left" Text="{Binding Model.MatchTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                    <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS1Command}" />
+                  </DockPanel>
                   <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=TwoWay}" />
                   <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
                     <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
@@ -562,13 +571,22 @@
                 <Label Content="{DynamicResource Spell_NoticeOnOver}" FontSize="20" FontWeight="Bold" />
                 <StackPanel Margin="5 10 0 0" Width="450">
                   <Label Content="WAVE" />
-                  <ComboBox
-                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                    DisplayMemberPath="Name"
-                    SelectedValuePath="FullPath"
-                    SelectedValue="{Binding Model.OverSound, Mode=TwoWay}" />
+                  <DockPanel>
+                    <ComboBox
+                      DockPanel.Dock="Left"
+                      HorizontalAlignment="Left"
+                      Width="415"
+                      ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="FullPath"
+                      SelectedValue="{Binding Model.OverSound, Mode=TwoWay}" />
+                    <Button DockPanel.Dock="Right" Content="♪" HorizontalAlignment="Right" Width="28" FontWeight="Black" Command="{Binding TestWave2Command}" />
+                  </DockPanel>
                   <Label Margin="0 10 0 0" Content="TTS" />
-                  <TextBox Text="{Binding Model.OverTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <DockPanel>
+                    <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.OverTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                    <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS2Command}" />
+                  </DockPanel>
                   <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
                     <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.OverTime, Mode=TwoWay}" />
                     <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnOverThisScounds}" VerticalAlignment="Center" />
@@ -588,13 +606,22 @@
                 <Label Content="{DynamicResource Spell_NoticeOnBefore}" FontSize="20" FontWeight="Bold" />
                 <StackPanel Margin="5 10 0 0" Width="450">
                   <Label Content="WAVE" />
-                  <ComboBox
-                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                    DisplayMemberPath="Name"
-                    SelectedValuePath="FullPath"
-                    SelectedValue="{Binding Model.BeforeSound, Mode=TwoWay}" />
+                  <DockPanel>
+                    <ComboBox
+                      DockPanel.Dock="Left"
+                      HorizontalAlignment="Left"
+                      Width="415"
+                      ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="FullPath"
+                      SelectedValue="{Binding Model.BeforeSound, Mode=TwoWay}" />
+                    <Button DockPanel.Dock="Right" Content="♪" HorizontalAlignment="Right" Width="28" FontWeight="Black" Command="{Binding TestWave3Command}" />
+                  </DockPanel>
                   <Label Margin="0 10 0 0" Content="TTS" />
-                  <TextBox Text="{Binding Model.BeforeTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <DockPanel>
+                    <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.BeforeTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                    <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS3Command}" />
+                  </DockPanel>
                   <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
                     <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.BeforeTime, Mode=TwoWay}" />
                     <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnBeforeThisScounds}" VerticalAlignment="Center" />
@@ -614,13 +641,22 @@
                 <Label Content="{DynamicResource Spell_NoticeOnTimeup}" FontSize="20" FontWeight="Bold" />
                 <StackPanel Margin="5 10 0 0" Width="450">
                   <Label Content="WAVE" />
-                  <ComboBox
-                    ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                    DisplayMemberPath="Name"
-                    SelectedValuePath="FullPath"
-                    SelectedValue="{Binding Model.TimeupSound, Mode=TwoWay}" />
+                  <DockPanel>
+                    <ComboBox
+                      DockPanel.Dock="Left"
+                      HorizontalAlignment="Left"
+                      Width="415"
+                      ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="FullPath"
+                      SelectedValue="{Binding Model.TimeupSound, Mode=TwoWay}" />
+                    <Button DockPanel.Dock="Right" Content="♪" HorizontalAlignment="Right" Width="28" FontWeight="Black" Command="{Binding TestWave4Command}" />
+                  </DockPanel>
                   <Label Margin="0 10 0 0" Content="TTS" />
-                  <TextBox Text="{Binding Model.TimeupTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                  <DockPanel>
+                    <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.TimeupTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                    <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS4Command}" />
+                  </DockPanel>
                   <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=TwoWay}" />
                   <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
                     <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToMainDevice, Mode=TwoWay}" />

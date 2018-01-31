@@ -386,6 +386,7 @@ namespace ACT.SpecialSpellTimer
                     panelWindow.Show();
                 }
 
+                // クリックスルーを反映する
                 if (this.beforeClickThrough != Settings.Default.ClickThroughEnabled)
                 {
                     this.beforeClickThrough = Settings.Default.ClickThroughEnabled;

@@ -347,18 +347,32 @@
         </TreeView.Resources>
       </TreeView>
 
-      <!-- デザインモード -->
-      <CheckBox
+      <StackPanel 
         Grid.Row="1"
         Margin="5"
-        Padding="5"
-        Content="Design Grid"
-        FontWeight="Bold"
-        Foreground="OrangeRed"
-        VerticalAlignment="Bottom"
-        VerticalContentAlignment="Center"
-        IsChecked="{Binding RootConfig.VisibleDesignGrid, Mode=TwoWay}"
-        ToolTip="{DynamicResource Tree_DesignGridDescription}" />
+        Orientation="Horizontal">
+        <!-- デザインモード -->
+        <CheckBox
+          Padding="5"
+          Content="Design Grid"
+          FontWeight="Bold"
+          Foreground="OrangeRed"
+          VerticalAlignment="Bottom"
+          VerticalContentAlignment="Center"
+          IsChecked="{Binding RootConfig.VisibleDesignGrid, Mode=TwoWay}"
+          ToolTip="{DynamicResource Tree_DesignGridDescription}" />
+
+        <!-- クリックスルー -->
+        <CheckBox
+          Margin="20 0 0 0"
+          Padding="5"
+          Content="Clickthrough"
+          FontWeight="Bold"
+          Foreground="RoyalBlue"
+          VerticalAlignment="Bottom"
+          VerticalContentAlignment="Center"
+          IsChecked="{Binding RootConfig.ClickThroughEnabled, Mode=TwoWay}" />
+      </StackPanel>
     </Grid>
 
     <Border
