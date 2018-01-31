@@ -11,6 +11,7 @@ using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -343,6 +344,8 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
+        private bool beforeClickThrough = false;
+
         /// <summary>
         /// スペルパネルWindowを更新する
         /// </summary>
@@ -374,12 +377,6 @@ namespace ACT.SpecialSpellTimer
                         this.spellPanelWindows.Add(panelWindow);
                     }
 
-                    // クリックスルー？
-                    if (Settings.Default.ClickThroughEnabled)
-                    {
-                        panelWindow.ToTransparentWindow();
-                    }
-
                     /// このパネルに属するスペルを再描画させる
                     foreach (var spell in spellsByPanel)
                     {
@@ -387,6 +384,19 @@ namespace ACT.SpecialSpellTimer
                     }
 
                     panelWindow.Show();
+                }
+
+                if (this.beforeClickThrough != Settings.Default.ClickThroughEnabled)
+                {
+                    this.beforeClickThrough = Settings.Default.ClickThroughEnabled;
+                    if (Settings.Default.ClickThroughEnabled)
+                    {
+                        panelWindow.ToTransparent();
+                    }
+                    else
+                    {
+                        panelWindow.ToNotTransparent();
+                    }
                 }
 
                 panelWindow.Spells = spellsByPanel.ToArray();

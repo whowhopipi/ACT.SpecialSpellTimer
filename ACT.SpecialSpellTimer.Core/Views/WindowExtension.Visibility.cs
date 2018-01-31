@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Views
+namespace ACT.SpecialSpellTimer.Views
 {
     using System.Collections.Concurrent;
     using System.Windows;
@@ -41,51 +41,6 @@
             Color color)
         {
             return GetBrush(color);
-        }
-
-        /// <summary>
-        /// オーバーレイとして非表示にする
-        /// </summary>
-        /// <param name="x">Window</param>
-        public static void HideOverlay(
-            this Window x)
-        {
-            lock (x)
-            {
-                if (x.Opacity > 0d)
-                {
-                    x.Opacity = 0d;
-                    x.Topmost = false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// オーバーレイとして表示する
-        /// </summary>
-        /// <param name="x">Window</param>
-        public static bool ShowOverlay(
-            this Window x)
-        {
-            lock (x)
-            {
-                var changed = false;
-
-                if (x.Opacity <= 0d)
-                {
-                    var targetOpacity = (100d - Settings.Default.Opacity) / 100d;
-
-                    if (x.Opacity != targetOpacity)
-                    {
-                        x.Opacity = targetOpacity;
-                        changed = true;
-                    }
-
-                    x.Topmost = true;
-                }
-
-                return changed;
-            }
         }
 
         /// <summary>

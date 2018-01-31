@@ -10,6 +10,7 @@ using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -226,6 +227,8 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
+        private bool beforeChickThrough = false;
+
         /// <summary>
         /// Windowをリフレッシュする
         /// </summary>
@@ -240,7 +243,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     w = new TickerWindow()
                     {
-                        Title = "OnePointTelop - " + telop.Title,
+                        Title = "Ticker - " + telop.Title,
                         DataSource = telop,
                         Opacity = 0,
                         Topmost = false,
@@ -248,12 +251,21 @@ namespace ACT.SpecialSpellTimer
 
                     this.telopWindowList.TryAdd(telop.ID, w);
 
+                    w.Show();
+                }
+
+                // クリックスルーを適用する
+                if (this.beforeChickThrough != Settings.Default.ClickThroughEnabled)
+                {
+                    this.beforeChickThrough = Settings.Default.ClickThroughEnabled;
                     if (Settings.Default.ClickThroughEnabled)
                     {
-                        w.ToTransparentWindow();
+                        w.ToTransparent();
                     }
-
-                    w.Show();
+                    else
+                    {
+                        w.ToNotTransparent();
+                    }
                 }
 
                 if (telop.IsDesignMode ||

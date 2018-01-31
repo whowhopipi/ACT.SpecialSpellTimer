@@ -7,6 +7,7 @@ using System.Windows.Media;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer.Views
 {
@@ -14,7 +15,8 @@ namespace ACT.SpecialSpellTimer.Views
     /// ワンポイントテロップWindow
     /// </summary>
     public partial class TickerWindow :
-        Window
+        Window,
+        IOverlay
     {
         /// <summary>
         /// コンストラクタ
@@ -25,6 +27,14 @@ namespace ACT.SpecialSpellTimer.Views
 
             this.Loaded += this.OnLoaded;
             this.MouseLeftButtonDown += (s1, e1) => this.DragMove();
+        }
+
+        private bool overlayVisible;
+
+        public bool OverlayVisible
+        {
+            get => this.overlayVisible;
+            set => this.SetOverlayVisible(ref this.overlayVisible, value, (100d - Settings.Default.Opacity) / 100d);
         }
 
         /// <summary>

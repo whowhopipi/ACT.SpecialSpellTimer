@@ -315,7 +315,6 @@
       <DependentUpon>TickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindowExtension.Visibility.cs" />
-    <Compile Include="Views\WindowExtension.Transparent.cs" />
     <Compile Include="Views\SpellTimerListWindow.xaml.cs">
       <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
     </Compile>

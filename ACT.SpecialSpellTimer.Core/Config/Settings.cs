@@ -15,6 +15,7 @@ using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
+using FFXIV.Framework.WPF.Views;
 using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config
@@ -264,7 +265,7 @@ namespace ACT.SpecialSpellTimer.Config
                     if (this.visibleDesignGrid)
                     {
                         this.gridView = new DesignGridView();
-                        this.gridView.ToTransparentWindow();
+                        this.gridView.ToTransparent();
                         this.gridView.Show();
                         this.gridView.ShowOverlay();
                     }
