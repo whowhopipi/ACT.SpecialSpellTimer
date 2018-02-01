@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,7 +7,6 @@ using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
-using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.WPF.Views;
 
@@ -122,14 +120,8 @@ namespace ACT.SpecialSpellTimer
                             // マッチング計測終了
                             telop.EndMatching();
 
-                            telop.Play(telop.MatchSound);
-                            telop.Play(telop.MatchTextToSpeak);
-
-                            // DISCORDに通知する？
-                            if (telop.NotifyToDiscord)
-                            {
-                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(messageReplaced);
-                            }
+                            telop.Play(telop.MatchSound, telop.MatchAdvancedConfig);
+                            telop.Play(telop.MatchTextToSpeak, telop.MatchAdvancedConfig);
 
                             matched = true;
                         }
@@ -167,17 +159,11 @@ namespace ACT.SpecialSpellTimer
                         // マッチング計測終了
                         telop.EndMatching();
 
-                        telop.Play(telop.MatchSound);
+                        telop.Play(telop.MatchSound, telop.MatchAdvancedConfig);
                         if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
                         {
                             var tts = match.Result(telop.MatchTextToSpeak);
-                            telop.Play(tts);
-                        }
-
-                        // DISCORDに通知する？
-                        if (telop.NotifyToDiscord)
-                        {
-                            DiscordBridge.Instance.SendMessageDelegate?.Invoke(messageReplaced);
+                            telop.Play(tts, telop.MatchAdvancedConfig);
                         }
 
                         matched = true;

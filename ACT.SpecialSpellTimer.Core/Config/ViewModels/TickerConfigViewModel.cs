@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.FFXIVHelper;
@@ -44,6 +49,9 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                         this.model.IsDesignMode = this.IsActiveVisualTab;
                         Task.Run(() => TableCompiler.Instance.CompileTickers());
                         this.SwitchDesignGrid();
+
+                        // タグを初期化する
+                        this.SetupTagsSource();
                     }
                     finally
                     {
@@ -57,6 +65,15 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
         }
 
         private bool isInitialize = false;
+
+        private ICommand simulateMatchCommand;
+
+        public ICommand SimulateMatchCommand =>
+            this.simulateMatchCommand ?? (this.simulateMatchCommand = new DelegateCommand(() =>
+            {
+                this.Model.SimulateMatch();
+            }));
+
         private bool isActiveVisualTab;
 
         public bool IsActiveVisualTab
@@ -251,5 +268,59 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             }));
 
         #endregion Precondition selector
+
+        #region Tags
+
+        private ICommand addTagsCommand;
+
+        public ICommand AddTagsCommand =>
+            this.addTagsCommand ?? (this.addTagsCommand = new DelegateCommand<Guid?>(targetItemID =>
+            {
+                if (!targetItemID.HasValue)
+                {
+                    return;
+                }
+
+                new TagView()
+                {
+                    TargetItemID = targetItemID.Value,
+                }.Show();
+            }));
+
+        public ICollectionView Tags => this.TagsSource.View;
+
+        private CollectionViewSource TagsSource;
+
+        private void SetupTagsSource()
+        {
+            this.TagsSource = new CollectionViewSource()
+            {
+                Source = TagTable.Instance.ItemTags,
+                IsLiveFilteringRequested = true,
+                IsLiveSortingRequested = true,
+            };
+
+            this.TagsSource.Filter += (x, y) =>
+                y.Accepted =
+                    (y.Item as ItemTags).ItemID == this.Model.Guid;
+
+            this.TagsSource.SortDescriptions.AddRange(new[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = "Tag.SortPriority",
+                    Direction = ListSortDirection.Descending
+                },
+                new SortDescription()
+                {
+                    PropertyName = "Tag.Name",
+                    Direction = ListSortDirection.Ascending
+                },
+            });
+
+            this.RaisePropertyChanged(nameof(this.Tags));
+        }
+
+        #endregion Tags
     }
 }

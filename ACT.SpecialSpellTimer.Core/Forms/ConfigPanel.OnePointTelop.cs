@@ -227,7 +227,6 @@ namespace ACT.SpecialSpellTimer.Forms
                 Color.FromArgb(src.BackgroundAlpha, src.BackgroundColor.FromHTML());
 
             this.TemporarilyDisplayTickerCheckBox.Checked = src.IsDesignMode;
-            this.TelopNotifyToDiscordCheckBox.Checked = src.NotifyToDiscord;
 
             this.TelopVisualSetting.RefreshSampleImage();
 
@@ -329,7 +328,6 @@ namespace ACT.SpecialSpellTimer.Forms
                     nr.ZoneFilter = baseRow.ZoneFilter;
                     nr.TimersMustRunningForStart = baseRow.TimersMustRunningForStart;
                     nr.TimersMustStoppingForStart = baseRow.TimersMustStoppingForStart;
-                    nr.NotifyToDiscord = baseRow.NotifyToDiscord;
                     nr.IsSequentialTTS = baseRow.IsSequentialTTS;
                 }
             }
@@ -500,7 +498,6 @@ namespace ACT.SpecialSpellTimer.Forms
                 src.RegexEnabled = this.TelopRegexEnabledCheckBox.Checked;
                 src.Delay = (double)this.TelopDelayNumericUpDown.Value;
                 src.DisplayTime = (double)this.DisplayTimeNumericUpDown.Value;
-                src.NotifyToDiscord = this.TelopNotifyToDiscordCheckBox.Checked;
                 src.AddMessageEnabled = this.EnabledAddMessageCheckBox.Checked;
                 src.ProgressBarEnabled = this.TelopProgressBarEnabledCheckBox.Checked;
                 src.FontColor = this.TelopVisualSetting.FontColor.ToHTML();

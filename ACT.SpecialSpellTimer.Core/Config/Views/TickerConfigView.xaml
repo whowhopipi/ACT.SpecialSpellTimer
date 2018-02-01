@@ -79,81 +79,99 @@
           Padding="0 0 0 20">
           <StackPanel>
             <!-- Name -->
-            <Label Content="{DynamicResource Spell_Name}" />
-            <TextBox Text="{Binding Model.SpellTitle, Mode=TwoWay}" />
+            <Label Content="{DynamicResource Ticker_Name}" />
+            <TextBox Text="{Binding Model.Title, Mode=TwoWay}" />
 
-            <!-- ToInstance -->
-            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToInstance}" IsChecked="{Binding Model.ToInstance}" />
+            <!-- Tags =>> -->
+            <StackPanel x:Name="TagPanel">
+              <ItemsControl
+                Margin="0 5 0 4"
+                ItemsSource="{Binding Tags, Mode=OneWay}">
 
-            <!-- Priority -->
-            <Label Margin="0 15 0 0" Content="{DynamicResource Spell_SortPriority}" VerticalAlignment="Center" />
-            <xctk:DoubleUpDown Value="{Binding Model.DisplayNo, Mode=TwoWay}" MinWidth="80" Increment="1" HorizontalAlignment="Left" />
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type triggerModel:ItemTags}">
+                    <Border Margin="1" Padding="1" CornerRadius="2" BorderThickness="1" BorderBrush="Orange">
+                      <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding Tag.Name, Mode=OneWay}" FontSize="14" Margin="2 0 0 0" />
+                        <Button
+                          Content="X"
+                          Margin="5 0 2 0"
+                          Command="{Binding RemoveTagCommand, Mode=OneWay}"
+                          CommandParameter="{Binding}"
+                          Foreground="LightGray"
+                          Background="Transparent"
+                          BorderBrush="Transparent"
+                          BorderThickness="0"
+                          FontSize="12"
+                          VerticalAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          HorizontalContentAlignment="Center" />
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <TextBlock Margin="2 0 0 0">
+                <Hyperlink
+                  Command="{Binding AddTagsCommand, Mode=OneWay}"
+                  CommandParameter="{Binding Model.Guid, Mode=OneWay}">
+                  <TextBlock Text="{DynamicResource Common_AddTags}" FontSize="14" />
+                </Hyperlink>
+              </TextBlock>
+            </StackPanel>
+            <!-- <<= Tags  -->
+
+            <!-- Message -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Ticker_Message}" />
+            <TextBox Text="{Binding Model.Message, Mode=TwoWay}" />
+            <StackPanel Margin="5 5 0 0">
+              <Label Content="{DynamicResource Ticker_MessageDiscription1}" FontSize="11" />
+              <Label Content="{DynamicResource Ticker_MessageDiscription2}" FontSize="11" />
+              <Label Content="{DynamicResource Ticker_MessageDiscription3}" FontSize="11" />
+              <Label Content="{DynamicResource Ticker_MessageDiscription4}" FontSize="11" />
+            </StackPanel>
 
             <!-- マッチングワード -->
             <Label Margin="0 15 0 0" Content="{DynamicResource Spell_TextToMatch}" />
             <TextBox Text="{Binding Model.Keyword, Mode=TwoWay}" />
 
+            <!-- 非表示にするマッチングワード -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Ticker_TextToMatchToHide}" />
+            <TextBox Text="{Binding Model.KeywordToHide, Mode=TwoWay}" />
+
             <!-- Use Regex -->
-            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_UserRegex}" IsChecked="{Binding Model.RegexEnabled}" />
+            <CheckBox Margin="0 10 0 0" Content="{DynamicResource Spell_UserRegex}" IsChecked="{Binding Model.RegexEnabled}" />
 
-            <!-- Recast Time -->
-            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-              <Label Content="{DynamicResource Spell_RecastTime}" VerticalAlignment="Center" Margin="0 0 10 0" />
-              <xctk:DoubleUpDown Value="{Binding Model.RecastTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-              <Label Content="{DynamicResource Spell_Secounds}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            <!-- Display Time -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Ticker_DisplayTime1}" />
+            <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+              <xctk:DoubleUpDown Value="{Binding Model.Delay, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Content="{DynamicResource Ticker_DisplayTime2}" VerticalAlignment="Center" Margin="0 0 10 0" />
+              <xctk:DoubleUpDown Value="{Binding Model.DisplayTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
+              <Label Content="{DynamicResource Ticker_DisplayTime3}" VerticalAlignment="Center" Margin="5 0 0 0" />
             </StackPanel>
 
-            <!-- 延長のマッチングワード -->
-            <Label Margin="0 15 0 0" Content="{DynamicResource Spell_TextToExtend}" />
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <Label Grid.Column="0" Margin="0 0 5 0" Content="1" />
-              <TextBox Grid.Column="1" Margin="0 0 5 0" Text="{Binding Model.KeywordForExtend1, Mode=TwoWay}" />
-              <xctk:DoubleUpDown Grid.Column="2" Value="{Binding Model.RecastTimeExtending1, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-              <Label Grid.Column="3" Margin="5 0 0 0" Content="{DynamicResource Spell_ExtendSecounds}" VerticalAlignment="Center" />
-            </Grid>
-            <Grid Margin="0 5 0 0">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-              </Grid.ColumnDefinitions>
-              <Label Grid.Column="0" Margin="0 0 5 0" Content="2" />
-              <TextBox Grid.Column="1" Margin="0 0 5 0" Text="{Binding Model.KeywordForExtend2, Mode=TwoWay}" />
-              <xctk:DoubleUpDown Grid.Column="2" Value="{Binding Model.RecastTimeExtending1, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-              <Label Grid.Column="3" Margin="5 0 0 0" Content="{DynamicResource Spell_ExtendSecounds}" VerticalAlignment="Center" />
-            </Grid>
+            <!-- メッセージの追加表示 -->
+            <CheckBox Margin="0 15 0 0" Content="{DynamicResource Ticker_AddMessages}" IsChecked="{Binding Model.AddMessageEnabled}" />
 
-            <!-- 元のリキャストタイムを超えて延長する -->
-            <CheckBox Margin="0 10 0 0" Content="{DynamicResource Spell_ExtendRecastTimeOverOrigal}" IsChecked="{Binding Model.ExtendBeyondOriginalRecastTime}" />
+            <!-- プログレスバー -->
+            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Ticker_VisibleProgressBar}" IsChecked="{Binding Model.ProgressBarEnabled}" />
 
-            <!-- Recast Time -->
-            <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-              <Label Content="{DynamicResource Spell_UpperLimitOfRecastTime}" VerticalAlignment="Center" Margin="0 0 10 0" />
-              <xctk:DoubleUpDown Value="{Binding Model.UpperLimitOfExtension, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-              <Label Content="{DynamicResource Spell_Secounds}" VerticalAlignment="Center" Margin="5 0 0 0" />
+            <!-- Location -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Common_Location}" />
+            <StackPanel Orientation="Horizontal">
+              <Label Margin="0 0 5 0" Content="X" VerticalAlignment="Center" />
+              <TextBox TextAlignment="Right" Text="{Binding Model.Left, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+              <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
+              <TextBox TextAlignment="Right" Text="{Binding Model.Top, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
             </StackPanel>
-
-            <!-- Warning -->
-            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-              <xctk:DoubleUpDown Value="{Binding Model.WarningTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-              <Label Content="{DynamicResource Spell_WarningTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
-            </StackPanel>
-            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_WarningTimeChangeFontColor}" IsChecked="{Binding Model.ChangeFontColorsWhenWarning}" />
-
-            <!-- Blink -->
-            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-              <xctk:DoubleUpDown Value="{Binding Model.BlinkTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-              <Label Content="{DynamicResource Spell_BlinkTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
-            </StackPanel>
-            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_BlinkIcon}" IsChecked="{Binding Model.BlinkIcon}" />
-            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_BlinkBar}" IsChecked="{Binding Model.BlinkTime}" />
 
             <!-- Jobフィルタ start -->
             <Expander Margin="0 20 0 0">
@@ -400,8 +418,24 @@
 
             <!-- Visualタブの左側 -->
             <StackPanel Grid.Column="0" Margin="0 0 90 0">
+              <!-- 全般 -->
+              <Label Content="{DynamicResource Common_General}" FontSize="20" FontWeight="Bold" />
+              <StackPanel Margin="10 0 0 0">
+                <!-- Location -->
+                <Label Margin="0 5 0 0" Content="{DynamicResource Common_Location}" />
+                <StackPanel Orientation="Horizontal">
+                  <Label Margin="0 0 5 0" Content="X" VerticalAlignment="Center" />
+                  <TextBox TextAlignment="Right" Text="{Binding Model.Left, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+                  <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
+                  <TextBox TextAlignment="Right" Text="{Binding Model.Top, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+                </StackPanel>
+
+                <!-- プログレスバー -->
+                <CheckBox Margin="0 15 0 0" Content="{DynamicResource Ticker_VisibleProgressBar}" IsChecked="{Binding Model.ProgressBarEnabled}" />
+              </StackPanel>
+
               <!-- フォント -->
-              <Label Content="{DynamicResource Common_Font}" FontSize="20" FontWeight="Bold" />
+              <Label Margin="0 20 0 0" Content="{DynamicResource Common_Font}" FontSize="20" FontWeight="Bold" />
               <StackPanel Margin="10 0 0 0">
                 <TextBlock HorizontalAlignment="Left">
                   <Hyperlink Command="{Binding ChangeFontCommand}">
@@ -420,50 +454,6 @@
                     <TextBlock Text="{DynamicResource Common_StrokeColor}" />
                   </Hyperlink>
                 </TextBlock>
-
-                <TextBlock Margin="0 8 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding ChangeWarnningFontColorCommand}">
-                    <TextBlock Text="{DynamicResource Common_WarnningFillColor}" />
-                  </Hyperlink>
-                </TextBlock>
-
-                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding ChangeWarnningFontOutlineColorCommand}">
-                    <TextBlock Text="{DynamicResource Common_WarnningStrokeColor}" />
-                  </Hyperlink>
-                </TextBlock>
-
-                <!-- Warning -->
-                <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-                  <xctk:DoubleUpDown Value="{Binding Model.WarningTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-                  <Label Content="{DynamicResource Spell_WarningTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
-                </StackPanel>
-                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_WarningTimeChangeFontColor}" IsChecked="{Binding Model.ChangeFontColorsWhenWarning}" />
-              </StackPanel>
-
-              <!-- プログレスバー -->
-              <Label Margin="0 20 0 0" Content="{DynamicResource Common_ProgressBar}" FontSize="20" FontWeight="Bold" />
-              <StackPanel Margin="10 0 0 0">
-                <CheckBox Margin="0 5 0 5" Content="{DynamicResource Common_IsReverseProgressBar}" IsChecked="{Binding Model.IsReverse, Mode=TwoWay}" />
-
-                <StackPanel Margin="0 8 0 8" Orientation="Horizontal">
-                  <TextBlock Margin="6 0 5 0" Text="W" VerticalAlignment="Center" />
-                  <xctk:DoubleUpDown Value="{Binding Model.BarWidth, Mode=TwoWay}" Increment="1" MinWidth="80" />
-                  <TextBlock Margin="10 0 5 0" Text="H" VerticalAlignment="Center" />
-                  <xctk:DoubleUpDown Value="{Binding Model.BarHeight, Mode=TwoWay}" Increment="1" MinWidth="80" />
-                </StackPanel>
-
-                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding ChangeBarColorCommand}">
-                    <TextBlock Text="{DynamicResource Common_FillColor}" />
-                  </Hyperlink>
-                </TextBlock>
-
-                <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding ChangeBarOutlineColorCommand}">
-                    <TextBlock Text="{DynamicResource Common_StrokeColor}" />
-                  </Hyperlink>
-                </TextBlock>
               </StackPanel>
 
               <!-- 背景色 -->
@@ -477,42 +467,6 @@
               </StackPanel>
             </StackPanel>
             <!-- Visualタブの左側 end -->
-
-            <!-- Visualタブの右側 -->
-            <StackPanel Grid.Column="1" Margin="0 0 40 0">
-              <!-- アイコン -->
-              <Label Margin="0 0 0 0" Content="{DynamicResource Common_Icon}" FontSize="20" FontWeight="Bold" />
-              <StackPanel Margin="10 0 0 0">
-                <StackPanel Margin="0 8 0 8" Orientation="Horizontal">
-                  <Border BorderBrush="LightGray" BorderThickness="1" CornerRadius="6">
-                    <Image Source="{Binding Model.SpellIconFullPath, Mode=OneWay}" Height="72" Width="72" />
-                  </Border>
-                  <StackPanel VerticalAlignment="Bottom">
-                    <TextBlock Margin="10 0 0 10" HorizontalAlignment="Left">
-                      <Hyperlink Command="{Binding SelectIconCommand, Mode=OneWay}">
-                        <TextBlock Text="{DynamicResource Common_SelectIcon}" />
-                      </Hyperlink>
-                    </TextBlock>
-
-                    <StackPanel Orientation="Horizontal">
-                      <TextBlock Margin="10 0 5 2" Text="Size" VerticalAlignment="Bottom" />
-                      <xctk:DoubleUpDown Value="{Binding Model.SpellIconSize, Mode=TwoWay}" Increment="1" MinWidth="65" VerticalAlignment="Bottom" />
-                    </StackPanel>
-                  </StackPanel>
-                </StackPanel>
-
-                <CheckBox Margin="0 0 0 0" Content="{DynamicResource Common_HideSpellName}" IsChecked="{Binding Model.HideSpellName, Mode=TwoWay}" />
-                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_RecastTimeOverIcon}" IsChecked="{Binding Model.OverlapRecastTime, Mode=TwoWay}" />
-                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_ToDarkBetweenRecast}" IsChecked="{Binding Model.ReduceIconBrightness, Mode=TwoWay}" />
-              </StackPanel>
-
-              <!-- その他 -->
-              <Label Margin="0 20 0 0" Content="{DynamicResource Common_Misc}" FontSize="20" FontWeight="Bold" />
-              <StackPanel Margin="10 0 0 0">
-                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_VisibleSpell}" IsChecked="{Binding Model.ProgressBarVisible, Mode=TwoWay}" ToolTip="{DynamicResource Common_VisibleSpellDiscription}" />
-                <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_DontHide}" IsChecked="{Binding Model.DontHide, Mode=TwoWay}" />
-              </StackPanel>
-            </StackPanel>
           </Grid>
         </ScrollViewer>
       </TabItem>
@@ -536,7 +490,7 @@
             <WrapPanel Orientation="Horizontal">
               <!-- Match start -->
               <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-                <Label Content="{DynamicResource Spell_NoticeOnMatch}" FontSize="20" FontWeight="Bold" />
+                <Label Content="{DynamicResource Ticker_NoticeOnMatch}" FontSize="20" FontWeight="Bold" />
                 <StackPanel Margin="5 10 0 0" Width="450">
                   <Label DockPanel.Dock="Left" Content="WAVE" />
                   <DockPanel>
@@ -565,9 +519,9 @@
               </StackPanel>
               <!-- Match end -->
 
-              <!-- Over start -->
+              <!-- Delay start -->
               <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-                <Label Content="{DynamicResource Spell_NoticeOnOver}" FontSize="20" FontWeight="Bold" />
+                <Label Content="{DynamicResource Ticker_NoticeOnDelay}" FontSize="20" FontWeight="Bold" />
                 <StackPanel Margin="5 10 0 0" Width="450">
                   <Label Content="WAVE" />
                   <DockPanel>
@@ -578,93 +532,23 @@
                       ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
                       DisplayMemberPath="Name"
                       SelectedValuePath="FullPath"
-                      SelectedValue="{Binding Model.OverSound, Mode=TwoWay}" />
-                    <Button DockPanel.Dock="Right" Content="♪" HorizontalAlignment="Right" Width="28" FontWeight="Black" Command="{Binding TestWave2Command}" />
-                  </DockPanel>
-                  <Label Margin="0 10 0 0" Content="TTS" />
-                  <DockPanel>
-                    <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.OverTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
-                    <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS2Command}" />
-                  </DockPanel>
-                  <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
-                    <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.OverTime, Mode=TwoWay}" />
-                    <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnOverThisScounds}" VerticalAlignment="Center" />
-                  </StackPanel>
-                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.OverAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.OverAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.OverAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.OverAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.OverAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
-                  </StackPanel>
-                </StackPanel>
-              </StackPanel>
-              <!-- Over end -->
-
-              <!-- Before start -->
-              <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-                <Label Content="{DynamicResource Spell_NoticeOnBefore}" FontSize="20" FontWeight="Bold" />
-                <StackPanel Margin="5 10 0 0" Width="450">
-                  <Label Content="WAVE" />
-                  <DockPanel>
-                    <ComboBox
-                      DockPanel.Dock="Left"
-                      HorizontalAlignment="Left"
-                      Width="415"
-                      ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                      DisplayMemberPath="Name"
-                      SelectedValuePath="FullPath"
-                      SelectedValue="{Binding Model.BeforeSound, Mode=TwoWay}" />
-                    <Button DockPanel.Dock="Right" Content="♪" HorizontalAlignment="Right" Width="28" FontWeight="Black" Command="{Binding TestWave3Command}" />
-                  </DockPanel>
-                  <Label Margin="0 10 0 0" Content="TTS" />
-                  <DockPanel>
-                    <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.BeforeTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
-                    <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS3Command}" />
-                  </DockPanel>
-                  <StackPanel Margin="0 15 0 0" Orientation="Horizontal">
-                    <xctk:DoubleUpDown Increment="1" FormatString="F1" MinWidth="80" Value="{Binding Model.BeforeTime, Mode=TwoWay}" />
-                    <Label Margin="5 0 0 0" Content="{DynamicResource Spell_NoticeOnBeforeThisScounds}" VerticalAlignment="Center" />
-                  </StackPanel>
-                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.BeforeAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.BeforeAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.BeforeAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
-                  </StackPanel>
-                </StackPanel>
-              </StackPanel>
-              <!-- Before end -->
-
-              <!-- Timeup start -->
-              <StackPanel Margin="0 0 50 40" VerticalAlignment="Top">
-                <Label Content="{DynamicResource Spell_NoticeOnTimeup}" FontSize="20" FontWeight="Bold" />
-                <StackPanel Margin="5 10 0 0" Width="450">
-                  <Label Content="WAVE" />
-                  <DockPanel>
-                    <ComboBox
-                      DockPanel.Dock="Left"
-                      HorizontalAlignment="Left"
-                      Width="415"
-                      ItemsSource="{x:Static vm:SpellConfigViewModel.WaveList}"
-                      DisplayMemberPath="Name"
-                      SelectedValuePath="FullPath"
-                      SelectedValue="{Binding Model.TimeupSound, Mode=TwoWay}" />
+                      SelectedValue="{Binding Model.DelaySound, Mode=TwoWay}" />
                     <Button DockPanel.Dock="Right" Content="♪" HorizontalAlignment="Right" Width="28" FontWeight="Black" Command="{Binding TestWave4Command}" />
                   </DockPanel>
                   <Label Margin="0 10 0 0" Content="TTS" />
                   <DockPanel>
-                    <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.TimeupTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
+                    <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.DelayTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
                     <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS4Command}" />
                   </DockPanel>
-                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.TimeupAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.TimeupAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.DelayAdvancedConfig.IsEnabled, Mode=TwoWay}" />
+                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.DelayAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.DelayAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.DelayAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
+                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.DelayAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
                   </StackPanel>
                 </StackPanel>
               </StackPanel>
-              <!-- Before end -->
+              <!-- Delay end -->
             </WrapPanel>
           </ScrollViewer>
 

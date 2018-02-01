@@ -10,7 +10,6 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Sound;
-using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
@@ -346,8 +345,6 @@ namespace ACT.SpecialSpellTimer.Models
         public double BlinkTime { get; set; } = 0;
         public bool BlinkIcon { get; set; } = false;
         public bool BlinkBar { get; set; } = false;
-        public bool NotifyToDiscord { get; set; } = false;
-        public bool NotifyToDiscordAtComplete { get; set; } = false;
 
         #region Sequential TTS
 
@@ -751,9 +748,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             if (string.IsNullOrWhiteSpace(this.TimeupSound) &&
-                string.IsNullOrWhiteSpace(this.TimeupTextToSpeak) &&
-                !this.NotifyToDiscord &&
-                !this.NotifyToDiscordAtComplete)
+                string.IsNullOrWhiteSpace(this.TimeupTextToSpeak))
             {
                 return;
             }
@@ -778,21 +773,21 @@ namespace ACT.SpecialSpellTimer.Models
             var wave = this.BeforeSound;
             var speak = this.BeforeTextToSpeak;
 
-            this.Play(wave);
+            this.Play(wave, this.BeforeAdvancedConfig);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    this.Play(speak);
+                    this.Play(speak, this.BeforeAdvancedConfig);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                this.Play(speak);
+                this.Play(speak, this.BeforeAdvancedConfig);
             }
         }
 
@@ -804,21 +799,21 @@ namespace ACT.SpecialSpellTimer.Models
             var wave = this.OverSound;
             var speak = this.OverTextToSpeak;
 
-            this.Play(wave);
+            this.Play(wave, this.OverAdvancedConfig);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    this.Play(speak);
+                    this.Play(speak, this.OverAdvancedConfig);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                this.Play(speak);
+                this.Play(speak, this.OverAdvancedConfig);
             }
         }
 
@@ -826,38 +821,25 @@ namespace ACT.SpecialSpellTimer.Models
         {
             this.TimeupDone = true;
 
-            // DISCORDに通知する？
-            if (this.NotifyToDiscord)
-            {
-                var compText = !this.IsReverse ?
-                    Settings.Default.ReadyText :
-                    Settings.Default.OverText;
-                var title = string.IsNullOrEmpty(this.SpellTitleReplaced) ?
-                    this.SpellTitle :
-                    this.SpellTitleReplaced;
-                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
-                    $"{title} {compText}");
-            }
-
             var regex = this.Regex;
             var wave = this.TimeupSound;
             var speak = this.TimeupTextToSpeak;
 
-            this.Play(wave);
+            this.Play(wave, this.TimeupAdvancedConfig);
 
             if (!string.IsNullOrWhiteSpace(speak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    this.Play(speak);
+                    this.Play(speak, this.TimeupAdvancedConfig);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                this.Play(speak);
+                this.Play(speak, this.TimeupAdvancedConfig);
             }
         }
 
@@ -1005,8 +987,6 @@ namespace ACT.SpecialSpellTimer.Models
             n.TimersMustRunningForStart = this.TimersMustRunningForStart;
             n.TimersMustStoppingForStart = this.TimersMustStoppingForStart;
             n.ToInstance = this.ToInstance;
-            n.NotifyToDiscord = this.NotifyToDiscord;
-            n.NotifyToDiscordAtComplete = this.NotifyToDiscordAtComplete;
 
             return n;
         }
@@ -1028,13 +1008,6 @@ namespace ACT.SpecialSpellTimer.Models
             // マッチ時点のサウンドを再生する
             this.MatchAdvancedConfig.PlayWave(this.MatchSound);
             this.MatchAdvancedConfig.Speak(this.MatchTextToSpeak);
-
-            // DISCORDへ通知する
-            if (this.NotifyToDiscord)
-            {
-                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
-                    this.SpellTitle);
-            }
 
             // 遅延サウンドタイマを開始する
             this.StartOverSoundTimer();

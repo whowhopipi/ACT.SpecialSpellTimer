@@ -21,7 +21,6 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             SpellPanel model)
         {
             this.Model = model;
-            this.SetupTagsSource();
         }
 
         private SpellPanel model;
@@ -29,7 +28,13 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
         public SpellPanel Model
         {
             get => this.model;
-            set => this.SetProperty(ref this.model, value);
+            set
+            {
+                if (this.SetProperty(ref this.model, value))
+                {
+                    this.SetupTagsSource();
+                }
+            }
         }
 
         public bool IsPreset => this.Model.ID == SpellPanel.GeneralPanel.ID;
@@ -54,15 +59,17 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         public ICollectionView Tags => this.TagsSource.View;
 
-        private CollectionViewSource TagsSource = new CollectionViewSource()
-        {
-            Source = TagTable.Instance.ItemTags,
-            IsLiveFilteringRequested = true,
-            IsLiveSortingRequested = true,
-        };
+        private CollectionViewSource TagsSource;
 
         private void SetupTagsSource()
         {
+            this.TagsSource = new CollectionViewSource()
+            {
+                Source = TagTable.Instance.ItemTags,
+                IsLiveFilteringRequested = true,
+                IsLiveSortingRequested = true,
+            };
+
             this.TagsSource.Filter += (x, y) =>
                 y.Accepted =
                     (y.Item as ItemTags).ItemID == this.Model.ID;
@@ -76,10 +83,12 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 },
                 new SortDescription()
                 {
-                    PropertyName = "Tag.FullName",
+                    PropertyName = "Tag.Name",
                     Direction = ListSortDirection.Ascending
                 },
             });
+
+            this.RaisePropertyChanged(nameof(this.Tags));
         }
 
         #endregion Tags

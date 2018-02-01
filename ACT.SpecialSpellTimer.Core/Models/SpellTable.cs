@@ -9,7 +9,6 @@ using System.Text;
 using System.Xml.Serialization;
 
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -364,8 +363,6 @@ namespace ACT.SpecialSpellTimer.Models
                     ns.TimersMustRunningForStart = sourceSpell.TimersMustRunningForStart;
                     ns.TimersMustStoppingForStart = sourceSpell.TimersMustStoppingForStart;
                     ns.Enabled = sourceSpell.Enabled;
-                    ns.NotifyToDiscord = sourceSpell.NotifyToDiscord;
-                    ns.NotifyToDiscordAtComplete = sourceSpell.NotifyToDiscordAtComplete;
 
                     ns.MatchedLog = sourceSpell.MatchedLog;
                     ns.Regex = sourceSpell.Regex;

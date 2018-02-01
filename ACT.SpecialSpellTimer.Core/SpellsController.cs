@@ -9,7 +9,6 @@ using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
-using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.WPF.Views;
 
@@ -134,15 +133,8 @@ namespace ACT.SpecialSpellTimer
                             spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
-                            targetSpell.Play(targetSpell.MatchSound);
-                            targetSpell.Play(targetSpell.MatchTextToSpeak);
-
-                            // DISCORDに通知する？
-                            if (targetSpell.NotifyToDiscord)
-                            {
-                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
-                                    $"{replacedTitle} {targetSpell.RecastTime:N0}");
-                            }
+                            targetSpell.Play(targetSpell.MatchSound, targetSpell.MatchAdvancedConfig);
+                            targetSpell.Play(targetSpell.MatchTextToSpeak, targetSpell.MatchAdvancedConfig);
 
                             notifyNeeded = true;
 
@@ -216,19 +208,12 @@ namespace ACT.SpecialSpellTimer
                             spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
-                            targetSpell.Play(targetSpell.MatchSound);
+                            targetSpell.Play(targetSpell.MatchSound, targetSpell.MatchAdvancedConfig);
 
                             if (!string.IsNullOrWhiteSpace(targetSpell.MatchTextToSpeak))
                             {
                                 var tts = match.Result(targetSpell.MatchTextToSpeak);
-                                targetSpell.Play(tts);
-                            }
-
-                            // DISCORDに通知する？
-                            if (targetSpell.NotifyToDiscord)
-                            {
-                                DiscordBridge.Instance.SendMessageDelegate?.Invoke(
-                                    $"{replacedTitle} {targetSpell.RecastTime:N0}");
+                                targetSpell.Play(tts, targetSpell.MatchAdvancedConfig);
                             }
 
                             notifyNeeded = true;

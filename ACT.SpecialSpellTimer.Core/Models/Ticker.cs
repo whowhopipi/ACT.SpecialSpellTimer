@@ -131,28 +131,14 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.isDesignMode, value);
         }
 
-        public bool AddMessageEnabled { get; set; }
-
-        public int BackgroundAlpha { get; set; }
-
-        public string BackgroundColor { get; set; }
-
-        public double Delay { get; set; } = 0;
-
-        public double DisplayTime { get; set; } = 0;
-
-        public FontInfo Font { get; set; } = FontInfo.DefaultFont;
-
-        public string FontColor { get; set; }
-
-        public string FontOutlineColor { get; set; }
-
-        [XmlIgnore]
-        public bool ForceHide { get; set; }
-
         public long ID { get; set; }
 
-        public string JobFilter { get; set; }
+        public string Title { get; set; }
+
+        public string Message { get; set; }
+
+        [XmlIgnore]
+        public string MessageReplaced { get; set; }
 
         public string Keyword { get; set; }
 
@@ -170,36 +156,54 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string MatchedLog { get; set; }
 
-        public string Message { get; set; }
-
-        [XmlIgnore]
-        public string MessageReplaced { get; set; }
-
-        public bool ProgressBarEnabled { get; set; }
+        public bool RegexEnabled { get; set; }
 
         [XmlIgnore]
         public Regex Regex { get; set; }
-
-        public bool RegexEnabled { get; set; }
 
         [XmlIgnore]
         public string RegexPattern { get; set; }
 
         [XmlIgnore]
-        public string RegexPatternToHide { get; set; }
+        public Regex RegexToHide { get; set; }
 
         [XmlIgnore]
-        public Regex RegexToHide { get; set; }
+        public string RegexPatternToHide { get; set; }
+
+        public double Delay { get; set; } = 0;
+
+        public double DisplayTime { get; set; } = 0;
+
+        public FontInfo Font { get; set; } = FontInfo.DefaultFont;
+
+        public string FontColor { get; set; }
+
+        public string FontOutlineColor { get; set; }
+
+        public int BackgroundAlpha { get; set; }
+
+        public string BackgroundColor { get; set; }
+
+        public bool AddMessageEnabled { get; set; }
+
+        private bool progressBarEnabled;
+
+        public bool ProgressBarEnabled
+        {
+            get => this.progressBarEnabled;
+            set => this.SetProperty(ref this.progressBarEnabled, value);
+        }
+
+        public string JobFilter { get; set; }
+
+        public string ZoneFilter { get; set; }
 
         public Guid[] TimersMustRunningForStart { get; set; }
 
         public Guid[] TimersMustStoppingForStart { get; set; }
 
-        public string Title { get; set; }
-
-        public string ZoneFilter { get; set; }
-
-        public bool NotifyToDiscord { get; set; } = false;
+        [XmlIgnore]
+        public bool ForceHide { get; set; }
 
         #region Sequential TTS
 
@@ -453,21 +457,21 @@ namespace ACT.SpecialSpellTimer.Models
             var wave = this.DelaySound;
             var speak = this.DelayTextToSpeak;
 
-            this.Play(this.DelaySound);
+            this.Play(this.DelaySound, this.DelayAdvancedConfig);
 
             if (!string.IsNullOrWhiteSpace(this.DelayTextToSpeak))
             {
                 if (regex == null ||
                     !speak.Contains("$"))
                 {
-                    this.Play(speak);
+                    this.Play(speak, this.DelayAdvancedConfig);
                     return;
                 }
 
                 var match = regex.Match(this.MatchedLog);
                 speak = match.Result(speak);
 
-                this.Play(speak);
+                this.Play(speak, this.DelayAdvancedConfig);
             }
         }
 
@@ -525,11 +529,26 @@ namespace ACT.SpecialSpellTimer.Models
             n.ZoneFilter = this.ZoneFilter;
             n.TimersMustRunningForStart = this.TimersMustRunningForStart;
             n.TimersMustStoppingForStart = this.TimersMustStoppingForStart;
-            n.NotifyToDiscord = this.NotifyToDiscord;
 
             return n;
         }
 
         #endregion NewTicker
+
+        public void SimulateMatch()
+        {
+            // 擬似的にマッチ状態にする
+            var now = DateTime.Now;
+            this.MatchDateTime = now;
+
+            this.Delayed = false;
+
+            // マッチ時点のサウンドを再生する
+            this.MatchAdvancedConfig.PlayWave(this.MatchSound);
+            this.MatchAdvancedConfig.Speak(this.MatchTextToSpeak);
+
+            // 遅延サウンドタイマを開始する
+            this.StartDelayedSoundTimer();
+        }
     }
 }
