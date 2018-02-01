@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
@@ -69,6 +68,109 @@ namespace ACT.SpecialSpellTimer.Config
 
         #endregion Constants
 
+        #region Data
+
+        [XmlIgnore]
+        public string Language => this.UILocale == Locales.JA ? "JP" : "EN";
+
+        public Locales UILocale { get; set; } = Locales.JA;
+
+        public Locales FFXIVLocale { get; set; } = Locales.JA;
+
+        private bool overlayVisible;
+
+        public bool OverlayVisible
+        {
+            get => this.overlayVisible;
+            set
+            {
+                if (this.SetProperty(ref this.overlayVisible, value))
+                {
+                    var button = PluginCore.Instance.SwitchVisibleButton;
+                    if (button != null)
+                    {
+                        if (this.overlayVisible)
+                        {
+                            button.BackColor = Color.SandyBrown;
+                            button.ForeColor = Color.WhiteSmoke;
+                        }
+                        else
+                        {
+                            button.BackColor = SystemColors.Control;
+                            button.ForeColor = Color.Black;
+                        }
+                    }
+                }
+            }
+        }
+
+        private DesignGridView gridView;
+        private bool visibleDesignGrid;
+
+        [XmlIgnore]
+        public bool VisibleDesignGrid
+        {
+            get => this.visibleDesignGrid;
+            set
+            {
+                if (this.SetProperty(ref this.visibleDesignGrid, value))
+                {
+                    if (this.visibleDesignGrid)
+                    {
+                        this.gridView = new DesignGridView();
+                        this.gridView.ToTransparent();
+                        this.gridView.Show();
+                        this.gridView.ShowOverlay();
+                    }
+                    else
+                    {
+                        this.gridView?.Close();
+                    }
+                }
+            }
+        }
+
+        private bool clickThroughEnabled;
+
+        public bool ClickThroughEnabled
+        {
+            get => this.clickThroughEnabled;
+            set => this.SetProperty(ref this.clickThroughEnabled, value);
+        }
+
+        public int Opacity { get; set; }
+
+        [XmlIgnore]
+        public double OpacityToView => (100d - this.Opacity) / 100d;
+
+        public bool HideWhenNotActive { get; set; }
+        public double PlayerInfoRefreshInterval { get; set; }
+
+        public long LogPollSleepInterval { get; set; }
+
+        public long RefreshInterval { get; set; }
+
+        public int MaxFPS { get; set; }
+        public bool RenderCPUOnly { get; set; } = true;
+
+        private NameStyles pcNameInitialOnDisplayStyle = NameStyles.FullName;
+
+        public NameStyles PCNameInitialOnDisplayStyle
+        {
+            get => this.pcNameInitialOnDisplayStyle;
+            set => this.SetProperty(ref this.pcNameInitialOnDisplayStyle, value);
+        }
+
+        public double TextBlurRate { get; set; }
+
+        public double TextOutlineThicknessRate { get; set; }
+
+        public int ReduceIconBrightness { get; set; }
+
+        public string ReadyText { get; set; }
+
+        public string OverText { get; set; }
+
         #region Data - ProgressBar Background
 
         [XmlIgnore] private readonly System.Windows.Media.Color DefaultBackgroundColor = System.Windows.Media.Colors.Black;
@@ -116,114 +218,23 @@ namespace ACT.SpecialSpellTimer.Config
 
         #endregion Data - ProgressBar Background
 
-        #region Data
+        public double TimeOfHideSpell { get; set; }
 
-        [XmlIgnore]
-        public string Language => this.UILocale == Locales.JA ? "JP" : "EN";
-
-        public Locales UILocale { get; set; } = Locales.JA;
-
-        public Locales FFXIVLocale { get; set; } = Locales.JA;
-
-        public List<ExpandedContainer> ExpandedList
-        {
-            get;
-            set;
-        } = new List<ExpandedContainer>();
-
-        private DesignGridView gridView;
-        private bool visibleDesignGrid;
-
-        [XmlIgnore]
-        public bool VisibleDesignGrid
-        {
-            get => this.visibleDesignGrid;
-            set
-            {
-                if (this.SetProperty(ref this.visibleDesignGrid, value))
-                {
-                    if (this.visibleDesignGrid)
-                    {
-                        this.gridView = new DesignGridView();
-                        this.gridView.ToTransparent();
-                        this.gridView.Show();
-                        this.gridView.ShowOverlay();
-                    }
-                    else
-                    {
-                        this.gridView?.Close();
-                    }
-                }
-            }
-        }
-
-        private bool clickThroughEnabled;
-
-        public bool ClickThroughEnabled
-        {
-            get => this.clickThroughEnabled;
-            set => this.SetProperty(ref this.clickThroughEnabled, value);
-        }
-
-        private bool overlayVisible;
-
-        public bool OverlayVisible
-        {
-            get => this.overlayVisible;
-            set
-            {
-                if (this.SetProperty(ref this.overlayVisible, value))
-                {
-                    var button = PluginCore.Instance.SwitchVisibleButton;
-                    if (button != null)
-                    {
-                        if (this.overlayVisible)
-                        {
-                            button.BackColor = Color.SandyBrown;
-                            button.ForeColor = Color.WhiteSmoke;
-                        }
-                        else
-                        {
-                            button.BackColor = SystemColors.Control;
-                            button.ForeColor = Color.Black;
-                        }
-                    }
-                }
-            }
-        }
-
-        public bool AutoSortEnabled { get; set; }
-        public bool AutoSortReverse { get; set; }
-        public long CombatLogBufferSize { get; set; }
-        public bool CombatLogEnabled { get; set; }
-        public bool DetectPacketDump { get; set; }
-        public bool EnabledNotifyNormalSpellTimer { get; set; }
         public bool EnabledPartyMemberPlaceholder { get; set; }
+
         public bool EnabledSpellTimerNoDecimal { get; set; }
-        public bool HideWhenNotActive { get; set; }
-        public long LogPollSleepInterval { get; set; }
+
+        public bool EnabledNotifyNormalSpellTimer { get; set; }
+
         public string NotifyNormalSpellTimerPrefix { get; set; }
-        public int Opacity { get; set; }
 
-        [XmlIgnore]
-        public double OpacityToView => (100d - this.Opacity) / 100d;
+        public bool SimpleRegex { get; set; }
 
-        public string OverText { get; set; }
-
-        private NameStyles pcNameInitialOnDisplayStyle = NameStyles.FullName;
-
-        public NameStyles PCNameInitialOnDisplayStyle
-        {
-            get => this.pcNameInitialOnDisplayStyle;
-            set => this.SetProperty(ref this.pcNameInitialOnDisplayStyle, value);
-        }
-
-        public double PlayerInfoRefreshInterval { get; set; }
-        public string ReadyText { get; set; }
-        public int ReduceIconBrightness { get; set; }
-        public long RefreshInterval { get; set; }
         public bool RemoveTooltipSymbols { get; set; }
-        public bool RenderCPUOnly { get; set; } = true;
+
+        public bool ToComplementUnknownSkill { get; set; } = true;
+
+        public bool DetectPacketDump { get; set; }
 
         private bool resetOnWipeOut;
 
@@ -233,20 +244,7 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.resetOnWipeOut, value);
         }
 
-        public bool SimpleRegex { get; set; }
-        public double TextBlurRate { get; set; }
-        public double TextOutlineThicknessRate { get; set; }
-        public double TimeOfHideSpell { get; set; }
-        public bool ToComplementUnknownSkill { get; set; } = true;
         public bool WipeoutNotifyToACT { get; set; }
-
-        public bool SingleTaskLogMatching { get; set; }
-
-        public bool DisableStartCondition { get; set; }
-
-        public bool EnableMultiLineMaching { get; set; }
-
-        public AutoScaleMode UIAutoScaleMode { get; set; }
 
         private bool lpsViewVisible = false;
         private double lpsViewX;
@@ -271,13 +269,13 @@ namespace ACT.SpecialSpellTimer.Config
         public double LPSViewX
         {
             get => this.lpsViewX;
-            set => this.SetProperty(ref this.lpsViewX, value);
+            set => this.SetProperty(ref this.lpsViewX, Math.Floor(value));
         }
 
         public double LPSViewY
         {
             get => this.lpsViewY;
-            set => this.SetProperty(ref this.lpsViewY, value);
+            set => this.SetProperty(ref this.lpsViewY, Math.Floor(value));
         }
 
         public double LPSViewScale
@@ -304,6 +302,38 @@ namespace ACT.SpecialSpellTimer.Config
         #endregion Data
 
         #region Data - Hidden
+
+        public bool CombatLogEnabled { get; set; }
+
+        public long CombatLogBufferSize { get; set; }
+
+        public bool AutoSortEnabled { get; set; }
+
+        public bool AutoSortReverse { get; set; }
+
+        public bool SingleTaskLogMatching { get; set; }
+
+        public bool DisableStartCondition { get; set; }
+
+        public bool EnableMultiLineMaching { get; set; }
+
+        /// <summary>点滅の輝度倍率 暗</summary>
+        public double BlinkBrightnessDark { get; set; }
+
+        /// <summary>点滅の輝度倍率 明</summary>
+        public double BlinkBrightnessLight { get; set; }
+
+        /// <summary>点滅のピッチ(秒)</summary>
+        public double BlinkPitch { get; set; }
+
+        /// <summary>点滅のピーク状態でのホールド時間(秒)</summary>
+        public double BlinkPeekHold { get; set; }
+
+        public List<ExpandedContainer> ExpandedList
+        {
+            get;
+            set;
+        } = new List<ExpandedContainer>();
 
         private DateTime lastUpdateDateTime;
 
@@ -353,20 +383,6 @@ namespace ACT.SpecialSpellTimer.Config
                 this.lastUpdateDateTime = DateTime.MinValue;
             }
         }
-
-        public int MaxFPS { get; set; }
-
-        /// <summary>点滅の輝度倍率 暗</summary>
-        public double BlinkBrightnessDark { get; set; }
-
-        /// <summary>点滅の輝度倍率 明</summary>
-        public double BlinkBrightnessLight { get; set; }
-
-        /// <summary>点滅のピッチ(秒)</summary>
-        public double BlinkPitch { get; set; }
-
-        /// <summary>点滅のピーク状態でのホールド時間(秒)</summary>
-        public double BlinkPeekHold { get; set; }
 
         #endregion Data - Hidden
 
@@ -492,7 +508,6 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.SingleTaskLogMatching), false },
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
-            { nameof(Settings.UIAutoScaleMode), AutoScaleMode.Inherit },
             { nameof(Settings.MaxFPS), 30 },
 
             { nameof(Settings.LPSViewVisible), false },
