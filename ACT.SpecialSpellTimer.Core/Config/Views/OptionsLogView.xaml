@@ -53,6 +53,11 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
       </Style>
 
+      <Style TargetType="{x:Type xctk:DoubleUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
       </ResourceDictionary.MergedDictionaries>
@@ -60,7 +65,21 @@
   </UserControl.Resources>
 
   <StackPanel>
-    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledLog}" IsChecked="{Binding Config.SaveLogEnabled, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_VisibleLPS}" IsChecked="{Binding Config.LPSViewVisible, Mode=TwoWay}" />
+
+    <Label Margin="0 15 0 3" Content="{DynamicResource Options_LPSOverlayScale}" />
+    <xctk:DoubleUpDown Value="{Binding Config.LPSViewScale, Mode=TwoWay}" MinWidth="80" FormatString="F2" />
+    
+    <!-- Location -->
+    <Label Margin="0 15 0 3" Content="{DynamicResource Options_LPSOverlayLocation}" />
+    <StackPanel Orientation="Horizontal">
+      <Label Margin="0 0 5 0" Content="X" VerticalAlignment="Center" />
+      <TextBox TextAlignment="Right" Text="{Binding Config.LPSViewX, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+      <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
+      <TextBox TextAlignment="Right" Text="{Binding Config.LPSViewY, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+    </StackPanel>
+
+    <CheckBox Margin="0 25 0 0" Content="{DynamicResource Options_EnabledLog}" IsChecked="{Binding Config.SaveLogEnabled, Mode=TwoWay}" />
 
     <StackPanel Visibility="{Binding Config.SaveLogEnabled, Mode=OneWay, Converter={StaticResource CollapsedConverter}}">
       <Label Margin="0 20 0 0" Content="{DynamicResource Options_LogDirectory}" />

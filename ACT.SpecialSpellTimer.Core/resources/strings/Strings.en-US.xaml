@@ -150,6 +150,9 @@
   <system:String x:Key="Options_ReadyText">Text to display at the completion of the forward direction timer (default: "Ready")</system:String>
   <system:String x:Key="Options_OverText">Text to display at the completion of the back direction timer (default: "Over")</system:String>
 
+  <system:String x:Key="Options_VisibleLPS">Show log density overlay (LPS)</system:String>
+  <system:String x:Key="Options_LPSOverlayScale">LPS Overlay scale</system:String>
+  <system:String x:Key="Options_LPSOverlayLocation">LPS Overlay location</system:String>
   <system:String x:Key="Options_EnabledLog">Save log</system:String>
   <system:String x:Key="Options_LogDirectory">Save folder</system:String>
   <system:String x:Key="Options_Browse">Browse</system:String>

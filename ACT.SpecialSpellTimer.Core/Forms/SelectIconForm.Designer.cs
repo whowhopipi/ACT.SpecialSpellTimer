@@ -1,4 +1,4 @@
-﻿namespace ACT.SpecialSpellTimer.Forms
+namespace ACT.SpecialSpellTimer.Forms
 {
     partial class SelectIconForm
     {
@@ -55,7 +55,7 @@
             this.TableLayoutPanel.RowCount = 2;
             this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.TableLayoutPanel.Size = new System.Drawing.Size(784, 411);
+            this.TableLayoutPanel.Size = new System.Drawing.Size(1264, 761);
             this.TableLayoutPanel.TabIndex = 4;
             // 
             // SplitContainer
@@ -71,8 +71,8 @@
             // SplitContainer.Panel2
             // 
             this.SplitContainer.Panel2.Controls.Add(this.IconsFlowLayoutPanel);
-            this.SplitContainer.Size = new System.Drawing.Size(778, 374);
-            this.SplitContainer.SplitterDistance = 248;
+            this.SplitContainer.Size = new System.Drawing.Size(1258, 724);
+            this.SplitContainer.SplitterDistance = 401;
             this.SplitContainer.TabIndex = 5;
             // 
             // FolderTreeView
@@ -85,7 +85,7 @@
             this.FolderTreeView.Location = new System.Drawing.Point(0, 0);
             this.FolderTreeView.Name = "FolderTreeView";
             this.FolderTreeView.ShowLines = false;
-            this.FolderTreeView.Size = new System.Drawing.Size(248, 374);
+            this.FolderTreeView.Size = new System.Drawing.Size(401, 724);
             this.FolderTreeView.TabIndex = 0;
             // 
             // IconsFlowLayoutPanel
@@ -95,7 +95,7 @@
             this.IconsFlowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.IconsFlowLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.IconsFlowLayoutPanel.Name = "IconsFlowLayoutPanel";
-            this.IconsFlowLayoutPanel.Size = new System.Drawing.Size(526, 374);
+            this.IconsFlowLayoutPanel.Size = new System.Drawing.Size(853, 724);
             this.IconsFlowLayoutPanel.TabIndex = 0;
             // 
             // BottomTableLayoutPanel
@@ -108,13 +108,13 @@
             this.BottomTableLayoutPanel.Controls.Add(this.ClearButton, 0, 0);
             this.BottomTableLayoutPanel.Controls.Add(this.CloseButton, 1, 0);
             this.BottomTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BottomTableLayoutPanel.Location = new System.Drawing.Point(0, 380);
+            this.BottomTableLayoutPanel.Location = new System.Drawing.Point(0, 730);
             this.BottomTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.BottomTableLayoutPanel.Name = "BottomTableLayoutPanel";
             this.BottomTableLayoutPanel.RowCount = 1;
             this.BottomTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.BottomTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.BottomTableLayoutPanel.Size = new System.Drawing.Size(784, 31);
+            this.BottomTableLayoutPanel.Size = new System.Drawing.Size(1264, 31);
             this.BottomTableLayoutPanel.TabIndex = 6;
             // 
             // ClearButton
@@ -123,7 +123,7 @@
             this.ClearButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.ClearButton.Location = new System.Drawing.Point(3, 3);
             this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(118, 25);
+            this.ClearButton.Size = new System.Drawing.Size(120, 25);
             this.ClearButton.TabIndex = 9;
             this.ClearButton.Text = "Clear";
             this.ClearButton.UseVisualStyleBackColor = true;
@@ -132,9 +132,9 @@
             // 
             this.CloseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CloseButton.Location = new System.Drawing.Point(663, 3);
+            this.CloseButton.Location = new System.Drawing.Point(1141, 3);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(118, 25);
+            this.CloseButton.Size = new System.Drawing.Size(120, 25);
             this.CloseButton.TabIndex = 10;
             this.CloseButton.Text = "Cancel";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -144,7 +144,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(784, 411);
+            this.ClientSize = new System.Drawing.Size(1264, 761);
             this.Controls.Add(this.TableLayoutPanel);
             this.DoubleBuffered = true;
             this.MaximizeBox = false;
