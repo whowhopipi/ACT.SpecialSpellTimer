@@ -16,6 +16,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+
+            this.Loaded += (x, y) =>
+            {
+                if (this.MenuTreeView.SelectedItem == null)
+                {
+                    this.StartingTab.IsSelected = true;
+                }
+            };
         }
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);

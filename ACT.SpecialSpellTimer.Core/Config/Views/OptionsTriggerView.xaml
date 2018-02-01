@@ -36,8 +36,18 @@
       <fwcnv:BoolToCollapsedNegativeConverter x:Key="CollapsedNegativeConverter" />
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
 
-      <Style TargetType="{x:Type Label}">
+      <Style TargetType="Label">
         <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="CheckBox">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:IntegerUpDown}">
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
       </Style>
@@ -49,5 +59,20 @@
   </UserControl.Resources>
 
   <StackPanel>
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledPartyPlaceholder}" IsChecked="{Binding Config.EnabledPartyMemberPlaceholder, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledNotifyDefaultSpellTimer}" IsChecked="{Binding Config.NotifyNormalSpellTimerPrefix, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledSimplyRegex}" IsChecked="{Binding Config.SimpleRegex, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledRemoveTooltipSymbol}" IsChecked="{Binding Config.RemoveTooltipSymbols, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledCompleteUnknownSkill}" IsChecked="{Binding Config.ToComplementUnknownSkill, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledDetectPacketDump}" IsChecked="{Binding Config.DetectPacketDump, Mode=TwoWay}" />
+
+    <Label Margin="0 20 0 0" Content="{DynamicResource Options_ReadyText}" />
+    <TextBox Text="{Binding Config.ReadyText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left" />
+
+    <Label Margin="0 20 0 0" Content="{DynamicResource Options_OverText}" />
+    <TextBox Text="{Binding Config.OverText, Mode=TwoWay}" Width="200" HorizontalAlignment="Left" />
+
+    <CheckBox Margin="0 25 0 0" Content="{DynamicResource Options_ResetOnWipeout}" IsChecked="{Binding Config.ResetOnWipeOut, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_ResetNotifyToACT}" IsChecked="{Binding Config.WipeoutNotifyToACT, Mode=TwoWay}" Visibility="{Binding Config.ResetOnWipeOut, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" />
   </StackPanel>
 </UserControl>

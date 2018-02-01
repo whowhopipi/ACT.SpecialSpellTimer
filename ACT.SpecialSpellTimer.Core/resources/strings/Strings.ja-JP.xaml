@@ -121,4 +121,41 @@
   <system:String x:Key="Options_Trigger">トリガー</system:String>
   <system:String x:Key="Options_Log">ログ</system:String>
   <system:String x:Key="Options_TTSDictionary">TTS辞書</system:String>
+
+  <system:String x:Key="Options_OverlayEnabled">オーバーレイを有効にする</system:String>
+  <system:String x:Key="Options_HideOverlayOnNonActive">非アクティブのときオーバーレイを隠す</system:String>
+  <system:String x:Key="Options_Transparency">透過率（※不透明度ではない）</system:String>
+  <system:String x:Key="Options_LogPollingRate">メモリの監視間隔 (msec)</system:String>
+  <system:String x:Key="Options_OverlayRefreshRate">オーバーレイの描画間隔 (msec)</system:String>
+  <system:String x:Key="Options_AnimationMaxFPS">アニメーションの最大FPS</system:String>
+  <system:String x:Key="Options_RenderOnlyCPU">レンダリングをCPUに限定する</system:String>
+
+  <system:String x:Key="Options_TextStrokeThickenessGain">テキストのアウトライン増幅率</system:String>
+  <system:String x:Key="Options_TextBlurGain">テキストのブラー増幅率</system:String>
+  <system:String x:Key="Options_IconBrightnessInRecasting">リキャスト中のアイコンの明るさ(%)</system:String>
+  <system:String x:Key="Options_RecastTimeInInteger">スペルのリキャスト時間を整数表示にする</system:String>
+  <system:String x:Key="Options_FixProgressBarBackground">プログレスバーの背景色を固定する</system:String>
+  <system:String x:Key="Options_ProgressBarBackgroudBrightness">プログレスバーの背景の輝度</system:String>
+  <system:String x:Key="Options_ProgressBarBackgroudColor">プログレスバーの背景色</system:String>
+
+  <system:String x:Key="Options_EnabledPartyPlaceholder">パーティメンバのプレースホルダを有効にする ※&lt;2&gt;～&lt;8&gt;等が使用できるようになります。ただし順序は実際のパーティリストとは異なる場合があります。</system:String>
+  <system:String x:Key="Options_EnabledNotifyDefaultSpellTimer">ACT本体のスペルタイマにも通知する（試験的機能）</system:String>
+  <system:String x:Key="Options_EnabledSimplyRegex">正規表現を単純にする</system:String>
+  <system:String x:Key="Options_EnabledRemoveTooltipSymbol">ツールチップ記号を除去する</system:String>
+  <system:String x:Key="Options_EnabledCompleteUnknownSkill">UNKNOWNスキルを補完する</system:String>
+  <system:String x:Key="Options_EnabledDetectPacketDump">FCから始まるパケットダンプも解析対象にする（非推奨：高負荷）</system:String>
+  <system:String x:Key="Options_ReadyText">正方向のスペルのカウント完了時のテキスト（既定値：Ready）</system:String>
+  <system:String x:Key="Options_OverText">逆方向のスペルのカウント完了時のテキスト（既定値：Over）</system:String>
+
+  <system:String x:Key="Options_EnabledLog">ログを保存する</system:String>
+  <system:String x:Key="Options_LogDirectory">ログの保存先フォルダ</system:String>
+  <system:String x:Key="Options_Browse">参照</system:String>
+
+  <system:String x:Key="Options_ResetOnWipeout">全滅時にカウントをリセットする</system:String>
+  <system:String x:Key="Options_ResetNotifyToACT">リセット時にACT本体に"end"を通知する</system:String>
+
+  <system:String x:Key="Options_Phonetics">パーティメンバの呼び名</system:String>
+  <system:String x:Key="Options_TestPhonetics">呼び名をテストする</system:String>
+  <system:String x:Key="Options_OpenTTSDictionary">外部のTTS辞書ファイルを開く</system:String>
+  <system:String x:Key="Options_ReloadTTSDictionary">外部のTTS辞書ファイルを再読込する</system:String>
 </ResourceDictionary>

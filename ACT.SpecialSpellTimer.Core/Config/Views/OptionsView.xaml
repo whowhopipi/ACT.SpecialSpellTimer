@@ -67,11 +67,12 @@
     <!-- メニューツリー -->
     <TreeView
       Grid.Column="0"
+      x:Name="MenuTreeView"
       BorderThickness="0"
       ItemContainerStyle="{StaticResource MenuStyle}"
       SelectedItemChanged="TreeView_SelectedItemChanged">
       <TreeViewItem Header="Language" TabIndex="0" />
-      <TreeViewItem Header="{DynamicResource Common_General}" TabIndex="1" />
+      <TreeViewItem Header="{DynamicResource Common_General}" TabIndex="1" x:Name="StartingTab" />
       <TreeViewItem Header="{DynamicResource Options_Visual}" TabIndex="2" />
       <TreeViewItem Header="{DynamicResource Options_Trigger}" TabIndex="3" />
       <TreeViewItem Header="{DynamicResource Options_Log}" TabIndex="4" />

@@ -56,7 +56,7 @@ namespace ACT.SpecialSpellTimer.Views
         public bool OverlayVisible
         {
             get => this.overlayVisible;
-            set => this.SetOverlayVisible(ref this.overlayVisible, value, (100d - Settings.Default.Opacity) / 100d);
+            set => this.SetOverlayVisible(ref this.overlayVisible, value, Settings.Default.OpacityToView);
         }
 
         public SpellPanel Config { get; set; }

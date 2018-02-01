@@ -36,8 +36,28 @@
       <fwcnv:BoolToCollapsedNegativeConverter x:Key="CollapsedNegativeConverter" />
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
 
-      <Style TargetType="{x:Type Label}">
+      <Style TargetType="Label">
         <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="CheckBox">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:IntegerUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:LongUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:DoubleUpDown}">
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
       </Style>
@@ -49,5 +69,29 @@
   </UserControl.Resources>
 
   <StackPanel>
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_TextStrokeThickenessGain}" />
+    <xctk:DoubleUpDown Value="{Binding Config.TextOutlineThicknessRate, Mode=TwoWay}" MinWidth="80" FormatString="F1" Increment="0.1" />
+
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_TextBlurGain}" />
+    <xctk:DoubleUpDown Value="{Binding Config.TextBlurRate, Mode=TwoWay}" MinWidth="80" FormatString="F1" Increment="0.1" />
+
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_IconBrightnessInRecasting}" />
+    <xctk:IntegerUpDown Value="{Binding Config.ReduceIconBrightness, Mode=TwoWay}" MinWidth="80" />
+
+    <CheckBox Margin="0 20 0 0" Content="{DynamicResource Options_RecastTimeInInteger}" IsChecked="{Binding Config.EnabledSpellTimerNoDecimal, Mode=TwoWay}" />
+    <CheckBox Margin="0 20 0 0" Content="{DynamicResource Options_FixProgressBarBackground}" IsChecked="{Binding Config.BarBackgroundFixed, Mode=TwoWay}" />
+
+    <StackPanel Margin="0 15 0 0" Visibility="{Binding Config.BarBackgroundFixed, Mode=OneWay, Converter={StaticResource CollapsedNegativeConverter}}">
+      <Label Margin="0 0 0 0" Content="{DynamicResource Options_ProgressBarBackgroudBrightness}" />
+      <xctk:DoubleUpDown Value="{Binding Config.BarBackgroundBrightness, Mode=TwoWay}" MinWidth="80" FormatString="F2" Increment="0.01" />
+    </StackPanel>
+
+    <StackPanel Margin="0 15 0 0" Visibility="{Binding Config.BarBackgroundFixed, Mode=OneWay, Converter={StaticResource CollapsedConverter}}">
+      <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+        <Hyperlink Command="{Binding ChangeProgressBarBackgroundColorCommand}">
+          <TextBlock Text="{DynamicResource Options_ProgressBarBackgroudColor}" />
+        </Hyperlink>
+      </TextBlock>
+    </StackPanel>
   </StackPanel>
 </UserControl>

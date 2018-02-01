@@ -73,7 +73,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 表示切り替えボタン
         /// </summary>
-        private CheckBox SwitchVisibleButton { get; set; }
+        public CheckBox SwitchVisibleButton { get; set; }
 
         /// <summary>
         /// 後片付けをする
@@ -243,7 +243,7 @@ namespace ACT.SpecialSpellTimer
             });
         }
 
-        private void ChangeButtonColor()
+        public void ChangeButtonColor()
         {
             var button = this.SwitchVisibleButton;
 

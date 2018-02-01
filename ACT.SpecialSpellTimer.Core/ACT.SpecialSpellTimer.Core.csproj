@@ -172,9 +172,6 @@
     <Compile Include="Config\Views\TriggersView.xaml.cs">
       <DependentUpon>TriggersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Config\Views\TTSDictionaryView.xaml.cs">
-      <DependentUpon>TTSDictionaryView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ConfigPanel.CombatAnalyzer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -454,10 +451,6 @@
     <Page Include="Config\Views\TriggersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Config\Views\TTSDictionaryView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="resources\strings\Strings.en-US.xaml">
       <Generator>MSBuild:Compile</Generator>

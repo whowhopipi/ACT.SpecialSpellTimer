@@ -156,7 +156,7 @@ namespace ACT.SpecialSpellTimer.Config
         public bool BarBackgroundFixed
         {
             get => this.barBackgroundFixed;
-            set => this.barBackgroundFixed = value;
+            set => this.SetProperty(ref this.barBackgroundFixed, value);
         }
 
         /// <summary>
@@ -268,6 +268,33 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.clickThroughEnabled, value);
         }
 
+        private bool overlayVisible;
+
+        public bool OverlayVisible
+        {
+            get => this.overlayVisible;
+            set
+            {
+                if (this.SetProperty(ref this.overlayVisible, value))
+                {
+                    var button = PluginCore.Instance.SwitchVisibleButton;
+                    if (button != null)
+                    {
+                        if (this.overlayVisible)
+                        {
+                            button.BackColor = Color.SandyBrown;
+                            button.ForeColor = Color.WhiteSmoke;
+                        }
+                        else
+                        {
+                            button.BackColor = SystemColors.Control;
+                            button.ForeColor = Color.Black;
+                        }
+                    }
+                }
+            }
+        }
+
         public bool AutoSortEnabled { get; set; }
         public bool AutoSortReverse { get; set; }
         public long CombatLogBufferSize { get; set; }
@@ -282,8 +309,11 @@ namespace ACT.SpecialSpellTimer.Config
         public long LogPollSleepInterval { get; set; }
         public string NotifyNormalSpellTimerPrefix { get; set; }
         public int Opacity { get; set; }
+
+        [XmlIgnore]
+        public double OpacityToView => (100d - this.Opacity) / 100d;
+
         public bool OverlayForceVisible { get; set; }
-        public bool OverlayVisible { get; set; }
         public string OverText { get; set; }
         public NameStyles PCNameInitialOnDisplayStyle { get; set; } = NameStyles.FullName;
         public NameStyles PCNameInitialOnLogStyle { get; set; } = NameStyles.FullName;
@@ -293,10 +323,15 @@ namespace ACT.SpecialSpellTimer.Config
         public long RefreshInterval { get; set; }
         public bool RemoveTooltipSymbols { get; set; }
         public bool RenderCPUOnly { get; set; } = true;
-        public bool ResetOnWipeOut { get; set; }
-        public string SaveLogDirectory { get; set; }
-        public bool SaveLogEnabled { get; set; }
-        public string SaveLogFile { get; set; }
+
+        private bool resetOnWipeOut;
+
+        public bool ResetOnWipeOut
+        {
+            get => this.resetOnWipeOut;
+            set => this.SetProperty(ref this.resetOnWipeOut, value);
+        }
+
         public bool SimpleRegex { get; set; }
         public bool TelopAlwaysVisible { get; set; }
         public double TextBlurRate { get; set; }
@@ -350,6 +385,21 @@ namespace ACT.SpecialSpellTimer.Config
         {
             get => this.lpsViewScale;
             set => this.SetProperty(ref this.lpsViewScale, value);
+        }
+
+        private bool saveLogEnabled;
+        private string saveLogDirectory;
+
+        public bool SaveLogEnabled
+        {
+            get => this.saveLogEnabled;
+            set => this.SetProperty(ref this.saveLogEnabled, value);
+        }
+
+        public string SaveLogDirectory
+        {
+            get => this.saveLogDirectory;
+            set => this.SetProperty(ref this.saveLogDirectory, value);
         }
 
         #endregion Data
@@ -539,7 +589,6 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.EnabledSpellTimerNoDecimal), true },
             { nameof(Settings.EnabledNotifyNormalSpellTimer), false },
             { nameof(Settings.SaveLogEnabled), false },
-            { nameof(Settings.SaveLogFile), string.Empty },
             { nameof(Settings.SaveLogDirectory), string.Empty },
             { nameof(Settings.HideWhenNotActive), false },
             { nameof(Settings.UseOtherThanFFXIV), false },

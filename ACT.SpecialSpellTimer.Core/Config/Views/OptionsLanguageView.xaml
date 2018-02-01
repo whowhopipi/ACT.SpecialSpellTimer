@@ -36,8 +36,18 @@
       <fwcnv:BoolToCollapsedNegativeConverter x:Key="CollapsedNegativeConverter" />
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
 
-      <Style TargetType="{x:Type Label}">
+      <Style TargetType="Label">
         <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="CheckBox">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:IntegerUpDown}">
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
       </Style>

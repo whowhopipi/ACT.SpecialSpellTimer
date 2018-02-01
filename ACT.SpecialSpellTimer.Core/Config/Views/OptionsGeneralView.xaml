@@ -36,8 +36,28 @@
       <fwcnv:BoolToCollapsedNegativeConverter x:Key="CollapsedNegativeConverter" />
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
 
-      <Style TargetType="{x:Type Label}">
+      <Style TargetType="Label">
         <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="CheckBox">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:IntegerUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:LongUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:DoubleUpDown}">
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
       </Style>
@@ -49,5 +69,26 @@
   </UserControl.Resources>
 
   <StackPanel>
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_OverlayEnabled}" IsChecked="{Binding Config.OverlayVisible, Mode=TwoWay}" FontWeight="Bold">
+      <CheckBox.LayoutTransform>
+        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+      </CheckBox.LayoutTransform>
+    </CheckBox>
+
+    <CheckBox Margin="0 40 0 0" Content="{DynamicResource Options_HideOverlayOnNonActive}" IsChecked="{Binding Config.HideWhenNotActive, Mode=TwoWay}" />
+
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_Transparency}" />
+    <xctk:IntegerUpDown Value="{Binding Config.Opacity, Mode=TwoWay}" MinWidth="80" />
+
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_LogPollingRate}" />
+    <xctk:LongUpDown Value="{Binding Config.LogPollSleepInterval, Mode=TwoWay}" MinWidth="80" />
+
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_OverlayRefreshRate}" />
+    <xctk:LongUpDown Value="{Binding Config.RefreshInterval, Mode=TwoWay}" MinWidth="80" />
+
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_AnimationMaxFPS}" />
+    <xctk:LongUpDown Value="{Binding Config.MaxFPS, Mode=TwoWay}" MinWidth="80" />
+
+    <CheckBox Margin="0 20 0 0" Content="{DynamicResource Options_RenderOnlyCPU}" IsChecked="{Binding Config.RenderCPUOnly, Mode=TwoWay}" />
   </StackPanel>
 </UserControl>
