@@ -116,4 +116,9 @@
   <system:String x:Key="Ticker_VisibleProgressBar">プログレスバーを表示する</system:String>
   <system:String x:Key="Ticker_NoticeOnMatch">マッチしたときの通知</system:String>
   <system:String x:Key="Ticker_NoticeOnDelay">表示したときの通知（ディレイ後の通知）</system:String>
+
+  <system:String x:Key="Options_Visual">見た目</system:String>
+  <system:String x:Key="Options_Trigger">トリガー</system:String>
+  <system:String x:Key="Options_Log">ログ</system:String>
+  <system:String x:Key="Options_TTSDictionary">TTS辞書</system:String>
 </ResourceDictionary>

@@ -10,7 +10,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
     /// <summary>
     /// SpellConfigView.xaml の相互作用ロジック
     /// </summary>
-    public partial class SpellConfigView : UserControl, ILocalizable
+    public partial class SpellConfigView :
+        UserControl,
+        ILocalizable
     {
         public SpellConfigView()
         {

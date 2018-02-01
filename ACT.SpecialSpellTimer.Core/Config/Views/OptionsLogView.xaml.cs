@@ -5,13 +5,13 @@ using FFXIV.Framework.Globalization;
 namespace ACT.SpecialSpellTimer.Config.Views
 {
     /// <summary>
-    /// OptionsView.xaml の相互作用ロジック
+    /// OptionsLogView.xaml の相互作用ロジック
     /// </summary>
-    public partial class OptionsView :
+    public partial class OptionsLogView :
         UserControl,
         ILocalizable
     {
-        public OptionsView()
+        public OptionsLogView()
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
