@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
+using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
+using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
@@ -140,35 +142,11 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string MessageReplaced { get; set; }
 
-        public string Keyword { get; set; }
-
-        [XmlIgnore]
-        public string KeywordReplaced { get; set; }
-
-        public string KeywordToHide { get; set; }
-
-        [XmlIgnore]
-        public string KeywordToHideReplaced { get; set; }
-
         [XmlIgnore]
         public DateTime MatchDateTime { get; set; }
 
         [XmlIgnore]
         public string MatchedLog { get; set; }
-
-        public bool RegexEnabled { get; set; }
-
-        [XmlIgnore]
-        public Regex Regex { get; set; }
-
-        [XmlIgnore]
-        public string RegexPattern { get; set; }
-
-        [XmlIgnore]
-        public Regex RegexToHide { get; set; }
-
-        [XmlIgnore]
-        public string RegexPatternToHide { get; set; }
 
         public double Delay { get; set; } = 0;
 
@@ -534,6 +512,199 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion NewTicker
+
+        #region Regex compiler
+
+        [XmlIgnore]
+        public bool IsRealtimeCompile { get; set; } = false;
+
+        private bool regexEnabled;
+        private string keyword;
+        private string keywordToHide;
+
+        public bool RegexEnabled
+        {
+            get => this.regexEnabled;
+            set
+            {
+                if (this.SetProperty(ref this.regexEnabled, value))
+                {
+                    this.KeywordReplaced = string.Empty;
+                    this.KeywordToHideReplaced = string.Empty;
+
+                    if (this.IsRealtimeCompile)
+                    {
+                        var message = string.Empty;
+
+                        message = this.CompileRegex();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+
+                        message = this.CompileRegexToHide();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+                    }
+                }
+            }
+        }
+
+        public string Keyword
+        {
+            get => this.keyword;
+            set
+            {
+                if (this.SetProperty(ref this.keyword, value))
+                {
+                    this.KeywordReplaced = string.Empty;
+                    if (this.IsRealtimeCompile)
+                    {
+                        var message = this.CompileRegex();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+                    }
+                }
+            }
+        }
+
+        public string KeywordToHide
+        {
+            get => this.keywordToHide;
+            set
+            {
+                if (this.SetProperty(ref this.keywordToHide, value))
+                {
+                    this.KeywordToHideReplaced = string.Empty;
+                    if (this.IsRealtimeCompile)
+                    {
+                        var message = this.CompileRegexToHide();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+                    }
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string KeywordReplaced { get; set; }
+
+        [XmlIgnore]
+        public string KeywordToHideReplaced { get; set; }
+
+        [XmlIgnore]
+        public Regex Regex { get; set; }
+
+        [XmlIgnore]
+        public Regex RegexToHide { get; set; }
+
+        [XmlIgnore]
+        public string RegexPattern { get; set; }
+
+        [XmlIgnore]
+        public string RegexPatternToHide { get; set; }
+
+        public string CompileRegex()
+        {
+            var message = string.Empty;
+            var pattern = string.Empty;
+
+            try
+            {
+                if (this.RegexEnabled)
+                {
+                    this.KeywordReplaced = TableCompiler.Instance.GetMatchingKeyword(
+                        this.KeywordReplaced,
+                        this.Keyword);
+                    pattern = this.KeywordReplaced.ToRegexPattern();
+
+                    if (this.Regex == null ||
+                        this.RegexPattern != pattern)
+                    {
+                        this.Regex = pattern.ToRegex();
+                        this.RegexPattern = pattern;
+                    }
+                }
+                else
+                {
+                    this.Regex = null;
+                    this.RegexPattern = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                message =
+                    $"Regex compile error." + Environment.NewLine +
+                    $"Target: {this.Title}" + Environment.NewLine +
+                    $"Pattern: {pattern}" + Environment.NewLine +
+                    ex.Message;
+            }
+
+            return message;
+        }
+
+        public string CompileRegexToHide()
+        {
+            var message = string.Empty;
+            var pattern = string.Empty;
+
+            try
+            {
+                if (this.RegexEnabled)
+                {
+                    this.KeywordToHideReplaced = TableCompiler.Instance.GetMatchingKeyword(
+                        this.KeywordToHideReplaced,
+                        this.KeywordToHide);
+                    pattern = this.KeywordToHideReplaced.ToRegexPattern();
+
+                    if (this.RegexToHide == null ||
+                        this.RegexPatternToHide != pattern)
+                    {
+                        this.RegexToHide = pattern.ToRegex();
+                        this.RegexPatternToHide = pattern;
+                    }
+                }
+                else
+                {
+                    this.RegexToHide = null;
+                    this.RegexPatternToHide = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                message =
+                    $"Regex compile error." + Environment.NewLine +
+                    $"Target: {this.Title}" + Environment.NewLine +
+                    $"Pattern: {pattern}" + Environment.NewLine +
+                    ex.Message;
+            }
+
+            return message;
+        }
+
+        #endregion Regex compiler
 
         public void SimulateMatch()
         {

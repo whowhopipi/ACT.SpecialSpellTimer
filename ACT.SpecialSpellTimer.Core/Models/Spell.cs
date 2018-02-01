@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
+using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Sound;
+using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
@@ -256,18 +258,6 @@ namespace ACT.SpecialSpellTimer.Models
         public bool IsInstance { get; set; }
 
         public bool IsReverse { get; set; }
-        public string Keyword { get; set; }
-        public string KeywordForExtend1 { get; set; }
-        public string KeywordForExtend2 { get; set; }
-
-        [XmlIgnore]
-        public string KeywordForExtendReplaced1 { get; set; }
-
-        [XmlIgnore]
-        public string KeywordForExtendReplaced2 { get; set; }
-
-        [XmlIgnore]
-        public string KeywordReplaced { get; set; }
 
         public DateTime MatchDateTime { get; set; }
 
@@ -279,26 +269,6 @@ namespace ACT.SpecialSpellTimer.Models
         public double RecastTimeExtending1 { get; set; } = 0;
         public double RecastTimeExtending2 { get; set; } = 0;
         public bool ReduceIconBrightness { get; set; }
-
-        [XmlIgnore]
-        public Regex Regex { get; set; }
-
-        public bool RegexEnabled { get; set; }
-
-        [XmlIgnore]
-        public Regex RegexForExtend1 { get; set; }
-
-        [XmlIgnore]
-        public Regex RegexForExtend2 { get; set; }
-
-        [XmlIgnore]
-        public string RegexForExtendPattern1 { get; set; }
-
-        [XmlIgnore]
-        public string RegexForExtendPattern2 { get; set; }
-
-        [XmlIgnore]
-        public string RegexPattern { get; set; }
 
         public bool RepeatEnabled { get; set; }
 
@@ -992,6 +962,283 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion NewSpell
+
+        #region Regex compiler
+
+        [XmlIgnore]
+        public bool IsRealtimeCompile { get; set; } = false;
+
+        private bool regexEnabled;
+        private string keyword;
+        private string keywordForExtend1;
+        private string keywordForExtend2;
+
+        public bool RegexEnabled
+        {
+            get => this.regexEnabled;
+            set
+            {
+                if (this.SetProperty(ref this.regexEnabled, value))
+                {
+                    this.KeywordReplaced = string.Empty;
+                    this.KeywordForExtendReplaced1 = string.Empty;
+                    this.KeywordForExtendReplaced2 = string.Empty;
+
+                    if (this.IsRealtimeCompile)
+                    {
+                        var message = string.Empty;
+
+                        message = this.CompileRegex();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+
+                        message = this.CompileRegexExtend1();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+
+                        message = this.CompileRegexExtend2();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+                    }
+                }
+            }
+        }
+
+        public string Keyword
+        {
+            get => this.keyword;
+            set
+            {
+                if (this.SetProperty(ref this.keyword, value))
+                {
+                    this.KeywordReplaced = string.Empty;
+                    if (this.IsRealtimeCompile)
+                    {
+                        var message = this.CompileRegex();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+                    }
+                }
+            }
+        }
+
+        public string KeywordForExtend1
+        {
+            get => this.keywordForExtend1;
+            set
+            {
+                if (this.SetProperty(ref this.keywordForExtend1, value))
+                {
+                    this.KeywordForExtendReplaced1 = string.Empty;
+                    if (this.IsRealtimeCompile)
+                    {
+                        var message = this.CompileRegexExtend1();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+                    }
+                }
+            }
+        }
+
+        public string KeywordForExtend2
+        {
+            get => this.keywordForExtend2;
+            set
+            {
+                if (this.SetProperty(ref this.keywordForExtend2, value))
+                {
+                    this.KeywordForExtendReplaced2 = string.Empty;
+                    if (this.IsRealtimeCompile)
+                    {
+                        var message = this.CompileRegexExtend2();
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            MessageBox.Show(
+                                message,
+                                "Regex compiler",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
+                        }
+                    }
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string KeywordReplaced { get; set; }
+
+        [XmlIgnore]
+        public string KeywordForExtendReplaced1 { get; set; }
+
+        [XmlIgnore]
+        public string KeywordForExtendReplaced2 { get; set; }
+
+        [XmlIgnore]
+        public Regex Regex { get; set; }
+
+        [XmlIgnore]
+        public Regex RegexForExtend1 { get; set; }
+
+        [XmlIgnore]
+        public Regex RegexForExtend2 { get; set; }
+
+        [XmlIgnore]
+        public string RegexPattern { get; set; }
+
+        [XmlIgnore]
+        public string RegexForExtendPattern1 { get; set; }
+
+        [XmlIgnore]
+        public string RegexForExtendPattern2 { get; set; }
+
+        public string CompileRegex()
+        {
+            var message = string.Empty;
+            var pattern = string.Empty;
+
+            try
+            {
+                if (this.RegexEnabled)
+                {
+                    this.KeywordReplaced = TableCompiler.Instance.GetMatchingKeyword(
+                        this.KeywordReplaced,
+                        this.Keyword);
+                    pattern = this.KeywordReplaced.ToRegexPattern();
+
+                    if (this.Regex == null ||
+                        this.RegexPattern != pattern)
+                    {
+                        this.Regex = pattern.ToRegex();
+                        this.RegexPattern = pattern;
+                    }
+                }
+                else
+                {
+                    this.Regex = null;
+                    this.RegexPattern = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                message =
+                    $"Regex compile error." + Environment.NewLine +
+                    $"Target: {this.SpellTitle}" + Environment.NewLine +
+                    $"Pattern: {pattern}" + Environment.NewLine +
+                    ex.Message;
+            }
+
+            return message;
+        }
+
+        public string CompileRegexExtend1()
+        {
+            var message = string.Empty;
+            var pattern = string.Empty;
+
+            try
+            {
+                if (this.RegexEnabled)
+                {
+                    this.KeywordForExtendReplaced1 = TableCompiler.Instance.GetMatchingKeyword(
+                        this.KeywordForExtendReplaced1,
+                        this.KeywordForExtend1);
+                    pattern = this.KeywordForExtendReplaced1.ToRegexPattern();
+
+                    if (this.RegexForExtend1 == null ||
+                        this.RegexForExtendPattern1 != pattern)
+                    {
+                        this.RegexForExtend1 = pattern.ToRegex();
+                        this.RegexForExtendPattern1 = pattern;
+                    }
+                }
+                else
+                {
+                    this.RegexForExtend1 = null;
+                    this.RegexForExtendPattern1 = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                message =
+                    $"Regex compile error." + Environment.NewLine +
+                    $"Target: {this.SpellTitle}" + Environment.NewLine +
+                    $"Pattern: {pattern}" + Environment.NewLine +
+                    ex.Message;
+            }
+
+            return message;
+        }
+
+        public string CompileRegexExtend2()
+        {
+            var message = string.Empty;
+            var pattern = string.Empty;
+
+            try
+            {
+                if (this.RegexEnabled)
+                {
+                    this.KeywordForExtendReplaced2 = TableCompiler.Instance.GetMatchingKeyword(
+                        this.KeywordForExtendReplaced2,
+                        this.KeywordForExtend2);
+                    pattern = this.KeywordForExtendReplaced2.ToRegexPattern();
+
+                    if (this.RegexForExtend2 == null ||
+                        this.RegexForExtendPattern2 != pattern)
+                    {
+                        this.RegexForExtend2 = pattern.ToRegex();
+                        this.RegexForExtendPattern2 = pattern;
+                    }
+                }
+                else
+                {
+                    this.RegexForExtend2 = null;
+                    this.RegexForExtendPattern2 = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                message =
+                    $"Regex compile error." + Environment.NewLine +
+                    $"Target: {this.SpellTitle}" + Environment.NewLine +
+                    $"Pattern: {pattern}" + Environment.NewLine +
+                    ex.Message;
+            }
+
+            return message;
+        }
+
+        #endregion Regex compiler
 
         public void SimulateMatch()
         {

@@ -347,7 +347,7 @@
         </TreeView.Resources>
       </TreeView>
 
-      <StackPanel 
+      <StackPanel
         Grid.Row="1"
         Margin="5"
         Orientation="Horizontal">

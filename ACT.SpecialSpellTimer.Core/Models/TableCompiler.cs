@@ -281,6 +281,11 @@ namespace ACT.SpecialSpellTimer.Models
             // コンパイルする
             this.spellList.AsParallel().ForAll(spell =>
             {
+                spell.CompileRegex();
+                spell.CompileRegexExtend1();
+                spell.CompileRegexExtend2();
+
+                /*
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
                 spell.KeywordForExtendReplaced2 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced2, spell.KeywordForExtend2);
@@ -307,6 +312,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexForExtend2 = r3.Regex;
                     spell.KeywordForExtendReplaced2 = r3.RegexPattern;
                 }
+                */
             });
 
             this.RaiseTableChenged();
@@ -385,6 +391,10 @@ namespace ACT.SpecialSpellTimer.Models
             // コンパイルする
             this.tickerList.AsParallel().ForAll(spell =>
             {
+                spell.CompileRegex();
+                spell.CompileRegexToHide();
+
+                /*
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
                 spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
 
@@ -405,6 +415,7 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexToHide = r2.Regex;
                     spell.RegexPatternToHide = r2.RegexPattern;
                 }
+                */
             });
 
             this.RaiseTableChenged();
@@ -459,10 +470,9 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        private string GetMatchingKeyword(
+        public string GetMatchingKeyword(
             string destinationKeyword,
-            string sourceKeyword,
-            bool forceUpdate = false)
+            string sourceKeyword)
         {
             if (string.IsNullOrEmpty(sourceKeyword))
             {
@@ -489,8 +499,7 @@ namespace ACT.SpecialSpellTimer.Models
                 return r;
             }
 
-            if (forceUpdate ||
-                string.IsNullOrEmpty(destinationKeyword))
+            if (string.IsNullOrEmpty(destinationKeyword))
             {
                 var newKeyword = sourceKeyword;
                 newKeyword = replace(newKeyword);

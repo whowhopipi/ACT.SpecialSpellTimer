@@ -36,20 +36,35 @@ namespace ACT.SpecialSpellTimer.Config.Views
         private SpellConfigViewModel spellViewModel;
         private TickerConfigViewModel tickerViewModel;
 
+        private object previousModel;
+
         private void ShowContent(
             object model)
         {
+            if (this.previousModel != null)
+            {
+                if (this.previousModel is Spell s)
+                {
+                    s.IsRealtimeCompile = false;
+                }
+
+                if (this.previousModel is Ticker t)
+                {
+                    t.IsRealtimeCompile = false;
+                }
+            }
+
             switch (model)
             {
                 case SpellPanel panel:
                     if (this.spellPanelViewModel == null)
                     {
-                        this.spellPanelViewModel = new SpellPanelConfigViewModel(model as SpellPanel);
+                        this.spellPanelViewModel = new SpellPanelConfigViewModel(panel);
                         this.SpellPanelView.DataContext = this.spellPanelViewModel;
                     }
                     else
                     {
-                        this.spellPanelViewModel.Model = model as SpellPanel;
+                        this.spellPanelViewModel.Model = panel;
                     }
 
                     this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.DarkViolet);
@@ -59,14 +74,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     break;
 
                 case Spell spell:
+                    spell.IsRealtimeCompile = true;
                     if (this.spellViewModel == null)
                     {
-                        this.spellViewModel = new SpellConfigViewModel(model as Spell);
+                        this.spellViewModel = new SpellConfigViewModel(spell);
                         this.SpellView.DataContext = this.spellViewModel;
                     }
                     else
                     {
-                        this.spellViewModel.Model = model as Spell;
+                        this.spellViewModel.Model = spell;
                     }
 
                     this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.MediumBlue);
@@ -76,14 +92,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     break;
 
                 case Ticker ticker:
+                    ticker.IsRealtimeCompile = true;
                     if (this.tickerViewModel == null)
                     {
-                        this.tickerViewModel = new TickerConfigViewModel(model as Ticker);
+                        this.tickerViewModel = new TickerConfigViewModel(ticker);
                         this.TickerView.DataContext = this.tickerViewModel;
                     }
                     else
                     {
-                        this.tickerViewModel.Model = model as Ticker;
+                        this.tickerViewModel.Model = ticker;
                     }
 
                     this.ContentBorder.BorderBrush = new SolidColorBrush(Colors.OliveDrab);
@@ -99,6 +116,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     this.TickerView.Visibility = Visibility.Collapsed;
                     break;
             }
+
+            this.previousModel = model;
         }
 
         private void RenameTextBoxOnLostFocus(

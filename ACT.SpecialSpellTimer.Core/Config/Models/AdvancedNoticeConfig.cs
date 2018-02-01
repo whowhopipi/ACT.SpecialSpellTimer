@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using ACT.SpecialSpellTimer.Sound;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Bridge;
@@ -45,6 +46,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public void PlayWave(
             string wave)
         {
+            if (!File.Exists(wave))
+            {
+                return;
+            }
+
             if (!this.IsEnabled)
             {
                 ActGlobals.oFormActMain.PlaySound(wave);
