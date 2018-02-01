@@ -31,8 +31,10 @@
     <TabItem Header="Help">
       <fw:HelpView x:Name="HelpView" />
     </TabItem>
+    <!--
     <TabItem Header="Config(OLD)">
       <WindowsFormsHost x:Name="WindowsFormsHost" Margin="0" />
     </TabItem>
+    -->
   </TabControl>
 </UserControl>
