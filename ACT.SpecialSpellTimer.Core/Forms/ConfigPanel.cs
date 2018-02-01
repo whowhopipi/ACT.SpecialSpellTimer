@@ -202,7 +202,6 @@ namespace ACT.SpecialSpellTimer.Forms
                         nr.RecastTimeExtending2 = baseRow.RecastTimeExtending2;
                         nr.ExtendBeyondOriginalRecastTime = baseRow.ExtendBeyondOriginalRecastTime;
                         nr.UpperLimitOfExtension = baseRow.UpperLimitOfExtension;
-                        nr.RepeatEnabled = baseRow.RepeatEnabled;
                         nr.ProgressBarVisible = baseRow.ProgressBarVisible;
                         nr.IsReverse = baseRow.IsReverse;
                         nr.FontColor = baseRow.FontColor;
@@ -741,7 +740,6 @@ namespace ACT.SpecialSpellTimer.Forms
             this.KeywordTextBox.Text = src.Keyword;
             this.RegexEnabledCheckBox.Checked = src.RegexEnabled;
             this.RecastTimeNumericUpDown.Value = (decimal)src.RecastTime;
-            this.RepeatCheckBox.Checked = src.RepeatEnabled;
             this.ShowProgressBarCheckBox.Checked = src.ProgressBarVisible;
 
             this.KeywordToExpand1TextBox.Text = src.KeywordForExtend1;
@@ -968,7 +966,6 @@ namespace ACT.SpecialSpellTimer.Forms
                     src.Keyword = this.KeywordTextBox.Text;
                     src.RegexEnabled = this.RegexEnabledCheckBox.Checked;
                     src.RecastTime = (double)this.RecastTimeNumericUpDown.Value;
-                    src.RepeatEnabled = this.RepeatCheckBox.Checked;
                     src.ProgressBarVisible = this.ShowProgressBarCheckBox.Checked;
 
                     src.KeywordForExtend1 = this.KeywordToExpand1TextBox.Text;

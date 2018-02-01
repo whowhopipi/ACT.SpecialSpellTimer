@@ -270,8 +270,6 @@ namespace ACT.SpecialSpellTimer.Models
         public double RecastTimeExtending2 { get; set; } = 0;
         public bool ReduceIconBrightness { get; set; }
 
-        public bool RepeatEnabled { get; set; }
-
         private string spellIcon;
 
         public string SpellIcon
@@ -929,7 +927,6 @@ namespace ACT.SpecialSpellTimer.Models
             n.RecastTimeExtending2 = this.RecastTimeExtending2;
             n.ExtendBeyondOriginalRecastTime = this.ExtendBeyondOriginalRecastTime;
             n.UpperLimitOfExtension = this.UpperLimitOfExtension;
-            n.RepeatEnabled = this.RepeatEnabled;
             n.ProgressBarVisible = this.ProgressBarVisible;
             n.IsReverse = this.IsReverse;
             n.FontColor = this.FontColor;
