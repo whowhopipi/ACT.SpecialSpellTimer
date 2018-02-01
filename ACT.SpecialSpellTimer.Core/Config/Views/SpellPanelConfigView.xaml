@@ -29,6 +29,7 @@
   TextOptions.TextRenderingMode="ClearType"
   Margin="8"
   IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
 
   <UserControl.Resources>

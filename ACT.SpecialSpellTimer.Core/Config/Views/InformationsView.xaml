@@ -11,8 +11,7 @@
   xmlns:resources="clr-namespace:ACT.SpecialSpellTimer.resources"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
-  d:DataContext="{d:DesignInstance Type=vm:InformationsViewModel,
-                                   IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=vm:InformationsViewModel, IsDesignTimeCreatable=True}"
   d:DesignWidth="600"
   Background="White"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -24,6 +23,8 @@
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
+  IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
   <Grid />
 </UserControl>

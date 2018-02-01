@@ -209,8 +209,15 @@ namespace ACT.SpecialSpellTimer.Config
         public double OpacityToView => (100d - this.Opacity) / 100d;
 
         public string OverText { get; set; }
-        public NameStyles PCNameInitialOnDisplayStyle { get; set; } = NameStyles.FullName;
-        public NameStyles PCNameInitialOnLogStyle { get; set; } = NameStyles.FullName;
+
+        private NameStyles pcNameInitialOnDisplayStyle = NameStyles.FullName;
+
+        public NameStyles PCNameInitialOnDisplayStyle
+        {
+            get => this.pcNameInitialOnDisplayStyle;
+            set => this.SetProperty(ref this.pcNameInitialOnDisplayStyle, value);
+        }
+
         public double PlayerInfoRefreshInterval { get; set; }
         public string ReadyText { get; set; }
         public int ReduceIconBrightness { get; set; }
@@ -479,7 +486,6 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.DetectPacketDump), false },
             { nameof(Settings.TextBlurRate), 1.2d },
             { nameof(Settings.TextOutlineThicknessRate), 1.0d },
-            { nameof(Settings.PCNameInitialOnLogStyle), NameStyles.FullName },
             { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
             { nameof(Settings.RenderCPUOnly), true },
             { nameof(Settings.ToComplementUnknownSkill), true },

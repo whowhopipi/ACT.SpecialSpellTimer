@@ -26,6 +26,7 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
 
   <UserControl.Resources>
@@ -69,7 +70,15 @@
   </UserControl.Resources>
 
   <StackPanel>
-    <Label Margin="0 15 0 0" Content="{DynamicResource Options_TextStrokeThickenessGain}" />
+    <StackPanel Margin="0 15 0 0" HorizontalAlignment="Left">
+      <Label Margin="0 0 0 8" Content="{DynamicResource Options_PCNameDisplayStyle}" />
+      <RadioButton Margin="5 0 0 0" Content="Naoki Yoshida" VerticalContentAlignment="Center" Tag="0" x:Name="NameStyle1RadioButton" />
+      <RadioButton Margin="5 5 0 0" Content="Naoki Y." VerticalContentAlignment="Center" Tag="1" x:Name="NameStyle2RadioButton" />
+      <RadioButton Margin="5 5 0 0" Content="N. Yoshida" VerticalContentAlignment="Center" Tag="2" x:Name="NameStyle3RadioButton" />
+      <RadioButton Margin="5 5 0 0" Content="N. Y." VerticalContentAlignment="Center" Tag="3" x:Name="NameStyle4RadioButton" />
+    </StackPanel>
+
+    <Label Margin="0 20 0 0" Content="{DynamicResource Options_TextStrokeThickenessGain}" />
     <xctk:DoubleUpDown Value="{Binding Config.TextOutlineThicknessRate, Mode=TwoWay}" MinWidth="80" FormatString="F1" Increment="0.1" />
 
     <Label Margin="0 15 0 0" Content="{DynamicResource Options_TextBlurGain}" />

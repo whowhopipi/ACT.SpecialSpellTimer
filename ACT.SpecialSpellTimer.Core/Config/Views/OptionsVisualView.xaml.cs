@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.resources;
 using FFXIV.Framework.Dialog;
 using FFXIV.Framework.Globalization;
@@ -20,11 +22,45 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+
+            this.nameStyleRadioButtons = new[]
+            {
+                this.NameStyle1RadioButton,
+                this.NameStyle2RadioButton,
+                this.NameStyle3RadioButton,
+                this.NameStyle4RadioButton,
+            };
+
+            this.Loaded += (x, y) =>
+            {
+                var target = this.nameStyleRadioButtons.FirstOrDefault(z =>
+                    Convert.ToInt32(z.Tag) == (int)this.Config.PCNameInitialOnDisplayStyle);
+                if (target != null)
+                {
+                    target.IsChecked = true;
+                }
+            };
+
+            void setNameStyle()
+            {
+                var source = this.nameStyleRadioButtons.FirstOrDefault(z => z.IsChecked ?? false);
+                if (source != null)
+                {
+                    this.Config.PCNameInitialOnDisplayStyle = (NameStyles)Convert.ToInt32(source.Tag);
+                }
+            }
+
+            foreach (var button in this.nameStyleRadioButtons)
+            {
+                button.Checked += (x, y) => setNameStyle();
+            }
         }
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);
 
         public Settings Config => Settings.Default;
+
+        private RadioButton[] nameStyleRadioButtons;
 
         private ICommand CreateChangeColorCommand(
             Func<Color> getCurrentColor,

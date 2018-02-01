@@ -28,6 +28,8 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   mc:Ignorable="d"
+  IsTabStop="False"
+  Focusable="False"
   Padding="3">
 
   <UserControl.Resources>
@@ -354,7 +356,7 @@
         <!-- デザインモード -->
         <CheckBox
           Padding="5"
-          Content="Design Grid"
+          Content="{DynamicResource Tree_LayoutGrid}"
           FontWeight="Bold"
           Foreground="OrangeRed"
           VerticalAlignment="Bottom"
@@ -366,7 +368,7 @@
         <CheckBox
           Margin="20 0 0 0"
           Padding="5"
-          Content="Clickthrough"
+          Content="{DynamicResource Tree_Clickthrough}"
           FontWeight="Bold"
           Foreground="RoyalBlue"
           VerticalAlignment="Bottom"

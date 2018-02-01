@@ -17,6 +17,8 @@
   TextOptions.TextFormattingMode="Display"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
+  IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
   <TabControl>
     <TabItem Header="Triggers" IsSelected="True">

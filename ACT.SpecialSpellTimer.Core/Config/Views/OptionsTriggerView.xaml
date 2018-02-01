@@ -26,6 +26,7 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
 
   <UserControl.Resources>
@@ -52,6 +53,11 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
       </Style>
 
+      <Style TargetType="{x:Type xctk:DoubleUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
       </ResourceDictionary.MergedDictionaries>
@@ -59,7 +65,10 @@
   </UserControl.Resources>
 
   <StackPanel>
-    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledPartyPlaceholder}" IsChecked="{Binding Config.EnabledPartyMemberPlaceholder, Mode=TwoWay}" />
+    <Label Margin="0 15 0 0" Content="{DynamicResource Options_TimeToHide}" />
+    <xctk:DoubleUpDown Value="{Binding Config.TimeOfHideSpell, Mode=TwoWay}" MinWidth="60" FormatString="F0" />
+
+    <CheckBox Margin="0 20 0 0" Content="{DynamicResource Options_EnabledPartyPlaceholder}" IsChecked="{Binding Config.EnabledPartyMemberPlaceholder, Mode=TwoWay}" />
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledNotifyDefaultSpellTimer}" IsChecked="{Binding Config.NotifyNormalSpellTimerPrefix, Mode=TwoWay}" />
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledSimplyRegex}" IsChecked="{Binding Config.SimpleRegex, Mode=TwoWay}" />
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledRemoveTooltipSymbol}" IsChecked="{Binding Config.RemoveTooltipSymbols, Mode=TwoWay}" />

@@ -93,17 +93,17 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 () => this.Model.FontOutlineColor,
                 (color) => this.Model.FontOutlineColor = color));
 
-        private ICommand changeWarnningFontColorCommand;
+        private ICommand changeWarningFontColorCommand;
 
-        public ICommand ChangeWarnningFontColorCommand =>
-            this.changeWarnningFontColorCommand ?? (this.changeWarnningFontColorCommand = this.CreateChangeColorCommand(
+        public ICommand ChangeWarningFontColorCommand =>
+            this.changeWarningFontColorCommand ?? (this.changeWarningFontColorCommand = this.CreateChangeColorCommand(
                 () => this.Model.WarningFontColor,
                 (color) => this.Model.WarningFontColor = color));
 
-        private ICommand changeWarnningFontOutlineColorCommand;
+        private ICommand changeWarningFontOutlineColorCommand;
 
-        public ICommand ChangeWarnningFontOutlineColorCommand =>
-            this.changeWarnningFontOutlineColorCommand ?? (this.changeWarnningFontOutlineColorCommand = this.CreateChangeColorCommand(
+        public ICommand ChangeWarningFontOutlineColorCommand =>
+            this.changeWarningFontOutlineColorCommand ?? (this.changeWarningFontOutlineColorCommand = this.CreateChangeColorCommand(
                 () => this.Model.WarningFontOutlineColor,
                 (color) => this.Model.WarningFontOutlineColor = color));
 

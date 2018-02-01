@@ -28,6 +28,7 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
 
   <UserControl.Resources>
@@ -423,14 +424,14 @@
                 </TextBlock>
 
                 <TextBlock Margin="0 8 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding ChangeWarnningFontColorCommand}">
-                    <TextBlock Text="{DynamicResource Common_WarnningFillColor}" />
+                  <Hyperlink Command="{Binding ChangeWarningFontColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_WarningFillColor}" />
                   </Hyperlink>
                 </TextBlock>
 
                 <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
-                  <Hyperlink Command="{Binding ChangeWarnningFontOutlineColorCommand}">
-                    <TextBlock Text="{DynamicResource Common_WarnningStrokeColor}" />
+                  <Hyperlink Command="{Binding ChangeWarningFontOutlineColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_WarningStrokeColor}" />
                   </Hyperlink>
                 </TextBlock>
 

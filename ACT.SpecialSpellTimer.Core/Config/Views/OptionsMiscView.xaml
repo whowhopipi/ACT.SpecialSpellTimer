@@ -26,6 +26,7 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
 
   <UserControl.Resources>

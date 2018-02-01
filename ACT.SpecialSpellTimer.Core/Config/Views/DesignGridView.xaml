@@ -18,6 +18,8 @@
   WindowStyle="None"
   Background="Transparent"
   Opacity="0.01"
+  IsTabStop="False"
+  Focusable="False"
   WindowState="Maximized">
 
   <Grid x:Name="BaseGrid">

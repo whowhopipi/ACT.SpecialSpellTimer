@@ -24,6 +24,7 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   IsTabStop="False"
+  Focusable="False"
   mc:Ignorable="d">
 
   <UserControl.Resources>
@@ -68,6 +69,7 @@
     <TreeView
       Grid.Column="0"
       x:Name="MenuTreeView"
+      Margin="5 8 0 8"
       BorderThickness="0"
       ItemContainerStyle="{StaticResource MenuStyle}"
       SelectedItemChanged="TreeView_SelectedItemChanged">
