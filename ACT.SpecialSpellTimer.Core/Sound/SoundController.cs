@@ -34,33 +34,43 @@ namespace ACT.SpecialSpellTimer.Sound
 
         #endregion Begin / End
 
+        private string waveDirectory;
+
         public string WaveDirectory
         {
             get
             {
-                // ACTのパスを取得する
-                var asm = Assembly.GetEntryAssembly();
-                if (asm != null)
+                if (string.IsNullOrEmpty(this.waveDirectory))
                 {
-                    var actDirectory = Path.GetDirectoryName(asm.Location);
-                    var resourcesUnderAct = Path.Combine(actDirectory, @"resources\wav");
-
-                    if (Directory.Exists(resourcesUnderAct))
+                    do
                     {
-                        return resourcesUnderAct;
-                    }
+                        // ACTのパスを取得する
+                        var asm = Assembly.GetEntryAssembly();
+                        if (asm != null)
+                        {
+                            var actDirectory = Path.GetDirectoryName(asm.Location);
+                            var resourcesUnderAct = Path.Combine(actDirectory, @"resources\wav");
+
+                            if (Directory.Exists(resourcesUnderAct))
+                            {
+                                this.waveDirectory = resourcesUnderAct;
+                                break;
+                            }
+                        }
+
+                        // 自身の場所を取得する
+                        var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
+                        var resourcesUnderThis = Path.Combine(selfDirectory, @"resources\wav");
+
+                        if (Directory.Exists(resourcesUnderThis))
+                        {
+                            this.waveDirectory = resourcesUnderThis;
+                            break;
+                        }
+                    } while (false);
                 }
 
-                // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
-                var resourcesUnderThis = Path.Combine(selfDirectory, @"resources\wav");
-
-                if (Directory.Exists(resourcesUnderThis))
-                {
-                    return resourcesUnderThis;
-                }
-
-                return string.Empty;
+                return this.waveDirectory;
             }
         }
 

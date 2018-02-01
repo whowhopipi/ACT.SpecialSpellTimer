@@ -221,29 +221,12 @@ namespace ACT.SpecialSpellTimer.Config
 
         #region Data
 
-        public string Language { get; set; }
-
         [XmlIgnore]
-        public Locales UILocale
-        {
-            get
-            {
-                switch (this.Language)
-                {
-                    case "EN":
-                        return Locales.EN;
+        public string Language => this.UILocale == Locales.JA ? "JP" : "EN";
 
-                    case "JP":
-                        return Locales.JA;
+        public Locales UILocale { get; set; } = Locales.JA;
 
-                    case "KR":
-                        return Locales.KO;
-
-                    default:
-                        return Locales.EN;
-                }
-            }
-        }
+        public Locales FFXIVLocale { get; set; } = Locales.JA;
 
         public List<ExpandedContainer> ExpandedList
         {
@@ -526,7 +509,6 @@ namespace ACT.SpecialSpellTimer.Config
 
         public static readonly Dictionary<string, object> DefaultValues = new Dictionary<string, object>()
         {
-            { nameof(Settings.Language), "EN" },
             { nameof(Settings.ProgressBarSize), new Size(190, 8) },
             { nameof(Settings.ProgressBarColor), Color.White },
             { nameof(Settings.ProgressBarOutlineColor), Color.FromArgb(22, 120, 157) },

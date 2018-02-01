@@ -12,6 +12,7 @@ using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.FFXIVHelper;
+using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -881,7 +882,7 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         private void TranslateZoneList()
         {
-            if (Settings.Default.Language != "JP")
+            if (Settings.Default.UILocale != Locales.JA)
             {
                 return;
             }

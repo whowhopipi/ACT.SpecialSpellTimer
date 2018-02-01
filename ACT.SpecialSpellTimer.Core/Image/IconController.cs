@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -16,52 +16,59 @@ namespace ACT.SpecialSpellTimer.Image
 
         #endregion Singleton
 
+        private string[] iconDirectories;
+
         public string[] IconDirectories
         {
             get
             {
-                var dirs = new List<string>();
-
-                var actDirectory = string.Empty;
-
-                // ACTのパスを取得する
-                var asm = Assembly.GetEntryAssembly();
-                if (asm != null)
+                if (this.iconDirectories == null)
                 {
-                    actDirectory = Path.GetDirectoryName(asm.Location);
+                    var dirs = new List<string>();
 
-                    var dir1 = Path.Combine(actDirectory, @"resources\icon");
-                    if (Directory.Exists(dir1))
+                    var actDirectory = string.Empty;
+
+                    // ACTのパスを取得する
+                    var asm = Assembly.GetEntryAssembly();
+                    if (asm != null)
                     {
-                        dirs.Add(dir1);
+                        actDirectory = Path.GetDirectoryName(asm.Location);
+
+                        var dir1 = Path.Combine(actDirectory, @"resources\icon");
+                        if (Directory.Exists(dir1))
+                        {
+                            dirs.Add(dir1);
+                        }
+
+                        var dir2 = Path.Combine(actDirectory, @"resources\xivdb\Action icons");
+                        if (Directory.Exists(dir2))
+                        {
+                            dirs.Add(dir2);
+                        }
                     }
 
-                    var dir2 = Path.Combine(actDirectory, @"resources\xivdb\Action icons");
-                    if (Directory.Exists(dir2))
+                    // 自身の場所を取得する
+                    var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
+                    if (Path.GetFullPath(selfDirectory).ToLower() !=
+                        Path.GetFullPath(actDirectory).ToLower())
                     {
-                        dirs.Add(dir2);
+                        var dir3 = Path.Combine(selfDirectory, @"resources\icon");
+                        if (Directory.Exists(dir3))
+                        {
+                            dirs.Add(dir3);
+                        }
+
+                        var dir4 = Path.Combine(selfDirectory, @"resources\xivdb\Action icons");
+                        if (Directory.Exists(dir4))
+                        {
+                            dirs.Add(dir4);
+                        }
                     }
+
+                    this.iconDirectories = dirs.ToArray();
                 }
 
-                // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
-                if (Path.GetFullPath(selfDirectory).ToLower() !=
-                    Path.GetFullPath(actDirectory).ToLower())
-                {
-                    var dir3 = Path.Combine(selfDirectory, @"resources\icon");
-                    if (Directory.Exists(dir3))
-                    {
-                        dirs.Add(dir3);
-                    }
-
-                    var dir4 = Path.Combine(selfDirectory, @"resources\xivdb\Action icons");
-                    if (Directory.Exists(dir4))
-                    {
-                        dirs.Add(dir4);
-                    }
-                }
-
-                return dirs.ToArray();
+                return this.iconDirectories;
             }
         }
 
@@ -145,8 +152,8 @@ namespace ACT.SpecialSpellTimer.Image
                 @"\d\d\d\d_(?<skillName>.+?)\.png",
                 RegexOptions.Compiled);
 
-            public string Directory => 
-                !string.IsNullOrEmpty(this.FullPath) ? 
+            public string Directory =>
+                !string.IsNullOrEmpty(this.FullPath) ?
                 Path.GetDirectoryName(this.FullPath) :
                 string.Empty;
 

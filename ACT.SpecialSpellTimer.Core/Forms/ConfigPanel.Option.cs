@@ -113,8 +113,6 @@ namespace ACT.SpecialSpellTimer.Forms
         /// </summary>
         private void ApplySettingsOption()
         {
-            Settings.Default.Language = ((Utility.Language)this.LanguageComboBox.SelectedItem).Value;
-
             Settings.Default.OverlayForceVisible = this.OverlayForceVisibleCheckBox.Checked;
             Settings.Default.HideWhenNotActive = this.HideWhenNotActiceCheckBox.Checked;
             Settings.Default.UseOtherThanFFXIV = this.UseOtherThanFFXIVCheckbox.Checked;
@@ -237,7 +235,6 @@ namespace ACT.SpecialSpellTimer.Forms
             {
                 Language language = (Language)this.LanguageComboBox.SelectedItem;
                 this.LanguageRestartLabel.Text = Utility.Translate.GetTranslationsFor(language.Value).GetString("RequiresRestart");
-                Settings.Default.Language = language.Value;
                 Settings.Default.Save();
                 this.LoadSettingsOption();
             };

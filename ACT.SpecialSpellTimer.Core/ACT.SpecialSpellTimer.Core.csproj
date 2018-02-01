@@ -126,7 +126,6 @@
     <Compile Include="Config\ViewModels\TickerConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellPanelConfigViewModel.cs" />
-    <Compile Include="Config\ViewModels\OptionsViewModel.cs" />
     <Compile Include="Config\ViewModels\TriggersViewModel.cs" />
     <Compile Include="Config\Views\DesignGridView.xaml.cs">
       <DependentUpon>DesignGridView.xaml</DependentUpon>
@@ -134,8 +133,29 @@
     <Compile Include="Config\Views\InformationsView.xaml.cs">
       <DependentUpon>InformationsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Views\OptionsGeneralView.xaml.cs">
+      <DependentUpon>OptionsGeneralView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\OptionsLanguageView.xaml.cs">
+      <DependentUpon>OptionsLanguageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\OptionsLogView.xaml.cs">
+      <DependentUpon>OptionsLogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\OptionsMiscView.xaml.cs">
+      <DependentUpon>OptionsMiscView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\OptionsTriggerView.xaml.cs">
+      <DependentUpon>OptionsTriggerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\OptionsTTSDictionaryView.xaml.cs">
+      <DependentUpon>OptionsTTSDictionaryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\OptionsView.xaml.cs">
       <DependentUpon>OptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\OptionsVisualView.xaml.cs">
+      <DependentUpon>OptionsVisualView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\Views\SpellConfigView.xaml.cs">
       <DependentUpon>SpellConfigView.xaml</DependentUpon>
@@ -383,7 +403,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Config\Views\OptionsGeneralView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\OptionsLanguageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\OptionsLogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\OptionsMiscView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\OptionsTriggerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\OptionsTTSDictionaryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Config\Views\OptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\OptionsVisualView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

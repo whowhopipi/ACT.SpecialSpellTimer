@@ -36,9 +36,18 @@
       <fwcnv:BoolToCollapsedNegativeConverter x:Key="CollapsedNegativeConverter" />
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
 
+      <Style TargetType="{x:Type Label}">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </UserControl.Resources>
+
+  <StackPanel>
+  </StackPanel>
 </UserControl>

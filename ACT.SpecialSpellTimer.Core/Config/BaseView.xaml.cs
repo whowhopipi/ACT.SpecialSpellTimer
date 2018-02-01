@@ -1,6 +1,5 @@
 using System.Windows.Controls;
 using ACT.SpecialSpellTimer.Forms;
-using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.Config
 {
@@ -29,10 +28,7 @@ namespace ACT.SpecialSpellTimer.Config
             this.WindowsFormsHost.Child = this.ConfigPanel;
 
             // HelpViewを設定する
-            this.HelpView.SetLocale(
-                Settings.Default.Language == "JP" ?
-                    Locales.JA :
-                    Locales.EN);
+            this.HelpView.SetLocale(Settings.Default.UILocale);
 
             this.HelpView.ViewModel.ConfigFile = Settings.Default.FileName;
             this.HelpView.ViewModel.ReloadConfigAction = null;

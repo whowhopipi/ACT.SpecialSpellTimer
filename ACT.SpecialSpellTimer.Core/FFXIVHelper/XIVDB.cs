@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.FFXIVHelper
 {
@@ -23,15 +24,15 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         public string AreaFile => Path.Combine(
             this.ResourcesDirectory + @"\xivdb",
-            $@"Instance.{Settings.Default.Language.ToLocale()}.csv");
+            $@"Instance.{Settings.Default.FFXIVLocale.ToText()}.csv");
 
         public string PlacenameFile => Path.Combine(
             this.ResourcesDirectory + @"\xivdb",
-            $@"Placename.{Settings.Default.Language.ToLocale()}.csv");
+            $@"Placename.{Settings.Default.FFXIVLocale.ToText()}.csv");
 
         public string SkillFile => Path.Combine(
             this.ResourcesDirectory + @"\xivdb",
-            $@"Action.{Settings.Default.Language.ToLocale()}.csv");
+            $@"Action.{Settings.Default.FFXIVLocale.ToText()}.csv");
 
         #endregion Resources Files
 
@@ -47,33 +48,43 @@ namespace ACT.SpecialSpellTimer.FFXIVHelper
 
         #endregion Resources Lists
 
+        private string resourcesDirectory;
+
         public string ResourcesDirectory
         {
             get
             {
-                // ACTのパスを取得する
-                var asm = Assembly.GetEntryAssembly();
-                if (asm != null)
+                if (string.IsNullOrEmpty(this.resourcesDirectory))
                 {
-                    var actDirectory = Path.GetDirectoryName(asm.Location);
-                    var resourcesUnderAct = Path.Combine(actDirectory, @"resources");
-
-                    if (Directory.Exists(resourcesUnderAct))
+                    do
                     {
-                        return resourcesUnderAct;
-                    }
+                        // ACTのパスを取得する
+                        var asm = Assembly.GetEntryAssembly();
+                        if (asm != null)
+                        {
+                            var actDirectory = Path.GetDirectoryName(asm.Location);
+                            var resourcesUnderAct = Path.Combine(actDirectory, @"resources");
+
+                            if (Directory.Exists(resourcesUnderAct))
+                            {
+                                this.resourcesDirectory = resourcesUnderAct;
+                                break;
+                            }
+                        }
+
+                        // 自身の場所を取得する
+                        var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
+                        var resourcesUnderThis = Path.Combine(selfDirectory, @"resources");
+
+                        if (Directory.Exists(resourcesUnderThis))
+                        {
+                            this.resourcesDirectory = resourcesUnderThis;
+                            break;
+                        }
+                    } while (false);
                 }
 
-                // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
-                var resourcesUnderThis = Path.Combine(selfDirectory, @"resources");
-
-                if (Directory.Exists(resourcesUnderThis))
-                {
-                    return resourcesUnderThis;
-                }
-
-                return string.Empty;
+                return this.resourcesDirectory;
             }
         }
 

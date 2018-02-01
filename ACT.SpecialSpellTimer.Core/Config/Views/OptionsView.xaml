@@ -68,22 +68,31 @@
     <TreeView
       Grid.Column="0"
       BorderThickness="0"
-      ItemContainerStyle="{StaticResource MenuStyle}">
-      <TreeViewItem Header="Language" />
-      <TreeViewItem Header="{DynamicResource Common_General}" />
-      <TreeViewItem Header="{DynamicResource Options_Visual}" />
-      <TreeViewItem Header="{DynamicResource Options_Trigger}" />
-      <TreeViewItem Header="{DynamicResource Options_Log}" />
-      <TreeViewItem Header="{DynamicResource Options_TTSDictionary}" />
-      <TreeViewItem Header="{DynamicResource Common_Misc}" />
+      ItemContainerStyle="{StaticResource MenuStyle}"
+      SelectedItemChanged="TreeView_SelectedItemChanged">
+      <TreeViewItem Header="Language" TabIndex="0" />
+      <TreeViewItem Header="{DynamicResource Common_General}" TabIndex="1" />
+      <TreeViewItem Header="{DynamicResource Options_Visual}" TabIndex="2" />
+      <TreeViewItem Header="{DynamicResource Options_Trigger}" TabIndex="3" />
+      <TreeViewItem Header="{DynamicResource Options_Log}" TabIndex="4" />
+      <TreeViewItem Header="{DynamicResource Options_TTSDictionary}" TabIndex="5" />
+      <TreeViewItem Header="{DynamicResource Common_Misc}" TabIndex="6" />
     </TreeView>
 
     <!-- コンテンツ領域 -->
     <Grid Grid.Column="2" Margin="5 0 0 0">
       <ScrollViewer
         HorizontalScrollBarVisibility="Auto"
-        VerticalScrollBarVisibility="Auto">
+        VerticalScrollBarVisibility="Auto"
+        Padding="5 10 5 10">
         <Grid>
+          <local:OptionsLanguageView x:Name="LanguageView" Visibility="Collapsed" />
+          <local:OptionsGeneralView x:Name="GeneralView" Visibility="Collapsed" />
+          <local:OptionsVisualView x:Name="VisualView" Visibility="Collapsed" />
+          <local:OptionsTriggerView x:Name="TriggerView" Visibility="Collapsed" />
+          <local:OptionsLogView x:Name="LogView" Visibility="Collapsed" />
+          <local:OptionsTTSDictionaryView x:Name="TTSDictionaryView" Visibility="Collapsed" />
+          <local:OptionsMiscView x:Name="MiscView" Visibility="Collapsed" />
         </Grid>
       </ScrollViewer>
     </Grid>

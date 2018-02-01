@@ -9,6 +9,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.FFXIVHelper;
+using FFXIV.Framework.Globalization;
 using Microsoft.VisualBasic.FileIO;
 using Prism.Mvvm;
 
@@ -28,7 +29,7 @@ namespace ACT.SpecialSpellTimer.Sound
 
         public string SourceFile => Path.Combine(
             this.ResourcesDirectory,
-            string.Format(SourceFileName, Settings.Default.Language.ToLocale()));
+            string.Format(SourceFileName, Settings.Default.UILocale.ToText()));
 
         private readonly object locker = new object();
         private readonly Dictionary<string, string> ttsDictionary = new Dictionary<string, string>();
@@ -37,33 +38,43 @@ namespace ACT.SpecialSpellTimer.Sound
         public ObservableCollection<PCPhonetic> Phonetics { get; private set; } = new ObservableCollection<PCPhonetic>();
         public Dictionary<string, string> Dictionary => this.ttsDictionary;
 
+        private string resourcesDirectory;
+
         public string ResourcesDirectory
         {
             get
             {
-                // ACTのパスを取得する
-                var asm = Assembly.GetEntryAssembly();
-                if (asm != null)
+                if (string.IsNullOrEmpty(this.resourcesDirectory))
                 {
-                    var actDirectory = Path.GetDirectoryName(asm.Location);
-                    var resourcesUnderAct = Path.Combine(actDirectory, @"resources");
-
-                    if (Directory.Exists(resourcesUnderAct))
+                    do
                     {
-                        return resourcesUnderAct;
-                    }
+                        // ACTのパスを取得する
+                        var asm = Assembly.GetEntryAssembly();
+                        if (asm != null)
+                        {
+                            var actDirectory = Path.GetDirectoryName(asm.Location);
+                            var resourcesUnderAct = Path.Combine(actDirectory, @"resources");
+
+                            if (Directory.Exists(resourcesUnderAct))
+                            {
+                                this.resourcesDirectory = resourcesUnderAct;
+                                break;
+                            }
+                        }
+
+                        // 自身の場所を取得する
+                        var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
+                        var resourcesUnderThis = Path.Combine(selfDirectory, @"resources");
+
+                        if (Directory.Exists(resourcesUnderThis))
+                        {
+                            this.resourcesDirectory = resourcesUnderThis;
+                            break;
+                        }
+                    } while (false);
                 }
 
-                // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
-                var resourcesUnderThis = Path.Combine(selfDirectory, @"resources");
-
-                if (Directory.Exists(resourcesUnderThis))
-                {
-                    return resourcesUnderThis;
-                }
-
-                return string.Empty;
+                return this.resourcesDirectory;
             }
         }
 
