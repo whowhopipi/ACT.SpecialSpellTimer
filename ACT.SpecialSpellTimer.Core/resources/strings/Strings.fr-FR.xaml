@@ -164,4 +164,14 @@
   <system:String x:Key="Options_TestPhonetics">Test callsign</system:String>
   <system:String x:Key="Options_OpenTTSDictionary">Open TTS dictionary</system:String>
   <system:String x:Key="Options_ReloadTTSDictionary">Reload TTS dictionary</system:String>
+
+  <system:String x:Key="Info_Placeholders">Placeholders</system:String>
+  <system:String x:Key="Info_Triggers">Active triggers</system:String>
+  <system:String x:Key="Info_TriggerCount">Active trigger count (include instanced spell)</system:String>
+  <system:String x:Key="Info_Type">Type</system:String>
+  <system:String x:Key="Info_Placeholder">Placeholder</system:String>
+  <system:String x:Key="Info_ReplacementString">Replacement string</system:String>
+  <system:String x:Key="Info_Name">Name</system:String>
+  <system:String x:Key="Info_Pattern">Pattern</system:String>
+  <system:String x:Key="Info_Regex">Regex</system:String>
 </ResourceDictionary>

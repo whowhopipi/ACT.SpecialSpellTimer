@@ -59,6 +59,7 @@
     <StackPanel>
       <Expander Header="{DynamicResource Info_Placeholders}" IsExpanded="True">
         <DataGrid
+          Height="300"
           Margin="0 5 0 0"
           BorderThickness="0"
           AutoGenerateColumns="False"
@@ -66,7 +67,7 @@
           HorizontalGridLinesBrush="Transparent"
           VerticalGridLinesBrush="Transparent"
           AlternationCount="1"
-          AlternatingRowBackground="LightGray"
+          AlternatingRowBackground="WhiteSmoke"
           ItemsSource="{Binding Trigger, Mode=OneWay}">
           <DataGrid.Columns>
             <DataGridTextColumn
@@ -97,11 +98,12 @@
 
           <DataGrid
             Margin="0 5 0 0"
+            Height="500"
             BorderThickness="0"
             AutoGenerateColumns="False"
             IsReadOnly="True"
             AlternationCount="1"
-            AlternatingRowBackground="LightGray"
+            AlternatingRowBackground="WhiteSmoke"
             HorizontalGridLinesBrush="Transparent"
             VerticalGridLinesBrush="Transparent"
             ItemsSource="{Binding TriggerList, Mode=OneWay}">

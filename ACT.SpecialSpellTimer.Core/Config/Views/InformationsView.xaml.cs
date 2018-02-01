@@ -161,10 +161,16 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     switch (this.Trigger)
                     {
                         case Spell s:
-                            return s.KeywordReplaced;
+                            return
+                                !string.IsNullOrEmpty(s.KeywordReplaced) ?
+                                s.KeywordReplaced :
+                                s.Keyword;
 
                         case Ticker t:
-                            return t.KeywordReplaced;
+                            return
+                                !string.IsNullOrEmpty(t.KeywordReplaced) ?
+                                t.KeywordReplaced :
+                                t.Keyword;
 
                         default:
                             return string.Empty;
