@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Text.RegularExpressions;
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 
@@ -29,6 +30,14 @@ namespace ACT.SpecialSpellTimer
             RegexOptions.IgnoreCase);
 
         /// <summary>
+        /// Logコマンド
+        /// </summary>
+        private readonly static Regex logCommand = new Regex(
+            @".*/spespe log (?<switch>on|off)",
+            RegexOptions.Compiled |
+            RegexOptions.IgnoreCase);
+
+        /// <summary>
         /// ログ1行とマッチングする
         /// </summary>
         /// <param name="logLine">ログ行</param>
@@ -50,6 +59,13 @@ namespace ACT.SpecialSpellTimer
             if (isPhonetic)
             {
                 return isPhonetic;
+            }
+
+            // ログコマンドとマッチングする
+            var isLog = MatchLogCommand(logLine);
+            if (isLog)
+            {
+                return isLog;
             }
 
             // その他の通常コマンドとマッチングする
@@ -239,6 +255,34 @@ namespace ACT.SpecialSpellTimer
                 {
                     TTSDictionary.Instance.Dictionary[pcName] = phonetic;
                 }
+            }
+
+            return r;
+        }
+
+        public static bool MatchLogCommand(
+            string logLine)
+        {
+            var r = false;
+
+            var match = logCommand.Match(logLine);
+            if (!match.Success)
+            {
+                return r;
+            }
+
+            var switchValue = match.Groups["switch"].ToString().ToLower();
+
+            if (switchValue == "on")
+            {
+                r = true;
+                Settings.Default.SaveLogEnabled = true;
+            }
+
+            if (switchValue == "off")
+            {
+                r = true;
+                Settings.Default.SaveLogEnabled = false;
             }
 
             return r;
