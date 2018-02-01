@@ -144,7 +144,6 @@ namespace ACT.SpecialSpellTimer.Config
         public double OpacityToView => (100d - this.Opacity) / 100d;
 
         public bool HideWhenNotActive { get; set; }
-        public double PlayerInfoRefreshInterval { get; set; }
 
         public long LogPollSleepInterval { get; set; }
 
@@ -478,7 +477,6 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.ReadyText), "Ready" },
             { nameof(Settings.OverText), "Over" },
             { nameof(Settings.TimeOfHideSpell), 1.0d },
-            { nameof(Settings.PlayerInfoRefreshInterval), 3.0d },
             { nameof(Settings.LogPollSleepInterval), 10 },
             { nameof(Settings.RefreshInterval), 60 },
             { nameof(Settings.CombatLogBufferSize), 30000 },

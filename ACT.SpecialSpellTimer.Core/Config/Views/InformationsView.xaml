@@ -12,7 +12,7 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   d:DataContext="{d:DesignInstance Type=vm:InformationsViewModel, IsDesignTimeCreatable=True}"
-  d:DesignWidth="600"
+  d:DesignWidth="1280"
   Background="White"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   FontFamily="Consolas, Yu Gothic UI, Meiryo UI"
@@ -26,5 +26,116 @@
   IsTabStop="False"
   Focusable="False"
   mc:Ignorable="d">
-  <Grid />
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
+
+      <fwcnv:BoolToCollapsedConverter x:Key="CollapsedConverter" />
+      <fwcnv:BoolToCollapsedNegativeConverter x:Key="CollapsedNegativeConverter" />
+      <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
+
+      <Style TargetType="Label">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="CheckBox">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+
+  <ScrollViewer
+    Padding="8"
+    HorizontalScrollBarVisibility="Disabled"
+    VerticalScrollBarVisibility="Auto">
+
+    <StackPanel>
+      <Expander Header="{DynamicResource Info_Placeholders}" IsExpanded="True">
+        <DataGrid
+          Margin="0 5 0 0"
+          BorderThickness="0"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          HorizontalGridLinesBrush="Transparent"
+          VerticalGridLinesBrush="Transparent"
+          AlternationCount="1"
+          AlternatingRowBackground="LightGray"
+          ItemsSource="{Binding Trigger, Mode=OneWay}">
+          <DataGrid.Columns>
+            <DataGridTextColumn
+              IsReadOnly="True"
+              Header="{DynamicResource Info_Type}"
+              Binding="{Binding Type}"
+              MinWidth="120" />
+            <DataGridTextColumn
+              IsReadOnly="True"
+              Header="{DynamicResource Info_Placeholder}"
+              Binding="{Binding Placeholder}"
+              MinWidth="240" />
+            <DataGridTextColumn
+              IsReadOnly="True"
+              Header="{DynamicResource Info_ReplacementString}"
+              Binding="{Binding ReplaceString}"
+              MinWidth="400" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </Expander>
+
+      <Expander Margin="0 20 0 0" Header="{DynamicResource Info_Triggers}" IsExpanded="True">
+        <StackPanel>
+          <StackPanel Margin="0 5 0 0" Orientation="Horizontal">
+            <Label Content="{DynamicResource Info_TriggerCount}" />
+            <Label Margin="15 0 0 0" Width="120" HorizontalContentAlignment="Right" Content="{Binding ActiveTriggerCount, Mode=OneWay}" ContentStringFormat="N0" FontWeight="Bold" />
+          </StackPanel>
+
+          <DataGrid
+            Margin="0 5 0 0"
+            BorderThickness="0"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            AlternationCount="1"
+            AlternatingRowBackground="LightGray"
+            HorizontalGridLinesBrush="Transparent"
+            VerticalGridLinesBrush="Transparent"
+            ItemsSource="{Binding TriggerList, Mode=OneWay}">
+            <DataGrid.Columns>
+              <DataGridTextColumn
+                IsReadOnly="True"
+                Header="No"
+                Binding="{Binding No}"
+                HeaderStringFormat="N0"
+                MinWidth="60" />
+              <DataGridTextColumn
+                IsReadOnly="True"
+                Header="{DynamicResource Info_Type}"
+                Binding="{Binding TriggerType}"
+                MinWidth="120" />
+              <DataGridTextColumn
+                IsReadOnly="True"
+                Header="{DynamicResource Info_Regex}"
+                Binding="{Binding UseRegex}"
+                MinWidth="90" />
+              <DataGridTextColumn
+                IsReadOnly="True"
+                Header="{DynamicResource Info_Name}"
+                Binding="{Binding Name}"
+                MinWidth="400" />
+              <DataGridTextColumn
+                IsReadOnly="True"
+                Header="{DynamicResource Info_Pattern}"
+                Binding="{Binding Pattern}"
+                MinWidth="600" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+      </Expander>
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>

@@ -164,4 +164,14 @@
   <system:String x:Key="Options_TestPhonetics">呼び名をテストする</system:String>
   <system:String x:Key="Options_OpenTTSDictionary">外部のTTS辞書ファイルを開く</system:String>
   <system:String x:Key="Options_ReloadTTSDictionary">外部のTTS辞書ファイルを再読込する</system:String>
+
+  <system:String x:Key="Info_Placeholders">有効なプレースホルダ</system:String>
+  <system:String x:Key="Info_Triggers">アクティブなトリガ</system:String>
+  <system:String x:Key="Info_TriggerCount">アクティブなトリガ数（インスタンスを含む）</system:String>
+  <system:String x:Key="Info_Type">タイプ</system:String>
+  <system:String x:Key="Info_Placeholder">プレースホルダ</system:String>
+  <system:String x:Key="Info_ReplacementString">置換後文字列</system:String>
+  <system:String x:Key="Info_Name">名前</system:String>
+  <system:String x:Key="Info_Pattern">実際のマッチングパターン</system:String>
+  <system:String x:Key="Info_Regex">正規表現</system:String>
 </ResourceDictionary>
