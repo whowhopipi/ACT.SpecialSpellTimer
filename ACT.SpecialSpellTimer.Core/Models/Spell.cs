@@ -953,7 +953,98 @@ namespace ACT.SpecialSpellTimer.Models
             n.ZoneFilter = this.ZoneFilter;
             n.TimersMustRunningForStart = this.TimersMustRunningForStart;
             n.TimersMustStoppingForStart = this.TimersMustStoppingForStart;
+
+            n.MatchAdvancedConfig = this.MatchAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.OverAdvancedConfig = this.OverAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.BeforeAdvancedConfig = this.BeforeAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.TimeupAdvancedConfig = this.TimeupAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.IsSequentialTTS = this.IsSequentialTTS;
+
             n.ToInstance = this.ToInstance;
+
+            return n;
+        }
+
+        public Spell CreateInstanceNew(
+            string title)
+        {
+            var n = Spell.CreateNew();
+
+            n.SpellTitleReplaced = title;
+
+            n.PanelID = this.PanelID;
+            n.SpellTitle = this.SpellTitle;
+            n.SpellIcon = this.SpellIcon;
+            n.SpellIconSize = this.SpellIconSize;
+            n.Keyword = this.Keyword;
+            n.KeywordForExtend1 = this.KeywordForExtend1;
+            n.KeywordForExtend2 = this.KeywordForExtend2;
+            n.RecastTime = this.RecastTime;
+            n.RecastTimeExtending1 = this.RecastTimeExtending1;
+            n.RecastTimeExtending2 = this.RecastTimeExtending2;
+            n.ExtendBeyondOriginalRecastTime = this.ExtendBeyondOriginalRecastTime;
+            n.UpperLimitOfExtension = this.UpperLimitOfExtension;
+            n.ProgressBarVisible = this.ProgressBarVisible;
+            n.MatchSound = this.MatchSound;
+            n.MatchTextToSpeak = this.MatchTextToSpeak;
+            n.OverSound = this.OverSound;
+            n.OverTextToSpeak = this.OverTextToSpeak;
+            n.OverTime = this.OverTime;
+            n.BeforeSound = this.BeforeSound;
+            n.BeforeTextToSpeak = this.BeforeTextToSpeak;
+            n.BeforeTime = this.BeforeTime;
+            n.TimeupSound = this.TimeupSound;
+            n.TimeupTextToSpeak = this.TimeupTextToSpeak;
+            n.MatchDateTime = this.MatchDateTime;
+            n.TimeupHide = this.TimeupHide;
+            n.IsReverse = this.IsReverse;
+            n.Font = this.Font;
+            n.FontOutlineColor = this.FontOutlineColor;
+            n.WarningFontColor = this.WarningFontColor;
+            n.WarningFontOutlineColor = this.WarningFontOutlineColor;
+            n.BarColor = this.BarColor;
+            n.BarOutlineColor = this.BarOutlineColor;
+            n.BarWidth = this.BarWidth;
+            n.BarHeight = this.BarHeight;
+            n.BackgroundColor = this.BackgroundColor;
+            n.BackgroundAlpha = this.BackgroundAlpha;
+            n.DontHide = this.DontHide;
+            n.HideSpellName = this.HideSpellName;
+            n.WarningTime = this.WarningTime;
+            n.ChangeFontColorsWhenWarning = this.ChangeFontColorsWhenWarning;
+            n.BlinkTime = this.BlinkTime;
+            n.BlinkIcon = this.BlinkIcon;
+            n.BlinkBar = this.BlinkBar;
+            n.OverlapRecastTime = this.OverlapRecastTime;
+            n.ReduceIconBrightness = this.ReduceIconBrightness;
+            n.RegexEnabled = this.RegexEnabled;
+            n.JobFilter = this.JobFilter;
+            n.ZoneFilter = this.ZoneFilter;
+            n.TimersMustRunningForStart = this.TimersMustRunningForStart;
+            n.TimersMustStoppingForStart = this.TimersMustStoppingForStart;
+            n.Enabled = this.Enabled;
+
+            n.MatchedLog = this.MatchedLog;
+            n.Regex = this.Regex;
+            n.RegexPattern = this.RegexPattern;
+            n.KeywordReplaced = this.KeywordReplaced;
+            n.RegexForExtend1 = this.RegexForExtend1;
+            n.RegexForExtendPattern1 = this.RegexForExtendPattern1;
+            n.KeywordForExtendReplaced1 = this.KeywordForExtendReplaced1;
+            n.RegexForExtend2 = this.RegexForExtend2;
+            n.RegexForExtendPattern2 = this.RegexForExtendPattern2;
+            n.KeywordForExtendReplaced2 = this.KeywordForExtendReplaced2;
+
+            n.MatchAdvancedConfig = this.MatchAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.OverAdvancedConfig = this.OverAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.BeforeAdvancedConfig = this.BeforeAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.TimeupAdvancedConfig = this.TimeupAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.IsSequentialTTS = this.IsSequentialTTS;
+            n.PlayDelegate = this.Play;
+
+            n.ToInstance = false;
+            n.IsInstance = true;
+            n.IsDesignMode = false;
 
             return n;
         }

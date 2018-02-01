@@ -508,6 +508,10 @@ namespace ACT.SpecialSpellTimer.Models
             n.TimersMustRunningForStart = this.TimersMustRunningForStart;
             n.TimersMustStoppingForStart = this.TimersMustStoppingForStart;
 
+            n.MatchAdvancedConfig = this.MatchAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.DelayAdvancedConfig = this.DelayAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.IsSequentialTTS = this.IsSequentialTTS;
+
             return n;
         }
 

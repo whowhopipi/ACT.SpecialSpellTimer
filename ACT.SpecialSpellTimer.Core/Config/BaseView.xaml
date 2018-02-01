@@ -19,10 +19,7 @@
   TextOptions.TextRenderingMode="ClearType"
   mc:Ignorable="d">
   <TabControl>
-    <TabItem Header="Config(OLD)">
-      <WindowsFormsHost x:Name="WindowsFormsHost" Margin="0" />
-    </TabItem>
-    <TabItem Header="Triggers">
+    <TabItem Header="Triggers" IsSelected="True">
       <views:TriggersView x:Name="TriggersView" />
     </TabItem>
     <TabItem Header="TTS Dictionary">
@@ -36,6 +33,9 @@
     </TabItem>
     <TabItem Header="Help">
       <fw:HelpView x:Name="HelpView" />
+    </TabItem>
+    <TabItem Header="Config(OLD)">
+      <WindowsFormsHost x:Name="WindowsFormsHost" Margin="0" />
     </TabItem>
   </TabControl>
 </UserControl>

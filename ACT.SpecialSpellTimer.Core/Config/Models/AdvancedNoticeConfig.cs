@@ -9,7 +9,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
 {
     [Serializable]
     public class AdvancedNoticeConfig :
-        BindableBase
+        BindableBase,
+        ICloneable
     {
         private bool isEnabled;
 
@@ -94,5 +95,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 DiscordBridge.Instance.SendMessageDelegate?.Invoke(tts);
             }
         }
+
+        public object Clone() => this.MemberwiseClone();
     }
 }
