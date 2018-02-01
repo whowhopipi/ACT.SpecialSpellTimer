@@ -172,36 +172,8 @@
     <Compile Include="Config\Views\TriggersView.xaml.cs">
       <DependentUpon>TriggersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\ConfigPanel.CombatAnalyzer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.Designer.cs">
-      <DependentUpon>ConfigPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.Log.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.Log.Designer.cs">
-      <DependentUpon>ConfigPanel.Log.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.NameStyle.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.NameStyle.Designer.cs">
-      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.OnePointTelop.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigPanel.Option.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Config\FontSerializationHelper.cs" />
     <Compile Include="Config\SerializableSize.cs" />
-    <Compile Include="DQXUtility.cs" />
     <Compile Include="FFXIVHelper\Buff.cs" />
     <Compile Include="FFXIVHelper\Combatant.cs" />
     <Compile Include="FFXIVHelper\FFXIVPlugin.cs" />
@@ -280,36 +252,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings-KR.resx</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SetConditionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SetConditionForm.Designer.cs">
-      <DependentUpon>SetConditionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SelectZoneForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SelectZoneForm.Designer.cs">
-      <DependentUpon>SelectZoneForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SelectJobForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SelectJobForm.Designer.cs">
-      <DependentUpon>SelectJobForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Sound\SoundController.cs" />
     <Compile Include="Views\OutlineTextBlockExtensions.cs" />
     <Compile Include="Views\SpellTimerControl.xaml.cs">
       <DependentUpon>SpellTimerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PluginMainWorker.cs" />
-    <Compile Include="Forms\TabControlExtHoriz.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Forms\TabControlExt.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="TextCommandController.cs" />
     <Compile Include="Utility\ActInvoker.cs" />
     <Compile Include="Utility\ConditionUtility.cs" />
@@ -318,18 +266,6 @@
     <Compile Include="Utility\StringExtensions.cs" />
     <Compile Include="Utility\Translate.cs" />
     <Compile Include="Views\StrokeThicknessToBlurRadiusConverter.cs" />
-    <Compile Include="Forms\VisualSettingControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\VisualSettingControl.Designer.cs">
-      <DependentUpon>VisualSettingControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\VisualSettingControlBackgoundColorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\VisualSettingControlBackgoundColorForm.Designer.cs">
-      <DependentUpon>VisualSettingControlBackgoundColorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\TickerControl.xaml.cs">
       <DependentUpon>TickerControl.xaml</DependentUpon>
     </Compile>
@@ -486,21 +422,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\ConfigPanel.DQXOption.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Forms\ConfigPanel.Log.resx">
-      <DependentUpon>ConfigPanel.Log.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConfigPanel.NameStyle.resx">
-      <DependentUpon>ConfigPanel.NameStyle.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConfigPanel.resx">
-      <DependentUpon>ConfigPanel.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectExportTargetForm.resx">
       <DependentUpon>SelectExportTargetForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -526,21 +447,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SelectIconUserControl.resx">
       <DependentUpon>SelectIconUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SetConditionForm.resx">
-      <DependentUpon>SetConditionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SelectZoneForm.resx">
-      <DependentUpon>SelectZoneForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SelectJobForm.resx">
-      <DependentUpon>SelectJobForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VisualSettingControl.resx">
-      <DependentUpon>VisualSettingControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VisualSettingControlBackgoundColorForm.resx">
-      <DependentUpon>VisualSettingControlBackgoundColorForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -199,12 +199,6 @@ namespace ACT.SpecialSpellTimer.Models
                 row.RegexForExtendPattern2 = string.Empty;
                 row.KeywordForExtendReplaced2 = string.Empty;
 
-                if (row.BarWidth == 0 && row.BarHeight == 0)
-                {
-                    row.BarWidth = Settings.Default.ProgressBarSize.Width;
-                    row.BarHeight = Settings.Default.ProgressBarSize.Height;
-                }
-
                 if (string.IsNullOrWhiteSpace(row.BackgroundColor))
                 {
                     row.BackgroundColor = Color.Transparent.ToHTML();

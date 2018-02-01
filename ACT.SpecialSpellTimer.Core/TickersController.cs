@@ -257,8 +257,7 @@ namespace ACT.SpecialSpellTimer
                     }
                 }
 
-                if (telop.IsDesignMode ||
-                    (Settings.Default.OverlayVisible && Settings.Default.TelopAlwaysVisible))
+                if (telop.IsDesignMode)
                 {
                     w.Refresh();
                     if (w.ShowOverlay())

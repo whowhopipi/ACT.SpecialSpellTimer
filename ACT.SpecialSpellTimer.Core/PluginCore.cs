@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Forms;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
@@ -53,10 +52,12 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Logger
 
+        /* ■OLD_UI
         /// <summary>
         /// 設定パネル
         /// </summary>
         public ConfigPanel ConfigPanel { get; private set; }
+        */
 
         /// <summary>
         /// 自身の場所
@@ -187,7 +188,9 @@ namespace ACT.SpecialSpellTimer
                     Font = pluginScreenSpace.Font,
                 });
 
+                /* ■OLD_UI
                 this.ConfigPanel = baseView.ConfigPanel;
+                */
 
                 // 本体を開始する
                 PluginMainWorker.Instance.Begin();

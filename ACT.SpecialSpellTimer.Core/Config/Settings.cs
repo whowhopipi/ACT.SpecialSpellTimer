@@ -69,80 +69,6 @@ namespace ACT.SpecialSpellTimer.Config
 
         #endregion Constants
 
-        #region Data - Colors
-
-        [XmlIgnore]
-        public Color BackgroundColor { get; set; }
-
-        [XmlElement(ElementName = "BackgroundColor")]
-        public string BackgroundColorText
-        {
-            get => this.BackgroundColor.ToHTML();
-            set => this.BackgroundColor = ColorTranslator.FromHtml(value);
-        }
-
-        [XmlIgnore]
-        public Color FontColor { get; set; }
-
-        [XmlElement(ElementName = "FontColor")]
-        public string FontColorText
-        {
-            get => this.FontColor.ToHTML();
-            set => this.FontColor = ColorTranslator.FromHtml(value);
-        }
-
-        [XmlIgnore]
-        public Color FontOutlineColor { get; set; }
-
-        [XmlElement(ElementName = "FontOutlineColor")]
-        public string FontOutlineColorText
-        {
-            get => this.FontOutlineColor.ToHTML();
-            set => this.FontOutlineColor = ColorTranslator.FromHtml(value);
-        }
-
-        [XmlIgnore]
-        public Color ProgressBarColor { get; set; }
-
-        [XmlElement(ElementName = "ProgressBarColor")]
-        public string ProgressBarColorText
-        {
-            get => this.ProgressBarColor.ToHTML();
-            set => this.ProgressBarColor = ColorTranslator.FromHtml(value);
-        }
-
-        [XmlIgnore]
-        public Color ProgressBarOutlineColor { get; set; }
-
-        [XmlElement(ElementName = "ProgressBarOutlineColor")]
-        public string ProgressBarOutlineColorText
-        {
-            get => this.ProgressBarOutlineColor.ToHTML();
-            set => this.ProgressBarOutlineColor = ColorTranslator.FromHtml(value);
-        }
-
-        [XmlIgnore]
-        public Color WarningFontColor { get; set; }
-
-        [XmlElement(ElementName = "WarningFontColor")]
-        public string WarningFontColorText
-        {
-            get => this.WarningFontColor.ToHTML();
-            set => this.WarningFontColor = ColorTranslator.FromHtml(value);
-        }
-
-        [XmlIgnore]
-        public Color WarningFontOutlineColor { get; set; }
-
-        [XmlElement(ElementName = "WarningFontOutlineColor")]
-        public string WarningFontOutlineColorText
-        {
-            get => this.WarningFontOutlineColor.ToHTML();
-            set => this.WarningFontOutlineColor = ColorTranslator.FromHtml(value);
-        }
-
-        #endregion Data - Colors
-
         #region Data - ProgressBar Background
 
         [XmlIgnore] private readonly System.Windows.Media.Color DefaultBackgroundColor = System.Windows.Media.Colors.Black;
@@ -189,35 +115,6 @@ namespace ACT.SpecialSpellTimer.Config
         }
 
         #endregion Data - ProgressBar Background
-
-        #region Data - Sizes
-
-        [XmlIgnore]
-        public Size ProgressBarSize { get; set; }
-
-        [XmlElement(ElementName = "ProgressBarSize")]
-        public SerializableSize ProgressBarSizeText
-        {
-            get => new SerializableSize() { Height = this.ProgressBarSize.Height, Width = this.ProgressBarSize.Width };
-            set => this.ProgressBarSize = new Size(value.Width, value.Height);
-        }
-
-        #endregion Data - Sizes
-
-        #region Data - Fonts
-
-        [XmlIgnore]
-        public Font Font { get; set; }
-
-        [XmlElement(ElementName = "Font")]
-        public string FontText
-
-        {
-            get => FontSerializationHelper.ToString(this.Font);
-            set => this.Font = FontSerializationHelper.FromString(value);
-        }
-
-        #endregion Data - Fonts
 
         #region Data
 
@@ -300,8 +197,6 @@ namespace ACT.SpecialSpellTimer.Config
         public long CombatLogBufferSize { get; set; }
         public bool CombatLogEnabled { get; set; }
         public bool DetectPacketDump { get; set; }
-        public string DQXPlayerName { get; set; }
-        public bool DQXUtilityEnabled { get; set; }
         public bool EnabledNotifyNormalSpellTimer { get; set; }
         public bool EnabledPartyMemberPlaceholder { get; set; }
         public bool EnabledSpellTimerNoDecimal { get; set; }
@@ -313,7 +208,6 @@ namespace ACT.SpecialSpellTimer.Config
         [XmlIgnore]
         public double OpacityToView => (100d - this.Opacity) / 100d;
 
-        public bool OverlayForceVisible { get; set; }
         public string OverText { get; set; }
         public NameStyles PCNameInitialOnDisplayStyle { get; set; } = NameStyles.FullName;
         public NameStyles PCNameInitialOnLogStyle { get; set; } = NameStyles.FullName;
@@ -333,12 +227,10 @@ namespace ACT.SpecialSpellTimer.Config
         }
 
         public bool SimpleRegex { get; set; }
-        public bool TelopAlwaysVisible { get; set; }
         public double TextBlurRate { get; set; }
         public double TextOutlineThicknessRate { get; set; }
         public double TimeOfHideSpell { get; set; }
         public bool ToComplementUnknownSkill { get; set; } = true;
-        public bool UseOtherThanFFXIV { get; set; }
         public bool WipeoutNotifyToACT { get; set; }
 
         public bool SingleTaskLogMatching { get; set; }
@@ -559,14 +451,6 @@ namespace ACT.SpecialSpellTimer.Config
 
         public static readonly Dictionary<string, object> DefaultValues = new Dictionary<string, object>()
         {
-            { nameof(Settings.ProgressBarSize), new Size(190, 8) },
-            { nameof(Settings.ProgressBarColor), Color.White },
-            { nameof(Settings.ProgressBarOutlineColor), Color.FromArgb(22, 120, 157) },
-            { nameof(Settings.FontColor), Color.AliceBlue },
-            { nameof(Settings.FontOutlineColor), Color.FromArgb(22, 120, 157) },
-            { nameof(Settings.WarningFontColor), Color.OrangeRed },
-            { nameof(Settings.WarningFontOutlineColor), Color.DarkRed },
-            { nameof(Settings.BackgroundColor), Color.Transparent },
             { nameof(Settings.NotifyNormalSpellTimerPrefix), "spespe_" },
             { nameof(Settings.ReadyText), "Ready" },
             { nameof(Settings.OverText), "Over" },
@@ -577,23 +461,17 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.CombatLogBufferSize), 30000 },
             { nameof(Settings.ReduceIconBrightness), 55 },
             { nameof(Settings.Opacity), 10 },
-            { nameof(Settings.Font), FontInfo.DefaultFont.ToFontForWindowsForm() },
             { nameof(Settings.OverlayVisible), true },
             { nameof(Settings.AutoSortEnabled), true },
             { nameof(Settings.ClickThroughEnabled), false },
             { nameof(Settings.AutoSortReverse), false },
-            { nameof(Settings.TelopAlwaysVisible), false },
             { nameof(Settings.EnabledPartyMemberPlaceholder), true },
             { nameof(Settings.CombatLogEnabled), false },
-            { nameof(Settings.OverlayForceVisible), false },
             { nameof(Settings.EnabledSpellTimerNoDecimal), true },
             { nameof(Settings.EnabledNotifyNormalSpellTimer), false },
             { nameof(Settings.SaveLogEnabled), false },
             { nameof(Settings.SaveLogDirectory), string.Empty },
             { nameof(Settings.HideWhenNotActive), false },
-            { nameof(Settings.UseOtherThanFFXIV), false },
-            { nameof(Settings.DQXUtilityEnabled), false },
-            { nameof(Settings.DQXPlayerName), "トンヌラ" },
             { nameof(Settings.ResetOnWipeOut), true },
             { nameof(Settings.WipeoutNotifyToACT), true },
             { nameof(Settings.RemoveTooltipSymbols), true },

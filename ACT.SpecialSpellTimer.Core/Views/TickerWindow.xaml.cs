@@ -66,7 +66,7 @@ namespace ACT.SpecialSpellTimer.Views
             // Brushを生成する
             var fontColor = this.Ticker.FontColor.FromHTML().ToWPF();
             var fontOutlineColor = string.IsNullOrWhiteSpace(this.Ticker.FontOutlineColor) ?
-                Settings.Default.FontOutlineColor.ToWPF() :
+                Colors.Navy :
                 this.Ticker.FontOutlineColor.FromHTMLWPF();
             var barColor = fontColor;
             var barOutlineColor = fontOutlineColor;
@@ -91,9 +91,7 @@ namespace ACT.SpecialSpellTimer.Views
                 this.BaseColorRectangle.Fill = this.BackgroundBrush;
             }
 
-            var forceVisible =
-                Settings.Default.TelopAlwaysVisible ||
-                this.Ticker.IsDesignMode;
+            var forceVisible = this.Ticker.IsDesignMode;
 
             var message = forceVisible ?
                 this.Ticker.Message.Replace(",", Environment.NewLine) :
@@ -105,11 +103,6 @@ namespace ACT.SpecialSpellTimer.Views
                 DateTime.Now).TotalSeconds;
 
             if (count < 0.0d)
-            {
-                count = 0.0d;
-            }
-
-            if (Settings.Default.TelopAlwaysVisible)
             {
                 count = 0.0d;
             }
@@ -143,7 +136,7 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // プログレスバーを初期化する
-            this.TickerControl.BarHeight = Settings.Default.ProgressBarSize.Height;
+            this.TickerControl.BarHeight = 10;
         }
 
         #region Animation

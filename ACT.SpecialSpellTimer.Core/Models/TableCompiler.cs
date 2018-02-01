@@ -96,12 +96,8 @@ namespace ACT.SpecialSpellTimer.Models
                         this.RecompileSpells();
                         this.RecompileTickers();
 
-                        // 不要なWindowを閉じる
-                        if (!Settings.Default.OverlayForceVisible)
-                        {
-                            TickersController.Instance.GarbageWindows(this.TickerList);
-                            SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
-                        }
+                        TickersController.Instance.GarbageWindows(this.TickerList);
+                        SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
                     }
                 }
             }
@@ -503,7 +499,6 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 var newKeyword = sourceKeyword;
                 newKeyword = replace(newKeyword);
-                newKeyword = DQXUtility.MakeKeyword(newKeyword);
 
                 return newKeyword;
             }

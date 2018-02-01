@@ -1,5 +1,4 @@
 using System.Windows.Controls;
-using ACT.SpecialSpellTimer.Forms;
 
 namespace ACT.SpecialSpellTimer.Config
 {
@@ -8,17 +7,20 @@ namespace ACT.SpecialSpellTimer.Config
     /// </summary>
     public partial class BaseView : UserControl
     {
+        /* ■OLD_UI
         public ConfigPanel ConfigPanel { get; private set; } = new ConfigPanel()
         {
             Dock = System.Windows.Forms.DockStyle.Fill,
             AutoScaleMode = Settings.Default.UIAutoScaleMode,
         };
+        */
 
         public BaseView(
             System.Drawing.Font font = null)
         {
             this.InitializeComponent();
 
+            /* ■OLD_UI
             // Windows FormのConfigパネルをセットする
             if (font != null)
             {
@@ -26,6 +28,7 @@ namespace ACT.SpecialSpellTimer.Config
             }
 
             this.WindowsFormsHost.Child = this.ConfigPanel;
+            */
 
             // HelpViewを設定する
             this.HelpView.SetLocale(Settings.Default.UILocale);

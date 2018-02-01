@@ -348,7 +348,6 @@ namespace ACT.SpecialSpellTimer
             // マッチング用のログリスト
             var list = new List<XIVLog>(logInfoQueue.Count);
 
-            var partyChangedAtDQX = false;
             var summoned = false;
             var doneCommand = false;
 
@@ -377,18 +376,11 @@ namespace ACT.SpecialSpellTimer
                     logLine = logLine.Replace(TooltipReplacementChar, string.Empty);
                 }
 
-                // FFXIVでの使用？
-                if (!Settings.Default.UseOtherThanFFXIV &&
-                    !summoned &&
+                // ペットジョブで召喚をしたか？
+                if (!summoned &&
                     palyerIsSummoner)
                 {
                     summoned = isSummoned(logLine);
-                }
-
-                // パーティに変化があるか？（対DQX）
-                if (!partyChangedAtDQX)
-                {
-                    partyChangedAtDQX = DQXUtility.IsPartyChanged(logLine);
                 }
 
                 // コマンドとマッチングする
@@ -400,15 +392,6 @@ namespace ACT.SpecialSpellTimer
             if (summoned)
             {
                 TableCompiler.Instance.RefreshPetPlaceholder();
-            }
-
-            if (partyChangedAtDQX)
-            {
-                Task.Run(() =>
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
-                    DQXUtility.RefeshKeywords();
-                });
             }
 
             if (doneCommand)

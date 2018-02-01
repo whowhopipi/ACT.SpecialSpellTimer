@@ -273,8 +273,7 @@ namespace ACT.SpecialSpellTimer
             var existsLog = false;
 
             // FFXIVがいない？
-            if (!Settings.Default.UseOtherThanFFXIV &&
-                !this.existFFXIVProcess)
+            if (!this.existFFXIVProcess)
             {
 #if !DEBUG
                 // importログの解析用にログを取り出しておく
@@ -363,9 +362,7 @@ namespace ACT.SpecialSpellTimer
                 (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
 
             // FFXIVが実行されていない？
-            if (!Settings.Default.UseOtherThanFFXIV &&
-                !this.existFFXIVProcess &&
-                !Settings.Default.OverlayForceVisible)
+            if (!this.existFFXIVProcess)
             {
                 // 一時表示スペルがない？
                 if (!spells.Any(x => x.IsDesignMode))
@@ -411,9 +408,7 @@ namespace ACT.SpecialSpellTimer
                 (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
 
             // FFXIVが実行されていない？
-            if (!Settings.Default.UseOtherThanFFXIV &&
-                !this.existFFXIVProcess &&
-                !Settings.Default.OverlayForceVisible)
+            if (!this.existFFXIVProcess)
             {
                 // 一時表示テロップがない？
                 if (!telops.Any(x => x.IsDesignMode))
@@ -450,12 +445,6 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private void ResetCountAtRestart()
         {
-            // FFXIV以外での使用ならば何もしない
-            if (Settings.Default.UseOtherThanFFXIV)
-            {
-                return;
-            }
-
             // 無効？
             if (!Settings.Default.ResetOnWipeOut)
             {

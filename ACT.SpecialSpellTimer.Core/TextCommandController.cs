@@ -4,7 +4,6 @@ using System.Media;
 using System.Text.RegularExpressions;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
-using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -72,6 +71,7 @@ namespace ACT.SpecialSpellTimer
 
             switch (command)
             {
+                /*
                 case "analyze":
                     switch (target)
                     {
@@ -87,6 +87,7 @@ namespace ACT.SpecialSpellTimer
                     }
 
                     break;
+                */
 
                 case "refresh":
                     switch (target)
@@ -120,7 +121,6 @@ namespace ACT.SpecialSpellTimer
                     break;
 
                 case "changeenabled":
-                    var changed = false;
                     switch (target)
                     {
                         case "spells":
@@ -130,19 +130,8 @@ namespace ACT.SpecialSpellTimer
                                     spell.SpellTitle.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     windowname.Trim().ToLower() == "all")
                                 {
-                                    changed = true;
                                     spell.Enabled = value;
                                 }
-                            }
-
-                            if (changed)
-                            {
-                                ActInvoker.Invoke(() =>
-                                {
-                                    PluginCore.Instance.ConfigPanel.LoadSpellTimerTable();
-                                });
-
-                                r = true;
                             }
 
                             break;
@@ -153,19 +142,8 @@ namespace ACT.SpecialSpellTimer
                                 if (telop.Title.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     windowname.Trim().ToLower() == "all")
                                 {
-                                    changed = true;
                                     telop.Enabled = value;
                                 }
-                            }
-
-                            if (changed)
-                            {
-                                ActInvoker.Invoke(() =>
-                                {
-                                    PluginCore.Instance.ConfigPanel.LoadTelopTable();
-                                });
-
-                                r = true;
                             }
 
                             break;

@@ -136,23 +136,23 @@ namespace ACT.SpecialSpellTimer.Views
 
             // Brushを生成する
             var fontColor = string.IsNullOrWhiteSpace(this.Spell.FontColor) ?
-                Settings.Default.FontColor.ToWPF() :
+                Colors.White :
                 this.Spell.FontColor.FromHTMLWPF();
             var fontOutlineColor = string.IsNullOrWhiteSpace(this.Spell.FontOutlineColor) ?
-                Settings.Default.FontOutlineColor.ToWPF() :
+                Colors.Navy :
                 this.Spell.FontOutlineColor.FromHTMLWPF();
             var warningFontColor = string.IsNullOrWhiteSpace(this.Spell.WarningFontColor) ?
-                Settings.Default.WarningFontColor.ToWPF() :
+                Colors.White :
                 this.Spell.WarningFontColor.FromHTMLWPF();
             var warningFontOutlineColor = string.IsNullOrWhiteSpace(this.Spell.WarningFontOutlineColor) ?
-                Settings.Default.WarningFontOutlineColor.ToWPF() :
+                Colors.OrangeRed :
                 this.Spell.WarningFontOutlineColor.FromHTMLWPF();
 
             var barColor = string.IsNullOrWhiteSpace(this.Spell.BarColor) ?
-                Settings.Default.ProgressBarColor.ToWPF() :
+                Colors.White :
                 this.Spell.BarColor.FromHTMLWPF();
             var barOutlineColor = string.IsNullOrWhiteSpace(this.Spell.BarOutlineColor) ?
-                Settings.Default.ProgressBarOutlineColor.ToWPF() :
+                Colors.Navy :
                 this.Spell.BarOutlineColor.FromHTMLWPF();
 
             this.FontBrush = this.GetBrush(fontColor);
