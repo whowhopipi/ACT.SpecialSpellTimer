@@ -59,32 +59,40 @@
     <StackPanel>
       <Expander Header="{DynamicResource Info_Placeholders}" IsExpanded="True">
         <DataGrid
-          Height="300"
+          MaxHeight="300"
           Margin="0 5 0 0"
           BorderThickness="0"
           AutoGenerateColumns="False"
           IsReadOnly="True"
           HorizontalGridLinesBrush="Transparent"
           VerticalGridLinesBrush="Transparent"
-          AlternationCount="1"
-          AlternatingRowBackground="WhiteSmoke"
+          HorizontalAlignment="Stretch"
           ItemsSource="{Binding Trigger, Mode=OneWay}">
           <DataGrid.Columns>
             <DataGridTextColumn
               IsReadOnly="True"
-              Header="{DynamicResource Info_Type}"
+              Header="Type"
               Binding="{Binding Type}"
-              MinWidth="120" />
+              MinWidth="80" />
             <DataGridTextColumn
               IsReadOnly="True"
-              Header="{DynamicResource Info_Placeholder}"
+              Header="Placeholder"
               Binding="{Binding Placeholder}"
-              MinWidth="240" />
-            <DataGridTextColumn
+              MinWidth="200" />
+            <DataGridTemplateColumn
               IsReadOnly="True"
-              Header="{DynamicResource Info_ReplacementString}"
-              Binding="{Binding ReplaceString}"
-              MinWidth="400" />
+              Header="Replacement string"
+              MinWidth="350">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <TextBlock
+                    Text="{Binding ReplaceString}"
+                    HorizontalAlignment="Left"
+                    MaxWidth="1150"
+                    TextWrapping="Wrap" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
           </DataGrid.Columns>
         </DataGrid>
       </Expander>
@@ -96,46 +104,62 @@
             <Label Margin="15 0 0 0" Width="120" HorizontalContentAlignment="Right" Content="{Binding ActiveTriggerCount, Mode=OneWay}" ContentStringFormat="N0" FontWeight="Bold" />
           </StackPanel>
 
-          <DataGrid
-            Margin="0 5 0 0"
-            Height="500"
-            BorderThickness="0"
-            AutoGenerateColumns="False"
-            IsReadOnly="True"
-            AlternationCount="1"
-            AlternatingRowBackground="WhiteSmoke"
-            HorizontalGridLinesBrush="Transparent"
-            VerticalGridLinesBrush="Transparent"
-            ItemsSource="{Binding TriggerList, Mode=OneWay}">
-            <DataGrid.Columns>
-              <DataGridTextColumn
-                IsReadOnly="True"
-                Header="No"
-                Binding="{Binding No}"
-                HeaderStringFormat="N0"
-                MinWidth="60" />
-              <DataGridTextColumn
-                IsReadOnly="True"
-                Header="{DynamicResource Info_Type}"
-                Binding="{Binding TriggerType}"
-                MinWidth="120" />
-              <DataGridTextColumn
-                IsReadOnly="True"
-                Header="{DynamicResource Info_Regex}"
-                Binding="{Binding UseRegex}"
-                MinWidth="90" />
-              <DataGridTextColumn
-                IsReadOnly="True"
-                Header="{DynamicResource Info_Name}"
-                Binding="{Binding Name}"
-                MinWidth="400" />
-              <DataGridTextColumn
-                IsReadOnly="True"
-                Header="{DynamicResource Info_Pattern}"
-                Binding="{Binding Pattern}"
-                MinWidth="600" />
-            </DataGrid.Columns>
-          </DataGrid>
+          <Grid>
+            <DataGrid
+              Margin="0 5 0 0"
+              MaxHeight="500"
+              BorderThickness="0"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              HorizontalGridLinesBrush="Transparent"
+              VerticalGridLinesBrush="Transparent"
+              HorizontalAlignment="Stretch"
+              ItemsSource="{Binding TriggerList, Mode=OneWay}">
+              <DataGrid.Columns>
+                <DataGridTemplateColumn
+                  IsReadOnly="True"
+                  Header="No"
+                  MinWidth="40">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <TextBlock
+                        Text="{Binding No, StringFormat=N0}"
+                        TextAlignment="Right" />
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                  IsReadOnly="True"
+                  Header="Type"
+                  Binding="{Binding TriggerType}"
+                  MinWidth="80" />
+                <DataGridTextColumn
+                  IsReadOnly="True"
+                  Header="Regex"
+                  Binding="{Binding UseRegex}"
+                  MinWidth="80" />
+                <DataGridTextColumn
+                  IsReadOnly="True"
+                  Header="Title"
+                  Binding="{Binding Name}"
+                  MinWidth="250" />
+                <DataGridTemplateColumn
+                  IsReadOnly="True"
+                  Header="Pattern"
+                  MinWidth="350">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <TextBlock
+                        Text="{Binding Pattern}"
+                        HorizontalAlignment="Left"
+                        MaxWidth="950"
+                        TextWrapping="Wrap" />
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </Grid>
         </StackPanel>
       </Expander>
     </StackPanel>
