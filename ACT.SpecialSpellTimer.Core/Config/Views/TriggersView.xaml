@@ -363,7 +363,7 @@
               <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{DynamicResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
               <fa:ImageAwesome Icon="Tag" />
               <TextBlock Text="{Binding Name, Mode=OneWay}" Visibility="{Binding IsInViewMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" />
-              <TextBox Text="{Binding Name, Mode=TwoWay}" Tag="{Binding}" MinWidth="120" Visibility="{Binding IsInEditMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" LostFocus="RenameTextBoxOnLostFocus" KeyDown="RenameTextBoxOnKeyDown" IsVisibleChanged="RenameTextBoxOnIsVisibleChanged" />
+              <TextBox Text="{Binding Name, Mode=OneWay}" Tag="{Binding}" MinWidth="120" Visibility="{Binding IsInEditMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" LostFocus="RenameTextBoxOnLostFocus" KeyDown="RenameTextBoxOnKeyDown" IsVisibleChanged="RenameTextBoxOnIsVisibleChanged" />
             </StackPanel>
           </HierarchicalDataTemplate>
         </TreeView.Resources>

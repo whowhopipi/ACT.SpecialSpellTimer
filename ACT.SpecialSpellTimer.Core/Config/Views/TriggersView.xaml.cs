@@ -154,6 +154,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 if (t.Tag is Tag tag)
                 {
                     tag.IsInEditMode = false;
+                    tag.Name = t.Text;
                 }
             }
         }
@@ -162,14 +163,22 @@ namespace ACT.SpecialSpellTimer.Config.Views
             object sender,
             KeyEventArgs e)
         {
-            if (e.Key == Key.Escape ||
-                e.Key == Key.Enter)
+            if (e.Key == Key.Enter ||
+                e.Key == Key.Escape)
             {
-                if (sender is TextBox t)
+                if (sender is TextBox t &&
+                    t.Tag is Tag tag)
                 {
-                    if (t.Tag is Tag tag)
+                    tag.IsInEditMode = false;
+
+                    if (e.Key == Key.Enter)
                     {
-                        tag.IsInEditMode = false;
+                        tag.Name = t.Text;
+                    }
+
+                    if (e.Key == Key.Escape)
+                    {
+                        t.Text = tag.Name;
                     }
                 }
             }
