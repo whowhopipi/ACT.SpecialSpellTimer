@@ -1,6 +1,7 @@
 using System;
 using System.Windows.Input;
 using System.Windows.Media;
+using ACT.SpecialSpellTimer.Config.Views;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Dialog;
 using FFXIV.Framework.Extensions;
@@ -104,5 +105,14 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 }));
 
         #endregion Change Colors
+
+        private ICommand copyConfigCommand;
+
+        public ICommand CopyConfigCommand =>
+            this.copyConfigCommand ?? (this.copyConfigCommand = new DelegateCommand(() =>
+            {
+                var view = new CopyConfigView(this.Model);
+                view.Show();
+            }));
     }
 }

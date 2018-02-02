@@ -567,13 +567,19 @@
     </TabControl>
 
     <!-- Bottom Buttons start -->
-    <StackPanel Grid.Row="1" Orientation="Horizontal">
-      <TextBlock Margin="5 5 0 5">
+    <DockPanel Grid.Row="1">
+      <TextBlock Margin="5 5 0 5" DockPanel.Dock="Left">
         <Hyperlink Command="{Binding SimulateMatchCommand, Mode=OneWay}">
           <TextBlock Text="{DynamicResource Trigger_SimulateMatch}" />
         </Hyperlink>
       </TextBlock>
-    </StackPanel>
+
+      <TextBlock Margin="0 5 5 5" DockPanel.Dock="Right" HorizontalAlignment="Right">
+        <Hyperlink Command="{Binding CopyConfigCommand, Mode=OneWay}">
+          <TextBlock Text="{DynamicResource Copy_Copy}" />
+        </Hyperlink>
+      </TextBlock>
+    </DockPanel>
     <!-- Bottom Buttons end -->
   </Grid>
 </UserControl>

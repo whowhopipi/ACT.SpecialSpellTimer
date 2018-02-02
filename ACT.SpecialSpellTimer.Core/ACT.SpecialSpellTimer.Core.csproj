@@ -129,6 +129,9 @@
     <Compile Include="Config\Views\DesignGridView.xaml.cs">
       <DependentUpon>DesignGridView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Views\CopyConfigView.xaml.cs">
+      <DependentUpon>CopyConfigView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\IconBrowserView.xaml.cs">
       <DependentUpon>IconBrowserView.xaml</DependentUpon>
     </Compile>
@@ -320,6 +323,10 @@
     <Page Include="Config\Views\DesignGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\CopyConfigView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Config\Views\IconBrowserView.xaml">
       <SubType>Designer</SubType>

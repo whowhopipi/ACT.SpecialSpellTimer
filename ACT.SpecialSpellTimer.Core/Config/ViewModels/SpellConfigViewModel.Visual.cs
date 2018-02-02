@@ -148,5 +148,14 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                     this.Model.SpellIcon = view.SelectedIconName;
                 }
             }));
+
+        private ICommand copyConfigCommand;
+
+        public ICommand CopyConfigCommand =>
+            this.copyConfigCommand ?? (this.copyConfigCommand = new DelegateCommand(() =>
+            {
+                var view = new CopyConfigView(this.Model);
+                view.Show();
+            }));
     }
 }

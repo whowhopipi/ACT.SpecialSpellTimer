@@ -37,6 +37,7 @@
   <system:String x:Key="Common_IsReverseProgressBar">進行方向を逆にする</system:String>
   <system:String x:Key="Common_Background">背景</system:String>
   <system:String x:Key="Common_Icon">アイコン</system:String>
+  <system:String x:Key="Common_Size">サイズ</system:String>
   <system:String x:Key="Common_SelectIcon">アイコンを選ぶ</system:String>
   <system:String x:Key="Common_RecastTimeOverIcon">リキャスト時間をアイコンに重ねる</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">リキャスト中はアイコンを暗くする</system:String>
@@ -179,4 +180,9 @@
   <system:String x:Key="Data_ExportSpellsFromPanel">このスペルパネルに属するスペルをエクスポートする</system:String>
   <system:String x:Key="Data_ExportSpellsFromTag">このタグに属するスペルをエクスポートする</system:String>
   <system:String x:Key="Data_ExportTickers">このタグ属するテロップをエクスポートする</system:String>
+
+  <system:String x:Key="Copy_Copy">設定をコピーする</system:String>
+  <system:String x:Key="Copy_Title">設定のコピー</system:String>
+  <system:String x:Key="Copy_Source">コピー元</system:String>
+  <system:String x:Key="Copy_Destination">コピー先</system:String>
 </ResourceDictionary>

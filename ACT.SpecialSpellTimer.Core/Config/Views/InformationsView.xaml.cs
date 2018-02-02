@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.resources;
 using FFXIV.Framework.Globalization;
