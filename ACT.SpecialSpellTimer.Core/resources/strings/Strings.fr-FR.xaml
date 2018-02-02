@@ -177,4 +177,9 @@
   <system:String x:Key="Data_ExportSpellsFromPanel">Export spells from this panel</system:String>
   <system:String x:Key="Data_ExportSpellsFromTag">Export spells from this tag</system:String>
   <system:String x:Key="Data_ExportTickers">Export tickers from this tag</system:String>
+
+  <system:String x:Key="Copy_Copy">Copy settings</system:String>
+  <system:String x:Key="Copy_Title">Copy settings</system:String>
+  <system:String x:Key="Copy_Source">Source</system:String>
+  <system:String x:Key="Copy_Destination">Destination</system:String>
 </ResourceDictionary>
