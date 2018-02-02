@@ -272,6 +272,41 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
+        public IList<Spell> LoadFromFile(
+            string file)
+        {
+            var data = default(IList<Spell>);
+
+            if (!File.Exists(file))
+            {
+                return data;
+            }
+
+            using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+            {
+                if (sr.BaseStream.Length > 0)
+                {
+                    var xs = new XmlSerializer(table.GetType());
+                    data = xs.Deserialize(sr) as IList<Spell>;
+
+                    // IDは振り直す
+                    if (data != null)
+                    {
+                        var id = this.table.Any() ?
+                            this.table.Max(x => x.ID) + 1 :
+                            1;
+                        foreach (var item in data)
+                        {
+                            item.ID = id++;
+                            item.Guid = Guid.NewGuid();
+                        }
+                    }
+                }
+            }
+
+            return data;
+        }
+
         #region To Instance spells
 
         private static readonly object lockObject = new object();

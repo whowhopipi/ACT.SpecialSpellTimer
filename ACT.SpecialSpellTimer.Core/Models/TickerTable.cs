@@ -231,5 +231,39 @@ namespace ACT.SpecialSpellTimer.Models
                     new UTF8Encoding(false));
             }
         }
+
+        public IList<Ticker> LoadFromFile(
+            string file)
+        {
+            var data = default(IList<Ticker>);
+
+            if (!File.Exists(file))
+            {
+                return data;
+            }
+
+            using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+            {
+                if (sr.BaseStream.Length > 0)
+                {
+                    var xs = new XmlSerializer(table.GetType());
+                    data = xs.Deserialize(sr) as IList<Ticker>;
+
+                    if (data != null)
+                    {
+                        var id = this.table.Any() ?
+                            this.table.Max(x => x.ID) + 1 :
+                            1;
+                        foreach (var item in data)
+                        {
+                            item.Guid = Guid.NewGuid();
+                            item.ID = id++;
+                        }
+                    }
+                }
+            }
+
+            return data;
+        }
     }
 }

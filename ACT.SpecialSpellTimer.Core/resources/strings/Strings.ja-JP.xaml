@@ -171,4 +171,9 @@
   <system:String x:Key="Info_TriggerCount">アクティブなトリガ数（インスタンスを含む）</system:String>
 
   <system:String x:Key="Icon_BrowseIcon">アイコンを選ぶ</system:String>
+
+  <system:String x:Key="Data_Import">インポート</system:String>
+  <system:String x:Key="Data_ImportSpellsToSpellPanel">このスペルパネルにスペルをインポートする</system:String>
+  <system:String x:Key="Data_ImportTickersToTag">このタグにテロップをインポートする</system:String>
+  <system:String x:Key="Data_Export">エクスポート</system:String>
 </ResourceDictionary>

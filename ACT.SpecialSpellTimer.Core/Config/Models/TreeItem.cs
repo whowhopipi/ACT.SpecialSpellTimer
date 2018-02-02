@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Models;
+using Advanced_Combat_Tracker;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -532,7 +534,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                 switch (item)
                 {
-                    case Spell s:
+                    case SpellPanel s:
                         Task.Run(() => TableCompiler.Instance.CompileSpells());
                         break;
 
@@ -548,5 +550,142 @@ namespace ACT.SpecialSpellTimer.Config.Models
             }));
 
         #endregion Commands
+
+        #region Import & Export
+
+        private System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+        {
+            RestoreDirectory = true,
+            Filter = "Special Spells Files|*.xml|All Files|*.*",
+            FilterIndex = 0,
+            DefaultExt = ".xml",
+            SupportMultiDottedExtensions = true,
+        };
+
+        private ICommand importSpellsCommand;
+
+        [XmlIgnore]
+        public ICommand ImportSpellsCommand =>
+            this.importSpellsCommand ?? (this.importSpellsCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                if (item == null)
+                {
+                    return;
+                }
+
+                var parentPanel = default(SpellPanel);
+
+                switch (item.ItemType)
+                {
+                    case ItemTypes.SpellsRoot:
+                    case ItemTypes.TickersRoot:
+                    case ItemTypes.TagsRoot:
+                        parentPanel = SpellPanel.GeneralPanel;
+                        break;
+
+                    case ItemTypes.SpellPanel:
+                        parentPanel = item as SpellPanel;
+                        break;
+
+                    default:
+                        return;
+                }
+
+                var result = this.openFileDialog.ShowDialog(
+                    ActGlobals.oFormActMain);
+                if (result != System.Windows.Forms.DialogResult.OK)
+                {
+                    return;
+                }
+
+                var file = this.openFileDialog.FileName;
+
+                var data = SpellTable.Instance.LoadFromFile(file);
+                if (data == null)
+                {
+                    return;
+                }
+
+                foreach (var x in data)
+                {
+                    x.PanelID = parentPanel.ID;
+                }
+
+                SpellTable.Instance.Table.AddRange(data);
+
+                Task.Run(() => TableCompiler.Instance.CompileSpells());
+
+                MessageBox.Show(
+                    "Import Completed.",
+                    "ACT.Hojoring",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }));
+
+        private ICommand importTickersCommand;
+
+        [XmlIgnore]
+        public ICommand ImportTickersCommand =>
+            this.importTickersCommand ?? (this.importTickersCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                if (item == null)
+                {
+                    return;
+                }
+
+                var parentTag = default(Tag);
+
+                switch (item.ItemType)
+                {
+                    case ItemTypes.SpellsRoot:
+                    case ItemTypes.TickersRoot:
+                    case ItemTypes.TagsRoot:
+                        parentTag = Tag.ImportsTag;
+                        break;
+
+                    case ItemTypes.Tag:
+                        parentTag = item as Tag;
+                        break;
+
+                    default:
+                        return;
+                }
+
+                var result = this.openFileDialog.ShowDialog(
+                    ActGlobals.oFormActMain);
+                if (result != System.Windows.Forms.DialogResult.OK)
+                {
+                    return;
+                }
+
+                var file = this.openFileDialog.FileName;
+
+                var data = TickerTable.Instance.LoadFromFile(file);
+                if (data == null)
+                {
+                    return;
+                }
+
+                TickerTable.Instance.Table.AddRange(data);
+
+                foreach (var x in data)
+                {
+                    TagTable.Instance.ItemTags.Add(new ItemTags()
+                    {
+                        ItemID = x.Guid,
+                        TagID = parentTag.ID,
+                    });
+                }
+
+                Task.Run(() => TableCompiler.Instance.CompileTickers());
+
+                MessageBox.Show(
+                    "Import Completed.",
+                    "ACT.Hojoring",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }));
+
+        #endregion Import & Export
     }
 }
