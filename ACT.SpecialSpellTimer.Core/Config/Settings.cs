@@ -289,7 +289,17 @@ namespace ACT.SpecialSpellTimer.Config
         public bool SaveLogEnabled
         {
             get => this.saveLogEnabled;
-            set => this.SetProperty(ref this.saveLogEnabled, value);
+            set
+
+            {
+                if (this.SetProperty(ref this.saveLogEnabled, value))
+                {
+                    if (!this.saveLogEnabled)
+                    {
+                        ChatLogWorker.Instance.Flush();
+                    }
+                }
+            }
         }
 
         public string SaveLogDirectory

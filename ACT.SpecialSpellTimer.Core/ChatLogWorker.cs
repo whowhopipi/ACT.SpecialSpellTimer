@@ -85,24 +85,19 @@ namespace ACT.SpecialSpellTimer
         {
             try
             {
-                if (!this.OutputEnabled)
-                {
-                    return;
-                }
-
-                if (!string.IsNullOrEmpty(this.OutputDirectory))
-                {
-                    if (!Directory.Exists(this.OutputDirectory))
-                    {
-                        Directory.CreateDirectory(this.OutputDirectory);
-                    }
-                }
-
                 lock (this.LogBuffer)
                 {
                     if (this.LogBuffer.Length <= 0)
                     {
                         return;
+                    }
+
+                    if (!string.IsNullOrEmpty(this.OutputDirectory))
+                    {
+                        if (!Directory.Exists(this.OutputDirectory))
+                        {
+                            Directory.CreateDirectory(this.OutputDirectory);
+                        }
                     }
 
                     File.AppendAllText(
