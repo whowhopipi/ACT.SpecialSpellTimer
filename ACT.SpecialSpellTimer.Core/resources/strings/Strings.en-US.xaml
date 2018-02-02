@@ -169,4 +169,12 @@
   <system:String x:Key="Info_Placeholders">Placeholders</system:String>
   <system:String x:Key="Info_Triggers">Active triggers</system:String>
   <system:String x:Key="Info_TriggerCount">Active trigger count (include instanced spell)</system:String>
+
+  <system:String x:Key="Data_Import">Import</system:String>
+  <system:String x:Key="Data_ImportSpellsToSpellPanel">Import spells to this panel</system:String>
+  <system:String x:Key="Data_ImportTickersToTag">Import tickers to this tag</system:String>
+  <system:String x:Key="Data_Export">Export</system:String>
+  <system:String x:Key="Data_ExportSpellsFromPanel">Export spells from this panel</system:String>
+  <system:String x:Key="Data_ExportSpellsFromTag">Export spells from this tag</system:String>
+  <system:String x:Key="Data_ExportTickers">Export tickers from this tag</system:String>
 </ResourceDictionary>
