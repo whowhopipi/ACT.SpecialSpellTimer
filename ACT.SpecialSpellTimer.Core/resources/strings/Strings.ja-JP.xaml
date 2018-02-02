@@ -16,6 +16,7 @@
   <system:String x:Key="Common_AddTags">タグを付ける</system:String>
   <system:String x:Key="Common_Apply">適用する</system:String>
   <system:String x:Key="Common_Cancel">キャンセル</system:String>
+  <system:String x:Key="Common_Clear">クリア</system:String>
   <system:String x:Key="Common_ManageTags">タグの管理</system:String>
 
   <system:String x:Key="Common_CreateNew">新規作成</system:String>
@@ -168,4 +169,6 @@
   <system:String x:Key="Info_Placeholders">有効なプレースホルダ</system:String>
   <system:String x:Key="Info_Triggers">アクティブなトリガ</system:String>
   <system:String x:Key="Info_TriggerCount">アクティブなトリガ数（インスタンスを含む）</system:String>
+
+  <system:String x:Key="Icon_BrowseIcon">アイコンを選ぶ</system:String>
 </ResourceDictionary>

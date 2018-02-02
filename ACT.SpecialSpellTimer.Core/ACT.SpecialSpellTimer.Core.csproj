@@ -129,6 +129,9 @@
     <Compile Include="Config\Views\DesignGridView.xaml.cs">
       <DependentUpon>DesignGridView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Views\IconBrowserView.xaml.cs">
+      <DependentUpon>IconBrowserView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\InformationsView.xaml.cs">
       <DependentUpon>InformationsView.xaml</DependentUpon>
     </Compile>
@@ -208,18 +211,6 @@
     <Compile Include="Models\TickerTable.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="PluginCore.cs" />
-    <Compile Include="Forms\SelectIconForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SelectIconForm.Designer.cs">
-      <DependentUpon>SelectIconForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SelectIconUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\SelectIconUserControl.Designer.cs">
-      <DependentUpon>SelectIconUserControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\BarBackgroundConverter.cs" />
     <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\BrightnessConverter.cs" />
@@ -327,6 +318,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Views\DesignGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\IconBrowserView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -447,12 +442,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="resources\strings\Strings-KR.resx">
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SelectIconForm.resx">
-      <DependentUpon>SelectIconForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SelectIconUserControl.resx">
-      <DependentUpon>SelectIconUserControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

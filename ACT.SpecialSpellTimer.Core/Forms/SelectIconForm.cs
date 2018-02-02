@@ -125,7 +125,7 @@ namespace ACT.SpecialSpellTimer.Forms
         private void SelectIcon(
             SelectIconUserControl selectedControl)
         {
-            this.SelectedIconRelativePath = selectedControl?.Icon.RelativePath;
+            this.SelectedIconRelativePath = selectedControl?.Icon.Name;
             this.DialogResult = DialogResult.OK;
         }
 
@@ -184,7 +184,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         else
                         {
                             if (dir.AsParallel().Any(x =>
-                                x.RelativePath.ToLower() ==
+                                x.Name.ToLower() ==
                                 this.SelectedIconRelativePath.ToLower()))
                             {
                                 selectedNode = node;
@@ -271,7 +271,7 @@ namespace ACT.SpecialSpellTimer.Forms
                         }
                         else
                         {
-                            if (icon.RelativePath.ToLower() ==
+                            if (icon.Name.ToLower() ==
                                 this.SelectedIconRelativePath.ToLower())
                             {
                                 selectedCtrl = ctrl;

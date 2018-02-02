@@ -16,6 +16,7 @@
   <system:String x:Key="Common_AddTags">Add tags</system:String>
   <system:String x:Key="Common_Apply">Apply</system:String>
   <system:String x:Key="Common_Cancel">Cancel</system:String>
+  <system:String x:Key="Common_Clear">Clear</system:String>
   <system:String x:Key="Common_ManageTags">Manage tags</system:String>
 
   <system:String x:Key="Common_CreateNew">Create new</system:String>
@@ -168,10 +169,4 @@
   <system:String x:Key="Info_Placeholders">Placeholders</system:String>
   <system:String x:Key="Info_Triggers">Active triggers</system:String>
   <system:String x:Key="Info_TriggerCount">Active trigger count (include instanced spell)</system:String>
-  <system:String x:Key="Info_Type">Type</system:String>
-  <system:String x:Key="Info_Placeholder">Placeholder</system:String>
-  <system:String x:Key="Info_ReplacementString">Replacement string</system:String>
-  <system:String x:Key="Info_Name">Name</system:String>
-  <system:String x:Key="Info_Pattern">Pattern</system:String>
-  <system:String x:Key="Info_Regex">Regex</system:String>
 </ResourceDictionary>

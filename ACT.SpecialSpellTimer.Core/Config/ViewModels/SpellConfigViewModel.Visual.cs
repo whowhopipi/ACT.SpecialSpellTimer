@@ -1,8 +1,7 @@
 using System;
 using System.Windows.Input;
 using System.Windows.Media;
-using ACT.SpecialSpellTimer.Forms;
-using Advanced_Combat_Tracker;
+using ACT.SpecialSpellTimer.Config.Views;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Dialog;
 using FFXIV.Framework.Extensions;
@@ -140,14 +139,13 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
         public ICommand SelectIconCommand =>
             this.selectIconCommand ?? (this.selectIconCommand = new DelegateCommand(() =>
             {
-                var result = SelectIconForm.ShowDialog(
-                    this.Model?.SpellIcon,
-                    ActGlobals.oFormActMain,
-                    this.Model);
+                var view = new IconBrowserView();
 
-                if (result.Result)
+                view.SelectedIconName = this.Model?.SpellIcon;
+
+                if (view.ShowDialog() ?? false)
                 {
-                    this.Model.SpellIcon = result.Icon;
+                    this.Model.SpellIcon = view.SelectedIconName;
                 }
             }));
     }

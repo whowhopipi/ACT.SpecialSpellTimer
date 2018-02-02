@@ -176,7 +176,7 @@ namespace ACT.SpecialSpellTimer.Views
                     image.Width != this.Spell.SpellIconSize ||
                     (image.Source as BitmapImage).UriSource.LocalPath != iconFile.FullPath)
                 {
-                    var bitmap = new BitmapImage(new Uri(iconFile.FullPath));
+                    var bitmap = iconFile.CreateBitmapImage();
                     image.Source = bitmap;
                     image.Height = this.Spell.SpellIconSize;
                     image.Width = this.Spell.SpellIconSize;
