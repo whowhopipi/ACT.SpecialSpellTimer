@@ -195,6 +195,8 @@ namespace ACT.SpecialSpellTimer.Models
                     Direction = ListSortDirection.Ascending
                 },
             });
+
+            this.RaisePropertyChanged(nameof(this.Children));
         }
 
         #endregion ITreeItem

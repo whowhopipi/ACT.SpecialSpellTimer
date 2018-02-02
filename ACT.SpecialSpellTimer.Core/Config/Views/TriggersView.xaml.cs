@@ -20,9 +20,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
     {
         public TriggersView()
         {
-            this.DataContext = new TriggersViewModel();
-
             this.InitializeComponent();
+
+            this.DataContext = new TriggersViewModel();
             this.SetLocale(Settings.Default.UILocale);
 
             this.TriggersTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
@@ -248,12 +248,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
             const string TagMenuItemName = "TagMenu";
             const string PanelMenuItemName = "PanelMenu";
 
-            var menu = sender as ContextMenu;
+            var context = sender as ContextMenu;
+            var data = context?.DataContext as ITreeItem;
 
             var tagMenuItem = default(MenuItem);
             var panelMenuItem = default(MenuItem);
 
-            foreach (var item in menu.Items)
+            foreach (var item in context.Items)
             {
                 if (item is MenuItem menuItem)
                 {
@@ -294,6 +295,18 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         Header = tag.Name
                     };
 
+                    menuItem.Click += (x, y) =>
+                    {
+                        if (!TagTable.Instance.ItemTags.Any(z =>
+                            z.ItemID == data.GetID() &&
+                            z.TagID == tag.GetID()))
+                        {
+                            TagTable.Instance.ItemTags.Add(new ItemTags(
+                                data.GetID(),
+                                tag.GetID()));
+                        }
+                    };
+
                     tagMenuItem.Items.Add(menuItem);
                 }
             }
@@ -315,6 +328,18 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     var menuItem = new MenuItem()
                     {
                         Header = panel.PanelName
+                    };
+
+                    menuItem.Click += (x, y) =>
+                    {
+                        if (data is Spell spell)
+                        {
+                            var oldPanel = spell.Panel;
+                            spell.PanelID = panel.ID;
+
+                            oldPanel.SetupChildrenSource();
+                            panel.SetupChildrenSource();
+                        }
                     };
 
                     panelMenuItem.Items.Add(menuItem);

@@ -48,6 +48,31 @@ namespace ACT.SpecialSpellTimer.Config.Models
         ICollectionView Children { get; }
     }
 
+    public static class TreeItemExtensions
+    {
+        public static Guid GetID(
+            this ITreeItem item)
+        {
+            switch (item)
+            {
+                case SpellPanel p:
+                    return p.ID;
+
+                case Spell s:
+                    return s.Guid;
+
+                case Ticker t:
+                    return t.Guid;
+
+                case Tag tag:
+                    return tag.ID;
+
+                default:
+                    return Guid.Empty;
+            }
+        }
+    }
+
     public abstract class TreeItemBase :
         BindableBase,
         ITreeItem
