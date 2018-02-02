@@ -125,6 +125,10 @@
                     <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding ImportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                     <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   </MenuItem>
+                  <MenuItem Header="{StaticResource Data_Export}">
+                    <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                    <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  </MenuItem>
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -170,6 +174,7 @@
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                   <Separator />
                   <MenuItem Header="{StaticResource Data_ImportSpellsToSpellPanel}" Command="{Binding ImportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Data_ExportSpellsFromPanel}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -222,6 +227,8 @@
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
+                  <Separator />
+                  <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -274,6 +281,8 @@
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
+                  <Separator />
+                  <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -335,6 +344,9 @@
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                   <Separator />
                   <MenuItem Header="{StaticResource Data_ImportTickersToTag}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <Separator />
+                  <MenuItem Header="{StaticResource Data_ExportSpellsFromTag}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Data_ExportTickers}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 

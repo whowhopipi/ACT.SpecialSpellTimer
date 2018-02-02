@@ -225,8 +225,10 @@ namespace ACT.SpecialSpellTimer.Models
                     xs.Serialize(sw, list);
                 }
 
+                sb.Replace("utf-16", "utf-8");
+
                 File.WriteAllText(
-                    this.DefaultFile,
+                    file,
                     sb.ToString(),
                     new UTF8Encoding(false));
             }

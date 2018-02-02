@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -553,13 +555,23 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         #region Import & Export
 
-        private System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+        private static readonly System.Windows.Forms.OpenFileDialog OpenFileDialog = new System.Windows.Forms.OpenFileDialog()
         {
             RestoreDirectory = true,
             Filter = "Special Spells Files|*.xml|All Files|*.*",
             FilterIndex = 0,
             DefaultExt = ".xml",
             SupportMultiDottedExtensions = true,
+        };
+
+        private static readonly System.Windows.Forms.SaveFileDialog SaveFileDialog = new System.Windows.Forms.SaveFileDialog()
+        {
+            RestoreDirectory = true,
+            Filter = "Special Spells Files|*.xml|All Files|*.*",
+            FilterIndex = 0,
+            DefaultExt = ".xml",
+            SupportMultiDottedExtensions = true,
+            FileName = "MySpecialSpells.xml"
         };
 
         private ICommand importSpellsCommand;
@@ -591,27 +603,43 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         return;
                 }
 
-                var result = this.openFileDialog.ShowDialog(
-                    ActGlobals.oFormActMain);
-                if (result != System.Windows.Forms.DialogResult.OK)
+                try
                 {
+                    var result = OpenFileDialog.ShowDialog(
+                        ActGlobals.oFormActMain);
+                    if (result != System.Windows.Forms.DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    var file = OpenFileDialog.FileName;
+
+                    // 次使うとき用にケアしておく
+                    OpenFileDialog.InitialDirectory = Path.GetDirectoryName(file);
+                    OpenFileDialog.FileName = Path.GetFileName(file);
+
+                    var data = SpellTable.Instance.LoadFromFile(file);
+                    if (data == null)
+                    {
+                        return;
+                    }
+
+                    foreach (var x in data)
+                    {
+                        x.PanelID = parentPanel.ID;
+                    }
+
+                    SpellTable.Instance.Table.AddRange(data);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Import Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                        "ACT.Hojoring",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
                     return;
                 }
-
-                var file = this.openFileDialog.FileName;
-
-                var data = SpellTable.Instance.LoadFromFile(file);
-                if (data == null)
-                {
-                    return;
-                }
-
-                foreach (var x in data)
-                {
-                    x.PanelID = parentPanel.ID;
-                }
-
-                SpellTable.Instance.Table.AddRange(data);
 
                 Task.Run(() => TableCompiler.Instance.CompileSpells());
 
@@ -651,36 +679,211 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         return;
                 }
 
-                var result = this.openFileDialog.ShowDialog(
-                    ActGlobals.oFormActMain);
-                if (result != System.Windows.Forms.DialogResult.OK)
+                try
                 {
-                    return;
-                }
-
-                var file = this.openFileDialog.FileName;
-
-                var data = TickerTable.Instance.LoadFromFile(file);
-                if (data == null)
-                {
-                    return;
-                }
-
-                TickerTable.Instance.Table.AddRange(data);
-
-                foreach (var x in data)
-                {
-                    TagTable.Instance.ItemTags.Add(new ItemTags()
+                    var result = OpenFileDialog.ShowDialog(
+                        ActGlobals.oFormActMain);
+                    if (result != System.Windows.Forms.DialogResult.OK)
                     {
-                        ItemID = x.Guid,
-                        TagID = parentTag.ID,
-                    });
+                        return;
+                    }
+
+                    var file = OpenFileDialog.FileName;
+
+                    // 次使うとき用にケアしておく
+                    OpenFileDialog.InitialDirectory = Path.GetDirectoryName(file);
+                    OpenFileDialog.FileName = Path.GetFileName(file);
+
+                    var data = TickerTable.Instance.LoadFromFile(file);
+                    if (data == null)
+                    {
+                        return;
+                    }
+
+                    TickerTable.Instance.Table.AddRange(data);
+
+                    foreach (var x in data)
+                    {
+                        TagTable.Instance.ItemTags.Add(new ItemTags()
+                        {
+                            ItemID = x.Guid,
+                            TagID = parentTag.ID,
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Import Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                        "ACT.Hojoring",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+                    return;
                 }
 
                 Task.Run(() => TableCompiler.Instance.CompileTickers());
 
                 MessageBox.Show(
                     "Import Completed.",
+                    "ACT.Hojoring",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }));
+
+        private ICommand exportSpellsCommand;
+
+        [XmlIgnore]
+        public ICommand ExportSpellsCommand =>
+            this.exportSpellsCommand ?? (this.exportSpellsCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                if (item == null)
+                {
+                    return;
+                }
+
+                var targets = new List<Spell>();
+
+                switch (item.ItemType)
+                {
+                    case ItemTypes.SpellsRoot:
+                    case ItemTypes.TickersRoot:
+                    case ItemTypes.TagsRoot:
+                        targets.AddRange(SpellTable.Instance.Table);
+                        break;
+
+                    case ItemTypes.SpellPanel:
+                        foreach (Spell spell in (item as SpellPanel).Children)
+                        {
+                            targets.Add(spell);
+                        }
+
+                        break;
+
+                    case ItemTypes.Tag:
+                        foreach (ITreeItem child in (item as Tag).Children)
+                        {
+                            if (child is SpellPanel panel)
+                            {
+                                foreach (Spell spell in panel.Children)
+                                {
+                                    targets.Add(spell);
+                                }
+                            }
+                        }
+
+                        break;
+
+                    case ItemTypes.Spell:
+                        targets.Add(item as Spell);
+                        break;
+
+                    default:
+                        return;
+                }
+
+                try
+                {
+                    var result = SaveFileDialog.ShowDialog(
+                        ActGlobals.oFormActMain);
+                    if (result != System.Windows.Forms.DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    var file = SaveFileDialog.FileName;
+
+                    // 次使うとき用にケアしておく
+                    SaveFileDialog.InitialDirectory = Path.GetDirectoryName(file);
+                    SaveFileDialog.FileName = Path.GetFileName(file);
+
+                    SpellTable.Instance.Save(file, targets);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Export Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                        "ACT.Hojoring",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+                    return;
+                }
+
+                MessageBox.Show(
+                    "Export Completed.",
+                    "ACT.Hojoring",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }));
+
+        private ICommand exportTickersCommand;
+
+        [XmlIgnore]
+        public ICommand ExportTickersCommand =>
+            this.exportTickersCommand ?? (this.exportTickersCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                if (item == null)
+                {
+                    return;
+                }
+
+                var targets = new List<Ticker>();
+
+                switch (item.ItemType)
+                {
+                    case ItemTypes.SpellsRoot:
+                    case ItemTypes.TickersRoot:
+                    case ItemTypes.TagsRoot:
+                        targets.AddRange(TickerTable.Instance.Table);
+                        break;
+
+                    case ItemTypes.Ticker:
+                        targets.Add(item as Ticker);
+                        break;
+
+                    case ItemTypes.Tag:
+                        foreach (ITreeItem child in (item as Tag).Children)
+                        {
+                            if (child is Ticker ticker)
+                            {
+                                targets.Add(ticker);
+                            }
+                        }
+
+                        break;
+
+                    default:
+                        return;
+                }
+
+                try
+                {
+                    var result = SaveFileDialog.ShowDialog(
+                        ActGlobals.oFormActMain);
+                    if (result != System.Windows.Forms.DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    var file = SaveFileDialog.FileName;
+
+                    // 次使うとき用にケアしておく
+                    SaveFileDialog.InitialDirectory = Path.GetDirectoryName(file);
+                    SaveFileDialog.FileName = Path.GetFileName(file);
+
+                    TickerTable.Instance.Save(file, targets);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Export Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                        "ACT.Hojoring",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+                    return;
+                }
+
+                MessageBox.Show(
+                    "Export Completed.",
                     "ACT.Hojoring",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);

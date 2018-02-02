@@ -441,6 +441,8 @@ namespace ACT.SpecialSpellTimer.Config
                     xs.Serialize(sw, this);
                 }
 
+                sb.Replace("utf-16", "utf-8");
+
                 File.WriteAllText(
                     this.FileName,
                     sb.ToString(),

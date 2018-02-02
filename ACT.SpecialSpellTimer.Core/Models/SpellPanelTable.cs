@@ -136,6 +136,8 @@ namespace ACT.SpecialSpellTimer.Models
                     xs.Serialize(sw, this.table);
                 }
 
+                sb.Replace("utf-16", "utf-8");
+
                 File.WriteAllText(
                     this.DefaultFile,
                     sb.ToString(),

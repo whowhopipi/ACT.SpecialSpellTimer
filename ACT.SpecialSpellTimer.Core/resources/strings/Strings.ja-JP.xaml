@@ -176,4 +176,7 @@
   <system:String x:Key="Data_ImportSpellsToSpellPanel">このスペルパネルにスペルをインポートする</system:String>
   <system:String x:Key="Data_ImportTickersToTag">このタグにテロップをインポートする</system:String>
   <system:String x:Key="Data_Export">エクスポート</system:String>
+  <system:String x:Key="Data_ExportSpellsFromPanel">このスペルパネルに属するスペルをエクスポートする</system:String>
+  <system:String x:Key="Data_ExportSpellsFromTag">このタグに属するスペルをエクスポートする</system:String>
+  <system:String x:Key="Data_ExportTickers">このタグ属するテロップをエクスポートする</system:String>
 </ResourceDictionary>
