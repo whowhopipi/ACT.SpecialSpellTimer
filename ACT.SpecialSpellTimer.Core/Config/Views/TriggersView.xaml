@@ -110,7 +110,7 @@
               </Style>
             </HierarchicalDataTemplate.Resources>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
 
               <!-- ルート要素のコンテキストメニュー -->
               <StackPanel.ContextMenu>
@@ -162,19 +162,21 @@
               </Style>
             </HierarchicalDataTemplate.Resources>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
 
               <!-- スペルパネルのコンテキストメニュー -->
               <StackPanel.ContextMenu>
-                <ContextMenu>
+                <ContextMenu Loaded="ContextMenu_Loaded">
                   <MenuItem Header="{StaticResource Common_CreateNew}">
                     <MenuItem Header="{StaticResource Common_SpellPanel}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                     <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   </MenuItem>
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                   <Separator />
-                  <MenuItem Header="{StaticResource Data_ImportSpellsToSpellPanel}" Command="{Binding ImportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Data_ExportSpellsFromPanel}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Tag}" x:Name="TagMenu" />
+                  <Separator />
+                  <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ImportSpellsToSpellPanel}" />
+                  <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportSpellsFromPanel}" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -220,7 +222,7 @@
               </Style>
             </HierarchicalDataTemplate.Resources>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
 
               <!-- スペルのコンテキストメニュー -->
               <StackPanel.ContextMenu>
@@ -274,7 +276,7 @@
               </Style>
             </HierarchicalDataTemplate.Resources>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
 
               <!-- テロップのコンテキストメニュー -->
               <StackPanel.ContextMenu>
@@ -328,9 +330,7 @@
               </Style>
             </HierarchicalDataTemplate.Resources>
 
-            <StackPanel Orientation="Horizontal">
-              <StackPanel.InputBindings>
-              </StackPanel.InputBindings>
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
 
               <!-- タグのコンテキストメニュー -->
               <StackPanel.ContextMenu>
@@ -343,10 +343,14 @@
                   <MenuItem Header="{StaticResource Common_Rename}" Command="{Binding RenameCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="F2" />
                   <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                   <Separator />
-                  <MenuItem Header="{StaticResource Data_ImportTickersToTag}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Data_Import}">
+                    <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ImportTickersToTag}" />
+                  </MenuItem>
                   <Separator />
-                  <MenuItem Header="{StaticResource Data_ExportSpellsFromTag}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Data_ExportTickers}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Data_Export}">
+                    <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportSpellsFromTag}" />
+                    <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportTickers}" />
+                  </MenuItem>
                 </ContextMenu>
               </StackPanel.ContextMenu>
 

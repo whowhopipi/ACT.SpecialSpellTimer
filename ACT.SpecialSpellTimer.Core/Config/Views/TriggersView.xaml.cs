@@ -7,50 +7,34 @@ using ACT.SpecialSpellTimer.Config.ViewModels;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.resources;
 using FFXIV.Framework.Globalization;
+using System.Linq;
 
 namespace ACT.SpecialSpellTimer.Config.Views
 {
     /// <summary>
     /// TriggersView.xaml の相互作用ロジック
     /// </summary>
-    public partial class TriggersView : UserControl, ILocalizable
+    public partial class TriggersView :
+        UserControl,
+        ILocalizable
     {
         public TriggersView()
         {
-            this.InitializeComponent();
             this.DataContext = new TriggersViewModel();
+
+            this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
 
             this.TriggersTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
-
             this.TriggersTreeView.PreviewKeyUp += this.TriggersTreeViewOnPreviewKeyUp;
-        }
-
-        private void TriggersTreeViewOnPreviewKeyUp(
-            object sender,
-            KeyEventArgs e)
-        {
-            var item = (sender as TreeView)?.SelectedItem as TreeItemBase;
-            if (item == null)
-            {
-                return;
-            }
-
-            switch (e.Key)
-            {
-                case Key.F2:
-                    item.RenameCommand.Execute(item);
-                    break;
-
-                case Key.Delete:
-                    item.DeleteCommand.Execute(item);
-                    break;
-            }
+            this.TriggersTreeView.PreviewMouseRightButtonDown += this.OnPreviewMouseRightButtonDown;
         }
 
         public TriggersViewModel ViewModel => this.DataContext as TriggersViewModel;
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);
+
+        #region コンテンツエリアの切り替え
 
         private void TriggersTreeViewOnSelectedItemChanged(
             object sender,
@@ -145,6 +129,64 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.previousModel = model;
         }
 
+        #endregion コンテンツエリアの切り替え
+
+        #region キーボードショートカット
+
+        private void TriggersTreeViewOnPreviewKeyUp(
+            object sender,
+            KeyEventArgs e)
+        {
+            var item = (sender as TreeView)?.SelectedItem as TreeItemBase;
+            if (item == null)
+            {
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.F2:
+                    item.RenameCommand.Execute(item);
+                    break;
+
+                case Key.Delete:
+                    item.DeleteCommand.Execute(item);
+                    break;
+            }
+        }
+
+        #endregion キーボードショートカット
+
+        #region 右クリックで選択アイテムを変更する
+
+        private static TreeViewItem VisualUpwardSearch(
+            DependencyObject source)
+        {
+            while (source != null && !(source is TreeViewItem))
+            {
+                source = VisualTreeHelper.GetParent(source);
+            }
+
+            return source as TreeViewItem;
+        }
+
+        private void OnPreviewMouseRightButtonDown(
+            object sender,
+            MouseButtonEventArgs e)
+        {
+            var treeViewItem = VisualUpwardSearch(e.OriginalSource as DependencyObject);
+
+            if (treeViewItem != null)
+            {
+                treeViewItem.Focus();
+                e.Handled = true;
+            }
+        }
+
+        #endregion 右クリックで選択アイテムを変更する
+
+        #region 名前の編集
+
         private void RenameTextBoxOnLostFocus(
             object sender,
             RoutedEventArgs e)
@@ -194,5 +236,92 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 t.Focus();
             }
         }
+
+        #endregion 名前の編集
+
+        #region 動的コンテキストメニュー
+
+        private void ContextMenu_Loaded(
+            object sender,
+            RoutedEventArgs e)
+        {
+            const string TagMenuItemName = "TagMenu";
+            const string PanelMenuItemName = "PanelMenu";
+
+            var menu = sender as ContextMenu;
+
+            var tagMenuItem = default(MenuItem);
+            var panelMenuItem = default(MenuItem);
+
+            foreach (var item in menu.Items)
+            {
+                if (item is MenuItem menuItem)
+                {
+                    if (menuItem.Name == TagMenuItemName)
+                    {
+                        tagMenuItem = menuItem;
+                    }
+
+                    if (menuItem.Name == PanelMenuItemName)
+                    {
+                        panelMenuItem = menuItem;
+                    }
+                }
+            }
+
+            if (tagMenuItem == null &&
+                panelMenuItem == null)
+            {
+                return;
+            }
+
+            if (tagMenuItem != null)
+            {
+                tagMenuItem.Items.Clear();
+
+                var tags =
+                    from x in TagTable.Instance.Tags
+                    orderby
+                    x.SortPriority descending,
+                    x.Name
+                    select
+                    x;
+
+                foreach (var tag in tags)
+                {
+                    var menuItem = new MenuItem()
+                    {
+                        Header = tag.Name
+                    };
+
+                    tagMenuItem.Items.Add(menuItem);
+                }
+            }
+
+            if (panelMenuItem != null)
+            {
+                panelMenuItem.Items.Clear();
+
+                var panels =
+                    from x in SpellPanelTable.Instance.Table
+                    orderby
+                    x.SortPriority descending,
+                    x.PanelName
+                    select
+                    x;
+
+                foreach (var panel in panels)
+                {
+                    var menuItem = new MenuItem()
+                    {
+                        Header = panel.PanelName
+                    };
+
+                    panelMenuItem.Items.Add(menuItem);
+                }
+            }
+        }
+
+        #endregion 動的コンテキストメニュー
     }
 }
