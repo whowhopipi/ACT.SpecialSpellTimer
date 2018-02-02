@@ -240,13 +240,6 @@ namespace ACT.SpecialSpellTimer
             {
                 this.lastSaveTickerTableDateTime = DateTime.Now;
 
-                // テロップの位置を保存するためテロップテーブルを保存する
-                Task.Run(() =>
-                {
-                    TickerTable.Instance.Save();
-                    Debug.WriteLine("●Save telop table.");
-                });
-
                 // ついでにLPSを出力する
                 var lps = this.LogBuffer.LPS;
                 if (lps > 0 &&

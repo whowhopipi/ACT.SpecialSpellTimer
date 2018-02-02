@@ -444,12 +444,19 @@ namespace ACT.SpecialSpellTimer.Config
                     Directory.CreateDirectory(directoryName);
                 }
 
-                using (var xw = XmlWriter.Create(
-                    this.FileName,
-                    this.XmlWriterSettings))
+                var sb = new StringBuilder();
+                using (var sw = new StringWriter(sb))
                 {
-                    this.Serializer.Serialize(xw, this);
+                    using (var xw = XmlWriter.Create(sw, this.XmlWriterSettings))
+                    {
+                        this.Serializer.Serialize(xw, this);
+                    }
                 }
+
+                File.WriteAllText(
+                    this.FileName,
+                    sb.ToString(),
+                    new UTF8Encoding(false));
             }
         }
 

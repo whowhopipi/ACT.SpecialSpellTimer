@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using Prism.Mvvm;
 
@@ -115,14 +114,23 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void Save()
         {
-            var file = this.DefaultFile;
-
-            FileHelper.CreateDirectory(file);
-
-            using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
+            lock (this)
             {
-                var xs = new XmlSerializer(this.GetType());
-                xs.Serialize(sw, this);
+                var file = this.DefaultFile;
+
+                FileHelper.CreateDirectory(file);
+
+                var sb = new StringBuilder();
+                using (var sw = new StringWriter(sb))
+                {
+                    var xs = new XmlSerializer(this.GetType());
+                    xs.Serialize(sw, this);
+                }
+
+                File.WriteAllText(
+                    this.DefaultFile,
+                    sb.ToString(),
+                    new UTF8Encoding(false));
             }
         }
 

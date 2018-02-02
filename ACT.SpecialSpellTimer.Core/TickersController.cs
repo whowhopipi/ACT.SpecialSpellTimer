@@ -321,8 +321,6 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-        #region Overlays Controller
-
         #region Hide & Close
 
         /// <summary>
@@ -406,84 +404,5 @@ namespace ACT.SpecialSpellTimer
         }
 
         #endregion Hide & Close
-
-        /// <summary>
-        /// 位置を取得する
-        /// </summary>
-        /// <param name="telopID">設定するテロップのID</param>
-        /// <param name="left">Left</param>
-        /// <param name="top">Top</param>
-        public void GettLocation(
-            long telopID,
-            out double left,
-            out double top)
-        {
-            left = 0;
-            top = 0;
-
-            var telop = default(TickerWindow);
-            lock (this.telopWindowList)
-            {
-                telop = this.telopWindowList.ContainsKey(telopID) ?
-                    this.telopWindowList[telopID] :
-                    null;
-            }
-
-            if (telop != null)
-            {
-                left = telop.Left;
-                top = telop.Top;
-
-                return;
-            }
-
-            var telopSettings = TickerTable.Instance.Table
-                .FirstOrDefault(x => x.ID == telopID);
-
-            if (telopSettings != null)
-            {
-                left = telopSettings.Left;
-                top = telopSettings.Top;
-            }
-        }
-
-        /// <summary>
-        /// 位置を設定する
-        /// </summary>
-        /// <param name="telopID">設定するテロップのID</param>
-        /// <param name="left">Left</param>
-        /// <param name="top">Top</param>
-        public void SetLocation(
-            long telopID,
-            double left,
-            double top)
-        {
-            var telop = default(TickerWindow);
-            lock (this.telopWindowList)
-            {
-                telop = this.telopWindowList.ContainsKey(telopID) ?
-                    this.telopWindowList[telopID] :
-                    null;
-            }
-
-            if (telop != null)
-            {
-                telop.Left = left;
-                telop.Top = top;
-
-                return;
-            }
-
-            var telopSettings = TickerTable.Instance.Table
-                .FirstOrDefault(x => x.ID == telopID);
-
-            if (telopSettings != null)
-            {
-                telopSettings.Left = left;
-                telopSettings.Top = top;
-            }
-        }
-
-        #endregion Overlays Controller
     }
 }

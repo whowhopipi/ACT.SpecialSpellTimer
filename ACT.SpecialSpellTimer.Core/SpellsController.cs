@@ -401,8 +401,6 @@ namespace ACT.SpecialSpellTimer
 
         #region Panel controller
 
-        #region Close & Hide
-
         /// <summary>
         /// Panelを閉じる
         /// </summary>
@@ -484,78 +482,6 @@ namespace ACT.SpecialSpellTimer
                     panel.PanelWindow?.HideOverlay();
                 }
             }
-        }
-
-        #endregion Close & Hide
-
-        public SpellPanel GetPanelSettings(
-            string panelName)
-        {
-            double normalize(double value)
-            {
-                var result = value;
-
-                if (double.IsNaN(result))
-                {
-                    result = 0;
-                }
-
-                if (value > 65535)
-                {
-                    result = 65535;
-                }
-
-                if (value < -65535)
-                {
-                    result = -65535;
-                }
-
-                return result;
-            }
-
-            var settings = new SpellPanel()
-            {
-                PanelName = panelName,
-                Top = 10,
-                Left = 10,
-                Margin = 5,
-                Horizontal = false,
-                FixedPositionSpell = false,
-                SortOrder = SpellOrders.SortRecastTimeASC,
-            };
-
-            lock (this.spellPanelWindows)
-            {
-                var panel = this.spellPanelWindows
-                    .Where(x => x.Config.PanelName == panelName)
-                    .FirstOrDefault();
-                if (panel != null)
-                {
-                    settings.SortOrder = panel.Config?.SortOrder ?? SpellOrders.SortRecastTimeASC;
-                }
-                else
-                {
-                    var s = SpellPanelTable.Instance.Table
-                        .Where(x => x.PanelName == panelName)
-                        .FirstOrDefault();
-
-                    if (s != null)
-                    {
-                        settings = s;
-                    }
-                    else
-                    {
-                        SpellPanelTable.Instance.Table.Add(settings);
-                    }
-                }
-            }
-
-            // 変な値が入っていたら補正する
-            settings.Top = normalize(settings.Top);
-            settings.Left = normalize(settings.Left);
-            settings.Margin = normalize(settings.Margin);
-
-            return settings;
         }
 
         #endregion Panel controller

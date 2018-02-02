@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-
-using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -212,16 +210,25 @@ namespace ACT.SpecialSpellTimer.Models
             string file,
             IList<Ticker> list)
         {
-            var dir = Path.GetDirectoryName(file);
-            if (!Directory.Exists(dir))
+            lock (this)
             {
-                Directory.CreateDirectory(dir);
-            }
+                var dir = Path.GetDirectoryName(file);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
 
-            using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
-            {
-                var xs = new XmlSerializer(list.GetType());
-                xs.Serialize(sw, list);
+                var sb = new StringBuilder();
+                using (var sw = new StringWriter(sb))
+                {
+                    var xs = new XmlSerializer(list.GetType());
+                    xs.Serialize(sw, list);
+                }
+
+                File.WriteAllText(
+                    this.DefaultFile,
+                    sb.ToString(),
+                    new UTF8Encoding(false));
             }
         }
     }
