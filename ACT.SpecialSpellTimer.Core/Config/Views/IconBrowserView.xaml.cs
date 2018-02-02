@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -69,31 +70,40 @@ namespace ACT.SpecialSpellTimer.Config.Views
             group x by
             x.DirectoryName).ToList();
 
-        private void IconBrowserView_Loaded(
+        private async void IconBrowserView_Loaded(
             object sender,
             RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.SelectedIconName))
-            {
-                this.SelectedIcon = this.Icons.FirstOrDefault(x =>
-                    x.Name == this.SelectedIconName ||
-                    x.FullPath.ContainsIgnoreCase(this.SelectedIconName));
-            }
+            var selectedGroup = default(IGrouping<string, IconController.IconFile>);
 
-            if (this.SelectedIcon == null)
+            await Task.Run(() =>
+            {
+                if (!string.IsNullOrEmpty(this.SelectedIconName))
+                {
+                    this.SelectedIcon = this.Icons.FirstOrDefault(x =>
+                        x.Name == this.SelectedIconName ||
+                        x.FullPath.ContainsIgnoreCase(this.SelectedIconName));
+                }
+
+                if (this.SelectedIcon != null)
+                {
+                    selectedGroup = (
+                        from x in this.IconGroups
+                        where
+                        x.Any(y => y == this.SelectedIcon)
+                        select
+                        x).FirstOrDefault();
+                }
+            });
+
+            if (this.SelectedIcon == null ||
+                selectedGroup == null)
             {
                 this.DirectoryListView.SelectedIndex = 0;
                 return;
             }
 
-            var selectedGroup = (
-                from x in this.IconGroups
-                where
-                x.Any(y => y == this.SelectedIcon)
-                select
-                x).FirstOrDefault();
-
-            this.DirectoryListView.SelectedValue = selectedGroup.Key;
+            this.DirectoryListView.SelectedValue = selectedGroup?.Key;
             this.IconsListView.SelectedItem = this.SelectedIcon;
 
             this.DirectoryListView.ScrollIntoView(this.DirectoryListView.SelectedItem);

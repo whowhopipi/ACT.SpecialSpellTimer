@@ -184,6 +184,10 @@ namespace ACT.SpecialSpellTimer.Views
                     this.SpellIconPanel.OpacityMask = new ImageBrush(bitmap);
                 }
             }
+            else
+            {
+                this.SpellIconImage.Source = null;
+            }
 
             // Titleを描画する
             tb = this.SpellTitleTextBlock;
