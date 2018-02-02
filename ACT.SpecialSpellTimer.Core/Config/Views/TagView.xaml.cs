@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.resources;
 using FFXIV.Framework.Globalization;
@@ -34,6 +35,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.Loaded += this.TagViewOnLoaded;
             this.CloseButton.Click += (x, y) => this.Close();
             this.ApplyButton.Click += ApplyButtonOnClick;
+
+            this.PreviewKeyUp += (x, y) =>
+            {
+                if (y.Key == Key.Escape)
+                {
+                    this.Close();
+                }
+            };
         }
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);
