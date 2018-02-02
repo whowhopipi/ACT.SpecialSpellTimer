@@ -389,20 +389,6 @@ namespace ACT.SpecialSpellTimer.Config
 
         private readonly object locker = new object();
 
-        /// <summary>
-        /// シリアライザ
-        /// </summary>
-        private readonly XmlSerializer Serializer = new XmlSerializer(typeof(Settings));
-
-        /// <summary>
-        /// XMLライターSettings
-        /// </summary>
-        private readonly XmlWriterSettings XmlWriterSettings = new XmlWriterSettings()
-        {
-            Encoding = new UTF8Encoding(false),
-            Indent = true,
-        };
-
         public void Load()
         {
             lock (this.locker)
@@ -422,12 +408,16 @@ namespace ACT.SpecialSpellTimer.Config
                     return;
                 }
 
-                using (var xr = XmlReader.Create(this.FileName))
+                using (var sr = new StreamReader(this.FileName, new UTF8Encoding(false)))
                 {
-                    var data = this.Serializer.Deserialize(xr) as Settings;
-                    if (data != null)
+                    if (sr.BaseStream.Length > 0)
                     {
-                        instance = data;
+                        var xs = new XmlSerializer(this.GetType());
+                        var data = xs.Deserialize(sr) as Settings;
+                        if (data != null)
+                        {
+                            instance = data;
+                        }
                     }
                 }
             }
@@ -447,10 +437,8 @@ namespace ACT.SpecialSpellTimer.Config
                 var sb = new StringBuilder();
                 using (var sw = new StringWriter(sb))
                 {
-                    using (var xw = XmlWriter.Create(sw, this.XmlWriterSettings))
-                    {
-                        this.Serializer.Serialize(xw, this);
-                    }
+                    var xs = new XmlSerializer(this.GetType());
+                    xs.Serialize(sw, this);
                 }
 
                 File.WriteAllText(

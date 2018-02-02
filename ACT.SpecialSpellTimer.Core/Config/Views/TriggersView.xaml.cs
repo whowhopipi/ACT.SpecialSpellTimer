@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Config.ViewModels;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.resources;
@@ -21,6 +22,30 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.SetLocale(Settings.Default.UILocale);
 
             this.TriggersTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
+
+            this.TriggersTreeView.PreviewKeyUp += this.TriggersTreeViewOnPreviewKeyUp;
+        }
+
+        private void TriggersTreeViewOnPreviewKeyUp(
+            object sender,
+            KeyEventArgs e)
+        {
+            var item = (sender as TreeView)?.SelectedItem as TreeItemBase;
+            if (item == null)
+            {
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.F2:
+                    item.RenameCommand.Execute(item);
+                    break;
+
+                case Key.Delete:
+                    item.DeleteCommand.Execute(item);
+                    break;
+            }
         }
 
         public TriggersViewModel ViewModel => this.DataContext as TriggersViewModel;

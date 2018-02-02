@@ -163,7 +163,7 @@
                     <MenuItem Header="{StaticResource Common_SpellPanel}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                     <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   </MenuItem>
-                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -215,7 +215,7 @@
               <StackPanel.ContextMenu>
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -267,7 +267,7 @@
               <StackPanel.ContextMenu>
                 <ContextMenu>
                   <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
@@ -325,8 +325,8 @@
                     <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                     <MenuItem Header="{StaticResource Common_Tag}" Command="{Binding CreateNewTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   </MenuItem>
-                  <MenuItem Header="{StaticResource Common_Rename}" Command="{Binding RenameCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                  <MenuItem Header="{StaticResource Common_Rename}" Command="{Binding RenameCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="F2" />
+                  <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 </ContextMenu>
               </StackPanel.ContextMenu>
 
