@@ -118,7 +118,6 @@
     <Compile Include="Config\Models\ZoneSelector.cs" />
     <Compile Include="Config\Models\JobSelector.cs" />
     <Compile Include="Config\Models\TriggersTreeRoot.cs" />
-    <Compile Include="Config\ViewModels\InformationsViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellConfigViewModel.Notice.cs" />
     <Compile Include="Config\ViewModels\SpellConfigViewModel.Visual.cs" />
     <Compile Include="Config\ViewModels\TickerConfigViewModel.Notice.cs" />
