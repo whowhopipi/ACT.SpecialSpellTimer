@@ -47,6 +47,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public void PlayWave(
             string wave)
         {
+            if (string.IsNullOrEmpty(wave))
+            {
+                return;
+            }
+
             if (!File.Exists(wave))
             {
                 return;
@@ -72,6 +77,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public void Speak(
             string tts)
         {
+            if (string.IsNullOrEmpty(tts))
+            {
+                return;
+            }
+
             tts = TTSDictionary.Instance.ReplaceWordsTTS(tts);
 
             if (!this.IsEnabled)
