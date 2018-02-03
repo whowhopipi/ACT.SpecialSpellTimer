@@ -13,6 +13,7 @@ using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
@@ -322,34 +323,22 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public bool IsSequentialTTS { get; set; } = false;
 
-        public delegate void DoPlay(string source, AdvancedNoticeConfig noticeConfig = null);
+        public void Play(string tts, AdvancedNoticeConfig config)
+            => Spell.PlayCore(tts, this.IsSequentialTTS, config);
 
-        /// <summary>
-        /// 再生処理のデリゲート
-        /// </summary>
-        [XmlIgnore]
-        public DoPlay PlayDelegate { get; set; } = null;
-
-        private volatile string tts;
-        private Timer speakTimer;
-
-        /// <summary>
-        /// TTSを発声する
-        /// </summary>
-        /// <param name="tts">
-        /// TTS</param>
-        public void Play(
+        public static void PlayCore(
             string tts,
-            AdvancedNoticeConfig noticeConfig = null)
+            bool isSync,
+            AdvancedNoticeConfig noticeConfig)
         {
             if (string.IsNullOrEmpty(tts))
             {
                 return;
             }
 
-            if (this.PlayDelegate != null)
+            if (noticeConfig == null)
             {
-                this.PlayDelegate(tts, noticeConfig);
+                SoundController.Instance.Play(tts);
                 return;
             }
 
@@ -362,73 +351,43 @@ namespace ACT.SpecialSpellTimer.Models
 
             void play(string source)
             {
-                if (noticeConfig == null)
+                if (isWave)
                 {
-                    SoundController.Instance.Play(source);
+                    noticeConfig.PlayWave(source);
                 }
                 else
                 {
-                    if (isWave)
-                    {
-                        noticeConfig.PlayWave(source);
-                    }
-                    else
-                    {
-                        noticeConfig.Speak(source);
-                    }
+                    noticeConfig.Speak(source);
                 }
             }
 
+            // waveサウンドはシンクロ再生しない
             if (isWave)
             {
                 play(tts);
                 return;
             }
 
-            if (!this.IsSequentialTTS)
+            // ゆっくりがいないならシンクロ再生はしない
+            if (PlayBridge.Instance.PlayMainDeviceDelegate == null)
             {
                 play(tts);
                 return;
             }
 
-            this.speakTimer?.Stop();
-
-            lock (this)
+            // シンクロ再生ならばシンクロコマンドを付与する
+            // /sync [優先順位] テキスト
+            // ex. /sync 9999 よしだーー
+            // 同期的に発声するが優先順位は最後になる
+            if (isSync)
             {
-                if (this.speakTimer == null)
+                if (!tts.Contains(AdvancedNoticeConfig.SyncKeyword))
                 {
-                    this.speakTimer = new Timer(50)
-                    {
-                        AutoReset = false
-                    };
-
-                    this.speakTimer.Elapsed += (x, y) =>
-                    {
-                        play(this.tts);
-                        this.tts = string.Empty;
-                    };
-                }
-
-                if (!tts.EndsWith("。") &&
-                    !tts.EndsWith(".") &&
-                    !tts.EndsWith("、") &&
-                    !tts.EndsWith(","))
-                {
-                    tts += Settings.Default.UILocale == Locales.JA ?
-                        "。" : ".";
-                }
-
-                if (string.IsNullOrEmpty(this.tts))
-                {
-                    this.tts = tts;
-                }
-                else
-                {
-                    this.tts += Environment.NewLine + tts;
+                    tts = $"{AdvancedNoticeConfig.SyncKeyword} 9999 {tts}";
                 }
             }
 
-            this.speakTimer?.Start();
+            play(tts);
         }
 
         #endregion Sequential TTS
@@ -1059,7 +1018,6 @@ namespace ACT.SpecialSpellTimer.Models
             n.BeforeAdvancedConfig = this.BeforeAdvancedConfig.Clone() as AdvancedNoticeConfig;
             n.TimeupAdvancedConfig = this.TimeupAdvancedConfig.Clone() as AdvancedNoticeConfig;
             n.IsSequentialTTS = this.IsSequentialTTS;
-            n.PlayDelegate = this.Play;
 
             n.ToInstance = false;
             n.IsInstance = true;

@@ -102,8 +102,8 @@
   <system:String x:Key="Spell_ToDicordTextChannel">TTSをDISCORDのテキストチャンネルに通知する</system:String>
   <system:String x:Key="Spell_NoticeOnOverThisScounds">秒後に通知する</system:String>
   <system:String x:Key="Spell_NoticeOnBeforeThisScounds">秒前に通知する</system:String>
-  <system:String x:Key="Spell_UseSequencialTTS">TTSをシーケンシャルに再生する（同時に再生しない）</system:String>
-  <system:String x:Key="Spell_TestSequencialTTS">シーケンシャルTTSをテストする</system:String>
+  <system:String x:Key="Spell_UseSequencialTTS">TTSをシンクロ再生する（同時に再生しない）</system:String>
+  <system:String x:Key="Spell_TestSequencialTTS">シンクロTTSをテストする</system:String>
 
   <system:String x:Key="Ticker_Name">テロップの名前</system:String>
   <system:String x:Key="Ticker_Message">テロップに表示するメッセージ</system:String>

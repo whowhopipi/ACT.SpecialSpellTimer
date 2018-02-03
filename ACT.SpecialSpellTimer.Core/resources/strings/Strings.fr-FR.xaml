@@ -102,8 +102,8 @@
   <system:String x:Key="Spell_ToDicordTextChannel">Notify TTS to DISCORD's text channel</system:String>
   <system:String x:Key="Spell_NoticeOnOverThisScounds">secounds, Delay until notify</system:String>
   <system:String x:Key="Spell_NoticeOnBeforeThisScounds">secounds, Before notify</system:String>
-  <system:String x:Key="Spell_UseSequencialTTS">Playback TTS sequentialy (Disable simultaneous playback)</system:String>
-  <system:String x:Key="Spell_TestSequencialTTS">Test sequentialy TTS</system:String>
+  <system:String x:Key="Spell_UseSequencialTTS">Speak TTS synchronously (Disable simultaneous speak)</system:String>
+  <system:String x:Key="Spell_TestSequencialTTS">Test Sync. TTS</system:String>
 
   <system:String x:Key="Ticker_Name">Ticker name</system:String>
   <system:String x:Key="Ticker_Message">Message to display on ticker</system:String>

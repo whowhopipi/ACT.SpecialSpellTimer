@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
@@ -53,10 +54,19 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
         public ICommand TestSequencialTTSCommand =>
             this.testSequencialTTSCommand ?? (this.testSequencialTTSCommand = new DelegateCommand(() =>
             {
-                this.Model.Play("おしらせ1");
-                this.Model.Play("おしらせ2");
-                this.Model.Play("おしらせ3");
-                this.Model.Play("おしらせ4");
+                var config = this.Model.MatchAdvancedConfig;
+
+                this.Model.Play("おしらせ1番", config);
+                this.Model.Play("おしらせ2番", config);
+                this.Model.Play("おしらせ3番", config);
+                this.Model.Play("おしらせ4番", config);
+
+                Thread.Sleep(3 * 1000);
+
+                this.Model.Play("/sync 4 1番目に登録したシンク4通知です", config);
+                this.Model.Play("/sync 3 2番目に登録したシンク3通知です", config);
+                this.Model.Play("/sync 2 3番目に登録したシンク2通知です", config);
+                this.Model.Play("/sync 1 4番目に登録したシンク1通知です", config);
             }));
     }
 }
