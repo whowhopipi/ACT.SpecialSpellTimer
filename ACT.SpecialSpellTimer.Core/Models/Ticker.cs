@@ -211,6 +211,11 @@ namespace ACT.SpecialSpellTimer.Models
             string tts,
             AdvancedNoticeConfig noticeConfig = null)
         {
+            if (string.IsNullOrEmpty(tts))
+            {
+                return;
+            }
+
             if (this.PlayDelegate != null)
             {
                 this.PlayDelegate(tts, noticeConfig);
