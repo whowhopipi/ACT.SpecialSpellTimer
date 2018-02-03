@@ -81,6 +81,11 @@ namespace ACT.SpecialSpellTimer.Sound
         public string ReplaceWordsTTS(
             string textToSpeak)
         {
+            if (string.IsNullOrEmpty(textToSpeak))
+            {
+                return textToSpeak;
+            }
+
             lock (this.locker)
             {
                 var placeholderList = TableCompiler.Instance.PlaceholderList;
