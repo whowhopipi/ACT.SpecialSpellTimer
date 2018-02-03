@@ -14,9 +14,11 @@
 
   <system:String x:Key="Common_Location">Location</system:String>
   <system:String x:Key="Common_AddTags">Add tags</system:String>
+  <system:String x:Key="Common_OK">O K</system:String>
   <system:String x:Key="Common_Apply">Apply</system:String>
   <system:String x:Key="Common_Cancel">Cancel</system:String>
   <system:String x:Key="Common_Clear">Clear</system:String>
+  <system:String x:Key="Common_Details">Details</system:String>
   <system:String x:Key="Common_ManageTags">Manage tags</system:String>
 
   <system:String x:Key="Common_CreateNew">Create new</system:String>
@@ -37,6 +39,7 @@
   <system:String x:Key="Common_IsReverseProgressBar">Reverse direction</system:String>
   <system:String x:Key="Common_Background">Background</system:String>
   <system:String x:Key="Common_Icon">Icon</system:String>
+  <system:String x:Key="Common_Size">Size</system:String>
   <system:String x:Key="Common_SelectIcon">Browse icon</system:String>
   <system:String x:Key="Common_RecastTimeOverIcon">Overlap recast time</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">During the recast time reduce brightness of icon</system:String>
@@ -126,6 +129,7 @@
 
   <system:String x:Key="Options_OverlayEnabled">Overlay enabled</system:String>
   <system:String x:Key="Options_HideOverlayOnNonActive">Hide overlay when inactive</system:String>
+  <system:String x:Key="Options_VisibleOverlayWithoutFFXIV">Show overlay when not exists FFXIV process (for debug)</system:String>
   <system:String x:Key="Options_Transparency">Transparency</system:String>
   <system:String x:Key="Options_LogPollingRate">Log polling rates (msec)</system:String>
   <system:String x:Key="Options_OverlayRefreshRate">Overlay refresh rates (msec)</system:String>
@@ -169,6 +173,8 @@
   <system:String x:Key="Info_Placeholders">Placeholders</system:String>
   <system:String x:Key="Info_Triggers">Active triggers</system:String>
   <system:String x:Key="Info_TriggerCount">Active trigger count (include instanced spell)</system:String>
+
+  <system:String x:Key="Icon_BrowseIcon">Browse icon</system:String>
 
   <system:String x:Key="Data_Import">Import</system:String>
   <system:String x:Key="Data_ImportSpellsToSpellPanel">Import spells to this panel</system:String>

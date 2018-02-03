@@ -129,6 +129,7 @@
 
   <system:String x:Key="Options_OverlayEnabled">オーバーレイを有効にする</system:String>
   <system:String x:Key="Options_HideOverlayOnNonActive">非アクティブのときオーバーレイを隠す</system:String>
+  <system:String x:Key="Options_VisibleOverlayWithoutFFXIV">FFXIVのプロセスが存在しなくてもオーバーレイを表示する（テスト用）</system:String>
   <system:String x:Key="Options_Transparency">透過率（※不透明度ではない）</system:String>
   <system:String x:Key="Options_LogPollingRate">メモリの監視間隔 (msec)</system:String>
   <system:String x:Key="Options_OverlayRefreshRate">オーバーレイの描画間隔 (msec)</system:String>

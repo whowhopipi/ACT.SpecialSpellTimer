@@ -77,6 +77,7 @@
     </CheckBox>
 
     <CheckBox Margin="0 40 0 0" Content="{DynamicResource Options_HideOverlayOnNonActive}" IsChecked="{Binding Config.HideWhenNotActive, Mode=TwoWay}" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_VisibleOverlayWithoutFFXIV}" IsChecked="{Binding Config.VisibleOverlayWithoutFFXIV, Mode=TwoWay}" />
 
     <Label Margin="0 15 0 0" Content="{DynamicResource Options_Transparency}" />
     <xctk:IntegerUpDown Value="{Binding Config.Opacity, Mode=TwoWay}" MinWidth="80" />

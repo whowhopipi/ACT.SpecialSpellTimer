@@ -145,6 +145,11 @@ namespace ACT.SpecialSpellTimer.Config
 
         public bool HideWhenNotActive { get; set; }
 
+        /// <summary>
+        /// FFXIVのプロセスが存在しなくてもオーバーレイを表示する
+        /// </summary>
+        public bool VisibleOverlayWithoutFFXIV { get; set; } = false;
+
         public long LogPollSleepInterval { get; set; }
 
         public long RefreshInterval { get; set; }
