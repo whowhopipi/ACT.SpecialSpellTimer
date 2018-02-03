@@ -113,11 +113,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
             });
 
-            MessageBox.Show(
+            ModernMessageBox.ShowDialog(
                 "Done!",
-                "ACT.Hojoring",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+                "ACT.Hojoring");
 
             this.Close();
         }

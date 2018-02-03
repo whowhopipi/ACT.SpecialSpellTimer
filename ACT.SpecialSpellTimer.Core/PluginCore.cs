@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
@@ -110,12 +111,11 @@ namespace ACT.SpecialSpellTimer
                     this.PluginStatusLabel.Text = "Plugin Exit Error";
                 }
 
-                MessageBox.Show(
-                    ActGlobals.oFormActMain,
-                    ex.ToString(),
-                    "Plugin Exit Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                ModernMessageBox.ShowDialog(
+                    "Plugin deinit error !",
+                    "ACT.SpecialSpellTimer",
+                    System.Windows.MessageBoxButton.OK,
+                    ex);
             }
 
             Logger.DeInit();
@@ -216,12 +216,11 @@ namespace ACT.SpecialSpellTimer
                     this.PluginStatusLabel.Text = "Plugin Initialize Error";
                 }
 
-                MessageBox.Show(
-                    ActGlobals.oFormActMain,
-                    ex.ToString(),
-                    "Plugin Initialize Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                ModernMessageBox.ShowDialog(
+                    "Plugin init error !",
+                    "ACT.SpecialSpellTimer",
+                    System.Windows.MessageBoxButton.OK,
+                    ex);
             }
         }
 

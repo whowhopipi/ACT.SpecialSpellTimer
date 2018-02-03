@@ -97,11 +97,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
             {
                 TTSDictionary.Instance.Load();
 
-                MessageBox.Show(
+                ModernMessageBox.ShowDialog(
                     "TTSDictionary.txt is reloaded.",
-                    "ACT.Hojoring",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    "ACT.Hojoring");
             }));
     }
 }

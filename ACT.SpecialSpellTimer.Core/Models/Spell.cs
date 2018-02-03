@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Image;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
@@ -1074,36 +1075,34 @@ namespace ACT.SpecialSpellTimer.Models
 
                     if (this.IsRealtimeCompile)
                     {
-                        var message = string.Empty;
-
-                        message = this.CompileRegex();
-                        if (!string.IsNullOrEmpty(message))
+                        var ex = this.CompileRegex();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
 
-                        message = this.CompileRegexExtend1();
-                        if (!string.IsNullOrEmpty(message))
+                        ex = this.CompileRegexExtend1();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
 
-                        message = this.CompileRegexExtend2();
-                        if (!string.IsNullOrEmpty(message))
+                        ex = this.CompileRegexExtend2();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
                     }
                 }
@@ -1120,14 +1119,14 @@ namespace ACT.SpecialSpellTimer.Models
                     this.KeywordReplaced = string.Empty;
                     if (this.IsRealtimeCompile)
                     {
-                        var message = this.CompileRegex();
-                        if (!string.IsNullOrEmpty(message))
+                        var ex = this.CompileRegex();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
                     }
                 }
@@ -1144,14 +1143,14 @@ namespace ACT.SpecialSpellTimer.Models
                     this.KeywordForExtendReplaced1 = string.Empty;
                     if (this.IsRealtimeCompile)
                     {
-                        var message = this.CompileRegexExtend1();
-                        if (!string.IsNullOrEmpty(message))
+                        var ex = this.CompileRegexExtend1();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
                     }
                 }
@@ -1168,14 +1167,14 @@ namespace ACT.SpecialSpellTimer.Models
                     this.KeywordForExtendReplaced2 = string.Empty;
                     if (this.IsRealtimeCompile)
                     {
-                        var message = this.CompileRegexExtend2();
-                        if (!string.IsNullOrEmpty(message))
+                        var ex = this.CompileRegexExtend2();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
                     }
                 }
@@ -1209,9 +1208,8 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string RegexForExtendPattern2 { get; set; }
 
-        public string CompileRegex()
+        public Exception CompileRegex()
         {
-            var message = string.Empty;
             var pattern = string.Empty;
 
             try
@@ -1238,19 +1236,14 @@ namespace ACT.SpecialSpellTimer.Models
             }
             catch (Exception ex)
             {
-                message =
-                    $"Regex compile error." + Environment.NewLine +
-                    $"Target: {this.SpellTitle}" + Environment.NewLine +
-                    $"Pattern: {pattern}" + Environment.NewLine +
-                    ex.Message;
+                return ex;
             }
 
-            return message;
+            return null;
         }
 
-        public string CompileRegexExtend1()
+        public Exception CompileRegexExtend1()
         {
-            var message = string.Empty;
             var pattern = string.Empty;
 
             try
@@ -1277,19 +1270,14 @@ namespace ACT.SpecialSpellTimer.Models
             }
             catch (Exception ex)
             {
-                message =
-                    $"Regex compile error." + Environment.NewLine +
-                    $"Target: {this.SpellTitle}" + Environment.NewLine +
-                    $"Pattern: {pattern}" + Environment.NewLine +
-                    ex.Message;
+                return ex;
             }
 
-            return message;
+            return null;
         }
 
-        public string CompileRegexExtend2()
+        public Exception CompileRegexExtend2()
         {
-            var message = string.Empty;
             var pattern = string.Empty;
 
             try
@@ -1316,14 +1304,10 @@ namespace ACT.SpecialSpellTimer.Models
             }
             catch (Exception ex)
             {
-                message =
-                    $"Regex compile error." + Environment.NewLine +
-                    $"Target: {this.SpellTitle}" + Environment.NewLine +
-                    $"Pattern: {pattern}" + Environment.NewLine +
-                    ex.Message;
+                return ex;
             }
 
-            return message;
+            return null;
         }
 
         #endregion Regex compiler

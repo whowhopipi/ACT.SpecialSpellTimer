@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Models;
 using Advanced_Combat_Tracker;
 using Prism.Commands;
@@ -174,6 +175,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                 if (newPanel != null)
                 {
+                    SpellPanelTable.Instance.Save();
                     newPanel.IsSelected = true;
                 }
             }));
@@ -271,6 +273,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 if (newSpell != null)
                 {
                     SpellTable.Instance.Table.Add(newSpell);
+                    SpellTable.Instance.Save();
                     newSpell.IsSelected = true;
                 }
             }));
@@ -339,6 +342,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                 if (newTicker != null)
                 {
+                    TickerTable.Instance.Save();
                     newTicker.IsSelected = true;
                 }
             }));
@@ -358,6 +362,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     case ItemTypes.TagsRoot:
                     case ItemTypes.Tag:
                         newItem = TagTable.Instance.AddNew("New Tag");
+                        TagTable.Instance.Save();
                         newItem.IsSelected = true;
                         break;
                 }
@@ -387,7 +392,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public ICommand DeleteCommand =>
             this.deleteCommand ?? (this.deleteCommand = new DelegateCommand<ITreeItem>(item =>
             {
-                var result = default(MessageBoxResult);
+                var result = false;
 
                 switch (item.ItemType)
                 {
@@ -398,13 +403,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             return;
                         }
 
-                        result = MessageBox.Show(
+                        result = ModernMessageBox.ShowDialog(
                             $@"Delete ""{ item.DisplayText }"" tag ?",
                             "Confirm",
-                            MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question,
-                            MessageBoxResult.Cancel);
-                        if (result != MessageBoxResult.OK)
+                            MessageBoxButton.OKCancel);
+                        if (!result)
                         {
                             return;
                         }
@@ -425,13 +428,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             return;
                         }
 
-                        result = MessageBox.Show(
+                        result = ModernMessageBox.ShowDialog(
                             $@"Delete ""{ item.DisplayText }"" panel and spells ?",
                             "Confirm",
-                            MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question,
-                            MessageBoxResult.Cancel);
-                        if (result != MessageBoxResult.OK)
+                            MessageBoxButton.OKCancel);
+                        if (!result)
                         {
                             return;
                         }
@@ -452,13 +453,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         break;
 
                     case ItemTypes.Spell:
-                        result = MessageBox.Show(
+                        result = ModernMessageBox.ShowDialog(
                             $@"Delete ""{ item.DisplayText }"" ?",
                             "Confirm",
-                            MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question,
-                            MessageBoxResult.Cancel);
-                        if (result != MessageBoxResult.OK)
+                            MessageBoxButton.OKCancel);
+                        if (!result)
                         {
                             return;
                         }
@@ -468,13 +467,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         break;
 
                     case ItemTypes.Ticker:
-                        result = MessageBox.Show(
+                        result = ModernMessageBox.ShowDialog(
                             $@"Delete ""{ item.DisplayText }"" ?",
                             "Confirm",
-                            MessageBoxButton.OKCancel,
-                            MessageBoxImage.Question,
-                            MessageBoxResult.Cancel);
-                        if (result != MessageBoxResult.OK)
+                            MessageBoxButton.OKCancel);
+                        if (!result)
                         {
                             return;
                         }
@@ -658,21 +655,19 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(
-                        "Import Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                    ModernMessageBox.ShowDialog(
+                        "Import Error!",
                         "ACT.Hojoring",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation);
+                        ex);
                     return;
                 }
 
                 Task.Run(() => TableCompiler.Instance.CompileSpells());
 
-                MessageBox.Show(
+                ModernMessageBox.ShowDialog(
                     "Import Completed.",
-                    "ACT.Hojoring",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    "ACT.Hojoring");
             }));
 
         private ICommand importTickersCommand;
@@ -738,21 +733,19 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(
-                        "Import Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                    ModernMessageBox.ShowDialog(
+                        "Import Error!",
                         "ACT.Hojoring",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation);
+                        ex);
                     return;
                 }
 
                 Task.Run(() => TableCompiler.Instance.CompileTickers());
 
-                MessageBox.Show(
+                ModernMessageBox.ShowDialog(
                     "Import Completed.",
-                    "ACT.Hojoring",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    "ACT.Hojoring");
             }));
 
         private ICommand exportSpellsCommand;
@@ -825,19 +818,17 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(
-                        "Export Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                    ModernMessageBox.ShowDialog(
+                        "Export Error!",
                         "ACT.Hojoring",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation);
+                        ex);
                     return;
                 }
 
-                MessageBox.Show(
+                ModernMessageBox.ShowDialog(
                     "Export Completed.",
-                    "ACT.Hojoring",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    "ACT.Hojoring");
             }));
 
         private ICommand exportTickersCommand;
@@ -899,19 +890,17 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(
-                        "Export Error!" + Environment.NewLine + Environment.NewLine + ex.ToString(),
+                    ModernMessageBox.ShowDialog(
+                        "Export Error!",
                         "ACT.Hojoring",
                         MessageBoxButton.OK,
-                        MessageBoxImage.Exclamation);
+                        ex);
                     return;
                 }
 
-                MessageBox.Show(
+                ModernMessageBox.ShowDialog(
                     "Export Completed.",
-                    "ACT.Hojoring",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    "ACT.Hojoring");
             }));
 
         #endregion Import & Export

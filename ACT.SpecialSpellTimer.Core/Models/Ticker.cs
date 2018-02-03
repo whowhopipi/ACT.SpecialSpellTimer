@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
@@ -538,26 +539,24 @@ namespace ACT.SpecialSpellTimer.Models
 
                     if (this.IsRealtimeCompile)
                     {
-                        var message = string.Empty;
-
-                        message = this.CompileRegex();
-                        if (!string.IsNullOrEmpty(message))
+                        var ex = this.CompileRegex();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
 
-                        message = this.CompileRegexToHide();
-                        if (!string.IsNullOrEmpty(message))
+                        ex = this.CompileRegexToHide();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
                     }
                 }
@@ -574,14 +573,14 @@ namespace ACT.SpecialSpellTimer.Models
                     this.KeywordReplaced = string.Empty;
                     if (this.IsRealtimeCompile)
                     {
-                        var message = this.CompileRegex();
-                        if (!string.IsNullOrEmpty(message))
+                        var ex = this.CompileRegex();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
                     }
                 }
@@ -598,14 +597,14 @@ namespace ACT.SpecialSpellTimer.Models
                     this.KeywordToHideReplaced = string.Empty;
                     if (this.IsRealtimeCompile)
                     {
-                        var message = this.CompileRegexToHide();
-                        if (!string.IsNullOrEmpty(message))
+                        var ex = this.CompileRegexToHide();
+                        if (ex != null)
                         {
-                            MessageBox.Show(
-                                message,
+                            ModernMessageBox.ShowDialog(
+                                "Regex compile error ! This is invalid keyword.",
                                 "Regex compiler",
                                 MessageBoxButton.OK,
-                                MessageBoxImage.Exclamation);
+                                ex);
                         }
                     }
                 }
@@ -630,9 +629,8 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string RegexPatternToHide { get; set; }
 
-        public string CompileRegex()
+        public Exception CompileRegex()
         {
-            var message = string.Empty;
             var pattern = string.Empty;
 
             try
@@ -659,17 +657,13 @@ namespace ACT.SpecialSpellTimer.Models
             }
             catch (Exception ex)
             {
-                message =
-                    $"Regex compile error." + Environment.NewLine +
-                    $"Target: {this.Title}" + Environment.NewLine +
-                    $"Pattern: {pattern}" + Environment.NewLine +
-                    ex.Message;
+                return ex;
             }
 
-            return message;
+            return null;
         }
 
-        public string CompileRegexToHide()
+        public Exception CompileRegexToHide()
         {
             var message = string.Empty;
             var pattern = string.Empty;
@@ -698,14 +692,10 @@ namespace ACT.SpecialSpellTimer.Models
             }
             catch (Exception ex)
             {
-                message =
-                    $"Regex compile error." + Environment.NewLine +
-                    $"Target: {this.Title}" + Environment.NewLine +
-                    $"Pattern: {pattern}" + Environment.NewLine +
-                    ex.Message;
+                return ex;
             }
 
-            return message;
+            return null;
         }
 
         #endregion Regex compiler

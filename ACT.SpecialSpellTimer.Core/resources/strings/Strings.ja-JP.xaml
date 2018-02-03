@@ -14,9 +14,11 @@
 
   <system:String x:Key="Common_Location">位置</system:String>
   <system:String x:Key="Common_AddTags">タグを付ける</system:String>
+  <system:String x:Key="Common_OK">O K</system:String>
   <system:String x:Key="Common_Apply">適用する</system:String>
   <system:String x:Key="Common_Cancel">キャンセル</system:String>
   <system:String x:Key="Common_Clear">クリア</system:String>
+  <system:String x:Key="Common_Details">詳細情報</system:String>
   <system:String x:Key="Common_ManageTags">タグの管理</system:String>
 
   <system:String x:Key="Common_CreateNew">新規作成</system:String>
