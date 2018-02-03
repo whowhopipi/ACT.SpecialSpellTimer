@@ -7,7 +7,6 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Image;
@@ -16,7 +15,6 @@ using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
-using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -211,7 +209,19 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.zoneFilter, value);
         }
 
-        public string SpellTitle { get; set; }
+        private string spellTitle;
+
+        public string SpellTitle
+        {
+            get => this.spellTitle;
+            set
+            {
+                if (this.SetProperty(ref this.spellTitle, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.DisplayText));
+                }
+            }
+        }
 
         [XmlIgnore]
         public string SpellTitleReplaced { get; set; }

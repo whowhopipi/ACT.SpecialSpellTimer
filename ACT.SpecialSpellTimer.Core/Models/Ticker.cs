@@ -7,14 +7,12 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
-using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.Models
 {
@@ -136,7 +134,19 @@ namespace ACT.SpecialSpellTimer.Models
 
         public long ID { get; set; }
 
-        public string Title { get; set; }
+        private string title;
+
+        public string Title
+        {
+            get => this.title;
+            set
+            {
+                if (this.SetProperty(ref this.title, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.DisplayText));
+                }
+            }
+        }
 
         public string Message { get; set; }
 
