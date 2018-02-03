@@ -217,6 +217,13 @@ namespace ACT.SpecialSpellTimer.Models
                 return;
             }
 
+            var isWave = false;
+            if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
+                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
+            {
+                isWave = true;
+            }
+
             void play(string source)
             {
                 if (noticeConfig == null)
@@ -225,12 +232,18 @@ namespace ACT.SpecialSpellTimer.Models
                 }
                 else
                 {
-                    noticeConfig.PlayWave(source);
+                    if (isWave)
+                    {
+                        noticeConfig.PlayWave(source);
+                    }
+                    else
+                    {
+                        noticeConfig.Speak(source);
+                    }
                 }
             }
 
-            if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
-                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
+            if (isWave)
             {
                 play(tts);
                 return;
@@ -635,11 +648,12 @@ namespace ACT.SpecialSpellTimer.Models
 
             try
             {
+                this.KeywordReplaced = TableCompiler.Instance.GetMatchingKeyword(
+                    this.KeywordReplaced,
+                    this.Keyword);
+
                 if (this.RegexEnabled)
                 {
-                    this.KeywordReplaced = TableCompiler.Instance.GetMatchingKeyword(
-                        this.KeywordReplaced,
-                        this.Keyword);
                     pattern = this.KeywordReplaced.ToRegexPattern();
 
                     if (this.Regex == null ||
@@ -670,11 +684,12 @@ namespace ACT.SpecialSpellTimer.Models
 
             try
             {
+                this.KeywordToHideReplaced = TableCompiler.Instance.GetMatchingKeyword(
+                    this.KeywordToHideReplaced,
+                    this.KeywordToHide);
+
                 if (this.RegexEnabled)
                 {
-                    this.KeywordToHideReplaced = TableCompiler.Instance.GetMatchingKeyword(
-                        this.KeywordToHideReplaced,
-                        this.KeywordToHide);
                     pattern = this.KeywordToHideReplaced.ToRegexPattern();
 
                     if (this.RegexToHide == null ||

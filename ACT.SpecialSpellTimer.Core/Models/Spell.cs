@@ -348,6 +348,13 @@ namespace ACT.SpecialSpellTimer.Models
                 return;
             }
 
+            var isWave = false;
+            if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
+                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
+            {
+                isWave = true;
+            }
+
             void play(string source)
             {
                 if (noticeConfig == null)
@@ -356,12 +363,18 @@ namespace ACT.SpecialSpellTimer.Models
                 }
                 else
                 {
-                    noticeConfig.PlayWave(source);
+                    if (isWave)
+                    {
+                        noticeConfig.PlayWave(source);
+                    }
+                    else
+                    {
+                        noticeConfig.Speak(source);
+                    }
                 }
             }
 
-            if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
-                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
+            if (isWave)
             {
                 play(tts);
                 return;
@@ -1214,11 +1227,12 @@ namespace ACT.SpecialSpellTimer.Models
 
             try
             {
+                this.KeywordReplaced = TableCompiler.Instance.GetMatchingKeyword(
+                    this.KeywordReplaced,
+                    this.Keyword);
+
                 if (this.RegexEnabled)
                 {
-                    this.KeywordReplaced = TableCompiler.Instance.GetMatchingKeyword(
-                        this.KeywordReplaced,
-                        this.Keyword);
                     pattern = this.KeywordReplaced.ToRegexPattern();
 
                     if (this.Regex == null ||
@@ -1248,11 +1262,12 @@ namespace ACT.SpecialSpellTimer.Models
 
             try
             {
+                this.KeywordForExtendReplaced1 = TableCompiler.Instance.GetMatchingKeyword(
+                    this.KeywordForExtendReplaced1,
+                    this.KeywordForExtend1);
+
                 if (this.RegexEnabled)
                 {
-                    this.KeywordForExtendReplaced1 = TableCompiler.Instance.GetMatchingKeyword(
-                        this.KeywordForExtendReplaced1,
-                        this.KeywordForExtend1);
                     pattern = this.KeywordForExtendReplaced1.ToRegexPattern();
 
                     if (this.RegexForExtend1 == null ||
@@ -1282,11 +1297,12 @@ namespace ACT.SpecialSpellTimer.Models
 
             try
             {
+                this.KeywordForExtendReplaced2 = TableCompiler.Instance.GetMatchingKeyword(
+                    this.KeywordForExtendReplaced2,
+                    this.KeywordForExtend2);
+
                 if (this.RegexEnabled)
                 {
-                    this.KeywordForExtendReplaced2 = TableCompiler.Instance.GetMatchingKeyword(
-                        this.KeywordForExtendReplaced2,
-                        this.KeywordForExtend2);
                     pattern = this.KeywordForExtendReplaced2.ToRegexPattern();
 
                     if (this.RegexForExtend2 == null ||

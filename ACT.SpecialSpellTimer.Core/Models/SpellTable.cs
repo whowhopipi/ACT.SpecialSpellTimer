@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -345,7 +346,12 @@ namespace ACT.SpecialSpellTimer.Models
                 lock (lockObject)
                 {
                     instance.ID = this.table.Max(y => y.ID) + 1;
-                    this.table.Add(instance);
+
+                    WPFHelper.BeginInvoke(() =>
+                    {
+                        this.table.Add(instance);
+                    });
+
                     TableCompiler.Instance.AddSpell(instance);
                 }
             }
@@ -400,7 +406,10 @@ namespace ACT.SpecialSpellTimer.Models
                     // スペルコレクション本体から除去する
                     lock (lockObject)
                     {
-                        this.table.Remove(instance);
+                        WPFHelper.BeginInvoke(() =>
+                        {
+                            this.table.Remove(instance);
+                        });
                     }
 
                     // コンパイル済みリストから除去する
