@@ -408,8 +408,11 @@ namespace ACT.SpecialSpellTimer
             if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
                 !this.existFFXIVProcess)
             {
-                // 一時表示テロップがない？
-                if (!telops.Any(x => x.IsDesignMode))
+                // デザインモードのテロップがない？
+                // テストモードのテロップがない？
+                if (!telops.Any(x =>
+                    x.IsDesignMode ||
+                    x.IsTest))
                 {
                     TickersController.Instance.CloseTelops();
                     return;
@@ -417,9 +420,10 @@ namespace ACT.SpecialSpellTimer
 
                 if (!isHideOverlay)
                 {
-                    // 一時表示テロップだけ表示する
                     TickersController.Instance.RefreshTelopOverlays(
-                        telops.Where(x => x.IsDesignMode).ToList());
+                        telops.Where(x =>
+                            x.IsDesignMode ||
+                            x.IsTest).ToList());
                     return;
                 }
             }

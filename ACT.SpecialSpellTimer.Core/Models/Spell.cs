@@ -932,7 +932,7 @@ namespace ACT.SpecialSpellTimer.Models
             n.ChangeFontColorsWhenWarning = this.ChangeFontColorsWhenWarning;
             n.OverlapRecastTime = this.OverlapRecastTime;
             n.ReduceIconBrightness = this.ReduceIconBrightness;
-            n.Font = this.Font;
+            n.Font = this.Font.Clone() as FontInfo;
             n.BarWidth = this.BarWidth;
             n.BarHeight = this.BarHeight;
             n.BackgroundColor = this.BackgroundColor;
@@ -986,7 +986,7 @@ namespace ACT.SpecialSpellTimer.Models
             n.MatchDateTime = this.MatchDateTime;
             n.TimeupHide = this.TimeupHide;
             n.IsReverse = this.IsReverse;
-            n.Font = this.Font;
+            n.Font = this.Font.Clone() as FontInfo;
             n.FontOutlineColor = this.FontOutlineColor;
             n.WarningFontColor = this.WarningFontColor;
             n.WarningFontOutlineColor = this.WarningFontOutlineColor;

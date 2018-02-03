@@ -41,6 +41,29 @@ namespace ACT.SpecialSpellTimer.Views
             set => this.SetOverlayVisible(ref this.overlayVisible, value, Settings.Default.OpacityToView);
         }
 
+        private bool? isClickthrough = null;
+
+        public bool IsClickthrough
+        {
+            get => this.isClickthrough ?? false;
+            set
+            {
+                if (this.isClickthrough != value)
+                {
+                    this.isClickthrough = value;
+
+                    if (this.isClickthrough.Value)
+                    {
+                        this.ToTransparent();
+                    }
+                    else
+                    {
+                        this.ToNotTransparent();
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// 表示するデータソース
         /// </summary>

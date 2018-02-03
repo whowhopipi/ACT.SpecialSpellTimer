@@ -329,8 +329,6 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-        private bool beforeClickThrough = false;
-
         /// <summary>
         /// スペルパネルWindowを更新する
         /// </summary>
@@ -372,26 +370,17 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // クリックスルーを反映する
-                if (this.beforeClickThrough != Settings.Default.ClickThroughEnabled)
-                {
-                    this.beforeClickThrough = Settings.Default.ClickThroughEnabled;
-                    if (Settings.Default.ClickThroughEnabled)
-                    {
-                        panelWindow.ToTransparent();
-                    }
-                    else
-                    {
-                        panelWindow.ToNotTransparent();
-                    }
-                }
+                panelWindow.IsClickthrough = Settings.Default.ClickThroughEnabled;
 
                 panelWindow.Spells = spellsByPanel.ToArray();
                 panelWindow.RefreshSpellTimer();
             }
 
+            // 不要なWindow（デザインモードの残骸など）を閉じる
             lock (this.spellPanelWindows)
             {
-                var toHide = this.spellPanelWindows.Where(x => !query.Any(y => y.Key == x.Config.PanelName));
+                var toHide = this.spellPanelWindows
+                    .Where(x => !query.Any(y => y.Key == x.Config.PanelName));
                 foreach (var window in toHide)
                 {
                     window.HideOverlay();

@@ -132,6 +132,19 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.isDesignMode, value);
         }
 
+        private bool isTest = false;
+
+        /// <summary>
+        /// 動作テスト用のフラグ
+        /// </summary>
+        /// <remarks>擬似的にマッチさせるで使用するテストモード用フラグ</remarks>
+        [XmlIgnore]
+        public bool IsTest
+        {
+            get => this.isTest;
+            set => this.SetProperty(ref this.isTest, value);
+        }
+
         public long ID { get; set; }
 
         private string title;
@@ -421,7 +434,7 @@ namespace ACT.SpecialSpellTimer.Models
             n.ProgressBarEnabled = this.ProgressBarEnabled;
             n.FontColor = this.FontColor;
             n.FontOutlineColor = this.FontOutlineColor;
-            n.Font = this.Font;
+            n.Font = this.Font.Clone() as FontInfo;
             n.BackgroundColor = this.BackgroundColor;
             n.BackgroundAlpha = this.BackgroundAlpha;
             n.Left = this.Left;
@@ -626,8 +639,10 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void SimulateMatch()
         {
-            // 擬似的にマッチ状態にする
             var now = DateTime.Now;
+
+            // 擬似的にマッチ状態にする
+            this.IsTest = true;
             this.MatchDateTime = now;
 
             this.Delayed = false;

@@ -213,8 +213,6 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-        private bool beforeChickThrough = false;
-
         /// <summary>
         /// Windowをリフレッシュする
         /// </summary>
@@ -244,20 +242,10 @@ namespace ACT.SpecialSpellTimer
                 }
 
                 // クリックスルーを適用する
-                if (this.beforeChickThrough != Settings.Default.ClickThroughEnabled)
-                {
-                    this.beforeChickThrough = Settings.Default.ClickThroughEnabled;
-                    if (Settings.Default.ClickThroughEnabled)
-                    {
-                        w.ToTransparent();
-                    }
-                    else
-                    {
-                        w.ToNotTransparent();
-                    }
-                }
+                w.IsClickthrough = Settings.Default.ClickThroughEnabled;
 
-                if (telop.IsDesignMode)
+                if (telop.IsDesignMode &&
+                    telop.MatchDateTime <= DateTime.MinValue)
                 {
                     w.Refresh();
                     if (w.ShowOverlay())
@@ -287,6 +275,7 @@ namespace ACT.SpecialSpellTimer
                         {
                             telop.MatchDateTime = DateTime.MinValue;
                             telop.MessageReplaced = string.Empty;
+                            telop.IsTest = false;
                         }
                     }
 
@@ -295,12 +284,14 @@ namespace ACT.SpecialSpellTimer
                         w.HideOverlay();
                         telop.MatchDateTime = DateTime.MinValue;
                         telop.MessageReplaced = string.Empty;
+                        telop.IsTest = false;
                     }
                 }
                 else
                 {
                     w.HideOverlay();
                     telop.MessageReplaced = string.Empty;
+                    telop.IsTest = false;
                 }
             }
 
@@ -318,6 +309,18 @@ namespace ACT.SpecialSpellTimer
                     Debug.WriteLine($"●refreshTelop {telop.Title} {sw.Elapsed.TotalMilliseconds:N0}ms");
                 }
 #endif
+            }
+
+            // 不要なWindow（デザインモードの残骸など）を閉じる
+            lock (this.telopWindowList)
+            {
+                var toHide = this.telopWindowList
+                    .Where(x => !telops.Any(y => y.GetID() == x.Value.Ticker.GetID()))
+                    .Select(x => x.Value);
+                foreach (var window in toHide)
+                {
+                    window.HideOverlay();
+                }
             }
         }
 
