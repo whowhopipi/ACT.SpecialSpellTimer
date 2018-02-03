@@ -440,6 +440,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         var targets = SpellTable.Instance.Table.Where(x => x.PanelID == panel.ID).ToArray();
                         foreach (var target in targets)
                         {
+                            target.IsDesignMode = false;
                             SpellTable.Instance.Table.Remove(target);
                         }
 
@@ -449,6 +450,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             TagTable.Instance.ItemTags.Remove(toRemove);
                         }
 
+                        panel.PanelWindow?.Hide();
                         SpellPanelTable.Instance.Table.Remove(panel);
                         break;
 
@@ -463,6 +465,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         }
 
                         var spell = item as Spell;
+                        spell.IsDesignMode = false;
                         SpellTable.Instance.Table.Remove(spell);
                         break;
 
@@ -484,6 +487,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             TagTable.Instance.ItemTags.Remove(toRemove);
                         }
 
+                        ticker.IsDesignMode = false;
                         TickerTable.Instance.Table.Remove(ticker);
                         break;
                 }
