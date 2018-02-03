@@ -349,7 +349,10 @@ namespace ACT.SpecialSpellTimer.Models
 
                     WPFHelper.BeginInvoke(() =>
                     {
-                        this.table.Add(instance);
+                        lock (lockObject)
+                        {
+                            this.table.Add(instance);
+                        }
                     });
 
                     TableCompiler.Instance.AddSpell(instance);
@@ -404,13 +407,13 @@ namespace ACT.SpecialSpellTimer.Models
                     this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out Spell o);
 
                     // スペルコレクション本体から除去する
-                    lock (lockObject)
+                    WPFHelper.BeginInvoke(() =>
                     {
-                        WPFHelper.BeginInvoke(() =>
+                        lock (lockObject)
                         {
                             this.table.Remove(instance);
-                        });
-                    }
+                        }
+                    });
 
                     // コンパイル済みリストから除去する
                     TableCompiler.Instance.RemoveSpell(instance);

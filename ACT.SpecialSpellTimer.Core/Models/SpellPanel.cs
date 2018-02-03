@@ -174,7 +174,9 @@ namespace ACT.SpecialSpellTimer.Models
             this.childrenSource.Filter += (x, y) =>
              {
                  var spell = y.Item as Spell;
-                 y.Accepted = spell.PanelID == this.ID;
+                 y.Accepted =
+                    spell.PanelID == this.ID &&
+                    !spell.IsInstance;
              };
 
             this.childrenSource.SortDescriptions.AddRange(new SortDescription[]
