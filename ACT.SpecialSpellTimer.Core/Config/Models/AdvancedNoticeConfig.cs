@@ -170,7 +170,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 return;
             }
 
-            var period = Settings.Default.UILocale == Locales.JA ? "。" : ".";
+            var period = Settings.Default.UILocale == Locales.JA ? "、" : ",";
             if (speakText.EndsWith(period))
             {
                 speakText += period;
