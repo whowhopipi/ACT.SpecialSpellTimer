@@ -265,19 +265,22 @@ namespace ACT.SpecialSpellTimer
         {
             var existsLog = false;
 
-            // FFXIVがいない？
-            if (!this.existFFXIVProcess)
+            if (!Settings.Default.VisibleOverlayWithoutFFXIV)
             {
-#if !DEBUG
-                // importログの解析用にログを取り出しておく
-                if (!this.LogBuffer.IsEmpty)
+                // FFXIVがいない？
+                if (!this.existFFXIVProcess)
                 {
-                    this.LogBuffer.GetLogLines();
-                }
+#if !DEBUG
+                    // importログの解析用にログを取り出しておく
+                    if (!this.LogBuffer.IsEmpty)
+                    {
+                        this.LogBuffer.GetLogLines();
+                    }
 
-                Thread.Sleep(TimeSpan.FromSeconds(3));
-                return;
+                    Thread.Sleep(TimeSpan.FromSeconds(3));
+                    return;
 #endif
+                }
             }
 
             // 全滅によるリセットを判定する
@@ -355,7 +358,8 @@ namespace ACT.SpecialSpellTimer
                 (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
 
             // FFXIVが実行されていない？
-            if (!this.existFFXIVProcess)
+            if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
+                !this.existFFXIVProcess)
             {
                 // 一時表示スペルがない？
                 if (!spells.Any(x => x.IsDesignMode))
@@ -401,7 +405,8 @@ namespace ACT.SpecialSpellTimer
                 (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
 
             // FFXIVが実行されていない？
-            if (!this.existFFXIVProcess)
+            if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
+                !this.existFFXIVProcess)
             {
                 // 一時表示テロップがない？
                 if (!telops.Any(x => x.IsDesignMode))

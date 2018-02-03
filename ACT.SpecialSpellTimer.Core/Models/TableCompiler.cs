@@ -277,9 +277,17 @@ namespace ACT.SpecialSpellTimer.Models
             // コンパイルする
             this.spellList.AsParallel().ForAll(spell =>
             {
-                spell.CompileRegex();
-                spell.CompileRegexExtend1();
-                spell.CompileRegexExtend2();
+                var ex1 = spell.CompileRegex();
+                var ex2 = spell.CompileRegexExtend1();
+                var ex3 = spell.CompileRegexExtend2();
+
+                var ex = ex1 ?? ex2 ?? ex3 ?? null;
+                if (ex != null)
+                {
+                    Logger.Write(
+                        $"Regex compile error! spell={spell.SpellTitle}",
+                        ex);
+                }
 
                 /*
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
@@ -387,8 +395,16 @@ namespace ACT.SpecialSpellTimer.Models
             // コンパイルする
             this.tickerList.AsParallel().ForAll(spell =>
             {
-                spell.CompileRegex();
-                spell.CompileRegexToHide();
+                var ex1 = spell.CompileRegex();
+                var ex2 = spell.CompileRegexToHide();
+
+                var ex = ex1 ?? ex2 ?? null;
+                if (ex != null)
+                {
+                    Logger.Write(
+                        $"Regex compile error! ticker={spell.Title}",
+                        ex);
+                }
 
                 /*
                 spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);

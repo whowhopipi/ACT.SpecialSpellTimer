@@ -277,10 +277,10 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     switch (this.Trigger)
                     {
                         case Spell s:
-                            return s.RegexEnabled;
+                            return s.RegexEnabled && s.Regex != null;
 
                         case Ticker t:
-                            return t.RegexEnabled;
+                            return t.RegexEnabled && t.Regex != null;
 
                         default:
                             return false;
