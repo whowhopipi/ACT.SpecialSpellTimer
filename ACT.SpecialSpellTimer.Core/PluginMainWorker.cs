@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Sound;
@@ -351,7 +352,10 @@ namespace ACT.SpecialSpellTimer
             }
 
             // 有効なスペルを取得する
-            var spells = TableCompiler.Instance.SpellList;
+            var spells = TableCompiler.Instance.TriggerList
+                .Where(x => x.ItemType == ItemTypes.Spell)
+                .Select(x => x as Spell)
+                .ToList();
 
             var isHideOverlay =
                 !Settings.Default.OverlayVisible ||
@@ -362,7 +366,9 @@ namespace ACT.SpecialSpellTimer
                 !this.existFFXIVProcess)
             {
                 // 一時表示スペルがない？
-                if (!spells.Any(x => x.IsDesignMode))
+                if (!spells.Any(x =>
+                    x.IsDesignMode ||
+                    x.IsTest))
                 {
                     SpellsController.Instance.ClosePanels();
                     return;
@@ -372,7 +378,9 @@ namespace ACT.SpecialSpellTimer
                 {
                     // 一時表示スペルだけ表示する
                     SpellsController.Instance.RefreshSpellOverlays(
-                        spells.Where(x => x.IsDesignMode).ToList());
+                        spells.Where(x =>
+                            x.IsDesignMode ||
+                            x.IsTest).ToList());
                     return;
                 }
             }
@@ -398,7 +406,17 @@ namespace ACT.SpecialSpellTimer
             }
 
             // 有効なテロップを取得する
-            var telops = TableCompiler.Instance.TickerList;
+            var telops = TableCompiler.Instance.TriggerList
+                .Where(x => x.ItemType == ItemTypes.Ticker)
+                .Select(x => x as Ticker)
+                .ToList();
+
+#if DEBUG
+            if (telops.Any(x => x.Title.Contains("TEST")))
+            {
+                ;
+            }
+#endif
 
             var isHideOverlay =
                 !Settings.Default.OverlayVisible ||

@@ -374,6 +374,16 @@ namespace ACT.SpecialSpellTimer
 
                 panelWindow.Spells = spellsByPanel.ToArray();
                 panelWindow.RefreshSpellTimer();
+
+                // テストモードの終了を判定する
+                foreach (var test in spellsByPanel.Where(x => x.IsTest))
+                {
+                    if (DateTime.Now >
+                        test.CompleteScheduledTime.AddSeconds(Settings.Default.TimeOfHideSpell))
+                    {
+                        test.IsTest = false;
+                    }
+                }
             }
 
             // 不要なWindow（デザインモードの残骸など）を閉じる

@@ -653,6 +653,9 @@ namespace ACT.SpecialSpellTimer.Models
 
             // 遅延サウンドタイマを開始する
             this.StartDelayedSoundTimer();
+
+            // トリガリストに加える
+            TableCompiler.Instance.AddTestTrigger(this);
         }
     }
 }

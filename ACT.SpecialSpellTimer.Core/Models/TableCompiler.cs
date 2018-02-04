@@ -160,6 +160,19 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
+        public void AddTestTrigger(
+            ITrigger testTrigger)
+        {
+            lock (this.triggerList)
+            {
+                if (!this.triggerList.Any(x =>
+                    x.GetID() == testTrigger.GetID()))
+                {
+                    this.triggerList.Add(testTrigger);
+                }
+            }
+        }
+
         public void AddSpell(
             Spell instancedSpell)
         {

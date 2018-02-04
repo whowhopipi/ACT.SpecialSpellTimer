@@ -241,6 +241,14 @@ namespace ACT.SpecialSpellTimer
                     }
                 }
 
+#if DEBUG
+                if (telop.Title.Contains("TEST"))
+                {
+                    // ブレイクポイント用
+                    ;
+                }
+#endif
+
                 // クリックスルーを適用する
                 w.IsClickthrough = Settings.Default.ClickThroughEnabled;
 

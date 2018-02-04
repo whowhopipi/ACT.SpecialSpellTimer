@@ -193,6 +193,19 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.isDesignMode, value);
         }
 
+        private bool isTest = false;
+
+        /// <summary>
+        /// 動作テスト用のフラグ
+        /// </summary>
+        /// <remarks>擬似的にマッチさせるで使用するテストモード用フラグ</remarks>
+        [XmlIgnore]
+        public bool IsTest
+        {
+            get => this.isTest;
+            set => this.SetProperty(ref this.isTest, value);
+        }
+
         private string jobFilter;
 
         public string JobFilter
@@ -1303,8 +1316,10 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void SimulateMatch()
         {
-            // 擬似的にマッチ状態にする
             var now = DateTime.Now;
+
+            // 擬似的にマッチ状態にする
+            this.IsTest = true;
             this.MatchDateTime = now;
             this.CompleteScheduledTime = now.AddSeconds(this.RecastTime);
 
@@ -1321,6 +1336,9 @@ namespace ACT.SpecialSpellTimer.Models
             this.StartOverSoundTimer();
             this.StartBeforeSoundTimer();
             this.StartTimeupSoundTimer();
+
+            // トリガリストに加える
+            TableCompiler.Instance.AddTestTrigger(this);
         }
     }
 }

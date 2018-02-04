@@ -114,7 +114,9 @@ namespace ACT.SpecialSpellTimer.Views
                 this.BaseColorRectangle.Fill = this.BackgroundBrush;
             }
 
-            var forceVisible = this.Ticker.IsDesignMode;
+            var forceVisible =
+                this.Ticker.IsDesignMode ||
+                this.Ticker.IsTest;
 
             var message = forceVisible ?
                 this.Ticker.Message.Replace(",", Environment.NewLine) :
