@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Advanced_Combat_Tracker;
@@ -38,6 +39,8 @@ namespace ACT.SpecialSpellTimer
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
+            Assembly.Load("FFXIV.Framework");
+
             PluginCore.Initialize(this);
             PluginCore.Instance?.InitPluginCore(
                 pluginScreenSpace,
