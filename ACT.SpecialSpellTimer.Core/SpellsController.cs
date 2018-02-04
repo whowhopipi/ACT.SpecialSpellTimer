@@ -342,8 +342,11 @@ namespace ACT.SpecialSpellTimer
             var query =
                 from s in spells
                 where
-                !s.ToInstance ||
-                s.IsDesignMode
+                s.Panel != null &&
+                (
+                    !s.ToInstance ||
+                    s.IsDesignMode
+                )
                 group s by s.Panel.PanelName.Trim();
 
             foreach (var spellsByPanel in query)

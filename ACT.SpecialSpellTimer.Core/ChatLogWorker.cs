@@ -28,7 +28,7 @@ namespace ACT.SpecialSpellTimer
             Settings.Default.SaveLogEnabled &&
             !string.IsNullOrEmpty(this.OutputFile);
 
-        private string OutputFile =>
+        public string OutputFile =>
             !string.IsNullOrEmpty(OutputDirectory) ?
             Path.Combine(
                 this.OutputDirectory,

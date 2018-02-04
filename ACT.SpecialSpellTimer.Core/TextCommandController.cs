@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text.RegularExpressions;
@@ -283,6 +285,16 @@ namespace ACT.SpecialSpellTimer
             {
                 r = true;
                 Settings.Default.SaveLogEnabled = false;
+            }
+
+            if (switchValue == "open")
+            {
+                r = true;
+                var file = ChatLogWorker.Instance.OutputFile;
+                if (File.Exists(file))
+                {
+                    Process.Start(file);
+                }
             }
 
             return r;

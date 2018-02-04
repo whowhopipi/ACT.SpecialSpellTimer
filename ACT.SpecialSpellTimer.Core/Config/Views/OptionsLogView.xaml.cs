@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.resources;
@@ -40,6 +42,18 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     System.Windows.Forms.DialogResult.OK)
                 {
                     this.Config.SaveLogDirectory = this.dialog.SelectedPath;
+                }
+            }));
+
+        private ICommand openLogCommand;
+
+        public ICommand OpenLogCommand =>
+            this.openLogCommand ?? (this.openLogCommand = new DelegateCommand(() =>
+            {
+                var file = ChatLogWorker.Instance.OutputFile;
+                if (File.Exists(file))
+                {
+                    Process.Start(file);
                 }
             }));
     }
