@@ -55,11 +55,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 if (this.previousModel is Spell s)
                 {
                     s.IsRealtimeCompile = false;
+                    s.IsDesignMode = false;
                 }
 
                 if (this.previousModel is Ticker t)
                 {
                     t.IsRealtimeCompile = false;
+                    t.IsDesignMode = false;
                 }
             }
 

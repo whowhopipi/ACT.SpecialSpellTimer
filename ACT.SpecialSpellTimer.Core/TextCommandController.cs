@@ -59,7 +59,8 @@ namespace ACT.SpecialSpellTimer
             var r = false;
 
             // 正規表現の前にキーワードがなければ抜けてしまう
-            if (!logLine.ToLower().Contains("/spespe"))
+            if (!logLine.ToLower().Contains("/spespe") &&
+                !logLine.ToLower().Contains("/tts"))
             {
                 return r;
             }
