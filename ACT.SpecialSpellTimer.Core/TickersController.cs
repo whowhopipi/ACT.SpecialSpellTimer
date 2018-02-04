@@ -220,6 +220,8 @@ namespace ACT.SpecialSpellTimer
         public void RefreshTelopOverlays(
             IReadOnlyList<Ticker> telops)
         {
+            var doneTest = false;
+
             void refreshTelop(
                 Ticker telop)
             {
@@ -283,7 +285,6 @@ namespace ACT.SpecialSpellTimer
                         {
                             telop.MatchDateTime = DateTime.MinValue;
                             telop.MessageReplaced = string.Empty;
-                            telop.IsTest = false;
                         }
                     }
 
@@ -292,14 +293,19 @@ namespace ACT.SpecialSpellTimer
                         w.HideOverlay();
                         telop.MatchDateTime = DateTime.MinValue;
                         telop.MessageReplaced = string.Empty;
-                        telop.IsTest = false;
                     }
                 }
                 else
                 {
                     w.HideOverlay();
                     telop.MessageReplaced = string.Empty;
+                }
+
+                if (telop.MatchDateTime <= DateTime.MinValue &&
+                    telop.IsTest)
+                {
                     telop.IsTest = false;
+                    doneTest = true;
                 }
             }
 
@@ -329,6 +335,12 @@ namespace ACT.SpecialSpellTimer
                 {
                     window.HideOverlay();
                 }
+            }
+
+            // TESTモードが終わったならばフィルタし直す
+            if (doneTest)
+            {
+                TableCompiler.Instance.CompileTickers();
             }
         }
 

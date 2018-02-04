@@ -337,6 +337,8 @@ namespace ACT.SpecialSpellTimer
         public void RefreshSpellOverlays(
             IReadOnlyList<Models.Spell> spells)
         {
+            var doneTest = false;
+
             var query =
                 from s in spells
                 where
@@ -382,6 +384,7 @@ namespace ACT.SpecialSpellTimer
                         test.CompleteScheduledTime.AddSeconds(Settings.Default.TimeOfHideSpell))
                     {
                         test.IsTest = false;
+                        doneTest = true;
                     }
                 }
             }
@@ -395,6 +398,12 @@ namespace ACT.SpecialSpellTimer
                 {
                     window.HideOverlay();
                 }
+            }
+
+            // TESTモードが終わったならフィルタし直す
+            if (doneTest)
+            {
+                TableCompiler.Instance.CompileSpells();
             }
         }
 
