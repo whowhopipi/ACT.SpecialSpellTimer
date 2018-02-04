@@ -999,7 +999,7 @@ namespace ACT.SpecialSpellTimer.Models
             n.MatchDateTime = this.MatchDateTime;
             n.TimeupHide = this.TimeupHide;
             n.IsReverse = this.IsReverse;
-            n.Font = this.Font.Clone() as FontInfo;
+            n.Font = this.Font;
             n.FontOutlineColor = this.FontOutlineColor;
             n.WarningFontColor = this.WarningFontColor;
             n.WarningFontOutlineColor = this.WarningFontOutlineColor;
@@ -1036,10 +1036,10 @@ namespace ACT.SpecialSpellTimer.Models
             n.RegexForExtendPattern2 = this.RegexForExtendPattern2;
             n.KeywordForExtendReplaced2 = this.KeywordForExtendReplaced2;
 
-            n.MatchAdvancedConfig = this.MatchAdvancedConfig.Clone() as AdvancedNoticeConfig;
-            n.OverAdvancedConfig = this.OverAdvancedConfig.Clone() as AdvancedNoticeConfig;
-            n.BeforeAdvancedConfig = this.BeforeAdvancedConfig.Clone() as AdvancedNoticeConfig;
-            n.TimeupAdvancedConfig = this.TimeupAdvancedConfig.Clone() as AdvancedNoticeConfig;
+            n.MatchAdvancedConfig = this.MatchAdvancedConfig;
+            n.OverAdvancedConfig = this.OverAdvancedConfig;
+            n.BeforeAdvancedConfig = this.BeforeAdvancedConfig;
+            n.TimeupAdvancedConfig = this.TimeupAdvancedConfig;
             n.IsSequentialTTS = this.IsSequentialTTS;
 
             n.ToInstance = false;
