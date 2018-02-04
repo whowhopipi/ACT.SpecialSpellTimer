@@ -35,7 +35,7 @@ namespace ACT.SpecialSpellTimer
         /// Logコマンド
         /// </summary>
         private readonly static Regex logCommand = new Regex(
-            @".*/spespe log (?<switch>on|off)",
+            @".*/spespe log (?<switch>on|off|open)",
             RegexOptions.Compiled |
             RegexOptions.IgnoreCase);
 
