@@ -34,17 +34,17 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 this.Model.MatchAdvancedConfig));
 
         public ICommand TestWave2Command =>
-            this.testWave1Command ?? (this.testWave2Command = this.CreateTestWaveCommand(
+            this.testWave2Command ?? (this.testWave2Command = this.CreateTestWaveCommand(
                 () => this.Model.OverSound,
                 this.Model.OverAdvancedConfig));
 
         public ICommand TestWave3Command =>
-            this.testWave1Command ?? (this.testWave3Command = this.CreateTestWaveCommand(
+            this.testWave3Command ?? (this.testWave3Command = this.CreateTestWaveCommand(
                 () => this.Model.BeforeSound,
                 this.Model.BeforeAdvancedConfig));
 
         public ICommand TestWave4Command =>
-            this.testWave1Command ?? (this.testWave4Command = this.CreateTestWaveCommand(
+            this.testWave4Command ?? (this.testWave4Command = this.CreateTestWaveCommand(
                 () => this.Model.TimeupSound,
                 this.Model.TimeupAdvancedConfig));
 
@@ -59,17 +59,17 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 this.Model.MatchAdvancedConfig));
 
         public ICommand TestTTS2Command =>
-            this.testTTS1Command ?? (this.testTTS2Command = this.CreateTestTTSCommand(
+            this.testTTS2Command ?? (this.testTTS2Command = this.CreateTestTTSCommand(
                 () => this.Model.OverTextToSpeak,
                 this.Model.OverAdvancedConfig));
 
         public ICommand TestTTS3Command =>
-            this.testTTS1Command ?? (this.testTTS3Command = this.CreateTestTTSCommand(
+            this.testTTS3Command ?? (this.testTTS3Command = this.CreateTestTTSCommand(
                 () => this.Model.BeforeTextToSpeak,
                 this.Model.BeforeAdvancedConfig));
 
         public ICommand TestTTS4Command =>
-            this.testTTS1Command ?? (this.testTTS4Command = this.CreateTestTTSCommand(
+            this.testTTS4Command ?? (this.testTTS4Command = this.CreateTestTTSCommand(
                 () => this.Model.TimeupTextToSpeak,
                 this.Model.TimeupAdvancedConfig));
 

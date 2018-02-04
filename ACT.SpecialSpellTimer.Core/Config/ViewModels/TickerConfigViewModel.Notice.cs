@@ -32,7 +32,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 this.Model.MatchAdvancedConfig));
 
         public ICommand TestWave2Command =>
-            this.testWave1Command ?? (this.testWave2Command = this.CreateTestWaveCommand(
+            this.testWave2Command ?? (this.testWave2Command = this.CreateTestWaveCommand(
                 () => this.Model.DelaySound,
                 this.Model.DelayAdvancedConfig));
 
@@ -45,7 +45,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 this.Model.MatchAdvancedConfig));
 
         public ICommand TestTTS2Command =>
-            this.testTTS1Command ?? (this.testTTS2Command = this.CreateTestTTSCommand(
+            this.testTTS2Command ?? (this.testTTS2Command = this.CreateTestTTSCommand(
                 () => this.Model.DelayTextToSpeak,
                 this.Model.DelayAdvancedConfig));
 
