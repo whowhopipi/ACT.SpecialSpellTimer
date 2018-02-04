@@ -40,6 +40,14 @@ namespace ACT.SpecialSpellTimer
             RegexOptions.IgnoreCase);
 
         /// <summary>
+        /// TTSコマンド
+        /// </summary>
+        private readonly static Regex ttsCommand = new Regex(
+            @".*/tts (?<text>.*)",
+            RegexOptions.Compiled |
+            RegexOptions.IgnoreCase);
+
+        /// <summary>
         /// ログ1行とマッチングする
         /// </summary>
         /// <param name="logLine">ログ行</param>
@@ -69,6 +77,9 @@ namespace ACT.SpecialSpellTimer
             {
                 return isLog;
             }
+
+            // TTSコマンドとマッチングする
+            MatchTTSCommand(logLine);
 
             // その他の通常コマンドとマッチングする
             var match = regexCommand.Match(logLine);
@@ -298,6 +309,22 @@ namespace ACT.SpecialSpellTimer
             }
 
             return r;
+        }
+
+        public static void MatchTTSCommand(
+            string logLine)
+        {
+            var match = ttsCommand.Match(logLine);
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var text = match.Groups["text"].ToString().ToLower();
+            if (!string.IsNullOrEmpty(text))
+            {
+                SoundController.Instance.Play(text);
+            }
         }
 
         /// <summary>
