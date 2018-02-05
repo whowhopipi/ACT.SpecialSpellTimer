@@ -67,7 +67,7 @@
         <Setter Property="LayoutTransform">
           <Setter.Value>
             <TransformGroup>
-              <RotateTransform Angle="-90"/>
+              <RotateTransform Angle="-90" />
             </TransformGroup>
           </Setter.Value>
         </Setter>
@@ -86,6 +86,8 @@
         VerticalGridLinesBrush="Transparent"
         HorizontalAlignment="Stretch"
         HeadersVisibility="Column"
+        VirtualizingPanel.IsVirtualizing="True"
+        VirtualizingPanel.VirtualizationMode="Recycling"
         ItemsSource="{Binding PlaceholderList, Mode=OneWay}">
         <DataGrid.Columns>
           <DataGridTextColumn
@@ -134,6 +136,8 @@
           VerticalGridLinesBrush="Transparent"
           HorizontalAlignment="Stretch"
           HeadersVisibility="Column"
+          VirtualizingPanel.IsVirtualizing="True"
+          VirtualizingPanel.VirtualizationMode="Recycling"
           ItemsSource="{Binding TriggerList, Mode=OneWay}">
           <DataGrid.Columns>
             <DataGridTemplateColumn
@@ -145,7 +149,7 @@
                   <TextBlock
                     Text="{Binding No, StringFormat=N0}"
                     TextAlignment="Right"
-                    Margin="0 0 10 0"/>
+                    Margin="0 0 10 0" />
                 </DataTemplate>
               </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
@@ -162,7 +166,7 @@
                 <DataTemplate>
                   <TextBlock
                     Text="{Binding UseRegexText}"
-                    TextAlignment="Center"/>
+                    TextAlignment="Center" />
                 </DataTemplate>
               </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
