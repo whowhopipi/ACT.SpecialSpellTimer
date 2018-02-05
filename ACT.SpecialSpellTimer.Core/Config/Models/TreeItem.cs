@@ -504,27 +504,22 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     return;
                 }
 
-                var isDesignMode = false;
                 switch (item)
                 {
                     case SpellPanel p:
                         p.IsDesignMode = !p.IsDesignMode;
-                        isDesignMode = p.IsDesignMode;
                         break;
 
                     case Spell s:
                         s.IsDesignMode = !s.IsDesignMode;
-                        isDesignMode = s.IsDesignMode;
                         break;
 
                     case Ticker t:
                         t.IsDesignMode = !t.IsDesignMode;
-                        isDesignMode = t.IsDesignMode;
                         break;
 
                     case Tag tag:
                         tag.IsDesignMode = !tag.IsDesignMode;
-                        isDesignMode = tag.IsDesignMode;
                         break;
                 }
 
@@ -538,15 +533,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     TableCompiler.Instance.SpellList.Any(x => x.IsDesignMode) ||
                     TableCompiler.Instance.TickerList.Any(x => x.IsDesignMode);
 
-                if (!Settings.Default.VisibleDesignGrid && !isDesignMode)
-                {
-                    // NO-OP
-                    // 元々OFFで今回個別にOFF化する場合は何もしない
-                }
-                else
-                {
-                    Settings.Default.VisibleDesignGrid = showGrid;
-                }
+                Settings.Default.VisibleDesignGrid = showGrid;
             }));
 
         private ICommand changeEnabledCommand;
