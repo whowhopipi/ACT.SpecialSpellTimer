@@ -104,7 +104,7 @@ namespace ACT.SpecialSpellTimer.Config
             }
         }
 
-        private DesignGridView gridView;
+        private static DesignGridView gridView;
         private bool visibleDesignGrid;
 
         [XmlIgnore]
@@ -117,14 +117,19 @@ namespace ACT.SpecialSpellTimer.Config
                 {
                     if (this.visibleDesignGrid)
                     {
-                        this.gridView = new DesignGridView();
-                        this.gridView.ToTransparent();
-                        this.gridView.Show();
-                        this.gridView.ShowOverlay();
+                        if (gridView == null)
+                        {
+                            gridView = new DesignGridView();
+                            gridView.ToTransparent();
+                        }
+
+                        gridView.Show();
+                        gridView.ShowOverlay();
                     }
                     else
                     {
-                        this.gridView?.Close();
+                        gridView?.HideOverlay();
+                        gridView?.Hide();
                     }
                 }
             }
