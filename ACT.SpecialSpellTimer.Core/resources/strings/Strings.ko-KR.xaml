@@ -7,6 +7,9 @@
   <system:String x:Key="UILanguage">UI Language (* requires restart)</system:String>
   <system:String x:Key="FFXIVLanguage">FFXIV Language (* requires restart)</system:String>
 
+  <system:String x:Key="Common_ManageOnTags">Mange on Tags (recommended)</system:String>
+  <system:String x:Key="Common_AllSpells">All Spells</system:String>
+  <system:String x:Key="Common_AllTickers">All Tickers</system:String>
   <system:String x:Key="Common_SpellPanel">Spell panel</system:String>
   <system:String x:Key="Common_Spell">Spell</system:String>
   <system:String x:Key="Common_Ticker">Ticker</system:String>
@@ -22,6 +25,10 @@
   <system:String x:Key="Common_ManageTags">Manage tags</system:String>
 
   <system:String x:Key="Common_CreateNew">Create new</system:String>
+  <system:String x:Key="Common_CreateNewTag">Create new Tag</system:String>
+  <system:String x:Key="Common_CreateNewSpellPanel">Create new Spell panel</system:String>
+  <system:String x:Key="Common_CreateNewSpell">Create new Spell</system:String>
+  <system:String x:Key="Common_CreateNewTicker">Create new Ticker</system:String>
   <system:String x:Key="Common_Rename">Edit name</system:String>
   <system:String x:Key="Common_Delete">Delete</system:String>
   <system:String x:Key="Common_Import">Import</system:String>
@@ -188,4 +195,6 @@
   <system:String x:Key="Copy_Title">Copy settings</system:String>
   <system:String x:Key="Copy_Source">Source</system:String>
   <system:String x:Key="Copy_Destination">Destination</system:String>
+
+  <system:String x:Key="AddToTag_AddToTag">Add to tag</system:String>
 </ResourceDictionary>

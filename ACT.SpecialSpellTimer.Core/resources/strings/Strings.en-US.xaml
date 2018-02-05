@@ -195,4 +195,6 @@
   <system:String x:Key="Copy_Title">Copy settings</system:String>
   <system:String x:Key="Copy_Source">Source</system:String>
   <system:String x:Key="Copy_Destination">Destination</system:String>
+
+  <system:String x:Key="AddToTag_AddToTag">Add to tag</system:String>
 </ResourceDictionary>
