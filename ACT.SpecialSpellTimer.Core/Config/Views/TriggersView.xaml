@@ -338,9 +338,9 @@
         TabStripPlacement="Left">
 
         <!-- タグで管理タブ -->
-        <TabItem Height="60" ToolTip="{DynamicResource Common_ManageOnTags}">
+        <TabItem Height="60">
           <TabItem.Header>
-            <fa:ImageAwesome Icon="Tag" Height="{StaticResource TabIconSize}" Foreground="Orange" />
+            <fa:ImageAwesome Icon="Tag" Height="{StaticResource TabIconSize}" Foreground="Orange" ToolTip="{DynamicResource Common_ManageOnTags}" />
           </TabItem.Header>
 
           <!-- タグツリー -->
@@ -377,9 +377,9 @@
         <!-- タグで管理タブ end -->
 
         <!-- すべてのスペルタブ -->
-        <TabItem Height="60" ToolTip="{DynamicResource Common_AllSpells}">
+        <TabItem Height="60">
           <TabItem.Header>
-            <fa:ImageAwesome Icon="Magic" Height="{StaticResource TabIconSize}" Foreground="MediumBlue" />
+            <fa:ImageAwesome Icon="Magic" Height="{StaticResource TabIconSize}" Foreground="MediumBlue" ToolTip="{DynamicResource Common_AllSpells}" />
           </TabItem.Header>
 
           <!-- スペルツリー -->
@@ -407,9 +407,9 @@
         <!-- すべてのスペルタブ end -->
 
         <!-- すべてのテロップタブ -->
-        <TabItem Height="60" ToolTip="{DynamicResource Common_AllTickers}">
+        <TabItem Height="60">
           <TabItem.Header>
-            <fa:ImageAwesome Icon="Comment" Height="{StaticResource TabIconSize}" Foreground="OliveDrab" />
+            <fa:ImageAwesome Icon="Comment" Height="{StaticResource TabIconSize}" Foreground="OliveDrab" ToolTip="{DynamicResource Common_AllTickers}" />
           </TabItem.Header>
 
           <!-- テロップツリー -->
