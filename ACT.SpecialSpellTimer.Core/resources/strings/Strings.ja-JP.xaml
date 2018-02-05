@@ -7,6 +7,9 @@
   <system:String x:Key="UILanguage">UI Language (* requires restart)</system:String>
   <system:String x:Key="FFXIVLanguage">FFXIV Language (* requires restart)</system:String>
 
+  <system:String x:Key="Common_ManageOnTags">タグで管理する（おすすめ）</system:String>
+  <system:String x:Key="Common_AllSpells">すべてのスペル</system:String>
+  <system:String x:Key="Common_AllTickers">すべてのテロップ</system:String>
   <system:String x:Key="Common_SpellPanel">スペルパネル</system:String>
   <system:String x:Key="Common_Spell">スペル</system:String>
   <system:String x:Key="Common_Ticker">テロップ</system:String>
@@ -22,6 +25,10 @@
   <system:String x:Key="Common_ManageTags">タグの管理</system:String>
 
   <system:String x:Key="Common_CreateNew">新規作成</system:String>
+  <system:String x:Key="Common_CreateNewTag">新しいタグ</system:String>
+  <system:String x:Key="Common_CreateNewSpellPanel">新しいスペルパネル</system:String>
+  <system:String x:Key="Common_CreateNewSpell">新しいスペル</system:String>
+  <system:String x:Key="Common_CreateNewTicker">新しいテロップ</system:String>
   <system:String x:Key="Common_Rename">名前の変更</system:String>
   <system:String x:Key="Common_Delete">削除</system:String>
   <system:String x:Key="Common_Import">インポート</system:String>

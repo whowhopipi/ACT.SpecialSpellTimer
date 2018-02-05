@@ -12,14 +12,10 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
     {
         public TriggersViewModel()
         {
-            this.SetupTreeRoot();
+            this.SetupTreeSource();
         }
 
         public Settings RootConfig => Settings.Default;
-
-        private ObservableCollection<TriggersTreeRoot> treeRoot = new ObservableCollection<TriggersTreeRoot>();
-
-        public ObservableCollection<TriggersTreeRoot> TreeRoot => treeRoot;
 
         private CollectionViewSource spellsSource = new CollectionViewSource()
         {
@@ -42,7 +38,15 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             IsLiveSortingRequested = true,
         };
 
-        private void SetupTreeRoot()
+        public TriggersTreeRoot TagsTreeRoot { get; private set; }
+        public TriggersTreeRoot SpellsTreeRoot { get; private set; }
+        public TriggersTreeRoot TickersTreeRoot { get; private set; }
+
+        public ICollectionView Spells => this.spellsSource.View;
+        public ICollectionView Tickers => this.tickersSource.View;
+        public ICollectionView Tags => this.tagsSource.View;
+
+        private void SetupTreeSource()
         {
             var spells = new TriggersTreeRoot(
                 ItemTypes.SpellsRoot,
@@ -111,9 +115,9 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 },
             });
 
-            this.TreeRoot.Add(spells);
-            this.TreeRoot.Add(tickers);
-            this.TreeRoot.Add(tags);
+            this.SpellsTreeRoot = spells;
+            this.TickersTreeRoot = tickers;
+            this.TagsTreeRoot = tags;
         }
     }
 }

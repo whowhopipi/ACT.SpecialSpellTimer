@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,7 +8,6 @@ using ACT.SpecialSpellTimer.Config.ViewModels;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.resources;
 using FFXIV.Framework.Globalization;
-using System.Linq;
 
 namespace ACT.SpecialSpellTimer.Config.Views
 {
@@ -25,9 +25,20 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.DataContext = new TriggersViewModel();
             this.SetLocale(Settings.Default.UILocale);
 
-            this.TriggersTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
-            this.TriggersTreeView.PreviewKeyUp += this.TriggersTreeViewOnPreviewKeyUp;
-            this.TriggersTreeView.PreviewMouseRightButtonDown += this.OnPreviewMouseRightButtonDown;
+            // タグツリービューへのイベントの割当
+            this.TagsTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
+            this.TagsTreeView.PreviewKeyUp += this.TriggersTreeViewOnPreviewKeyUp;
+            this.TagsTreeView.PreviewMouseRightButtonDown += this.OnPreviewMouseRightButtonDown;
+
+            // スペルツリービューへのイベントの割当
+            this.SpellsTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
+            this.SpellsTreeView.PreviewKeyUp += this.TriggersTreeViewOnPreviewKeyUp;
+            this.SpellsTreeView.PreviewMouseRightButtonDown += this.OnPreviewMouseRightButtonDown;
+
+            // ティッカーツリービューへのイベントの割当
+            this.TickersTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
+            this.TickersTreeView.PreviewKeyUp += this.TriggersTreeViewOnPreviewKeyUp;
+            this.TickersTreeView.PreviewMouseRightButtonDown += this.OnPreviewMouseRightButtonDown;
         }
 
         public TriggersViewModel ViewModel => this.DataContext as TriggersViewModel;
@@ -39,7 +50,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
         private void TriggersTreeViewOnSelectedItemChanged(
             object sender,
             RoutedPropertyChangedEventArgs<object> e)
-            => this.ShowContent(e.NewValue);
+        {
+            var treeView = sender as TreeView;
+
+            if (treeView.IsLoaded)
+            {
+                this.ShowContent(e.NewValue);
+            }
+        }
 
         private SpellPanelConfigViewModel spellPanelViewModel;
         private SpellConfigViewModel spellViewModel;
