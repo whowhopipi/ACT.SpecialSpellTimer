@@ -133,7 +133,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     case ItemTypes.TagsRoot:
                         newPanel = new SpellPanel()
                         {
-                            PanelName = "New Panel"
+                            PanelName = "New Panel",
+                            SortOrder = SpellOrders.SortRecastTimeASC,
                         };
 
                         SpellPanelTable.Instance.Table.Add(newPanel);
@@ -163,7 +164,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                         newPanel = new SpellPanel()
                         {
-                            PanelName = "New Panel"
+                            PanelName = "New Panel",
+                            SortOrder = SpellOrders.SortRecastTimeASC,
                         };
 
                         SpellPanelTable.Instance.Table.Add(newPanel);
