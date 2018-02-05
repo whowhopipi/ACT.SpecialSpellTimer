@@ -493,6 +493,21 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
             }));
 
+        private ICommand addToTagCommand;
+
+        [XmlIgnore]
+        public ICommand AddToTagCommand =>
+            this.addToTagCommand ?? (this.addToTagCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                switch (item.ItemType)
+                {
+                    case ItemTypes.Tag:
+                        var view = new AddToTagView(item as Tag);
+                        view.Show();
+                        break;
+                }
+            }));
+
         private ICommand designModeCommand;
 
         [XmlIgnore]

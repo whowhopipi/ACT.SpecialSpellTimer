@@ -195,4 +195,6 @@
   <system:String x:Key="Copy_Title">設定のコピー</system:String>
   <system:String x:Key="Copy_Source">コピー元</system:String>
   <system:String x:Key="Copy_Destination">コピー先</system:String>
+
+  <system:String x:Key="AddToTag_AddToTag">タグに追加する</system:String>
 </ResourceDictionary>

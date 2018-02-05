@@ -298,6 +298,8 @@
                 <MenuItem Header="{StaticResource Common_Rename}" Command="{Binding RenameCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="F2" />
                 <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 <Separator />
+                <MenuItem Header="{StaticResource AddToTag_AddToTag}" Command="{Binding AddToTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <Separator />
                 <MenuItem Header="{StaticResource Data_Import}">
                   <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ImportTickersToTag}" />
                 </MenuItem>

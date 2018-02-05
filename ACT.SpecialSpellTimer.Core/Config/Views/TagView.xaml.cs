@@ -119,6 +119,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
             }
 
+            TagTable.Instance.Save();
+
             this.Close();
         }
 

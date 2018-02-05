@@ -149,40 +149,49 @@ namespace ACT.SpecialSpellTimer.Config.Views
             }
         }
 
+        private Dest[] dests;
+
         public Dest[] Dests
         {
             get
             {
-                var dests = new List<Dest>();
-
-                if (this.IsSpell)
+                if (this.dests == null)
                 {
-                    dests.AddRange(
-                        from x in SpellTable.Instance.Table
-                        orderby
-                        x.Panel?.PanelName,
-                        x.DisplayNo,
-                        x.ID
-                        select new Dest()
-                        {
-                            Item = x
-                        });
+                    var dests = new List<Dest>();
+
+                    if (this.IsSpell)
+                    {
+                        dests.AddRange(
+                            from x in SpellTable.Instance.Table
+                            where
+                            !x.IsInstance
+                            orderby
+                            x.Panel?.PanelName,
+                            x.DisplayNo,
+                            x.ID
+                            select new Dest()
+                            {
+                                Item = x
+                            });
+                    }
+
+                    if (this.IsTicker)
+                    {
+                        dests.AddRange(
+                            from x in TickerTable.Instance.Table
+                            orderby
+                            x.Title,
+                            x.ID
+                            select new Dest()
+                            {
+                                Item = x
+                            });
+                    }
+
+                    this.dests = dests.ToArray();
                 }
 
-                if (this.IsTicker)
-                {
-                    dests.AddRange(
-                        from x in TickerTable.Instance.Table
-                        orderby
-                        x.Title,
-                        x.ID
-                        select new Dest()
-                        {
-                            Item = x
-                        });
-                }
-
-                return dests.ToArray();
+                return this.dests;
             }
         }
 
@@ -251,6 +260,10 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                     switch (this.Item)
                     {
+                        case SpellPanel p:
+                            text = p.PanelName;
+                            break;
+
                         case Spell s:
                             text = s.Panel?.PanelName + " - " + s.SpellTitle;
                             break;

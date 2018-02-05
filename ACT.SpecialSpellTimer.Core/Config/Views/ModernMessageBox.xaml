@@ -14,7 +14,7 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
-  d:DataContext="{d:DesignInstance Type=local:ModernMessageBox, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:ModernMessageBox}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   Background="Transparent"
   FontFamily="Consolas, Yu Gothic UI, Meiryo UI"
@@ -29,7 +29,7 @@
   WindowStyle="None"
   ResizeMode="CanResize"
   AllowsTransparency="True"
-  ShowInTaskbar="False"
+  ShowInTaskbar="True"
   Title="{Binding Caption, Mode=OneWay}"
   SizeToContent="WidthAndHeight">
 

@@ -14,7 +14,7 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
-  d:DataContext="{d:DesignInstance Type=local:CopyConfigView, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:CopyConfigView}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   Background="Transparent"
   FontFamily="Consolas, Yu Gothic UI, Meiryo UI"
@@ -158,14 +158,18 @@
           <Label Content="{DynamicResource Copy_Destination}" FontSize="18" />
 
           <ScrollViewer
-            Margin="0 28 3 0">
+            Margin="0 28 3 0"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
             <ItemsControl
               BorderThickness="0"
               Margin="15 0 3 0"
+              VirtualizingPanel.IsVirtualizing="True"
+              VirtualizingPanel.VirtualizationMode="Recycling"
               ItemsSource="{Binding Dests, Mode=OneWay}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                  <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding CopyTo, Mode=TwoWay}" />
+                  <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>

@@ -126,6 +126,9 @@
     <Compile Include="Config\ViewModels\SpellConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\SpellPanelConfigViewModel.cs" />
     <Compile Include="Config\ViewModels\TriggersViewModel.cs" />
+    <Compile Include="Config\Views\AddToTagView.xaml.cs">
+      <DependentUpon>AddToTagView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\ModernMessageBox.xaml.cs">
       <DependentUpon>ModernMessageBox.xaml</DependentUpon>
     </Compile>
@@ -320,6 +323,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Config\BaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\AddToTagView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
