@@ -117,7 +117,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             var toRefresh = this.placeholderRefreshed;
 
-            var newList = TableCompiler.Instance.TriggerList;
+            var newList = (
+                from x in TableCompiler.Instance.TriggerList
+                where
+                (x as Ticker) != null ||
+                (x as Spell)?.IsInstance == false
+                select
+                x).ToList();
 
             do
             {
@@ -165,9 +171,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 var i = 1;
                 var query =
                     from x in newList
-                    where
-                    (x as Ticker) != null ||
-                    (x as Spell).IsInstance == false
                     orderby
                     x.ItemType
                     select new TriggerContainer()
