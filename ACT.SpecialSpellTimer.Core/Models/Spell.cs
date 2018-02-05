@@ -963,6 +963,8 @@ namespace ACT.SpecialSpellTimer.Models
 
             n.ToInstance = this.ToInstance;
 
+            n.Enabled = this.Enabled;
+
             return n;
         }
 

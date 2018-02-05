@@ -448,6 +448,8 @@ namespace ACT.SpecialSpellTimer.Models
             n.DelayAdvancedConfig = this.DelayAdvancedConfig.Clone() as AdvancedNoticeConfig;
             n.IsSequentialTTS = this.IsSequentialTTS;
 
+            n.Enabled = this.Enabled;
+
             return n;
         }
 
