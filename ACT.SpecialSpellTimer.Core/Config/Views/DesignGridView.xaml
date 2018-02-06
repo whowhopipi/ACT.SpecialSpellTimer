@@ -20,7 +20,7 @@
   Opacity="0.01"
   IsTabStop="False"
   Focusable="False"
-  WindowState="Maximized">
+  WindowStartupLocation="Manual">
 
   <Grid x:Name="BaseGrid">
     <Grid.RowDefinitions>

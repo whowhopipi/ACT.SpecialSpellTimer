@@ -104,7 +104,7 @@ namespace ACT.SpecialSpellTimer.Config
             }
         }
 
-        private static DesignGridView gridView;
+        private static DesignGridView[] gridViews;
         private bool visibleDesignGrid;
 
         [XmlIgnore]
@@ -117,19 +117,47 @@ namespace ACT.SpecialSpellTimer.Config
                 {
                     if (this.visibleDesignGrid)
                     {
-                        if (gridView == null)
+                        lock (this)
                         {
-                            gridView = new DesignGridView();
-                            gridView.ToTransparent();
+                            if (gridViews == null)
+                            {
+                                var views = new List<DesignGridView>();
+
+                                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                                {
+                                    var view = new DesignGridView()
+                                    {
+                                        WindowStartupLocation = System.Windows.WindowStartupLocation.Manual,
+                                        Left = screen.Bounds.X,
+                                        Top = screen.Bounds.Y,
+                                        Width = screen.Bounds.Width,
+                                        Height = screen.Bounds.Height,
+                                    };
+
+                                    view.ToTransparent();
+                                    views.Add(view);
+                                }
+
+                                gridViews = views.ToArray();
+                            }
                         }
 
-                        gridView.Show();
-                        gridView.ShowOverlay();
+                        foreach (var view in gridViews)
+                        {
+                            view.Show();
+                            view.ShowOverlay();
+                        }
                     }
                     else
                     {
-                        gridView?.HideOverlay();
-                        gridView?.Hide();
+                        if (gridViews != null)
+                        {
+                            foreach (var view in gridViews)
+                            {
+                                view?.HideOverlay();
+                                view?.Hide();
+                            }
+                        }
                     }
                 }
             }
