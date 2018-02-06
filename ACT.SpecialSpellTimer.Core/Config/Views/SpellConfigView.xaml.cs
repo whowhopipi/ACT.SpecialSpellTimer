@@ -51,5 +51,10 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.ViewModel.IsActiveVisualTab = this.VisualTab.IsSelected;
         }
+
+        private void FilterExpander_Expanded(object sender, RoutedEventArgs e)
+        {
+            this.BaseScrollViewer.ScrollToEnd();
+        }
     }
 }

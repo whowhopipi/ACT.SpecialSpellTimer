@@ -131,7 +131,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             var jobFilters = this.Model.JobFilter?.Split(',');
             foreach (var selector in this.JobSelectors)
             {
-                selector.IsSelected = jobFilters.Contains(selector.Job.ID.ToString());
+                selector.IsSelected = jobFilters.Contains(((int)selector.Job.ID).ToString());
                 selector.SelectedChangedDelegate = this.JobFilterChanged;
             }
         }

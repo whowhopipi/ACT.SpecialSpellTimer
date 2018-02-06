@@ -156,24 +156,25 @@
         <!-- Copy先 -->
         <Grid Grid.Column="1">
           <Label Content="{DynamicResource Copy_Destination}" FontSize="18" />
-
-          <ScrollViewer
-            Margin="0 28 3 0"
-            HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Auto">
-            <ItemsControl
-              BorderThickness="0"
-              Margin="15 0 3 0"
-              VirtualizingPanel.IsVirtualizing="True"
-              VirtualizingPanel.VirtualizationMode="Recycling"
-              ItemsSource="{Binding Dests, Mode=OneWay}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-          </ScrollViewer>
+          <ListView
+            BorderThickness="0"
+            Margin="15 28 6 0"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.VirtualizationMode="Recycling"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ItemsSource="{Binding Dests, Mode=OneWay}">
+            <ListView.ItemContainerStyle>
+              <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+              </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+              <DataTemplate>
+                <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
         </Grid>
         <!-- Copy先 end -->
       </Grid>

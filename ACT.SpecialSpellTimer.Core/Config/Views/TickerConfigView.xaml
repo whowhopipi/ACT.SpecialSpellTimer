@@ -74,6 +74,7 @@
       <!-- General タブ start -->
       <TabItem Header="General" Padding="20 2 20 2">
         <ScrollViewer
+          x:Name="BaseScrollViewer"
           HorizontalScrollBarVisibility="Disabled"
           VerticalScrollBarVisibility="Auto"
           Margin="5"
@@ -175,7 +176,7 @@
             </StackPanel>
 
             <!-- Jobフィルタ start -->
-            <Expander Margin="0 20 0 0">
+            <Expander Margin="0 20 0 0" Expanded="FilterExpander_Expanded">
               <Expander.Header>
                 <StackPanel Orientation="Horizontal">
                   <Label Content="{DynamicResource Trigger_JobFilter}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
@@ -183,7 +184,7 @@
                 </StackPanel>
               </Expander.Header>
 
-              <StackPanel Orientation="Vertical">
+              <Grid>
 
                 <TextBlock Margin="0 3 0 5">
                   <Hyperlink
@@ -192,33 +193,39 @@
                   </Hyperlink>
                 </TextBlock>
 
-                <ItemsControl
+                <ListView
+                  Margin="0 30 0 0"
                   BorderThickness="0"
                   ItemsSource="{Binding JobSelectors, Mode=OneWay}"
-                  Height="150">
-                  <ItemsControl.ItemsPanel>
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                  Height="200">
+                  <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                  </ListView.ItemContainerStyle>
+                  <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                       <WrapPanel Orientation="Vertical" />
                     </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
+                  </ListView.ItemsPanel>
+                  <ListView.ItemTemplate>
                     <DataTemplate>
                       <CheckBox
                         Margin="0 2 20 2"
                         FontSize="15"
                         Content="{Binding Text, Mode=OneWay}"
-                        IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center" />
+                        IsChecked="{Binding IsSelected, Mode=TwoWay}" />
                     </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-              </StackPanel>
+                  </ListView.ItemTemplate>
+                </ListView>
+              </Grid>
             </Expander>
             <!-- Jobフィルタ end -->
 
             <!-- Zoneフィルタ start -->
-            <Expander Margin="0 10 0 0">
+            <Expander Margin="0 10 0 0" Expanded="FilterExpander_Expanded">
               <Expander.Header>
                 <StackPanel Orientation="Horizontal">
                   <Label Content="{DynamicResource Trigger_ZoneFilter}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
@@ -226,7 +233,7 @@
                 </StackPanel>
               </Expander.Header>
 
-              <StackPanel Orientation="Vertical">
+              <Grid>
                 <TextBlock Margin="0 3 0 5">
                   <Hyperlink
                     Command="{Binding ClearZoneFilterCommand, Mode=OneWay}">
@@ -234,38 +241,39 @@
                   </Hyperlink>
                 </TextBlock>
 
-                <ScrollViewer
-                  HorizontalScrollBarVisibility="Auto"
-                  VerticalScrollBarVisibility="Disabled"
+                <ListView
+                  Margin="0 30 0 0"
+                  BorderThickness="0"
+                  ItemsSource="{Binding ZoneSelectors, Mode=OneWay}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
                   Height="400">
-                  <ItemsControl
-                    BorderThickness="0"
-                    ItemsSource="{Binding ZoneSelectors, Mode=OneWay}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                    <ItemsControl.ItemsPanel>
-                      <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Vertical" />
-                      </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <CheckBox
-                          Margin="0 2 20 2"
-                          FontSize="15"
-                          Content="{Binding Name, Mode=OneWay}"
-                          IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                          HorizontalAlignment="Left"
-                          VerticalAlignment="Center" />
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
-                </ScrollViewer>
-              </StackPanel>
+                  <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                  </ListView.ItemContainerStyle>
+                  <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                  </ListView.ItemsPanel>
+                  <ListView.ItemTemplate>
+                    <DataTemplate>
+                      <CheckBox
+                        Margin="0 2 20 2"
+                        FontSize="15"
+                        Content="{Binding Name, Mode=OneWay}"
+                        IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                    </DataTemplate>
+                  </ListView.ItemTemplate>
+                </ListView>
+              </Grid>
             </Expander>
             <!-- Zoneフィルタ end -->
 
             <!-- Preconditionフィルタ start -->
-            <Expander Margin="0 10 0 0">
+            <Expander Margin="0 10 0 0" Expanded="FilterExpander_Expanded">
               <Expander.Header>
                 <StackPanel Orientation="Horizontal">
                   <Label Content="{DynamicResource Trigger_Preconditions}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
@@ -273,7 +281,7 @@
                 </StackPanel>
               </Expander.Header>
 
-              <StackPanel Orientation="Vertical">
+              <Grid>
                 <TextBlock Margin="0 3 0 5">
                   <Hyperlink
                     Command="{Binding ClearPreconditionsCommand, Mode=OneWay}">
@@ -281,7 +289,7 @@
                   </Hyperlink>
                 </TextBlock>
 
-                <Grid Margin="0 5 0 0">
+                <Grid Margin="0 35 0 0">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -294,108 +302,120 @@
                   <!-- 稼働スペル -->
                   <StackPanel Grid.Row="0" Grid.Column="0">
                     <Label Content="{DynamicResource Trigger_ForMustStartRunningSpell}" />
-                    <ScrollViewer
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto"
-                      Height="250">
-                      <ItemsControl
-                        BorderThickness="0"
-                        Margin="0 5 0 0"
-                        ItemsSource="{Binding PreconditionSelectors.ActiveSpells, Mode=OneWay}">
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <CheckBox
-                              Margin="2 0 10 0"
-                              Content="{Binding Text, Mode=OneWay}"
-                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                              FontSize="15"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center" />
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
-                    </ScrollViewer>
+                    <ListView
+                      BorderThickness="0"
+                      Margin="0 5 0 0"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      Height="250"
+                      ItemsSource="{Binding PreconditionSelectors.ActiveSpells, Mode=OneWay}">
+                      <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                      </ListView.ItemContainerStyle>
+                      <ListView.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox
+                            Margin="2 0 10 0"
+                            Content="{Binding Text, Mode=OneWay}"
+                            IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                            FontSize="15" />
+                        </DataTemplate>
+                      </ListView.ItemTemplate>
+                    </ListView>
                   </StackPanel>
 
                   <!-- 非稼働スペル -->
                   <StackPanel Grid.Row="0" Grid.Column="1" Margin="10 0 0 0">
                     <Label Content="{DynamicResource Trigger_ForMustStartStoppingSpell}" />
-                    <ScrollViewer
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto"
-                      Height="250">
-                      <ItemsControl
-                        BorderThickness="0"
-                        Margin="0 5 0 0"
-                        ItemsSource="{Binding PreconditionSelectors.InactiveSpells, Mode=OneWay}">
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <CheckBox
-                              Margin="2 0 10 0"
-                              Content="{Binding Text, Mode=OneWay}"
-                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                              FontSize="15"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center" />
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
-                    </ScrollViewer>
+                    <ListView
+                      BorderThickness="0"
+                      Margin="0 5 0 0"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      Height="250"
+                      ItemsSource="{Binding PreconditionSelectors.InactiveSpells, Mode=OneWay}">
+                      <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                      </ListView.ItemContainerStyle>
+                      <ListView.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox
+                            Margin="2 0 10 0"
+                            Content="{Binding Text, Mode=OneWay}"
+                            IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                            FontSize="15" />
+                        </DataTemplate>
+                      </ListView.ItemTemplate>
+                    </ListView>
                   </StackPanel>
 
                   <!-- 稼働テロップ -->
                   <StackPanel Grid.Row="1" Grid.Column="0" Margin="0 10 0 0">
                     <Label Content="{DynamicResource Trigger_ForMustStartRunningTicker}" />
-                    <ScrollViewer
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto"
-                      Height="250">
-                      <ItemsControl
-                        BorderThickness="0"
-                        Margin="0 5 0 0"
-                        ItemsSource="{Binding PreconditionSelectors.ActiveTickers, Mode=OneWay}">
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <CheckBox
-                              Margin="2 0 10 0"
-                              Content="{Binding Text, Mode=OneWay}"
-                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                              FontSize="15"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center" />
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
-                    </ScrollViewer>
+                    <ListView
+                      BorderThickness="0"
+                      Margin="0 5 0 0"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      Height="250"
+                      ItemsSource="{Binding PreconditionSelectors.ActiveTickers, Mode=OneWay}">
+                      <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                      </ListView.ItemContainerStyle>
+                      <ListView.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox
+                            Margin="2 0 10 0"
+                            Content="{Binding Text, Mode=OneWay}"
+                            IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                            FontSize="15" />
+                        </DataTemplate>
+                      </ListView.ItemTemplate>
+                    </ListView>
                   </StackPanel>
 
                   <!-- 非稼働テロップ -->
                   <StackPanel Grid.Row="1" Grid.Column="1" Margin="10 10 0 0">
                     <Label Content="{DynamicResource Trigger_ForMustStartStoppingTicker}" />
-                    <ScrollViewer
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto"
-                      Height="250">
-                      <ItemsControl
-                        BorderThickness="0"
-                        Margin="0 5 0 0"
-                        ItemsSource="{Binding PreconditionSelectors.InactiveTickers, Mode=OneWay}">
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <CheckBox
-                              Margin="2 0 10 0"
-                              Content="{Binding Text, Mode=OneWay}"
-                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                              FontSize="15"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center" />
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
-                    </ScrollViewer>
+                    <ListView
+                      BorderThickness="0"
+                      Margin="0 5 0 0"
+                      VirtualizingPanel.IsVirtualizing="True"
+                      VirtualizingPanel.VirtualizationMode="Recycling"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      Height="250"
+                      ItemsSource="{Binding PreconditionSelectors.InactiveTickers, Mode=OneWay}">
+                      <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                      </ListView.ItemContainerStyle>
+                      <ListView.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox
+                            Margin="2 0 10 0"
+                            Content="{Binding Text, Mode=OneWay}"
+                            IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                            FontSize="15" />
+                        </DataTemplate>
+                      </ListView.ItemTemplate>
+                    </ListView>
                   </StackPanel>
                 </Grid>
-              </StackPanel>
+              </Grid>
             </Expander>
             <!-- Preconditionフィルタ end -->
           </StackPanel>

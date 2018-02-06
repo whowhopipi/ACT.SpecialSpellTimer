@@ -31,6 +31,7 @@
   AllowsTransparency="True"
   ShowInTaskbar="False"
   Title="Tag"
+  ResizeMode="CanResizeWithGrip"
   Width="400" Height="350">
 
   <Window.Resources>
@@ -82,27 +83,34 @@
       </DockPanel>
 
       <!-- タグ -->
-      <ItemsControl
+      <ListView
         Grid.Row="1"
         Margin="5 10 5 0"
+        BorderThickness="0"
+        VirtualizingPanel.IsVirtualizing="True"
+        VirtualizingPanel.VirtualizationMode="Recycling"
         ScrollViewer.VerticalScrollBarVisibility="Auto"
         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
         ItemsSource="{Binding Tags, Mode=OneWay}">
 
-        <ItemsControl.ItemTemplate>
+        <ListView.ItemContainerStyle>
+          <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          </Style>
+        </ListView.ItemContainerStyle>
+
+        <ListView.ItemTemplate>
           <DataTemplate>
-            <StackPanel Orientation="Horizontal">
-              <CheckBox
-                IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                VerticalContentAlignment="Center"
-                Margin="0 0 5 0"
-                Checked="TagsOnChanged"
-                Unchecked="TagsOnChanged" />
-              <Label Content="{Binding Text, Mode=OneWay}" />
-            </StackPanel>
+            <CheckBox
+              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+              VerticalContentAlignment="Center"
+              Margin="0 0 5 0"
+              Content="{Binding Text, Mode=OneWay}"
+              Checked="TagsOnChanged"
+              Unchecked="TagsOnChanged" />
           </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+        </ListView.ItemTemplate>
+      </ListView>
 
       <!-- ボタンエリア -->
       <StackPanel Grid.Row="2" Orientation="Vertical">

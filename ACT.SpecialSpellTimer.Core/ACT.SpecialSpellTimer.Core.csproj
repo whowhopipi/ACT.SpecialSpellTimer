@@ -193,12 +193,6 @@
     <Compile Include="FFXIVHelper\Skill.cs" />
     <Compile Include="FFXIVHelper\XIVDB.cs" />
     <Compile Include="FFXIVHelper\Zone.cs" />
-    <Compile Include="Forms\SelectExportTargetForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SelectExportTargetForm.Designer.cs">
-      <DependentUpon>SelectExportTargetForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Image\IconController.cs" />
     <Compile Include="JobExtensions.cs" />
     <Compile Include="LogBuffer.cs" />
@@ -444,9 +438,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\SelectExportTargetForm.resx">
-      <DependentUpon>SelectExportTargetForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

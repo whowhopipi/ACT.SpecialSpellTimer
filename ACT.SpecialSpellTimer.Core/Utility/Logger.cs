@@ -1,5 +1,4 @@
 using System;
-using ACT.SpecialSpellTimer.Forms;
 
 namespace ACT.SpecialSpellTimer.Utility
 {

@@ -116,6 +116,8 @@
           x:Name="IconsListView"
           Margin="8 0 0 0"
           BorderThickness="0"
+          VirtualizingPanel.IsVirtualizing="True"
+          VirtualizingPanel.VirtualizationMode="Recycling"
           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
           ScrollViewer.VerticalScrollBarVisibility="Auto"
           ItemsSource="{Binding ElementName=DirectoryListView, Path=SelectedItem, Mode=OneWay}">
@@ -130,6 +132,7 @@
             <Style TargetType="ListViewItem">
               <EventSetter Event="PreviewMouseLeftButtonUp" Handler="ListViewItem_PreviewMouseLeftButtonUp" />
               <EventSetter Event="PreviewKeyUp" Handler="ListViewItem_PreviewKeyUp" />
+              <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             </Style>
           </ListView.ItemContainerStyle>
 

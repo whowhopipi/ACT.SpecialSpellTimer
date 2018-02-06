@@ -108,45 +108,49 @@
 
             <!-- スペル -->
             <Label Grid.Column="0" Content="{DynamicResource Common_SpellPanel}" FontSize="18" Margin="0 0 10 0" />
-            <ScrollViewer
+            <ListView
               Grid.Column="0"
-              Margin="0 28 11 0"
-              HorizontalScrollBarVisibility="Disabled"
-              VerticalScrollBarVisibility="Auto">
-              <ItemsControl
-                BorderThickness="0"
-                Margin="15 0 3 0"
-                VirtualizingPanel.IsVirtualizing="True"
-                VirtualizingPanel.VirtualizationMode="Recycling"
-                ItemsSource="{Binding TargetsSpells, Mode=OneWay}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
+              BorderThickness="0"
+              Margin="15 28 14 0"
+              VirtualizingPanel.IsVirtualizing="True"
+              VirtualizingPanel.VirtualizationMode="Recycling"
+              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+              ScrollViewer.VerticalScrollBarVisibility="Auto"
+              ItemsSource="{Binding TargetsSpells, Mode=OneWay}">
+              <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+              </ListView.ItemContainerStyle>
+              <ListView.ItemTemplate>
+                <DataTemplate>
+                  <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
+                </DataTemplate>
+              </ListView.ItemTemplate>
+            </ListView>
 
             <!-- テロップ -->
             <Label Grid.Column="1" Content="{DynamicResource Common_Ticker}" FontSize="18" />
-            <ScrollViewer
+            <ListView
               Grid.Column="1"
-              Margin="0 28 3 0"
-              HorizontalScrollBarVisibility="Disabled"
-              VerticalScrollBarVisibility="Auto">
-              <ItemsControl
-                BorderThickness="0"
-                Margin="15 0 3 0"
-                VirtualizingPanel.IsVirtualizing="True"
-                VirtualizingPanel.VirtualizationMode="Recycling"
-                ItemsSource="{Binding TargetsTickers, Mode=OneWay}">
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate>
-                    <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
-            </ScrollViewer>
+              BorderThickness="0"
+              Margin="15 28 14 0"
+              VirtualizingPanel.IsVirtualizing="True"
+              VirtualizingPanel.VirtualizationMode="Recycling"
+              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+              ScrollViewer.VerticalScrollBarVisibility="Auto"
+              ItemsSource="{Binding TargetsTickers, Mode=OneWay}">
+              <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+              </ListView.ItemContainerStyle>
+              <ListView.ItemTemplate>
+                <DataTemplate>
+                  <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
+                </DataTemplate>
+              </ListView.ItemTemplate>
+            </ListView>
           </Grid>
         </Grid>
         <!-- Copy先 end -->
