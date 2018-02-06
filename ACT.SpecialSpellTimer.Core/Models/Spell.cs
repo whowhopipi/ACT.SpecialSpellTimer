@@ -1356,7 +1356,7 @@ namespace ACT.SpecialSpellTimer.Models
                 RegexEnabled = true,
                 RecastTime = 90,
                 BarHeight = 8,
-                BarWidth = 120
+                BarWidth = 120,
             }
         };
 
