@@ -1342,5 +1342,24 @@ namespace ACT.SpecialSpellTimer.Models
             // トリガリストに加える
             TableCompiler.Instance.AddTestTrigger(this);
         }
+
+        #region Sample Spells
+
+        public static readonly Spell[] SampleSpells = new[]
+        {
+            // ランパート
+            new Spell()
+            {
+                PanelID = SpellPanel.GeneralPanel.ID,
+                SpellTitle = "ランパート",
+                Keyword = "<mex>の「ランパート」",
+                RegexEnabled = true,
+                RecastTime = 90,
+                BarHeight = 8,
+                BarWidth = 120
+            }
+        };
+
+        #endregion Sample Spells
     }
 }

@@ -140,8 +140,13 @@ namespace ACT.SpecialSpellTimer.Models
             string file,
             bool isClear)
         {
-            if (File.Exists(file))
+            try
             {
+                if (!File.Exists(file))
+                {
+                    return;
+                }
+
                 using (var sr = new StreamReader(file, new UTF8Encoding(false)))
                 {
                     if (sr.BaseStream.Length > 0)
@@ -167,6 +172,13 @@ namespace ACT.SpecialSpellTimer.Models
                             this.table.Add(item);
                         }
                     }
+                }
+            }
+            finally
+            {
+                if (!this.table.Any())
+                {
+                    this.table.AddRange(Spell.SampleSpells);
                 }
 
                 this.Reset();

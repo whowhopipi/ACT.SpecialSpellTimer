@@ -82,8 +82,8 @@ namespace ACT.SpecialSpellTimer.Models
             this.DelaySound = string.Empty;
             this.DelayTextToSpeak = string.Empty;
             this.BackgroundColor = string.Empty;
-            this.FontColor = string.Empty;
-            this.FontOutlineColor = string.Empty;
+            this.FontColor = Colors.White.ToLegacy().ToHTML();
+            this.FontOutlineColor = Colors.OrangeRed.ToLegacy().ToHTML();
             this.MatchedLog = string.Empty;
             this.MessageReplaced = string.Empty;
             this.RegexPattern = string.Empty;
@@ -659,5 +659,40 @@ namespace ACT.SpecialSpellTimer.Models
             // トリガリストに加える
             TableCompiler.Instance.AddTestTrigger(this);
         }
+
+        #region Sample Tickers
+
+        public static readonly Ticker[] SampleTickers = new[]
+        {
+            // インビンシブル
+            new Ticker()
+            {
+                Title = "インビンシブル",
+                Message = "{COUNT0} インビンシビル",
+                Keyword = "<mex>の「インビンシブル」",
+                RegexEnabled = true,
+                DisplayTime = 10,
+                MatchTextToSpeak = "インビンシブル。",
+                Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2,
+                Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width /2,
+            },
+
+            // インビンシブルサウンド
+            new Ticker()
+            {
+                Title = "インビンシブル（サウンドのみ）",
+                Message = "",
+                Keyword = "<mex>の「インビンシブル」",
+                RegexEnabled = true,
+                Delay = 5,
+                DisplayTime = 0,
+                MatchTextToSpeak = "",
+                DelayTextToSpeak = "インビンシブルの終了まで後5秒。",
+                Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2,
+                Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width /2,
+            }
+        };
+
+        #endregion Sample Tickers
     }
 }

@@ -31,6 +31,9 @@ namespace ACT.SpecialSpellTimer.Models
         {
             PanelName = "+General",
             SortPriority = 100,
+            SortOrder = SpellOrders.SortRecastTimeASC,
+            Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2,
+            Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2,
         };
 
         public static SpellPanel GeneralPanel => generalPanel;
