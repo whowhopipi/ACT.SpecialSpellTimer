@@ -52,6 +52,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
                     this.RaisePropertyChanged(nameof(this.IsJobFiltered));
                     this.RaisePropertyChanged(nameof(this.IsZoneFiltered));
+                    this.RaisePropertyChanged(nameof(this.PreconditionSelectors));
                 }
             }
         }
@@ -126,6 +127,8 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 selector.IsSelected = jobFilters.Contains(((int)selector.Job.ID).ToString());
                 selector.SelectedChangedDelegate = this.JobFilterChanged;
             }
+
+            this.RaisePropertyChanged(nameof(this.JobSelectors));
         }
 
         private void JobFilterChanged()
@@ -206,6 +209,8 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 selector.IsSelected = zoneFilters.Contains(selector.ID);
                 selector.SelectedChangedDelegate = this.ZoneFilterChanged;
             }
+
+            this.RaisePropertyChanged(nameof(this.ZoneSelectors));
         }
 
         private void ZoneFilterChanged()
