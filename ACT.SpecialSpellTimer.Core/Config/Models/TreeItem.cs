@@ -206,6 +206,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         currentSpell = (
                             from x in SpellTable.Instance.Table
                             where
+                            !x.IsInstance &&
                             x.PanelID == currentPanel.ID
                             orderby
                             x.SortPriority descending,
@@ -248,6 +249,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             currentSpell = (
                                 from x in SpellTable.Instance.Table
                                 where
+                                !x.IsInstance &&
                                 x.PanelID == currentPanel.ID
                                 orderby
                                 x.SortPriority descending,
@@ -276,7 +278,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 {
                     SpellTable.Instance.Table.Add(newSpell);
                     SpellTable.Instance.Save();
-                    newSpell.IsSelected = true;
+
+                    // スペルの追加は選択状態にせずパネルを展開状態にするだけにする
+                    if (newSpell.Panel != null)
+                    {
+                        newSpell.Panel.IsExpanded = true;
+                    }
                 }
             }));
 

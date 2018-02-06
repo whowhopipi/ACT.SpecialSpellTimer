@@ -226,6 +226,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 spells.Clear();
                 spells.AddRange(
                     from x in SpellTable.Instance.Table
+                    where
+                    !x.IsInstance
                     orderby
                     x.Panel?.PanelName,
                     x.DisplayNo,

@@ -122,7 +122,9 @@ namespace ACT.SpecialSpellTimer.Models
 
         [XmlIgnore]
         public IReadOnlyList<Spell> Spells
-            => SpellTable.Instance.Table.Where(x => x.PanelID == this.ID).ToList();
+            => SpellTable.Instance.Table.Where(x =>
+                !x.IsInstance &&
+                x.PanelID == this.ID).ToList();
 
         #region ITreeItem
 
