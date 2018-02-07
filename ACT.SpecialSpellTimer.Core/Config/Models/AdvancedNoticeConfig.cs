@@ -1,15 +1,15 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Timers;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Sound;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Bridge;
-using Prism.Mvvm;
 using FFXIV.Framework.Globalization;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config.Models
 {
@@ -18,6 +18,29 @@ namespace ACT.SpecialSpellTimer.Config.Models
         BindableBase,
         ICloneable
     {
+        #region Available TTSYukkuri
+
+        private static Timer timer = new Timer(5 * 1000);
+
+        public static bool AvailableTTSYukkuri { get; private set; } = false;
+
+        static AdvancedNoticeConfig()
+        {
+            timer.Elapsed += (x, y) =>
+            {
+                AvailableTTSYukkuri =
+                    PlayBridge.Instance.PlayMainDeviceDelegate != null ||
+                    PlayBridge.Instance.PlaySubDeviceDelegate != null;
+            };
+
+            timer.Start();
+        }
+
+        #endregion Available TTSYukkuri
+
+        [XmlIgnore]
+        public bool Available => AdvancedNoticeConfig.AvailableTTSYukkuri;
+
         private bool isEnabled;
 
         public bool IsEnabled

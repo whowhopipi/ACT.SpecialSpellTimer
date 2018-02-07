@@ -530,11 +530,13 @@
                     <TextBox DockPanel.Dock="Left" Width="415" HorizontalAlignment="Left" Text="{Binding Model.MatchTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
                     <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS1Command}" />
                   </DockPanel>
-                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.MatchAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                  <StackPanel Visibility="{Binding Model.MatchAdvancedConfig.Available, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=TwoWay}" />
+                    <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.MatchAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
+                      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.MatchAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
+                      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.MatchAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                    </StackPanel>
                   </StackPanel>
                 </StackPanel>
               </StackPanel>
@@ -561,11 +563,13 @@
                     <TextBox DockPanel.Dock="Left" HorizontalAlignment="Left" Width="415" Text="{Binding Model.DelayTextToSpeak, Mode=TwoWay}" Height="26" VerticalContentAlignment="Center" />
                     <Button DockPanel.Dock="Right" Content="▶" HorizontalAlignment="Right" Width="28" FontWeight="Black" FontSize="11"  Command="{Binding TestTTS2Command}" />
                   </DockPanel>
-                  <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.DelayAdvancedConfig.IsEnabled, Mode=TwoWay}" />
-                  <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.DelayAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.DelayAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.DelayAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
-                    <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.DelayAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                  <StackPanel Visibility="{Binding Model.DelayAdvancedConfig.Available, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Spell_UseAdvancedNotice}" IsChecked="{Binding Model.DelayAdvancedConfig.IsEnabled, Mode=TwoWay}" />
+                    <StackPanel Margin="0 5 0 0" Visibility="{Binding Model.DelayAdvancedConfig.IsEnabled, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+                      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToMainPlaybackDevice}" IsChecked="{Binding Model.DelayAdvancedConfig.ToMainDevice, Mode=TwoWay}" />
+                      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToSubPlaybackDevice}" IsChecked="{Binding Model.DelayAdvancedConfig.ToSubDevice, Mode=TwoWay}" />
+                      <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToDicordTextChannel}" IsChecked="{Binding Model.DelayAdvancedConfig.ToDicordTextChat, Mode=TwoWay}" />
+                    </StackPanel>
                   </StackPanel>
                 </StackPanel>
               </StackPanel>

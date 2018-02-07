@@ -53,6 +53,10 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                     this.RaisePropertyChanged(nameof(this.IsJobFiltered));
                     this.RaisePropertyChanged(nameof(this.IsZoneFiltered));
                     this.RaisePropertyChanged(nameof(this.PreconditionSelectors));
+                    this.RaisePropertyChanged(nameof(this.Model.MatchAdvancedConfig));
+                    this.RaisePropertyChanged(nameof(this.Model.BeforeAdvancedConfig));
+                    this.RaisePropertyChanged(nameof(this.Model.OverAdvancedConfig));
+                    this.RaisePropertyChanged(nameof(this.Model.TimeupAdvancedConfig));
                 }
             }
         }
