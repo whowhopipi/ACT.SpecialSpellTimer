@@ -88,6 +88,52 @@
             <!-- ToInstance -->
             <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToInstance}" IsChecked="{Binding Model.ToInstance}" />
 
+            <!-- Tags =>> -->
+            <StackPanel x:Name="TagPanel">
+              <ItemsControl
+                Margin="0 5 0 4"
+                ItemsSource="{Binding Tags, Mode=OneWay}">
+
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate DataType="{x:Type triggerModel:ItemTags}">
+                    <Border Margin="1" Padding="1" CornerRadius="2" BorderThickness="1" BorderBrush="Orange">
+                      <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding Tag.Name, Mode=OneWay}" FontSize="14" Margin="2 0 0 0" />
+                        <Button
+                          Content="X"
+                          Margin="5 0 2 0"
+                          Command="{Binding RemoveTagCommand, Mode=OneWay}"
+                          CommandParameter="{Binding}"
+                          Foreground="LightGray"
+                          Background="Transparent"
+                          BorderBrush="Transparent"
+                          BorderThickness="0"
+                          FontSize="12"
+                          VerticalAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          HorizontalContentAlignment="Center" />
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <TextBlock Margin="2 0 0 0">
+                <Hyperlink
+                  Command="{Binding AddTagsCommand, Mode=OneWay}"
+                  CommandParameter="{Binding Model.Guid, Mode=OneWay}">
+                  <TextBlock Text="{DynamicResource Common_AddTags}" FontSize="14" />
+                </Hyperlink>
+              </TextBlock>
+            </StackPanel>
+            <!-- <<= Tags  -->
+
             <!-- パネル -->
             <Label Margin="0 15 0 0" Content="{DynamicResource Common_SpellPanel}" VerticalAlignment="Center" />
             <ComboBox
