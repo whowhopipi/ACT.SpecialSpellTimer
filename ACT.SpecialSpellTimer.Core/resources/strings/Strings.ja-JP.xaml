@@ -25,6 +25,7 @@
   <system:String x:Key="Common_ManageTags">タグの管理</system:String>
 
   <system:String x:Key="Common_CreateNew">新規作成</system:String>
+  <system:String x:Key="Common_CreateSimilarNew">コピーして新規作成</system:String>
   <system:String x:Key="Common_CreateNewTag">新しいタグ</system:String>
   <system:String x:Key="Common_CreateNewSpellPanel">新しいスペルパネル</system:String>
   <system:String x:Key="Common_CreateNewSpell">新しいスペル</system:String>

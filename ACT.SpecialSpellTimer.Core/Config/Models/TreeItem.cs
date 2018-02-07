@@ -705,12 +705,17 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             from x in data.Panels
                             select
                             x.GetID()).Union(
-                            from x in data.Spells
-                            select
-                            x.GetID()).Union(
                             from x in data.Tickers
                             select
                             x.GetID());
+
+                        if (!data.Panels.Any())
+                        {
+                            items = items.Union(
+                                from x in data.Spells
+                                select
+                                x.GetID());
+                        }
 
                         foreach (var x in items)
                         {

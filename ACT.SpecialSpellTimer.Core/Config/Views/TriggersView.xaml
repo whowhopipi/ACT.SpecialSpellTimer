@@ -175,7 +175,7 @@
             <!-- スペルのコンテキストメニュー -->
             <StackPanel.ContextMenu>
               <ContextMenu Loaded="ContextMenu_Loaded">
-                <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Common_CreateSimilarNew}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 <Separator />
                 <MenuItem Header="{StaticResource Common_SpellPanel}" x:Name="PanelMenu" />
@@ -232,7 +232,7 @@
             <!-- テロップのコンテキストメニュー -->
             <StackPanel.ContextMenu>
               <ContextMenu Loaded="ContextMenu_Loaded">
-                <MenuItem Header="{StaticResource Common_CreateNew}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Common_CreateSimilarNew}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 <Separator />
                 <MenuItem Header="{StaticResource Common_Tag}" x:Name="TagMenu" />

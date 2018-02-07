@@ -25,6 +25,7 @@
   <system:String x:Key="Common_ManageTags">Manage tags</system:String>
 
   <system:String x:Key="Common_CreateNew">Create new</system:String>
+  <system:String x:Key="Common_CreateSimilarNew">Createe similer new</system:String>
   <system:String x:Key="Common_CreateNewTag">Create new Tag</system:String>
   <system:String x:Key="Common_CreateNewSpellPanel">Create new Spell panel</system:String>
   <system:String x:Key="Common_CreateNewSpell">Create new Spell</system:String>
