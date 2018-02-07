@@ -88,6 +88,15 @@
             <!-- ToInstance -->
             <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_ToInstance}" IsChecked="{Binding Model.ToInstance}" />
 
+            <!-- パネル -->
+            <Label Margin="0 15 0 0" Content="{DynamicResource Common_SpellPanel}" VerticalAlignment="Center" />
+            <ComboBox
+              ItemsSource="{Binding Panels, Mode=OneWay}"
+              DisplayMemberPath="PanelName"
+              SelectedValuePath="ID"
+              SelectedValue="{Binding Model.PanelID, Mode=TwoWay}"
+              SelectionChanged="Panel_SelectionChanged" />
+
             <!-- Priority -->
             <Label Margin="0 15 0 0" Content="{DynamicResource Spell_SortPriority}" VerticalAlignment="Center" />
             <xctk:DoubleUpDown Value="{Binding Model.DisplayNo, Mode=TwoWay}" MinWidth="80" Increment="1" HorizontalAlignment="Left" />

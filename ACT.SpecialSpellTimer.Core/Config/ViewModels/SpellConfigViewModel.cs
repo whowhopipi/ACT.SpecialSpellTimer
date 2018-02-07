@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.FFXIVHelper;
@@ -20,7 +23,10 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
         public SpellConfigViewModel(
             Spell model)
-            => this.Model = model;
+        {
+            this.Model = model;
+            this.SetupPanelSource();
+        }
 
         private Spell model;
 
@@ -85,6 +91,32 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                     this.SwitchDesignGrid();
                 }
             }
+        }
+
+        private CollectionViewSource panelSource = new CollectionViewSource()
+        {
+            Source = SpellPanelTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
+        public ICollectionView Panels => this.panelSource.View;
+
+        private void SetupPanelSource()
+        {
+            this.panelSource.SortDescriptions.AddRange(new[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.SortPriority),
+                    Direction = ListSortDirection.Descending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.PanelName),
+                    Direction = ListSortDirection.Ascending,
+                }
+            });
         }
 
         private void SwitchDesignGrid()
