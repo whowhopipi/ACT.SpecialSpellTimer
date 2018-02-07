@@ -185,11 +185,10 @@
 
   <system:String x:Key="Data_Import">インポート</system:String>
   <system:String x:Key="Data_ImportSpellsToSpellPanel">このスペルパネルにスペルをインポートします。</system:String>
-  <system:String x:Key="Data_ImportTickersToTag">このタグにテロップをインポートします。</system:String>
+  <system:String x:Key="Data_ImportToTag">このタグにスペル・テロップをインポートします。</system:String>
   <system:String x:Key="Data_Export">エクスポート</system:String>
   <system:String x:Key="Data_ExportSpellsFromPanel">このスペルパネルに属するスペルをエクスポートします。</system:String>
-  <system:String x:Key="Data_ExportSpellsFromTag">このタグに属するスペルをエクスポートします。</system:String>
-  <system:String x:Key="Data_ExportTickers">このタグ属するテロップをエクスポートします。</system:String>
+  <system:String x:Key="Data_ExportFromTag">このタグに属するスペル・テロップをエクスポートします。</system:String>
 
   <system:String x:Key="Copy_Copy">設定をコピーする</system:String>
   <system:String x:Key="Copy_Title">設定のコピー</system:String>

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -595,7 +594,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
         private static readonly System.Windows.Forms.OpenFileDialog OpenFileDialog = new System.Windows.Forms.OpenFileDialog()
         {
             RestoreDirectory = true,
-            Filter = "Special Spells Files|*.xml|All Files|*.*",
+            Filter = "SPESPE Files|*.xml|All Files|*.*",
             FilterIndex = 0,
             DefaultExt = ".xml",
             SupportMultiDottedExtensions = true,
@@ -604,40 +603,21 @@ namespace ACT.SpecialSpellTimer.Config.Models
         private static readonly System.Windows.Forms.SaveFileDialog SaveFileDialog = new System.Windows.Forms.SaveFileDialog()
         {
             RestoreDirectory = true,
-            Filter = "Special Spells Files|*.xml|All Files|*.*",
+            Filter = "SPESPE Files|*.xml|All Files|*.*",
             FilterIndex = 0,
             DefaultExt = ".xml",
             SupportMultiDottedExtensions = true,
-            FileName = "MySpecialSpells.xml"
         };
 
-        private ICommand importSpellsCommand;
+        private ICommand importCommand;
 
         [XmlIgnore]
-        public ICommand ImportSpellsCommand =>
-            this.importSpellsCommand ?? (this.importSpellsCommand = new DelegateCommand<ITreeItem>(item =>
+        public ICommand ImportCommand =>
+            this.importCommand ?? (this.importCommand = new DelegateCommand<ITreeItem>(item =>
             {
                 if (item == null)
                 {
                     return;
-                }
-
-                var parentPanel = default(SpellPanel);
-
-                switch (item.ItemType)
-                {
-                    case ItemTypes.SpellsRoot:
-                    case ItemTypes.TickersRoot:
-                    case ItemTypes.TagsRoot:
-                        parentPanel = SpellPanel.GeneralPanel;
-                        break;
-
-                    case ItemTypes.SpellPanel:
-                        parentPanel = item as SpellPanel;
-                        break;
-
-                    default:
-                        return;
                 }
 
                 try
@@ -655,231 +635,169 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     OpenFileDialog.InitialDirectory = Path.GetDirectoryName(file);
                     OpenFileDialog.FileName = Path.GetFileName(file);
 
-                    var data = SpellTable.Instance.LoadFromFile(file);
+                    var data = ExportContainer.LoadFromFile(file);
                     if (data == null)
                     {
                         return;
                     }
 
-                    foreach (var x in data)
+                    if (data.Tag == null)
                     {
-                        x.PanelID = parentPanel.ID;
+                        data.Tag = Tag.ImportsTag;
                     }
 
-                    SpellTable.Instance.Table.AddRange(data);
-                }
-                catch (Exception ex)
-                {
-                    ModernMessageBox.ShowDialog(
-                        "Import Error!",
-                        "ACT.Hojoring",
-                        MessageBoxButton.OK,
-                        ex);
-                    return;
-                }
-
-                Task.Run(() => TableCompiler.Instance.CompileSpells());
-
-                ModernMessageBox.ShowDialog(
-                    "Import Completed.",
-                    "ACT.Hojoring");
-            }));
-
-        private ICommand importTickersCommand;
-
-        [XmlIgnore]
-        public ICommand ImportTickersCommand =>
-            this.importTickersCommand ?? (this.importTickersCommand = new DelegateCommand<ITreeItem>(item =>
-            {
-                if (item == null)
-                {
-                    return;
-                }
-
-                var parentTag = default(Tag);
-
-                switch (item.ItemType)
-                {
-                    case ItemTypes.SpellsRoot:
-                    case ItemTypes.TickersRoot:
-                    case ItemTypes.TagsRoot:
-                        parentTag = Tag.ImportsTag;
-                        break;
-
-                    case ItemTypes.Tag:
-                        parentTag = item as Tag;
-                        break;
-
-                    default:
-                        return;
-                }
-
-                try
-                {
-                    var result = OpenFileDialog.ShowDialog(
-                        ActGlobals.oFormActMain);
-                    if (result != System.Windows.Forms.DialogResult.OK)
+                    switch (item.ItemType)
                     {
-                        return;
+                        case ItemTypes.SpellsRoot:
+                            data.Tickers.Clear();
+                            break;
+
+                        case ItemTypes.TickersRoot:
+                            data.Spells.Clear();
+                            data.Panels.Clear();
+                            break;
+
+                        case ItemTypes.SpellPanel:
+                            var panel = item as SpellPanel;
+                            data.Tickers.Clear();
+                            data.Panels.Clear();
+                            foreach (var spell in data.Spells)
+                            {
+                                spell.PanelID = panel.ID;
+                            }
+                            break;
+
+                        case ItemTypes.TagsRoot:
+                            break;
+
+                        case ItemTypes.Tag:
+                            var tag = item as Tag;
+                            data.Tag = tag;
+                            break;
+
+                        default:
+                            return;
                     }
 
-                    var file = OpenFileDialog.FileName;
-
-                    // 次使うとき用にケアしておく
-                    OpenFileDialog.InitialDirectory = Path.GetDirectoryName(file);
-                    OpenFileDialog.FileName = Path.GetFileName(file);
-
-                    var data = TickerTable.Instance.LoadFromFile(file);
-                    if (data == null)
+                    if (data.Panels.Any())
                     {
-                        return;
+                        SpellPanelTable.Instance.Table.AddRange(data.Panels);
                     }
 
-                    TickerTable.Instance.Table.AddRange(data);
-
-                    foreach (var x in data)
+                    if (data.Spells.Any())
                     {
-                        TagTable.Instance.ItemTags.Add(new ItemTags()
+                        SpellTable.Instance.Table.AddRange(data.Spells);
+                    }
+
+                    if (data.Tickers.Any())
+                    {
+                        TickerTable.Instance.Table.AddRange(data.Tickers);
+                    }
+
+                    if (data.Tag != null)
+                    {
+                        if (!TagTable.Instance.Tags.Any(x => x.ID == data.Tag.ID))
                         {
-                            ItemID = x.Guid,
-                            TagID = parentTag.ID,
-                        });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ModernMessageBox.ShowDialog(
-                        "Import Error!",
-                        "ACT.Hojoring",
-                        MessageBoxButton.OK,
-                        ex);
-                    return;
-                }
-
-                Task.Run(() => TableCompiler.Instance.CompileTickers());
-
-                ModernMessageBox.ShowDialog(
-                    "Import Completed.",
-                    "ACT.Hojoring");
-            }));
-
-        private ICommand exportSpellsCommand;
-
-        [XmlIgnore]
-        public ICommand ExportSpellsCommand =>
-            this.exportSpellsCommand ?? (this.exportSpellsCommand = new DelegateCommand<ITreeItem>(item =>
-            {
-                if (item == null)
-                {
-                    return;
-                }
-
-                var targets = new List<Spell>();
-
-                switch (item.ItemType)
-                {
-                    case ItemTypes.SpellsRoot:
-                    case ItemTypes.TickersRoot:
-                    case ItemTypes.TagsRoot:
-                        targets.AddRange(SpellTable.Instance.Table);
-                        break;
-
-                    case ItemTypes.SpellPanel:
-                        foreach (Spell spell in (item as SpellPanel).Children)
-                        {
-                            targets.Add(spell);
+                            TagTable.Instance.Tags.Add(data.Tag);
                         }
 
+                        var items = (
+                            from x in data.Panels
+                            select
+                            x.GetID()).Union(
+                            from x in data.Spells
+                            select
+                            x.GetID()).Union(
+                            from x in data.Tickers
+                            select
+                            x.GetID());
+
+                        foreach (var x in items)
+                        {
+                            TagTable.Instance.ItemTags.Add(new ItemTags()
+                            {
+                                ItemID = x,
+                                TagID = data.Tag.ID,
+                            });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModernMessageBox.ShowDialog(
+                        "Import Error!",
+                        "ACT.Hojoring",
+                        MessageBoxButton.OK,
+                        ex);
+                    return;
+                }
+
+                Task.Run(() =>
+                {
+                    TableCompiler.Instance.CompileSpells();
+                    TableCompiler.Instance.CompileTickers();
+                });
+
+                ModernMessageBox.ShowDialog(
+                    "Import Completed.",
+                    "ACT.Hojoring");
+            }));
+
+        private ICommand exportCommand;
+
+        [XmlIgnore]
+        public ICommand ExportCommand =>
+            this.exportCommand ?? (this.exportCommand = new DelegateCommand<ITreeItem>(item =>
+            {
+                if (item == null)
+                {
+                    return;
+                }
+
+                var exports = new ExportContainer();
+
+                switch (item.ItemType)
+                {
+                    case ItemTypes.SpellsRoot:
+                        SaveFileDialog.FileName = "MySpells.xml";
+                        exports.Panels.AddRange(SpellPanelTable.Instance.Table);
+                        exports.Spells.AddRange(SpellTable.Instance.Table.Where(x => !x.IsInstance));
                         break;
 
-                    case ItemTypes.Tag:
-                        foreach (ITreeItem child in (item as Tag).Children)
+                    case ItemTypes.TickersRoot:
+                        SaveFileDialog.FileName = "MyTickers.xml";
+                        exports.Tickers.AddRange(TickerTable.Instance.Table);
+                        break;
+
+                    case ItemTypes.TagsRoot:
+                        break;
+
+                    case ItemTypes.SpellPanel:
+                        SaveFileDialog.FileName = "MySpells.xml";
+                        exports.Panels.Add(item as SpellPanel);
+                        foreach (Spell spell in (item as SpellPanel).Children)
                         {
-                            if (child is SpellPanel panel)
+                            if (!spell.IsInstance)
                             {
-                                foreach (Spell spell in panel.Children)
-                                {
-                                    targets.Add(spell);
-                                }
+                                exports.Spells.Add(spell);
                             }
                         }
 
                         break;
 
                     case ItemTypes.Spell:
-                        targets.Add(item as Spell);
-                        break;
-
-                    default:
-                        return;
-                }
-
-                try
-                {
-                    var result = SaveFileDialog.ShowDialog(
-                        ActGlobals.oFormActMain);
-                    if (result != System.Windows.Forms.DialogResult.OK)
-                    {
-                        return;
-                    }
-
-                    var file = SaveFileDialog.FileName;
-
-                    // 次使うとき用にケアしておく
-                    SaveFileDialog.InitialDirectory = Path.GetDirectoryName(file);
-                    SaveFileDialog.FileName = Path.GetFileName(file);
-
-                    SpellTable.Instance.Save(file, targets);
-                }
-                catch (Exception ex)
-                {
-                    ModernMessageBox.ShowDialog(
-                        "Export Error!",
-                        "ACT.Hojoring",
-                        MessageBoxButton.OK,
-                        ex);
-                    return;
-                }
-
-                ModernMessageBox.ShowDialog(
-                    "Export Completed.",
-                    "ACT.Hojoring");
-            }));
-
-        private ICommand exportTickersCommand;
-
-        [XmlIgnore]
-        public ICommand ExportTickersCommand =>
-            this.exportTickersCommand ?? (this.exportTickersCommand = new DelegateCommand<ITreeItem>(item =>
-            {
-                if (item == null)
-                {
-                    return;
-                }
-
-                var targets = new List<Ticker>();
-
-                switch (item.ItemType)
-                {
-                    case ItemTypes.SpellsRoot:
-                    case ItemTypes.TickersRoot:
-                    case ItemTypes.TagsRoot:
-                        targets.AddRange(TickerTable.Instance.Table);
+                        SaveFileDialog.FileName = "MySpells.xml";
+                        exports.Spells.Add(item as Spell);
                         break;
 
                     case ItemTypes.Ticker:
-                        targets.Add(item as Ticker);
+                        SaveFileDialog.FileName = "MyTickers.xml";
+                        exports.Tickers.Add(item as Ticker);
                         break;
 
                     case ItemTypes.Tag:
-                        foreach (ITreeItem child in (item as Tag).Children)
-                        {
-                            if (child is Ticker ticker)
-                            {
-                                targets.Add(ticker);
-                            }
-                        }
-
+                        SaveFileDialog.FileName = "MyTag.xml";
+                        ExportTag(exports, item as Tag);
                         break;
 
                     default:
@@ -901,7 +819,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     SaveFileDialog.InitialDirectory = Path.GetDirectoryName(file);
                     SaveFileDialog.FileName = Path.GetFileName(file);
 
-                    TickerTable.Instance.Save(file, targets);
+                    exports.Save(file);
                 }
                 catch (Exception ex)
                 {
@@ -917,6 +835,32 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     "Export Completed.",
                     "ACT.Hojoring");
             }));
+
+        private static void ExportTag(
+            ExportContainer exports,
+            Tag tag)
+        {
+            exports.Tag = tag;
+            foreach (ITreeItem child in tag.Children)
+            {
+                if (child is SpellPanel panel)
+                {
+                    exports.Panels.Add(panel);
+                    foreach (Spell spell in panel.Children)
+                    {
+                        if (!spell.IsInstance)
+                        {
+                            exports.Spells.Add(spell);
+                        }
+                    }
+                }
+
+                if (child is Ticker ticker)
+                {
+                    exports.Tickers.Add(ticker);
+                }
+            }
+        }
 
         #endregion Import & Export
     }

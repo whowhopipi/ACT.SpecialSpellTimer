@@ -202,6 +202,7 @@
     <Compile Include="Models\ItemTags.cs" />
     <Compile Include="Config\Models\TreeItem.cs" />
     <Compile Include="Models\ITrigger.cs" />
+    <Compile Include="Models\ExportContainer.cs" />
     <Compile Include="Models\SpellPanel.cs" />
     <Compile Include="Models\PlaceholderTypes.cs" />
     <Compile Include="Models\Spell.cs" />

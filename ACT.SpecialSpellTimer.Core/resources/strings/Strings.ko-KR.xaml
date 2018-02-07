@@ -185,11 +185,10 @@
 
   <system:String x:Key="Data_Import">Import</system:String>
   <system:String x:Key="Data_ImportSpellsToSpellPanel">Import spells to this panel</system:String>
-  <system:String x:Key="Data_ImportTickersToTag">Import tickers to this tag</system:String>
+  <system:String x:Key="Data_ImportToTag">Import spells and tickers to this tag</system:String>
   <system:String x:Key="Data_Export">Export</system:String>
   <system:String x:Key="Data_ExportSpellsFromPanel">Export spells from this panel</system:String>
-  <system:String x:Key="Data_ExportSpellsFromTag">Export spells from this tag</system:String>
-  <system:String x:Key="Data_ExportTickers">Export tickers from this tag</system:String>
+  <system:String x:Key="Data_ExportFromTag">Export spells and tickers from this tag</system:String>
 
   <system:String x:Key="Copy_Copy">Copy settings</system:String>
   <system:String x:Key="Copy_Title">Copy settings</system:String>

@@ -122,8 +122,8 @@
                 <Separator />
                 <MenuItem Header="{StaticResource Common_Tag}" x:Name="TagMenu" />
                 <Separator />
-                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ImportSpellsToSpellPanel}" />
-                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportSpellsFromPanel}" />
+                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ImportSpellsToSpellPanel}" />
+                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportSpellsFromPanel}" />
               </ContextMenu>
             </StackPanel.ContextMenu>
 
@@ -180,7 +180,7 @@
                 <Separator />
                 <MenuItem Header="{StaticResource Common_SpellPanel}" x:Name="PanelMenu" />
                 <Separator />
-                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" />
               </ContextMenu>
             </StackPanel.ContextMenu>
 
@@ -237,7 +237,7 @@
                 <Separator />
                 <MenuItem Header="{StaticResource Common_Tag}" x:Name="TagMenu" />
                 <Separator />
-                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" />
               </ContextMenu>
             </StackPanel.ContextMenu>
 
@@ -300,13 +300,8 @@
                 <Separator />
                 <MenuItem Header="{StaticResource AddToTag_AddToTag}" Command="{Binding AddToTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <Separator />
-                <MenuItem Header="{StaticResource Data_Import}">
-                  <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ImportTickersToTag}" />
-                </MenuItem>
-                <MenuItem Header="{StaticResource Data_Export}">
-                  <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportSpellsFromTag}" />
-                  <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportTickers}" />
-                </MenuItem>
+                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{DynamicResource Data_ImportToTag}" />
+                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{DynamicResource Data_ExportFromTag}" />
               </ContextMenu>
             </StackPanel.ContextMenu>
 
@@ -362,14 +357,8 @@
                   <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                   <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 </MenuItem>
-                <MenuItem Header="{StaticResource Data_Import}">
-                  <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding ImportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                </MenuItem>
-                <MenuItem Header="{StaticResource Data_Export}">
-                  <MenuItem Header="{StaticResource Common_Spell}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                  <MenuItem Header="{StaticResource Common_Ticker}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                </MenuItem>
+                <Separator />
+                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportCommand, Mode=OneWay}" CommandParameter="{Binding}" />
               </ContextMenu>
             </TreeView.ContextMenu>
           </TreeView>
@@ -397,8 +386,8 @@
                 <MenuItem Header="{StaticResource Common_CreateNewSpellPanel}" Command="{Binding CreateNewSpellPanelCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <MenuItem Header="{StaticResource Common_CreateNewSpell}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <Separator />
-                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportSpellsCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" />
               </ContextMenu>
             </TreeView.ContextMenu>
           </TreeView>
@@ -426,8 +415,8 @@
               <ContextMenu>
                 <MenuItem Header="{StaticResource Common_CreateNewTicker}" Command="{Binding CreateNewTickerCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <Separator />
-                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
-                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportTickersCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportCommand, Mode=OneWay}" CommandParameter="{Binding}" />
+                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" />
               </ContextMenu>
             </TreeView.ContextMenu>
           </TreeView>
