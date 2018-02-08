@@ -114,7 +114,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 new SortDescription()
                 {
                     PropertyName = nameof(SpellPanel.SortPriority),
-                    Direction = ListSortDirection.Descending,
+                    Direction = ListSortDirection.Ascending,
                 },
                 new SortDescription()
                 {
@@ -348,7 +348,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 new SortDescription()
                 {
                     PropertyName = "Tag.SortPriority",
-                    Direction = ListSortDirection.Descending
+                    Direction = ListSortDirection.Ascending
                 },
                 new SortDescription()
                 {

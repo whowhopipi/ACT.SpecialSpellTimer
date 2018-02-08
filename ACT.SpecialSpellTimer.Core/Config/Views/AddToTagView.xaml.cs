@@ -153,7 +153,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 new SortDescription()
                 {
                     PropertyName = nameof(SpellPanel.SortPriority),
-                    Direction = ListSortDirection.Descending,
+                    Direction = ListSortDirection.Ascending,
                 },
                 new SortDescription()
                 {

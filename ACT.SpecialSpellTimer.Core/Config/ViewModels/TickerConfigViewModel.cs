@@ -317,7 +317,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 new SortDescription()
                 {
                     PropertyName = "Tag.SortPriority",
-                    Direction = ListSortDirection.Descending
+                    Direction = ListSortDirection.Ascending
                 },
                 new SortDescription()
                 {

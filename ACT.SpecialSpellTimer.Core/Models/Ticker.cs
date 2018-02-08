@@ -106,7 +106,21 @@ namespace ACT.SpecialSpellTimer.Models
             this.delayedSoundTimer.Elapsed += this.DelayedSoundTimer_Elapsed;
         }
 
-        public Guid Guid { get; set; } = Guid.NewGuid();
+        private long id;
+
+        public long ID
+        {
+            get => this.id;
+            set => this.SetProperty(ref this.id, value);
+        }
+
+        private Guid guid = Guid.NewGuid();
+
+        public Guid Guid
+        {
+            get => this.guid;
+            set => this.SetProperty(ref this.guid, value);
+        }
 
         private double left = 0;
         private double top = 0;
@@ -144,8 +158,6 @@ namespace ACT.SpecialSpellTimer.Models
             get => this.isTest;
             set => this.SetProperty(ref this.isTest, value);
         }
-
-        public long ID { get; set; }
 
         private string title;
 

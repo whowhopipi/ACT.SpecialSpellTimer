@@ -303,7 +303,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 var tags =
                     from x in TagTable.Instance.Tags
                     orderby
-                    x.SortPriority descending,
+                    x.SortPriority ascending,
                     x.Name
                     select
                     x;
@@ -338,7 +338,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 var panels =
                     from x in SpellPanelTable.Instance.Table
                     orderby
-                    x.SortPriority descending,
+                    x.SortPriority ascending,
                     x.PanelName
                     select
                     x;

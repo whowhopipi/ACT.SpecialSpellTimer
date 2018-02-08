@@ -61,7 +61,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
             var q =
                 from x in TagTable.Instance.Tags
                 orderby
-                x.SortPriority descending,
+                x.SortPriority ascending,
                 x.Name ascending
                 select
                 x;

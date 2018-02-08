@@ -146,6 +146,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         {
                             PanelName = "New Panel",
                             SortOrder = SpellOrders.SortRecastTimeASC,
+                            Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2,
+                            Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2,
                         };
 
                         SpellPanelTable.Instance.Table.Add(newPanel);
@@ -221,7 +223,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             !x.IsInstance &&
                             x.PanelID == currentPanel.ID
                             orderby
-                            x.SortPriority descending,
+                            x.SortPriority ascending,
                             x.ID descending
                             select
                             x).FirstOrDefault();
@@ -264,7 +266,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                                 !x.IsInstance &&
                                 x.PanelID == currentPanel.ID
                                 orderby
-                                x.SortPriority descending,
+                                x.SortPriority ascending,
                                 x.ID descending
                                 select
                                 x).FirstOrDefault();
@@ -314,6 +316,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                     case ItemTypes.TickersRoot:
                     case ItemTypes.TagsRoot:
                         newTicker = Ticker.CreateNew();
+                        newTicker.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2;
+                        newTicker.Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2;
                         TickerTable.Instance.Table.Add(newTicker);
                         break;
 

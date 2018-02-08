@@ -153,7 +153,21 @@ namespace ACT.SpecialSpellTimer.Models
             this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
         }
 
-        public Guid Guid { get; set; } = Guid.NewGuid();
+        private long id;
+
+        public long ID
+        {
+            get => this.id;
+            set => this.SetProperty(ref id, value);
+        }
+
+        private Guid guid = Guid.Empty;
+
+        public Guid Guid
+        {
+            get => this.guid;
+            set => this.SetProperty(ref this.guid, value);
+        }
 
         private Guid panelID = Guid.Empty;
 
@@ -295,6 +309,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         public string BarColor { get; set; }
+
         public string BarOutlineColor { get; set; }
 
         public string BackgroundColor { get; set; }
@@ -304,7 +319,13 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public DateTime CompleteScheduledTime { get; set; }
 
-        public long DisplayNo { get; set; }
+        private long displayNo;
+
+        public long DisplayNo
+        {
+            get => this.displayNo;
+            set => this.SetProperty(ref this.displayNo, value);
+        }
 
         private bool dontHide;
 
@@ -331,8 +352,6 @@ namespace ACT.SpecialSpellTimer.Models
             get => this.hideCounter;
             set => this.SetProperty(ref this.hideCounter, value);
         }
-
-        public long ID { get; set; }
 
         /// <summary>インスタンス化されたスペルか？</summary>
         [XmlIgnore]

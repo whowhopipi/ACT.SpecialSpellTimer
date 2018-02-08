@@ -201,7 +201,7 @@ namespace ACT.SpecialSpellTimer.Models
                 new SortDescription()
                 {
                     PropertyName = nameof(ITreeItem.SortPriority),
-                    Direction = ListSortDirection.Descending,
+                    Direction = ListSortDirection.Ascending,
                 },
                 new SortDescription()
                 {
