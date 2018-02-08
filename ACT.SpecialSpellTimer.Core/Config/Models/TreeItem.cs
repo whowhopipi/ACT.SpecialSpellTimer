@@ -760,25 +760,27 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
 
                 var exports = new ExportContainer();
+                var name = string.Empty;
 
                 switch (item.ItemType)
                 {
                     case ItemTypes.SpellsRoot:
-                        SaveFileDialog.FileName = "MySpells.xml";
+                        SaveFileDialog.FileName = "Spells.xml";
                         exports.Panels.AddRange(SpellPanelTable.Instance.Table);
                         exports.Spells.AddRange(SpellTable.Instance.Table.Where(x => !x.IsInstance));
                         break;
 
                     case ItemTypes.TickersRoot:
-                        SaveFileDialog.FileName = "MyTickers.xml";
+                        SaveFileDialog.FileName = "Tickers.xml";
                         exports.Tickers.AddRange(TickerTable.Instance.Table);
                         break;
 
                     case ItemTypes.TagsRoot:
-                        break;
+                        return;
 
                     case ItemTypes.SpellPanel:
-                        SaveFileDialog.FileName = "MySpells.xml";
+                        name = (item as SpellPanel).PanelName;
+                        SaveFileDialog.FileName = $"{name}.spellpanel.xml";
                         exports.Panels.Add(item as SpellPanel);
                         foreach (Spell spell in (item as SpellPanel).Children)
                         {
@@ -791,17 +793,20 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         break;
 
                     case ItemTypes.Spell:
-                        SaveFileDialog.FileName = "MySpells.xml";
+                        name = (item as Spell).SpellTitle;
+                        SaveFileDialog.FileName = $"{name}.spell.xml";
                         exports.Spells.Add(item as Spell);
                         break;
 
                     case ItemTypes.Ticker:
-                        SaveFileDialog.FileName = "MyTickers.xml";
+                        name = (item as Ticker).Title;
+                        SaveFileDialog.FileName = $"{name}.ticker.xml";
                         exports.Tickers.Add(item as Ticker);
                         break;
 
                     case ItemTypes.Tag:
-                        SaveFileDialog.FileName = "MyTag.xml";
+                        name = (item as Tag).Name;
+                        SaveFileDialog.FileName = $"{name}.tag.xml";
                         ExportTag(exports, item as Tag);
                         break;
 
