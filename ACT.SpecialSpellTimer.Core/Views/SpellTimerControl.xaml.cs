@@ -104,27 +104,30 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // リキャスト時間を描画する
-            var tb = this.RecastTimeTextBlock;
-            var recast = this.RecastTime > 0 ?
-                this.RecastTime.ToString(RecastTimeFormat) :
-                this.Spell.IsReverse ? Settings.Default.OverText : Settings.Default.ReadyText;
-
-            if (tb.Text != recast) tb.Text = recast;
-            tb.SetFontInfo(this.Spell.Font);
-            tb.SetAutoStrokeThickness();
-
-            var fill = this.FontBrush;
-            var stroke = this.FontOutlineBrush;
-
-            if (this.Spell.ChangeFontColorsWhenWarning &&
-                this.RecastTime < this.Spell.WarningTime)
+            if (!this.Spell.HideCounter)
             {
-                fill = this.WarningFontBrush;
-                stroke = this.WarningFontOutlineBrush;
-            }
+                var tb = this.RecastTimeTextBlock;
+                var recast = this.RecastTime > 0 ?
+                    this.RecastTime.ToString(RecastTimeFormat) :
+                    this.Spell.IsReverse ? Settings.Default.OverText : Settings.Default.ReadyText;
 
-            if (tb.Fill != fill) tb.Fill = fill;
-            if (tb.Stroke != stroke) tb.Stroke = stroke;
+                if (tb.Text != recast) tb.Text = recast;
+                tb.SetFontInfo(this.Spell.Font);
+                tb.SetAutoStrokeThickness();
+
+                var fill = this.FontBrush;
+                var stroke = this.FontOutlineBrush;
+
+                if (this.Spell.ChangeFontColorsWhenWarning &&
+                    this.RecastTime < this.Spell.WarningTime)
+                {
+                    fill = this.WarningFontBrush;
+                    stroke = this.WarningFontOutlineBrush;
+                }
+
+                if (tb.Fill != fill) tb.Fill = fill;
+                if (tb.Stroke != stroke) tb.Stroke = stroke;
+            }
         }
 
         /// <summary>
@@ -209,15 +212,24 @@ namespace ACT.SpecialSpellTimer.Views
                 Visibility.Collapsed :
                 Visibility.Visible;
 
-            if (this.Spell.OverlapRecastTime)
+            // スペルカウンタの表示及び表示位置を切り替える
+            if (!this.Spell.HideCounter)
             {
-                this.RecastTimePanelOnIcon.Visibility = Visibility.Visible;
-                this.RecastTimePanel.Visibility = Visibility.Collapsed;
+                if (this.Spell.OverlapRecastTime)
+                {
+                    this.RecastTimePanelOnIcon.Visibility = Visibility.Visible;
+                    this.RecastTimePanel.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    this.RecastTimePanelOnIcon.Visibility = Visibility.Collapsed;
+                    this.RecastTimePanel.Visibility = Visibility.Visible;
+                }
             }
             else
             {
                 this.RecastTimePanelOnIcon.Visibility = Visibility.Collapsed;
-                this.RecastTimePanel.Visibility = Visibility.Visible;
+                this.RecastTimePanel.Visibility = Visibility.Collapsed;
             }
 
             // ProgressBarを描画する

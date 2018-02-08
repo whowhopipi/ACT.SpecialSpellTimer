@@ -100,6 +100,7 @@
   <system:String x:Key="Spell_BlinkTime">secounds, start blink it is less than.</system:String>
   <system:String x:Key="Spell_BlinkIcon">Blink icon</system:String>
   <system:String x:Key="Spell_BlinkBar">Blink progress bar</system:String>
+  <system:String x:Key="Spell_HideCounter">Hide recast time</system:String>
   <system:String x:Key="Spell_NoticeOnMatch">Notice when log matches</system:String>
   <system:String x:Key="Spell_NoticeOnOver">Notice when log matches, after N seconds</system:String>
   <system:String x:Key="Spell_NoticeOnBefore">Notice when log matches, after N seconds</system:String>

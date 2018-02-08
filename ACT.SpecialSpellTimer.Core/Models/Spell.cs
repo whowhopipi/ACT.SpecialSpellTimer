@@ -246,19 +246,30 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public bool ProgressBarVisible { get; set; } = true;
 
-        public int BackgroundAlpha { get; set; }
+        public FontInfo Font { get; set; } = FontInfo.DefaultFont;
 
-        public string BackgroundColor { get; set; }
+        public string FontColor { get; set; }
 
-        public string BarColor { get; set; }
+        public string FontOutlineColor { get; set; }
 
-        public int BarHeight { get; set; }
+        public bool ChangeFontColorsWhenWarning { get; set; }
 
-        public string BarOutlineColor { get; set; }
+        public string WarningFontColor { get; set; }
+
+        public string WarningFontOutlineColor { get; set; }
+
+        public double WarningTime { get; set; } = 0;
 
         public int BarWidth { get; set; }
 
-        public bool ChangeFontColorsWhenWarning { get; set; }
+        public int BarHeight { get; set; }
+
+        public string BarColor { get; set; }
+        public string BarOutlineColor { get; set; }
+
+        public string BackgroundColor { get; set; }
+
+        public int BackgroundAlpha { get; set; }
 
         [XmlIgnore]
         public DateTime CompleteScheduledTime { get; set; }
@@ -269,13 +280,10 @@ namespace ACT.SpecialSpellTimer.Models
 
         public bool ExtendBeyondOriginalRecastTime { get; set; }
 
-        public FontInfo Font { get; set; } = FontInfo.DefaultFont;
-
-        public string FontColor { get; set; }
-
-        public string FontOutlineColor { get; set; }
-
         public bool HideSpellName { get; set; }
+
+        public bool HideCounter { get; set; } = false;
+
         public long ID { get; set; }
 
         /// <summary>インスタンス化されたスペルか？</summary>
@@ -322,6 +330,7 @@ namespace ACT.SpecialSpellTimer.Models
         public string TargetName { get; set; }
 
         public Guid[] TimersMustRunningForStart { get; set; }
+
         public Guid[] TimersMustStoppingForStart { get; set; }
 
         public bool TimeupHide { get; set; }
@@ -331,12 +340,11 @@ namespace ACT.SpecialSpellTimer.Models
         public bool ToInstance { get; set; }
 
         public double UpperLimitOfExtension { get; set; } = 0;
-        public string WarningFontColor { get; set; }
 
-        public string WarningFontOutlineColor { get; set; }
-        public double WarningTime { get; set; } = 0;
         public double BlinkTime { get; set; } = 0;
+
         public bool BlinkIcon { get; set; } = false;
+
         public bool BlinkBar { get; set; } = false;
 
         #region Sequential TTS
