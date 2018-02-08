@@ -244,7 +244,13 @@ namespace ACT.SpecialSpellTimer.Models
         /// 昔の名残で項目名と異なる動作になっている。
         /// プログレスバーの表示／非表示ではなく、スペル全体の表示／非表示を司る重要な項目として動作している
         /// </summary>
-        public bool ProgressBarVisible { get; set; } = true;
+        private bool progressBarVisible = true;
+
+        public bool ProgressBarVisible
+        {
+            get => this.progressBarVisible;
+            set => this.SetProperty(ref this.progressBarVisible, value);
+        }
 
         public FontInfo Font { get; set; } = FontInfo.DefaultFont;
 
@@ -252,17 +258,41 @@ namespace ACT.SpecialSpellTimer.Models
 
         public string FontOutlineColor { get; set; }
 
-        public bool ChangeFontColorsWhenWarning { get; set; }
+        private double warningTime = 0;
+
+        public double WarningTime
+        {
+            get => this.warningTime;
+            set => this.SetProperty(ref this.warningTime, value);
+        }
+
+        private bool changeFontColorsWhenWarning;
+
+        public bool ChangeFontColorsWhenWarning
+        {
+            get => this.changeFontColorsWhenWarning;
+            set => this.SetProperty(ref this.changeFontColorsWhenWarning, value);
+        }
 
         public string WarningFontColor { get; set; }
 
         public string WarningFontOutlineColor { get; set; }
 
-        public double WarningTime { get; set; } = 0;
+        private int barWidth;
 
-        public int BarWidth { get; set; }
+        public int BarWidth
+        {
+            get => this.barWidth;
+            set => this.SetProperty(ref this.barWidth, value);
+        }
 
-        public int BarHeight { get; set; }
+        private int barHeight;
+
+        public int BarHeight
+        {
+            get => this.barHeight;
+            set => this.SetProperty(ref this.barHeight, value);
+        }
 
         public string BarColor { get; set; }
         public string BarOutlineColor { get; set; }
@@ -276,13 +306,31 @@ namespace ACT.SpecialSpellTimer.Models
 
         public long DisplayNo { get; set; }
 
-        public bool DontHide { get; set; }
+        private bool dontHide;
+
+        public bool DontHide
+        {
+            get => this.dontHide;
+            set => this.SetProperty(ref this.dontHide, value);
+        }
 
         public bool ExtendBeyondOriginalRecastTime { get; set; }
 
-        public bool HideSpellName { get; set; }
+        private bool hideSpellName;
 
-        public bool HideCounter { get; set; } = false;
+        public bool HideSpellName
+        {
+            get => this.hideSpellName;
+            set => this.SetProperty(ref this.hideSpellName, value);
+        }
+
+        private bool hideCounter;
+
+        public bool HideCounter
+        {
+            get => this.hideCounter;
+            set => this.SetProperty(ref this.hideCounter, value);
+        }
 
         public long ID { get; set; }
 
@@ -290,18 +338,38 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public bool IsInstance { get; set; }
 
-        public bool IsReverse { get; set; }
+        private bool isReverse;
+
+        public bool IsReverse
+        {
+            get => this.isReverse;
+            set => this.SetProperty(ref this.isReverse, value);
+        }
 
         public DateTime MatchDateTime { get; set; }
 
         [XmlIgnore]
         public string MatchedLog { get; set; }
 
-        public bool OverlapRecastTime { get; set; }
+        private bool overlapRecastTime;
+
+        public bool OverlapRecastTime
+        {
+            get => this.overlapRecastTime;
+            set => this.SetProperty(ref this.overlapRecastTime, value);
+        }
+
         public double RecastTime { get; set; } = 0;
         public double RecastTimeExtending1 { get; set; } = 0;
         public double RecastTimeExtending2 { get; set; } = 0;
-        public bool ReduceIconBrightness { get; set; }
+
+        private bool reduceIconBrightness;
+
+        public bool ReduceIconBrightness
+        {
+            get => this.reduceIconBrightness;
+            set => this.SetProperty(ref this.reduceIconBrightness, value);
+        }
 
         private string spellIcon;
 
@@ -323,7 +391,13 @@ namespace ACT.SpecialSpellTimer.Models
             string.Empty :
             IconController.Instance.GetIconFile(this.SpellIcon)?.FullPath;
 
-        public int SpellIconSize { get; set; } = 24;
+        private int spellIconSize = 24;
+
+        public int SpellIconSize
+        {
+            get => this.spellIconSize;
+            set => this.SetProperty(ref this.spellIconSize, value);
+        }
 
         /// <summary>スペルが作用した対象</summary>
         [XmlIgnore]

@@ -84,6 +84,10 @@
   <system:String x:Key="SpellPanel_SortOrdersSortMatchTime">Order by matched time.</system:String>
   <system:String x:Key="SpellPanel_SortOrdersFixed">Fixed layout</system:String>
 
+  <system:String x:Key="SpellPanel_VisualWarning1">* ATTENTION *</system:String>
+  <system:String x:Key="SpellPanel_VisualWarning2">Update visual config to all spells under this panel.</system:String>
+  <system:String x:Key="SpellPanel_VisualWarning3">Please carefully check spells to be updated.</system:String>
+
   <system:String x:Key="Spell_Name">Spell name</system:String>
   <system:String x:Key="Spell_ToInstance">When being different in a spell name (indication text), I become an instance.</system:String>
   <system:String x:Key="Spell_SortPriority">Priority of display</system:String>

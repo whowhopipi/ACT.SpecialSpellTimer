@@ -10,7 +10,7 @@ using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config.ViewModels
 {
-    public class SpellPanelConfigViewModel :
+    public partial class SpellPanelConfigViewModel :
         BindableBase
     {
         public SpellPanelConfigViewModel() : this(new SpellPanel())
@@ -34,6 +34,8 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 {
                     this.SetupTagsSource();
                 }
+
+                this.RefreshFirstSpell();
             }
         }
 

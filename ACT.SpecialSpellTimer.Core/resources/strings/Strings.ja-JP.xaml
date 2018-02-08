@@ -84,6 +84,10 @@
   <system:String x:Key="SpellPanel_SortOrdersSortMatchTime">マッチした時間を最優先にする</system:String>
   <system:String x:Key="SpellPanel_SortOrdersFixed">固定配置（表示順でソートし間を詰めない）</system:String>
 
+  <system:String x:Key="SpellPanel_VisualWarning1">* 注意 *</system:String>
+  <system:String x:Key="SpellPanel_VisualWarning2">スペルパネル配下のスペルの見た目を一斉に設定する機能です。</system:String>
+  <system:String x:Key="SpellPanel_VisualWarning3">更新対象のスペルを確認の上、使用してください。</system:String>
+
   <system:String x:Key="Spell_Name">スペルの名前</system:String>
   <system:String x:Key="Spell_ToInstance">動的に設定されたスペル名が異なるときにインスタンス化する</system:String>
   <system:String x:Key="Spell_SortPriority">表示の優先順位</system:String>
