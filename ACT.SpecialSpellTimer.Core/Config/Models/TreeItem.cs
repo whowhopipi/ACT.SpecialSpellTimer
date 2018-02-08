@@ -156,6 +156,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         newPanel = currentPanel.MemberwiseClone() as SpellPanel;
                         newPanel.ID = Guid.NewGuid();
                         newPanel.PanelName += " New";
+                        newPanel.SortPriority = 0;
                         newPanel.SetupChildrenSource();
                         SpellPanelTable.Instance.Table.Add(newPanel);
 
