@@ -13,6 +13,7 @@
   xmlns:resources="clr-namespace:ACT.SpecialSpellTimer.resources"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
+  xmlns:cnv="clr-namespace:ACT.SpecialSpellTimer.Config.Converters"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
   d:DataContext="{d:DesignInstance Type=local:CopyConfigView}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -155,26 +156,284 @@
 
         <!-- Copy先 -->
         <Grid Grid.Column="1">
+          <Grid.Resources>
+            <!-- 切替タブのアイコンサイズ -->
+            <system:Double x:Key="TabIconSize">20</system:Double>
+
+            <Style TargetType="TreeViewItem">
+              <Setter Property="Padding" Value="5 1 5 1" />
+            </Style>
+
+            <Style TargetType="Button">
+              <Setter Property="IsTabStop" Value="False" />
+            </Style>
+
+            <!-- スペルパネルのテンプレ -->
+            <HierarchicalDataTemplate
+              DataType="{x:Type triggerModel:SpellPanel}"
+              ItemsSource="{Binding Children, Mode=OneWay}">
+
+              <HierarchicalDataTemplate.Resources>
+                <Style TargetType="TextBlock">
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+
+                <Style TargetType="CheckBox">
+                  <EventSetter Event="Checked" Handler="CheckBox_Checked" />
+                  <EventSetter Event="Unchecked" Handler="CheckBox_Unchecked" />
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                  <Setter Property="VerticalContentAlignment" Value="Center" />
+                  <Setter Property="IsTabStop" Value="False" />
+                  <Setter Property="Margin" Value="0 0 5 0" />
+                </Style>
+
+                <Style TargetType="fa:ImageAwesome">
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                  <Setter Property="Height" Value="17" />
+                  <Setter Property="Width" Value="17" />
+                  <Setter Property="Margin" Value="0 0 4 0" />
+                  <Setter Property="Foreground" Value="DarkViolet" />
+                </Style>
+              </HierarchicalDataTemplate.Resources>
+
+              <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+                <fa:ImageAwesome Icon="ThList" />
+                <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
+              </StackPanel>
+            </HierarchicalDataTemplate>
+            <!-- スペルパネルのテンプレ end -->
+
+            <!-- スペルのテンプレ -->
+            <HierarchicalDataTemplate
+              DataType="{x:Type triggerModel:Spell}"
+              ItemsSource="{Binding Children, Mode=OneWay}">
+
+              <HierarchicalDataTemplate.Resources>
+                <Style TargetType="TextBlock">
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+
+                <Style TargetType="CheckBox">
+                  <EventSetter Event="Checked" Handler="CheckBox_Checked" />
+                  <EventSetter Event="Unchecked" Handler="CheckBox_Unchecked" />
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                  <Setter Property="VerticalContentAlignment" Value="Center" />
+                  <Setter Property="IsTabStop" Value="False" />
+                  <Setter Property="Margin" Value="0 0 5 0" />
+                </Style>
+
+                <Style TargetType="fa:ImageAwesome">
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                  <Setter Property="Height" Value="17" />
+                  <Setter Property="Width" Value="17" />
+                  <Setter Property="Margin" Value="0 0 4 0" />
+                  <Setter Property="Foreground" Value="MediumBlue" />
+                </Style>
+              </HierarchicalDataTemplate.Resources>
+
+              <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+                <fa:ImageAwesome Icon="Magic" />
+                <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
+              </StackPanel>
+            </HierarchicalDataTemplate>
+            <!-- スペルのテンプレ end -->
+
+            <!-- テロップのテンプレ -->
+            <HierarchicalDataTemplate
+              DataType="{x:Type triggerModel:Ticker}"
+              ItemsSource="{Binding Children, Mode=OneWay}">
+
+              <HierarchicalDataTemplate.Resources>
+                <Style TargetType="TextBlock">
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+
+                <Style TargetType="CheckBox">
+                  <EventSetter Event="Checked" Handler="CheckBox_Checked" />
+                  <EventSetter Event="Unchecked" Handler="CheckBox_Unchecked" />
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                  <Setter Property="VerticalContentAlignment" Value="Center" />
+                  <Setter Property="IsTabStop" Value="False" />
+                  <Setter Property="Margin" Value="0 0 5 0" />
+                </Style>
+
+                <Style TargetType="fa:ImageAwesome">
+                  <Setter Property="VerticalAlignment" Value="Center" />
+                  <Setter Property="Height" Value="17" />
+                  <Setter Property="Width" Value="17" />
+                  <Setter Property="Margin" Value="0 0 4 0" />
+                  <Setter Property="Foreground" Value="OliveDrab" />
+                </Style>
+              </HierarchicalDataTemplate.Resources>
+
+              <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+                <fa:ImageAwesome Icon="Comment" />
+                <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
+              </StackPanel>
+            </HierarchicalDataTemplate>
+            <!-- テロップのテンプレ end -->
+          </Grid.Resources>
+
           <Label Content="{DynamicResource Copy_Destination}" FontSize="18" />
-          <ListView
-            BorderThickness="0"
+
+          <!-- ●ツリー切替タブ -->
+          <TabControl
+            x:Name="DestinationTab"
             Margin="15 28 6 0"
-            VirtualizingPanel.IsVirtualizing="True"
-            VirtualizingPanel.VirtualizationMode="Recycling"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ItemsSource="{Binding Dests, Mode=OneWay}">
-            <ListView.ItemContainerStyle>
-              <Style TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-              </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-              <DataTemplate>
-                <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
-              </DataTemplate>
-            </ListView.ItemTemplate>
-          </ListView>
+            MinWidth="420"
+            Padding="0"
+            TabStripPlacement="Left">
+
+            <!-- タグで管理タブ(スペル用) -->
+            <TabItem x:Name="TagSpellTab" Height="60" Visibility="{Binding IsSpell, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+              <TabItem.Header>
+                <fa:ImageAwesome Icon="Tag" Height="{StaticResource TabIconSize}" Foreground="Orange" />
+              </TabItem.Header>
+
+              <!-- タグツリー(スペル用) -->
+              <TreeView
+                Visibility="{Binding IsSpell, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
+                BorderThickness="0"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                ItemsSource="{Binding Tags, Mode=OneWay}">
+                <TreeView.Resources>
+                  <!-- タグのテンプレ -->
+                  <HierarchicalDataTemplate
+                    DataType="{x:Type triggerModel:Tag}"
+                    ItemsSource="{Binding SpellPanels, Mode=OneWay}">
+
+                    <HierarchicalDataTemplate.Resources>
+                      <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                      </Style>
+
+                      <Style TargetType="CheckBox">
+                        <EventSetter Event="Checked" Handler="CheckBox_Checked" />
+                        <EventSetter Event="Unchecked" Handler="CheckBox_Unchecked" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="IsTabStop" Value="False" />
+                        <Setter Property="Margin" Value="0 0 5 0" />
+                      </Style>
+
+                      <Style TargetType="fa:ImageAwesome">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Height" Value="17" />
+                        <Setter Property="Width" Value="17" />
+                        <Setter Property="Margin" Value="0 0 4 0" />
+                        <Setter Property="Foreground" Value="Orange" />
+                      </Style>
+                    </HierarchicalDataTemplate.Resources>
+
+                    <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+                      <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+                      <fa:ImageAwesome Icon="Tag" />
+                      <TextBlock Text="{Binding Name, Mode=OneWay}" />
+                    </StackPanel>
+                  </HierarchicalDataTemplate>
+                  <!-- タグのテンプレ end -->
+                </TreeView.Resources>
+              </TreeView>
+            </TabItem>
+            <!-- タグで管理タブ end -->
+
+            <!-- タグで管理タブ(テロップ用用) -->
+            <TabItem x:Name="TagTickerTab" Height="60" Visibility="{Binding IsTicker, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+              <TabItem.Header>
+                <fa:ImageAwesome Icon="Tag" Height="{StaticResource TabIconSize}" Foreground="Orange" />
+              </TabItem.Header>
+
+              <!-- タグツリー(スペル用) -->
+              <TreeView
+                Visibility="{Binding IsTicker, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
+                BorderThickness="0"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                ItemsSource="{Binding Tags, Mode=OneWay}">
+                <TreeView.Resources>
+                  <!-- タグのテンプレ -->
+                  <HierarchicalDataTemplate
+                    DataType="{x:Type triggerModel:Tag}"
+                    ItemsSource="{Binding Tickers, Mode=OneWay}">
+
+                    <HierarchicalDataTemplate.Resources>
+                      <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                      </Style>
+
+                      <Style TargetType="CheckBox">
+                        <EventSetter Event="Checked" Handler="CheckBox_Checked" />
+                        <EventSetter Event="Unchecked" Handler="CheckBox_Unchecked" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="IsTabStop" Value="False" />
+                        <Setter Property="Margin" Value="0 0 5 0" />
+                      </Style>
+
+                      <Style TargetType="fa:ImageAwesome">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Height" Value="17" />
+                        <Setter Property="Width" Value="17" />
+                        <Setter Property="Margin" Value="0 0 4 0" />
+                        <Setter Property="Foreground" Value="Orange" />
+                      </Style>
+                    </HierarchicalDataTemplate.Resources>
+
+                    <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+                      <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+                      <fa:ImageAwesome Icon="Tag" />
+                      <TextBlock Text="{Binding Name, Mode=OneWay}" />
+                    </StackPanel>
+                  </HierarchicalDataTemplate>
+                  <!-- タグのテンプレ end -->
+                </TreeView.Resources>
+              </TreeView>
+            </TabItem>
+            <!-- タグで管理タブ end -->
+
+            <!-- すべてのスペルタブ -->
+            <TabItem Height="60" Visibility="{Binding IsSpell, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+              <TabItem.Header>
+                <fa:ImageAwesome Icon="Magic" Height="{StaticResource TabIconSize}" Foreground="MediumBlue" />
+              </TabItem.Header>
+
+              <!-- スペルツリー -->
+              <TreeView
+                Visibility="{Binding IsSpell, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
+                Name="SpellsTreeView"
+                BorderThickness="0"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                ItemsSource="{Binding Spells, Mode=OneWay}">
+              </TreeView>
+              <!-- スペルツリー end -->
+            </TabItem>
+            <!-- すべてのスペルタブ end -->
+
+            <!-- すべてのテロップタブ -->
+            <TabItem Height="60" Visibility="{Binding IsTicker, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+              <TabItem.Header>
+                <fa:ImageAwesome Icon="Comment" Height="{StaticResource TabIconSize}" Foreground="OliveDrab" />
+              </TabItem.Header>
+
+              <!-- テロップツリー -->
+              <TreeView
+                Visibility="{Binding IsTicker, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
+                Name="TickersTreeView"
+                BorderThickness="0"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                ItemsSource="{Binding Tickers, Mode=OneWay}">
+              </TreeView>
+              <!-- テロップツリー end -->
+            </TabItem>
+            <!-- すべてのテロップタブ end -->
+          </TabControl>
+          <!-- ●ツリー切替タブ end -->
         </Grid>
         <!-- Copy先 end -->
       </Grid>

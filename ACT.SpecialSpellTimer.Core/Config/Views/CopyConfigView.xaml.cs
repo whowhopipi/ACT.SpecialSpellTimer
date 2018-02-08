@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Config.Models;
@@ -51,9 +49,24 @@ namespace ACT.SpecialSpellTimer.Config.Views
             };
 
             this.ApplyButton.Click += this.ApplyButton_Click;
+
+            this.SetupTreeSource();
+
+            this.RaisePropertyChanged(nameof(this.IsSpell));
+            this.RaisePropertyChanged(nameof(this.IsTicker));
+
+            if (this.IsSpell)
+            {
+                this.DestinationTab.SelectedItem = this.TagSpellTab;
+            }
+
+            if (this.IsTicker)
+            {
+                this.DestinationTab.SelectedItem = this.TagTickerTab;
+            }
         }
 
-        private async void ApplyButton_Click(
+        private void ApplyButton_Click(
             object sender,
             RoutedEventArgs e)
         {
@@ -95,31 +108,89 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 ifdo(this.CopyY, () => d.Top = s.Top);
             }
 
-            await Task.Run(() =>
+            if (this.IsSpell)
             {
-                foreach (var dest in this.Dests.Where(x => x.ToCopy))
+                var src = this.SourceConfig as Spell;
+
+                foreach (var item in this.Spells)
                 {
-                    if (this.IsSpell)
+                    switch (item)
                     {
-                        var src = this.SourceConfig as Spell;
-                        var d = dest.Item as Spell;
-                        copySpell(d, src);
+                        case SpellPanel panel:
+                            foreach (Spell spell in panel.Children)
+                            {
+                                if (spell.IsChecked)
+                                {
+                                    copySpell(spell, src);
+                                }
+                            }
+                            break;
+
+                        case Spell spell:
+                            if (spell.IsChecked)
+                            {
+                                copySpell(spell, src);
+                            }
+                            break;
                     }
 
-                    if (this.IsTicker)
-                    {
-                        var src = this.SourceConfig as Ticker;
-                        var d = dest.Item as Ticker;
-                        copyTicker(d, src);
-                    }
+                    (item as ITreeItem).IsChecked = false;
                 }
-            });
+            }
+
+            if (this.IsTicker)
+            {
+                var src = this.SourceConfig as Ticker;
+
+                foreach (var item in this.Tickers)
+                {
+                    if (item is Ticker ticker)
+                    {
+                        if (ticker.IsChecked)
+                        {
+                            copyTicker(ticker, src);
+                        }
+                    }
+
+                    (item as ITreeItem).IsChecked = false;
+                }
+            }
+
+            this.Close();
 
             ModernMessageBox.ShowDialog(
                 "Done!",
                 "ACT.Hojoring");
+        }
 
-            this.Close();
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var data = (e.Source as CheckBox)?.DataContext;
+            if (data is ITreeItem item)
+            {
+                if (item.Children != null)
+                {
+                    foreach (ITreeItem child in item.Children)
+                    {
+                        child.IsChecked = true;
+                    }
+                }
+            }
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var data = (e.Source as CheckBox)?.DataContext;
+            if (data is ITreeItem item)
+            {
+                if (item.Children != null)
+                {
+                    foreach (ITreeItem child in item.Children)
+                    {
+                        child.IsChecked = false;
+                    }
+                }
+            }
         }
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);
@@ -173,26 +244,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
         };
 
         public ICollectionView Spells => this.spellsSource.View;
+
         public ICollectionView Tickers => this.tickersSource.View;
+
         public ICollectionView Tags => this.tagsSource.View;
 
         private void SetupTreeSource()
         {
-            this.tagsSource.Filter += (x, y) =>
-            {
-                switch (y.Item)
-                {
-                    case SpellPanel p:
-                    case Spell s:
-                        y.Accepted = this.IsSpell;
-                        break;
-
-                    case Ticker t:
-                        y.Accepted = this.IsTicker;
-                        break;
-                }
-            };
-
             this.spellsSource.SortDescriptions.AddRange(new[]
             {
                 new SortDescription()
@@ -302,39 +360,5 @@ namespace ACT.SpecialSpellTimer.Config.Views
         }
 
         #endregion INotifyPropertyChanged
-
-        public class Dest
-        {
-            public bool ToCopy { get; set; }
-
-            public string Text
-            {
-                get
-                {
-                    var text = string.Empty;
-
-                    switch (this.Item)
-                    {
-                        case SpellPanel p:
-                            text = p.PanelName;
-                            break;
-
-                        case Spell s:
-                            text = s.Panel?.PanelName + " - " + s.SpellTitle;
-                            break;
-
-                        case Ticker t:
-                            text = t.Title;
-                            break;
-                    }
-
-                    return text;
-                }
-            }
-
-            public ITreeItem Item { get; set; }
-
-            public override string ToString() => this.Text;
-        }
     }
 }

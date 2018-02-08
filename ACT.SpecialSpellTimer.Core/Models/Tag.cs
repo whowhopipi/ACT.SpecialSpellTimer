@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -142,6 +143,42 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public override ICollectionView Children => this.childrenSource?.View;
 
+        [XmlIgnore]
+        public IReadOnlyList<SpellPanel> SpellPanels
+        {
+            get
+            {
+                var list = new List<SpellPanel>();
+                foreach (var item in this.Children)
+                {
+                    if (item is SpellPanel panel)
+                    {
+                        list.Add(panel);
+                    }
+                }
+
+                return list;
+            }
+        }
+
+        [XmlIgnore]
+        public IReadOnlyList<Ticker> Tickers
+        {
+            get
+            {
+                var list = new List<Ticker>();
+                foreach (var item in this.Children)
+                {
+                    if (item is Ticker ticker)
+                    {
+                        list.Add(ticker);
+                    }
+                }
+
+                return list;
+            }
+        }
+
         private ObservableCollection<ITreeItem> children;
         private CollectionViewSource childrenSource;
 
@@ -173,6 +210,7 @@ namespace ACT.SpecialSpellTimer.Models
                 },
             });
 
+            TagTable.Instance.ItemTags.CollectionChanged -= this.ItemTagsOnCollectionChanged;
             TagTable.Instance.ItemTags.CollectionChanged += this.ItemTagsOnCollectionChanged;
         }
 
