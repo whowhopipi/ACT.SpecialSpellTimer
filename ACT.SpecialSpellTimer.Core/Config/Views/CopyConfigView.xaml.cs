@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Models;
@@ -124,10 +126,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         public ITreeItem SourceConfig { get; private set; } = null;
 
-        public bool IsSpell => this.SourceConfig is Spell;
-
-        public bool IsTicker => this.SourceConfig is Ticker;
-
         public string SourceName
         {
             get
@@ -149,50 +147,107 @@ namespace ACT.SpecialSpellTimer.Config.Views
             }
         }
 
-        private Dest[] dests;
+        public bool IsSpell => this.SourceConfig is Spell;
 
-        public Dest[] Dests
+        public bool IsTicker => this.SourceConfig is Ticker;
+
+        private CollectionViewSource spellsSource = new CollectionViewSource()
         {
-            get
+            Source = SpellPanelTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
+        private CollectionViewSource tickersSource = new CollectionViewSource()
+        {
+            Source = TickerTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
+        private CollectionViewSource tagsSource = new CollectionViewSource()
+        {
+            Source = TagTable.Instance.Tags,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
+        public ICollectionView Spells => this.spellsSource.View;
+        public ICollectionView Tickers => this.tickersSource.View;
+        public ICollectionView Tags => this.tagsSource.View;
+
+        private void SetupTreeSource()
+        {
+            this.tagsSource.Filter += (x, y) =>
             {
-                if (this.dests == null)
+                switch (y.Item)
                 {
-                    var dests = new List<Dest>();
+                    case SpellPanel p:
+                    case Spell s:
+                        y.Accepted = this.IsSpell;
+                        break;
 
-                    if (this.IsSpell)
-                    {
-                        dests.AddRange(
-                            from x in SpellTable.Instance.Table
-                            where
-                            !x.IsInstance
-                            orderby
-                            x.Panel?.PanelName,
-                            x.DisplayNo,
-                            x.ID
-                            select new Dest()
-                            {
-                                Item = x
-                            });
-                    }
-
-                    if (this.IsTicker)
-                    {
-                        dests.AddRange(
-                            from x in TickerTable.Instance.Table
-                            orderby
-                            x.Title,
-                            x.ID
-                            select new Dest()
-                            {
-                                Item = x
-                            });
-                    }
-
-                    this.dests = dests.ToArray();
+                    case Ticker t:
+                        y.Accepted = this.IsTicker;
+                        break;
                 }
+            };
 
-                return this.dests;
-            }
+            this.spellsSource.SortDescriptions.AddRange(new[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.SortPriority),
+                    Direction = ListSortDirection.Descending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.PanelName),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
+            });
+
+            this.tickersSource.SortDescriptions.AddRange(new[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.Title),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
+            });
+
+            this.tagsSource.SortDescriptions.AddRange(new[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.SortPriority),
+                    Direction = ListSortDirection.Descending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(ACT.SpecialSpellTimer.Models.Tag.Name),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(ACT.SpecialSpellTimer.Models.Tag.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
+            });
+
+            this.RaisePropertyChanged(nameof(this.Spells));
+            this.RaisePropertyChanged(nameof(this.Tickers));
+            this.RaisePropertyChanged(nameof(this.Tags));
         }
 
         #region Copy設定

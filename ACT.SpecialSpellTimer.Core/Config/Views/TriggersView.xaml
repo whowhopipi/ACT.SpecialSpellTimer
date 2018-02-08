@@ -178,6 +178,8 @@
                 <MenuItem Header="{StaticResource Common_CreateSimilarNew}" Command="{Binding CreateNewSpellCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <MenuItem Header="{StaticResource Common_Delete}" Command="{Binding DeleteCommand, Mode=OneWay}" CommandParameter="{Binding}" InputGestureText="Delete" />
                 <Separator />
+                <MenuItem Header="{StaticResource Common_Tag}" x:Name="TagMenu" />
+                <Separator />
                 <MenuItem Header="{StaticResource Common_SpellPanel}" x:Name="PanelMenu" />
                 <Separator />
                 <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" />

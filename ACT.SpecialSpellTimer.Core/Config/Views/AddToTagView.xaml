@@ -93,6 +93,136 @@
           <RowDefinition />
         </Grid.RowDefinitions>
 
+        <Grid.Resources>
+          <Style TargetType="TreeViewItem">
+            <Setter Property="Padding" Value="5 1 5 1" />
+          </Style>
+
+          <!-- スペルパネルのテンプレ -->
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:SpellPanel}"
+            ItemsSource="{Binding Children, Mode=OneWay}">
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+              <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="ThList" Foreground="DarkViolet" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+          <!-- スペルパネルのテンプレ end -->
+
+          <!-- スペルのテンプレ -->
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:Spell}"
+            ItemsSource="{Binding Children, Mode=OneWay}">
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+              <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="Magic" Foreground="MediumBlue" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+          <!-- スペルのテンプレ end -->
+
+          <!-- テロップのテンプレ -->
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:Ticker}"
+            ItemsSource="{Binding Children, Mode=OneWay}">
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+              <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="Comment" Foreground="OliveDrab" />
+              <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+          <!-- テロップのテンプレ end -->
+
+          <!-- タグのテンプレ -->
+          <HierarchicalDataTemplate
+            DataType="{x:Type triggerModel:Tag}"
+            ItemsSource="{Binding Children, Mode=OneWay}">
+            <HierarchicalDataTemplate.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+              </Style>
+
+              <Style TargetType="CheckBox">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="IsTabStop" Value="False" />
+                <Setter Property="Margin" Value="0 0 5 0" />
+              </Style>
+
+              <Style TargetType="fa:ImageAwesome">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Height" Value="17" />
+                <Setter Property="Width" Value="17" />
+                <Setter Property="Margin" Value="0 0 4 0" />
+              </Style>
+            </HierarchicalDataTemplate.Resources>
+            <StackPanel Orientation="Horizontal" ContextMenuService.Placement="MousePoint">
+              <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" />
+              <fa:ImageAwesome Icon="Tag" Foreground="Orange" />
+              <TextBlock Text="{Binding Name, Mode=OneWay}" />
+            </StackPanel>
+          </HierarchicalDataTemplate>
+          <!-- タグのテンプレ end -->
+        </Grid.Resources>
+
         <StackPanel Grid.Row="0" Orientation="Vertical">
           <Label Content="{DynamicResource Common_Tag}" FontSize="18" />
           <Label Margin="5 2 0 0" Content="{Binding TargetTag.Name, Mode=OneWay}" FontSize="21" FontWeight="Bold" />
@@ -108,7 +238,7 @@
 
             <!-- スペル -->
             <Label Grid.Column="0" Content="{DynamicResource Common_SpellPanel}" FontSize="18" Margin="0 0 10 0" />
-            <ListView
+            <TreeView
               Grid.Column="0"
               BorderThickness="0"
               Margin="15 28 14 0"
@@ -116,22 +246,12 @@
               VirtualizingPanel.VirtualizationMode="Recycling"
               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
               ScrollViewer.VerticalScrollBarVisibility="Auto"
-              ItemsSource="{Binding TargetsSpells, Mode=OneWay}">
-              <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-              </ListView.ItemContainerStyle>
-              <ListView.ItemTemplate>
-                <DataTemplate>
-                  <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
-                </DataTemplate>
-              </ListView.ItemTemplate>
-            </ListView>
+              ItemsSource="{Binding Spells, Mode=OneWay}">
+            </TreeView>
 
             <!-- テロップ -->
             <Label Grid.Column="1" Content="{DynamicResource Common_Ticker}" FontSize="18" />
-            <ListView
+            <TreeView
               Grid.Column="1"
               BorderThickness="0"
               Margin="15 28 14 0"
@@ -139,18 +259,8 @@
               VirtualizingPanel.VirtualizationMode="Recycling"
               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
               ScrollViewer.VerticalScrollBarVisibility="Auto"
-              ItemsSource="{Binding TargetsTickers, Mode=OneWay}">
-              <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-              </ListView.ItemContainerStyle>
-              <ListView.ItemTemplate>
-                <DataTemplate>
-                  <CheckBox Margin="0 3 20 3" Content="{Binding Text}" IsChecked="{Binding ToCopy, Mode=TwoWay}" />
-                </DataTemplate>
-              </ListView.ItemTemplate>
-            </ListView>
+              ItemsSource="{Binding Tickers, Mode=OneWay}">
+            </TreeView>
           </Grid>
         </Grid>
         <!-- Copy先 end -->

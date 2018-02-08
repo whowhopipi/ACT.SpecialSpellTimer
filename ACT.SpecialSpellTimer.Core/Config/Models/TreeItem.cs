@@ -35,6 +35,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
         string DisplayText { get; }
 
+        /// <summary>
+        /// リストボックス等にアイテムを設定して選択状態等を得るための汎用的なBOOL値
+        /// </summary>
+        bool IsChecked { get; set; }
+
         bool IsExpanded { get; set; }
 
         bool Enabled { get; set; }
@@ -77,6 +82,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
         BindableBase,
         ITreeItem
     {
+        private bool isChecked;
         private bool isSelected;
         private bool isInEditMode;
 
@@ -85,6 +91,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
         public abstract int SortPriority { get; set; }
 
         public abstract string DisplayText { get; }
+
+        public bool IsChecked
+        {
+            get => this.isChecked;
+            set => this.SetProperty(ref this.isChecked, value);
+        }
 
         public abstract bool IsExpanded { get; set; }
 

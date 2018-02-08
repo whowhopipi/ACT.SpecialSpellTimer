@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.resources;
@@ -54,6 +55,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
             };
 
             this.ApplyButton.Click += this.ApplyButton_Click;
+
+            this.SetupTreeSource();
         }
 
         private void ApplyButton_Click(
@@ -62,21 +65,51 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             var items = new List<ItemTags>();
 
-            foreach (var dest in this.TargetsSpells.Where(x => x.ToCopy))
+            foreach (var item in this.Spells)
             {
-                var panel = dest.Item as SpellPanel;
-
-                if (!TagTable.Instance.ItemTags.Any(x =>
-                    x.ItemID == panel.ID &&
-                    x.TagID == this.TargetTag.ID))
+                if (item is SpellPanel panel)
                 {
-                    items.Add(new ItemTags(panel.ID, this.TargetTag.ID));
+                    if (!panel.IsChecked)
+                    {
+                        continue;
+                    }
+
+                    if (!TagTable.Instance.ItemTags.Any(x =>
+                        x.ItemID == panel.ID &&
+                        x.TagID == this.TargetTag.ID))
+                    {
+                        items.Add(new ItemTags(panel.ID, this.TargetTag.ID));
+                    }
+                }
+
+                if (item is Spell spell)
+                {
+                    if (!spell.IsChecked)
+                    {
+                        continue;
+                    }
+
+                    if (spell.Panel?.IsChecked ?? false)
+                    {
+                        continue;
+                    }
+
+                    if (!TagTable.Instance.ItemTags.Any(x =>
+                        x.ItemID == spell.Guid &&
+                        x.TagID == this.TargetTag.ID))
+                    {
+                        items.Add(new ItemTags(spell.Guid, this.TargetTag.ID));
+                    }
                 }
             }
 
-            foreach (var dest in this.TargetsTickers.Where(x => x.ToCopy))
+            foreach (var item in this.Tickers)
             {
-                var ticker = dest.Item as Ticker;
+                var ticker = item as Ticker;
+                if (!ticker.IsChecked)
+                {
+                    continue;
+                }
 
                 if (!TagTable.Instance.ItemTags.Any(x =>
                     x.ItemID == ticker.Guid &&
@@ -96,56 +129,60 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);
 
-        private CopyConfigView.Dest[] targetsSpells;
-        private CopyConfigView.Dest[] targetsTickers;
-
-        public CopyConfigView.Dest[] TargetsSpells
+        private CollectionViewSource spellsSource = new CollectionViewSource()
         {
-            get
-            {
-                if (this.targetsSpells == null)
-                {
-                    var dests = new List<CopyConfigView.Dest>();
+            Source = SpellPanelTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
 
-                    dests.AddRange(
-                        from x in SpellPanelTable.Instance.Table
-                        orderby
-                        x.PanelName
-                        select new CopyConfigView.Dest()
-                        {
-                            Item = x
-                        });
-
-                    this.targetsSpells = dests.ToArray();
-                }
-
-                return this.targetsSpells;
-            }
-        }
-
-        public CopyConfigView.Dest[] TargetsTickers
+        private CollectionViewSource tickersSource = new CollectionViewSource()
         {
-            get
+            Source = TickerTable.Instance.Table,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+        };
+
+        public ICollectionView Spells => this.spellsSource.View;
+        public ICollectionView Tickers => this.tickersSource.View;
+
+        private void SetupTreeSource()
+        {
+            this.spellsSource.SortDescriptions.AddRange(new[]
             {
-                if (this.targetsTickers == null)
+                new SortDescription()
                 {
-                    var dests = new List<CopyConfigView.Dest>();
+                    PropertyName = nameof(SpellPanel.SortPriority),
+                    Direction = ListSortDirection.Descending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.PanelName),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(SpellPanel.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
+            });
 
-                    dests.AddRange(
-                        from x in TickerTable.Instance.Table
-                        orderby
-                        x.Title,
-                        x.ID
-                        select new CopyConfigView.Dest()
-                        {
-                            Item = x
-                        });
+            this.tickersSource.SortDescriptions.AddRange(new[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.Title),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(Ticker.ID),
+                    Direction = ListSortDirection.Ascending,
+                },
+            });
 
-                    this.targetsTickers = dests.ToArray();
-                }
-
-                return this.targetsTickers;
-            }
+            this.RaisePropertyChanged(nameof(this.Spells));
+            this.RaisePropertyChanged(nameof(this.Tickers));
         }
 
         #region INotifyPropertyChanged
