@@ -121,7 +121,7 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref id, value);
         }
 
-        private Guid guid = Guid.Empty;
+        private Guid guid = Guid.NewGuid();
 
         public Guid Guid
         {
@@ -180,7 +180,7 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.isTest, value);
         }
 
-        private string jobFilter;
+        private string jobFilter = string.Empty;
 
         public string JobFilter
         {
@@ -188,7 +188,7 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.jobFilter, value);
         }
 
-        private string zoneFilter;
+        private string zoneFilter = string.Empty;
 
         public string ZoneFilter
         {
@@ -196,7 +196,7 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.zoneFilter, value);
         }
 
-        private string spellTitle;
+        private string spellTitle = string.Empty;
 
         public string SpellTitle
         {
@@ -211,7 +211,7 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         [XmlIgnore]
-        public string SpellTitleReplaced { get; set; }
+        public string SpellTitleReplaced { get; set; } = string.Empty;
 
         /// <summary>
         /// ※注意が必要な項目※
@@ -325,10 +325,10 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.isReverse, value);
         }
 
-        public DateTime MatchDateTime { get; set; }
+        public DateTime MatchDateTime { get; set; } = DateTime.MinValue;
 
         [XmlIgnore]
-        public string MatchedLog { get; set; }
+        public string MatchedLog { get; set; } = string.Empty;
 
         private bool overlapRecastTime;
 
@@ -352,7 +352,7 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.reduceIconBrightness, value);
         }
 
-        private string spellIcon;
+        private string spellIcon = string.Empty;
 
         public string SpellIcon
         {
@@ -382,7 +382,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         /// <summary>スペルが作用した対象</summary>
         [XmlIgnore]
-        public string TargetName { get; set; }
+        public string TargetName { get; set; } = string.Empty;
 
         public Guid[] TimersMustRunningForStart { get; set; } = new Guid[0];
 

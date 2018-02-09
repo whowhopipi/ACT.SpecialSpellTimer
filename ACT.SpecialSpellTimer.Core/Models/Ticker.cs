@@ -129,7 +129,7 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.isTest, value);
         }
 
-        private string title;
+        private string title = string.Empty;
 
         public string Title
         {
@@ -143,16 +143,16 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
 
         [XmlIgnore]
-        public string MessageReplaced { get; set; }
+        public string MessageReplaced { get; set; } = string.Empty;
 
         [XmlIgnore]
-        public DateTime MatchDateTime { get; set; }
+        public DateTime MatchDateTime { get; set; } = DateTime.MinValue;
 
         [XmlIgnore]
-        public string MatchedLog { get; set; }
+        public string MatchedLog { get; set; } = string.Empty;
 
         public double Delay { get; set; } = 0;
 
@@ -164,13 +164,13 @@ namespace ACT.SpecialSpellTimer.Models
 
         public string FontOutlineColor { get; set; } = Colors.OrangeRed.ToLegacy().ToHTML();
 
-        public int BackgroundAlpha { get; set; }
+        public int BackgroundAlpha { get; set; } = 0;
 
-        public string BackgroundColor { get; set; }
+        public string BackgroundColor { get; set; } = Colors.Black.ToLegacy().ToHTML();
 
-        public bool AddMessageEnabled { get; set; }
+        public bool AddMessageEnabled { get; set; } = false;
 
-        private bool progressBarEnabled;
+        private bool progressBarEnabled = false;
 
         public bool ProgressBarEnabled
         {
@@ -178,9 +178,21 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.progressBarEnabled, value);
         }
 
-        public string JobFilter { get; set; }
+        private string jobFilter = string.Empty;
 
-        public string ZoneFilter { get; set; }
+        public string JobFilter
+        {
+            get => this.jobFilter;
+            set => this.SetProperty(ref this.jobFilter, value);
+        }
+
+        private string zoneFilter = string.Empty;
+
+        public string ZoneFilter
+        {
+            get => this.zoneFilter;
+            set => this.SetProperty(ref this.zoneFilter, value);
+        }
 
         public Guid[] TimersMustRunningForStart { get; set; } = new Guid[0];
 

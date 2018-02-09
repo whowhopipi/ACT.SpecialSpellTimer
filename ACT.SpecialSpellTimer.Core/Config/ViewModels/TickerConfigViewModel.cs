@@ -134,7 +134,11 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             var jobFilters = this.Model.JobFilter?.Split(',');
             foreach (var selector in this.JobSelectors)
             {
-                selector.IsSelected = jobFilters.Contains(((int)selector.Job.ID).ToString());
+                if (jobFilters != null)
+                {
+                    selector.IsSelected = jobFilters.Contains(((int)selector.Job.ID).ToString());
+                }
+
                 selector.SelectedChangedDelegate = this.JobFilterChanged;
             }
 
@@ -216,7 +220,11 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             var zoneFilters = this.Model.ZoneFilter?.Split(',');
             foreach (var selector in this.ZoneSelectors)
             {
-                selector.IsSelected = zoneFilters.Contains(selector.ID);
+                if (zoneFilters != null)
+                {
+                    selector.IsSelected = zoneFilters.Contains(selector.ID);
+                }
+
                 selector.SelectedChangedDelegate = this.ZoneFilterChanged;
             }
 
