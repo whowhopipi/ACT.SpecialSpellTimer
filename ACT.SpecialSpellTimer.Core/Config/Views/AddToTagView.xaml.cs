@@ -56,6 +56,21 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             this.ApplyButton.Click += this.ApplyButton_Click;
 
+            foreach (var item in SpellPanelTable.Instance.Table)
+            {
+                item.IsChecked = false;
+            }
+
+            foreach (var item in SpellTable.Instance.Table)
+            {
+                item.IsChecked = false;
+            }
+
+            foreach (var item in TickerTable.Instance.Table)
+            {
+                item.IsChecked = false;
+            }
+
             this.SetupTreeSource();
         }
 

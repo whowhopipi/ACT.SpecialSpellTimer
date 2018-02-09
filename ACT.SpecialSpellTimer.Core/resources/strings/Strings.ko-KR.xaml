@@ -88,6 +88,12 @@
   <system:String x:Key="SpellPanel_VisualWarning2">Update visual config to all spells under this panel.</system:String>
   <system:String x:Key="SpellPanel_VisualWarning3">Please carefully check spells to be updated.</system:String>
 
+  <system:String x:Key="SpellPanel_EnabledAdvancedLayouyt">Use advanced layout</system:String>
+  <system:String x:Key="SpellPanel_AdvancedDesignMode">Visible inner guid grid</system:String>
+  <system:String x:Key="SpellPanel_PanelLauout">Panel layout</system:String>
+  <system:String x:Key="SpellPanel_BackgroundColor">Background color</system:String>
+  <system:String x:Key="SpellPanel_SpellsLayout">Spells layout</system:String>
+
   <system:String x:Key="Spell_Name">Spell name</system:String>
   <system:String x:Key="Spell_ToInstance">When being different in a spell name (indication text), I become an instance.</system:String>
   <system:String x:Key="Spell_SortPriority">Priority of display</system:String>

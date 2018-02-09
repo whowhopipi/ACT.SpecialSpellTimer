@@ -188,10 +188,6 @@ namespace ACT.SpecialSpellTimer
                     Font = pluginScreenSpace.Font,
                 });
 
-                /* ■OLD_UI
-                this.ConfigPanel = baseView.ConfigPanel;
-                */
-
                 // 本体を開始する
                 PluginMainWorker.Instance.Begin();
 

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Views;
@@ -59,7 +60,13 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public override ItemTypes ItemType => ItemTypes.SpellPanel;
 
-        public Guid ID { get; set; } = Guid.NewGuid();
+        private Guid id = Guid.NewGuid();
+
+        public Guid ID
+        {
+            get => this.id;
+            set => this.SetProperty(ref this.id, value);
+        }
 
         public double Left
         {
@@ -97,9 +104,9 @@ namespace ACT.SpecialSpellTimer.Models
         public bool IsDesignMode
         {
             get =>
-                this.Spells.Count < 1 ?
+                this.Spells.Count() < 1 ?
                 false :
-                this.Spells.Count == this.Spells.Where(x => x.IsDesignMode).Count();
+                this.Spells.Count() == this.Spells.Where(x => x.IsDesignMode).Count();
             set
             {
                 foreach (var spell in this.Spells)
@@ -121,13 +128,68 @@ namespace ACT.SpecialSpellTimer.Models
         public bool ToClose { get; set; } = false;
 
         [XmlIgnore]
-        public SpellTimerListWindow PanelWindow { get; set; } = null;
+        public ISpellPanelWindow PanelWindow { get; set; } = null;
 
         [XmlIgnore]
-        public IReadOnlyList<Spell> Spells
-            => SpellTable.Instance.Table.Where(x =>
-                !x.IsInstance &&
-                x.PanelID == this.ID).ToList();
+        public IEnumerable<Spell> Spells => this.Children?.Cast<Spell>();
+
+        #region Advanced Layout
+
+        private bool enabledAdvancedLayout = false;
+
+        public bool EnabledAdvancedLayout
+        {
+            get => this.enabledAdvancedLayout;
+            set => this.SetProperty(ref this.enabledAdvancedLayout, value);
+        }
+
+        private bool isAdvancedDesignMode = false;
+
+        [XmlIgnore]
+        public bool IsAdvancedDesignMode
+        {
+            get => this.isAdvancedDesignMode;
+            set => this.SetProperty(ref this.isAdvancedDesignMode, value);
+        }
+
+        private double width = 640;
+
+        public double Width
+        {
+            get => this.width;
+            set => this.SetProperty(ref this.width, Math.Round(value));
+        }
+
+        private double height = 480;
+
+        public double Height
+        {
+            get => this.height;
+            set => this.SetProperty(ref this.height, Math.Round(value));
+        }
+
+        private Color backgroudColor = Color.FromArgb(0x01, 0, 0, 0);
+
+        public Color BackgroundColor
+        {
+            get => this.backgroudColor;
+            set
+            {
+                if (this.SetProperty(ref this.backgroudColor, value))
+                {
+                    this.backgroundBrush = new SolidColorBrush(this.backgroudColor);
+                    this.RaisePropertyChanged(nameof(this.BackgroundBrush));
+                }
+            }
+        }
+
+        private SolidColorBrush backgroundBrush;
+
+        [XmlIgnore]
+        public SolidColorBrush BackgroundBrush =>
+            this.backgroundBrush ?? (this.backgroundBrush = new SolidColorBrush(this.BackgroundColor));
+
+        #endregion Advanced Layout
 
         #region ITreeItem
 
@@ -148,9 +210,9 @@ namespace ACT.SpecialSpellTimer.Models
         public override bool Enabled
         {
             get =>
-                this.Spells.Count < 1 ?
+                this.Spells.Count() < 1 ?
                 false :
-                this.Spells.Count == this.Spells.Where(x => x.Enabled).Count();
+                this.Spells.Count() == this.Spells.Where(x => x.Enabled).Count();
             set
             {
                 foreach (var spell in this.Spells)
@@ -184,7 +246,7 @@ namespace ACT.SpecialSpellTimer.Models
                     !spell.IsInstance;
              };
 
-            this.childrenSource.SortDescriptions.AddRange(new SortDescription[]
+            this.childrenSource.SortDescriptions.AddRange(new[]
             {
                 new SortDescription()
                 {
@@ -204,6 +266,9 @@ namespace ACT.SpecialSpellTimer.Models
             });
 
             this.RaisePropertyChanged(nameof(this.Children));
+            this.RaisePropertyChanged(nameof(this.Spells));
+            this.RaisePropertyChanged(nameof(this.Enabled));
+            this.RaisePropertyChanged(nameof(this.IsDesignMode));
         }
 
         #endregion ITreeItem

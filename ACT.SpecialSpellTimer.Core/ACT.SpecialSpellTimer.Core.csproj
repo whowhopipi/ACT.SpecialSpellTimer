@@ -219,6 +219,9 @@
     <Compile Include="Models\TickerTable.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="PluginCore.cs" />
+    <Compile Include="Views\AdvancedSpellPanelWindow.xaml.cs">
+      <DependentUpon>AdvancedSpellPanelWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BarBackgroundConverter.cs" />
     <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\BrightnessConverter.cs" />
@@ -252,8 +255,8 @@
     </Compile>
     <Compile Include="Sound\SoundController.cs" />
     <Compile Include="Views\OutlineTextBlockExtensions.cs" />
-    <Compile Include="Views\SpellTimerControl.xaml.cs">
-      <DependentUpon>SpellTimerControl.xaml</DependentUpon>
+    <Compile Include="Views\SpellControl.xaml.cs">
+      <DependentUpon>SpellControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="PluginMainWorker.cs" />
     <Compile Include="TextCommandController.cs" />
@@ -267,8 +270,8 @@
       <DependentUpon>TickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WindowExtension.Visibility.cs" />
-    <Compile Include="Views\SpellTimerListWindow.xaml.cs">
-      <DependentUpon>SpellTimerListWindow.xaml</DependentUpon>
+    <Compile Include="Views\SpellPanelWindow.xaml.cs">
+      <DependentUpon>SpellPanelWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\SpellTable.cs" />
   </ItemGroup>
@@ -421,6 +424,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\AdvancedSpellPanelWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LPSView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -429,11 +436,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SpellTimerControl.xaml">
+    <Page Include="Views\SpellControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SpellTimerListWindow.xaml">
+    <Page Include="Views\SpellPanelWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

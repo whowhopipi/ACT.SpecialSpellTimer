@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Extensions;
@@ -19,19 +18,19 @@ namespace ACT.SpecialSpellTimer.Views
     /// <summary>
     /// SpellTimerList Window
     /// </summary>
-    public partial class SpellTimerListWindow :
+    public partial class SpellPanelWindow :
         Window,
-        IOverlay,
+        ISpellPanelWindow,
         INotifyPropertyChanged
     {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public SpellTimerListWindow(
-            SpellPanel config)
+        public SpellPanelWindow(
+            SpellPanel panel)
         {
-            this.Config = config;
-            this.Config.PanelWindow = this;
+            this.Panel = panel;
+            this.Panel.PanelWindow = this;
 
             this.InitializeComponent();
 
@@ -43,10 +42,10 @@ namespace ACT.SpecialSpellTimer.Views
                     this.SpellControls.Clear();
                 }
 
-                if (this.Config != null)
+                if (this.Panel != null)
                 {
-                    this.Config.PanelWindow = null;
-                    this.Config = null;
+                    this.Panel.PanelWindow = null;
+                    this.Panel = null;
                 }
             };
         }
@@ -82,11 +81,11 @@ namespace ACT.SpecialSpellTimer.Views
             }
         }
 
-        public SpellPanel Config { get; set; }
+        public SpellPanel Panel { get; set; }
 
-        public Dictionary<long, SpellTimerControl> SpellControls { get; private set; } = new Dictionary<long, SpellTimerControl>();
+        public Dictionary<long, SpellControl> SpellControls { get; private set; } = new Dictionary<long, SpellControl>();
 
-        public Spell[] Spells { get; set; }
+        public IList<Spell> Spells { get; set; }
 
         private SolidColorBrush backgroundBrush;
 
@@ -99,7 +98,7 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// SpellTimerの描画をRefreshする
         /// </summary>
-        public void RefreshSpellTimer()
+        public void Refresh()
         {
             // 表示するものがなければ何もしない
             if (this.Spells == null)
@@ -118,7 +117,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // タイムアップしたものを除外する
             if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
-                this.Config.SortOrder != SpellOrders.Fixed)
+                this.Panel.SortOrder != SpellOrders.Fixed)
             {
                 spells =
                     from x in spells
@@ -137,7 +136,7 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // ソートする
-            switch (this.Config.SortOrder)
+            switch (this.Panel.SortOrder)
             {
                 case SpellOrders.None:
                 case SpellOrders.SortPriority:
@@ -206,24 +205,23 @@ namespace ACT.SpecialSpellTimer.Views
 
             // 水平レイアウト時のマージンを調整する
             var m = this.BaseGrid.Margin;
-            m.Bottom = this.Config.Horizontal ? 0 : 6;
+            m.Bottom = this.Panel.Horizontal ? 0 : 6;
             this.BaseGrid.Margin = m;
 
             // スペルタイマコントロールのリストを生成する
-            var displayList = new List<SpellTimerControl>();
-            var timeupList = new List<SpellTimerControl>();
+            var displayList = new List<SpellControl>();
+            var timeupList = new List<SpellControl>();
             foreach (var spell in spells)
             {
-                SpellTimerControl c;
+                SpellControl c;
                 if (this.SpellControls.ContainsKey(spell.ID))
                 {
                     c = this.SpellControls[spell.ID];
                 }
                 else
                 {
-                    c = new SpellTimerControl()
+                    c = new SpellControl(spell)
                     {
-                        Spell = spell,
                         Visibility = Visibility.Collapsed,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
@@ -297,7 +295,7 @@ namespace ACT.SpecialSpellTimer.Views
                 displayList.Add(c);
 
                 if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
-                    this.Config.FixedPositionSpell)
+                    this.Panel.FixedPositionSpell)
                 {
                     if (!spell.IsDesignMode)
                     {
@@ -321,7 +319,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // 行・列の個数がスペル表示数より小さい場合に拡張する
             // また不要な行・列を削除する
-            if (this.Config.Horizontal)
+            if (this.Panel.Horizontal)
             {
                 if (this.BaseGrid.RowDefinitions.Count > 1)
                 {
@@ -357,8 +355,8 @@ namespace ACT.SpecialSpellTimer.Views
                 var margin = displaySpell.Margin;
                 if (index != 0)
                 {
-                    margin.Left = this.Config.Horizontal ? this.Config.Margin : 0;
-                    margin.Top = this.Config.Horizontal ? 0 : this.Config.Margin;
+                    margin.Left = this.Panel.Horizontal ? this.Panel.Margin : 0;
+                    margin.Top = this.Panel.Horizontal ? 0 : this.Panel.Margin;
                 }
                 else
                 {
@@ -367,10 +365,10 @@ namespace ACT.SpecialSpellTimer.Views
                 }
 
                 displaySpell.Margin = margin;
-                displaySpell.VerticalAlignment = this.Config.Horizontal ? VerticalAlignment.Bottom : VerticalAlignment.Top;
+                displaySpell.VerticalAlignment = this.Panel.Horizontal ? VerticalAlignment.Bottom : VerticalAlignment.Top;
 
-                displaySpell.SetValue(Grid.RowProperty, this.Config.Horizontal ? 0 : index);
-                displaySpell.SetValue(Grid.ColumnProperty, this.Config.Horizontal ? index : 0);
+                displaySpell.SetValue(Grid.RowProperty, this.Panel.Horizontal ? 0 : index);
+                displaySpell.SetValue(Grid.ColumnProperty, this.Panel.Horizontal ? index : 0);
                 displaySpell.Visibility = Visibility.Visible;
 
                 index++;

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -475,7 +476,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             TagTable.Instance.ItemTags.Remove(toRemove);
                         }
 
-                        panel.PanelWindow?.Hide();
+                        panel.PanelWindow?.ToWindow().Hide();
                         SpellPanelTable.Instance.Table.Remove(panel);
                         break;
 

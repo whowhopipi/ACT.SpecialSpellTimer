@@ -144,40 +144,28 @@ namespace ACT.SpecialSpellTimer.Models
         public override ICollectionView Children => this.childrenSource?.View;
 
         [XmlIgnore]
-        public IReadOnlyList<SpellPanel> SpellPanels
-        {
-            get
-            {
-                var list = new List<SpellPanel>();
-                foreach (var item in this.Children)
-                {
-                    if (item is SpellPanel panel)
-                    {
-                        list.Add(panel);
-                    }
-                }
-
-                return list;
-            }
-        }
+        public IEnumerable<ITrigger> Triggers => this.childrenSource?.View?.Cast<ITrigger>();
 
         [XmlIgnore]
-        public IReadOnlyList<Ticker> Tickers
-        {
-            get
-            {
-                var list = new List<Ticker>();
-                foreach (var item in this.Children)
-                {
-                    if (item is Ticker ticker)
-                    {
-                        list.Add(ticker);
-                    }
-                }
+        public IEnumerable<ITrigger> SpellPanelsAndSpells =>
+            this.SpellPanels.Cast<ITrigger>().Union(this.Spells.Cast<ITrigger>());
 
-                return list;
-            }
-        }
+        [XmlIgnore]
+        public IEnumerable<SpellPanel> SpellPanels => this.Triggers?
+            .Where(x => x.ItemType == ItemTypes.SpellPanel)
+            .Cast<SpellPanel>();
+
+        [XmlIgnore]
+        public IEnumerable<Spell> Spells => this.Triggers?
+            .Where(x =>
+                x.ItemType == ItemTypes.Spell &&
+                !((x as Spell)?.ToInstance ?? true))
+            .Cast<Spell>();
+
+        [XmlIgnore]
+        public IEnumerable<Ticker> Tickers => this.Triggers?
+            .Where(x => x.ItemType == ItemTypes.Ticker)
+            .Cast<Ticker>();
 
         private ObservableCollection<ITreeItem> children;
         private CollectionViewSource childrenSource;
@@ -249,14 +237,28 @@ namespace ACT.SpecialSpellTimer.Models
                 from x in TagTable.Instance.ItemTags
                 where
                 x.TagID == this.ID &&
-                x.Item != null
+                x.Item != null &&
+                (
+                    x.ItemType == ItemTypes.Ticker ||
+                    x.ItemType == ItemTypes.SpellPanel ||
+                    (
+                        x.ItemType == ItemTypes.Spell &&
+                        !(x.Item as Spell).IsInstance
+                    )
+                )
                 select
                 x.Item;
 
             this.children.Clear();
             this.children.AddRange(items);
 
+            this.RaisePropertyChanged(nameof(this.Triggers));
+            this.RaisePropertyChanged(nameof(this.SpellPanels));
+            this.RaisePropertyChanged(nameof(this.Spells));
+            this.RaisePropertyChanged(nameof(this.SpellPanelsAndSpells));
+            this.RaisePropertyChanged(nameof(this.Tickers));
             this.RaisePropertyChanged(nameof(this.Enabled));
+            this.RaisePropertyChanged(nameof(this.IsDesignMode));
         }
 
         #endregion ITreeItem

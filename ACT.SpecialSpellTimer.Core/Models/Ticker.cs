@@ -66,43 +66,13 @@ namespace ACT.SpecialSpellTimer.Models
         #endregion ITreeItem
 
         [XmlIgnore]
-        private Timer delayedSoundTimer;
+        private Timer delayedSoundTimer = new Timer() { AutoReset = false, Enabled = false };
 
         [XmlIgnore]
         public bool ToClose { get; set; } = false;
 
         public Ticker()
         {
-            this.Title = string.Empty;
-            this.Keyword = string.Empty;
-            this.KeywordToHide = string.Empty;
-            this.Message = string.Empty;
-            this.MatchSound = string.Empty;
-            this.MatchTextToSpeak = string.Empty;
-            this.DelaySound = string.Empty;
-            this.DelayTextToSpeak = string.Empty;
-            this.BackgroundColor = string.Empty;
-            this.FontColor = Colors.White.ToLegacy().ToHTML();
-            this.FontOutlineColor = Colors.OrangeRed.ToLegacy().ToHTML();
-            this.MatchedLog = string.Empty;
-            this.MessageReplaced = string.Empty;
-            this.RegexPattern = string.Empty;
-            this.RegexPatternToHide = string.Empty;
-            this.JobFilter = string.Empty;
-            this.ZoneFilter = string.Empty;
-            this.TimersMustRunningForStart = new Guid[0];
-            this.TimersMustStoppingForStart = new Guid[0];
-            this.Font = new FontInfo();
-            this.KeywordReplaced = string.Empty;
-            this.KeywordToHideReplaced = string.Empty;
-
-            // ディレイサウンドタイマをセットする
-            this.delayedSoundTimer = new Timer
-            {
-                AutoReset = false,
-                Enabled = false
-            };
-
             this.delayedSoundTimer.Elapsed += this.DelayedSoundTimer_Elapsed;
         }
 
@@ -190,9 +160,9 @@ namespace ACT.SpecialSpellTimer.Models
 
         public FontInfo Font { get; set; } = FontInfo.DefaultFont;
 
-        public string FontColor { get; set; }
+        public string FontColor { get; set; } = Colors.White.ToLegacy().ToHTML();
 
-        public string FontOutlineColor { get; set; }
+        public string FontOutlineColor { get; set; } = Colors.OrangeRed.ToLegacy().ToHTML();
 
         public int BackgroundAlpha { get; set; }
 
@@ -212,9 +182,9 @@ namespace ACT.SpecialSpellTimer.Models
 
         public string ZoneFilter { get; set; }
 
-        public Guid[] TimersMustRunningForStart { get; set; }
+        public Guid[] TimersMustRunningForStart { get; set; } = new Guid[0];
 
-        public Guid[] TimersMustStoppingForStart { get; set; }
+        public Guid[] TimersMustStoppingForStart { get; set; } = new Guid[0];
 
         [XmlIgnore]
         public bool ForceHide { get; set; }

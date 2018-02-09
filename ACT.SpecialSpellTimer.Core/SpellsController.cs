@@ -25,12 +25,6 @@ namespace ACT.SpecialSpellTimer
         #endregion Singleton
 
         /// <summary>
-        /// SpellTimerのPanelリスト
-        /// </summary>
-        private volatile List<SpellTimerListWindow> spellPanelWindows =
-            new List<SpellTimerListWindow>();
-
-        /// <summary>
         /// Spellをマッチングする
         /// </summary>
         /// <param name="spells">Spell</param>
@@ -330,6 +324,12 @@ namespace ACT.SpecialSpellTimer
         }
 
         /// <summary>
+        /// SpellTimerのPanelリスト
+        /// </summary>
+        private volatile List<ISpellPanelWindow> spellPanelWindows =
+            new List<ISpellPanelWindow>();
+
+        /// <summary>
         /// スペルパネルWindowを更新する
         /// </summary>
         /// <param name="spells">
@@ -349,16 +349,44 @@ namespace ACT.SpecialSpellTimer
                 )
                 group s by s.Panel.PanelName.Trim();
 
+            var panelWindow = default(ISpellPanelWindow);
             foreach (var spellsByPanel in query)
             {
                 var panel = spellsByPanel.First().Panel;
-                var panelWindow = panel.PanelWindow;
+                panelWindow = panel.PanelWindow;
+
+                // 違うタイプのウィンドウならば閉じる
+                if (panel.EnabledAdvancedLayout)
+                {
+                    if (panelWindow is SpellPanelWindow window)
+                    {
+                        window.Close();
+                        lock (this.spellPanelWindows)
+                        {
+                            this.spellPanelWindows.Remove(window);
+                        }
+
+                        panelWindow = null;
+                    }
+                }
+                else
+                {
+                    if (panelWindow is AdvancedSpellPanelWindow window)
+                    {
+                        window.Close();
+                        lock (this.spellPanelWindows)
+                        {
+                            this.spellPanelWindows.Remove(window);
+                        }
+
+                        panelWindow = null;
+                    }
+                }
+
                 if (panelWindow == null)
                 {
-                    panelWindow = new SpellTimerListWindow(panel)
-                    {
-                        Title = "Spell Panel - " + panel.PanelName,
-                    };
+                    panelWindow = AdvancedSpellPanelWindow.GetWindow(panel);
+                    panelWindow.ToWindow().Title = "Spell Panel - " + panel.PanelName;
 
                     lock (this.spellPanelWindows)
                     {
@@ -371,14 +399,14 @@ namespace ACT.SpecialSpellTimer
                         spell.UpdateDone = false;
                     }
 
-                    panelWindow.Show();
+                    panelWindow.ToWindow().Show();
                 }
 
                 // クリックスルーを反映する
                 panelWindow.IsClickthrough = Settings.Default.ClickThroughEnabled;
 
                 panelWindow.Spells = spellsByPanel.ToArray();
-                panelWindow.RefreshSpellTimer();
+                panelWindow.Refresh();
 
                 // テストモードの終了を判定する
                 foreach (var test in spellsByPanel.Where(x => x.IsTest))
@@ -396,7 +424,7 @@ namespace ACT.SpecialSpellTimer
             lock (this.spellPanelWindows)
             {
                 var toHide = this.spellPanelWindows
-                    .Where(x => !query.Any(y => y.Key == x.Config.PanelName));
+                    .Where(x => !query.Any(y => y.Key == x.Panel.PanelName));
                 foreach (var window in toHide)
                 {
                     window.HideOverlay();
@@ -447,7 +475,7 @@ namespace ACT.SpecialSpellTimer
                     {
                         panel.ToClose = false;
 
-                        window.Close();
+                        window.ToWindow().Close();
                         this.spellPanelWindows.Remove(window);
 
                         closed = true;

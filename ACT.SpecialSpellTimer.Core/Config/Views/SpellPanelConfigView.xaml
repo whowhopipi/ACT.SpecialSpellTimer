@@ -311,5 +311,74 @@
       </ScrollViewer>
     </TabItem>
     <!-- Visualタブ end -->
+
+    <!-- Advanced Layoutタブ -->
+    <TabItem Header="Advanced Layout" Padding="20 2 20 2">
+      <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto"
+        Margin="5"
+        Padding="0 0 0 20">
+        <StackPanel>
+          <CheckBox Margin="0 15 0 0" Content="{DynamicResource SpellPanel_EnabledAdvancedLayouyt}" IsChecked="{Binding Path=Model.EnabledAdvancedLayout, Mode=TwoWay}" />
+
+          <StackPanel
+            Visibility="{Binding Path=Model.EnabledAdvancedLayout, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
+            <CheckBox Margin="0 20 0 0" Content="{DynamicResource SpellPanel_AdvancedDesignMode}" IsChecked="{Binding Path=Model.IsAdvancedDesignMode, Mode=TwoWay}" />
+
+            <!-- パネルのレイアウト -->
+            <Label Margin="0 20 0 0" Content="{DynamicResource SpellPanel_PanelLauout}" FontSize="18" FontWeight="Bold" />
+            <StackPanel Margin="10 5 0 0">
+              <!-- Location -->
+              <Label Content="{DynamicResource Common_Location}" />
+              <StackPanel Orientation="Horizontal">
+                <Label Margin="0 0 5 0" Content="X" VerticalAlignment="Center" />
+                <TextBox TextAlignment="Right" Text="{Binding Model.Left, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+                <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
+                <TextBox TextAlignment="Right" Text="{Binding Model.Top, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+              </StackPanel>
+
+              <!-- Size -->
+              <Label Margin="0 15 0 0" Content="{DynamicResource Common_Size}" />
+              <StackPanel Orientation="Horizontal">
+                <Label Margin="0 0 5 0" Content="W" VerticalAlignment="Center" />
+                <TextBox TextAlignment="Right" Text="{Binding Model.Width, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+                <Label Margin="10 0 5 0" Content="H" VerticalAlignment="Center" />
+                <TextBox TextAlignment="Right" Text="{Binding Model.Height, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+              </StackPanel>
+
+              <TextBlock Margin="0 15 0 0" HorizontalAlignment="Left">
+                <Hyperlink Command="{Binding ChangeAdvancedBackgroundColorCommand}">
+                  <TextBlock Text="{DynamicResource SpellPanel_BackgroundColor}" />
+                </Hyperlink>
+              </TextBlock>
+            </StackPanel>
+            <!-- パネルのレイアウト end -->
+
+            <!-- スペルのレイアウト -->
+            <Label Margin="0 20 0 0" Content="{DynamicResource SpellPanel_SpellsLayout}" FontSize="18" FontWeight="Bold" />
+            <ItemsControl
+              Margin="5 10 0 0"
+              BorderThickness="0"
+              ItemsSource="{Binding Path=Model.Spells, Mode=OneWay}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type triggerModel:Spell}">
+                  <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+                    <TextBlock Text="{Binding Path=SpellTitle, Mode=OneWay}" Width="340" Margin="0 0 20 0" />
+                    <Label Margin="0 0 5 0" Content="X" VerticalAlignment="Center" />
+                    <xctk:DoubleUpDown Value="{Binding Path=Left, Mode=TwoWay}" Width="80" />
+                    <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
+                    <xctk:DoubleUpDown Value="{Binding Path=Top, Mode=TwoWay}" Width="80" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!-- スペルのレイアウト end -->
+          </StackPanel>
+          <!-- Advanced 設定 end -->
+        </StackPanel>
+      </ScrollViewer>
+    </TabItem>
+    <!-- Advanced Layoutタブ end -->
   </TabControl>
 </UserControl>

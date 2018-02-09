@@ -18,13 +18,24 @@ namespace ACT.SpecialSpellTimer.Views
     /// <summary>
     /// SpellTimerControl
     /// </summary>
-    public partial class SpellTimerControl : UserControl
+    public partial class SpellControl :
+        UserControl
     {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public SpellTimerControl()
+        public SpellControl() : this(new Spell())
         {
+        }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public SpellControl(
+            Spell spell)
+        {
+            this.Spell = spell;
+
             this.InitializeComponent();
         }
 
@@ -62,7 +73,14 @@ namespace ACT.SpecialSpellTimer.Views
 
         #endregion Sizes
 
-        public Spell Spell { get; set; }
+        public Spell Spell
+        {
+            get => this.DataContext as Spell;
+            set
+            {
+                this.DataContext = value;
+            }
+        }
 
         public double Progress { get; set; }
 
@@ -416,8 +434,8 @@ namespace ACT.SpecialSpellTimer.Views
             if (this.Spell.SpellIconSize > 0 &&
                 this.Spell.BlinkIcon)
             {
-                var value1 = !this.Spell.IsReverse ? SpellTimerControl.IconDarkValue : SpellTimerControl.IconLightValue;
-                var value2 = !this.Spell.IsReverse ? SpellTimerControl.IconLightValue : SpellTimerControl.IconDarkValue;
+                var value1 = !this.Spell.IsReverse ? SpellControl.IconDarkValue : SpellControl.IconLightValue;
+                var value2 = !this.Spell.IsReverse ? SpellControl.IconLightValue : SpellControl.IconDarkValue;
 
                 this.IconKeyframe1.Value = value2;
                 this.IconKeyframe2.Value = value1;

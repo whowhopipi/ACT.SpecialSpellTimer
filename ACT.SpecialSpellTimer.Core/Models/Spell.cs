@@ -70,87 +70,47 @@ namespace ACT.SpecialSpellTimer.Models
         public volatile bool UpdateDone;
 
         [XmlIgnore]
-        private Timer beforeSoundTimer = new Timer();
+        private Timer overSoundTimer = new Timer() { AutoReset = false, Enabled = false };
 
         [XmlIgnore]
-        private Timer garbageInstanceTimer = new Timer();
+        private Timer beforeSoundTimer = new Timer() { AutoReset = false, Enabled = false };
 
         [XmlIgnore]
-        private Timer overSoundTimer = new Timer();
+        private Timer timeupSoundTimer = new Timer() { AutoReset = false, Enabled = false };
 
         [XmlIgnore]
-        private Timer timeupSoundTimer = new Timer();
+        private Timer garbageInstanceTimer = new Timer(10 * 1000) { AutoReset = false, Enabled = false };
 
         public Spell()
         {
-            this.SpellTitle = string.Empty;
-            this.SpellIcon = string.Empty;
-            this.Keyword = string.Empty;
-            this.KeywordForExtend1 = string.Empty;
-            this.KeywordForExtend2 = string.Empty;
-            this.MatchSound = string.Empty;
-            this.MatchTextToSpeak = string.Empty;
-            this.OverSound = string.Empty;
-            this.OverTextToSpeak = string.Empty;
-            this.TimeupSound = string.Empty;
-            this.TimeupTextToSpeak = string.Empty;
-            this.FontColor = string.Empty;
-            this.FontOutlineColor = string.Empty;
-            this.WarningFontColor = string.Empty;
-            this.WarningFontOutlineColor = string.Empty;
-            this.BarColor = string.Empty;
-            this.BarOutlineColor = string.Empty;
-            this.BackgroundColor = string.Empty;
-            this.SpellTitleReplaced = string.Empty;
-            this.MatchedLog = string.Empty;
-            this.RegexPattern = string.Empty;
-            this.JobFilter = string.Empty;
-            this.ZoneFilter = string.Empty;
-            this.TimersMustRunningForStart = new Guid[0];
-            this.TimersMustStoppingForStart = new Guid[0];
-            this.Font = new FontInfo();
-            this.KeywordReplaced = string.Empty;
-            this.KeywordForExtendReplaced1 = string.Empty;
-            this.KeywordForExtendReplaced2 = string.Empty;
-
-            // マッチ後ｎ秒後のサウンドタイマをセットする
-            this.overSoundTimer = new Timer
-            {
-                AutoReset = false,
-                Enabled = false
-            };
-
             this.overSoundTimer.Elapsed += this.OverSoundTimer_Elapsed;
-
-            // リキャストｎ秒前のサウンドタイマをセットする
-            this.beforeSoundTimer = new Timer
-            {
-                AutoReset = false,
-                Enabled = false
-            };
-
             this.beforeSoundTimer.Elapsed += this.BeforeSoundTimer_Elapsed;
-
-            // リキャスト完了のサウンドタイマをセットする
-            this.timeupSoundTimer = new Timer
-            {
-                AutoReset = false,
-                Enabled = false
-            };
-
             this.timeupSoundTimer.Elapsed += this.TimeupSoundTimer_Elapsed;
-
-            // インスタンススペルのガーベージタイマをセットする
-            this.garbageInstanceTimer = new Timer
-            {
-                AutoReset = true,
-                Enabled = false,
-
-                // 10秒毎
-                Interval = 10 * 1000,
-            };
-
             this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
+        }
+
+        private double left, top;
+
+        public double Left
+        {
+            get => this.left;
+            set
+            {
+                if (this.SetProperty(ref this.left, Math.Round(value)))
+                {
+                }
+            }
+        }
+
+        public double Top
+        {
+            get => this.top;
+            set
+            {
+                if (this.SetProperty(ref this.top, Math.Round(value)))
+                {
+                }
+            }
         }
 
         private long id;
@@ -268,9 +228,9 @@ namespace ACT.SpecialSpellTimer.Models
 
         public FontInfo Font { get; set; } = FontInfo.DefaultFont;
 
-        public string FontColor { get; set; }
+        public string FontColor { get; set; } = Colors.White.ToLegacy().ToHTML();
 
-        public string FontOutlineColor { get; set; }
+        public string FontOutlineColor { get; set; } = Colors.Navy.ToLegacy().ToHTML();
 
         private double warningTime = 0;
 
@@ -288,9 +248,9 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.changeFontColorsWhenWarning, value);
         }
 
-        public string WarningFontColor { get; set; }
+        public string WarningFontColor { get; set; } = Colors.White.ToLegacy().ToHTML();
 
-        public string WarningFontOutlineColor { get; set; }
+        public string WarningFontOutlineColor { get; set; } = Colors.Red.ToLegacy().ToHTML();
 
         private int barWidth;
 
@@ -308,13 +268,13 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.barHeight, value);
         }
 
-        public string BarColor { get; set; }
+        public string BarColor { get; set; } = Colors.White.ToLegacy().ToHTML();
 
-        public string BarOutlineColor { get; set; }
+        public string BarOutlineColor { get; set; } = Colors.Navy.ToLegacy().ToHTML();
 
-        public string BackgroundColor { get; set; }
+        public string BackgroundColor { get; set; } = Colors.Black.ToLegacy().ToHTML();
 
-        public int BackgroundAlpha { get; set; }
+        public int BackgroundAlpha { get; set; } = 0;
 
         [XmlIgnore]
         public DateTime CompleteScheduledTime { get; set; }
@@ -379,7 +339,9 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         public double RecastTime { get; set; } = 0;
+
         public double RecastTimeExtending1 { get; set; } = 0;
+
         public double RecastTimeExtending2 { get; set; } = 0;
 
         private bool reduceIconBrightness;
@@ -422,9 +384,9 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         public string TargetName { get; set; }
 
-        public Guid[] TimersMustRunningForStart { get; set; }
+        public Guid[] TimersMustRunningForStart { get; set; } = new Guid[0];
 
-        public Guid[] TimersMustStoppingForStart { get; set; }
+        public Guid[] TimersMustStoppingForStart { get; set; } = new Guid[0];
 
         public bool TimeupHide { get; set; }
 

@@ -146,6 +146,19 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 }
             });
 
+        private ICommand CreateChangeColorWPFCommand(
+            Func<Color> getCurrentColor,
+            Action<Color> changeColorAction,
+            bool ignoreAlpha = true)
+            => new DelegateCommand(() =>
+            {
+                var result = ColorDialogWrapper.ShowDialog(getCurrentColor(), ignoreAlpha);
+                if (result.Result)
+                {
+                    changeColorAction.Invoke(result.Color);
+                }
+            });
+
         private ICommand changeFontColorCommand;
 
         public ICommand ChangeFontColorCommand =>
@@ -238,6 +251,17 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                         spell.BackgroundAlpha = alpha;
                     }
                 }));
+
+        private ICommand changeAdvancedBackgroundColorCommand;
+
+        public ICommand ChangeAdvancedBackgroundColorCommand =>
+            this.changeAdvancedBackgroundColorCommand ?? (this.changeAdvancedBackgroundColorCommand = this.CreateChangeColorWPFCommand(
+                () => this.Model.BackgroundColor,
+                (color) =>
+                {
+                    this.Model.BackgroundColor = color;
+                },
+                false));
 
         #endregion Change Colors
 
