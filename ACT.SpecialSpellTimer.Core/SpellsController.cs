@@ -163,9 +163,6 @@ namespace ACT.SpecialSpellTimer
                                 targetSpell = SpellTable.Instance.GetOrAddInstance(
                                     replacedTitle,
                                     spell);
-
-                                // インスタンスのガーベージタイマをスタートする
-                                targetSpell.StartGarbageInstanceTimer();
                             }
 
                             targetSpell.SpellTitleReplaced = replacedTitle;

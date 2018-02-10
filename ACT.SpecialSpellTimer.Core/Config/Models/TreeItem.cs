@@ -181,6 +181,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         {
                             PanelName = "New Panel",
                             SortOrder = SpellOrders.SortRecastTimeASC,
+                            Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2,
+                            Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2,
                         };
 
                         SpellPanelTable.Instance.Table.Add(newPanel);
@@ -218,26 +220,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                     case ItemTypes.SpellPanel:
                         currentPanel = item as SpellPanel;
-                        currentSpell = (
-                            from x in SpellTable.Instance.Table
-                            where
-                            !x.IsInstance &&
-                            x.PanelID == currentPanel.ID
-                            orderby
-                            x.SortPriority ascending,
-                            x.ID descending
-                            select
-                            x).FirstOrDefault();
-                        if (currentSpell != null)
-                        {
-                            newSpell = currentSpell.CreateSimilarNew();
-                        }
-                        else
-                        {
-                            newSpell = Spell.CreateNew();
-                            newSpell.PanelID = currentPanel.ID;
-                        }
-
+                        newSpell = Spell.CreateNew();
+                        newSpell.PanelID = currentPanel.ID;
                         currentPanel.IsExpanded = true;
                         break;
 
@@ -259,33 +243,17 @@ namespace ACT.SpecialSpellTimer.Config.Models
                             select
                             x).FirstOrDefault();
 
-                        if (currentPanel != null)
-                        {
-                            currentSpell = (
-                                from x in SpellTable.Instance.Table
-                                where
-                                !x.IsInstance &&
-                                x.PanelID == currentPanel.ID
-                                orderby
-                                x.SortPriority ascending,
-                                x.ID descending
-                                select
-                                x).FirstOrDefault();
-                        }
-
-                        if (currentSpell != null)
-                        {
-                            newSpell = currentSpell.CreateSimilarNew();
-                        }
-                        else
-                        {
-                            newSpell = Spell.CreateNew();
-                            newSpell.PanelID = currentPanel != null ?
-                                currentPanel.ID :
-                                SpellPanel.GeneralPanel.ID;
-                        }
+                        newSpell = Spell.CreateNew();
+                        newSpell.PanelID = currentPanel != null ?
+                            currentPanel.ID :
+                            SpellPanel.GeneralPanel.ID;
 
                         currentTag.IsExpanded = true;
+                        if (currentPanel != null)
+                        {
+                            currentPanel.IsExpanded = true;
+                        }
+
                         break;
                 }
 
@@ -340,25 +308,10 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                     case ItemTypes.Tag:
                         var currentTag = item as Tag;
-                        currentTicker = (
-                            from x in TickerTable.Instance.Table
-                            join y in TagTable.Instance.ItemTags on
-                            x.Guid equals y.ItemID
-                            where
-                            y.TagID == currentTag.ID
-                            orderby
-                            x.Title
-                            select
-                            x).FirstOrDefault();
 
-                        if (currentTicker != null)
-                        {
-                            newTicker = currentTicker.CreateSimilarNew();
-                        }
-                        else
-                        {
-                            newTicker = Ticker.CreateNew();
-                        }
+                        newTicker = Ticker.CreateNew();
+                        newTicker.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2;
+                        newTicker.Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2;
 
                         TickerTable.Instance.Table.Add(newTicker);
                         TagTable.Instance.ItemTags.Add(new ItemTags(newTicker.Guid, currentTag.ID));

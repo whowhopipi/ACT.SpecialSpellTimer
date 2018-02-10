@@ -329,8 +329,8 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
-        private volatile ConcurrentDictionary<string, Spell> instanceSpells =
-            new ConcurrentDictionary<string, Spell>();
+        private volatile Dictionary<string, Spell> instanceSpells =
+            new Dictionary<string, Spell>();
 
         /// <summary>
         /// 同じスペル表示名のインスタンスを取得するか新たに作成する
@@ -344,32 +344,36 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var instance = default(Spell);
 
-            lock (sourceSpell)
+            lock (this.instanceSpells)
             {
-                instance = this.instanceSpells.GetOrAdd(
-                    spellTitle,
-                    (title) => sourceSpell.CreateInstanceNew(title));
+                if (this.instanceSpells.ContainsKey(spellTitle))
+                {
+                    instance = this.instanceSpells[spellTitle];
+                }
+                else
+                {
+                    instance = sourceSpell.CreateInstanceNew(spellTitle);
+                    this.instanceSpells[spellTitle] = instance;
+                }
+
+                instance.CompleteScheduledTime = DateTime.MinValue;
+                instance.StartGarbageInstanceTimer();
             }
 
-            lock (instance)
+            // スペルテーブル本体に登録する
+            lock (lockObject)
             {
-                instance.CompleteScheduledTime = DateTime.MinValue;
+                instance.ID = this.table.Max(y => y.ID) + 1;
 
-                // スペルテーブル本体に登録する
-                lock (lockObject)
+                WPFHelper.BeginInvoke(() =>
                 {
-                    instance.ID = this.table.Max(y => y.ID) + 1;
-
-                    WPFHelper.BeginInvoke(() =>
+                    lock (lockObject)
                     {
-                        lock (lockObject)
-                        {
-                            this.table.Add(instance);
-                        }
-                    });
+                        this.table.Add(instance);
+                    }
+                });
 
-                    TableCompiler.Instance.AddSpell(instance);
-                }
+                TableCompiler.Instance.AddSpell(instance);
             }
 
             return instance;
@@ -380,7 +384,10 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public void RemoveInstanceSpellsAll()
         {
-            this.instanceSpells.Clear();
+            lock (this.instanceSpells)
+            {
+                this.instanceSpells.Clear();
+            }
 
             lock (lockObject)
             {
@@ -389,9 +396,9 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     this.table.Remove(item);
                 }
-            }
 
-            TableCompiler.Instance.RemoveInstanceSpells();
+                TableCompiler.Instance.RemoveInstanceSpells();
+            }
         }
 
         /// <summary>
@@ -403,37 +410,45 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var ttl = Settings.Default.TimeOfHideSpell + 30;
 
-            lock (instance)
+            if (!instance.IsInstance ||
+                instance.IsDesignMode)
+            {
+                return;
+            }
+
+            var isRemove = false;
+
+            lock (this.instanceSpells)
             {
                 if (instance.CompleteScheduledTime != DateTime.MinValue &&
                     (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
                 {
-                    if (!instance.IsInstance ||
-                        instance.IsDesignMode)
-                    {
-                        return;
-                    }
-
-                    // ガーベージタイマを止める
+                    isRemove = true;
                     instance.StopGarbageInstanceTimer();
-
-                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out Spell o);
-
-                    // スペルコレクション本体から除去する
-                    WPFHelper.BeginInvoke(() =>
-                    {
-                        lock (lockObject)
-                        {
-                            this.table.Remove(instance);
-                        }
-                    });
-
-                    // コンパイル済みリストから除去する
-                    TableCompiler.Instance.RemoveSpell(instance);
-
-                    instance.Dispose();
+                    this.instanceSpells.Remove(instance.SpellTitleReplaced);
                 }
             }
+
+            if (!isRemove)
+            {
+                return;
+            }
+
+            // スペルコレクション本体から除去する
+            lock (lockObject)
+            {
+                WPFHelper.BeginInvoke(() =>
+                {
+                    lock (lockObject)
+                    {
+                        this.table.Remove(instance);
+                    }
+                });
+
+                TableCompiler.Instance.RemoveSpell(instance);
+            }
+
+            instance.Dispose();
         }
 
         #endregion To Instance spells

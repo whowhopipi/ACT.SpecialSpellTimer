@@ -81,6 +81,11 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     t.IsRealtimeCompile = false;
                     t.IsDesignMode = false;
                 }
+
+                if (this.previousModel is SpellPanel p)
+                {
+                    this.spellPanelViewModel.ClearFirstSpellChanged();
+                }
             }
 
             switch (model)

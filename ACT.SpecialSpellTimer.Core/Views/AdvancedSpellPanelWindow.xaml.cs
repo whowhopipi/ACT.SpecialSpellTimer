@@ -230,6 +230,8 @@ namespace ACT.SpecialSpellTimer.Views
                     control.SetBinding(Canvas.TopProperty, new Binding(nameof(Spell.Top)));
                     control.SetBinding(Canvas.ZIndexProperty, new Binding(nameof(Spell.DisplayNo)));
 
+                    spell.UpdateDone = false;
+
                     this.SpellsCanvas.Children.Add(control);
                     this.spellControls.Add(control);
                 }

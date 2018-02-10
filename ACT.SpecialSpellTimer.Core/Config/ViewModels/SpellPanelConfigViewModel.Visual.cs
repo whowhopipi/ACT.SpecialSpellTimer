@@ -18,6 +18,14 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
     {
         public Spell FirstSpell { get; private set; } = null;
 
+        public void ClearFirstSpellChanged()
+        {
+            foreach (var spell in this.Model.Spells)
+            {
+                spell.PropertyChanged -= this.FirstSpell_PropertyChanged;
+            }
+        }
+
         private void RefreshFirstSpell()
         {
             if (this.FirstSpell != null)
