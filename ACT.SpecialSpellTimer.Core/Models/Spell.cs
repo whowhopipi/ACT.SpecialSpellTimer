@@ -1013,6 +1013,7 @@ namespace ACT.SpecialSpellTimer.Models
             n.BarHeight = this.BarHeight;
             n.BackgroundColor = this.BackgroundColor;
             n.BackgroundAlpha = this.BackgroundAlpha;
+            n.HideCounter = this.HideCounter;
             n.JobFilter = this.JobFilter;
             n.ZoneFilter = this.ZoneFilter;
             n.TimersMustRunningForStart = this.TimersMustRunningForStart;
@@ -1074,6 +1075,7 @@ namespace ACT.SpecialSpellTimer.Models
             n.BarHeight = this.BarHeight;
             n.BackgroundColor = this.BackgroundColor;
             n.BackgroundAlpha = this.BackgroundAlpha;
+            n.HideCounter = this.HideCounter;
             n.DontHide = this.DontHide;
             n.HideSpellName = this.HideSpellName;
             n.WarningTime = this.WarningTime;
