@@ -342,17 +342,18 @@ namespace ACT.SpecialSpellTimer.Models
             string spellTitle,
             Spell sourceSpell)
         {
-            var instance = this.instanceSpells.GetOrAdd(
-                spellTitle,
-                (title) => sourceSpell.CreateInstanceNew(title));
+            var instance = default(Spell);
+
+            lock (sourceSpell)
+            {
+                instance = this.instanceSpells.GetOrAdd(
+                    spellTitle,
+                    (title) => sourceSpell.CreateInstanceNew(title));
+            }
 
             lock (instance)
             {
                 instance.CompleteScheduledTime = DateTime.MinValue;
-
-                this.instanceSpells.TryAdd(
-                    instance.SpellTitleReplaced,
-                    instance);
 
                 // スペルテーブル本体に登録する
                 lock (lockObject)
