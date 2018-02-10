@@ -53,13 +53,6 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Logger
 
-        /* ■OLD_UI
-        /// <summary>
-        /// 設定パネル
-        /// </summary>
-        public ConfigPanel ConfigPanel { get; private set; }
-        */
-
         /// <summary>
         /// 自身の場所
         /// </summary>

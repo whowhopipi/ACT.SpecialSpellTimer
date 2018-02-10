@@ -95,7 +95,9 @@ namespace ACT.SpecialSpellTimer
             TableCompiler.Instance.Begin();
 
             // 戦闘分析を初期化する
+            /*
             CombatAnalyzer.Default.Initialize();
+            */
 
             // サウンドコントローラを開始する
             SoundController.Instance.Begin();
@@ -175,7 +177,9 @@ namespace ACT.SpecialSpellTimer
             this.isOver = true;
 
             // 戦闘分析を開放する
+            /*
             CombatAnalyzer.Default.Denitialize();
+            */
 
             // Workerを開放する
             this.refreshSpellOverlaysWorker?.Stop();
