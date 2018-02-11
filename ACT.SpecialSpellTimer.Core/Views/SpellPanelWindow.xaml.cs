@@ -295,7 +295,7 @@ namespace ACT.SpecialSpellTimer.Views
                 displayList.Add(c);
 
                 if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
-                    this.Panel.FixedPositionSpell)
+                    this.Panel.SortOrder == SpellOrders.Fixed)
                 {
                     if (!spell.IsDesignMode)
                     {
