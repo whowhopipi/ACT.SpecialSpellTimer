@@ -297,8 +297,6 @@
               <TreeView
                 Visibility="{Binding IsSpell, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
                 BorderThickness="0"
-                VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling"
                 ItemsSource="{Binding Tags, Mode=OneWay}">
                 <TreeView.Resources>
                   <!-- タグのテンプレ -->
@@ -351,8 +349,6 @@
               <TreeView
                 Visibility="{Binding IsTicker, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
                 BorderThickness="0"
-                VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling"
                 ItemsSource="{Binding Tags, Mode=OneWay}">
                 <TreeView.Resources>
                   <!-- タグのテンプレ -->
@@ -406,8 +402,6 @@
                 Visibility="{Binding IsSpell, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
                 Name="SpellsTreeView"
                 BorderThickness="0"
-                VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling"
                 ItemsSource="{Binding Spells, Mode=OneWay}">
               </TreeView>
               <!-- スペルツリー end -->
@@ -425,8 +419,6 @@
                 Visibility="{Binding IsTicker, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
                 Name="TickersTreeView"
                 BorderThickness="0"
-                VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling"
                 ItemsSource="{Binding Tickers, Mode=OneWay}">
               </TreeView>
               <!-- テロップツリー end -->

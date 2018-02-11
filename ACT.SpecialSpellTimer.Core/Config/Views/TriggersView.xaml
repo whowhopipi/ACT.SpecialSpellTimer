@@ -128,7 +128,7 @@
             </StackPanel.ContextMenu>
 
             <!-- Designモードボタン -->
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{StaticResource Tree_DesignModeDescription}">
               <Button.Content>
                 <Grid>
                   <fa:FontAwesome Icon="Wrench" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
@@ -137,7 +137,7 @@
               </Button.Content>
             </Button>
 
-            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{DynamicResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
+            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{StaticResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
             <fa:ImageAwesome Icon="ThList" />
             <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
           </StackPanel>
@@ -187,7 +187,7 @@
             </StackPanel.ContextMenu>
 
             <!-- Designモードボタン -->
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{StaticResource Tree_DesignModeDescription}">
               <Button.Content>
                 <Grid>
                   <fa:FontAwesome Icon="Wrench" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
@@ -196,7 +196,7 @@
               </Button.Content>
             </Button>
 
-            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{DynamicResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
+            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{StaticResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
             <fa:ImageAwesome Icon="Magic" />
             <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
           </StackPanel>
@@ -244,7 +244,7 @@
             </StackPanel.ContextMenu>
 
             <!-- Designモードボタン -->
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{StaticResource Tree_DesignModeDescription}">
               <Button.Content>
                 <Grid>
                   <fa:FontAwesome Icon="Wrench" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
@@ -253,7 +253,7 @@
               </Button.Content>
             </Button>
 
-            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{DynamicResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
+            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{StaticResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
             <fa:ImageAwesome Icon="Comment" />
             <TextBlock Text="{Binding DisplayText, Mode=OneWay}" />
           </StackPanel>
@@ -302,13 +302,13 @@
                 <Separator />
                 <MenuItem Header="{StaticResource AddToTag_AddToTag}" Command="{Binding AddToTagCommand, Mode=OneWay}" CommandParameter="{Binding}" />
                 <Separator />
-                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{DynamicResource Data_ImportToTag}" />
-                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{DynamicResource Data_ExportFromTag}" />
+                <MenuItem Header="{StaticResource Data_Import}" Command="{Binding ImportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ImportToTag}" />
+                <MenuItem Header="{StaticResource Data_Export}" Command="{Binding ExportCommand, Mode=OneWay}" CommandParameter="{Binding}" ToolTip="{StaticResource Data_ExportFromTag}" />
               </ContextMenu>
             </StackPanel.ContextMenu>
 
             <!-- Designモードボタン -->
-            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{DynamicResource Tree_DesignModeDescription}">
+            <Button HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Background="Transparent" BorderThickness="0" Margin="0 0 5 0" Command="{Binding DesignModeCommand}" CommandParameter="{Binding}" ToolTip="{StaticResource Tree_DesignModeDescription}">
               <Button.Content>
                 <Grid>
                   <fa:FontAwesome Icon="Wrench" Visibility="{Binding IsDesignMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" Foreground="OrangeRed" />
@@ -317,7 +317,7 @@
               </Button.Content>
             </Button>
 
-            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{DynamicResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
+            <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" ToolTip="{StaticResource Tree_EnabledDescription}" Command="{Binding ChangeEnabledCommand}" CommandParameter="{Binding}" />
             <fa:ImageAwesome Icon="Tag" />
             <TextBlock Text="{Binding Name, Mode=OneWay}" Visibility="{Binding IsInViewMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" />
             <TextBox Text="{Binding Name, Mode=OneWay}" Tag="{Binding}" MinWidth="120" Visibility="{Binding IsInEditMode, Mode=OneWay, Converter={StaticResource CollapsedConverter}}" LostFocus="RenameTextBoxOnLostFocus" KeyDown="RenameTextBoxOnKeyDown" IsVisibleChanged="RenameTextBoxOnIsVisibleChanged" />
@@ -337,15 +337,13 @@
         <!-- タグで管理タブ -->
         <TabItem Height="60">
           <TabItem.Header>
-            <fa:ImageAwesome Icon="Tag" Height="{StaticResource TabIconSize}" Foreground="Orange" ToolTip="{DynamicResource Common_ManageOnTags}" />
+            <fa:ImageAwesome Icon="Tag" Height="{StaticResource TabIconSize}" Foreground="Orange" ToolTip="{StaticResource Common_ManageOnTags}" />
           </TabItem.Header>
 
           <!-- タグツリー -->
           <TreeView
             Name="TagsTreeView"
             BorderThickness="0"
-            VirtualizingStackPanel.IsVirtualizing="True"
-            VirtualizingStackPanel.VirtualizationMode="Recycling"
             DataContext="{Binding TagsTreeRoot, Mode=OneWay}"
             ItemsSource="{Binding Children, Mode=OneWay}">
 
@@ -370,15 +368,13 @@
         <!-- すべてのスペルタブ -->
         <TabItem Height="60">
           <TabItem.Header>
-            <fa:ImageAwesome Icon="Magic" Height="{StaticResource TabIconSize}" Foreground="MediumBlue" ToolTip="{DynamicResource Common_AllSpells}" />
+            <fa:ImageAwesome Icon="Magic" Height="{StaticResource TabIconSize}" Foreground="MediumBlue" ToolTip="{StaticResource Common_AllSpells}" />
           </TabItem.Header>
 
           <!-- スペルツリー -->
           <TreeView
             Name="SpellsTreeView"
             BorderThickness="0"
-            VirtualizingStackPanel.IsVirtualizing="True"
-            VirtualizingStackPanel.VirtualizationMode="Recycling"
             DataContext="{Binding SpellsTreeRoot, Mode=OneWay}"
             ItemsSource="{Binding Children, Mode=OneWay}">
 
@@ -400,15 +396,13 @@
         <!-- すべてのテロップタブ -->
         <TabItem Height="60">
           <TabItem.Header>
-            <fa:ImageAwesome Icon="Comment" Height="{StaticResource TabIconSize}" Foreground="OliveDrab" ToolTip="{DynamicResource Common_AllTickers}" />
+            <fa:ImageAwesome Icon="Comment" Height="{StaticResource TabIconSize}" Foreground="OliveDrab" ToolTip="{StaticResource Common_AllTickers}" />
           </TabItem.Header>
 
           <!-- テロップツリー -->
           <TreeView
             Name="TickersTreeView"
             BorderThickness="0"
-            VirtualizingStackPanel.IsVirtualizing="True"
-            VirtualizingStackPanel.VirtualizationMode="Recycling"
             DataContext="{Binding TickersTreeRoot, Mode=OneWay}"
             ItemsSource="{Binding Children, Mode=OneWay}">
 
@@ -435,19 +429,19 @@
         <!-- デザインモード -->
         <CheckBox
           Padding="5"
-          Content="{DynamicResource Tree_LayoutGrid}"
+          Content="{StaticResource Tree_LayoutGrid}"
           FontWeight="Bold"
           Foreground="OrangeRed"
           VerticalAlignment="Bottom"
           VerticalContentAlignment="Center"
           IsChecked="{Binding RootConfig.VisibleDesignGrid, Mode=TwoWay}"
-          ToolTip="{DynamicResource Tree_DesignGridDescription}" />
+          ToolTip="{StaticResource Tree_DesignGridDescription}" />
 
         <!-- クリックスルー -->
         <CheckBox
           Margin="20 0 0 0"
           Padding="5"
-          Content="{DynamicResource Tree_Clickthrough}"
+          Content="{StaticResource Tree_Clickthrough}"
           FontWeight="Bold"
           Foreground="RoyalBlue"
           VerticalAlignment="Bottom"

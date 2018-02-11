@@ -242,8 +242,6 @@
               Grid.Column="0"
               BorderThickness="0"
               Margin="15 28 14 0"
-              VirtualizingPanel.IsVirtualizing="True"
-              VirtualizingPanel.VirtualizationMode="Recycling"
               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
               ScrollViewer.VerticalScrollBarVisibility="Auto"
               ItemsSource="{Binding Spells, Mode=OneWay}">
@@ -255,8 +253,6 @@
               Grid.Column="1"
               BorderThickness="0"
               Margin="15 28 14 0"
-              VirtualizingPanel.IsVirtualizing="True"
-              VirtualizingPanel.VirtualizationMode="Recycling"
               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
               ScrollViewer.VerticalScrollBarVisibility="Auto"
               ItemsSource="{Binding Tickers, Mode=OneWay}">
