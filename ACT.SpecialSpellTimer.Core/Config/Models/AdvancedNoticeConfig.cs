@@ -162,6 +162,11 @@ namespace ACT.SpecialSpellTimer.Config.Models
             string tts,
             AdvancedNoticeConfig config)
         {
+            if (string.IsNullOrEmpty(tts))
+            {
+                return;
+            }
+
             // シンクロTTSじゃない？
             if (!tts.Contains(SyncKeyword))
             {

@@ -215,12 +215,12 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region to Notice
 
-        public string MatchTextToSpeak { get; set; }
+        public string MatchTextToSpeak { get; set; } = string.Empty;
 
         [XmlIgnore]
         public bool Delayed { get; set; }
 
-        public string DelayTextToSpeak { get; set; }
+        public string DelayTextToSpeak { get; set; } = string.Empty;
 
         public AdvancedNoticeConfig MatchAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
 

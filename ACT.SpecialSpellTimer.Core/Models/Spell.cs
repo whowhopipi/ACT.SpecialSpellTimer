@@ -480,13 +480,13 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region to Notice
 
-        public string MatchTextToSpeak { get; set; }
+        public string MatchTextToSpeak { get; set; } = string.Empty;
 
         public AdvancedNoticeConfig MatchAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
 
         public double OverTime { get; set; } = 0;
 
-        public string OverTextToSpeak { get; set; }
+        public string OverTextToSpeak { get; set;  = string.Empty;
 
         [XmlIgnore]
         public bool OverDone { get; set; }
@@ -495,14 +495,14 @@ namespace ACT.SpecialSpellTimer.Models
 
         public double BeforeTime { get; set; } = 0;
 
-        public string BeforeTextToSpeak { get; set; }
+        public string BeforeTextToSpeak { get; set; } = string.Empty;
 
         [XmlIgnore]
         public bool BeforeDone { get; set; }
 
         public AdvancedNoticeConfig BeforeAdvancedConfig { get; set; } = new AdvancedNoticeConfig();
 
-        public string TimeupTextToSpeak { get; set; }
+        public string TimeupTextToSpeak { get; set; } = string.Empty;
 
         [XmlIgnore]
         public bool TimeupDone { get; set; }
