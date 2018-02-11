@@ -486,7 +486,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         public double OverTime { get; set; } = 0;
 
-        public string OverTextToSpeak { get; set;  = string.Empty;
+        public string OverTextToSpeak { get; set; } = string.Empty;
 
         [XmlIgnore]
         public bool OverDone { get; set; }
