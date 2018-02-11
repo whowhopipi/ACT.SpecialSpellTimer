@@ -101,6 +101,11 @@ namespace ACT.SpecialSpellTimer.Sound
 
                 foreach (var item in q)
                 {
+                    if (string.IsNullOrEmpty(item.Key))
+                    {
+                        continue;
+                    }
+
                     // 通常の置換
                     if (!item.Key.Contains("<") &&
                         !item.Key.Contains(">"))
