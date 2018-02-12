@@ -152,7 +152,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 this.Model.JobFilter = string.Join(",",
                     this.JobSelectors
                         .Where(x => x.IsSelected)
-                        .Select(x => x.Job.ID.ToString())
+                        .Select(x => ((int)x.Job.ID).ToString())
                         .ToArray());
 
                 this.RaisePropertyChanged(nameof(this.IsJobFiltered));
