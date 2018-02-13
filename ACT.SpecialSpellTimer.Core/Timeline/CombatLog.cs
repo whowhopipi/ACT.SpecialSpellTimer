@@ -1,6 +1,6 @@
 using System;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Timeline
 {
     /// <summary>
     /// 戦闘ログの種類

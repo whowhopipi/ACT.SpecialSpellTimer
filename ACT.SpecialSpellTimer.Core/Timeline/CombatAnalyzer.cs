@@ -11,7 +11,7 @@ using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 
-namespace ACT.SpecialSpellTimer
+namespace ACT.SpecialSpellTimer.Timeline
 {
     /// <summary>
     /// 分析キーワードの分類
