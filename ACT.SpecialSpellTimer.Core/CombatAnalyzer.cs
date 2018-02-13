@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
@@ -17,50 +18,18 @@ namespace ACT.SpecialSpellTimer
     /// </summary>
     public enum AnalyzeKeywordCategory
     {
-        /// <summary>
-        /// 未使用
-        /// </summary>
         Unknown = 0,
-
-        /// <summary>
-        /// 自分
-        /// </summary>
         Me = 0x01,
-
-        /// <summary>
-        /// パーティメンバ
-        /// </summary>
         PartyMember = 0x02,
-
-        /// <summary>
-        /// ペット
-        /// </summary>
         Pet = 0x03,
-
-        /// <summary>
-        /// 構え等準備動作
-        /// </summary>
         Cast = 0x10,
-
-        /// <summary>
-        /// 構え等準備動作 starts using
-        /// </summary>
         CastStartsUsing = 0x11,
-
-        /// <summary>
-        /// アクションの発動
-        /// </summary>
         Action = 0x20,
-
-        /// <summary>
-        /// 残HP率
-        /// </summary>
-        HPRate = 0x30,
-
-        /// <summary>
-        /// Added Combatant
-        /// </summary>
-        Added = 0x40
+        Dialogue = 0x30,
+        HPRate = 0x80,
+        Added = 0x81,
+        Start = 0x90,
+        End = 0x91,
     }
 
     /// <summary>
@@ -71,12 +40,12 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// キーワードの分類
         /// </summary>
-        public AnalyzeKeywordCategory Category { get; set; }
+        public AnalyzeKeywordCategory Category { get; set; } = AnalyzeKeywordCategory.Unknown;
 
         /// <summary>
         /// キーワード
         /// </summary>
-        public string Keyword { get; set; }
+        public string Keyword { get; set; } = string.Empty;
 
         /// <summary>
         /// 同一カテゴリのキーワードをまとめて生成する
@@ -138,7 +107,23 @@ namespace ACT.SpecialSpellTimer
             @"\[.+?\] ..:(?<actor>.+?) HP at (?<hprate>\d+?)%",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly IReadOnlyCollection<AnalyzeKeyword> Keywords = new List<AnalyzeKeyword>()
+        private static readonly Regex StartsUsingRegex = new Regex(
+            @"14:..:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+        private static readonly Regex DialogRegex = new Regex(
+            @"00:0044:(?<dialog>.+?)$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+        private static readonly Regex CombatStartRegex = new Regex(
+            @"00:0039:(?<discription>.+?)$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+        private static readonly Regex CombatEndRegex = new Regex(
+            @"00:....:(?<discription>.+?)$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+        private static readonly IList<AnalyzeKeyword> Keywords = new[]
         {
             new AnalyzeKeyword() { Keyword = "・エギ", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "フェアリー・", Category = AnalyzeKeywordCategory.Pet },
@@ -146,15 +131,16 @@ namespace ACT.SpecialSpellTimer
             new AnalyzeKeyword() { Keyword = "を唱えた。", Category = AnalyzeKeywordCategory.Cast },
             new AnalyzeKeyword() { Keyword = "の構え。", Category = AnalyzeKeywordCategory.Cast },
             new AnalyzeKeyword() { Keyword = "starts using", Category = AnalyzeKeywordCategory.CastStartsUsing },
-            new AnalyzeKeyword() { Keyword = "「", Category = AnalyzeKeywordCategory.Action },
-            new AnalyzeKeyword() { Keyword = "」", Category = AnalyzeKeywordCategory.Action },
             new AnalyzeKeyword() { Keyword = "HP at", Category = AnalyzeKeywordCategory.HPRate },
             new AnalyzeKeyword() { Keyword = "Added new combatant", Category = AnalyzeKeywordCategory.Added },
+            new AnalyzeKeyword() { Keyword = "00:0044:", Category = AnalyzeKeywordCategory.Dialogue },
+            new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始", Category = AnalyzeKeywordCategory.Start },
+            new AnalyzeKeyword() { Keyword = "の攻略を終了した。", Category = AnalyzeKeywordCategory.End },
+            new AnalyzeKeyword() { Keyword = "ロットを行ってください。", Category = AnalyzeKeywordCategory.End },
+            new AnalyzeKeyword() { Keyword = "00:0038:wipeout", Category = AnalyzeKeywordCategory.End },
+            new AnalyzeKeyword() { Keyword = "「", Category = AnalyzeKeywordCategory.Action },
+            new AnalyzeKeyword() { Keyword = "」", Category = AnalyzeKeywordCategory.Action },
         };
-
-        private static readonly Regex StartsUsingRegex = new Regex(
-            @"14:..:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         /// <summary>
         /// ログ一時バッファ
@@ -169,12 +155,12 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログ格納スレッド
         /// </summary>
-        private System.Timers.Timer storeLogWorker;
+        private DispatcherTimer storeLogWorker;
 
         /// <summary>
         /// 戦闘ログのリスト
         /// </summary>
-        public List<CombatLog> CurrentCombatLogList { get; private set; } = new List<CombatLog>();
+        public ObservableCollection<CombatLog> CurrentCombatLogList { get; private set; } = new ObservableCollection<CombatLog>();
 
         /// <summary>
         /// アクターのHP率
@@ -194,7 +180,7 @@ namespace ACT.SpecialSpellTimer
                 this.StartPoller();
                 ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
                 ActGlobals.oFormActMain.OnLogLineRead += this.FormActMain_OnLogLineRead;
-                Logger.Write("start combat analyze.");
+                Logger.Write("start timeline analyze.");
             }
         }
 
@@ -209,7 +195,7 @@ namespace ACT.SpecialSpellTimer
 
             this.ClearLogBuffer();
             this.CurrentCombatLogList.Clear();
-            Logger.Write("end combat analyze.");
+            Logger.Write("end timeline analyze.");
         }
 
         /// <summary>
@@ -220,15 +206,14 @@ namespace ACT.SpecialSpellTimer
             this.ClearLogInfoQueue();
 
             if (this.storeLogWorker != null &&
-                this.storeLogWorker.Enabled)
+                this.storeLogWorker.IsEnabled)
             {
                 return;
             }
 
-            this.storeLogWorker = new System.Timers.Timer();
-            this.storeLogWorker.AutoReset = true;
-            this.storeLogWorker.Interval = 1000;
-            this.storeLogWorker.Elapsed += (s, e) =>
+            this.storeLogWorker = new DispatcherTimer(DispatcherPriority.Background);
+            this.storeLogWorker.Interval = TimeSpan.FromSeconds(3);
+            this.storeLogWorker.Tick += (s, e) =>
             {
                 this.StoreLogPoller();
             };
@@ -242,64 +227,8 @@ namespace ACT.SpecialSpellTimer
         public void EndPoller()
         {
             this.storeLogWorker?.Stop();
-            this.storeLogWorker?.Dispose();
             this.storeLogWorker = null;
             this.ClearLogInfoQueue();
-        }
-
-        /// <summary>
-        /// ログを分析する
-        /// </summary>
-        public void AnalyzeLog()
-        {
-            this.AnalyzeLogAsync(this.CurrentCombatLogList);
-        }
-
-        /// <summary>
-        /// ログを分析する
-        /// </summary>
-        /// <param name="logList">ログのリスト</param>
-        public async void AnalyzeLogAsync(
-            List<CombatLog> logList)
-        {
-            CombatLog[] logs;
-
-            lock (this.CurrentCombatLogList)
-            {
-                if (logList == null ||
-                    logList.Count < 1)
-                {
-                    return;
-                }
-
-                logs = logList.OrderBy(x => x.ID).ToArray();
-            }
-
-            var previouseAction = new Dictionary<string, DateTime>();
-
-            await Task.Run(() =>
-            {
-                foreach (var log in logs)
-                {
-                    if (log.LogType == CombatLogType.AnalyzeStart ||
-                        log.LogType == CombatLogType.AnalyzeEnd ||
-                        log.LogType == CombatLogType.HPRate)
-                    {
-                        continue;
-                    }
-
-                    var key = log.LogType.ToString() + "-" + log.Actor + "-" + log.Action;
-
-                    // 直前の同じログを探す
-                    if (previouseAction.ContainsKey(key))
-                    {
-                        log.Span = (log.TimeStamp - previouseAction[key]).TotalSeconds;
-                    }
-
-                    // 記録しておく
-                    previouseAction[key] = log.TimeStamp;
-                }
-            });
         }
 
         /// <summary>
@@ -320,9 +249,8 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private void ClearLogInfoQueue()
         {
-            while (!this.logInfoQueue.IsEmpty)
+            while (this.logInfoQueue.TryDequeue(out LogLineEventArgs l))
             {
-                this.logInfoQueue.TryDequeue(out LogLineEventArgs l);
             }
         }
 
@@ -357,7 +285,7 @@ namespace ACT.SpecialSpellTimer
         /// 分析用のキーワードを取得する
         /// </summary>
         /// <returns>キーワードコレクション</returns>
-        private IReadOnlyCollection<string> GetPartyMemberNames()
+        private IList<string> GetPartyMemberNames()
         {
             var names = new List<string>();
 
@@ -402,7 +330,7 @@ namespace ACT.SpecialSpellTimer
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Action = $"{match.Groups["skill"].ToString()} の発動",
+                Activity = $"{match.Groups["skill"].ToString()} の発動",
                 LogType = CombatLogType.Action
             };
 
@@ -430,7 +358,7 @@ namespace ACT.SpecialSpellTimer
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Action = "Added",
+                Activity = "Added",
                 LogType = CombatLogType.Added
             };
 
@@ -458,7 +386,7 @@ namespace ACT.SpecialSpellTimer
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Action = $"{match.Groups["skill"].ToString()} の準備動作",
+                Activity = $"{match.Groups["skill"].ToString()} の準備動作",
                 LogType = CombatLogType.CastStart
             };
 
@@ -486,7 +414,7 @@ namespace ACT.SpecialSpellTimer
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Action = $"starts using {match.Groups["skill"].ToString()}",
+                Activity = $"starts using {match.Groups["skill"].ToString()}",
                 LogType = CombatLogType.CastStart
             };
 
@@ -524,6 +452,87 @@ namespace ACT.SpecialSpellTimer
         }
 
         /// <summary>
+        /// セリフを格納する
+        /// </summary>
+        /// <param name="logInfo">ログ情報</param>
+        private void StoreDialog(
+            LogLineEventArgs logInfo)
+        {
+            var match = DialogRegex.Match(logInfo.logLine);
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var dialog = match.Groups["dialog"].ToString();
+
+            var log = new CombatLog()
+            {
+                TimeStamp = logInfo.detectedTime,
+                Raw = logInfo.logLine,
+                Actor = string.Empty,
+                Activity = dialog,
+                LogType = CombatLogType.Dialog
+            };
+
+            this.StoreLog(log);
+        }
+
+        /// <summary>
+        /// 戦闘開始を格納する
+        /// </summary>
+        /// <param name="logInfo">ログ情報</param>
+        private void StoreStartCombat(
+            LogLineEventArgs logInfo)
+        {
+            var match = CombatStartRegex.Match(logInfo.logLine);
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var discription = match.Groups["discription"].ToString();
+
+            var log = new CombatLog()
+            {
+                TimeStamp = logInfo.detectedTime,
+                Raw = logInfo.logLine,
+                Actor = string.Empty,
+                Activity = discription,
+                LogType = CombatLogType.CombatStart
+            };
+
+            this.StoreLog(log);
+        }
+
+        /// <summary>
+        /// 戦闘終了を格納する
+        /// </summary>
+        /// <param name="logInfo">ログ情報</param>
+        private void StoreEndCombat(
+            LogLineEventArgs logInfo)
+        {
+            var match = CombatEndRegex.Match(logInfo.logLine);
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var discription = match.Groups["discription"].ToString();
+
+            var log = new CombatLog()
+            {
+                TimeStamp = logInfo.detectedTime,
+                Raw = logInfo.logLine,
+                Actor = string.Empty,
+                Activity = discription,
+                LogType = CombatLogType.CombatEnd
+            };
+
+            this.StoreLog(log);
+        }
+
+        /// <summary>
         /// ログを格納する
         /// </summary>
         /// <param name="log">ログ</param>
@@ -532,11 +541,11 @@ namespace ACT.SpecialSpellTimer
         {
             switch (log.LogType)
             {
-                case CombatLogType.AnalyzeStart:
+                case CombatLogType.CombatStart:
                     log.LogTypeName = "開始";
                     break;
 
-                case CombatLogType.AnalyzeEnd:
+                case CombatLogType.CombatEnd:
                     log.LogTypeName = "終了";
                     break;
 
@@ -555,6 +564,10 @@ namespace ACT.SpecialSpellTimer
                 case CombatLogType.HPRate:
                     log.LogTypeName = "残HP率";
                     break;
+
+                case CombatLogType.Dialog:
+                    log.LogTypeName = "セリフ";
+                    break;
             }
 
             lock (this.CurrentCombatLogList)
@@ -562,15 +575,6 @@ namespace ACT.SpecialSpellTimer
                 // IDを発番する
                 log.ID = this.id;
                 this.id++;
-
-                // バッファサイズを超えた？
-                if (this.CurrentCombatLogList.Count >
-                    (Settings.Default.CombatLogBufferSize * 1.1m))
-                {
-                    // オーバー分を消去する
-                    var over = (int)(this.CurrentCombatLogList.Count - Settings.Default.CombatLogBufferSize);
-                    this.CurrentCombatLogList.RemoveRange(0, over);
-                }
 
                 // 経過秒を求める
                 if (this.CurrentCombatLogList.Count > 0)
@@ -598,24 +602,23 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         private void StoreLogPoller()
         {
-            var analyzeLogLine = new Func<string, IReadOnlyCollection<AnalyzeKeyword>, AnalyzeKeywordCategory>(
-                (log, keywords) =>
-                {
-                    var key = (
-                        from x in keywords
-                        where
-                        log.Contains(x.Keyword)
-                        select
-                        x).FirstOrDefault();
+            AnalyzeKeywordCategory analyzeLogLine(string log, IList<AnalyzeKeyword> keywords)
+            {
+                var key = (
+                    from x in keywords
+                    where
+                    log.Contains(x.Keyword)
+                    select
+                    x).FirstOrDefault();
 
-                    return key != null ?
-                        key.Category :
-                        AnalyzeKeywordCategory.Unknown;
-                });
+                return key != null ?
+                    key.Category :
+                    AnalyzeKeywordCategory.Unknown;
+            }
 
             while (!this.logInfoQueue.IsEmpty)
             {
-                Thread.Sleep(0);
+                Thread.Yield();
 
                 this.logInfoQueue.TryDequeue(out LogLineEventArgs log);
 
@@ -649,6 +652,27 @@ namespace ACT.SpecialSpellTimer
 
                     case AnalyzeKeywordCategory.Added:
                         this.StoreAddedLog(log);
+                        break;
+
+                    case AnalyzeKeywordCategory.Dialogue:
+                        this.StoreDialog(log);
+                        break;
+
+                    case AnalyzeKeywordCategory.Start:
+                        // 戦闘開始でバッファを消去する
+                        lock (this.CurrentCombatLogList)
+                        {
+                            if (this.CurrentCombatLogList.Count > 32)
+                            {
+                                this.CurrentCombatLogList.Clear();
+                            }
+                        }
+
+                        this.StoreStartCombat(log);
+                        break;
+
+                    case AnalyzeKeywordCategory.End:
+                        this.StoreEndCombat(log);
                         break;
 
                     default:
