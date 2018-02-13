@@ -346,13 +346,37 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.saveLogDirectory, value);
         }
 
+        #region Data - Timeline
+
+        private bool autoCombatLogAnalyze;
+
+        public bool AutoCombatLogAnalyze
+        {
+            get => this.autoCombatLogAnalyze;
+            set => this.SetProperty(ref this.autoCombatLogAnalyze, value);
+        }
+
+        private bool autoCombatLogSave;
+
+        public bool AutoCombatLogSave
+        {
+            get => this.autoCombatLogSave;
+            set => this.SetProperty(ref this.autoCombatLogSave, value);
+        }
+
+        private string combatLogSaveDirectory = string.Empty;
+
+        public string CombatLogSaveDirectory
+        {
+            get => this.combatLogSaveDirectory;
+            set => this.SetProperty(ref this.combatLogSaveDirectory, value);
+        }
+
+        #endregion Data - Timeline
+
         #endregion Data
 
         #region Data - Hidden
-
-        public bool CombatLogEnabled { get; set; }
-
-        public long CombatLogBufferSize { get; set; }
 
         public bool AutoSortEnabled { get; set; }
 
@@ -524,7 +548,6 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.TimeOfHideSpell), 1.0d },
             { nameof(Settings.LogPollSleepInterval), 10 },
             { nameof(Settings.RefreshInterval), 60 },
-            { nameof(Settings.CombatLogBufferSize), 30000 },
             { nameof(Settings.ReduceIconBrightness), 55 },
             { nameof(Settings.Opacity), 10 },
             { nameof(Settings.OverlayVisible), true },
@@ -532,7 +555,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.ClickThroughEnabled), false },
             { nameof(Settings.AutoSortReverse), false },
             { nameof(Settings.EnabledPartyMemberPlaceholder), true },
-            { nameof(Settings.CombatLogEnabled), false },
+            { nameof(Settings.AutoCombatLogAnalyze), false },
             { nameof(Settings.EnabledSpellTimerNoDecimal), true },
             { nameof(Settings.EnabledNotifyNormalSpellTimer), false },
             { nameof(Settings.SaveLogEnabled), false },

@@ -175,7 +175,7 @@ namespace ACT.SpecialSpellTimer.Timeline
             this.ClearLogBuffer();
             this.CurrentCombatLogList.Clear();
 
-            if (Settings.Default.CombatLogEnabled)
+            if (Settings.Default.AutoCombatLogAnalyze)
             {
                 this.StartPoller();
                 ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
@@ -265,7 +265,7 @@ namespace ACT.SpecialSpellTimer.Timeline
         {
             try
             {
-                if (!Settings.Default.CombatLogEnabled)
+                if (!Settings.Default.AutoCombatLogAnalyze)
                 {
                     return;
                 }
