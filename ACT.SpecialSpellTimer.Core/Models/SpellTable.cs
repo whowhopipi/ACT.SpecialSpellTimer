@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -41,6 +40,33 @@ namespace ACT.SpecialSpellTimer.Models
         /// SpellTimerデータテーブル
         /// </summary>
         public ObservableCollection<Spell> Table => this.table;
+
+        public void Add(
+            Spell spell)
+        {
+            lock (this.table)
+            {
+                this.table.Add(spell);
+            }
+        }
+
+        public void AddRange(
+            IEnumerable<Spell> spells)
+        {
+            lock (this.table)
+            {
+                this.table.AddRange(spells);
+            }
+        }
+
+        public void Remove(
+            Spell spell)
+        {
+            lock (this.table)
+            {
+                this.table.Remove(spell);
+            }
+        }
 
         /// <summary>
         /// カウントをリセットする
@@ -363,13 +389,11 @@ namespace ACT.SpecialSpellTimer.Models
             // スペルテーブル本体に登録する
             lock (lockObject)
             {
-                instance.ID = this.table.Max(y => y.ID) + 1;
-
                 WPFHelper.BeginInvoke(() =>
                 {
                     lock (lockObject)
                     {
-                        this.table.Add(instance);
+                        this.Add(instance);
                     }
                 });
 
@@ -394,7 +418,7 @@ namespace ACT.SpecialSpellTimer.Models
                 var targets = this.table.Where(x => x.IsInstance).ToArray();
                 foreach (var item in targets)
                 {
-                    this.table.Remove(item);
+                    this.Remove(item);
                 }
 
                 TableCompiler.Instance.RemoveInstanceSpells();
@@ -441,7 +465,7 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     lock (lockObject)
                     {
-                        this.table.Remove(instance);
+                        this.Remove(instance);
                     }
                 });
 

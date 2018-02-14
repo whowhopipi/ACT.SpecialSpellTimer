@@ -259,7 +259,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                 if (newSpell != null)
                 {
-                    SpellTable.Instance.Table.Add(newSpell);
+                    SpellTable.Instance.Add(newSpell);
                     SpellTable.Instance.Save();
 
                     // スペルの追加は選択状態にせずパネルを展開状態にするだけにする
@@ -287,13 +287,13 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         newTicker = Ticker.CreateNew();
                         newTicker.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2;
                         newTicker.Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2;
-                        TickerTable.Instance.Table.Add(newTicker);
+                        TickerTable.Instance.Add(newTicker);
                         break;
 
                     case ItemTypes.Ticker:
                         currentTicker = item as Ticker;
                         newTicker = currentTicker.CreateSimilarNew();
-                        TickerTable.Instance.Table.Add(newTicker);
+                        TickerTable.Instance.Add(newTicker);
 
                         foreach (var tagID in
                             TagTable.Instance.ItemTags
@@ -313,7 +313,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         newTicker.Top = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height / 2;
                         newTicker.Left = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width / 2;
 
-                        TickerTable.Instance.Table.Add(newTicker);
+                        TickerTable.Instance.Add(newTicker);
                         TagTable.Instance.ItemTags.Add(new ItemTags(newTicker.Guid, currentTag.ID));
                         currentTag.IsExpanded = true;
                         break;
@@ -420,7 +420,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         foreach (var target in targets)
                         {
                             target.IsDesignMode = false;
-                            SpellTable.Instance.Table.Remove(target);
+                            SpellTable.Instance.Remove(target);
                         }
 
                         foreach (var toRemove in
@@ -445,7 +445,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                         var spell = item as Spell;
                         spell.IsDesignMode = false;
-                        SpellTable.Instance.Table.Remove(spell);
+                        SpellTable.Instance.Remove(spell);
                         break;
 
                     case ItemTypes.Ticker:
@@ -467,7 +467,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         }
 
                         ticker.IsDesignMode = false;
-                        TickerTable.Instance.Table.Remove(ticker);
+                        TickerTable.Instance.Remove(ticker);
                         break;
                 }
             }));
@@ -657,12 +657,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
                     if (data.Spells.Any())
                     {
-                        SpellTable.Instance.Table.AddRange(data.Spells);
+                        SpellTable.Instance.AddRange(data.Spells);
                     }
 
                     if (data.Tickers.Any())
                     {
-                        TickerTable.Instance.Table.AddRange(data.Tickers);
+                        TickerTable.Instance.AddRange(data.Tickers);
                     }
 
                     if (data.Tag != null)

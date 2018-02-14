@@ -41,6 +41,33 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public ObservableCollection<Ticker> Table => this.table;
 
+        public void Add(
+            Ticker ticker)
+        {
+            lock (this.table)
+            {
+                this.table.Add(ticker);
+            }
+        }
+
+        public void AddRange(
+            IEnumerable<Ticker> tickers)
+        {
+            lock (this.table)
+            {
+                this.table.AddRange(tickers);
+            }
+        }
+
+        public void Remove(
+            Ticker ticker)
+        {
+            lock (this.table)
+            {
+                this.table.Remove(ticker);
+            }
+        }
+
         /// <summary>
         /// テーブルファイルをバックアップする
         /// </summary>
