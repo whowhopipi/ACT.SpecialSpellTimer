@@ -391,10 +391,7 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 WPFHelper.BeginInvoke(() =>
                 {
-                    lock (lockObject)
-                    {
-                        this.Add(instance);
-                    }
+                    this.Add(instance);
                 });
 
                 TableCompiler.Instance.AddSpell(instance);
@@ -463,10 +460,7 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 WPFHelper.BeginInvoke(() =>
                 {
-                    lock (lockObject)
-                    {
-                        this.Remove(instance);
-                    }
+                    this.Remove(instance);
                 });
 
                 TableCompiler.Instance.RemoveSpell(instance);
