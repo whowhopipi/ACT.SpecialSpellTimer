@@ -110,6 +110,7 @@
       HeadersVisibility="All"
       VirtualizingPanel.IsVirtualizing="True"
       VirtualizingPanel.VirtualizationMode="Recycling"
+      ClipboardCopyMode="ExcludeHeader"
       ItemsSource="{Binding Path=CombatLogs, Mode=OneWay}">
 
       <DataGrid.RowStyle>
@@ -129,6 +130,7 @@
           IsReadOnly="True"
           SortMemberPath="No"
           Header="No"
+          ClipboardContentBinding="{Binding No, Mode=OneWay}"
           MinWidth="10">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
@@ -144,6 +146,7 @@
           IsReadOnly="True"
           SortMemberPath="TimeStampElapted"
           Header="Time"
+          ClipboardContentBinding="{Binding TimeStampElapted, Mode=OneWay}"
           MinWidth="75">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
@@ -164,6 +167,7 @@
           IsReadOnly="True"
           SortMemberPath="Actor"
           Header="Actor"
+          ClipboardContentBinding="{Binding Actor, Mode=OneWay}"
           MinWidth="130">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
@@ -177,6 +181,7 @@
         <DataGridTemplateColumn
           IsReadOnly="True"
           Header="HP"
+          ClipboardContentBinding="{Binding HPRate, Mode=OneWay}"
           MinWidth="60">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
@@ -191,6 +196,7 @@
         <DataGridTemplateColumn
           IsReadOnly="True"
           Header="Activity"
+          ClipboardContentBinding="{Binding Activity, Mode=OneWay}"
           MinWidth="300">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
@@ -205,6 +211,7 @@
           IsReadOnly="True"
           Header="Log"
           MinWidth="200"
+          ClipboardContentBinding="{Binding RawWithoutTimestamp, Mode=OneWay}"
           Width="*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
