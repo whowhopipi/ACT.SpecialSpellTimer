@@ -40,12 +40,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// キーワードの分類
         /// </summary>
-        public AnalyzeKeywordCategory Category { get; set; } = AnalyzeKeywordCategory.Unknown;
+        public AnalyzeKeywordCategory Category
+        {
+            get;
+            set;
+        } = AnalyzeKeywordCategory.Unknown;
 
         /// <summary>
         /// キーワード
         /// </summary>
-        public string Keyword { get; set; } = string.Empty;
+        public string Keyword
+        {
+            get;
+            set;
+        } = string.Empty;
 
         /// <summary>
         /// 同一カテゴリのキーワードをまとめて生成する
@@ -90,6 +98,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public static CombatAnalyzer Default => instance;
 
         #endregion Singleton
+
+        public const string WipeoutLog = "00:0038:wipeout";
 
         private static readonly Regex ActionRegex = new Regex(
             @"\[.+?\] 00:....:(?<actor>.+?)の「(?<skill>.+?)」$",
@@ -137,7 +147,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始", Category = AnalyzeKeywordCategory.Start },
             new AnalyzeKeyword() { Keyword = "の攻略を終了した。", Category = AnalyzeKeywordCategory.End },
             new AnalyzeKeyword() { Keyword = "ロットを行ってください。", Category = AnalyzeKeywordCategory.End },
-            new AnalyzeKeyword() { Keyword = "00:0038:wipeout", Category = AnalyzeKeywordCategory.End },
+            new AnalyzeKeyword() { Keyword = WipeoutLog, Category = AnalyzeKeywordCategory.End },
             new AnalyzeKeyword() { Keyword = "「", Category = AnalyzeKeywordCategory.Action },
             new AnalyzeKeyword() { Keyword = "」", Category = AnalyzeKeywordCategory.Action },
         };
@@ -158,50 +168,60 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private DispatcherTimer storeLogWorker;
 
         /// <summary>
+        /// ログ格納中？
+        /// </summary>
+        private bool isStoreLogAnalyzing;
+
+        /// <summary>
         /// 戦闘ログのリスト
         /// </summary>
-        public ObservableCollection<CombatLog> CurrentCombatLogList { get; private set; } = new ObservableCollection<CombatLog>();
+        public ObservableCollection<CombatLog> CurrentCombatLogList
+        {
+            get;
+            private set;
+        } = new ObservableCollection<CombatLog>();
 
         /// <summary>
         /// アクターのHP率
         /// </summary>
-        private Dictionary<string, decimal> ActorHPRate { get; set; } = new Dictionary<string, decimal>();
+        private Dictionary<string, decimal> ActorHPRate
+        {
+            get;
+            set;
+        } = new Dictionary<string, decimal>();
 
         /// <summary>
         /// 分析を開始する
         /// </summary>
-        public void Initialize()
+        public void Start()
         {
             this.ClearLogBuffer();
-            this.CurrentCombatLogList.Clear();
 
             if (Settings.Default.AutoCombatLogAnalyze)
             {
                 this.StartPoller();
                 ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
                 ActGlobals.oFormActMain.OnLogLineRead += this.FormActMain_OnLogLineRead;
-                Logger.Write("start timeline analyze.");
+                Logger.Write("Start Timeline Analyze.");
             }
         }
 
         /// <summary>
         /// 分析を停止する
         /// </summary>
-        public void Denitialize()
+        public void End()
         {
             ActGlobals.oFormActMain.OnLogLineRead -= this.FormActMain_OnLogLineRead;
 
             this.EndPoller();
-
             this.ClearLogBuffer();
-            this.CurrentCombatLogList.Clear();
-            Logger.Write("end timeline analyze.");
+            Logger.Write("End Timeline Analyze.");
         }
 
         /// <summary>
         /// ログのポーリングを開始する
         /// </summary>
-        public void StartPoller()
+        private void StartPoller()
         {
             this.ClearLogInfoQueue();
 
@@ -215,26 +235,55 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             this.storeLogWorker.Interval = TimeSpan.FromSeconds(3);
             this.storeLogWorker.Tick += (s, e) =>
             {
-                this.StoreLogPoller();
+                lock (this)
+                {
+                    if (this.isStoreLogAnalyzing)
+                    {
+                        return;
+                    }
+
+                    this.isStoreLogAnalyzing = true;
+
+                    try
+                    {
+                        this.StoreLogPoller();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Write(
+                            "catch exception at StoreLog.",
+                            ex);
+                    }
+                    finally
+                    {
+                        this.isStoreLogAnalyzing = false;
+                    }
+                }
             };
 
+            this.isStoreLogAnalyzing = false;
             this.storeLogWorker.Start();
         }
 
         /// <summary>
         /// ログのポーリングを終了する
         /// </summary>
-        public void EndPoller()
+        private void EndPoller()
         {
-            this.storeLogWorker?.Stop();
-            this.storeLogWorker = null;
+            lock (this)
+            {
+                this.storeLogWorker?.Stop();
+                this.storeLogWorker = null;
+                this.isStoreLogAnalyzing = false;
+            }
+
             this.ClearLogInfoQueue();
         }
 
         /// <summary>
         /// ログバッファをクリアする
         /// </summary>
-        public void ClearLogBuffer()
+        private void ClearLogBuffer()
         {
             lock (this.CurrentCombatLogList)
             {
@@ -276,8 +325,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             catch (Exception ex)
             {
                 Logger.Write(
-                    "catch exception at Combat Analyzer OnLogLineRead.\n" +
-                    ex.ToString());
+                    "catch exception at Timeline Analyzer OnLogLineRead.",
+                    ex);
             }
         }
 
@@ -539,37 +588,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private void StoreLog(
             CombatLog log)
         {
-            switch (log.LogType)
-            {
-                case CombatLogType.CombatStart:
-                    log.LogTypeName = "開始";
-                    break;
-
-                case CombatLogType.CombatEnd:
-                    log.LogTypeName = "終了";
-                    break;
-
-                case CombatLogType.CastStart:
-                    log.LogTypeName = "準備動作";
-                    break;
-
-                case CombatLogType.Action:
-                    log.LogTypeName = "アクション";
-                    break;
-
-                case CombatLogType.Added:
-                    log.LogTypeName = "Added";
-                    break;
-
-                case CombatLogType.HPRate:
-                    log.LogTypeName = "残HP率";
-                    break;
-
-                case CombatLogType.Dialog:
-                    log.LogTypeName = "セリフ";
-                    break;
-            }
-
             lock (this.CurrentCombatLogList)
             {
                 // IDを発番する
@@ -577,20 +595,21 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.id++;
 
                 // 経過秒を求める
-                if (this.CurrentCombatLogList.Count > 0)
+                var origin = this.CurrentCombatLogList.FirstOrDefault();
+                if (origin != null)
                 {
-                    log.TimeStampElapted =
-                        (log.TimeStamp - this.CurrentCombatLogList.First().TimeStamp).TotalSeconds;
-                }
-                else
-                {
-                    log.TimeStampElapted = 0;
+                    log.TimeStampElapted = log.TimeStamp - origin.TimeStamp;
                 }
 
                 // アクター別の残HP率をセットする
                 if (this.ActorHPRate.ContainsKey(log.Actor))
                 {
                     log.HPRate = this.ActorHPRate[log.Actor];
+                }
+
+                if (!this.CurrentCombatLogList.Any())
+                {
+                    log.IsOrigin = true;
                 }
 
                 this.CurrentCombatLogList.Add(log);
@@ -616,11 +635,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     AnalyzeKeywordCategory.Unknown;
             }
 
-            while (!this.logInfoQueue.IsEmpty)
+            while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
             {
                 Thread.Yield();
-
-                this.logInfoQueue.TryDequeue(out LogLineEventArgs log);
 
                 if (log == null)
                 {
@@ -665,6 +682,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             if (this.CurrentCombatLogList.Count > 32)
                             {
                                 this.CurrentCombatLogList.Clear();
+                                this.ActorHPRate.Clear();
+                            }
+
+                            if (!this.CurrentCombatLogList.Any())
+                            {
+                                Logger.Write("Start Combat");
                             }
                         }
 
@@ -672,6 +695,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         break;
 
                     case AnalyzeKeywordCategory.End:
+                        Logger.Write("End Combat");
                         this.StoreEndCombat(log);
                         break;
 

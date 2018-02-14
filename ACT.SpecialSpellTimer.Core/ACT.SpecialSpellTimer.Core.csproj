@@ -49,9 +49,6 @@
     <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
@@ -78,9 +75,6 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Wpf.6.3.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -109,6 +103,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatLogWorker.cs" />
+    <Compile Include="Config\Views\TimelineAnalyzerView.xaml.cs">
+      <DependentUpon>TimelineAnalyzerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\TimelineManagerView.xaml.cs">
+      <DependentUpon>TimelineManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Config\Views\TimelineView.xaml.cs">
+      <DependentUpon>TimelineView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RaidTimeline\CombatAnalyzer.cs" />
     <Compile Include="RaidTimeline\CombatLog.cs" />
     <Compile Include="Config\BaseView.xaml.cs">
@@ -397,6 +400,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Views\TickerConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TimelineAnalyzerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TimelineManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TimelineView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

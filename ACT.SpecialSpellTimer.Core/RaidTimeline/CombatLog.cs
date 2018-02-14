@@ -7,13 +7,31 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     /// </summary>
     public enum CombatLogType
     {
-        CombatStart = 0,
-        CombatEnd = 1,
-        CastStart = 2,
-        Action = 3,
-        Added = 4,
-        HPRate = 5,
-        Dialog = 6,
+        Unknown = 0,
+        CombatStart,
+        CombatEnd,
+        CastStart,
+        Action,
+        Added,
+        HPRate,
+        Dialog,
+    }
+
+    public static class CombatLogTypeExtensions
+    {
+        public static string ToText(
+            this CombatLogType t)
+            => new[]
+            {
+                "UNKNOWN",
+                "Combat Start",
+                "Combat End",
+                "Starts Using",
+                "Action",
+                "Added",
+                "HP Rate",
+                "Dialog",
+            }[(int)t];
     }
 
     /// <summary>
@@ -21,17 +39,59 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     /// </summary>
     public class CombatLog
     {
-        public string Activity { get; set; } = string.Empty;
-        public string Actor { get; set; } = string.Empty;
-        public double CastTime { get; set; }
-        public decimal HPRate { get; set; }
-        public long ID { get; set; }
+        /// <summary>
+        /// 一意な連番
+        /// </summary>
+        public long ID { get; set; } = 0;
+
+        /// <summary>
+        /// 起点？
+        /// </summary>
         public bool IsOrigin { get; set; }
-        public CombatLogType LogType { get; set; }
-        public string LogTypeName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// ログのタイムスタンプ
+        /// </summary>
+        public DateTime TimeStamp { get; set; } = DateTime.MinValue;
+
+        /// <summary>
+        /// 経過時間
+        /// </summary>
+        public TimeSpan TimeStampElapted { get; set; } = TimeSpan.Zero;
+
+        /// <summary>
+        /// ログの種類
+        /// </summary>
+        public CombatLogType LogType { get; set; } = CombatLogType.Unknown;
+
+        /// <summary>
+        /// ログの種類
+        /// </summary>
+        public string LogTypeName => this.LogType.ToText();
+
+        /// <summary>
+        /// 発生したActivity
+        /// </summary>
+        public string Activity { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Actor
+        /// </summary>
+        public string Actor { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Actorの残HP率
+        /// </summary>
+        public decimal HPRate { get; set; }
+
+        /// <summary>
+        /// ナマのログ
+        /// </summary>
         public string Raw { get; set; } = string.Empty;
-        public string Target { get; set; } = string.Empty;
-        public DateTime TimeStamp { get; set; }
-        public double TimeStampElapted { get; set; }
+
+        /// <summary>
+        /// ナマのログからタイムスタンプを除去した部分
+        /// </summary>
+        public string RawWithoutTimestamp => this.Raw.Substring(15);
     }
 }

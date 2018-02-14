@@ -12,6 +12,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
@@ -494,16 +495,22 @@ namespace ACT.SpecialSpellTimer
                     SpellTable.ResetCount();
                     TickerTable.Instance.ResetCount();
 
-                    // ACT本体に戦闘終了を通知する
-                    if (Settings.Default.WipeoutNotifyToACT)
+                    this.lastWipeOutDateTime = DateTime.Now;
+
+                    ActInvoker.Invoke(() =>
                     {
-                        ActInvoker.Invoke(() =>
+                        // wipeouログを発生させる
+                        ActGlobals.oFormActMain.ParseRawLogLine(
+                            false,
+                            DateTime.Now,
+                            CombatAnalyzer.WipeoutLog);
+
+                        // ACT本体に戦闘終了を通知する
+                        if (Settings.Default.WipeoutNotifyToACT)
                         {
                             ActGlobals.oFormActMain.ActCommands("end");
-                        });
-                    }
-
-                    this.lastWipeOutDateTime = DateTime.Now;
+                        }
+                    });
                 }
             }
         }
