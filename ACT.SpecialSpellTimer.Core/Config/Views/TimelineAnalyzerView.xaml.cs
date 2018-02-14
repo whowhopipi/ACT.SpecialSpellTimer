@@ -1,11 +1,13 @@
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.resources;
@@ -27,11 +29,26 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+
+            this.CombatLogs.CollectionChanged += (x, y) =>
+            {
+                this.RaisePropertyChanged(nameof(this.Zone));
+            };
         }
+
+        private CollectionViewSource combatLogSource = new CollectionViewSource()
+        {
+            Source = CombatAnalyzer.Instance.CurrentCombatLogList,
+            IsLiveFilteringRequested = true,
+            IsLiveSortingRequested = true,
+            IsLiveGroupingRequested = true,
+        };
 
         public Settings RootConfig => Settings.Default;
 
-        public ObservableCollection<CombatLog> CombatLogs => CombatAnalyzer.Instance.CurrentCombatLogList;
+        public ICollectionView CombatLogs => this.combatLogSource.View;
+
+        public string Zone => this.CombatLogs.Cast<CombatLog>().FirstOrDefault()?.Zone;
 
         private void AutoCombatLogAnalyze_Checked(
             object sender,
@@ -75,6 +92,55 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 if (Directory.Exists(dir))
                 {
                     Process.Start(dir);
+                }
+            }));
+
+        private System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog()
+        {
+            RestoreDirectory = true,
+            Filter = "Spreadsheet Files|*.xlsx|All Files|*.*",
+            FilterIndex = 0,
+            DefaultExt = ".xlsx",
+            SupportMultiDottedExtensions = true,
+        };
+
+        private ICommand saveToSpreadsheetCommand;
+
+        public ICommand SaveToSpreadsheetCommand =>
+            this.saveToSpreadsheetCommand ?? (this.saveToSpreadsheetCommand = new DelegateCommand(async () =>
+            {
+                var logs = this.CombatLogs.Cast<CombatLog>()?.ToList();
+                if (logs == null ||
+                    !logs.Any())
+                {
+                    return;
+                }
+
+                this.saveFileDialog.FileName =
+                    $"{DateTime.Now.ToString("yyyy-MM-dd")}.{logs.First().Zone}.CombatLog.xlsx";
+
+                if (this.saveFileDialog.ShowDialog(ActGlobals.oFormActMain)
+                    == System.Windows.Forms.DialogResult.OK)
+                {
+                    var file = this.saveFileDialog.FileName;
+                    this.saveFileDialog.FileName = Path.GetFileName(file);
+
+                    try
+                    {
+                        await Task.Run(() => CombatAnalyzer.Instance.SaveToSpreadsheet(file, logs));
+
+                        ModernMessageBox.ShowDialog(
+                            $"CombatLog Saved.\n\n\"{Path.GetFileName(file)}\"",
+                            "Timeline Analyzer");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModernMessageBox.ShowDialog(
+                            $"Save CombatLog Error.",
+                            "Timeline Analyzer",
+                            MessageBoxButton.OK,
+                            ex);
+                    }
                 }
             }));
 

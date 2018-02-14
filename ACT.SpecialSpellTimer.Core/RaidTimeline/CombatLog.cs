@@ -43,6 +43,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     public class CombatLog :
         BindableBase
     {
+        public static bool TotalSecondFormat { get; set; } = false;
+
         private long no;
 
         public long No
@@ -98,7 +100,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// 経過時間
         /// </summary>
-        public string TimeStampElaptedString => this.TimeStampElapted.ToTLString();
+        public string TimeStampElaptedString =>
+            TotalSecondFormat ?
+            this.TimeStampElapted.ToSecondString() :
+            this.TimeStampElapted.ToTLString();
 
         /// <summary>
         /// ログの種類
@@ -142,6 +147,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// ナマのログからタイムスタンプを除去した部分
         /// </summary>
         public string RawWithoutTimestamp => this.Raw.Substring(15);
+
+        public string Zone { get; set; } = string.Empty;
 
         public SolidColorBrush Background
         {

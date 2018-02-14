@@ -82,7 +82,16 @@
       <!-- コンテンツエリア -->
       <Grid Grid.Row="1" Margin="5 10 5 10" MinHeight="150" MinWidth="400">
         <StackPanel VerticalAlignment="Center">
-          <TextBox Margin="5 0 5 0" Text="{Binding Message, Mode=OneWay}" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" IsReadOnly="True" BorderThickness="0" />
+          <TextBox
+            Margin="5 0 5 0"
+            Text="{Binding Message, Mode=OneWay}"
+            HorizontalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            FontSize="20"
+            FontWeight="Bold"
+            TextWrapping="Wrap"
+            IsReadOnly="True"
+            BorderThickness="0" />
 
           <Expander Header="{DynamicResource Common_Details}" Margin="5 30 5 0" Visibility="{Binding HasDetails, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" IsExpanded="True">
             <ScrollViewer

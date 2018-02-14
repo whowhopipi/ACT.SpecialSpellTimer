@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -10,6 +11,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using NPOI.SS.UserModel;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -266,6 +268,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             this.isStoreLogAnalyzing = false;
             this.storeLogWorker.Start();
+
+            this.inCombat = false;
         }
 
         /// <summary>
@@ -624,6 +628,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private void StoreLog(
             CombatLog log)
         {
+            var zone = ActGlobals.oFormActMain.CurrentZone;
+            zone = string.IsNullOrEmpty(zone) ?
+                "UNKNOWN" :
+                zone;
+
             lock (this.CurrentCombatLogList)
             {
                 // IDを発番する
@@ -652,11 +661,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     log.IsOrigin = true;
                 }
 
+                // ゾーンを保存する
+                log.Zone = zone;
+
                 this.CurrentCombatLogList.Add(log);
             }
         }
 
         private long no;
+        private bool inCombat;
 
         /// <summary>
         /// ログを格納するスレッド
@@ -694,59 +707,196 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         break;
 
                     case AnalyzeKeywordCategory.Cast:
-                        this.StoreCastLog(log);
+                        if (this.inCombat)
+                        {
+                            this.StoreCastLog(log);
+                        }
                         break;
 
                     case AnalyzeKeywordCategory.CastStartsUsing:
                         /*
                         starts using は準備動作をかぶるので無視する
-                        this.StoreCastStartsUsingLog(log);
+                        if (this.inCombat)
+                        {
+                            this.StoreCastStartsUsingLog(log);
+                        }
                         */
                         break;
 
                     case AnalyzeKeywordCategory.Action:
-                        this.StoreActionLog(log);
+                        if (this.inCombat)
+                        {
+                            this.StoreActionLog(log);
+                        }
                         break;
 
                     case AnalyzeKeywordCategory.HPRate:
-                        this.StoreHPRateLog(log);
+                        if (this.inCombat)
+                        {
+                            this.StoreHPRateLog(log);
+                        }
                         break;
 
                     case AnalyzeKeywordCategory.Added:
-                        this.StoreAddedLog(log);
+                        if (this.inCombat)
+                        {
+                            this.StoreAddedLog(log);
+                        }
                         break;
 
                     case AnalyzeKeywordCategory.Dialogue:
-                        this.StoreDialog(log);
+                        if (this.inCombat)
+                        {
+                            this.StoreDialog(log);
+                        }
                         break;
 
                     case AnalyzeKeywordCategory.Start:
-                        // 戦闘開始でバッファを消去する
                         lock (this.CurrentCombatLogList)
                         {
-                            if (this.CurrentCombatLogList.Count > 32)
+                            if (!this.inCombat)
                             {
                                 this.CurrentCombatLogList.Clear();
                                 this.ActorHPRate.Clear();
-                            }
-
-                            if (!this.CurrentCombatLogList.Any())
-                            {
+                                this.partyNames = null;
                                 this.no = 1;
                                 Logger.Write("Start Combat");
                             }
+
+                            this.inCombat = true;
                         }
 
-                        this.partyNames = null;
                         this.StoreStartCombat(log);
                         break;
 
                     case AnalyzeKeywordCategory.End:
-                        Logger.Write("End Combat");
-                        this.StoreEndCombat(log);
+                        lock (this.CurrentCombatLogList)
+                        {
+                            if (this.inCombat)
+                            {
+                                this.inCombat = false;
+                                this.StoreEndCombat(log);
+                                Logger.Write("End Combat");
+                            }
+                        }
                         break;
 
                     default:
+                        break;
+                }
+            }
+        }
+
+        public void SaveToSpreadsheet(
+            string file,
+            IList<CombatLog> combatLogs)
+        {
+            var master = Path.Combine(
+                DirectoryHelper.FindSubDirectory("resources"),
+                "CombatLogBase.xlsx");
+
+            var work = Path.Combine(
+                DirectoryHelper.FindSubDirectory("resources"),
+                "CombatLogBase_work.xlsx");
+
+            if (!File.Exists(master))
+            {
+                throw new FileNotFoundException(
+                   $"CombatLog Master File Not Found. {master}");
+            }
+
+            File.Copy(master, work, true);
+
+            var book = WorkbookFactory.Create(work);
+            var sheet = book.GetSheet("CombatLog");
+
+            try
+            {
+                // セルの書式を生成する
+                var noStyle = book.CreateCellStyle();
+                var timeStyle = book.CreateCellStyle();
+                var textStyle = book.CreateCellStyle();
+                var perStyle = book.CreateCellStyle();
+                noStyle.DataFormat = book.CreateDataFormat().GetFormat("#,##0_ ");
+                timeStyle.DataFormat = book.CreateDataFormat().GetFormat("mm:ss");
+                textStyle.DataFormat = book.CreateDataFormat().GetFormat("@");
+                perStyle.DataFormat = book.CreateDataFormat().GetFormat("0.0%");
+
+                var now = DateTime.Now;
+
+                var row = 1;
+                foreach (var data in combatLogs)
+                {
+                    var timeAsDateTime = new DateTime(
+                        now.Year,
+                        now.Month,
+                        now.Day,
+                        0,
+                        data.TimeStampElapted.Minutes,
+                        data.TimeStampElapted.Seconds);
+
+                    var col = 0;
+
+                    writeCell<long>(sheet, row, col++, data.No, noStyle);
+                    writeCell<DateTime>(sheet, row, col++, timeAsDateTime, timeStyle);
+                    writeCell<double>(sheet, row, col++, data.TimeStampElapted.TotalSeconds, noStyle);
+                    writeCell<string>(sheet, row, col++, data.LogTypeName, textStyle);
+                    writeCell<string>(sheet, row, col++, data.Actor, textStyle);
+                    writeCell<decimal>(sheet, row, col++, data.HPRate, perStyle);
+                    writeCell<string>(sheet, row, col++, data.Activity, textStyle);
+                    writeCell<string>(sheet, row, col++, data.RawWithoutTimestamp, textStyle);
+                    writeCell<string>(sheet, row, col++, data.Zone, textStyle);
+
+                    row++;
+                }
+
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
+
+                using (var fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write))
+                {
+                    book.Write(fs);
+                }
+            }
+            finally
+            {
+                book?.Close();
+                File.Delete(work);
+            }
+
+            // セルの編集内部メソッド
+            void writeCell<T>(ISheet sh, int r, int c, T v, ICellStyle style)
+            {
+                var rowObj = sh.GetRow(r) ?? sheet.CreateRow(r);
+                var cellObj = rowObj.GetCell(c) ?? rowObj.CreateCell(c);
+
+                switch (Type.GetTypeCode(typeof(T)))
+                {
+                    case TypeCode.SByte:
+                    case TypeCode.Byte:
+                    case TypeCode.Int16:
+                    case TypeCode.UInt16:
+                    case TypeCode.Int32:
+                    case TypeCode.UInt32:
+                    case TypeCode.Int64:
+                    case TypeCode.UInt64:
+                    case TypeCode.Single:
+                    case TypeCode.Double:
+                    case TypeCode.Decimal:
+                        cellObj.SetCellValue(Convert.ToDouble(v));
+                        cellObj.CellStyle = style;
+                        break;
+
+                    case TypeCode.DateTime:
+                        cellObj.SetCellValue(Convert.ToDateTime(v));
+                        cellObj.CellStyle = style;
+                        break;
+
+                    case TypeCode.String:
+                        cellObj.SetCellValue(Convert.ToString(v));
+                        cellObj.CellStyle = style;
                         break;
                 }
             }

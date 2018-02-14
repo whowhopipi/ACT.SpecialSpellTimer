@@ -214,4 +214,5 @@
   <system:String x:Key="Timeline_AutoCombatAnalyze">自動タイムライン分析</system:String>
   <system:String x:Key="Timeline_AutoCombatSave">分析結果の自動保存</system:String>
   <system:String x:Key="Timeline_AutoCombatSaveDirectory">分析結果の自動保存先</system:String>
+  <system:String x:Key="Timeline_SaveToSpreadsheet">スプレッドシートに保存する</system:String>
 </ResourceDictionary>
