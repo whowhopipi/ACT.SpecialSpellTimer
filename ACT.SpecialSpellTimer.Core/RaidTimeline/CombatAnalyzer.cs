@@ -380,7 +380,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Activity = $"{match.Groups["skill"].ToString()} の発動",
+                Activity = $"{match.Groups["skill"].ToString()}",
                 LogType = CombatLogType.Action
             };
 
@@ -436,7 +436,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Activity = $"{match.Groups["skill"].ToString()} の準備動作",
+                Activity = $"{match.Groups["skill"].ToString()} Start",
                 LogType = CombatLogType.CastStart
             };
 
@@ -521,7 +521,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = string.Empty,
-                Activity = dialog,
+                Activity = "Dialog",
                 LogType = CombatLogType.Dialog
             };
 
@@ -657,7 +657,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         break;
 
                     case AnalyzeKeywordCategory.CastStartsUsing:
+                        /*
+                        starts using は準備動作をかぶるので無視する
                         this.StoreCastStartsUsingLog(log);
+                        */
                         break;
 
                     case AnalyzeKeywordCategory.Action:
