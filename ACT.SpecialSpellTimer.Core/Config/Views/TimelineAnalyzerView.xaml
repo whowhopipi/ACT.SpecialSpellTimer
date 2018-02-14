@@ -29,6 +29,26 @@
 
   <UserControl.Resources>
     <ResourceDictionary>
+      <Style TargetType="Label">
+        <Setter Property="Padding" Value="0" />
+      </Style>
+
+      <Style TargetType="CheckBox">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+      </Style>
+
+      <Style TargetType="TextBox">
+        <EventSetter Event="MouseDoubleClick" Handler="TextBoxOnGotFocus" />
+        <EventSetter Event="GotKeyboardFocus" Handler="TextBoxOnGotFocus" />
+        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TextBoxSelect" />
+        <Style.Triggers>
+          <Trigger Property="IsReadOnly" Value="True">
+            <Setter Property="Foreground" Value="Silver" />
+          </Trigger>
+        </Style.Triggers>
+      </Style>
+
       <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
 
       <fwcnv:BoolToCollapsedConverter x:Key="CollapsedConverter" />
@@ -40,4 +60,123 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </UserControl.Resources>
+
+  <Grid Margin="8">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+
+    <!-- Cofig Area -->
+    <StackPanel Grid.Row="0">
+      <CheckBox Margin="0 8 0 0" Content="{DynamicResource Timeline_AutoCombatAnalyze}" IsChecked="{Binding Path=RootConfig.AutoCombatLogAnalyze, Mode=TwoWay}" Checked="AutoCombatLogAnalyze_Checked" Unchecked="AutoCombatLogAnalyzex_Unchecked" />
+      <CheckBox Margin="0 8 0 0" Content="{DynamicResource Timeline_AutoCombatSave}" IsChecked="{Binding Path=RootConfig.AutoCombatLogSave, Mode=TwoWay}" />
+
+      <StackPanel Visibility="{Binding Path=RootConfig.AutoCombatLogSave, Mode=OneWay, Converter={StaticResource CollapsedConverter}}">
+        <Label Margin="0 8 0 0" Content="{DynamicResource Timeline_AutoCombatSaveDirectory}" />
+        <TextBox Margin="0 3 0 0" Width="450" Text="{Binding Path=RootConfig.CombatLogSaveDirectory, Mode=TwoWay}" HorizontalAlignment="Left" />
+
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Margin="0 5 0 0" HorizontalAlignment="Left">
+            <Hyperlink Command="{Binding BrowseLogDirectoryCommand}">
+              <TextBlock Text="{DynamicResource Options_Browse}" />
+            </Hyperlink>
+          </TextBlock>
+
+          <TextBlock Margin="15 5 0 0" HorizontalAlignment="Left">
+            <Hyperlink Command="{Binding OpenLogCommand}">
+              <TextBlock Text="Open" />
+            </Hyperlink>
+          </TextBlock>
+        </StackPanel>
+      </StackPanel>
+    </StackPanel>
+    <!-- Cofig Area end -->
+
+    <!-- Combat Log Area -->
+    <DataGrid
+      Grid.Row="1"
+      Margin="0 20 0 0"
+      BorderThickness="0"
+      AutoGenerateColumns="False"
+      IsReadOnly="True"
+      Background="Transparent"
+      HorizontalGridLinesBrush="Transparent"
+      VerticalGridLinesBrush="Transparent"
+      HorizontalAlignment="Stretch"
+      HeadersVisibility="Column"
+      VirtualizingPanel.IsVirtualizing="True"
+      VirtualizingPanel.VirtualizationMode="Recycling"
+      ItemsSource="{Binding Path=CombatLogs, Mode=OneWay}">
+      <DataGrid.Columns>
+        <DataGridTextColumn
+          IsReadOnly="True"
+          Header="Time"
+          Binding="{Binding TimeStampElaptedString}"
+          MinWidth="60" />
+
+        <DataGridTextColumn
+          IsReadOnly="True"
+          Header="Activity Type"
+          Binding="{Binding LogTypeName}"
+          MinWidth="130" />
+
+        <DataGridTemplateColumn
+          IsReadOnly="True"
+          SortMemberPath="Actor"
+          Header="Actor"
+          MinWidth="130">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock
+                Margin="0 0 20 0"
+                Text="{Binding Actor}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn
+          IsReadOnly="True"
+          Header="HP"
+          MinWidth="60">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock
+                Margin="0 0 10 0"
+                Text="{Binding HPRateText}"
+                HorizontalAlignment="Right" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn
+          IsReadOnly="True"
+          Header="Activity"
+          MinWidth="300">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock
+                Margin="0 0 20 0"
+                Text="{Binding Activity}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn
+          IsReadOnly="True"
+          Header="Log"
+          MinWidth="200"
+          Width="*">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock
+                Text="{Binding RawWithoutTimestamp}"
+                TextWrapping="Wrap" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+    <!-- Combat Log Area end -->
+  </Grid>
 </UserControl>

@@ -23,6 +23,9 @@
     <TabItem Header="Triggers" IsSelected="True">
       <views:TriggersView x:Name="TriggersView" />
     </TabItem>
+    <TabItem Header="Timeline">
+      <views:TimelineView x:Name="TimelineView" />
+    </TabItem>
     <TabItem Header="Options">
       <views:OptionsView x:Name="OptionsView" />
     </TabItem>

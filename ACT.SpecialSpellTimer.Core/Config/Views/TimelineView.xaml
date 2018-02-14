@@ -11,6 +11,7 @@
   xmlns:resources="clr-namespace:ACT.SpecialSpellTimer.resources"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
+  xmlns:fa="http://schemas.fontawesome.io/icons/"
   d:DataContext="{d:DesignInstance Type=local:TimelineView, IsDesignTimeCreatable=True}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   d:DesignWidth="1280"
@@ -25,7 +26,8 @@
   TextOptions.TextRenderingMode="ClearType"
   IsTabStop="False"
   Focusable="False"
-  mc:Ignorable="d">
+  mc:Ignorable="d"
+  Padding="0 3 3 3">
 
   <UserControl.Resources>
     <ResourceDictionary>
@@ -40,4 +42,34 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </UserControl.Resources>
+
+  <TabControl
+    Margin="0"
+    Padding="0"
+    Grid.Row="0"
+    TabStripPlacement="Left">
+
+    <TabControl.Resources>
+      <!-- 切替タブのアイコンサイズ -->
+      <system:Double x:Key="TabIconSize">20</system:Double>
+    </TabControl.Resources>
+
+    <!-- Timeline Analyzer タブ -->
+    <TabItem Height="60">
+      <TabItem.Header>
+        <fa:ImageAwesome Icon="PlayCircleOutline" Height="{StaticResource TabIconSize}" ToolTip="{StaticResource Timeline_Analyzer}" />
+      </TabItem.Header>
+      <local:TimelineAnalyzerView />
+    </TabItem>
+    <!-- Timeline Analyzer タブ end -->
+
+    <!-- Timeline Manager タブ -->
+    <TabItem Height="60">
+      <TabItem.Header>
+        <fa:ImageAwesome Icon="ClockOutline" Height="{StaticResource TabIconSize}" ToolTip="{StaticResource Timeline_Manager}" />
+      </TabItem.Header>
+      <local:TimelineManagerView />
+    </TabItem>
+    <!-- Timeline Manager タブ end -->
+  </TabControl>
 </UserControl>

@@ -1,4 +1,5 @@
 using System;
+using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -60,6 +61,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimeSpan TimeStampElapted { get; set; } = TimeSpan.Zero;
 
         /// <summary>
+        /// 経過時間
+        /// </summary>
+        public string TimeStampElaptedString => this.TimeStampElapted.ToTLString();
+
+        /// <summary>
         /// ログの種類
         /// </summary>
         public CombatLogType LogType { get; set; } = CombatLogType.Unknown;
@@ -83,6 +89,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// Actorの残HP率
         /// </summary>
         public decimal HPRate { get; set; }
+
+        /// <summary>
+        /// Actorの残HP率
+        /// </summary>
+        public string HPRateText =>
+            this.HPRate != 0 ?
+            this.HPRate.ToString("P1") :
+            string.Empty;
 
         /// <summary>
         /// ナマのログ

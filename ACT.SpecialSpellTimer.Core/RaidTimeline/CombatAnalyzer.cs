@@ -90,12 +90,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// シングルトンInstance
         /// </summary>
-        private static CombatAnalyzer instance = new CombatAnalyzer();
+        private static CombatAnalyzer instance;
 
         /// <summary>
         /// シングルトンInstance
         /// </summary>
-        public static CombatAnalyzer Default => instance;
+        public static CombatAnalyzer Instance =>
+            instance ?? (instance = new CombatAnalyzer());
 
         #endregion Singleton
 
