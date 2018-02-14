@@ -1,5 +1,7 @@
 using System;
+using System.Windows.Media;
 using FFXIV.Framework.Extensions;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -38,27 +40,60 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     /// <summary>
     /// 戦闘ログ
     /// </summary>
-    public class CombatLog
+    public class CombatLog :
+        BindableBase
     {
+        private long no;
+
+        public long No
+        {
+            get => this.no;
+            set => this.SetProperty(ref this.no, value);
+        }
+
         /// <summary>
         /// 一意な連番
         /// </summary>
         public long ID { get; set; } = 0;
 
+        private bool isOrigin;
+
         /// <summary>
         /// 起点？
         /// </summary>
-        public bool IsOrigin { get; set; }
+        public bool IsOrigin
+        {
+            get => this.isOrigin;
+            set
+            {
+                if (this.SetProperty(ref this.isOrigin, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.Background));
+                }
+            }
+        }
 
         /// <summary>
         /// ログのタイムスタンプ
         /// </summary>
         public DateTime TimeStamp { get; set; } = DateTime.MinValue;
 
+        private TimeSpan timeStampElapted = TimeSpan.Zero;
+
         /// <summary>
         /// 経過時間
         /// </summary>
-        public TimeSpan TimeStampElapted { get; set; } = TimeSpan.Zero;
+        public TimeSpan TimeStampElapted
+        {
+            get => this.timeStampElapted;
+            set
+            {
+                if (this.SetProperty(ref this.timeStampElapted, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.TimeStampElaptedString));
+                }
+            }
+        }
 
         /// <summary>
         /// 経過時間
@@ -107,5 +142,55 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// ナマのログからタイムスタンプを除去した部分
         /// </summary>
         public string RawWithoutTimestamp => this.Raw.Substring(15);
+
+        public SolidColorBrush Background
+        {
+            get
+            {
+                var color = Colors.White;
+
+                if (this.IsOrigin)
+                {
+                    color = Colors.YellowGreen;
+                }
+                else
+                {
+                    switch (this.LogType)
+                    {
+                        case CombatLogType.CombatStart:
+                            color = Colors.Wheat;
+                            break;
+
+                        case CombatLogType.CombatEnd:
+                            color = Colors.Wheat;
+                            break;
+
+                        case CombatLogType.CastStart:
+                            color = Colors.OrangeRed;
+                            break;
+
+                        case CombatLogType.Action:
+                            color = Colors.Sienna;
+                            break;
+
+                        case CombatLogType.Added:
+                            color = Colors.LightGray;
+                            break;
+
+                        case CombatLogType.HPRate:
+                            color = Colors.Silver;
+                            break;
+
+                        case CombatLogType.Dialog:
+                            color = Colors.Peru;
+                            break;
+                    }
+                }
+
+                color.A = (byte)(255 * 0.2);
+
+                return new SolidColorBrush(color);
+            }
+        }
     }
 }

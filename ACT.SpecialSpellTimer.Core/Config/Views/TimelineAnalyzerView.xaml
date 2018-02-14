@@ -104,21 +104,55 @@
       HorizontalGridLinesBrush="Transparent"
       VerticalGridLinesBrush="Transparent"
       HorizontalAlignment="Stretch"
-      HeadersVisibility="Column"
-      VirtualizingPanel.IsVirtualizing="True"
-      VirtualizingPanel.VirtualizationMode="Recycling"
+      HeadersVisibility="All"
       ItemsSource="{Binding Path=CombatLogs, Mode=OneWay}">
+
+      <DataGrid.RowStyle>
+        <Style TargetType="DataGridRow">
+          <Setter Property="Background" Value="{Binding Background, Mode=OneWay}" />
+        </Style>
+      </DataGrid.RowStyle>
+
+      <DataGrid.RowHeaderStyle>
+        <Style TargetType="DataGridRowHeader">
+          <Setter Property="Width" Value="14" />
+        </Style>
+      </DataGrid.RowHeaderStyle>
+
       <DataGrid.Columns>
-        <DataGridTextColumn
+        <DataGridTemplateColumn
           IsReadOnly="True"
+          SortMemberPath="No"
+          Header="No"
+          MinWidth="10">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock
+                Margin="5 0 10 0"
+                TextAlignment="Right"
+                Text="{Binding No, StringFormat=N0, Mode=OneWay}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTemplateColumn
+          IsReadOnly="True"
+          SortMemberPath="TimeStampElapted"
           Header="Time"
-          Binding="{Binding TimeStampElaptedString}"
-          MinWidth="60" />
+          MinWidth="75">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock
+                Margin="5 0 5 0"
+                Text="{Binding TimeStampElaptedString, Mode=OneWay}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
 
         <DataGridTextColumn
           IsReadOnly="True"
           Header="Activity Type"
-          Binding="{Binding LogTypeName}"
+          Binding="{Binding LogTypeName, Mode=OneWay}"
           MinWidth="130" />
 
         <DataGridTemplateColumn
@@ -130,7 +164,7 @@
             <DataTemplate>
               <TextBlock
                 Margin="0 0 20 0"
-                Text="{Binding Actor}" />
+                Text="{Binding Actor, Mode=OneWay}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -143,7 +177,7 @@
             <DataTemplate>
               <TextBlock
                 Margin="0 0 10 0"
-                Text="{Binding HPRateText}"
+                Text="{Binding HPRateText, Mode=OneWay}"
                 HorizontalAlignment="Right" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
@@ -157,7 +191,7 @@
             <DataTemplate>
               <TextBlock
                 Margin="0 0 20 0"
-                Text="{Binding Activity}" />
+                Text="{Binding Activity, Mode=OneWay}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -170,7 +204,7 @@
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <TextBlock
-                Text="{Binding RawWithoutTimestamp}"
+                Text="{Binding RawWithoutTimestamp, Mode=OneWay}"
                 TextWrapping="Wrap" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>

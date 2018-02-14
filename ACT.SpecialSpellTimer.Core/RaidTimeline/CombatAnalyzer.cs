@@ -139,6 +139,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "・エギ", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "フェアリー・", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "カーバンクル・", Category = AnalyzeKeywordCategory.Pet },
+            new AnalyzeKeyword() { Keyword = "オートタレット", Category = AnalyzeKeywordCategory.Pet },
+            new AnalyzeKeyword() { Keyword = "デミ・バハムート", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "を唱えた。", Category = AnalyzeKeywordCategory.Cast },
             new AnalyzeKeyword() { Keyword = "の構え。", Category = AnalyzeKeywordCategory.Cast },
             new AnalyzeKeyword() { Keyword = "starts using", Category = AnalyzeKeywordCategory.CastStartsUsing },
@@ -362,6 +364,39 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             return names;
         }
 
+        private IList<string> partyNames = null;
+
+        private static readonly Regex PCNameRegex = new Regex(
+            @"[a-zA-Z'\.]+ [a-zA-Z'\.]+",
+            RegexOptions.Compiled);
+
+        /// <summary>
+        /// ログを保存する対象のActorか？
+        /// </summary>
+        /// <param name="actor">アクター</param>
+        /// <returns>保存対象か？</returns>
+        private bool ToStoreActor(
+            string actor)
+        {
+            if (string.IsNullOrEmpty(actor))
+            {
+                return true;
+            }
+
+            if (this.partyNames == null)
+            {
+                this.partyNames = this.GetPartyMemberNames();
+            }
+
+#if !DEBUG
+            if (this.partyNames.Any())
+            {
+                return !this.partyNames.Contains(actor);
+            }
+#endif
+            return !PCNameRegex.Match(actor).Success;
+        }
+
         /// <summary>
         /// アクションログを格納する
         /// </summary>
@@ -384,7 +419,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 LogType = CombatLogType.Action
             };
 
-            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            if (this.ToStoreActor(log.Actor))
             {
                 this.StoreLog(log);
             }
@@ -412,7 +447,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 LogType = CombatLogType.Added
             };
 
-            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            if (this.ToStoreActor(log.Actor))
             {
                 this.StoreLog(log);
             }
@@ -440,7 +475,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 LogType = CombatLogType.CastStart
             };
 
-            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            if (this.ToStoreActor(log.Actor))
             {
                 this.StoreLog(log);
             }
@@ -468,7 +503,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 LogType = CombatLogType.CastStart
             };
 
-            if (!this.GetPartyMemberNames().Any(x => x == log.Actor))
+            if (this.ToStoreActor(log.Actor))
             {
                 this.StoreLog(log);
             }
@@ -489,7 +524,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var actor = match.Groups["actor"].ToString();
 
-            if (!string.IsNullOrWhiteSpace(actor))
+            if (this.ToStoreActor(actor))
             {
                 decimal hprate;
                 if (!decimal.TryParse(match.Groups["hprate"].ToString(), out hprate))
@@ -595,6 +630,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 log.ID = this.id;
                 this.id++;
 
+                // 今回の分析の連番を付与する
+                log.No = this.no;
+                this.no++;
+
                 // 経過秒を求める
                 var origin = this.CurrentCombatLogList.FirstOrDefault();
                 if (origin != null)
@@ -616,6 +655,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.CurrentCombatLogList.Add(log);
             }
         }
+
+        private long no;
 
         /// <summary>
         /// ログを格納するスレッド
@@ -691,10 +732,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                             if (!this.CurrentCombatLogList.Any())
                             {
+                                this.no = 1;
                                 Logger.Write("Start Combat");
                             }
                         }
 
+                        this.partyNames = null;
                         this.StoreStartCombat(log);
                         break;
 
