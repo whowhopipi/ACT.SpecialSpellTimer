@@ -186,9 +186,9 @@
                 <Setter Property="Foreground" Value="OrangeRed" />
               </Style>
             </StackPanel.Resources>
-            <Label Content="{StaticResource SpellPanel_VisualWarning1}" />
-            <Label Content="{StaticResource SpellPanel_VisualWarning2}" />
-            <Label Content="{StaticResource SpellPanel_VisualWarning3}" />
+            <Label Content="{DynamicResource SpellPanel_VisualWarning1}" />
+            <Label Content="{DynamicResource SpellPanel_VisualWarning2}" />
+            <Label Content="{DynamicResource SpellPanel_VisualWarning3}" />
           </StackPanel>
 
           <!-- Visualタブの左側 -->

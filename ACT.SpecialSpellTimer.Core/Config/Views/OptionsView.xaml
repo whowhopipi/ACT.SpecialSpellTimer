@@ -71,7 +71,7 @@
       x:Name="MenuTreeView"
       Margin="5 8 0 8"
       BorderThickness="0"
-      ItemContainerStyle="{StaticResource MenuStyle}"
+      ItemContainerStyle="{DynamicResource MenuStyle}"
       SelectedItemChanged="TreeView_SelectedItemChanged">
       <TreeViewItem Header="Language" TabIndex="0" />
       <TreeViewItem Header="{DynamicResource Common_General}" TabIndex="1" x:Name="StartingTab" />
