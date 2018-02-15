@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Input;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.resources;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 
@@ -66,7 +68,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         private System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog()
         {
-            Description = "ログの保存先を選択してください。",
+            Description = "分析結果の保存先を選択してください。",
             ShowNewFolderButton = true,
         };
 
@@ -95,6 +97,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
             }));
 
+        private System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+        {
+            RestoreDirectory = true,
+            Filter = "CombatLog Files|*.log|All Files|*.*",
+            FilterIndex = 0,
+            DefaultExt = ".log",
+            SupportMultiDottedExtensions = true,
+        };
+
         private System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog()
         {
             RestoreDirectory = true,
@@ -103,6 +114,107 @@ namespace ACT.SpecialSpellTimer.Config.Views
             DefaultExt = ".xlsx",
             SupportMultiDottedExtensions = true,
         };
+
+        private ICommand setOriginCommand;
+
+        public ICommand SetOriginCommand =>
+            this.setOriginCommand ?? (this.setOriginCommand = new DelegateCommand(async () =>
+            {
+                var originLog = this.CombatLogDataGrid.SelectedItem as CombatLog;
+
+                if (originLog == null)
+                {
+                    return;
+                }
+
+                await WPFHelper.BeginInvoke(() =>
+                {
+                    var combatLogs = this.CombatLogs.Cast<CombatLog>();
+
+                    foreach (var log in combatLogs)
+                    {
+                        log.IsOrigin = false;
+
+                        var ts = log.TimeStamp - originLog.TimeStamp;
+                        if (ts.TotalMinutes <= 60 &&
+                            ts.TotalMinutes >= -60)
+                        {
+                            log.TimeStampElapted = ts;
+                        }
+                        else
+                        {
+                            log.TimeStampElapted = TimeSpan.Zero;
+                        }
+                    }
+
+                    originLog.IsOrigin = true;
+                });
+            }));
+
+        private ICommand changeSecondsFormatCommand;
+
+        public ICommand ChangeSecondsFormatCommand =>
+            this.changeSecondsFormatCommand ?? (this.changeSecondsFormatCommand = new DelegateCommand(async () =>
+            {
+                if (this.CombatLogs == null)
+                {
+                    return;
+                }
+
+                await WPFHelper.BeginInvoke(() =>
+                {
+                    this.CombatLogs.Refresh();
+                });
+            }));
+
+        private ICommand copyCommand;
+
+        public ICommand CopyCommand =>
+            this.copyCommand ?? (this.copyCommand = new DelegateCommand(() =>
+            {
+                // NO-OP
+            }));
+
+        private ICommand importCombatLogCommand;
+
+        public ICommand ImportCombatLogCommand =>
+            this.importCombatLogCommand ?? (this.importCombatLogCommand = new DelegateCommand(async () =>
+            {
+                if (string.IsNullOrEmpty(this.openFileDialog.InitialDirectory))
+                {
+                    this.openFileDialog.InitialDirectory = Settings.Default.CombatLogSaveDirectory;
+                    this.openFileDialog.FileName = string.Empty;
+                }
+
+                if (this.openFileDialog.ShowDialog(ActGlobals.oFormActMain)
+                    != System.Windows.Forms.DialogResult.OK)
+                {
+                    return;
+                }
+
+                try
+                {
+                    await WPFHelper.BeginInvoke(() =>
+                    {
+                        var file = this.openFileDialog.FileName;
+                        var lines = File.ReadAllLines(file, new UTF8Encoding(false));
+
+                        CombatAnalyzer.Instance.ImportLogLines(lines.ToList());
+                    });
+
+                    ModernMessageBox.ShowDialog(
+                        $"CombatLog Imported",
+                        "Timeline Analyzer");
+                }
+                catch (Exception ex)
+                {
+                    ModernMessageBox.ShowDialog(
+                        $"Import CombatLog Error.",
+                        "Timeline Analyzer",
+                        MessageBoxButton.OK,
+                        ex);
+                }
+            }));
 
         private ICommand saveToSpreadsheetCommand;
 
@@ -117,7 +229,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
 
                 this.saveFileDialog.FileName =
-                    $"{DateTime.Now.ToString("yyyy-MM-dd")}.{logs.First().Zone}.CombatLog.xlsx";
+                    $"{DateTime.Now.ToString("yyyy-MM-dd")}.[{logs.First().Zone}].AnalyzedLog.xlsx";
 
                 if (this.saveFileDialog.ShowDialog(ActGlobals.oFormActMain)
                     == System.Windows.Forms.DialogResult.OK)

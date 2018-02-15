@@ -103,6 +103,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         #endregion Singleton
 
         public const string WipeoutLog = "00:0038:wipeout";
+        public const string ImportLog = "00:0038:import";
 
         private static readonly Regex ActionRegex = new Regex(
             @"\[.+?\] 00:....:(?<actor>.+?)の「(?<skill>.+?)」$",
@@ -129,7 +130,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         private static readonly Regex CombatStartRegex = new Regex(
-            @"00:0039:(?<discription>.+?)$",
+            @"00:(0038|0039):(?<discription>.+?)$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         private static readonly Regex CombatEndRegex = new Regex(
@@ -149,6 +150,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "HP at", Category = AnalyzeKeywordCategory.HPRate },
             new AnalyzeKeyword() { Keyword = "Added new combatant", Category = AnalyzeKeywordCategory.Added },
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = AnalyzeKeywordCategory.Dialogue },
+            new AnalyzeKeyword() { Keyword = ImportLog, Category = AnalyzeKeywordCategory.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始", Category = AnalyzeKeywordCategory.Start },
             new AnalyzeKeyword() { Keyword = "の攻略を終了した。", Category = AnalyzeKeywordCategory.End },
             new AnalyzeKeyword() { Keyword = "ロットを行ってください。", Category = AnalyzeKeywordCategory.End },
@@ -644,10 +646,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.no++;
 
                 // 経過秒を求める
-                var origin = this.CurrentCombatLogList.FirstOrDefault();
+                var origin = this.CurrentCombatLogList.FirstOrDefault(x => x.IsOrigin);
                 if (origin != null)
                 {
-                    log.TimeStampElapted = log.TimeStamp - origin.TimeStamp;
+                    var ts = log.TimeStamp - origin.TimeStamp;
+                    if (ts.TotalMinutes <= 60 &&
+                        ts.TotalMinutes >= -60)
+                    {
+                        log.TimeStampElapted = ts;
+                    }
                 }
 
                 // アクター別の残HP率をセットする
@@ -656,7 +663,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     log.HPRate = this.ActorHPRate[log.Actor];
                 }
 
-                if (!this.CurrentCombatLogList.Any())
+                if (!this.CurrentCombatLogList.Any() &&
+                    log.RawWithoutTimestamp != ImportLog)
                 {
                     log.IsOrigin = true;
                 }
@@ -670,12 +678,125 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private long no;
         private bool inCombat;
+        private bool isImporting;
 
         /// <summary>
         /// ログを格納するスレッド
         /// </summary>
         private void StoreLogPoller()
         {
+            while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
+            {
+                Thread.Yield();
+                this.AnalyzeLogLine(log);
+            }
+        }
+
+        /// <summary>
+        /// ログ行を分析する
+        /// </summary>
+        /// <param name="logLine">ログ行</param>
+        private void AnalyzeLogLine(
+            LogLineEventArgs logLine)
+        {
+            if (logLine == null)
+            {
+                return;
+            }
+
+            // ログを分類する
+            var category = analyzeLogLine(logLine.logLine, Keywords);
+            switch (category)
+            {
+                case AnalyzeKeywordCategory.Pet:
+                    break;
+
+                case AnalyzeKeywordCategory.Cast:
+                    if (this.inCombat)
+                    {
+                        this.StoreCastLog(logLine);
+                    }
+                    break;
+
+                case AnalyzeKeywordCategory.CastStartsUsing:
+                    /*
+                    starts using は準備動作をかぶるので無視する
+                    if (this.inCombat)
+                    {
+                        this.StoreCastStartsUsingLog(log);
+                    }
+                    */
+                    break;
+
+                case AnalyzeKeywordCategory.Action:
+                    if (this.inCombat)
+                    {
+                        this.StoreActionLog(logLine);
+                    }
+                    break;
+
+                case AnalyzeKeywordCategory.HPRate:
+                    if (this.inCombat)
+                    {
+                        this.StoreHPRateLog(logLine);
+                    }
+                    break;
+
+                case AnalyzeKeywordCategory.Added:
+                    if (this.inCombat)
+                    {
+                        this.StoreAddedLog(logLine);
+                    }
+                    break;
+
+                case AnalyzeKeywordCategory.Dialogue:
+                    if (this.inCombat)
+                    {
+                        this.StoreDialog(logLine);
+                    }
+                    break;
+
+                case AnalyzeKeywordCategory.Start:
+                    lock (this.CurrentCombatLogList)
+                    {
+                        if (!this.inCombat)
+                        {
+                            if (!this.isImporting)
+                            {
+                                this.CurrentCombatLogList.Clear();
+                                this.ActorHPRate.Clear();
+                                this.partyNames = null;
+                                this.no = 1;
+                            }
+
+                            Logger.Write("Start Combat");
+                        }
+
+                        this.inCombat = true;
+                    }
+
+                    this.StoreStartCombat(logLine);
+                    break;
+
+                case AnalyzeKeywordCategory.End:
+                    lock (this.CurrentCombatLogList)
+                    {
+                        if (this.inCombat)
+                        {
+                            this.inCombat = false;
+                            this.StoreEndCombat(logLine);
+
+                            this.AutoSaveToSpreadsheet();
+
+                            Logger.Write("End Combat");
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
             AnalyzeKeywordCategory analyzeLogLine(string log, IList<AnalyzeKeyword> keywords)
             {
                 var key = (
@@ -689,102 +810,100 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     key.Category :
                     AnalyzeKeywordCategory.Unknown;
             }
+        }
 
-            while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
+        /// <summary>
+        /// ログ行をインポートして解析する
+        /// </summary>
+        /// <param name="logLines">インポートするログ行</param>
+        public void ImportLogLines(
+            List<string> logLines)
+        {
+            try
             {
-                Thread.Yield();
+                this.isImporting = true;
 
-                if (log == null)
+                // 冒頭にインポートを示すログを加える
+                logLines.Insert(0, $"[00:00:00.000] {ImportLog}");
+
+                var now = DateTime.Now;
+
+                // 各種初期化
+                this.inCombat = false;
+                this.CurrentCombatLogList.Clear();
+                this.ActorHPRate.Clear();
+                this.partyNames = null;
+                this.no = 1;
+
+                foreach (var line in logLines)
                 {
-                    continue;
-                }
+                    if (line.Length < 14)
+                    {
+                        continue;
+                    }
 
-                // ログを分類する
-                var category = analyzeLogLine(log.logLine, Keywords);
-                switch (category)
-                {
-                    case AnalyzeKeywordCategory.Pet:
-                        break;
+                    var timeAsText = line.Substring(0, 14)
+                        .Replace("[", string.Empty)
+                        .Replace("]", string.Empty);
 
-                    case AnalyzeKeywordCategory.Cast:
-                        if (this.inCombat)
-                        {
-                            this.StoreCastLog(log);
-                        }
-                        break;
+                    DateTime time;
+                    if (!DateTime.TryParse(timeAsText, out time))
+                    {
+                        continue;
+                    }
 
-                    case AnalyzeKeywordCategory.CastStartsUsing:
-                        /*
-                        starts using は準備動作をかぶるので無視する
-                        if (this.inCombat)
-                        {
-                            this.StoreCastStartsUsingLog(log);
-                        }
-                        */
-                        break;
+                    var detectTime = new DateTime(
+                        now.Year,
+                        now.Month,
+                        now.Day,
+                        time.Hour,
+                        time.Minute,
+                        time.Second,
+                        time.Millisecond);
 
-                    case AnalyzeKeywordCategory.Action:
-                        if (this.inCombat)
-                        {
-                            this.StoreActionLog(log);
-                        }
-                        break;
+                    var arg = new LogLineEventArgs(
+                        line,
+                        0,
+                        detectTime,
+                        string.Empty,
+                        true);
 
-                    case AnalyzeKeywordCategory.HPRate:
-                        if (this.inCombat)
-                        {
-                            this.StoreHPRateLog(log);
-                        }
-                        break;
-
-                    case AnalyzeKeywordCategory.Added:
-                        if (this.inCombat)
-                        {
-                            this.StoreAddedLog(log);
-                        }
-                        break;
-
-                    case AnalyzeKeywordCategory.Dialogue:
-                        if (this.inCombat)
-                        {
-                            this.StoreDialog(log);
-                        }
-                        break;
-
-                    case AnalyzeKeywordCategory.Start:
-                        lock (this.CurrentCombatLogList)
-                        {
-                            if (!this.inCombat)
-                            {
-                                this.CurrentCombatLogList.Clear();
-                                this.ActorHPRate.Clear();
-                                this.partyNames = null;
-                                this.no = 1;
-                                Logger.Write("Start Combat");
-                            }
-
-                            this.inCombat = true;
-                        }
-
-                        this.StoreStartCombat(log);
-                        break;
-
-                    case AnalyzeKeywordCategory.End:
-                        lock (this.CurrentCombatLogList)
-                        {
-                            if (this.inCombat)
-                            {
-                                this.inCombat = false;
-                                this.StoreEndCombat(log);
-                                Logger.Write("End Combat");
-                            }
-                        }
-                        break;
-
-                    default:
-                        break;
+                    this.AnalyzeLogLine(arg);
                 }
             }
+            finally
+            {
+                this.isImporting = false;
+            }
+        }
+
+        private void AutoSaveToSpreadsheet()
+        {
+            if (!Settings.Default.AutoCombatLogSave ||
+                string.IsNullOrEmpty(Settings.Default.CombatLogSaveDirectory))
+            {
+                return;
+            }
+
+            var logs = default(IList<CombatLog>);
+            lock (this.CurrentCombatLogList)
+            {
+                logs = this.CurrentCombatLogList.ToArray();
+            }
+
+            if (!logs.Any())
+            {
+                return;
+            }
+
+            var zone = logs.First().Zone;
+            var timeStamp = logs.Last().TimeStamp;
+
+            var file = $"{timeStamp.ToString("yyyy-MM-dd_HHmm")}.[{zone}].AutoAnalyzedLog.xlsx";
+
+            this.SaveToSpreadsheet(
+                Path.Combine(Settings.Default.CombatLogSaveDirectory, file),
+                logs);
         }
 
         public void SaveToSpreadsheet(
@@ -832,8 +951,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         now.Month,
                         now.Day,
                         0,
-                        data.TimeStampElapted.Minutes,
-                        data.TimeStampElapted.Seconds);
+                        data.TimeStampElapted.Minutes >= 0 ? data.TimeStampElapted.Minutes : 0,
+                        data.TimeStampElapted.Seconds >= 0 ? data.TimeStampElapted.Seconds : 0);
 
                     var col = 0;
 

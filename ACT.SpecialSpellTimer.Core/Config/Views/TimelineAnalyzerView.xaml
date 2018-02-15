@@ -98,6 +98,7 @@
     <Label Margin="0 20 0 0" Grid.Row="1" Content="{Binding Zone, Mode=OneWay}" ContentStringFormat="{}ZONE: {0}" />
 
     <DataGrid
+      x:Name="CombatLogDataGrid"
       Grid.Row="1"
       Margin="0 50 0 0"
       BorderThickness="0"
@@ -112,6 +113,17 @@
       VirtualizingPanel.VirtualizationMode="Recycling"
       ClipboardCopyMode="ExcludeHeader"
       ItemsSource="{Binding Path=CombatLogs, Mode=OneWay}">
+
+      <DataGrid.ContextMenu>
+        <ContextMenu>
+          <MenuItem Header="{DynamicResource Timeline_ThisIsOrigin}"  Command="{Binding SetOriginCommand, Mode=OneWay}" />
+          <MenuItem Header="{DynamicResource Timeline_TotalSecoundsFormat}" IsCheckable="true" IsChecked="{Binding Path=RootConfig.TimelineTotalSecoundsFormat, Mode=TwoWay}" Command="{Binding ChangeSecondsFormatCommand, Mode=OneWay}" />
+          <!--
+          <Separator />
+          <MenuItem Header="{DynamicResource Common_Copy}" InputGestureText="Ctrl + C" Command="{Binding CopyCommand, Mode=OneWay}" />
+          -->
+        </ContextMenu>
+      </DataGrid.ContextMenu>
 
       <DataGrid.RowStyle>
         <Style TargetType="DataGridRow">
@@ -147,12 +159,22 @@
           SortMemberPath="TimeStampElapted"
           Header="Time"
           ClipboardContentBinding="{Binding TimeStampElapted, Mode=OneWay}"
-          MinWidth="75">
+          Width="76">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <TextBlock
-                Margin="5 0 5 0"
-                Text="{Binding TimeStampElaptedString, Mode=OneWay}" />
+              <Grid>
+                <TextBlock
+                  Visibility="{Binding IsOrigin, Mode=OneWay, Converter={StaticResource CollapsedConverter}}"
+                  Margin="5 0 10 0"
+                  TextAlignment="Right"
+                  FontWeight="Bold"
+                  Text="{Binding TimeStampElaptedString, Mode=OneWay}" />
+                <TextBlock
+                  Visibility="{Binding IsOrigin, Mode=OneWay, Converter={StaticResource CollapsedNegativeConverter}}"
+                  Margin="5 0 10 0"
+                  TextAlignment="Right"
+                  Text="{Binding TimeStampElaptedString, Mode=OneWay}" />
+              </Grid>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -226,9 +248,20 @@
     <!-- Combat Log Area end -->
 
     <!-- Button Area -->
-    <StackPanel Grid.Row="2" Margin="0 10 0 2" Orientation="Horizontal">
-      <Button Content="{DynamicResource Timeline_SaveToSpreadsheet}" BorderThickness="0" Background="Transparent" Command="{Binding SaveToSpreadsheetCommand, Mode=OneWay}" Padding="2" />
-    </StackPanel>
+    <Grid Grid.Row="2" Margin="0 10 0 2">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+
+      <DockPanel Grid.Column="0">
+        <Button DockPanel.Dock="Left" Content="{DynamicResource Timeline_ImportCombatLog}" HorizontalAlignment="Left" BorderThickness="0" Background="Transparent" Command="{Binding ImportCombatLogCommand, Mode=OneWay}" Padding="2" />
+      </DockPanel>
+
+      <DockPanel Grid.Column="1">
+        <Button DockPanel.Dock="Right" Content="{DynamicResource Timeline_SaveToSpreadsheet}" HorizontalAlignment="Right" BorderThickness="0" Background="Transparent" Command="{Binding SaveToSpreadsheetCommand, Mode=OneWay}" Padding="2" />
+      </DockPanel>
+    </Grid>
     <!-- Button Area end -->
   </Grid>
 </UserControl>

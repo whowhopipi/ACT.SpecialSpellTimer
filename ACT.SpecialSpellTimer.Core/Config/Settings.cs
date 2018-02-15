@@ -348,6 +348,14 @@ namespace ACT.SpecialSpellTimer.Config
 
         #region Data - Timeline
 
+        private bool timelineTotalSecoundsFormat = false;
+
+        public bool TimelineTotalSecoundsFormat
+        {
+            get => this.timelineTotalSecoundsFormat;
+            set => this.SetProperty(ref this.timelineTotalSecoundsFormat, value);
+        }
+
         private bool autoCombatLogAnalyze;
 
         public bool AutoCombatLogAnalyze

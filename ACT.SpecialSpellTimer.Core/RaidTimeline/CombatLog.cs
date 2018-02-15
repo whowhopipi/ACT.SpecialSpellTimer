@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Media;
+using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Extensions;
 using Prism.Mvvm;
 
@@ -43,8 +44,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     public class CombatLog :
         BindableBase
     {
-        public static bool TotalSecondFormat { get; set; } = false;
-
         private long no;
 
         public long No
@@ -101,7 +100,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// 経過時間
         /// </summary>
         public string TimeStampElaptedString =>
-            TotalSecondFormat ?
+            Settings.Default.TimelineTotalSecoundsFormat ?
             this.TimeStampElapted.ToSecondString() :
             this.TimeStampElapted.ToTLString();
 
