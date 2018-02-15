@@ -34,6 +34,7 @@
   <system:String x:Key="Common_Delete">Delete</system:String>
   <system:String x:Key="Common_Import">Import</system:String>
   <system:String x:Key="Common_Export">Export</system:String>
+  <system:String x:Key="Common_Copy">Copy</system:String>
 
   <system:String x:Key="Common_VisibleSpell">Show visual timer and progress bar</system:String>
   <system:String x:Key="Common_VisibleSpellDiscription">For OFF, only for sound</system:String>
@@ -208,4 +209,14 @@
   <system:String x:Key="Copy_Destination">Destination</system:String>
 
   <system:String x:Key="AddToTag_AddToTag">Add to tag</system:String>
+
+  <system:String x:Key="Timeline_Analyzer">Timeline Aanalyzer</system:String>
+  <system:String x:Key="Timeline_Manager">Timeline Manager</system:String>
+  <system:String x:Key="Timeline_AutoCombatAnalyze">Auto timeline analyze</system:String>
+  <system:String x:Key="Timeline_AutoCombatSave">Auto save result of analysis</system:String>
+  <system:String x:Key="Timeline_AutoCombatSaveDirectory">Save to</system:String>
+  <system:String x:Key="Timeline_SaveToSpreadsheet">Save to Spreadsheet</system:String>
+  <system:String x:Key="Timeline_TotalSecoundsFormat">Show total secounds</system:String>
+  <system:String x:Key="Timeline_ThisIsOrigin">This record is Origin</system:String>
+  <system:String x:Key="Timeline_ImportCombatLog">Import CombatLog</system:String>
 </ResourceDictionary>
