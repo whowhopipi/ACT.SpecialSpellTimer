@@ -16,6 +16,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         CombatEnd,
         CastStart,
         Action,
+        Marker,
         Added,
         HPRate,
         Dialog,
@@ -32,6 +33,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 "Combat End",
                 "Starts Using",
                 "Action",
+                "Marker",
                 "Added",
                 "HP Rate",
                 "Dialog",
@@ -182,6 +184,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                         case CombatLogType.Action:
                             color = Colors.Sienna;
+                            break;
+
+                        case CombatLogType.Marker:
+                            color = Colors.DarkViolet;
                             break;
 
                         case CombatLogType.Added:

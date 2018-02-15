@@ -21,17 +21,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     public enum AnalyzeKeywordCategory
     {
         Unknown = 0,
-        Me = 0x01,
-        PartyMember = 0x02,
-        Pet = 0x03,
-        Cast = 0x10,
-        CastStartsUsing = 0x11,
-        Action = 0x20,
-        Dialogue = 0x30,
-        HPRate = 0x80,
-        Added = 0x81,
-        Start = 0x90,
-        End = 0x91,
+        Me,
+        PartyMember,
+        Pet,
+        Cast,
+        CastStartsUsing,
+        Action,
+        Marker,
+        Dialogue,
+        HPRate,
+        Added,
+        Start,
+        End,
     }
 
     /// <summary>
@@ -137,6 +138,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             @"00:....:(?<discription>.+?)$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
+        private static readonly Regex MarkerRegex = new Regex(
+            @"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
         private static readonly IList<AnalyzeKeyword> Keywords = new[]
         {
             new AnalyzeKeyword() { Keyword = "・エギ", Category = AnalyzeKeywordCategory.Pet },
@@ -144,11 +149,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "カーバンクル・", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "オートタレット", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "デミ・バハムート", Category = AnalyzeKeywordCategory.Pet },
+            new AnalyzeKeyword() { Keyword = "アーサリースター", Category = AnalyzeKeywordCategory.Pet },
             new AnalyzeKeyword() { Keyword = "を唱えた。", Category = AnalyzeKeywordCategory.Cast },
             new AnalyzeKeyword() { Keyword = "の構え。", Category = AnalyzeKeywordCategory.Cast },
             new AnalyzeKeyword() { Keyword = "starts using", Category = AnalyzeKeywordCategory.CastStartsUsing },
             new AnalyzeKeyword() { Keyword = "HP at", Category = AnalyzeKeywordCategory.HPRate },
             new AnalyzeKeyword() { Keyword = "Added new combatant", Category = AnalyzeKeywordCategory.Added },
+            new AnalyzeKeyword() { Keyword = "] 1B:", Category = AnalyzeKeywordCategory.Marker },
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = AnalyzeKeywordCategory.Dialogue },
             new AnalyzeKeyword() { Keyword = ImportLog, Category = AnalyzeKeywordCategory.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始", Category = AnalyzeKeywordCategory.Start },
@@ -519,6 +526,41 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         /// <summary>
+        /// マーカーログを格納する
+        /// </summary>
+        /// <param name="logInfo">ログ情報</param>
+        private void StoreMarkerLog(
+            LogLineEventArgs logInfo)
+        {
+            const string PCIDPlaceholder = "(?<pcid>.{8})";
+            const string PCNamePlaceholder = "(?<pcname>.+)";
+
+            var match = MarkerRegex.Match(logInfo.logLine);
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var id = match.Groups["id"].ToString();
+            var target = match.Groups["target"].ToString();
+
+            var log = new CombatLog()
+            {
+                TimeStamp = logInfo.detectedTime,
+                Raw = logInfo.logLine
+                    .Replace(id, PCIDPlaceholder)
+                    .Replace(target, PCNamePlaceholder),
+                Activity = $"Marker:{match.Groups["type"].ToString()}",
+                LogType = CombatLogType.Marker
+            };
+
+            if (this.ToStoreActor(log.Actor))
+            {
+                this.StoreLog(log);
+            }
+        }
+
+        /// <summary>
         /// HP率のログを格納する
         /// </summary>
         /// <param name="logInfo">ログ情報</param>
@@ -735,6 +777,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     if (this.inCombat)
                     {
                         this.StoreActionLog(logLine);
+                    }
+                    break;
+
+                case AnalyzeKeywordCategory.Marker:
+                    if (this.inCombat)
+                    {
+                        this.StoreMarkerLog(logLine);
                     }
                     break;
 
@@ -1038,26 +1087,32 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            var outputTypes = new[]
+            {
+                CombatLogType.CastStart,
+                CombatLogType.Action,
+                CombatLogType.Dialog,
+                CombatLogType.Added,
+                CombatLogType.Marker,
+            };
+
             var timeline = new TimelineModel();
 
             timeline.Zone = combatLogs.First().Zone;
 
             foreach (var log in combatLogs.Where(x =>
-                x.LogType == CombatLogType.CastStart ||
-                x.LogType == CombatLogType.Action ||
-                x.LogType == CombatLogType.Dialog ||
-                x.LogType == CombatLogType.Added))
+                outputTypes.Contains(x.LogType)))
             {
                 var a = new TimelineActivityModel()
                 {
                     Time = log.TimeStampElapted,
-                    SyncKeyword = log.RawWithoutTimestamp.Substring(8),
                 };
 
                 switch (log.LogType)
                 {
                     case CombatLogType.CastStart:
                         a.Text = log.Skill;
+                        a.SyncKeyword = log.RawWithoutTimestamp.Substring(8);
                         a.Notice = $"次は、{log.Skill}。";
                         break;
 
@@ -1070,6 +1125,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             (log.TimeStamp - x.TimeStamp).TotalSeconds <= 12))
                         {
                             a.Text = log.Skill;
+                            a.SyncKeyword = log.RawWithoutTimestamp.Substring(8);
                             a.Notice = $"次は、{log.Skill}。";
                         }
                         else
@@ -1094,8 +1150,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                         break;
 
+                    case CombatLogType.Marker:
+                        a.Text = log.Activity;
+                        a.SyncKeyword = log.RawWithoutTimestamp;
+                        a.Notice = $"次は、{log.Activity.Replace(":", string.Empty)}。";
+
+                        if (timeline.Activities.Any(x =>
+                            x.Time == a.Time &&
+                            x.Text == a.Text))
+                        {
+                            continue;
+                        }
+
+                        break;
+
                     case CombatLogType.Dialog:
                         a.Text = null;
+                        a.SyncKeyword = log.RawWithoutTimestamp.Substring(8);
                         break;
                 }
 
