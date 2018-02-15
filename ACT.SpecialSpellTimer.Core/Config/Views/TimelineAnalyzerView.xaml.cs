@@ -106,12 +106,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
             SupportMultiDottedExtensions = true,
         };
 
+        private const string SpreadFilter = "Spreadsheet Files|*.xlsx|All Files|*.*";
+        private const string SpreadExt = ".xlsx";
+        private const string TimelineFilter = "Timeline Files|*.xml|All Files|*.*";
+        private const string TimelineExt = ".xml";
+
         private System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog()
         {
             RestoreDirectory = true,
-            Filter = "Spreadsheet Files|*.xlsx|All Files|*.*",
             FilterIndex = 0,
-            DefaultExt = ".xlsx",
             SupportMultiDottedExtensions = true,
         };
 
@@ -228,8 +231,18 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     return;
                 }
 
+                var timestamp = logs.Last().TimeStamp;
+                var zone = logs.First().Zone;
+                zone = zone.Replace(" ", "_");
+                foreach (var c in Path.GetInvalidFileNameChars())
+                {
+                    zone = zone.Replace(c, '_');
+                }
+
+                this.saveFileDialog.Filter = SpreadFilter;
+                this.saveFileDialog.DefaultExt = SpreadExt;
                 this.saveFileDialog.FileName =
-                    $"{DateTime.Now.ToString("yyyy-MM-dd")}.[{logs.First().Zone}].AnalyzedLog.xlsx";
+                    $"{timestamp.ToString("yyyy-MM-dd")}.{zone}.AnalyzedLog.xlsx";
 
                 if (this.saveFileDialog.ShowDialog(ActGlobals.oFormActMain)
                     == System.Windows.Forms.DialogResult.OK)
@@ -249,6 +262,51 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     {
                         ModernMessageBox.ShowDialog(
                             $"Save CombatLog Error.",
+                            "Timeline Analyzer",
+                            MessageBoxButton.OK,
+                            ex);
+                    }
+                }
+            }));
+
+        private ICommand saveDraftTimelineCommand;
+
+        public ICommand SaveDraftTimelineCommand =>
+            this.saveDraftTimelineCommand ?? (this.saveDraftTimelineCommand = new DelegateCommand(async () =>
+            {
+                var logs = this.CombatLogs.Cast<CombatLog>()?.ToList();
+                if (logs == null ||
+                    !logs.Any())
+                {
+                    return;
+                }
+
+                var zone = logs.First().Zone;
+                zone = zone.Replace(" ", "_");
+
+                this.saveFileDialog.Filter = TimelineFilter;
+                this.saveFileDialog.DefaultExt = TimelineExt;
+                this.saveFileDialog.FileName =
+                    $"{zone}.DraftTimeline.xml";
+
+                if (this.saveFileDialog.ShowDialog(ActGlobals.oFormActMain)
+                    == System.Windows.Forms.DialogResult.OK)
+                {
+                    var file = this.saveFileDialog.FileName;
+                    this.saveFileDialog.FileName = Path.GetFileName(file);
+
+                    try
+                    {
+                        await Task.Run(() => CombatAnalyzer.Instance.SaveToDraftTimeline(file, logs));
+
+                        ModernMessageBox.ShowDialog(
+                            $"Draft Timeline Saved.\n\n\"{Path.GetFileName(file)}\"",
+                            "Timeline Analyzer");
+                    }
+                    catch (Exception ex)
+                    {
+                        ModernMessageBox.ShowDialog(
+                            $"Save Timeline Error.",
                             "Timeline Analyzer",
                             MessageBoxButton.OK,
                             ex);

@@ -216,6 +216,7 @@
   <system:String x:Key="Timeline_AutoCombatSave">分析結果の自動保存</system:String>
   <system:String x:Key="Timeline_AutoCombatSaveDirectory">分析結果の自動保存先</system:String>
   <system:String x:Key="Timeline_SaveToSpreadsheet">スプレッドシートに保存する</system:String>
+  <system:String x:Key="Timeline_SaveToDraftTimeline">ドラフト版タイムラインに保存する</system:String>
   <system:String x:Key="Timeline_TotalSecoundsFormat">トータル秒数表示にする</system:String>
   <system:String x:Key="Timeline_ThisIsOrigin">このレコードを基点にする</system:String>
   <system:String x:Key="Timeline_ImportCombatLog">過去の戦闘ログをインポートする</system:String>

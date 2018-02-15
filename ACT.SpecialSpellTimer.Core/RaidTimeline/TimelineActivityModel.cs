@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -9,7 +10,35 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     public class TimelineActivityModel :
         TimelineBase
     {
-        private string syncKeyword = string.Empty;
+        [XmlIgnore]
+        public override TimelineElementTypes TimelineType => TimelineElementTypes.Activity;
+
+        private TimeSpan time = TimeSpan.Zero;
+
+        [XmlIgnore]
+        public TimeSpan Time
+        {
+            get => this.time;
+            set => this.SetProperty(ref this.time, value);
+        }
+
+        [XmlAttribute(AttributeName = "time")]
+        public string TimeText
+        {
+            get => this.time.ToTLString();
+            set => this.SetProperty(ref this.time, TimeSpanExtensions.FromTLString(value));
+        }
+
+        private string text = null;
+
+        [XmlAttribute(AttributeName = "text")]
+        public string Text
+        {
+            get => this.text;
+            set => this.SetProperty(ref this.text, value);
+        }
+
+        private string syncKeyword = null;
 
         [XmlAttribute(AttributeName = "sync")]
         public string SyncKeyword
@@ -44,24 +73,38 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             private set => this.SetProperty(ref this.syncRegex, value);
         }
 
-        private double syncOffsetStart = -12;
-        private double syncOffsetEnd = 12;
+        private double? syncOffsetStart = null;
+        private double? syncOffsetEnd = null;
 
-        [XmlAttribute(AttributeName = "sync-s")]
-        public double SyncOffsetStart
+        [XmlIgnore]
+        public double? SyncOffsetStart
         {
             get => this.syncOffsetStart;
             set => this.SetProperty(ref this.syncOffsetStart, value);
         }
 
-        [XmlAttribute(AttributeName = "sync-e")]
-        public double SyncOffsetEnd
+        [XmlAttribute(AttributeName = "sync-s")]
+        public string SyncOffsetStartXML
+        {
+            get => this.SyncOffsetStart?.ToString();
+            set => this.SyncOffsetStart = double.TryParse(value, out var v) ? v : (double?)null;
+        }
+
+        [XmlIgnore]
+        public double? SyncOffsetEnd
         {
             get => this.syncOffsetEnd;
             set => this.SetProperty(ref this.syncOffsetEnd, value);
         }
 
-        public string gotoDestination = string.Empty;
+        [XmlAttribute(AttributeName = "sync-e")]
+        public string SyncOffsetEndXML
+        {
+            get => this.syncOffsetEnd?.ToString();
+            set => this.syncOffsetEnd = double.TryParse(value, out var v) ? v : (double?)null;
+        }
+
+        private string gotoDestination = null;
 
         [XmlAttribute(AttributeName = "goto")]
         public string GoToDestination
@@ -70,13 +113,63 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.gotoDestination, value);
         }
 
-        public string callTarget = string.Empty;
+        private string callTarget = null;
 
         [XmlAttribute(AttributeName = "call")]
         public string CallTarget
         {
             get => this.callTarget;
             set => this.SetProperty(ref this.callTarget, value);
+        }
+
+        private string notice = null;
+
+        [XmlAttribute(AttributeName = "notice")]
+        public string Notice
+        {
+            get => this.notice;
+            set => this.SetProperty(ref this.notice, value);
+        }
+
+        private NoticeDevices? noticeDevice = null;
+
+        [XmlIgnore]
+        public NoticeDevices? NoticeDevice
+        {
+            get => this.noticeDevice;
+            set => this.SetProperty(ref this.noticeDevice, value);
+        }
+
+        [XmlAttribute(AttributeName = "notice-d")]
+        public string NoticeDeviceXML
+        {
+            get => this.NoticeDevice?.ToString();
+            set => this.NoticeDevice = Enum.TryParse<NoticeDevices>(value, out var v) ? v : (NoticeDevices?)null;
+        }
+
+        private double? noticeOffset = null;
+
+        [XmlIgnore]
+        public double? NoticeOffset
+        {
+            get => this.noticeOffset;
+            set => this.SetProperty(ref this.noticeOffset, value);
+        }
+
+        [XmlAttribute(AttributeName = "notice-o")]
+        public string NoticeOffsetXML
+        {
+            get => this.NoticeOffset?.ToString();
+            set => this.NoticeOffset = double.TryParse(value, out var v) ? v : (double?)null;
+        }
+
+        private string style = null;
+
+        [XmlAttribute(AttributeName = "style")]
+        public string Style
+        {
+            get => this.style;
+            set => this.SetProperty(ref this.style, value);
         }
     }
 }

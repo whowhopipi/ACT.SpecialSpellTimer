@@ -4,14 +4,38 @@ using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
+    public enum NoticeDevices
+    {
+        Both = 0,
+        Main,
+        Sub,
+    }
+
+    public enum TimelineElementTypes
+    {
+        Timeline = 0,
+        Default,
+        Activity,
+        Trigger,
+        Subroutine
+    }
+
     [Serializable]
     public abstract class TimelineBase :
         BindableBase
     {
-        private string name = string.Empty;
+        [XmlIgnore]
+        public abstract TimelineElementTypes TimelineType { get; }
+
+        private Guid id = Guid.NewGuid();
+
+        [XmlIgnore]
+        public Guid ID => this.id;
+
+        private string name = null;
 
         [XmlAttribute(AttributeName = "name")]
-        public string Name
+        public virtual string Name
         {
             get => this.name;
             set => this.SetProperty(ref this.name, value);

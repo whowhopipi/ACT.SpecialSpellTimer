@@ -422,6 +422,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
                 Activity = $"{match.Groups["skill"].ToString()}",
+                Skill = match.Groups["skill"].ToString(),
                 LogType = CombatLogType.Action
             };
 
@@ -449,7 +450,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
-                Activity = "Added",
+                Activity = $"Added",
                 LogType = CombatLogType.Added
             };
 
@@ -478,6 +479,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
                 Activity = $"{match.Groups["skill"].ToString()} Start",
+                Skill = match.Groups["skill"].ToString(),
                 LogType = CombatLogType.CastStart
             };
 
@@ -506,6 +508,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Raw = logInfo.logLine,
                 Actor = match.Groups["actor"].ToString(),
                 Activity = $"starts using {match.Groups["skill"].ToString()}",
+                Skill = match.Groups["skill"].ToString(),
                 LogType = CombatLogType.CastStart
             };
 
@@ -896,10 +899,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
-            var zone = logs.First().Zone;
             var timeStamp = logs.Last().TimeStamp;
+            var zone = logs.First().Zone;
+            zone = zone.Replace(" ", "_");
+            foreach (var c in Path.GetInvalidFileNameChars())
+            {
+                zone = zone.Replace(c, '_');
+            }
 
-            var file = $"{timeStamp.ToString("yyyy-MM-dd_HHmm")}.[{zone}].AutoAnalyzedLog.xlsx";
+            var file = $"{timeStamp.ToString("yyyy-MM-dd_HHmm")}.{zone}.AutoAnalyzedLog.xlsx";
 
             this.SaveToSpreadsheet(
                 Path.Combine(Settings.Default.CombatLogSaveDirectory, file),
@@ -1019,6 +1027,82 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         break;
                 }
             }
+        }
+
+        public void SaveToDraftTimeline(
+            string file,
+            IList<CombatLog> combatLogs)
+        {
+            if (!combatLogs.Any())
+            {
+                return;
+            }
+
+            var timeline = new TimelineModel();
+
+            timeline.Zone = combatLogs.First().Zone;
+
+            foreach (var log in combatLogs.Where(x =>
+                x.LogType == CombatLogType.CastStart ||
+                x.LogType == CombatLogType.Action ||
+                x.LogType == CombatLogType.Dialog ||
+                x.LogType == CombatLogType.Added))
+            {
+                var a = new TimelineActivityModel()
+                {
+                    Time = log.TimeStampElapted,
+                    SyncKeyword = log.RawWithoutTimestamp.Substring(8),
+                };
+
+                switch (log.LogType)
+                {
+                    case CombatLogType.CastStart:
+                        a.Text = log.Skill;
+                        a.Notice = $"次は、{log.Skill}。";
+                        break;
+
+                    case CombatLogType.Action:
+                        // 構えのないアクションか？
+                        if (!combatLogs.Any(x =>
+                            x.ID < log.ID &&
+                            x.Skill == log.Skill &&
+                            x.LogType == CombatLogType.CastStart &&
+                            (log.TimeStamp - x.TimeStamp).TotalSeconds <= 12))
+                        {
+                            a.Text = log.Skill;
+                            a.Notice = $"次は、{log.Skill}。";
+                        }
+                        else
+                        {
+                            continue;
+                        }
+
+                        break;
+
+                    case CombatLogType.Added:
+                        a.Text = $"Add {log.Actor}";
+                        a.SyncKeyword = log.RawWithoutTimestamp.Substring(0, log.RawWithoutTimestamp.IndexOf('.'));
+                        a.Notice = $"次は、{log.Actor}。";
+
+                        if (timeline.Activities.Any(x =>
+                            x.Time == a.Time &&
+                            x.Text == a.Text &&
+                            x.SyncKeyword == a.SyncKeyword))
+                        {
+                            continue;
+                        }
+
+                        break;
+
+                    case CombatLogType.Dialog:
+                        a.Text = null;
+                        break;
+                }
+
+                timeline.Add(a);
+            }
+
+            timeline.Save(file);
         }
     }
 }

@@ -231,6 +231,7 @@
     <Compile Include="Models\Ticker.cs" />
     <Compile Include="RaidTimeline\TimelineActivityModel.cs" />
     <Compile Include="RaidTimeline\TimelineBase.cs" />
+    <Compile Include="RaidTimeline\TimelineDefaultModel.cs" />
     <Compile Include="RaidTimeline\TimelineModel.cs" />
     <Compile Include="RaidTimeline\TimelineSubroutineModel.cs" />
     <Compile Include="RaidTimeline\TimelineTriggerModel.cs" />

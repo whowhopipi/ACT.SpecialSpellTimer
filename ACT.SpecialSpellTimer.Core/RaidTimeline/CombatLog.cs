@@ -115,6 +115,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string LogTypeName => this.LogType.ToText();
 
         /// <summary>
+        /// 関連したスキル
+        /// </summary>
+        public string Skill { get; set; } = string.Empty;
+
+        /// <summary>
         /// 発生したActivity
         /// </summary>
         public string Activity { get; set; } = string.Empty;

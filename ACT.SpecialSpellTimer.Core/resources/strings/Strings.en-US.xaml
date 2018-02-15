@@ -216,6 +216,7 @@
   <system:String x:Key="Timeline_AutoCombatSave">Auto save result of analysis</system:String>
   <system:String x:Key="Timeline_AutoCombatSaveDirectory">Save to</system:String>
   <system:String x:Key="Timeline_SaveToSpreadsheet">Save to Spreadsheet</system:String>
+  <system:String x:Key="Timeline_SaveToDraftTimeline">Save to draft Timeline</system:String>
   <system:String x:Key="Timeline_TotalSecoundsFormat">Show total secounds</system:String>
   <system:String x:Key="Timeline_ThisIsOrigin">This record is Origin</system:String>
   <system:String x:Key="Timeline_ImportCombatLog">Import CombatLog</system:String>
