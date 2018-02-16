@@ -1297,6 +1297,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     case LogTypes.Marker:
                     case LogTypes.Effect:
                         a.Enabled = false;
+
                         if (timeline.Activities.Any(x =>
                             x.Time == a.Time &&
                             x.Text == a.Text))
