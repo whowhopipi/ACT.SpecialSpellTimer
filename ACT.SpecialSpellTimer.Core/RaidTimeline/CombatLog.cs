@@ -7,40 +7,6 @@ using Prism.Mvvm;
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
     /// <summary>
-    /// 戦闘ログの種類
-    /// </summary>
-    public enum CombatLogType
-    {
-        Unknown = 0,
-        CombatStart,
-        CombatEnd,
-        CastStart,
-        Action,
-        Marker,
-        Added,
-        HPRate,
-        Dialog,
-    }
-
-    public static class CombatLogTypeExtensions
-    {
-        public static string ToText(
-            this CombatLogType t)
-            => new[]
-            {
-                "UNKNOWN",
-                "Combat Start",
-                "Combat End",
-                "Starts Using",
-                "Action",
-                "Marker",
-                "Added",
-                "HP Rate",
-                "Dialog",
-            }[(int)t];
-    }
-
-    /// <summary>
     /// 戦闘ログ
     /// </summary>
     public class CombatLog :
@@ -109,7 +75,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// ログの種類
         /// </summary>
-        public CombatLogType LogType { get; set; } = CombatLogType.Unknown;
+        public LogTypes LogType { get; set; } = LogTypes.Unknown;
 
         /// <summary>
         /// ログの種類
@@ -156,53 +122,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public string Zone { get; set; } = string.Empty;
 
+        public string Text { get; set; } = null;
+
+        public string SyncKeyword { get; set; } = null;
+
         public SolidColorBrush Background
         {
             get
             {
-                var color = Colors.White;
-
-                if (this.IsOrigin)
-                {
-                    color = Colors.YellowGreen;
-                }
-                else
-                {
-                    switch (this.LogType)
-                    {
-                        case CombatLogType.CombatStart:
-                            color = Colors.Wheat;
-                            break;
-
-                        case CombatLogType.CombatEnd:
-                            color = Colors.Wheat;
-                            break;
-
-                        case CombatLogType.CastStart:
-                            color = Colors.OrangeRed;
-                            break;
-
-                        case CombatLogType.Action:
-                            color = Colors.Sienna;
-                            break;
-
-                        case CombatLogType.Marker:
-                            color = Colors.DarkViolet;
-                            break;
-
-                        case CombatLogType.Added:
-                            color = Colors.LightGray;
-                            break;
-
-                        case CombatLogType.HPRate:
-                            color = Colors.Silver;
-                            break;
-
-                        case CombatLogType.Dialog:
-                            color = Colors.Peru;
-                            break;
-                    }
-                }
+                var color = this.IsOrigin ?
+                    Colors.Crimson :
+                    this.LogType.ToColor();
 
                 color.A = (byte)(255 * 0.2);
 

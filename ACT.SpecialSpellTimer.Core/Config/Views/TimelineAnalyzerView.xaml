@@ -125,9 +125,27 @@
         </ContextMenu>
       </DataGrid.ContextMenu>
 
+      <DataGrid.CellStyle>
+        <Style TargetType="DataGridCell">
+          <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="Background" Value="Transparent" />
+              <Setter Property="Foreground" Value="Black" />
+              <Setter Property="BorderThickness" Value="0" />
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+      </DataGrid.CellStyle>
+
       <DataGrid.RowStyle>
         <Style TargetType="DataGridRow">
           <Setter Property="Background" Value="{Binding Background, Mode=OneWay}" />
+          <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="BorderBrush" Value="Navy" />
+              <Setter Property="BorderThickness" Value="1" />
+            </Trigger>
+          </Style.Triggers>
         </Style>
       </DataGrid.RowStyle>
 
