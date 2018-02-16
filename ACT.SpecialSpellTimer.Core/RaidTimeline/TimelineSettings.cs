@@ -76,6 +76,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (this.SetProperty(ref this.styles, value))
                 {
                     this.styleTable = this.styles.ToDictionary(x => x.Name);
+                    this.RaisePropertyChanged(nameof(this.StyleTable));
                 }
             }
         }

@@ -233,6 +233,8 @@
     <Compile Include="RaidTimeline\TimelineBase.cs" />
     <Compile Include="RaidTimeline\TimelineDefaultModel.cs" />
     <Compile Include="RaidTimeline\TimelineModel.cs" />
+    <Compile Include="RaidTimeline\TimelineSettings.cs" />
+    <Compile Include="RaidTimeline\TimelineStyle.cs" />
     <Compile Include="RaidTimeline\TimelineSubroutineModel.cs" />
     <Compile Include="RaidTimeline\TimelineTriggerModel.cs" />
     <Compile Include="resources\ILocalizable.cs" />
