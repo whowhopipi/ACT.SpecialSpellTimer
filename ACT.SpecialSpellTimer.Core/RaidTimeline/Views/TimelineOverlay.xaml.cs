@@ -18,11 +18,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             TimelineModel model)
         {
             this.DataContext = model;
-<<<<<<< HEAD
             model.Controller.View = this;
-=======
-            model.View = this;
->>>>>>> defca75f49d9b0d5e44894df9c9e5ac9e3855622
 
             this.InitializeComponent();
 
@@ -33,11 +29,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             {
                 if (this.Model != null)
                 {
-<<<<<<< HEAD
                     this.Model.Controller.View = null;
-=======
-                    this.Model.View = null;
->>>>>>> defca75f49d9b0d5e44894df9c9e5ac9e3855622
                 }
             };
         }
