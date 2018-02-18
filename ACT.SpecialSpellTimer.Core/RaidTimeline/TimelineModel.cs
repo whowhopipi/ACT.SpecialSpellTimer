@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using FFXIV.Framework.Common;
 using Prism.Mvvm;
 
@@ -14,7 +15,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     [XmlInclude(typeof(TimelineActivityModel))]
     [XmlInclude(typeof(TimelineTriggerModel))]
     [XmlInclude(typeof(TimelineSubroutineModel))]
-    public class TimelineModel :
+    public partial class TimelineModel :
         BindableBase
     {
         private string zone = string.Empty;
@@ -58,6 +59,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.Elements.Where(x => x.TimelineType == TimelineElementTypes.Subroutine).Cast<TimelineSubroutineModel>().ToArray();
             set => this.AddRange(value);
         }
+
+        private TimelineController controller;
+
+        /// <summary>
+        /// タイムラインの実行を制御するオブジェクト
+        /// </summary>
+        [XmlIgnore]
+        public TimelineController Controller =>
+            this.controller = (this.controller ?? new TimelineController(this));
 
         #region Methods
 

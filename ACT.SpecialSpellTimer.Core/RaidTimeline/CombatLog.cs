@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Media;
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Extensions;
@@ -6,40 +7,6 @@ using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
-    /// <summary>
-    /// 戦闘ログの種類
-    /// </summary>
-    public enum CombatLogType
-    {
-        Unknown = 0,
-        CombatStart,
-        CombatEnd,
-        CastStart,
-        Action,
-        Marker,
-        Added,
-        HPRate,
-        Dialog,
-    }
-
-    public static class CombatLogTypeExtensions
-    {
-        public static string ToText(
-            this CombatLogType t)
-            => new[]
-            {
-                "UNKNOWN",
-                "Combat Start",
-                "Combat End",
-                "Starts Using",
-                "Action",
-                "Marker",
-                "Added",
-                "HP Rate",
-                "Dialog",
-            }[(int)t];
-    }
-
     /// <summary>
     /// 戦闘ログ
     /// </summary>
@@ -71,6 +38,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.SetProperty(ref this.isOrigin, value))
                 {
+                    this.RaisePropertyChanged(nameof(this.FontWeight));
+                    this.RaisePropertyChanged(nameof(this.Foreground));
                     this.RaisePropertyChanged(nameof(this.Background));
                 }
             }
@@ -109,7 +78,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// ログの種類
         /// </summary>
-        public CombatLogType LogType { get; set; } = CombatLogType.Unknown;
+        public LogTypes LogType { get; set; } = LogTypes.Unknown;
 
         /// <summary>
         /// ログの種類
@@ -156,58 +125,28 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public string Zone { get; set; } = string.Empty;
 
-        public SolidColorBrush Background
-        {
-            get
-            {
-                var color = Colors.White;
+        public string Text { get; set; } = null;
 
-                if (this.IsOrigin)
-                {
-                    color = Colors.YellowGreen;
-                }
-                else
-                {
-                    switch (this.LogType)
-                    {
-                        case CombatLogType.CombatStart:
-                            color = Colors.Wheat;
-                            break;
+        public string SyncKeyword { get; set; } = null;
 
-                        case CombatLogType.CombatEnd:
-                            color = Colors.Wheat;
-                            break;
+        public FontWeight FontWeight =>
+            this.IsOrigin ? FontWeights.Black : FontWeights.Normal;
 
-                        case CombatLogType.CastStart:
-                            color = Colors.OrangeRed;
-                            break;
+        public SolidColorBrush Foreground =>
+            new SolidColorBrush(
+                this.LogType.ToForegroundColor());
 
-                        case CombatLogType.Action:
-                            color = Colors.Sienna;
-                            break;
+        public SolidColorBrush Background =>
+            new SolidColorBrush(
+                this.LogType.ToBackgroundColor());
 
-                        case CombatLogType.Marker:
-                            color = Colors.DarkViolet;
-                            break;
-
-                        case CombatLogType.Added:
-                            color = Colors.LightGray;
-                            break;
-
-                        case CombatLogType.HPRate:
-                            color = Colors.Silver;
-                            break;
-
-                        case CombatLogType.Dialog:
-                            color = Colors.Peru;
-                            break;
-                    }
-                }
-
-                color.A = (byte)(255 * 0.2);
-
-                return new SolidColorBrush(color);
-            }
-        }
+        public SolidColorBrush BackgroundLine =>
+            (
+                this.LogType == LogTypes.CombatStart ||
+                this.LogType == LogTypes.CombatEnd ||
+                this.LogType == LogTypes.Dialog
+            ) ?
+            new SolidColorBrush(this.LogType.ToBackgroundColor()) :
+            Brushes.Transparent;
     }
 }

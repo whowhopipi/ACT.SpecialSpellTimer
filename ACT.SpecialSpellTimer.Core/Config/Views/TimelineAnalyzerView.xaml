@@ -125,9 +125,32 @@
         </ContextMenu>
       </DataGrid.ContextMenu>
 
+      <DataGrid.CellStyle>
+        <Style TargetType="DataGridCell">
+          <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="Background" Value="Transparent" />
+              <Setter Property="Foreground" Value="Black" />
+              <Setter Property="BorderThickness" Value="0" />
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+      </DataGrid.CellStyle>
+
       <DataGrid.RowStyle>
         <Style TargetType="DataGridRow">
-          <Setter Property="Background" Value="{Binding Background, Mode=OneWay}" />
+          <Setter Property="Foreground" Value="{Binding Foreground, Mode=OneWay}" />
+          <Setter Property="FontWeight" Value="{Binding FontWeight, Mode=OneWay}" />
+
+          <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+              <!--
+              <Setter Property="BorderBrush" Value="Navy" />
+              <Setter Property="BorderThickness" Value="1.5" />
+              -->
+              <Setter Property="Background" Value="Gainsboro" />
+            </Trigger>
+          </Style.Triggers>
         </Style>
       </DataGrid.RowStyle>
 
@@ -147,7 +170,7 @@
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <TextBlock
-                Margin="5 0 10 0"
+                Padding="5 0 10 0"
                 TextAlignment="Right"
                 Text="{Binding No, StringFormat=N0, Mode=OneWay}" />
             </DataTemplate>
@@ -162,28 +185,42 @@
           Width="76">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Grid>
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Padding="5 0 0 0" Text="*" Visibility="{Binding IsOrigin, Converter={StaticResource HiddenConverter}, Mode=OneWay}" />
                 <TextBlock
-                  Visibility="{Binding IsOrigin, Mode=OneWay, Converter={StaticResource CollapsedConverter}}"
-                  Margin="5 0 10 0"
-                  TextAlignment="Right"
-                  FontWeight="Bold"
-                  Text="{Binding TimeStampElaptedString, Mode=OneWay}" />
-                <TextBlock
-                  Visibility="{Binding IsOrigin, Mode=OneWay, Converter={StaticResource CollapsedNegativeConverter}}"
-                  Margin="5 0 10 0"
+                  Padding="3 0 10 0"
                   TextAlignment="Right"
                   Text="{Binding TimeStampElaptedString, Mode=OneWay}" />
-              </Grid>
+              </StackPanel>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
 
-        <DataGridTextColumn
+        <DataGridTemplateColumn
           IsReadOnly="True"
           Header="Activity Type"
-          Binding="{Binding LogTypeName, Mode=OneWay}"
-          MinWidth="130" />
+          MinWidth="130">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Grid>
+                <Border Margin="1.1 0 -5 0" BorderThickness="0 0 0 1" BorderBrush="{Binding BackgroundLine, Mode=OneWay}">
+                  <Label />
+                </Border>
+                <StackPanel Orientation="Horizontal">
+                  <Rectangle
+                    Margin="1 0 0 -0.3"
+                    Width="10"
+                    RadiusX="2"
+                    RadiusY="2"
+                    Fill="{Binding Background, Mode=OneWay}" />
+                  <TextBlock
+                    Padding="3 0 0 0"
+                    Text="{Binding LogTypeName, Mode=OneWay}" />
+                </StackPanel>
+              </Grid>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
 
         <DataGridTemplateColumn
           IsReadOnly="True"
@@ -193,9 +230,11 @@
           MinWidth="130">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <TextBlock
-                Margin="0 0 20 0"
-                Text="{Binding Actor, Mode=OneWay}" />
+              <Border Margin="0 0 -5 0" BorderThickness="0 0 0 1" BorderBrush="{Binding BackgroundLine, Mode=OneWay}">
+                <TextBlock
+                  Padding="5 0 20 0"
+                  Text="{Binding Actor, Mode=OneWay}" />
+              </Border>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -207,10 +246,12 @@
           MinWidth="60">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <TextBlock
-                Margin="0 0 10 0"
-                Text="{Binding HPRateText, Mode=OneWay}"
-                HorizontalAlignment="Right" />
+              <Border Margin="0 0 -5 0" BorderThickness="0 0 0 1" BorderBrush="{Binding BackgroundLine, Mode=OneWay}">
+                <TextBlock
+                  Padding="5 0 10 0"
+                  Text="{Binding HPRateText, Mode=OneWay}"
+                  TextAlignment="Right" />
+              </Border>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -222,9 +263,11 @@
           MinWidth="300">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <TextBlock
-                Margin="0 0 20 0"
-                Text="{Binding Activity, Mode=OneWay}" />
+              <Border Margin="0 0 -5 0" BorderThickness="0 0 0 1" BorderBrush="{Binding BackgroundLine, Mode=OneWay}">
+                <TextBlock
+                  Padding="5 0 20 0"
+                  Text="{Binding Activity, Mode=OneWay}" />
+              </Border>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
@@ -237,9 +280,12 @@
           Width="*">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <TextBlock
-                Text="{Binding RawWithoutTimestamp, Mode=OneWay}"
-                TextWrapping="Wrap" />
+              <Border BorderThickness="0 0 0 1" BorderBrush="{Binding BackgroundLine, Mode=OneWay}">
+                <TextBlock
+                  Padding="5 0 0 0"
+                  Text="{Binding RawWithoutTimestamp, Mode=OneWay}"
+                  TextWrapping="Wrap" />
+              </Border>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>

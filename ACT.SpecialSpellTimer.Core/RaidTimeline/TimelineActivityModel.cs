@@ -171,5 +171,39 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.style;
             set => this.SetProperty(ref this.style, value);
         }
+
+        private int seq = 0;
+
+        [XmlIgnore]
+        public int Seq
+        {
+            get => this.seq;
+            set => this.SetProperty(ref this.seq, value);
+        }
+
+        private bool isDone = false;
+
+        [XmlIgnore]
+        public bool IsDone
+        {
+            get => this.isDone;
+            set => this.SetProperty(ref this.isDone, value);
+        }
+
+        private bool isNotified = false;
+
+        [XmlIgnore]
+        public bool IsNotified
+        {
+            get => this.isNotified;
+            set => this.SetProperty(ref this.isNotified, value);
+        }
+
+        public TimelineActivityModel Clone()
+        {
+            var clone = this.MemberwiseClone() as TimelineActivityModel;
+            clone.id = Guid.NewGuid();
+            return clone;
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlIgnore]
         public abstract TimelineElementTypes TimelineType { get; }
 
-        private Guid id = Guid.NewGuid();
+        protected Guid id = Guid.NewGuid();
 
         [XmlIgnore]
         public Guid ID => this.id;
@@ -39,6 +39,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.name;
             set => this.SetProperty(ref this.name, value);
+        }
+
+        private bool? enabled = null;
+
+        [XmlIgnore]
+        public virtual bool? Enabled
+        {
+            get => this.enabled;
+            set => this.SetProperty(ref this.enabled, value);
+        }
+
+        [XmlAttribute(AttributeName = "enabled")]
+        public string EnabledXML
+        {
+            get => this.Enabled?.ToString();
+            set => this.Enabled = bool.TryParse(value, out var v) ? v : (bool?)null;
         }
 
         private BindableBase parent = null;
