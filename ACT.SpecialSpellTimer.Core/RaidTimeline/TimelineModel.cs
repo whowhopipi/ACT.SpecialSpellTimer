@@ -181,5 +181,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         #endregion Methods
+
+        #region MVVM
+
+        [XmlIgnore]
+        public TimelineOverlay View
+        {
+            get;
+            set;
+        } = null;
+
+        #endregion MVVM
     }
 }

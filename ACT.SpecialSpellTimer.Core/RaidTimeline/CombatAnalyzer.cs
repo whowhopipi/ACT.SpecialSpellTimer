@@ -96,7 +96,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 (Color)cc.ConvertFrom("#FFDC143C"), // Combat Start
                 (Color)cc.ConvertFrom("#FFDC143C"), // Combat End
                 (Color)cc.ConvertFrom("#FF4169E1"), // Starts Using
+<<<<<<< HEAD
                 (Color)cc.ConvertFrom("#FF98fb98"), // Action
+=======
+                (Color)cc.ConvertFrom("#FF228B22"), // Action
+>>>>>>> defca75f49d9b0d5e44894df9c9e5ac9e3855622
                 (Color)cc.ConvertFrom("#FFF0E68C"), // Effect
                 (Color)cc.ConvertFrom("#FFFFA500"), // Marker
                 (Color)cc.ConvertFrom("#00000000"), // Added

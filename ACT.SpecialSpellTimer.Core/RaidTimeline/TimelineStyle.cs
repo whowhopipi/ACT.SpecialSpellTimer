@@ -131,6 +131,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.barHeight, value);
         }
 
+<<<<<<< HEAD
         public bool isCircleStyle = false;
 
         /// <summary>
@@ -142,6 +143,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.isCircleStyle, value);
         }
 
+=======
+>>>>>>> defca75f49d9b0d5e44894df9c9e5ac9e3855622
         private string icon = string.Empty;
 
         /// <summary>
