@@ -33,6 +33,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 if (this.SetProperty(ref this.model, value))
                 {
                     this.SetupTagsSource();
+                    this.RaisePropertyChanged(nameof(this.IsPreset));
                 }
 
                 this.RefreshFirstSpell();
