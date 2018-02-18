@@ -82,6 +82,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         [XmlIgnore]
+        public TimelineStyle DefaultStyle =>
+            this.Styles.FirstOrDefault(x => x.IsDefault) ?? TimelineStyle.DefaultStyle;
+
+        [XmlIgnore]
         public IReadOnlyDictionary<string, TimelineStyle> StyleTable =>
             this.styleTable ?? (this.styleTable = this.styles.ToDictionary(x => x.Name));
 

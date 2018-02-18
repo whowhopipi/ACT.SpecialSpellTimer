@@ -237,6 +237,12 @@
     <Compile Include="RaidTimeline\TimelineStyle.cs" />
     <Compile Include="RaidTimeline\TimelineSubroutineModel.cs" />
     <Compile Include="RaidTimeline\TimelineTriggerModel.cs" />
+    <Compile Include="RaidTimeline\Views\TimelineActivityControl.xaml.cs">
+      <DependentUpon>TimelineActivityControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RaidTimeline\Views\TimelineOverlay.xaml.cs">
+      <DependentUpon>TimelineOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="resources\ILocalizable.cs" />
     <Compile Include="resources\LocalizeExtensions.cs" />
     <Compile Include="Sound\TTSDictionary.cs" />
@@ -440,6 +446,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Views\TriggersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RaidTimeline\Views\TimelineActivityControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RaidTimeline\Views\TimelineOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

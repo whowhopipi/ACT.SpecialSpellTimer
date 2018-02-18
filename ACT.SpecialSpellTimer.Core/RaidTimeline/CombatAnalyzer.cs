@@ -58,6 +58,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
     public static class LogTypesExtensions
     {
+        private static ColorConverter cc = new ColorConverter();
+
         public static string ToText(
             this LogTypes t)
             => new[]
@@ -74,20 +76,48 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 "Dialog",
             }[(int)t];
 
-        public static Color ToColor(
+        public static Color ToBackgroundColor(
             this LogTypes t)
             => new[]
             {
-                Colors.White,
-                Colors.Wheat,
-                Colors.Wheat,
-                Colors.OrangeRed,
-                Colors.Sienna,
-                Colors.DarkGray,
-                Colors.DarkGray,
-                Colors.DarkGreen,
-                Colors.Silver,
-                Colors.Peru,
+                /*
+                (Color)cc.ConvertFrom("#FFFFFFFF"), // UNKNOWN
+                (Color)cc.ConvertFrom("#FFFF9999"), // Combat Start
+                (Color)cc.ConvertFrom("#FFFF9999"), // Combat End
+                (Color)cc.ConvertFrom("#FFCEE6F4"), // Starts Using
+                (Color)cc.ConvertFrom("#FFEEFBDD"), // Action
+                (Color)cc.ConvertFrom("#FFEFF6FB"), // Effect
+                (Color)cc.ConvertFrom("#FFFFDA97"), // Marker
+                (Color)cc.ConvertFrom("#FFFFFFFF"), // Added
+                (Color)cc.ConvertFrom("#FFFFFFFF"), // HP Rate
+                (Color)cc.ConvertFrom("#FFD8D8D8"), // Dialog
+                */
+                (Color)cc.ConvertFrom("#FFFFFFFF"), // UNKNOWN
+                (Color)cc.ConvertFrom("#FFDC143C"), // Combat Start
+                (Color)cc.ConvertFrom("#FFDC143C"), // Combat End
+                (Color)cc.ConvertFrom("#FF4169E1"), // Starts Using
+                (Color)cc.ConvertFrom("#FF228B22"), // Action
+                (Color)cc.ConvertFrom("#FFF0E68C"), // Effect
+                (Color)cc.ConvertFrom("#FFFFA500"), // Marker
+                (Color)cc.ConvertFrom("#00000000"), // Added
+                (Color)cc.ConvertFrom("#00000000"), // HP Rate
+                (Color)cc.ConvertFrom("#FFD8D8D8"), // Dialog
+            }[(int)t];
+
+        public static Color ToForegroundColor(
+            this LogTypes t)
+            => new[]
+            {
+                (Color)cc.ConvertFrom("#FF000000"), // UNKNOWN
+                (Color)cc.ConvertFrom("#FF000000"), // Combat Start
+                (Color)cc.ConvertFrom("#FF000000"), // Combat End
+                (Color)cc.ConvertFrom("#FF000000"), // Starts Using
+                (Color)cc.ConvertFrom("#FF000000"), // Action
+                (Color)cc.ConvertFrom("#FF000000"), // Effect
+                (Color)cc.ConvertFrom("#FF000000"), // Marker
+                (Color)cc.ConvertFrom("#FF7F7F7F"), // Added
+                (Color)cc.ConvertFrom("#FF000000"), // HP Rate
+                (Color)cc.ConvertFrom("#FF000000"), // Dialog
             }[(int)t];
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Image;
@@ -22,6 +23,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.name;
             set => this.SetProperty(ref this.name, value);
+        }
+
+        private bool isDefault;
+
+        /// <summary>
+        /// 規定のスタイル？
+        /// </summary>
+        public bool IsDefault
+        {
+            get => this.isDefault;
+            set => this.SetProperty(ref this.isDefault, value);
         }
 
         private FontInfo font = new FontInfo();
@@ -149,5 +161,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.iconSize;
             set => this.SetProperty(ref this.iconSize, value);
         }
+
+        #region Default Style
+
+        private static TimelineStyle defaultStyle;
+
+        public static TimelineStyle DefaultStyle =>
+            defaultStyle ?? (defaultStyle = new TimelineStyle()
+            {
+                Font = new FontInfo("Arial", 18, "Normal", "Bold", "Normal"),
+            });
+
+        #endregion Default Style
     }
 }

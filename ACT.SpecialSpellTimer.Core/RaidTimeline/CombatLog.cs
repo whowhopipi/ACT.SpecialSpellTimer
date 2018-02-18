@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Media;
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Extensions;
@@ -37,6 +38,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.SetProperty(ref this.isOrigin, value))
                 {
+                    this.RaisePropertyChanged(nameof(this.FontWeight));
+                    this.RaisePropertyChanged(nameof(this.Foreground));
                     this.RaisePropertyChanged(nameof(this.Background));
                 }
             }
@@ -126,18 +129,24 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public string SyncKeyword { get; set; } = null;
 
-        public SolidColorBrush Background
-        {
-            get
-            {
-                var color = this.IsOrigin ?
-                    Colors.Crimson :
-                    this.LogType.ToColor();
+        public FontWeight FontWeight =>
+            this.IsOrigin ? FontWeights.Black : FontWeights.Normal;
 
-                color.A = (byte)(255 * 0.2);
+        public SolidColorBrush Foreground =>
+            new SolidColorBrush(
+                this.LogType.ToForegroundColor());
 
-                return new SolidColorBrush(color);
-            }
-        }
+        public SolidColorBrush Background =>
+            new SolidColorBrush(
+                this.LogType.ToBackgroundColor());
+
+        public SolidColorBrush BackgroundLine =>
+            (
+                this.LogType == LogTypes.CombatStart ||
+                this.LogType == LogTypes.CombatEnd ||
+                this.LogType == LogTypes.Dialog
+            ) ?
+            new SolidColorBrush(this.LogType.ToBackgroundColor()) :
+            Brushes.Transparent;
     }
 }
