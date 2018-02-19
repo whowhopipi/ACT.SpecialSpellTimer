@@ -12,6 +12,7 @@ using ACT.SpecialSpellTimer.Sound;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
 using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -86,7 +87,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set;
         }
 
-        public void LoadActivity()
+        public void Load()
         {
             lock (Locker)
             {
@@ -95,17 +96,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return;
                 }
 
-                this.CurrentTime = TimeSpan.Zero;
-                this.ClearActivity();
-
-                int seq = 1;
-                foreach (var src in this.Model.Activities
-                    .Where(x => x.Enabled ?? true))
-                {
-                    var act = src.Clone();
-                    act.Init(seq++);
-                    this.AddActivity(act);
-                }
+                this.LoadActivityLine();
 
                 this.LogWorker = new Thread(this.DetectLogLoop)
                 {
@@ -122,7 +113,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
-        public void UnloadActivity()
+        public void Unload()
         {
             lock (Locker)
             {
@@ -139,6 +130,21 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.logInfoQueue = null;
 
                 CurrentController = null;
+            }
+        }
+
+        private void LoadActivityLine()
+        {
+            this.CurrentTime = TimeSpan.Zero;
+            this.ClearActivity();
+
+            int seq = 1;
+            foreach (var src in this.Model.Activities
+                .Where(x => x.Enabled ?? true))
+            {
+                var act = src.Clone();
+                act.Init(seq++);
+                this.AddActivity(act);
             }
         }
 
@@ -476,31 +482,59 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 detectors.AddRange(acts);
             }
 
-            logs.AsParallel().ForAll(log =>
+            // 開始・終了判定のキーワードを取得する
+            var keywords = CombatAnalyzer.Keywords.Where(x =>
+                x.Category == KewordTypes.Start ||
+                x.Category == KewordTypes.End);
+
+            logs.AsParallel().ForAll(xivlog =>
             {
+                // 開始・終了を判定する
+                var key = (
+                    from x in keywords
+                    where
+                    xivlog.Log.ContainsIgnoreCase(x.Keyword)
+                    select
+                    x).FirstOrDefault();
+
+                if (key != null)
+                {
+                    switch (key.Category)
+                    {
+                        case KewordTypes.Start:
+                            this.StartActivityLine();
+                            break;
+
+                        case KewordTypes.End:
+                            this.EndActivityLine();
+                            break;
+                    }
+                }
+
+                // アクティビティ・トリガとマッチングする
                 detectors.AsParallel().ForAll(detector =>
                 {
                     switch (detector)
                     {
                         case TimelineActivityModel act:
-                            detectActivity(log, act);
+                            detectActivity(xivlog, act);
                             break;
 
                         case TimelineTriggerModel tri:
-                            detectTrigger(log, tri);
+                            detectTrigger(xivlog, tri);
                             break;
                     }
                 });
             });
 
-            void detectActivity(
+            bool detectActivity(
                 XIVLog xivlog,
                 TimelineActivityModel act)
             {
                 var match = act.SynqRegex.Match(xivlog.Log);
                 if (!match.Success)
                 {
-                    return;
+                    return false;
                 }
 
                 WPFHelper.BeginInvoke(() =>
@@ -517,16 +551,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         this.CurrentTime = act.Time;
                     }
                 });
+
+                return true;
             }
 
-            void detectTrigger(
+            bool detectTrigger(
                 XIVLog xivlog,
                 TimelineTriggerModel tri)
             {
                 var match = tri.SynqRegex.Match(xivlog.Log);
                 if (!match.Success)
                 {
-                    return;
+                    return false;
                 }
 
                 tri.MatchedCounter++;
@@ -535,7 +571,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     if (tri.SyncCount.Value != tri.MatchedCounter)
                     {
-                        return;
+                        return false;
                     }
                 }
 
@@ -563,6 +599,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         }
                     }
                 });
+
+                return true;
             }
         }
 
@@ -576,10 +614,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set;
         } = null;
 
-        public void Start()
+        private volatile bool isRunning = false;
+
+        public void StartActivityLine()
         {
             lock (this)
             {
+                if (this.isRunning)
+                {
+                    return;
+                }
+
                 this.CurrentTime = TimeSpan.Zero;
 
                 if (this.TimelineTimer == null)
@@ -594,6 +639,24 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.PreviouseDetectTime = DateTime.Now;
                 this.TimelineTimer.Start();
+
+                this.isRunning = true;
+            }
+        }
+
+        public void EndActivityLine()
+        {
+            lock (this)
+            {
+                if (!this.isRunning)
+                {
+                    return;
+                }
+
+                this.TimelineTimer.Stop();
+                this.LoadActivityLine();
+
+                this.isRunning = false;
             }
         }
 
@@ -601,13 +664,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             object sender,
             EventArgs e)
         {
-            lock (this)
+            try
             {
-                var now = DateTime.Now;
-                this.CurrentTime += now - this.PreviouseDetectTime;
-                this.PreviouseDetectTime = now;
+                lock (this)
+                {
+                    var now = DateTime.Now;
+                    this.CurrentTime += now - this.PreviouseDetectTime;
+                    this.PreviouseDetectTime = now;
 
-                this.RefreshActivityLine();
+                    this.RefreshActivityLine();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.AppLogger.Error(
+                    ex,
+                    $"[TL] Error Timeline ticker. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.FileName}");
             }
         }
 

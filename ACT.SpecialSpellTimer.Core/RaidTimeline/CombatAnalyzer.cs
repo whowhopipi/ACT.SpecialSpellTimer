@@ -148,47 +148,47 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public const string WipeoutLog = "00:0038:wipeout";
         public const string ImportLog = "00:0038:import";
 
-        private static readonly Regex ActionRegex = new Regex(
+        public static readonly Regex ActionRegex = new Regex(
             @"\[.+?\] 00:....:(?<actor>.+?)の「(?<skill>.+?)」$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex AddedRegex = new Regex(
+        public static readonly Regex AddedRegex = new Regex(
             @"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex CastRegex = new Regex(
+        public static readonly Regex CastRegex = new Regex(
             @"\[.+?\] 00:....:(?<actor>.+?)は「(?<skill>.+?)」(を唱えた。|の構え。)$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex HPRateRegex = new Regex(
+        public static readonly Regex HPRateRegex = new Regex(
             @"\[.+?\] ..:(?<actor>.+?) HP at (?<hprate>\d+?)%",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex StartsUsingRegex = new Regex(
+        public static readonly Regex StartsUsingRegex = new Regex(
             @"14:..:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex DialogRegex = new Regex(
+        public static readonly Regex DialogRegex = new Regex(
             @"00:0044:(?<dialog>.+?)$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex CombatStartRegex = new Regex(
+        public static readonly Regex CombatStartRegex = new Regex(
             @"00:(0038|0039):(?<discription>.+?)$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex CombatEndRegex = new Regex(
+        public static readonly Regex CombatEndRegex = new Regex(
             @"00:....:(?<discription>.+?)$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex EffectRegex = new Regex(
+        public static readonly Regex EffectRegex = new Regex(
             @"1A:(?<victim>.+?) gains the effect of (?<effect>.+?) from (?<actor>.+?) for (?<duration>[0-9\.]*?) Seconds.$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly Regex MarkerRegex = new Regex(
+        public static readonly Regex MarkerRegex = new Regex(
             @"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-        private static readonly IList<AnalyzeKeyword> Keywords = new[]
+        public static readonly IList<AnalyzeKeyword> Keywords = new[]
         {
             new AnalyzeKeyword() { Keyword = "・エギ", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "フェアリー・", Category = KewordTypes.Pet },
