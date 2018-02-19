@@ -592,10 +592,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             select
                             x).FirstOrDefault();
 
-                        // jumpを判定する
-                        if (!this.CallActivity(active, tri.CallTarget))
+                        if (active != null)
                         {
-                            this.GoToActivity(active, tri.GoToDestination);
+                            // jumpを判定する
+                            if (!this.CallActivity(active, tri.CallTarget))
+                            {
+                                this.GoToActivity(active, tri.GoToDestination);
+                            }
                         }
                     }
                 });
