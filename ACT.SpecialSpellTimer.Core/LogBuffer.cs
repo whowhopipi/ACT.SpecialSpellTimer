@@ -469,6 +469,7 @@ namespace ACT.SpecialSpellTimer
         }
 
         public string Timestamp { get; set; } = string.Empty;
+
         public string Log { get; set; } = string.Empty;
 
         public string LogLine => $"{this.Timestamp} {this.Log}";

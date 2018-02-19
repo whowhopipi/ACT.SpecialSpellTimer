@@ -179,6 +179,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             return clone;
         }
 
+        public override string ToString()
+            => $"{this.TimeText} {this.Text}";
+
         #region 動作を制御するためのフィールド
 
         private int seq = 0;

@@ -124,6 +124,9 @@
     <Compile Include="Config\Views\TimelineManagerView.xaml.cs">
       <DependentUpon>TimelineManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Views\TimelineTesterView.xaml.cs">
+      <DependentUpon>TimelineTesterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\TimelineView.xaml.cs">
       <DependentUpon>TimelineView.xaml</DependentUpon>
     </Compile>
@@ -309,7 +312,9 @@
     </Compile>
     <Compile Include="Models\SpellTable.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="resources\timeline\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="resources\color\サンプル灰色系.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -439,6 +444,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Views\TimelineManagerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TimelineTesterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

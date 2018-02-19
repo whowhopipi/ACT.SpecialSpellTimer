@@ -1277,6 +1277,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var timeline = new TimelineModel();
 
             timeline.Zone = combatLogs.First().Zone;
+            timeline.Locale = Settings.Default.FFXIVLocale;
+            timeline.Name = $"{timeline.Zone} draft timeline";
 
             foreach (var log in combatLogs.Where(x =>
                 outputTypes.Contains(x.LogType)))

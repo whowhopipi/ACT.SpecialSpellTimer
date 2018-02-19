@@ -27,26 +27,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.AddRange(value);
         }
 
-        [XmlElement(ElementName = "t")]
-        public TimelineTriggerModel[] Triggers
-        {
-            get => this.statements.Where(x => x.TimelineType == TimelineElementTypes.Trigger).Cast<TimelineTriggerModel>().ToArray();
-            set => this.AddRange(value);
-        }
-
         #region Methods
 
         public void Add(TimelineBase timeline)
         {
+            if (timeline.TimelineType != TimelineElementTypes.Activity)
+            {
+                return;
+            }
+
             timeline.Parent = this;
             this.statements.Add(timeline);
         }
 
         public void AddRange(IEnumerable<TimelineBase> timelines)
         {
-            foreach (var tl in timelines)
+            if (timelines != null)
             {
-                this.Add(tl);
+                foreach (var tl in timelines)
+                {
+                    this.Add(tl);
+                }
             }
         }
 

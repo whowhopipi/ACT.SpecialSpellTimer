@@ -17,6 +17,25 @@ using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
+    public enum TimelineStatus
+    {
+        Unloaded = 0,
+        Loaded,
+        Runnning
+    }
+
+    public static class TimelineStatusEx
+    {
+        public static string ToText(
+            this TimelineStatus s)
+            => new[]
+            {
+                string.Empty,
+                "Standby",
+                "Running",
+            }[(int)s];
+    }
+
     public partial class TimelineController :
         BindableBase
     {
@@ -65,7 +84,24 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             string.Equals(
                 ActGlobals.oFormActMain.CurrentZone,
                 this.Model.Zone,
-                StringComparison.OrdinalIgnoreCase);
+                StringComparison.OrdinalIgnoreCase) &&
+            Settings.Default.FFXIVLocale == this.Model.Locale;
+
+        private TimelineStatus status = TimelineStatus.Unloaded;
+
+        public TimelineStatus Status
+        {
+            get => this.status;
+            set
+            {
+                if (this.SetProperty(ref status, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.StatusText));
+                }
+            }
+        }
+
+        public string StatusText => this.status.ToText();
 
         private TimeSpan currentTime = TimeSpan.Zero;
 
@@ -91,11 +127,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             lock (Locker)
             {
-                if (!this.IsAvailable)
-                {
-                    return;
-                }
-
                 this.LoadActivityLine();
 
                 this.LogWorker = new Thread(this.DetectLogLoop)
@@ -103,6 +134,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     IsBackground = true
                 };
 
+                this.isLogWorkerRunning = true;
                 this.LogWorker.Start();
 
                 this.logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
@@ -110,6 +142,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
                 CurrentController = this;
+                this.Status = TimelineStatus.Loaded;
             }
         }
 
@@ -117,12 +150,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             lock (Locker)
             {
+                this.isLogWorkerRunning = false;
+
                 this.CurrentTime = TimeSpan.Zero;
                 this.ClearActivity();
 
                 if (this.LogWorker != null)
                 {
-                    this.LogWorker.Abort();
+                    this.LogWorker.Join(TimeSpan.FromSeconds(1));
+
+                    if (this.LogWorker.IsAlive)
+                    {
+                        this.LogWorker.Abort();
+                    }
+
                     this.LogWorker = null;
                 }
 
@@ -130,6 +171,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.logInfoQueue = null;
 
                 CurrentController = null;
+                this.Status = TimelineStatus.Unloaded;
             }
         }
 
@@ -343,6 +385,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         #region Log 関係のスレッド
 
         private ConcurrentQueue<LogLineEventArgs> logInfoQueue;
+        private volatile bool isLogWorkerRunning = false;
 
         private Thread LogWorker
         {
@@ -350,12 +393,28 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set;
         } = null;
 
+        public void EnqueueLog(
+            LogLineEventArgs logInfo)
+        {
+            if (!this.isLogWorkerRunning)
+            {
+                return;
+            }
+
+            this.logInfoQueue?.Enqueue(logInfo);
+        }
+
         private void OnLogLineRead(
             bool isImport,
             LogLineEventArgs logInfo)
         {
             try
             {
+                if (!this.isLogWorkerRunning)
+                {
+                    return;
+                }
+
                 // 18文字以下のログは読み捨てる
                 // なぜならば、タイムスタンプ＋ログタイプのみのログだから
                 if (logInfo.logLine.Length <= 18)
@@ -369,13 +428,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.AppLogger.Error(
                     ex,
-                    $"[TL] Error OnLoglineRead. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.FileName}");
+                    $"[TL] Error OnLoglineRead. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.File}");
             }
         }
 
         private void DetectLogLoop()
         {
-            while (true)
+            while (this.isLogWorkerRunning)
             {
                 var isExistsLog = false;
 
@@ -404,7 +463,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     this.AppLogger.Error(
                         ex,
-                        $"[TL] Error DetectLog. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.FileName}");
+                        $"[TL] Error DetectLog. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.File}");
                 }
                 finally
                 {
@@ -644,6 +703,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.TimelineTimer.Start();
 
                 this.isRunning = true;
+                this.Status = TimelineStatus.Runnning;
             }
         }
 
@@ -660,6 +720,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.LoadActivityLine();
 
                 this.isRunning = false;
+                this.Status = TimelineStatus.Loaded;
             }
         }
 
@@ -682,7 +743,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.AppLogger.Error(
                     ex,
-                    $"[TL] Error Timeline ticker. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.FileName}");
+                    $"[TL] Error Timeline ticker. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.File}");
             }
         }
 

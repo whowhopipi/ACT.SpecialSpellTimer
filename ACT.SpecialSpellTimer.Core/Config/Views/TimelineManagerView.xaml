@@ -29,6 +29,21 @@
 
   <UserControl.Resources>
     <ResourceDictionary>
+      <Style TargetType="Label">
+        <Setter Property="Padding" Value="0" />
+      </Style>
+
+      <Style TargetType="CheckBox">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+      </Style>
+
+      <Style TargetType="Button">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+      </Style>
+
       <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
 
       <fwcnv:BoolToCollapsedConverter x:Key="CollapsedConverter" />
@@ -40,4 +55,131 @@
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </UserControl.Resources>
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" MinWidth="600" />
+      <ColumnDefinition Width="Auto" MinWidth="600" />
+    </Grid.ColumnDefinitions>
+
+    <!-- 左ペイン -->
+    <Border
+      Grid.Column="0"
+      Margin="3 3 0 3"
+      BorderThickness="2"
+      CornerRadius="2"
+      BorderBrush="Green">
+
+      <Grid Margin="5">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+          <CheckBox Margin="0 10 0 0" Content="{DynamicResource Timeline_Enable}" IsChecked="{Binding Path=TimelineConfig.Enabled, Mode=TwoWay}" FontWeight="Black" />
+
+          <StackPanel Margin="0 20 0 0">
+            <Label Content="{DynamicResource Timeline_Folder}" />
+            <TextBox Margin="0 5 20 0" BorderThickness="0" IsReadOnly="True" Text="{Binding Path=TimelineDirectory, Mode=OneWay}" />
+            <StackPanel Margin="0 5 0 0" Orientation="Horizontal">
+              <Button Content="Open" Command="{Binding OpenTimelineFolderCommand, Mode=OneWay}" />
+              <Button Margin="10 0 0 0" Content="Reload" Command="{Binding ReloadTimelineFolderCommand, Mode=OneWay}" />
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+
+        <ListView
+          Grid.Row="1"
+          Margin="0 15 20 15"
+          BorderThickness="0"
+          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+          ScrollViewer.VerticalScrollBarVisibility="Auto"
+          ItemsSource="{Binding Path=TimelineModels, Mode=OneWay}">
+
+          <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+              <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            </Style>
+          </ListView.ItemContainerStyle>
+
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <CheckBox
+                  Grid.Column="0"
+                  Margin="10 0 10 0"
+                  IsChecked="{Binding Path=IsActive, Mode=TwoWay}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  HorizontalContentAlignment="Center"
+                  IsTabStop="False"
+                  Focusable="False"
+                  ToolTip="Active Timeline" />
+
+                <StackPanel
+                  Grid.Column="1"
+                  Margin="10 0 0 0">
+                  <Label Content="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="18" />
+
+                  <TextBlock Margin="10 5 0 0" Text="{Binding Path=Zone, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
+                  <TextBlock Margin="10 1 0 0" Text="{Binding Path=LocaleText, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
+                  <TextBlock Margin="10 1 0 0" Text="{Binding Path=FileName, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
+                </StackPanel>
+
+                <Grid
+                  Grid.Column="2"
+                  VerticalAlignment="Bottom"
+                  Margin="10 0 0 0">
+
+                  <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+
+                  <Label
+                    Grid.Row="0"
+                    Margin="0 0 0 15"
+                    Content="{Binding Path=Controller.StatusText, Mode=OneWay}"
+                    FontSize="16"
+                    FontStyle="Italic"
+                    FontWeight="Bold"
+                    Foreground="DarkOrchid" />
+
+                  <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Content="Edit" FontSize="14" Command="{Binding EditCommand, Mode=OneWay}" />
+                    <Button Margin="10 0 0 0" Content="Reload" FontSize="14" Command="{Binding ReloadCommand, Mode=OneWay}" />
+                  </StackPanel>
+                </Grid>
+              </Grid>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+          <Button
+            Content="{DynamicResource Timeline_TestTimeline}"
+            Command="{Binding TestTimelineCommand, Mode=OneWay}" />
+        </StackPanel>
+      </Grid>
+    </Border>
+    <!-- 左ペイン end -->
+
+    <!-- 右ペイン -->
+    <Border
+      Grid.Column="1"
+      Margin="3 3 3 3"
+      BorderThickness="2"
+      CornerRadius="2"
+      BorderBrush="Gold">
+    </Border>
+    <!-- 右ペイン end -->
+  </Grid>
 </UserControl>

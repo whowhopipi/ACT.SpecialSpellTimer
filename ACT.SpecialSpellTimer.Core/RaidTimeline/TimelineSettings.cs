@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,11 +28,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private TimelineSettings()
         {
+            this.PropertyChanged += this.TimelineSettings_PropertyChanged;
         }
 
         #endregion Singleton
 
         #region Data
+
+        private bool enabled = false;
+
+        public bool Enabled
+        {
+            get => this.enabled;
+            set => this.SetProperty(ref this.enabled, value);
+        }
 
         private bool overlayVisible = true;
 
@@ -63,6 +73,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.overlayScale;
             set => this.SetProperty(ref this.overlayScale, value);
+        }
+
+        private double nearestActivityScale = 1.2;
+
+        public double NearestActivityScale
+        {
+            get => this.nearestActivityScale;
+            set => this.SetProperty(ref this.nearestActivityScale, value);
+        }
+
+        private double nextActivityBrightness = 0.7;
+
+        public double NextActivityBrightness
+        {
+            get => this.nextActivityBrightness;
+            set => this.SetProperty(ref this.nextActivityBrightness, value);
         }
 
         private List<TimelineStyle> styles = new List<TimelineStyle>();
@@ -108,18 +134,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             lock (Locker)
             {
-                if (!File.Exists(file))
+                try
                 {
-                    return new TimelineSettings();
-                }
+                    autoSave = false;
 
-                using (var sr = new StreamReader(file, new UTF8Encoding(false)))
-                {
-                    if (sr.BaseStream.Length > 0)
+                    if (!File.Exists(file))
                     {
-                        var xs = new XmlSerializer(typeof(TimelineSettings));
-                        data = xs.Deserialize(sr) as TimelineSettings;
+                        return new TimelineSettings();
                     }
+
+                    using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+                    {
+                        if (sr.BaseStream.Length > 0)
+                        {
+                            var xs = new XmlSerializer(typeof(TimelineSettings));
+                            data = xs.Deserialize(sr) as TimelineSettings;
+                        }
+                    }
+                }
+                finally
+                {
+                    autoSave = true;
                 }
             }
 
@@ -149,6 +184,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     file,
                     sb.ToString() + Environment.NewLine,
                     new UTF8Encoding(false));
+            }
+        }
+
+        private static bool autoSave = false;
+
+        private void TimelineSettings_PropertyChanged(
+            object sender,
+            PropertyChangedEventArgs e)
+        {
+            if (autoSave)
+            {
+                TimelineSettings.Save();
             }
         }
 

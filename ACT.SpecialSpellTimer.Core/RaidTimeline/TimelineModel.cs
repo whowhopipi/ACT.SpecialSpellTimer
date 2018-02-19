@@ -1,10 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config.Views;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Globalization;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -19,7 +26,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     {
         private string name = string.Empty;
 
-        [XmlAttribute(AttributeName = "name")]
+        [XmlElement(ElementName = "name")]
         public string Name
         {
             get => this.name;
@@ -28,21 +35,72 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private string zone = string.Empty;
 
-        [XmlAttribute(AttributeName = "zone")]
+        [XmlElement(ElementName = "zone")]
         public string Zone
         {
             get => this.zone;
             set => this.SetProperty(ref this.zone, value);
         }
 
-        private string fileName = string.Empty;
+        private Locales locale = Locales.JA;
+
+        [XmlElement(ElementName = "locale")]
+        public Locales Locale
+        {
+            get => this.locale;
+            set => this.SetProperty(ref this.locale, value);
+        }
 
         [XmlIgnore]
-        public string FileName
+        public string LocaleText => this.Locale.ToText();
+
+        private string file = string.Empty;
+
+        [XmlIgnore]
+        public string File
         {
-            get => this.fileName;
-            private set => this.SetProperty(ref this.fileName, value);
+            get => this.file;
+            private set
+            {
+                if (this.SetProperty(ref this.file, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.FileName));
+                }
+            }
         }
+
+        private bool isActive = false;
+
+        [XmlIgnore]
+        public bool IsActive
+        {
+            get => this.isActive;
+            set
+            {
+                if (this.SetProperty(ref this.isActive, value))
+                {
+                    Task.Run(() =>
+                    {
+                        if (this.isActive)
+                        {
+                            if (TimelineController.CurrentController != null)
+                            {
+                                TimelineController.CurrentController.Model.IsActive = false;
+                            }
+
+                            this.Controller.Load();
+                        }
+                        else
+                        {
+                            this.Controller.Unload();
+                        }
+                    });
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string FileName => Path.GetFileName(this.File);
 
         private List<TimelineBase> elements = new List<TimelineBase>();
 
@@ -96,16 +154,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public void AddRange(IEnumerable<TimelineBase> timelines)
         {
-            foreach (var tl in timelines)
+            if (timelines != null)
             {
-                this.Add(tl);
+                foreach (var tl in timelines)
+                {
+                    this.Add(tl);
+                }
             }
         }
 
         public static TimelineModel Load(
             string file)
         {
-            if (!File.Exists(file))
+            if (!System.IO.File.Exists(file))
             {
                 return null;
             }
@@ -121,7 +182,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     if (data != null)
                     {
                         tl = data;
-                        tl.FileName = file;
+                        tl.File = file;
                     }
                 }
             }
@@ -191,7 +252,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 sb.Replace("utf-16", "utf-8");
 
-                File.WriteAllText(
+                System.IO.File.WriteAllText(
                     file,
                     sb.ToString() + Environment.NewLine,
                     new UTF8Encoding(false));
@@ -199,5 +260,77 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         #endregion Methods
+
+        #region Commands
+
+        private ICommand editCommand;
+
+        public ICommand EditCommand =>
+            this.editCommand ?? (this.editCommand = new DelegateCommand(() =>
+            {
+                if (System.IO.File.Exists(this.File))
+                {
+                    Process.Start(this.File);
+                }
+            }));
+
+        private ICommand reloadCommand;
+
+        public ICommand ReloadCommand =>
+            this.reloadCommand ?? (this.reloadCommand = new DelegateCommand(async () =>
+            {
+                if (!System.IO.File.Exists(this.File))
+                {
+                    return;
+                }
+
+                try
+                {
+                    var isStanby = this.IsActive;
+
+                    var tl = default(TimelineModel);
+                    await Task.Run(() =>
+                    {
+                        if (isStanby)
+                        {
+                            this.Controller.Unload();
+                        }
+
+                        tl = TimelineModel.Load(this.File);
+                    });
+
+                    if (tl == null)
+                    {
+                        return;
+                    }
+
+                    this.Name = tl.Name;
+                    this.Zone = tl.Zone;
+                    this.Locale = tl.Locale;
+                    this.File = tl.File;
+
+                    this.elements.Clear();
+                    this.AddRange(tl.Elements);
+
+                    if (isStanby)
+                    {
+                        this.Controller.Load();
+                    }
+
+                    ModernMessageBox.ShowDialog(
+                        "Timeline reloaded.",
+                        "Timeline Manager");
+                }
+                catch (Exception ex)
+                {
+                    ModernMessageBox.ShowDialog(
+                        "Timeline reload error !",
+                        "Timeline Manager",
+                        MessageBoxButton.OK,
+                        ex);
+                }
+            }));
+
+        #endregion Commands
     }
 }

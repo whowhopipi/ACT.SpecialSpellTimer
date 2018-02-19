@@ -57,7 +57,7 @@
     <!-- Timeline Analyzer タブ -->
     <TabItem Height="60">
       <TabItem.Header>
-        <fa:ImageAwesome Icon="PlayCircleOutline" Height="{StaticResource TabIconSize}" ToolTip="{DynamicResource Timeline_Analyzer}" />
+        <fa:ImageAwesome Icon="Pencil" Height="{StaticResource TabIconSize}" ToolTip="{DynamicResource Timeline_Analyzer}" Foreground="Crimson" />
       </TabItem.Header>
       <local:TimelineAnalyzerView />
     </TabItem>
@@ -66,7 +66,7 @@
     <!-- Timeline Manager タブ -->
     <TabItem Height="60">
       <TabItem.Header>
-        <fa:ImageAwesome Icon="ClockOutline" Height="{StaticResource TabIconSize}" ToolTip="{DynamicResource Timeline_Manager}" />
+        <fa:ImageAwesome Icon="ClockOutline" Height="{StaticResource TabIconSize}" ToolTip="{DynamicResource Timeline_Manager}" Foreground="Green" />
       </TabItem.Header>
       <local:TimelineManagerView />
     </TabItem>
