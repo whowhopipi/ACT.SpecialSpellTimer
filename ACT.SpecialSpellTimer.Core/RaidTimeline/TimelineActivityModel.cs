@@ -172,6 +172,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.style, value);
         }
 
+        public TimelineActivityModel Clone()
+        {
+            var clone = this.MemberwiseClone() as TimelineActivityModel;
+            clone.id = Guid.NewGuid();
+            return clone;
+        }
+
+        #region 動作を制御するためのフィールド
+
         private int seq = 0;
 
         [XmlIgnore]
@@ -179,6 +188,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.seq;
             set => this.SetProperty(ref this.seq, value);
+        }
+
+        private bool isActive = false;
+
+        [XmlIgnore]
+        public bool IsActive
+        {
+            get => this.isActive;
+            set => this.SetProperty(ref this.isActive, value);
         }
 
         private bool isDone = false;
@@ -199,11 +217,29 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.isNotified, value);
         }
 
-        public TimelineActivityModel Clone()
+        private bool isSynced = false;
+
+        [XmlIgnore]
+        public bool IsSynced
         {
-            var clone = this.MemberwiseClone() as TimelineActivityModel;
-            clone.id = Guid.NewGuid();
-            return clone;
+            get => this.isSynced;
+            set => this.SetProperty(ref this.isSynced, value);
         }
+
+        public void Init(
+            int? seq = null)
+        {
+            if (seq.HasValue)
+            {
+                this.Seq = seq.Value;
+            }
+
+            this.IsActive = false;
+            this.IsDone = false;
+            this.IsNotified = false;
+            this.IsSynced = false;
+        }
+
+        #endregion 動作を制御するためのフィールド
     }
 }

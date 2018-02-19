@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using FFXIV.Framework.Common;
 using Prism.Mvvm;
 
@@ -18,6 +17,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     public partial class TimelineModel :
         BindableBase
     {
+        private string name = string.Empty;
+
+        [XmlAttribute(AttributeName = "name")]
+        public string Name
+        {
+            get => this.name;
+            set => this.SetProperty(ref this.name, value);
+        }
+
         private string zone = string.Empty;
 
         [XmlAttribute(AttributeName = "zone")]
@@ -25,6 +33,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.zone;
             set => this.SetProperty(ref this.zone, value);
+        }
+
+        private string fileName = string.Empty;
+
+        [XmlIgnore]
+        public string FileName
+        {
+            get => this.fileName;
+            private set => this.SetProperty(ref this.fileName, value);
         }
 
         private List<TimelineBase> elements = new List<TimelineBase>();
@@ -104,10 +121,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     if (data != null)
                     {
                         tl = data;
+                        tl.FileName = file;
                     }
                 }
             }
-
+#if false
             if (tl == null)
             {
                 return tl;
@@ -150,7 +168,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         break;
                 }
             }
-
+#endif
             return tl;
         }
 

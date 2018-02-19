@@ -122,5 +122,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.style;
             set => this.SetProperty(ref this.style, value);
         }
+
+        private int matchedCounter = 0;
+
+        [XmlIgnore]
+        public int MatchedCounter
+        {
+            get => this.matchedCounter;
+            set => this.SetProperty(ref this.matchedCounter, value);
+        }
     }
 }

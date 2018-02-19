@@ -27,19 +27,19 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 空のログリスト
         /// </summary>
-        private static readonly List<XIVLog> EmptyLogLineList = new List<XIVLog>();
+        public static readonly List<XIVLog> EmptyLogLineList = new List<XIVLog>();
 
         /// <summary>
         /// ツールチップのサフィックス
         /// </summary>
         /// <remarks>
         /// ツールチップは計4charsで構成されるが先頭1文字目が可変で残り3文字が固定となっている</remarks>
-        private const string TooltipSuffix = "\u0001\u0001\uFFFD";
+        public const string TooltipSuffix = "\u0001\u0001\uFFFD";
 
         /// <summary>
         /// ツールチップで残るリプレースメントキャラ
         /// </summary>
-        private const string TooltipReplacementChar = "\uFFFD";
+        public const string TooltipReplacementChar = "\uFFFD";
 
         #endregion Constants
 
