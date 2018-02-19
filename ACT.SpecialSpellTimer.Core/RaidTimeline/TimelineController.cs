@@ -128,6 +128,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             lock (Locker)
             {
                 this.LoadActivityLine();
+                this.SetStyle();
 
                 this.LogWorker = new Thread(this.DetectLogLoop)
                 {
@@ -187,6 +188,50 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 var act = src.Clone();
                 act.Init(seq++);
                 this.AddActivity(act);
+            }
+        }
+
+        private void SetStyle()
+        {
+            var defaultStyle = TimelineSettings.Instance.Styles.FirstOrDefault(x => x.IsDefault);
+            if (defaultStyle == null)
+            {
+                defaultStyle = TimelineStyle.DefaultStyle;
+            }
+
+            foreach (var act in this.Model.Activities)
+            {
+                set(act);
+            }
+
+            foreach (var sub in this.Model.Subroutines)
+            {
+                foreach (var act in sub.Activities)
+                {
+                    set(act);
+                }
+            }
+
+            void set(TimelineActivityModel act)
+            {
+                if (string.IsNullOrEmpty(act.Style))
+                {
+                    act.StyleModel = defaultStyle;
+                }
+                else
+                {
+                    var style = TimelineSettings.Instance.Styles.FirstOrDefault(x =>
+                        string.Equals(x.Name == act.Style, StringComparison.OrdinalIgnoreCase));
+
+                    if (style != null)
+                    {
+                        act.StyleModel = style;
+                    }
+                    else
+                    {
+                        act.StyleModel = defaultStyle;
+                    }
+                }
             }
         }
 

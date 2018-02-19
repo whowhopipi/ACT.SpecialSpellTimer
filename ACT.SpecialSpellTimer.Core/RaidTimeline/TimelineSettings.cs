@@ -35,6 +35,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region Data
 
+        private bool designMode = false;
+
+        [XmlIgnore]
+        public bool DesignMode
+        {
+            get => this.designMode;
+            set => this.SetProperty(ref this.designMode, value);
+        }
+
         private bool enabled = false;
 
         public bool Enabled

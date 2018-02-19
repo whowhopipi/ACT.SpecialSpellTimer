@@ -229,6 +229,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.isSynced, value);
         }
 
+        private TimelineStyle styleModel = null;
+
+        [XmlIgnore]
+        public TimelineStyle StyleModel
+        {
+            get => this.styleModel;
+            set => this.SetProperty(ref this.styleModel, value);
+        }
+
         public void Init(
             int? seq = null)
         {
