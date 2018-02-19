@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -51,6 +51,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.overlayVisible, value);
         }
 
+        private double left = 10;
+
+        public double Left
+        {
+            get => this.left;
+            set => this.SetProperty(ref this.left, Math.Round(value));
+        }
+
+        private double top = 10;
+
+        public double Top
+        {
+            get => this.top;
+            set => this.SetProperty(ref this.top, Math.Round(value));
+        }
+
         private bool clickthrough = false;
 
         public bool Clickthrough
@@ -91,29 +107,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.nextActivityBrightness, value);
         }
 
-        private List<TimelineStyle> styles = new List<TimelineStyle>();
-        private Dictionary<string, TimelineStyle> styleTable;
+        private ObservableCollection<TimelineStyle> styles = new ObservableCollection<TimelineStyle>();
 
-        public List<TimelineStyle> Styles
+        public ObservableCollection<TimelineStyle> Styles
         {
             get => this.styles;
             set
             {
-                if (this.SetProperty(ref this.styles, value))
-                {
-                    this.styleTable = this.styles.ToDictionary(x => x.Name);
-                    this.RaisePropertyChanged(nameof(this.StyleTable));
-                }
+                this.styles.Clear();
+                this.styles.AddRange(value);
+                this.RaisePropertyChanged(nameof(this.DefaultStyle));
             }
         }
 
         [XmlIgnore]
         public TimelineStyle DefaultStyle =>
             this.Styles.FirstOrDefault(x => x.IsDefault) ?? TimelineStyle.DefaultStyle;
-
-        [XmlIgnore]
-        public IReadOnlyDictionary<string, TimelineStyle> StyleTable =>
-            this.styleTable ?? (this.styleTable = this.styles.ToDictionary(x => x.Name));
 
         #endregion Data
 
@@ -150,6 +159,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             var xs = new XmlSerializer(typeof(TimelineSettings));
                             data = xs.Deserialize(sr) as TimelineSettings;
                         }
+                    }
+
+                    if (data != null &&
+                        !data.Styles.Any())
+                    {
+                        var style = TimelineStyle.DefaultStyle.Clone();
+                        style.IsDefault = true;
+                        data.Styles.Add(style);
                     }
                 }
                 finally

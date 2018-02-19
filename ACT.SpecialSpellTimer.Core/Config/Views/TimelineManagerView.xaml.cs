@@ -154,6 +154,44 @@ namespace ACT.SpecialSpellTimer.Config.Views
             view.Show();
         }
 
+        private ICommand addStyleCommand;
+
+        public ICommand AddStyleCommand =>
+            this.addStyleCommand ?? (this.addStyleCommand = new DelegateCommand(() =>
+            {
+                var style = default(TimelineStyle);
+
+                if (this.StyleListView.SelectedItem != null)
+                {
+                    style = (this.StyleListView.SelectedItem as TimelineStyle).Clone();
+                }
+                else
+                {
+                    style = TimelineStyle.DefaultStyle.Clone();
+                }
+
+                style.Name = "New Style";
+                TimelineSettings.Instance.Styles.Add(style);
+                this.StyleListView.SelectedItem = style;
+            }));
+
+        private ICommand deleteStyleCommand;
+
+        public ICommand DeleteStyleCommand =>
+            this.deleteStyleCommand ?? (this.deleteStyleCommand = new DelegateCommand(() =>
+            {
+                if (this.StyleListView.SelectedItem != null)
+                {
+                    var style = this.StyleListView.SelectedItem as TimelineStyle;
+
+                    if (TimelineSettings.Instance.Styles.Count > 1)
+                    {
+                        TimelineSettings.Instance.Styles.Remove(style);
+                        this.StyleListView.SelectedItem = TimelineSettings.Instance.Styles.First();
+                    }
+                }
+            }));
+
         #region Zone Changer
 
         private string currentZoneName = string.Empty;

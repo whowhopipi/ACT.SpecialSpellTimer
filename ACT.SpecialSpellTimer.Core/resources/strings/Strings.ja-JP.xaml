@@ -223,11 +223,14 @@
 
   <system:String x:Key="Timeline_Enable">タイムラインを使用する</system:String>
   <system:String x:Key="Timeline_Folder">タイムラインの参照フォルダ</system:String>
+  <system:String x:Key="Timeline_Visual">タイムラインの見た目</system:String>
   <system:String x:Key="Timeline_OverlayVisible">オーバーレイを表示する</system:String>
+  <system:String x:Key="Timeline_Opacity">不透明度</system:String>
   <system:String x:Key="Timeline_OverlayScale">オーバーレイのスケール</system:String>
   <system:String x:Key="Timeline_NearestActivityScale">直近のアクティビティの拡大率</system:String>
   <system:String x:Key="Timeline_NextActivityBrightness">次点以降のアクティビティの明るさ</system:String>
   <system:String x:Key="Timeline_Styles">アクティビティの表示スタイル</system:String>
+  <system:String x:Key="Timeline_StyleName">スタイルの名前</system:String>
   <system:String x:Key="Timeline_CircleStyle">サークルスタイル</system:String>
   <system:String x:Key="Timeline_TestTimeline">過去の戦闘ログを使用してタイムラインをテストする</system:String>
   <system:String x:Key="Timeline_TimelineTester">タイムラインテスター</system:String>

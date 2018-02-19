@@ -9,6 +9,7 @@ using System.Windows.Forms.Integration;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
@@ -87,6 +88,7 @@ namespace ACT.SpecialSpellTimer
                 this.PluginStatusLabel.Text = "Plugin Exited";
 
                 // 設定ファイルを保存する
+                TimelineSettings.Save();
                 Settings.Default.Save();
 
                 Logger.Write("Plugin Exited.");

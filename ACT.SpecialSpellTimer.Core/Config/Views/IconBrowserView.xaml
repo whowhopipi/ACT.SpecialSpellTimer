@@ -120,6 +120,8 @@
           VirtualizingPanel.VirtualizationMode="Recycling"
           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
           ScrollViewer.VerticalScrollBarVisibility="Auto"
+          IsTabStop="False"
+          Focusable="False"
           ItemsSource="{Binding ElementName=DirectoryListView, Path=SelectedItem, Mode=OneWay}">
 
           <ListView.ItemsPanel>
