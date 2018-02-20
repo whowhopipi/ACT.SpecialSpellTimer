@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Image;
@@ -159,6 +160,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (this.SetProperty(ref this.icon, value))
                 {
                     this.RaisePropertyChanged(nameof(this.IconFile));
+                    this.RaisePropertyChanged(nameof(this.IconImage));
                 }
             }
         }
@@ -168,6 +170,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             string.IsNullOrEmpty(this.Icon) ?
             string.Empty :
             IconController.Instance.GetIconFile(this.Icon)?.FullPath;
+
+        [XmlIgnore]
+        public BitmapImage IconImage =>
+            string.IsNullOrEmpty(this.Icon) ?
+            null :
+            IconController.Instance.GetIconFile(this.Icon)?.CreateBitmapImage();
 
         private double iconSize = 24;
 
@@ -295,17 +303,35 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #endregion Change Icon
 
-        #region Default Style
+        #region Super Default Style
 
-        private static TimelineStyle defaultStyle;
+        private static TimelineStyle superDefaultStyle;
 
-        public static TimelineStyle DefaultStyle =>
-            defaultStyle ?? (defaultStyle = new TimelineStyle()
+        /// <summary>
+        /// スーパーDefaultスタイル（デバッグ用またはまったく設定がないときに適用されるスタイル）
+        /// </summary>
+        public static TimelineStyle SuperDefaultStyle =>
+            superDefaultStyle ?? (superDefaultStyle = CreateSuperDefaultStyle());
+
+        private static TimelineStyle CreateSuperDefaultStyle()
+        {
+            var style = new TimelineStyle()
             {
                 Name = "Default",
-                Font = new FontInfo("Arial", 18, "Normal", "Bold", "Normal"),
-            });
+            };
 
-        #endregion Default Style
+            if (WPFHelper.IsDesignMode)
+            {
+                style.Font = new FontInfo("メイリオ", 22, "Normal", "Black", "Normal");
+            }
+            else
+            {
+                style.Font = new FontInfo("Arial", 18, "Normal", "Bold", "Normal");
+            }
+
+            return style;
+        }
+
+        #endregion Super Default Style
     }
 }

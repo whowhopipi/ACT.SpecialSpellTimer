@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
@@ -26,9 +27,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public static TimelineSettings Instance =>
             instance ?? (instance = Load(FileName));
 
-        private TimelineSettings()
+        public TimelineSettings()
         {
-            this.PropertyChanged += this.TimelineSettings_PropertyChanged;
+            if (!WPFHelper.IsDesignMode)
+            {
+                this.PropertyChanged += this.TimelineSettings_PropertyChanged;
+            }
         }
 
         #endregion Singleton
@@ -116,6 +120,65 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.nextActivityBrightness, value);
         }
 
+        private int showActivitiesCount = 8;
+
+        public int ShowActivitiesCount
+        {
+            get => this.showActivitiesCount;
+            set => this.SetProperty(ref this.showActivitiesCount, value);
+        }
+
+        private Color backgroundColor = Colors.Transparent;
+
+        public Color BackgroundColor
+        {
+            get => this.backgroundColor;
+            set => this.SetProperty(ref this.backgroundColor, value);
+        }
+
+        private bool indicatorVisible = true;
+
+        public bool IndicatorVisible
+        {
+            get => this.indicatorVisible;
+            set => this.SetProperty(ref this.indicatorVisible, value);
+        }
+
+        private string indicatorStyle = "Default";
+
+        public string IndicatorStyle
+        {
+            get => this.indicatorStyle;
+            set
+            {
+                if (this.SetProperty(ref this.indicatorStyle, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.IndicatorStyleModel));
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public TimelineStyle IndicatorStyleModel
+        {
+            get
+            {
+                var style = this.DefaultStyle;
+
+                if (!string.IsNullOrEmpty(this.IndicatorStyle))
+                {
+                    var s = this.Styles.FirstOrDefault(x =>
+                        string.Equals(x.Name, this.IndicatorStyle, StringComparison.OrdinalIgnoreCase));
+                    if (s != null)
+                    {
+                        style = s;
+                    }
+                }
+
+                return style;
+            }
+        }
+
         private ObservableCollection<TimelineStyle> styles = new ObservableCollection<TimelineStyle>();
 
         public ObservableCollection<TimelineStyle> Styles
@@ -131,7 +194,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         [XmlIgnore]
         public TimelineStyle DefaultStyle =>
-            this.Styles.FirstOrDefault(x => x.IsDefault) ?? TimelineStyle.DefaultStyle;
+            this.Styles.FirstOrDefault(x => x.IsDefault) ?? TimelineStyle.SuperDefaultStyle;
 
         #endregion Data
 
@@ -158,7 +221,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                     if (!File.Exists(file))
                     {
-                        return new TimelineSettings();
+                        data = new TimelineSettings();
+                        return data;
                     }
 
                     using (var sr = new StreamReader(file, new UTF8Encoding(false)))
@@ -169,17 +233,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             data = xs.Deserialize(sr) as TimelineSettings;
                         }
                     }
-
-                    if (data != null &&
-                        !data.Styles.Any())
-                    {
-                        var style = TimelineStyle.DefaultStyle.Clone();
-                        style.IsDefault = true;
-                        data.Styles.Add(style);
-                    }
                 }
                 finally
                 {
+                    if (data != null &&
+                        !data.Styles.Any())
+                    {
+                        var style = TimelineStyle.SuperDefaultStyle;
+                        style.IsDefault = true;
+                        data.Styles.Add(style);
+                    }
+
                     autoSave = true;
                 }
             }

@@ -7,14 +7,18 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using ACT.SpecialSpellTimer.RaidTimeline;
+using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Dialog;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 
@@ -154,6 +158,45 @@ namespace ACT.SpecialSpellTimer.Config.Views
             view.Show();
         }
 
+        private ICommand showDummyOverlayCommand;
+
+        public ICommand ShowDummyOverlayCommand =>
+            this.showDummyOverlayCommand ?? (this.showDummyOverlayCommand = new DelegateCommand<bool?>((isChecked) =>
+            {
+                if (!isChecked.HasValue)
+                {
+                    return;
+                }
+
+                if (isChecked.Value)
+                {
+                    TimelineOverlay.ShowDesignOverlay();
+                }
+                else
+                {
+                    TimelineOverlay.HideDesignOverlay();
+                }
+            }));
+
+        private ICommand CreateChangeColorCommand(
+            Func<Color> getCurrentColor,
+            Action<Color> changeColorAction)
+            => new DelegateCommand(() =>
+            {
+                var result = ColorDialogWrapper.ShowDialog(getCurrentColor(), false);
+                if (result.Result)
+                {
+                    changeColorAction.Invoke(result.Color);
+                }
+            });
+
+        private ICommand changeBackgroundColorCommand;
+
+        public ICommand ChangeBackgroundColorCommand =>
+            this.changeBackgroundColorCommand ?? (this.changeBackgroundColorCommand = this.CreateChangeColorCommand(
+                () => this.TimelineConfig.BackgroundColor,
+                (color) => this.TimelineConfig.BackgroundColor = color));
+
         private ICommand addStyleCommand;
 
         public ICommand AddStyleCommand =>
@@ -167,7 +210,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
                 else
                 {
-                    style = TimelineStyle.DefaultStyle.Clone();
+                    style = TimelineStyle.SuperDefaultStyle.Clone();
                 }
 
                 style.Name = "New Style";
@@ -191,6 +234,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     }
                 }
             }));
+
+        private void TopActivityStyle_ValueChanged(
+            object sender,
+            RoutedPropertyChangedEventArgs<object> e)
+        {
+            TimelineController.CurrentController?.Model?.RefreshTopActivityStyle();
+            TimelineModel.DummyTimeline.RefreshTopActivityStyle();
+        }
 
         #region Zone Changer
 

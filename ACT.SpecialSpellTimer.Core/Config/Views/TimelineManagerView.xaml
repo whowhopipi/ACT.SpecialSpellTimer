@@ -188,6 +188,7 @@
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
           </Grid.ColumnDefinitions>
 
@@ -196,7 +197,7 @@
 
             <CheckBox Margin="0 0 0 0" Content="{DynamicResource Timeline_OverlayVisible}" IsChecked="{Binding Path=TimelineConfig.OverlayVisible, Mode=TwoWay}" />
             <CheckBox Margin="0 5 0 0" Content="{DynamicResource Tree_Clickthrough}" IsChecked="{Binding Path=TimelineConfig.Clickthrough, Mode=TwoWay}" />
-            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Timeline_ShowDummyTimeline}" IsChecked="{Binding Path=TimelineConfig.DesignMode, Mode=TwoWay}" Foreground="Green" FontWeight="Bold" />
+            <CheckBox Margin="0 5 0 0" Content="{DynamicResource Timeline_ShowDummyTimeline}" IsChecked="{Binding Path=TimelineConfig.DesignMode, Mode=TwoWay}" Foreground="Green" FontWeight="Bold" Command="{Binding ShowDummyOverlayCommand, Mode=OneWay}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked, Mode=OneWay}" />
 
             <Label Margin="0 10 0 0" Content="{DynamicResource Common_Location}" />
             <StackPanel Orientation="Horizontal" Margin="0 5 0 0" HorizontalAlignment="Left">
@@ -212,16 +213,44 @@
             <Label Margin="0 15 0 0" Content="{DynamicResource Timeline_OverlayScale}" />
             <xctk:DoubleUpDown Value="{Binding Path=TimelineConfig.OverlayScale, Mode=TwoWay}" FormatString="N2" Increment="0.01" Width="80" HorizontalAlignment="Left" />
 
+            <Label Margin="0 15 0 0" Content="{DynamicResource Timeline_ShowActivitiesCount}" />
+            <xctk:IntegerUpDown Value="{Binding Path=TimelineConfig.ShowActivitiesCount, Mode=TwoWay}" FormatString="N0" Increment="1" Width="80" HorizontalAlignment="Left" ValueChanged="TopActivityStyle_ValueChanged" />
+
             <Label Margin="0 15 0 0" Content="{DynamicResource Timeline_NearestActivityScale}" />
-            <xctk:DoubleUpDown Value="{Binding Path=TimelineConfig.NearestActivityScale, Mode=TwoWay}" FormatString="N2" Increment="0.01" Width="80" HorizontalAlignment="Left" />
+            <xctk:DoubleUpDown Value="{Binding Path=TimelineConfig.NearestActivityScale, Mode=TwoWay}" FormatString="N2" Increment="0.01" Width="80" HorizontalAlignment="Left" ValueChanged="TopActivityStyle_ValueChanged" />
 
             <Label Margin="0 15 0 0" Content="{DynamicResource Timeline_NextActivityBrightness}" />
-            <xctk:DoubleUpDown Value="{Binding Path=TimelineConfig.NextActivityBrightness, Mode=TwoWay}" FormatString="N2" Increment="0.01" Width="80" HorizontalAlignment="Left" />
+            <xctk:DoubleUpDown Value="{Binding Path=TimelineConfig.NextActivityBrightness, Mode=TwoWay}" FormatString="N2" Increment="0.01" Width="80" HorizontalAlignment="Left" ValueChanged="TopActivityStyle_ValueChanged" />
           </StackPanel>
           <!-- 見た目の左側 end -->
 
+          <StackPanel Grid.Column="1" Margin="0 90 40 0">
+            <!-- 背景色 -->
+            <Label Margin="0 0 0 0" Content="{DynamicResource Common_Background}" FontWeight="Bold" />
+            <StackPanel Margin="10 0 0 0">
+              <TextBlock Margin="0 3 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding ChangeBackgroundColorCommand}">
+                    <TextBlock Text="{DynamicResource Common_FillColor}" />
+                  </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+
+            <!-- ヘッダ -->
+            <Label Margin="0 25 0 0" Content="{DynamicResource Timeline_Header}" FontWeight="Bold" />
+            <StackPanel Margin="10 0 0 0">
+              <CheckBox Margin="0 8 0 0" Content="{DynamicResource Timeline_ShowHeader}" IsChecked="{Binding Path=TimelineConfig.IndicatorVisible, Mode=TwoWay}" />
+
+              <Label Margin="0 15 0 0" Content="{DynamicResource Timeline_HeaderStyle}" />
+              <ComboBox
+                ItemsSource="{Binding Path=TimelineConfig.Styles, Mode=OneWay}"
+                SelectedValuePath="Name"
+                DisplayMemberPath="Name"
+                SelectedValue="{Binding Path=TimelineConfig.IndicatorStyle, Mode=TwoWay}" />
+            </StackPanel>
+          </StackPanel>
+
           <!-- 見た目の右側 -->
-          <Grid Grid.Column="1" Margin="0 15 0 0">
+          <Grid Grid.Column="2" Margin="0 15 0 0">
             <Grid.RowDefinitions>
               <RowDefinition Height="Auto" />
               <RowDefinition />

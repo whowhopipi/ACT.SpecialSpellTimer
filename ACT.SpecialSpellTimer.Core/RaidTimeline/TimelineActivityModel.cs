@@ -19,7 +19,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimeSpan Time
         {
             get => this.time;
-            set => this.SetProperty(ref this.time, value);
+            set
+            {
+                if (this.SetProperty(ref this.time, value))
+                {
+                    this.RefreshProgress();
+                }
+            }
         }
 
         [XmlAttribute(AttributeName = "time")]
@@ -184,6 +190,63 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region 動作を制御するためのフィールド
 
+        private TimeSpan currentTime = TimeSpan.Zero;
+
+        [XmlIgnore]
+        public TimeSpan CurrentTime
+        {
+            get => this.currentTime;
+            set
+            {
+                if (this.SetProperty(ref this.currentTime, value))
+                {
+                    this.RefreshProgress();
+                }
+            }
+        }
+
+        private void RefreshProgress()
+        {
+            var remain = (this.time - this.currentTime).TotalSeconds;
+            if (remain < 0)
+            {
+                remain = 0;
+            }
+
+            this.RemainTime = remain;
+
+            var progress = 0d;
+
+            if (this.time != TimeSpan.Zero)
+            {
+                progress = this.currentTime.TotalSeconds / this.time.TotalSeconds;
+                if (progress > 1)
+                {
+                    progress = 1;
+                }
+            }
+
+            this.Progress = progress;
+        }
+
+        private double remainTime = 0;
+
+        [XmlIgnore]
+        public double RemainTime
+        {
+            get => this.remainTime;
+            set => this.SetProperty(ref this.remainTime, value);
+        }
+
+        private double progress = 0;
+
+        [XmlIgnore]
+        public double Progress
+        {
+            get => this.progress;
+            set => this.SetProperty(ref this.progress, value);
+        }
+
         private int seq = 0;
 
         [XmlIgnore]
@@ -236,6 +299,33 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.styleModel;
             set => this.SetProperty(ref this.styleModel, value);
+        }
+
+        private double opacity = 1.0d;
+
+        [XmlIgnore]
+        public double Opacity
+        {
+            get => this.opacity;
+            set => this.SetProperty(ref this.opacity, value);
+        }
+
+        private double scale = 1.0d;
+
+        [XmlIgnore]
+        public double Scale
+        {
+            get => this.scale;
+            set => this.SetProperty(ref this.scale, value);
+        }
+
+        private bool isVisible = false;
+
+        [XmlIgnore]
+        public bool IsVisible
+        {
+            get => this.isVisible;
+            set => this.SetProperty(ref this.isVisible, value);
         }
 
         public void Init(

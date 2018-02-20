@@ -14,13 +14,63 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         IOverlay,
         INotifyPropertyChanged
     {
+        #region Design View
+
+        private static TimelineOverlay designOverlay;
+
+        public static void ShowDesignOverlay()
+        {
+            if (designOverlay == null)
+            {
+                designOverlay = CreateDesignOverlay();
+            }
+
+            designOverlay.Show();
+            designOverlay.OverlayVisible = true;
+        }
+
+        public static void HideDesignOverlay()
+        {
+            if (designOverlay != null)
+            {
+                designOverlay.OverlayVisible = false;
+                designOverlay.Hide();
+            }
+        }
+
+        private static TimelineOverlay CreateDesignOverlay()
+        {
+            var overlay = new TimelineOverlay();
+
+            return overlay;
+        }
+
+        #endregion Design View
+
+#if DEBUG
+
+        public TimelineOverlay() :
+            this(TimelineModel.DummyTimeline)
+        {
+        }
+
+#else
+        public TimelineOverlay() :
+            this(new TimelineModel())
+        {
+        }
+#endif
+
         public TimelineOverlay(
             TimelineModel model)
         {
-            this.DataContext = model;
-            model.Controller.View = this;
+            this.Model = model;
+            this.Model.Controller.View = this;
 
             this.InitializeComponent();
+
+            this.ToNonActive();
+            this.MouseLeftButtonDown += (x, y) => this.DragMove();
 
             this.Opacity = 0;
             this.Topmost = false;
@@ -34,9 +84,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             };
         }
 
-        public TimelineSettings Config => TimelineSettings.Instance;
+        private TimelineModel model;
 
-        public TimelineModel Model => this.DataContext as TimelineModel;
+        public TimelineModel Model
+        {
+            get => this.model;
+            private set => this.SetProperty(ref this.model, value);
+        }
+
+        public TimelineSettings Config => TimelineSettings.Instance;
 
         #region IOverlay
 

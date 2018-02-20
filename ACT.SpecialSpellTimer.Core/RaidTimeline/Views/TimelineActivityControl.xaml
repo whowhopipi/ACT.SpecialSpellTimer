@@ -1,12 +1,237 @@
-﻿<UserControl x:Class="ACT.SpecialSpellTimer.RaidTimeline.Views.TimelineActivityControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ACT.SpecialSpellTimer.RaidTimeline.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
+<UserControl
+  x:Class="ACT.SpecialSpellTimer.RaidTimeline.Views.TimelineActivityControl"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:local="clr-namespace:ACT.SpecialSpellTimer.RaidTimeline.Views"
+  xmlns:ctrl="clr-namespace:FFXIV.Framework.WPF.Controls;assembly=FFXIV.Framework"
+  xmlns:fwcnv="clr-namespace:FFXIV.Framework.WPF.Converters;assembly=FFXIV.Framework"
+  xmlns:cnv="clr-namespace:ACT.SpecialSpellTimer.Views"
+  xmlns:tl="clr-namespace:ACT.SpecialSpellTimer.RaidTimeline"
+  mc:Ignorable="d"
+  TextOptions.TextFormattingMode="Display"
+  TextOptions.TextHintingMode="Animated"
+  TextOptions.TextRenderingMode="ClearType"
+  RenderOptions.ClearTypeHint="Enabled"
+  RenderOptions.BitmapScalingMode="HighQuality"
+  RenderOptions.EdgeMode="Unspecified"
+  Background="Transparent">
+  <!--
+  d:DataContext="{x:Static local:TimelineActivityControl.DummyActivity}">
+  -->
+
+  <UserControl.Resources>
+    <BitmapImage x:Key="DummyIcon" UriSource="ACT.SpecialSpellTimer/ACT.SpecialSpellTimer.Core/resources/icon/Rampart.png" />
+
+    <fwcnv:BoolToCollapsedConverter x:Key="VisibilityConverter" />
+    <fwcnv:BoolToCollapsedNegativeConverter x:Key="NotVisibilityConverter" />
+    <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
+    <fwcnv:ColorToSolidColorBrushConverter x:Key="BrushConverter" />
+    <fwcnv:MultipleConverter x:Key="MultipleConverter" />
+
+    <cnv:StrokeThicknessToBlurRadiusConverter x:Key="BlurConverter" />
+
+    <Style TargetType="Image">
+      <Style.Triggers>
+        <Trigger Property="Source" Value="{x:Null}">
+          <Setter Property="Visibility" Value="Collapsed" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+  </UserControl.Resources>
+
+  <StackPanel>
+    <!-- Barスタイル -->
+    <Grid Visibility="{Binding Path=StyleModel.IsCircleStyle, Converter={StaticResource NotVisibilityConverter}}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+
+      <Image
+        Grid.Column="0"
+        Margin="0 0 5 0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        RenderOptions.BitmapScalingMode="HighQuality"
+        Source="{Binding Path=StyleModel.IconImage, Mode=OneWay}"
+        Height="{Binding Path=StyleModel.IconSize, Mode=OneWay}"
+        Width="{Binding Path=StyleModel.IconSize, Mode=OneWay}" />
+
+      <Grid
+        Grid.Column="1"
+        VerticalAlignment="Center">
+
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+          <RowDefinition />
+          <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ctrl:OutlineTextBlock
+          Grid.Row="0"
+          Grid.Column="0"
+          Margin="0 0 40 0"
+          VerticalAlignment="Bottom"
+          Text="{Binding Path=Text, Mode=OneWay}"
+          FontFamily="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}"
+          FontWeight="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}"
+          FontStyle="{Binding Path=StyleModel.Font.Style, Mode=OneWay}"
+          FontStretch="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}"
+          FontSize="{Binding Path=StyleModel.Font.Size, Mode=OneWay}"
+          Fill="{Binding Path=StyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          Stroke="{Binding Path=StyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
+          <ctrl:OutlineTextBlock.Effect>
+            <DropShadowEffect
+              BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+              Direction="0"
+              RenderingBias="Performance"
+              ShadowDepth="0"
+              Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
+          </ctrl:OutlineTextBlock.Effect>
+        </ctrl:OutlineTextBlock>
+
+        <ctrl:RichProgressBar
+          Grid.Row="1"
+          Grid.Column="0"
+          Grid.ColumnSpan="2"
+          Margin="0 1 0 0"
+          IsStrokeBackground="false"
+          Fill="{Binding Path=StyleModel.BarColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          Stroke="{Binding Path=StyleModel.BarColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          Height="{Binding Path=StyleModel.BarHeight, Mode=OneWay}"
+          Progress="{Binding Path=Progress, Mode=OneWay}">
+        </ctrl:RichProgressBar>
+
+        <ctrl:OutlineTextBlock
+          Grid.Row="0"
+          Grid.Column="1"
+          TextAlignment="Right"
+          Margin="0 0 2 0"
+          VerticalAlignment="Bottom"
+          HorizontalAlignment="Right"
+          Text="{Binding Path=RemainTime, Mode=OneWay, StringFormat=N0}"
+          FontFamily="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}"
+          FontWeight="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}"
+          FontStyle="{Binding Path=StyleModel.Font.Style, Mode=OneWay}"
+          FontStretch="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}"
+          FontSize="{Binding Path=StyleModel.Font.Size, Mode=OneWay}"
+          Fill="{Binding Path=StyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          Stroke="{Binding Path=StyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
+          <ctrl:OutlineTextBlock.Effect>
+            <DropShadowEffect
+              BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+              Direction="0"
+              RenderingBias="Performance"
+              ShadowDepth="0"
+              Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
+          </ctrl:OutlineTextBlock.Effect>
+        </ctrl:OutlineTextBlock>
+
+        <!-- 幅を算出するための隠しテキスト -->
+        <ctrl:OutlineTextBlock
+          Grid.Row="0"
+          Grid.Column="1"
+          TextAlignment="Right"
+          Margin="0 0 2 0"
+          VerticalAlignment="Bottom"
+          HorizontalAlignment="Right"
+          Visibility="Hidden"
+          Text="999"
+          FontFamily="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}"
+          FontWeight="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}"
+          FontStyle="{Binding Path=StyleModel.Font.Style, Mode=OneWay}"
+          FontStretch="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}"
+          FontSize="{Binding Path=StyleModel.Font.Size, Mode=OneWay}" />
+      </Grid>
     </Grid>
+    <!-- Barスタイル end -->
+
+    <!-- Circleスタイル -->
+    <Grid Visibility="{Binding Path=StyleModel.IsCircleStyle, Converter={StaticResource VisibilityConverter}}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+
+      <Image
+        Grid.Column="0"
+        Margin="0 0 5 0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        RenderOptions.BitmapScalingMode="HighQuality"
+        Source="{Binding Path=StyleModel.IconImage, Mode=OneWay}"
+        Height="{Binding Path=StyleModel.IconSize, Mode=OneWay}"
+        Width="{Binding Path=StyleModel.IconSize, Mode=OneWay}" />
+
+      <ctrl:OutlineTextBlock
+        Grid.Column="1"
+        Margin="0 0 40 0"
+        VerticalAlignment="Center"
+        Text="{Binding Path=Text, Mode=OneWay}"
+        FontFamily="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}"
+        FontWeight="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}"
+        FontStyle="{Binding Path=StyleModel.Font.Style, Mode=OneWay}"
+        FontStretch="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}"
+        FontSize="{Binding Path=StyleModel.Font.Size, Mode=OneWay}"
+        Fill="{Binding Path=StyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+        Stroke="{Binding Path=StyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+        StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
+        <ctrl:OutlineTextBlock.Effect>
+          <DropShadowEffect
+            BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+            Direction="0"
+            RenderingBias="Performance"
+            ShadowDepth="0"
+            Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
+        </ctrl:OutlineTextBlock.Effect>
+      </ctrl:OutlineTextBlock>
+
+      <Grid Grid.Column="2">
+        <ctrl:ProgressCircle
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          Fill="{Binding Path=StyleModel.BarColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          Stroke="{Binding Path=StyleModel.BarColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          Thickness="{Binding Path=StyleModel.BarHeight, Mode=OneWay, Converter={StaticResource MultipleConverter}, ConverterParameter=0.5}"
+          Radius="{Binding ElementName=CounterText, Path=ActualHeight, Mode=OneWay, Converter={StaticResource MultipleConverter}, ConverterParameter=0.9}"
+          Progress="{Binding Path=Progress, Mode=OneWay}"
+          IsCCW="True" />
+
+        <ctrl:OutlineTextBlock
+          x:Name="CounterText"
+          TextAlignment="Center"
+          Margin="0 0 2 0"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"
+          Text="{Binding Path=RemainTime, Mode=OneWay, StringFormat=N0}"
+          FontFamily="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}"
+          FontWeight="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}"
+          FontStyle="{Binding Path=StyleModel.Font.Style, Mode=OneWay}"
+          FontStretch="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}"
+          FontSize="{Binding Path=StyleModel.Font.Size, Mode=OneWay}"
+          Fill="{Binding Path=StyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          Stroke="{Binding Path=StyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
+          StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
+          <ctrl:OutlineTextBlock.Effect>
+            <DropShadowEffect
+              BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+              Direction="0"
+              RenderingBias="Performance"
+              ShadowDepth="0"
+              Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
+          </ctrl:OutlineTextBlock.Effect>
+        </ctrl:OutlineTextBlock>
+      </Grid>
+    </Grid>
+    <!-- Circleスタイル end -->
+  </StackPanel>
 </UserControl>

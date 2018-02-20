@@ -1,28 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 {
     /// <summary>
     /// TimelineActivityControl.xaml の相互作用ロジック
     /// </summary>
-    public partial class TimelineActivityControl : UserControl
+    public partial class TimelineActivityControl :
+        UserControl,
+        INotifyPropertyChanged
     {
+#if DEBUG
+
+        public static readonly TimelineActivityModel DummyActivity = new TimelineActivityModel()
+        {
+            Name = "Dummy",
+            Text = "ダミーアクティビティ",
+            Time = TimeSpan.FromSeconds(10.1),
+            StyleModel = TimelineStyle.SuperDefaultStyle,
+        };
+
+#endif
+
         public TimelineActivityControl()
         {
-            InitializeComponent();
+            /*
+#if DEBUG
+            if (WPFHelper.IsDesignMode &&
+                this.Activity == null)
+            {
+                this.Activity = DummyActivity;
+            }
+#endif
+            */
+
+            this.InitializeComponent();
         }
+
+        public TimelineActivityModel Activity
+        {
+            get => this.DataContext as TimelineActivityModel;
+            set => this.DataContext = value;
+        }
+
+        #region INotifyPropertyChanged
+
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged(
+            [CallerMemberName]string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected virtual bool SetProperty<T>(
+            ref T field,
+            T value,
+            [CallerMemberName]string propertyName = null)
+        {
+            if (Equals(field, value))
+            {
+                return false;
+            }
+
+            field = value;
+            this.PropertyChanged?.Invoke(
+                this,
+                new PropertyChangedEventArgs(propertyName));
+
+            return true;
+        }
+
+        #endregion INotifyPropertyChanged
     }
 }

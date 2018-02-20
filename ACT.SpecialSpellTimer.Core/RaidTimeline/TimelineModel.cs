@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Views;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -30,7 +34,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string Name
         {
             get => this.name;
-            set => this.SetProperty(ref this.name, value);
+            set
+            {
+                if (this.SetProperty(ref this.name, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.DisplayName));
+                }
+            }
         }
 
         private string zone = string.Empty;
@@ -39,7 +49,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string Zone
         {
             get => this.zone;
-            set => this.SetProperty(ref this.zone, value);
+            set
+            {
+                if (this.SetProperty(ref this.zone, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.DisplayName));
+                }
+            }
         }
 
         private Locales locale = Locales.JA;
@@ -261,6 +277,127 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #endregion Methods
 
+        #region To View
+
+        private CollectionViewSource activitySource;
+
+        private CollectionViewSource ActivitySource =>
+            this.activitySource ?? (this.activitySource = this.CreateActivityView());
+
+        public ICollectionView ActivityView => this.ActivitySource?.View;
+
+        public TimelineActivityModel TopActivity => this.ActivityView?.Cast<TimelineActivityModel>().FirstOrDefault();
+
+        public string CurrentTime => this.TopActivity?.CurrentTime.ToTLString();
+
+        public string SubName => (this.TopActivity?.Parent as TimelineSubroutineModel)?.Name;
+
+        public string DisplayName =>
+            !string.IsNullOrEmpty(this.Name) ?
+            this.Name :
+            this.Zone;
+
+        private CollectionViewSource CreateActivityView()
+        {
+            var cvs = new CollectionViewSource()
+            {
+                Source = this.Controller.ActivityLine,
+                IsLiveSortingRequested = true,
+                IsLiveFilteringRequested = true,
+            };
+
+            cvs.Filter += (x, y) =>
+            {
+                y.Accepted = false;
+
+                var act = y.Item as TimelineActivityModel;
+                if (act.Enabled ?? true &&
+                    !act.IsDone &&
+                    !string.IsNullOrEmpty(act.Text) &&
+                    act.Time <= act.CurrentTime.Add(TimeSpan.FromMinutes(10)))
+                {
+                    y.Accepted = true;
+                }
+            };
+
+            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Enabled));
+            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.IsDone));
+            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Text));
+            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Time));
+
+            cvs.SortDescriptions.AddRange(new[]
+            {
+                new SortDescription()
+                {
+                    PropertyName = nameof(TimelineActivityModel.Seq),
+                    Direction = ListSortDirection.Ascending,
+                }
+            });
+
+            cvs.View.CollectionChanged += (x, y) =>
+            {
+                this.RaisePropertyChanged(nameof(this.TopActivity));
+                this.RaisePropertyChanged(nameof(this.CurrentTime));
+                this.RaisePropertyChanged(nameof(this.SubName));
+
+                this.RefreshTopActivityStyle();
+            };
+
+            this.RefreshTopActivityStyle(cvs);
+
+            return cvs;
+        }
+
+        public void RefreshTopActivityStyle(
+            CollectionViewSource cvs = null)
+        {
+            if (cvs == null)
+            {
+                cvs = this.ActivitySource;
+            }
+
+            if (cvs.View == null)
+            {
+                return;
+            }
+
+            var acts = cvs.View.Cast<TimelineActivityModel>().ToArray();
+            var top = acts.FirstOrDefault();
+
+            if (top == null)
+            {
+                return;
+            }
+
+            var i = 0;
+            foreach (var act in acts)
+            {
+                if (i < TimelineSettings.Instance.ShowActivitiesCount)
+                {
+                    act.IsVisible = true;
+                }
+                else
+                {
+                    act.IsVisible = false;
+                }
+
+                if (act == top)
+                {
+                    act.Opacity = 1.0d;
+                    act.Scale = TimelineSettings.Instance.NearestActivityScale;
+                }
+                else
+                {
+                    act.Opacity = TimelineSettings.Instance.NextActivityBrightness;
+                    act.Scale = 1.0d;
+                }
+
+                i++;
+            }
+        }
+
+        #endregion To View
+
         #region Commands
 
         private ICommand editCommand;
@@ -332,5 +469,74 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }));
 
         #endregion Commands
+
+        #region Dummy Timeline
+
+        private static TimelineModel dummyTimeline;
+
+        public static TimelineModel DummyTimeline => dummyTimeline ?? (dummyTimeline = CreateDummyTimeline());
+
+        private static TimelineModel CreateDummyTimeline()
+        {
+            var tl = new TimelineModel();
+
+            tl.Name = "ダミータイムライン";
+            tl.Zone = "Dummy Zone V1.0 (Savage)";
+
+            var defaultStyle = TimelineStyle.SuperDefaultStyle;
+            if (!WPFHelper.IsDesignMode)
+            {
+                defaultStyle = TimelineSettings.Instance.DefaultStyle;
+            }
+
+            var act1 = new TimelineActivityModel()
+            {
+                Seq = 1,
+                Text = "デスセンテンス",
+                Time = TimeSpan.FromSeconds(10.1),
+                Parent = new TimelineSubroutineModel()
+                {
+                    Name = "ダミーフェーズ"
+                },
+                StyleModel = defaultStyle,
+            };
+
+            var act2 = new TimelineActivityModel()
+            {
+                Seq = 2,
+                Text = "ツイスター",
+                Time = TimeSpan.FromSeconds(16.1),
+                StyleModel = defaultStyle,
+            };
+
+            var act3 = new TimelineActivityModel()
+            {
+                Seq = 3,
+                Text = "メガフレア",
+                Time = TimeSpan.FromSeconds(20.1),
+                StyleModel = defaultStyle,
+            };
+
+            tl.Controller.ActivityLine.Add(act1);
+            tl.Controller.ActivityLine.Add(act2);
+            tl.Controller.ActivityLine.Add(act3);
+
+            for (int i = 1; i <= 13; i++)
+            {
+                var a = new TimelineActivityModel()
+                {
+                    Seq = act3.Seq + i,
+                    Text = "アクション" + i,
+                    Time = TimeSpan.FromSeconds(30 + i),
+                    StyleModel = defaultStyle,
+                };
+
+                tl.Controller.ActivityLine.Add(a);
+            }
+
+            return tl;
+        }
+
+        #endregion Dummy Timeline
     }
 }

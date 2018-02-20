@@ -193,11 +193,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private void SetStyle()
         {
-            var defaultStyle = TimelineSettings.Instance.Styles.FirstOrDefault(x => x.IsDefault);
-            if (defaultStyle == null)
-            {
-                defaultStyle = TimelineStyle.DefaultStyle;
-            }
+            var defaultStyle = TimelineSettings.Instance.DefaultStyle;
 
             foreach (var act in this.Model.Activities)
             {
@@ -797,6 +793,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             if (this.CurrentTime == TimeSpan.Zero)
             {
                 return;
+            }
+
+            // 現在の時間を更新する
+            foreach (var act in this.ActivityLine)
+            {
+                act.CurrentTime = this.CurrentTime;
             }
 
             // 通知を判定する
