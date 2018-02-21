@@ -157,7 +157,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         {
             const string Resources = @"Resources\Styles\TimelineOverlayResources.xaml";
 
-            var file = Path.Combine(PluginCore.Instance.Location, Resources);
+            var file = Path.Combine(PluginCore.Instance?.Location, Resources);
             if (File.Exists(file))
             {
                 this.Resources.MergedDictionaries.Add(new ResourceDictionary()

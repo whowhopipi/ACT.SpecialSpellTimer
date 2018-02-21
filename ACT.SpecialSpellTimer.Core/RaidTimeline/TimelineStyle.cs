@@ -130,8 +130,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public Color BarColor
         {
             get => this.barColor;
-            set => this.SetProperty(ref this.barColor, value);
+            set
+            {
+                if (this.SetProperty(ref this.barColor, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.BarColor));
+                }
+            }
         }
+
+        [XmlIgnore]
+        public SolidColorBrush BarColorBrush => new SolidColorBrush(this.BarColor);
 
         /// <summary>
         /// バーのカラー
@@ -162,8 +171,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public bool IsCircleStyle
         {
             get => this.isCircleStyle;
-            set => this.SetProperty(ref this.isCircleStyle, value);
+            set
+            {
+                if (this.SetProperty(ref this.isCircleStyle, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.IsBarStyle));
+                }
+            }
         }
+
+        [XmlIgnore]
+        public bool IsBarStyle => !this.IsCircleStyle;
 
         private string icon = string.Empty;
 
@@ -179,9 +197,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     this.RaisePropertyChanged(nameof(this.IconFile));
                     this.RaisePropertyChanged(nameof(this.IconImage));
+                    this.RaisePropertyChanged(nameof(this.ExistsIcon));
                 }
             }
         }
+
+        [XmlIgnore]
+        public bool ExistsIcon => !string.IsNullOrEmpty(this.Icon);
 
         [XmlIgnore]
         public string IconFile =>

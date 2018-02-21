@@ -5,9 +5,7 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:wpf="clr-namespace:FFXIV.Framework.WPF;assembly=FFXIV.Framework"
-  xmlns:ctrl="clr-namespace:FFXIV.Framework.WPF.Controls;assembly=FFXIV.Framework"
-  xmlns:fwcnv="clr-namespace:FFXIV.Framework.WPF.Converters;assembly=FFXIV.Framework"
-  xmlns:cnv="clr-namespace:ACT.SpecialSpellTimer.Views"
+  xmlns:controls="clr-namespace:FFXIV.Framework.WPF.Controls;assembly=FFXIV.Framework"
   xmlns:local="clr-namespace:ACT.SpecialSpellTimer.RaidTimeline.Views"
   xmlns:tl="clr-namespace:ACT.SpecialSpellTimer.RaidTimeline"
   mc:Ignorable="d"
@@ -48,18 +46,18 @@
       <StackPanel Style="{DynamicResource HeaderPanel}">
         <StackPanel Style="{DynamicResource Header1Panel}">
           <!-- 現在時刻 -->
-          <ctrl:OutlineTextBlock Style="{DynamicResource CurrentTime}" />
+          <controls:OutlineTextBlock Style="{DynamicResource CurrentTime}" />
 
           <!-- サブルーチン -->
-          <ctrl:OutlineTextBlock Style="{DynamicResource Subroutine}" />
+          <controls:OutlineTextBlock Style="{DynamicResource Subroutine}" />
         </StackPanel>
 
         <StackPanel Style="{DynamicResource Header2Panel}">
           <!-- ゾーン or Name -->
-          <ctrl:OutlineTextBlock Style="{DynamicResource Title}" />
+          <controls:OutlineTextBlock Style="{DynamicResource Title}" />
 
           <!-- ステータス -->
-          <ctrl:OutlineTextBlock Style="{DynamicResource Status}" />
+          <controls:OutlineTextBlock Style="{DynamicResource Status}" />
         </StackPanel>
       </StackPanel>
       <!-- インジケータ end -->
