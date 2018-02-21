@@ -4,6 +4,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:wpf="clr-namespace:FFXIV.Framework.WPF;assembly=FFXIV.Framework"
   xmlns:ctrl="clr-namespace:FFXIV.Framework.WPF.Controls;assembly=FFXIV.Framework"
   xmlns:fwcnv="clr-namespace:FFXIV.Framework.WPF.Converters;assembly=FFXIV.Framework"
   xmlns:cnv="clr-namespace:ACT.SpecialSpellTimer.Views"
@@ -22,170 +23,55 @@
   ShowInTaskbar="False"
   SizeToContent="WidthAndHeight"
   Title="Timeline"
-  d:DesignWidth="400"
-  d:DesignHeight="300"
   Background="#01000000"
   Left="{Binding Path=Config.Left, Mode=TwoWay}"
   Top="{Binding Path=Config.Top, Mode=TwoWay}"
-  d:DataContext="{d:DesignInstance Type=local:TimelineOverlay, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:TimelineOverlay}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
   <Window.Resources>
-    <fwcnv:BoolToCollapsedConverter x:Key="VisibilityConverter" />
-    <fwcnv:BoolToCollapsedNegativeConverter x:Key="NotVisibilityConverter" />
-    <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
-    <fwcnv:ColorToSolidColorBrushConverter x:Key="BrushConverter" />
-    <fwcnv:MultipleConverter x:Key="MultipleConverter" />
-
-    <cnv:StrokeThicknessToBlurRadiusConverter x:Key="BlurConverter" />
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <wpf:DesignTimeResourceDictionary Source="../../Resources/Styles/TimelineOverlayResources.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
   </Window.Resources>
 
-  <Border
-    CornerRadius="6"
-    Background="#60000000">
-
-    <Border.LayoutTransform>
-      <ScaleTransform
-        ScaleX="{Binding Path=Config.OverlayScale, Mode=OneWay}"
-        ScaleY="{Binding Path=Config.OverlayScale, Mode=OneWay}" />
-    </Border.LayoutTransform>
-
-    <Grid Margin="8">
+  <Border Style="{DynamicResource BaseBorder}">
+    <Grid Style="{DynamicResource BaseGrid}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />
       </Grid.RowDefinitions>
 
-      <!-- インジケータ -->
-      <StackPanel Visibility="{Binding Path=Config.IndicatorVisible, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
-        <StackPanel Orientation="Horizontal">
+      <!-- ヘッダ -->
+      <StackPanel Style="{DynamicResource HeaderPanel}">
+        <StackPanel Style="{DynamicResource Header1Panel}">
           <!-- 現在時刻 -->
-          <ctrl:OutlineTextBlock
-            Text="{Binding Path=Model.Controller.CurrentTimeText, Mode=OneWay}"
-            FontFamily="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}"
-            FontWeight="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}"
-            FontStyle="{Binding Path=Config.IndicatorStyleModel.Font.Style, Mode=OneWay}"
-            FontStretch="{Binding Path=Config.IndicatorStyleModel.Font.Stretch, Mode=OneWay}"
-            FontSize="{Binding Path=Config.IndicatorStyleModel.Font.Size, Mode=OneWay}"
-            Fill="{Binding Path=Config.IndicatorStyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            Stroke="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            StrokeThickness="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}">
-            <ctrl:OutlineTextBlock.Effect>
-              <DropShadowEffect
-                BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
-                Direction="0"
-                RenderingBias="Quality"
-                ShadowDepth="0"
-                Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-            </ctrl:OutlineTextBlock.Effect>
-          </ctrl:OutlineTextBlock>
+          <ctrl:OutlineTextBlock Style="{DynamicResource CurrentTime}" />
 
           <!-- サブルーチン -->
-          <ctrl:OutlineTextBlock
-            Margin="10 0 0 0"
-            Text="{Binding Path=Model.SubName, Mode=OneWay}"
-            FontFamily="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}"
-            FontWeight="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}"
-            FontStyle="{Binding Path=Config.IndicatorStyleModel.Font.Style, Mode=OneWay}"
-            FontStretch="{Binding Path=Config.IndicatorStyleModel.Font.Stretch, Mode=OneWay}"
-            FontSize="{Binding Path=Config.IndicatorStyleModel.Font.Size, Mode=OneWay}"
-            Fill="{Binding Path=Config.IndicatorStyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            Stroke="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            StrokeThickness="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}">
-            <ctrl:OutlineTextBlock.Effect>
-              <DropShadowEffect
-                BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
-                Direction="0"
-                RenderingBias="Quality"
-                ShadowDepth="0"
-                Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-            </ctrl:OutlineTextBlock.Effect>
-          </ctrl:OutlineTextBlock>
+          <ctrl:OutlineTextBlock Style="{DynamicResource Subroutine}" />
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Margin="2 5 0 0">
+        <StackPanel Style="{DynamicResource Header2Panel}">
           <!-- ゾーン or Name -->
-          <ctrl:OutlineTextBlock
-            Margin="0 0 0 0"
-            Text="{Binding Path=Model.DisplayName, Mode=OneWay}"
-            FontFamily="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}"
-            FontWeight="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}"
-            FontStyle="{Binding Path=Config.IndicatorStyleModel.Font.Style, Mode=OneWay}"
-            FontStretch="{Binding Path=Config.IndicatorStyleModel.Font.Stretch, Mode=OneWay}"
-            FontSize="{Binding Path=Config.IndicatorStyleModel.Font.Size, Mode=OneWay}"
-            Fill="{Binding Path=Config.IndicatorStyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            Stroke="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            StrokeThickness="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}"
-            Opacity="0.8">
-            <ctrl:OutlineTextBlock.Effect>
-              <DropShadowEffect
-                BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
-                Direction="0"
-                RenderingBias="Quality"
-                ShadowDepth="0"
-                Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-            </ctrl:OutlineTextBlock.Effect>
-            <ctrl:OutlineTextBlock.LayoutTransform>
-              <ScaleTransform ScaleX="0.6" ScaleY="0.6" />
-            </ctrl:OutlineTextBlock.LayoutTransform>
-          </ctrl:OutlineTextBlock>
+          <ctrl:OutlineTextBlock Style="{DynamicResource Title}" />
 
           <!-- ステータス -->
-          <ctrl:OutlineTextBlock
-            Margin="10 0 0 0"
-            VerticalAlignment="Center"
-            Text="Standby"
-            FontFamily="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}"
-            FontWeight="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}"
-            FontStyle="{Binding Path=Config.IndicatorStyleModel.Font.Style, Mode=OneWay}"
-            FontStretch="{Binding Path=Config.IndicatorStyleModel.Font.Stretch, Mode=OneWay}"
-            FontSize="{Binding Path=Config.IndicatorStyleModel.Font.Size, Mode=OneWay}"
-            Fill="{Binding Path=Config.IndicatorStyleModel.Color, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            Stroke="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay, Converter={StaticResource BrushConverter}}"
-            StrokeThickness="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}"
-            Opacity="0.9">
-            <ctrl:OutlineTextBlock.Effect>
-              <DropShadowEffect
-                BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
-                Direction="0"
-                RenderingBias="Quality"
-                ShadowDepth="0"
-                Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-            </ctrl:OutlineTextBlock.Effect>
-            <ctrl:OutlineTextBlock.LayoutTransform>
-              <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
-            </ctrl:OutlineTextBlock.LayoutTransform>
-          </ctrl:OutlineTextBlock>
+          <ctrl:OutlineTextBlock Style="{DynamicResource Status}" />
         </StackPanel>
       </StackPanel>
       <!-- インジケータ end -->
 
       <!-- アクティビティ -->
       <ItemsControl
-        Margin="0 0 0 3"
-        Grid.Row="1"
-        BorderThickness="0"
-        Background="Transparent"
-        Focusable="False"
-        IsTabStop="False"
-        VirtualizingPanel.IsVirtualizing="True"
-        VirtualizingPanel.VirtualizationMode="Recycling"
+        Style="{DynamicResource ActivitiesControl}"
+        ItemContainerStyle="{DynamicResource ActivityContainer}"
         ItemsSource="{Binding Path=Model.ActivityView, Mode=OneWay}">
         <ItemsControl.ItemTemplate>
           <DataTemplate DataType="{x:Type tl:TimelineActivityModel}">
-            <local:TimelineActivityControl
-              Margin="0 15 0 0"
-              DataContext="{Binding}"
-              Opacity="{Binding Path=Opacity, Mode=OneWay}"
-              Visibility="{Binding Path=IsVisible, Mode=OneWay, Converter={StaticResource VisibilityConverter}}">
-              <local:TimelineActivityControl.LayoutTransform>
-                <ScaleTransform
-                  CenterX="0.5"
-                  CenterY="0.5"
-                  ScaleX="{Binding Path=Scale, Mode=OneWay}"
-                  ScaleY="{Binding Path=Scale, Mode=OneWay}" />
-              </local:TimelineActivityControl.LayoutTransform>
-            </local:TimelineActivityControl>
+            <local:TimelineActivityControl DataContext="{Binding}" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>

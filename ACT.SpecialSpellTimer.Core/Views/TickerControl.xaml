@@ -16,7 +16,6 @@
   TextOptions.TextRenderingMode="ClearType">
 
   <UserControl.Resources>
-    <local:StrokeThicknessToBlurRadiusConverter x:Key="StrokeThicknessToBlurRadiusConverter" />
     <local:ColorBrightnessConverter x:Key="ColorConv" />
     <local:BrushBrightnessConverter x:Key="BrushConv" />
     <local:BarBackgroundConverter x:Key="BarBackConv" />
@@ -57,7 +56,7 @@
 
         <ctrl:OutlineTextBlock.Effect>
           <DropShadowEffect
-            BlurRadius="{Binding ElementName=MessageTextBlock, Path=StrokeThickness, Converter={StaticResource StrokeThicknessToBlurRadiusConverter}}"
+            x:Name="MessageTextBlockEffect"
             Direction="0"
             RenderingBias="Performance"
             ShadowDepth="0"

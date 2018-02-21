@@ -226,6 +226,8 @@ namespace ACT.SpecialSpellTimer.Views
             tb.SetFontInfo(font);
             tb.SetAutoStrokeThickness();
 
+            this.SpellTitleTextBlockEffect.BlurRadius = font.BlurRadius;
+
             tb.Visibility = this.Spell.HideSpellName ?
                 Visibility.Collapsed :
                 Visibility.Visible;

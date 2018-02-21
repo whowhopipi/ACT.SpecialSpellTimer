@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Media;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
@@ -136,12 +135,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.showActivitiesTime, value);
         }
 
-        private Color backgroundColor = Colors.Transparent;
+        private double showProgressBarTime = 15;
 
-        public Color BackgroundColor
+        public double ShowProgressBarTime
         {
-            get => this.backgroundColor;
-            set => this.SetProperty(ref this.backgroundColor, value);
+            get => this.showProgressBarTime;
+            set => this.SetProperty(ref this.showProgressBarTime, value);
         }
 
         private bool indicatorVisible = true;

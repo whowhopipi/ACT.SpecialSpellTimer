@@ -303,7 +303,6 @@
     <Compile Include="Utility\Logger.cs" />
     <Compile Include="Utility\StringExtensions.cs" />
     <Compile Include="Utility\Translate.cs" />
-    <Compile Include="Views\StrokeThicknessToBlurRadiusConverter.cs" />
     <Compile Include="Views\TickerControl.xaml.cs">
       <DependentUpon>TickerControl.xaml</DependentUpon>
     </Compile>
@@ -675,6 +674,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Content Include="resources\styles\TimelineOverlayResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Page Include="Views\AdvancedSpellPanelWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

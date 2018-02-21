@@ -54,6 +54,61 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         public TimelineSettings TimelineConfig => TimelineSettings.Instance;
 
+        #region Zone Changer
+
+        private string currentZoneName = string.Empty;
+        private DispatcherTimer timer = null;
+
+        private void SetupZoneChanger()
+        {
+            this.timer = new DispatcherTimer(DispatcherPriority.Background)
+            {
+                Interval = TimeSpan.FromSeconds(1),
+            };
+
+            this.timer.Tick += this.ZoneChanger_Tick;
+            this.timer.Start();
+        }
+
+        private void ZoneChanger_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                lock (this)
+                {
+                    if (this.currentZoneName != ActGlobals.oFormActMain.CurrentZone)
+                    {
+                        this.currentZoneName = ActGlobals.oFormActMain.CurrentZone;
+
+                        var tls = TimelineManager.Instance.TimelineModels.ToArray();
+
+                        foreach (var tl in tls.Where(x => x.IsActive))
+                        {
+                            tl.Controller.Unload();
+                            tl.IsActive = false;
+                        }
+
+                        var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
+                        if (nextTimeline != null)
+                        {
+                            nextTimeline.Controller.Load();
+                            nextTimeline.IsActive = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.AppLogger.Error(
+                    ex,
+                    $"[TL] Auto loading error. zone={ActGlobals.oFormActMain.CurrentZone}");
+            }
+        }
+
+        #endregion Zone Changer
+
+        #region Commands 左側ペイン
+
         private ICommand openTimelineFolderCommand;
 
         public ICommand OpenTimelineFolderCommand =>
@@ -140,6 +195,46 @@ namespace ACT.SpecialSpellTimer.Config.Views
             view.Show();
         }
 
+        #endregion Commands 左側ペイン
+
+        #region Commands 右側ペイン
+
+        private ICommand showOverlayCommand;
+
+        public ICommand ShowOverlayCommand =>
+            this.showOverlayCommand ?? (this.showOverlayCommand = new DelegateCommand<bool?>((isChecked) =>
+            {
+                if (!isChecked.HasValue)
+                {
+                    return;
+                }
+
+                if (!isChecked.Value)
+                {
+                    TimelineOverlay.CloseTimeline();
+                    return;
+                }
+
+                var active = TimelineManager.Instance.TimelineModels.FirstOrDefault(x => x.IsActive);
+                if (active != null)
+                {
+                    TimelineOverlay.ShowTimeline(active);
+                }
+            }));
+
+        private ICommand clickthroughCommand;
+
+        public ICommand ClickthroughCommand =>
+            this.clickthroughCommand ?? (this.clickthroughCommand = new DelegateCommand<bool?>((isChecked) =>
+            {
+                if (!isChecked.HasValue)
+                {
+                    return;
+                }
+
+                TimelineOverlay.ChangeClickthrough(isChecked.Value);
+            }));
+
         private ICommand showDummyOverlayCommand;
 
         public ICommand ShowDummyOverlayCommand =>
@@ -171,13 +266,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     changeColorAction.Invoke(result.Color);
                 }
             });
-
-        private ICommand changeBackgroundColorCommand;
-
-        public ICommand ChangeBackgroundColorCommand =>
-            this.changeBackgroundColorCommand ?? (this.changeBackgroundColorCommand = this.CreateChangeColorCommand(
-                () => this.TimelineConfig.BackgroundColor,
-                (color) => this.TimelineConfig.BackgroundColor = color));
 
         private ICommand addStyleCommand;
 
@@ -217,6 +305,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
             }));
 
+        #endregion Commands 右側ペイン
+
         private void TopActivityStyle_ValueChanged(
             object sender,
             RoutedPropertyChangedEventArgs<object> e)
@@ -224,59 +314,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
             TimelineController.CurrentController?.Model?.RefreshTopActivityStyle();
             TimelineModel.DummyTimeline.RefreshTopActivityStyle();
         }
-
-        #region Zone Changer
-
-        private string currentZoneName = string.Empty;
-        private DispatcherTimer timer = null;
-
-        private void SetupZoneChanger()
-        {
-            this.timer = new DispatcherTimer(DispatcherPriority.Background)
-            {
-                Interval = TimeSpan.FromSeconds(1),
-            };
-
-            this.timer.Tick += this.ZoneChanger_Tick;
-            this.timer.Start();
-        }
-
-        private void ZoneChanger_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                lock (this)
-                {
-                    if (this.currentZoneName != ActGlobals.oFormActMain.CurrentZone)
-                    {
-                        this.currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-
-                        var tls = TimelineManager.Instance.TimelineModels.ToArray();
-
-                        foreach (var tl in tls.Where(x => x.IsActive))
-                        {
-                            tl.Controller.Unload();
-                            tl.IsActive = false;
-                        }
-
-                        var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
-                        if (nextTimeline != null)
-                        {
-                            nextTimeline.Controller.Load();
-                            nextTimeline.IsActive = true;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                this.AppLogger.Error(
-                    ex,
-                    $"[TL] Auto loading error. zone={ActGlobals.oFormActMain.CurrentZone}");
-            }
-        }
-
-        #endregion Zone Changer
 
         #region ILocalizebale
 

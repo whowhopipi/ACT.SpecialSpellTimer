@@ -65,6 +65,7 @@ namespace ACT.SpecialSpellTimer.Views
                 if (this.MessageTextBlock.SetFontInfo(value))
                 {
                     this.MessageTextBlock.SetAutoStrokeThickness();
+                    this.MessageTextBlockEffect.BlurRadius = value.BlurRadius;
                 }
             }
         }

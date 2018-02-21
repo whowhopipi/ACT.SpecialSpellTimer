@@ -198,32 +198,16 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.pcNameInitialOnDisplayStyle, value);
         }
 
-        private double textBlurRate = 1.2d;
-
         public double TextBlurRate
         {
-            get => this.textBlurRate;
-            set
-            {
-                if (this.SetProperty(ref this.textBlurRate, value))
-                {
-                    FontInfo.RaiseOutlineThicknessChanged();
-                }
-            }
+            get => FontInfo.BlurRadiusRate;
+            set => FontInfo.BlurRadiusRate = value;
         }
-
-        private double textOutlineThicknessRate = 1.0d;
 
         public double TextOutlineThicknessRate
         {
-            get => this.textOutlineThicknessRate;
-            set
-            {
-                if (this.SetProperty(ref this.textOutlineThicknessRate, value))
-                {
-                    FontInfo.TextOutlineThicknessGain = value;
-                }
-            }
+            get => FontInfo.OutlineThicknessRate;
+            set => FontInfo.OutlineThicknessRate = value;
         }
 
         public int ReduceIconBrightness { get; set; }

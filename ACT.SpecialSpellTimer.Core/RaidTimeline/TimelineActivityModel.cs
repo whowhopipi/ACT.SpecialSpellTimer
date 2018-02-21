@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -207,7 +208,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public void RefreshProgress()
         {
-            const double ProgressStartTime = 16;
+            var progressStartTime =
+                WPFHelper.IsDesignMode ?
+                15 :
+                TimelineSettings.Instance.ShowProgressBarTime;
 
             var remain = (this.time - CurrentTime).TotalSeconds;
             if (remain < 0)
@@ -220,9 +224,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var progress = 0d;
 
             var before = this.time - CurrentTime;
-            if (before.TotalSeconds <= ProgressStartTime)
+            if (before.TotalSeconds <= progressStartTime)
             {
-                progress = (ProgressStartTime - before.TotalSeconds) / ProgressStartTime;
+                progress = (progressStartTime - before.TotalSeconds) / progressStartTime;
                 if (progress > 1)
                 {
                     progress = 1;

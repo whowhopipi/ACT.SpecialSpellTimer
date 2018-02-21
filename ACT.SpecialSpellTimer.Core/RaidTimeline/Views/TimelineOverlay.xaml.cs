@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using FFXIV.Framework.Common;
@@ -101,7 +102,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         public static void ChangeClickthrough(
             bool isClickthrough)
         {
-            TimelineView.IsClickthrough = isClickthrough;
+            if (timelineView != null)
+            {
+                timelineView.IsClickthrough = isClickthrough;
+            }
         }
 
         public static void CloseTimeline()
@@ -128,6 +132,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             }
 
             this.InitializeComponent();
+            this.LoadResourcesDictionary();
 
             this.ToNonActive();
             this.MouseLeftButtonDown += (x, y) => this.DragMove();
@@ -145,6 +150,24 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         }
 
         public TimelineSettings Config => TimelineSettings.Instance;
+
+        #region Resources Dictionary
+
+        private void LoadResourcesDictionary()
+        {
+            const string Resources = @"Resources\Styles\TimelineOverlayResources.xaml";
+
+            var file = Path.Combine(PluginCore.Instance.Location, Resources);
+            if (File.Exists(file))
+            {
+                this.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(file, UriKind.Absolute)
+                });
+            }
+        }
+
+        #endregion Resources Dictionary
 
         #region IOverlay
 

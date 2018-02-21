@@ -30,8 +30,6 @@
     <fwcnv:ColorToSolidColorBrushConverter x:Key="BrushConverter" />
     <fwcnv:MultipleConverter x:Key="MultipleConverter" />
 
-    <cnv:StrokeThicknessToBlurRadiusConverter x:Key="BlurConverter" />
-
     <Style TargetType="Image">
       <Style.Triggers>
         <Trigger Property="Source" Value="{x:Null}">
@@ -105,7 +103,7 @@
           StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
           <ctrl:OutlineTextBlock.Effect>
             <DropShadowEffect
-              BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+              BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
               Direction="0"
               RenderingBias="Quality"
               ShadowDepth="0"
@@ -143,7 +141,7 @@
           StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
           <ctrl:OutlineTextBlock.Effect>
             <DropShadowEffect
-              BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+              BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
               Direction="0"
               RenderingBias="Quality"
               ShadowDepth="0"
@@ -203,7 +201,7 @@
         StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
         <ctrl:OutlineTextBlock.Effect>
           <DropShadowEffect
-            BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+            BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
             Direction="0"
             RenderingBias="Quality"
             ShadowDepth="0"
@@ -240,7 +238,7 @@
           StrokeThickness="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}">
           <ctrl:OutlineTextBlock.Effect>
             <DropShadowEffect
-              BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
+              BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
               Direction="0"
               RenderingBias="Quality"
               ShadowDepth="0"

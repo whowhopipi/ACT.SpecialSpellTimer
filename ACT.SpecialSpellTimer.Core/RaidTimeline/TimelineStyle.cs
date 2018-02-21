@@ -68,8 +68,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public Color Color
         {
             get => this.color;
-            set => this.SetProperty(ref this.color, value);
+            set
+            {
+                if (this.SetProperty(ref this.color, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.ColorBrush));
+                }
+            }
         }
+
+        [XmlIgnore]
+        public SolidColorBrush ColorBrush => new SolidColorBrush(this.Color);
 
         /// <summary>
         /// カラー
@@ -90,8 +99,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public Color OutlineColor
         {
             get => this.outlineColor;
-            set => this.SetProperty(ref this.outlineColor, value);
+            set
+            {
+                if (this.SetProperty(ref this.outlineColor, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.OutlineColorBrush));
+                }
+            }
         }
+
+        [XmlIgnore]
+        public SolidColorBrush OutlineColorBrush => new SolidColorBrush(this.OutlineColor);
 
         /// <summary>
         /// アウトラインのカラー
