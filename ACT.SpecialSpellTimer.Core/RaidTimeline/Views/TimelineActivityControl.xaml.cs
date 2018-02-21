@@ -20,6 +20,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         {
             Name = "Dummy",
             Text = "ダミーアクティビティ",
+            CallTarget = "フェーズ2",
             Time = TimeSpan.FromSeconds(10.1),
             StyleModel = TimelineStyle.SuperDefaultStyle,
         };
@@ -28,14 +29,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         public TimelineActivityControl()
         {
-#if false
 #if DEBUG
-            if (WPFHelper.IsDesignMode &&
+            if (FFXIV.Framework.Common.WPFHelper.IsDesignMode &&
                 this.Activity == null)
             {
                 this.Activity = DummyActivity;
             }
-#endif
 #endif
             this.InitializeComponent();
             this.LoadResourcesDictionary();

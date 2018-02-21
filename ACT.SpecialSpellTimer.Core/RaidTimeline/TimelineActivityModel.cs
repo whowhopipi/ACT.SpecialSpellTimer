@@ -117,7 +117,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string GoToDestination
         {
             get => this.gotoDestination;
-            set => this.SetProperty(ref this.gotoDestination, value);
+            set
+            {
+                if (this.SetProperty(ref this.gotoDestination, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.JumpDestination));
+                }
+            }
         }
 
         private string callTarget = null;
@@ -126,7 +132,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string CallTarget
         {
             get => this.callTarget;
-            set => this.SetProperty(ref this.callTarget, value);
+            set
+            {
+                if (this.SetProperty(ref this.callTarget, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.JumpDestination));
+                }
+            }
         }
 
         private string notice = null;
@@ -349,6 +361,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.isVisible;
             set => this.SetProperty(ref this.isVisible, value);
         }
+
+        [XmlIgnore]
+        public string JumpDestination => (
+            !string.IsNullOrEmpty(this.CallTarget) ?
+            this.CallTarget :
+            this.GoToDestination) ?? string.Empty;
 
         public void Init(
             int? seq = null)

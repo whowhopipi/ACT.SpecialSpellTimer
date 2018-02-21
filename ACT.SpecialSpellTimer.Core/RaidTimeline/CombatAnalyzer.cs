@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Media;
@@ -1344,6 +1345,41 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
 
             timeline.Save(file);
+        }
+
+        public void SaveToTestLog(
+            string file,
+            IList<CombatLog> combatLogs)
+        {
+            if (!combatLogs.Any())
+            {
+                return;
+            }
+
+            var sb = new StringBuilder(5012);
+
+            using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
+            {
+                foreach (var log in combatLogs)
+                {
+                    sb.AppendLine(log.Raw
+                        .Replace("(?<pcid>.{8})", "00000000"));
+
+                    if (sb.Length > 5012)
+                    {
+                        sw.Write(sb.ToString());
+                        sb.Clear();
+                    }
+                }
+
+                if (sb.Length > 0)
+                {
+                    sw.Write(sb.ToString());
+                    sb.Clear();
+                }
+
+                sw.Flush();
+            }
         }
     }
 

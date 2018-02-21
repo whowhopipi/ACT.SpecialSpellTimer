@@ -307,6 +307,7 @@
       <DockPanel Grid.Column="1">
         <Button DockPanel.Dock="Right" Content="{DynamicResource Timeline_SaveToSpreadsheet}" HorizontalAlignment="Right" BorderThickness="0" Background="Transparent" Command="{Binding SaveToSpreadsheetCommand, Mode=OneWay}" Padding="2" Margin="15 0 0 0" />
         <Button DockPanel.Dock="Right" Content="{DynamicResource Timeline_SaveToDraftTimeline}" HorizontalAlignment="Right" BorderThickness="0" Background="Transparent" Command="{Binding SaveDraftTimelineCommand, Mode=OneWay}" Padding="2" Margin="15 0 0 0" />
+        <Button DockPanel.Dock="Right" Content="{DynamicResource Timeline_SaveToTestLog}" HorizontalAlignment="Right" BorderThickness="0" Background="Transparent" Command="{Binding SaveTestLogCommand, Mode=OneWay}" Padding="2" Margin="15 0 0 0" />
       </DockPanel>
     </Grid>
     <!-- Button Area end -->

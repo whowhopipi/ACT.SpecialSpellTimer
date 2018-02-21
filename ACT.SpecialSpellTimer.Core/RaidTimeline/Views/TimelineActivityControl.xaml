@@ -14,10 +14,8 @@
   RenderOptions.ClearTypeHint="Enabled"
   RenderOptions.BitmapScalingMode="HighQuality"
   RenderOptions.EdgeMode="Unspecified"
-  Background="Transparent">
-  <!--
+  Background="Transparent"
   d:DataContext="{x:Static local:TimelineActivityControl.DummyActivity}">
-  -->
 
   <UserControl.Resources>
     <ResourceDictionary>
@@ -51,8 +49,13 @@
           <RowDefinition />
         </Grid.RowDefinitions>
 
-        <!-- アクティビティのテキスト -->
-        <controls:OutlineTextBlock Style="{DynamicResource ActivityText}" />
+        <StackPanel Style="{DynamicResource ActivityTextPanel}">
+          <!-- アクティビティのテキスト -->
+          <controls:OutlineTextBlock Style="{DynamicResource ActivityText}" />
+
+          <!-- ジャンプ先のテキスト -->
+          <controls:OutlineTextBlock Style="{DynamicResource JumpDestinationText}" />
+        </StackPanel>
 
         <!-- プログレスバー -->
         <controls:RichProgressBar Style="{DynamicResource Bar}" />
@@ -74,8 +77,13 @@
       <!-- アイコン -->
       <Image Style="{DynamicResource IconCircle}" />
 
-      <!-- アクティビティのテキスト -->
-      <controls:OutlineTextBlock Style="{DynamicResource ActivityTextCircle}" />
+      <StackPanel Style="{DynamicResource ActivityTextPanelCircle}">
+        <!-- アクティビティのテキスト -->
+        <controls:OutlineTextBlock Style="{DynamicResource ActivityTextCircle}" />
+
+        <!-- ジャンプ先のテキスト -->
+        <controls:OutlineTextBlock Style="{DynamicResource JumpDestinationTextCircle}" />
+      </StackPanel>
 
       <Grid Style="{DynamicResource CircleGrid}">
         <!-- プログレスサークル -->

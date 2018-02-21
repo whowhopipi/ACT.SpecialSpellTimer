@@ -31,10 +31,14 @@
     <Setter Property="Visibility" Value="{Binding Path=StyleModel.ExistsIcon, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
   </Style>
 
-  <Style x:Key="ActivityText" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="ActivityTextPanel" TargetType="StackPanel">
     <Setter Property="Grid.Row" Value="0" />
     <Setter Property="Grid.Column" Value="0" />
     <Setter Property="Margin" Value="0 0 40 0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style x:Key="ActivityText" TargetType="controls:OutlineTextBlock">
     <Setter Property="Text" Value="{Binding Path=Text, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
@@ -54,6 +58,41 @@
           Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
+  </Style>
+
+  <Style x:Key="JumpDestinationText" TargetType="controls:OutlineTextBlock">
+    <Setter Property="Margin" Value="20 0 0 0" />
+    <Setter Property="Text" Value="{Binding Path=JumpDestination, StringFormat=➡ {0}, Mode=OneWay}" />
+    <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
+    <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
+    <Setter Property="FontStyle" Value="{Binding Path=StyleModel.Font.Style, Mode=OneWay}" />
+    <Setter Property="FontStretch" Value="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}" />
+    <Setter Property="FontSize" Value="{Binding Path=StyleModel.Font.Size, Mode=OneWay}" />
+    <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
+    <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
+    <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="Effect">
+      <Setter.Value>
+        <DropShadowEffect
+          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
+          Direction="0"
+          RenderingBias="Quality"
+          ShadowDepth="0"
+          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
+      </Setter.Value>
+    </Setter>
+    <Setter Property="LayoutTransform">
+      <Setter.Value>
+        <ScaleTransform
+          ScaleX="0.75"
+          ScaleY="0.75" />
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <DataTrigger Binding="{Binding Path=JumpDestination, Mode=OneWay}" Value="">
+        <Setter Property="Visibility" Value="Collapsed" />
+      </DataTrigger>
+    </Style.Triggers>
   </Style>
 
   <Style x:Key="Bar" TargetType="controls:RichProgressBar">
@@ -77,7 +116,7 @@
     <Setter Property="Grid.Row" Value="0" />
     <Setter Property="Grid.Column" Value="1" />
     <Setter Property="Margin" Value="0 0 2 0" />
-    <Setter Property="VerticalAlignment" Value="Bottom" />
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="HorizontalAlignment" Value="Right" />
     <Setter Property="Text" Value="{Binding Path=RemainTimeText, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
@@ -120,10 +159,13 @@
     <Setter Property="Visibility" Value="{Binding Path=StyleModel.ExistsIcon, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
   </Style>
 
-  <Style x:Key="ActivityTextCircle" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="ActivityTextPanelCircle" TargetType="StackPanel">
     <Setter Property="Grid.Column" Value="1" />
     <Setter Property="Margin" Value="0 0 40 0" />
     <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style x:Key="ActivityTextCircle" TargetType="controls:OutlineTextBlock">
     <Setter Property="Text" Value="{Binding Path=Text, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
@@ -143,6 +185,41 @@
           Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
+  </Style>
+
+  <Style x:Key="JumpDestinationTextCircle" TargetType="controls:OutlineTextBlock">
+    <Setter Property="Margin" Value="20 0 0 0" />
+    <Setter Property="Text" Value="{Binding Path=JumpDestination, StringFormat=➡ {0}, Mode=OneWay}" />
+    <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
+    <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
+    <Setter Property="FontStyle" Value="{Binding Path=StyleModel.Font.Style, Mode=OneWay}" />
+    <Setter Property="FontStretch" Value="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}" />
+    <Setter Property="FontSize" Value="{Binding Path=StyleModel.Font.Size, Mode=OneWay}" />
+    <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
+    <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
+    <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="Effect">
+      <Setter.Value>
+        <DropShadowEffect
+          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
+          Direction="0"
+          RenderingBias="Quality"
+          ShadowDepth="0"
+          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
+      </Setter.Value>
+    </Setter>
+    <Setter Property="LayoutTransform">
+      <Setter.Value>
+        <ScaleTransform
+          ScaleX="0.75"
+          ScaleY="0.75" />
+      </Setter.Value>
+    </Setter>
+    <Style.Triggers>
+      <DataTrigger Binding="{Binding Path=JumpDestination, Mode=OneWay}" Value="">
+        <Setter Property="Visibility" Value="Collapsed" />
+      </DataTrigger>
+    </Style.Triggers>
   </Style>
 
   <Style x:Key="Circle" TargetType="controls:ProgressCircle">

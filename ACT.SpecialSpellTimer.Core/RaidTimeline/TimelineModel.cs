@@ -698,6 +698,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Seq = 3,
                 Text = "メガフレア",
                 Time = TimeSpan.FromSeconds(20.1),
+                CallTarget = "フェーズ2",
                 StyleModel = defaultStyle,
             };
 
