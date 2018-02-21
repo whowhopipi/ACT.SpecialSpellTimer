@@ -87,15 +87,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         public static void ShowTimeline(
             TimelineModel timelineModel)
         {
+            if (!TimelineSettings.Instance.Enabled ||
+                !TimelineSettings.Instance.OverlayVisible)
+            {
+                return;
+            }
+
             WPFHelper.Invoke(() =>
             {
-                if (TimelineSettings.Instance.OverlayVisible)
-                {
-                    TimelineView.Model = timelineModel;
-                    TimelineView.OverlayVisible = true;
+                TimelineView.Model = timelineModel;
+                TimelineView.OverlayVisible = true;
 
-                    ChangeClickthrough(TimelineSettings.Instance.Clickthrough);
-                }
+                ChangeClickthrough(TimelineSettings.Instance.Clickthrough);
             });
         }
 

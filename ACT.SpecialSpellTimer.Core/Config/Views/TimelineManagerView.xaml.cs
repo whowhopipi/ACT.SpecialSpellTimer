@@ -88,11 +88,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
                             tl.IsActive = false;
                         }
 
-                        var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
-                        if (nextTimeline != null)
+                        if (this.TimelineConfig.Enabled)
                         {
-                            nextTimeline.Controller.Load();
-                            nextTimeline.IsActive = true;
+                            var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
+                            if (nextTimeline != null)
+                            {
+                                nextTimeline.Controller.Load();
+                                nextTimeline.IsActive = true;
+                            }
                         }
                     }
                 }
@@ -108,6 +111,30 @@ namespace ACT.SpecialSpellTimer.Config.Views
         #endregion Zone Changer
 
         #region Commands 左側ペイン
+
+        private ICommand enabledTimelineCommand;
+
+        public ICommand EnabledTimelineCommand =>
+            this.enabledTimelineCommand ?? (this.enabledTimelineCommand = new DelegateCommand<bool?>((isChecked) =>
+            {
+                if (!isChecked.HasValue)
+                {
+                    return;
+                }
+
+                if (!isChecked.Value)
+                {
+                    TimelineOverlay.CloseTimeline();
+
+                    var active = TimelineManager.Instance.TimelineModels.FirstOrDefault(x => x.IsActive);
+                    if (active != null)
+                    {
+                        active.Controller.EndActivityLine();
+                        active.Controller.Unload();
+                        active.IsActive = false;
+                    }
+                }
+            }));
 
         private ICommand openTimelineFolderCommand;
 
@@ -139,6 +166,11 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.startTimelineCommand ?? (this.startTimelineCommand = new DelegateCommand<Button>((button) =>
             {
                 if (button == null)
+                {
+                    return;
+                }
+
+                if (!this.TimelineConfig.Enabled)
                 {
                     return;
                 }

@@ -464,6 +464,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             try
             {
+                if (!TimelineSettings.Instance.Enabled)
+                {
+                    return;
+                }
+
                 if (!this.isLogWorkerRunning)
                 {
                     return;
@@ -503,6 +508,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     var logs = this.GetLogs();
                     if (!logs.Any())
                     {
+                        continue;
+                    }
+
+                    if (!TimelineSettings.Instance.Enabled)
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(5));
                         continue;
                     }
 
@@ -734,6 +745,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public void StartActivityLine()
         {
+            if (!TimelineSettings.Instance.Enabled)
+            {
+                return;
+            }
+
             lock (this)
             {
                 if (this.isRunning)
@@ -786,6 +802,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             try
             {
+                if (!TimelineSettings.Instance.Enabled)
+                {
+                    return;
+                }
+
                 lock (this)
                 {
                     var now = DateTime.Now;
