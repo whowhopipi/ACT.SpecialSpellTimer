@@ -128,6 +128,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.showActivitiesCount, value);
         }
 
+        private double showActivitiesTime = 60;
+
+        public double ShowActivitiesTime
+        {
+            get => this.showActivitiesTime;
+            set => this.SetProperty(ref this.showActivitiesTime, value);
+        }
+
         private Color backgroundColor = Colors.Transparent;
 
         public Color BackgroundColor

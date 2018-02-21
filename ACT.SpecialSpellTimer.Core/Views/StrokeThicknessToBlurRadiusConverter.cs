@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
-
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
 
@@ -28,7 +27,7 @@ namespace ACT.SpecialSpellTimer.Views
 #endif
             textBlurGain = Settings.Default.TextBlurRate;
 
-            return (double)value * textBlurGain;
+            return Math.Round((double)value * textBlurGain, 2);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

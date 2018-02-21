@@ -5,15 +5,17 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Xml;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Views;
+using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
-using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -91,28 +93,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public bool IsActive
         {
             get => this.isActive;
-            set
-            {
-                if (this.SetProperty(ref this.isActive, value))
-                {
-                    Task.Run(() =>
-                    {
-                        if (this.isActive)
-                        {
-                            if (TimelineController.CurrentController != null)
-                            {
-                                TimelineController.CurrentController.Model.IsActive = false;
-                            }
-
-                            this.Controller.Load();
-                        }
-                        else
-                        {
-                            this.Controller.Unload();
-                        }
-                    });
-                }
-            }
+            set => this.SetProperty(ref this.isActive, value);
         }
 
         [XmlIgnore]
@@ -202,6 +183,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
                 }
             }
+
+            if (tl != null)
+            {
+                // 既定値を適用する
+                tl.SetDefaultValues();
+            }
 #if false
             if (tl == null)
             {
@@ -277,6 +264,162 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #endregion Methods
 
+        #region Default Values
+
+        /// <summary>
+        /// 規定の既定値の定義リスト
+        /// </summary>
+        private static readonly IList<TimelineDefaultModel> SuperDefaultValues = new[]
+        {
+            // アクティビティ
+            NewDefault(TimelineElementTypes.Activity, "Enabled", true),
+            NewDefault(TimelineElementTypes.Activity, "SyncOffsetStart", -12),
+            NewDefault(TimelineElementTypes.Activity, "SyncOffsetEnd", 12),
+            NewDefault(TimelineElementTypes.Activity, "NoticeDevice", NoticeDevices.Both),
+            NewDefault(TimelineElementTypes.Activity, "noticeOffset", -6),
+
+            // トリガ
+            NewDefault(TimelineElementTypes.Trigger, "Enabled", true),
+            NewDefault(TimelineElementTypes.Trigger, "SyncCount", 0),
+            NewDefault(TimelineElementTypes.Trigger, "NoticeDevice", NoticeDevices.Both),
+
+            // サブルーチン
+            NewDefault(TimelineElementTypes.Subroutine, "Enabled", true),
+            NewDefault(TimelineElementTypes.Subroutine, "SyncCount", 0),
+            NewDefault(TimelineElementTypes.Subroutine, "NoticeDevice", NoticeDevices.Both),
+        };
+
+        private void SetDefaultValues()
+        {
+            var defaults = SuperDefaultValues.Union(this.Defaults)
+                .Where(x => (x.Enabled ?? true));
+
+            foreach (var el in this.Elements)
+            {
+                setDefaultValuesToElement(el);
+
+                if (el.TimelineType == TimelineElementTypes.Subroutine)
+                {
+                    var sub = el as TimelineSubroutineModel;
+                    foreach (var act in sub.Statements)
+                    {
+                        setDefaultValuesToElement(act);
+                    }
+                }
+            }
+
+            void setDefaultValuesToElement(TimelineBase element)
+            {
+                try
+                {
+                    foreach (var def in defaults
+                        .Where(x => x.TargetElement == element.TimelineType))
+                    {
+                        var pi = GetPropertyInfo(element, def.TargetAttribute);
+                        if (pi == null)
+                        {
+                            continue;
+                        }
+
+                        var value = pi.GetValue(element);
+                        if (value == null)
+                        {
+                            object defValue = null;
+
+                            var type = pi.PropertyType;
+
+                            if (type.IsGenericType &&
+                                type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                            {
+                                type = Nullable.GetUnderlyingType(type);
+                            }
+
+                            if (!type.IsEnum)
+                            {
+                                defValue = Convert.ChangeType(def.Value, type);
+                            }
+                            else
+                            {
+                                defValue = Enum.Parse(type, def.Value, true);
+                            }
+
+                            if (defValue != null)
+                            {
+                                pi.SetValue(element, defValue);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Write("[TL] Load default values error.", ex);
+                }
+            }
+        }
+
+        private static PropertyInfo GetPropertyInfo(
+            TimelineBase element,
+            string fieldName)
+        {
+            const BindingFlags flag =
+                BindingFlags.Instance |
+                BindingFlags.Public |
+                BindingFlags.NonPublic |
+                BindingFlags.IgnoreCase;
+
+            var info = default(PropertyInfo);
+
+            var type = element.GetType();
+            if (type == null)
+            {
+                return info;
+            }
+
+            // 通常のフィールド名からフィールド情報を取得する
+            info = type.GetProperty(fieldName, flag);
+
+            if (info != null)
+            {
+                return info;
+            }
+
+            // XML属性名からフィールド情報を取得する
+            var pis = type.GetProperties(flag);
+
+            foreach (var pi in pis)
+            {
+                var attr = Attribute.GetCustomAttributes(pi, typeof(XmlAttributeAttribute))
+                    .FirstOrDefault() as XmlAttributeAttribute;
+                if (attr != null)
+                {
+                    if (string.Equals(
+                        attr.AttributeName,
+                        fieldName,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        info = pi;
+                        break;
+                    }
+                }
+            }
+
+            return info;
+        }
+
+        private static TimelineDefaultModel NewDefault(
+            TimelineElementTypes element,
+            string attr,
+            object value)
+            => new TimelineDefaultModel()
+            {
+                TargetElement = element,
+                TargetAttribute = attr,
+                Value = value.ToString(),
+                Enabled = true,
+            };
+
+        #endregion Default Values
+
         #region To View
 
         private CollectionViewSource activitySource;
@@ -287,8 +430,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public ICollectionView ActivityView => this.ActivitySource?.View;
 
         public TimelineActivityModel TopActivity => this.ActivityView?.Cast<TimelineActivityModel>().FirstOrDefault();
-
-        public string CurrentTime => this.TopActivity?.CurrentTime.ToTLString();
 
         public string SubName => (this.TopActivity?.Parent as TimelineSubroutineModel)?.Name;
 
@@ -310,20 +451,38 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 y.Accepted = false;
 
+                var maxTime = this.Controller.CurrentTime.Add(
+                    TimeSpan.FromSeconds(TimelineSettings.Instance.ShowActivitiesTime));
+
                 var act = y.Item as TimelineActivityModel;
-                if (act.Enabled ?? true &&
-                    !act.IsDone &&
-                    !string.IsNullOrEmpty(act.Text) &&
-                    act.Time <= act.CurrentTime.Add(TimeSpan.FromMinutes(10)))
+
+                if (!act.Enabled.GetValueOrDefault())
                 {
-                    y.Accepted = true;
+                    return;
                 }
+
+                if (act.IsDone)
+                {
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(act.Text))
+                {
+                    return;
+                }
+
+                if (act.Time > maxTime)
+                {
+                    return;
+                }
+
+                y.Accepted = true;
             };
 
             cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Enabled));
-            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.IsDone));
             cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Text));
-            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Time));
+            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.IsDone));
+            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.RemainTime));
 
             cvs.SortDescriptions.AddRange(new[]
             {
@@ -337,7 +496,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             cvs.View.CollectionChanged += (x, y) =>
             {
                 this.RaisePropertyChanged(nameof(this.TopActivity));
-                this.RaisePropertyChanged(nameof(this.CurrentTime));
                 this.RaisePropertyChanged(nameof(this.SubName));
 
                 this.RefreshTopActivityStyle();
@@ -372,24 +530,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var i = 0;
             foreach (var act in acts)
             {
-                if (i < TimelineSettings.Instance.ShowActivitiesCount)
-                {
-                    act.IsVisible = true;
-                }
-                else
-                {
-                    act.IsVisible = false;
-                }
+                act.IsVisible = i < TimelineSettings.Instance.ShowActivitiesCount;
 
-                if (act == top)
+                if (act.IsVisible)
                 {
-                    act.Opacity = 1.0d;
-                    act.Scale = TimelineSettings.Instance.NearestActivityScale;
-                }
-                else
-                {
-                    act.Opacity = TimelineSettings.Instance.NextActivityBrightness;
-                    act.Scale = 1.0d;
+                    if (act == top)
+                    {
+                        act.Opacity = 1.0d;
+                        act.Scale = TimelineSettings.Instance.NearestActivityScale;
+                    }
+                    else
+                    {
+                        act.Opacity = TimelineSettings.Instance.NextActivityBrightness;
+                        act.Scale = 1.0d;
+                    }
                 }
 
                 i++;
@@ -399,6 +553,36 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         #endregion To View
 
         #region Commands
+
+        private ICommand changeActiveCommand;
+
+        public ICommand ChangeActiveCommand =>
+            this.changeActiveCommand ?? (this.changeActiveCommand = new DelegateCommand<bool?>((isChecked) =>
+            {
+                if (!isChecked.HasValue)
+                {
+                    return;
+                }
+
+                if (isChecked.Value)
+                {
+                    var old = TimelineManager.Instance.TimelineModels.FirstOrDefault(x =>
+                        x != this &&
+                        x.IsActive);
+
+                    if (old != null)
+                    {
+                        old.IsActive = false;
+                        old.Controller.Unload();
+                    }
+
+                    this.Controller.Load();
+                }
+                else
+                {
+                    this.Controller.Unload();
+                }
+            }));
 
         private ICommand editCommand;
 
@@ -423,17 +607,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 try
                 {
-                    var isStanby = this.IsActive;
-
                     var tl = default(TimelineModel);
                     await Task.Run(() =>
                     {
-                        if (isStanby)
-                        {
-                            this.Controller.Unload();
-                        }
-
                         tl = TimelineModel.Load(this.File);
+
+                        if (tl != null)
+                        {
+                            this.elements.Clear();
+                            this.AddRange(tl.Elements);
+                        }
                     });
 
                     if (tl == null)
@@ -446,11 +629,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     this.Locale = tl.Locale;
                     this.File = tl.File;
 
-                    this.elements.Clear();
-                    this.AddRange(tl.Elements);
-
-                    if (isStanby)
+                    if (this.IsActive)
                     {
+                        this.Controller.Unload();
                         this.Controller.Load();
                     }
 
@@ -491,6 +672,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var act1 = new TimelineActivityModel()
             {
+                Enabled = true,
                 Seq = 1,
                 Text = "デスセンテンス",
                 Time = TimeSpan.FromSeconds(10.1),
@@ -503,6 +685,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var act2 = new TimelineActivityModel()
             {
+                Enabled = true,
                 Seq = 2,
                 Text = "ツイスター",
                 Time = TimeSpan.FromSeconds(16.1),
@@ -511,6 +694,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var act3 = new TimelineActivityModel()
             {
+                Enabled = true,
                 Seq = 3,
                 Text = "メガフレア",
                 Time = TimeSpan.FromSeconds(20.1),
@@ -525,6 +709,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 var a = new TimelineActivityModel()
                 {
+                    Enabled = true,
                     Seq = act3.Seq + i,
                     Text = "アクション" + i,
                     Time = TimeSpan.FromSeconds(30 + i),

@@ -9,10 +9,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Default;
 
-        private string targetElement = string.Empty;
+        private TimelineElementTypes targetElement = TimelineElementTypes.Activity;
 
         [XmlAttribute(AttributeName = "target-element")]
-        public string TargetElement
+        public TimelineElementTypes TargetElement
         {
             get => this.targetElement;
             set => this.SetProperty(ref this.targetElement, value);
@@ -35,5 +35,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.value;
             set => this.SetProperty(ref this.value, value);
         }
+
+        public override string ToString() => $"target-element={this.TargetElement}, target-attr={this.TargetAttribute}, value={this.Value}";
     }
 }

@@ -190,24 +190,26 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region 動作を制御するためのフィールド
 
-        private TimeSpan currentTime = TimeSpan.Zero;
+        private static TimeSpan currentTime = TimeSpan.Zero;
 
         [XmlIgnore]
-        public TimeSpan CurrentTime
+        public static TimeSpan CurrentTime
         {
-            get => this.currentTime;
+            get => currentTime;
             set
             {
-                if (this.SetProperty(ref this.currentTime, value))
+                if (currentTime != value)
                 {
-                    this.RefreshProgress();
+                    currentTime = value;
                 }
             }
         }
 
-        private void RefreshProgress()
+        public void RefreshProgress()
         {
-            var remain = (this.time - this.currentTime).TotalSeconds;
+            const double ProgressStartTime = 16;
+
+            var remain = (this.time - CurrentTime).TotalSeconds;
             if (remain < 0)
             {
                 remain = 0;
@@ -217,16 +219,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var progress = 0d;
 
-            if (this.time != TimeSpan.Zero)
+            var before = this.time - CurrentTime;
+            if (before.TotalSeconds <= ProgressStartTime)
             {
-                progress = this.currentTime.TotalSeconds / this.time.TotalSeconds;
+                progress = (ProgressStartTime - before.TotalSeconds) / ProgressStartTime;
                 if (progress > 1)
                 {
                     progress = 1;
                 }
             }
 
-            this.Progress = progress;
+            this.Progress = Math.Round(progress, 3);
         }
 
         private double remainTime = 0;
@@ -235,7 +238,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public double RemainTime
         {
             get => this.remainTime;
-            set => this.SetProperty(ref this.remainTime, value);
+            set
+            {
+                if (this.SetProperty(ref this.remainTime, value))
+                {
+                    this.RemainTimeText = Math.Ceiling(this.remainTime).ToString("N0");
+                }
+            }
+        }
+
+        private string remainTimeText = string.Empty;
+
+        [XmlIgnore]
+        public string RemainTimeText
+        {
+            get => this.remainTimeText;
+            set => this.SetProperty(ref this.remainTimeText, value);
         }
 
         private double progress = 0;

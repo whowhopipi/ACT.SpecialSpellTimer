@@ -61,7 +61,7 @@
         <StackPanel Orientation="Horizontal">
           <!-- 現在時刻 -->
           <ctrl:OutlineTextBlock
-            Text="{Binding Path=Model.CurrentTime, Mode=OneWay}"
+            Text="{Binding Path=Model.Controller.CurrentTimeText, Mode=OneWay}"
             FontFamily="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}"
             FontWeight="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}"
             FontStyle="{Binding Path=Config.IndicatorStyleModel.Font.Style, Mode=OneWay}"
@@ -74,7 +74,7 @@
               <DropShadowEffect
                 BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
                 Direction="0"
-                RenderingBias="Performance"
+                RenderingBias="Quality"
                 ShadowDepth="0"
                 Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
             </ctrl:OutlineTextBlock.Effect>
@@ -96,7 +96,7 @@
               <DropShadowEffect
                 BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
                 Direction="0"
-                RenderingBias="Performance"
+                RenderingBias="Quality"
                 ShadowDepth="0"
                 Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
             </ctrl:OutlineTextBlock.Effect>
@@ -121,19 +121,19 @@
               <DropShadowEffect
                 BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
                 Direction="0"
-                RenderingBias="Performance"
+                RenderingBias="Quality"
                 ShadowDepth="0"
                 Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
             </ctrl:OutlineTextBlock.Effect>
             <ctrl:OutlineTextBlock.LayoutTransform>
-              <ScaleTransform ScaleX="0.7" ScaleY="0.7" />
+              <ScaleTransform ScaleX="0.6" ScaleY="0.6" />
             </ctrl:OutlineTextBlock.LayoutTransform>
           </ctrl:OutlineTextBlock>
 
           <!-- ステータス -->
           <ctrl:OutlineTextBlock
             Margin="10 0 0 0"
-            VerticalAlignment="Bottom"
+            VerticalAlignment="Center"
             Text="Standby"
             FontFamily="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}"
             FontWeight="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}"
@@ -148,7 +148,7 @@
               <DropShadowEffect
                 BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
                 Direction="0"
-                RenderingBias="Performance"
+                RenderingBias="Quality"
                 ShadowDepth="0"
                 Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
             </ctrl:OutlineTextBlock.Effect>
@@ -165,7 +165,11 @@
         Margin="0 0 0 3"
         Grid.Row="1"
         BorderThickness="0"
-        AlternationCount="999"
+        Background="Transparent"
+        Focusable="False"
+        IsTabStop="False"
+        VirtualizingPanel.IsVirtualizing="True"
+        VirtualizingPanel.VirtualizationMode="Recycling"
         ItemsSource="{Binding Path=Model.ActivityView, Mode=OneWay}">
         <ItemsControl.ItemTemplate>
           <DataTemplate DataType="{x:Type tl:TimelineActivityModel}">

@@ -236,6 +236,7 @@
     <Compile Include="RaidTimeline\TimelineBase.cs" />
     <Compile Include="RaidTimeline\TimelineDefaultModel.cs" />
     <Compile Include="RaidTimeline\TimelineController.cs" />
+    <Compile Include="RaidTimeline\TimelineManager.cs" />
     <Compile Include="RaidTimeline\TimelineModel.cs" />
     <Compile Include="RaidTimeline\TimelineSettings.cs" />
     <Compile Include="RaidTimeline\TimelineStyle.cs" />

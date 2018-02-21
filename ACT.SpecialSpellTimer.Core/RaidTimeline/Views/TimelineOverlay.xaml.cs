@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline.Views
@@ -23,6 +24,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             if (designOverlay == null)
             {
                 designOverlay = CreateDesignOverlay();
+                designOverlay.Model = TimelineModel.DummyTimeline;
+            }
+
+            // 本番ビューを隠す
+            if (TimelineView.OverlayVisible)
+            {
+                TimelineView.OverlayVisible = false;
             }
 
             designOverlay.Show();
@@ -35,6 +43,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             {
                 designOverlay.OverlayVisible = false;
                 designOverlay.Hide();
+
+                // 本番ビューを復帰させる
+                if (TimelineSettings.Instance.OverlayVisible)
+                {
+                    if (!TimelineView.OverlayVisible &&
+                        TimelineView.Model != null)
+                    {
+                        TimelineView.OverlayVisible = true;
+                    }
+                }
             }
         }
 
@@ -47,25 +65,67 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         #endregion Design View
 
-#if DEBUG
+        #region View
 
-        public TimelineOverlay() :
-            this(TimelineModel.DummyTimeline)
+        private static TimelineOverlay timelineView;
+
+        private static TimelineOverlay TimelineView
         {
+            get
+            {
+                if (timelineView == null)
+                {
+                    timelineView = new TimelineOverlay();
+                    timelineView.Show();
+                }
+
+                return timelineView;
+            }
         }
 
-#else
-        public TimelineOverlay() :
-            this(new TimelineModel())
+        public static void ShowTimeline(
+            TimelineModel timelineModel)
         {
-        }
-#endif
+            WPFHelper.Invoke(() =>
+            {
+                if (TimelineSettings.Instance.OverlayVisible)
+                {
+                    TimelineView.Model = timelineModel;
+                    TimelineView.OverlayVisible = true;
 
-        public TimelineOverlay(
-            TimelineModel model)
+                    ChangeClickthrough(TimelineSettings.Instance.Clickthrough);
+                }
+            });
+        }
+
+        public static void ChangeClickthrough(
+            bool isClickthrough)
         {
-            this.Model = model;
-            this.Model.Controller.View = this;
+            TimelineView.IsClickthrough = isClickthrough;
+        }
+
+        public static void CloseTimeline()
+        {
+            WPFHelper.Invoke(() =>
+            {
+                if (TimelineOverlay.timelineView != null)
+                {
+                    TimelineOverlay.timelineView.Model = null;
+                    TimelineOverlay.timelineView.DataContext = null;
+                    TimelineOverlay.timelineView.Close();
+                    TimelineOverlay.timelineView = null;
+                }
+            });
+        }
+
+        #endregion View
+
+        public TimelineOverlay()
+        {
+            if (WPFHelper.IsDesignMode)
+            {
+                this.Model = TimelineModel.DummyTimeline;
+            }
 
             this.InitializeComponent();
 
@@ -74,14 +134,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.Opacity = 0;
             this.Topmost = false;
-
-            this.Closed += (x, y) =>
-            {
-                if (this.Model != null)
-                {
-                    this.Model.Controller.View = null;
-                }
-            };
         }
 
         private TimelineModel model;
@@ -89,7 +141,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         public TimelineModel Model
         {
             get => this.model;
-            private set => this.SetProperty(ref this.model, value);
+            set => this.SetProperty(ref this.model, value);
         }
 
         public TimelineSettings Config => TimelineSettings.Instance;

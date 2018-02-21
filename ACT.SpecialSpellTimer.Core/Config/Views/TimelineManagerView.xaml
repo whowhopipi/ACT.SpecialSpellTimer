@@ -60,7 +60,7 @@
 
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="600" />
+      <ColumnDefinition Width="Auto" MinWidth="500" />
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
 
@@ -110,36 +110,33 @@
             <DataTemplate>
               <Grid Margin="5">
                 <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="Auto" />
                   <ColumnDefinition />
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <CheckBox
                   Grid.Column="0"
-                  Margin="10 0 10 0"
+                  Margin="10 0 20 0"
                   IsChecked="{Binding Path=IsActive, Mode=TwoWay}"
-                  HorizontalAlignment="Center"
+                  Command="{Binding Path=ChangeActiveCommand, Mode=OneWay}"
+                  CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked, Mode=OneWay}"
                   VerticalAlignment="Center"
-                  HorizontalContentAlignment="Center"
                   IsTabStop="False"
-                  Focusable="False"
-                  ToolTip="Active Timeline" />
+                  Focusable="False">
 
-                <StackPanel
-                  Grid.Column="1"
-                  Margin="10 0 0 0">
-                  <Label Content="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="18" />
+                  <StackPanel Margin="10 0 0 0">
+                    <Label Content="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="18" />
 
-                  <TextBlock Margin="10 5 0 0" Text="{Binding Path=Zone, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
-                  <TextBlock Margin="10 1 0 0" Text="{Binding Path=LocaleText, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
-                  <TextBlock Margin="10 1 0 0" Text="{Binding Path=FileName, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
-                </StackPanel>
+                    <TextBlock Margin="10 5 0 0" Text="{Binding Path=Zone, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
+                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=LocaleText, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
+                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=FileName, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
+                  </StackPanel>
+                </CheckBox>
 
                 <Grid
-                  Grid.Column="2"
+                  Grid.Column="1"
                   VerticalAlignment="Bottom"
-                  Margin="10 0 0 0">
+                  Margin="0 0 0 0">
 
                   <Grid.RowDefinitions>
                     <RowDefinition />
@@ -156,8 +153,8 @@
                     Foreground="DarkOrchid" />
 
                   <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button Content="Edit" FontSize="14" Command="{Binding EditCommand, Mode=OneWay}" />
-                    <Button Margin="10 0 0 0" Content="Reload" FontSize="14" Command="{Binding ReloadCommand, Mode=OneWay}" />
+                    <Button Padding="3 0 3 0" Content="Edit" FontSize="16" Command="{Binding EditCommand, Mode=OneWay}" />
+                    <Button Padding="3 0 3 0" Margin="10 0 0 0" Content="Reload" FontSize="16" Command="{Binding ReloadCommand, Mode=OneWay}" />
                   </StackPanel>
                 </Grid>
               </Grid>
@@ -165,8 +162,19 @@
           </ListView.ItemTemplate>
         </ListView>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="2">
           <Button
+            HorizontalAlignment="Left"
+            Padding="5 0 5 0"
+            Content="Start"
+            Command="{Binding StartTimelineCommand, Mode=OneWay}"
+            CommandParameter="{Binding RelativeSource={RelativeSource Self}, Mode=OneWay}"
+            FontWeight="Bold"
+            FontSize="18" />
+          <Button
+            HorizontalAlignment="Left"
+            Margin="0 10 0 0"
+            Padding="5 0 5 0"
             Content="{DynamicResource Timeline_TestTimeline}"
             Command="{Binding TestTimelineCommand, Mode=OneWay}" />
         </StackPanel>

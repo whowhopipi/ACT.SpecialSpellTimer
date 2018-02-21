@@ -503,7 +503,7 @@ namespace ACT.SpecialSpellTimer
                         ActGlobals.oFormActMain.ParseRawLogLine(
                             false,
                             DateTime.Now,
-                            CombatAnalyzer.WipeoutLog);
+                            $"[{DateTime.Now.ToString("HH:mm:ss.fff")}] {CombatAnalyzer.WipeoutLog}");
 
                         // ACT本体に戦闘終了を通知する
                         if (Settings.Default.WipeoutNotifyToACT)

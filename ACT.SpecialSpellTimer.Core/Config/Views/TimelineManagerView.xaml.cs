@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,7 +14,6 @@ using System.Windows.Threading;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
-using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Dialog;
@@ -45,67 +43,16 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             if (!WPFHelper.IsDesignMode)
             {
-                this.LoadTimelineModels();
+                TimelineManager.Instance.LoadTimelineModels();
                 this.SetupZoneChanger();
             }
         }
 
+        public string TimelineDirectory => TimelineManager.Instance.TimelineDirectory;
+
+        public ObservableCollection<TimelineModel> TimelineModels => TimelineManager.Instance.TimelineModels;
+
         public TimelineSettings TimelineConfig => TimelineSettings.Instance;
-
-        public string TimelineDirectory => DirectoryHelper.FindSubDirectory(@"resources\timeline");
-
-        private ObservableCollection<TimelineModel> timelineModels = new ObservableCollection<TimelineModel>();
-
-        public ObservableCollection<TimelineModel> TimelineModels => this.timelineModels;
-
-        public bool LoadTimelineModels()
-        {
-            var result = true;
-
-            var dir = this.TimelineDirectory;
-            if (!Directory.Exists(dir))
-            {
-                return result;
-            }
-
-            var list = new List<TimelineModel>();
-            foreach (var file in Directory.GetFiles(dir, "*.xml"))
-            {
-                try
-                {
-                    var tl = TimelineModel.Load(file);
-                    list.Add(tl);
-                }
-                catch (Exception ex)
-                {
-                    this.AppLogger.Error(
-                        ex,
-                        $"[TL] Load error. file={file}");
-
-                    result = false;
-                }
-            }
-
-            WPFHelper.Invoke(() =>
-            {
-                lock (this)
-                {
-                    foreach (var tl in this.TimelineModels)
-                    {
-                        if (tl.IsActive)
-                        {
-                            tl.IsActive = false;
-                        }
-                    }
-
-                    this.TimelineModels.Clear();
-                    this.TimelineModels.AddRange(list.OrderBy(x => x.FileName));
-                    this.currentZoneName = string.Empty;
-                }
-            });
-
-            return result;
-        }
 
         private ICommand openTimelineFolderCommand;
 
@@ -123,7 +70,42 @@ namespace ACT.SpecialSpellTimer.Config.Views
         public ICommand ReloadTimelineFolderCommand =>
             this.reloadTimelineFolderCommand ?? (this.reloadTimelineFolderCommand = new DelegateCommand(async () =>
             {
-                await Task.Run(() => this.LoadTimelineModels());
+                await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
+
+                lock (this)
+                {
+                    this.currentZoneName = string.Empty;
+                }
+            }));
+
+        private ICommand startTimelineCommand;
+
+        public ICommand StartTimelineCommand =>
+            this.startTimelineCommand ?? (this.startTimelineCommand = new DelegateCommand<Button>((button) =>
+            {
+                if (button == null)
+                {
+                    return;
+                }
+
+                var activeTL = TimelineManager.Instance.TimelineModels.FirstOrDefault(x => x.IsActive);
+                if (activeTL == null)
+                {
+                    return;
+                }
+
+                var toStart = button.Content.ToString() == "Start";
+
+                if (toStart)
+                {
+                    activeTL.Controller.StartActivityLine();
+                    button.Content = "Stop";
+                }
+                else
+                {
+                    activeTL.Controller.EndActivityLine();
+                    button.Content = "Start";
+                }
             }));
 
         private ICommand testTimelineCommand;
@@ -261,23 +243,36 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         private void ZoneChanger_Tick(object sender, EventArgs e)
         {
-            lock (this)
+            try
             {
-                if (this.currentZoneName != ActGlobals.oFormActMain.CurrentZone)
+                lock (this)
                 {
-                    this.currentZoneName = ActGlobals.oFormActMain.CurrentZone;
-
-                    foreach (var tl in this.TimelineModels.Where(x => x.IsActive))
+                    if (this.currentZoneName != ActGlobals.oFormActMain.CurrentZone)
                     {
-                        tl.IsActive = false;
-                    }
+                        this.currentZoneName = ActGlobals.oFormActMain.CurrentZone;
 
-                    var nextTimeline = this.TimelineModels.FirstOrDefault(x => x.Controller.IsAvailable);
-                    if (nextTimeline != null)
-                    {
-                        nextTimeline.IsActive = true;
+                        var tls = TimelineManager.Instance.TimelineModels.ToArray();
+
+                        foreach (var tl in tls.Where(x => x.IsActive))
+                        {
+                            tl.Controller.Unload();
+                            tl.IsActive = false;
+                        }
+
+                        var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
+                        if (nextTimeline != null)
+                        {
+                            nextTimeline.Controller.Load();
+                            nextTimeline.IsActive = true;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                this.AppLogger.Error(
+                    ex,
+                    $"[TL] Auto loading error. zone={ActGlobals.oFormActMain.CurrentZone}");
             }
         }
 

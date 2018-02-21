@@ -39,6 +39,22 @@
         </Trigger>
       </Style.Triggers>
     </Style>
+
+    <Style TargetType="ctrl:RichProgressBar">
+      <Style.Triggers>
+        <Trigger Property="Progress" Value="0">
+          <Setter Property="Visibility" Value="Hidden" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+
+    <Style TargetType="ctrl:ProgressCircle">
+      <Style.Triggers>
+        <Trigger Property="Progress" Value="0">
+          <Setter Property="Visibility" Value="Hidden" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
   </UserControl.Resources>
 
   <StackPanel>
@@ -91,7 +107,7 @@
             <DropShadowEffect
               BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
               Direction="0"
-              RenderingBias="Performance"
+              RenderingBias="Quality"
               ShadowDepth="0"
               Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
           </ctrl:OutlineTextBlock.Effect>
@@ -116,7 +132,7 @@
           Margin="0 0 2 0"
           VerticalAlignment="Bottom"
           HorizontalAlignment="Right"
-          Text="{Binding Path=RemainTime, Mode=OneWay, StringFormat=N0}"
+          Text="{Binding Path=RemainTimeText, Mode=OneWay}"
           FontFamily="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}"
           FontWeight="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}"
           FontStyle="{Binding Path=StyleModel.Font.Style, Mode=OneWay}"
@@ -129,7 +145,7 @@
             <DropShadowEffect
               BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
               Direction="0"
-              RenderingBias="Performance"
+              RenderingBias="Quality"
               ShadowDepth="0"
               Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
           </ctrl:OutlineTextBlock.Effect>
@@ -189,7 +205,7 @@
           <DropShadowEffect
             BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
             Direction="0"
-            RenderingBias="Performance"
+            RenderingBias="Quality"
             ShadowDepth="0"
             Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
         </ctrl:OutlineTextBlock.Effect>
@@ -204,7 +220,8 @@
           Thickness="{Binding Path=StyleModel.BarHeight, Mode=OneWay, Converter={StaticResource MultipleConverter}, ConverterParameter=0.5}"
           Radius="{Binding ElementName=CounterText, Path=ActualHeight, Mode=OneWay, Converter={StaticResource MultipleConverter}, ConverterParameter=0.9}"
           Progress="{Binding Path=Progress, Mode=OneWay}"
-          IsCCW="True" />
+          IsCCW="True">
+        </ctrl:ProgressCircle>
 
         <ctrl:OutlineTextBlock
           x:Name="CounterText"
@@ -212,7 +229,7 @@
           Margin="0 0 2 0"
           HorizontalAlignment="Center"
           VerticalAlignment="Center"
-          Text="{Binding Path=RemainTime, Mode=OneWay, StringFormat=N0}"
+          Text="{Binding Path=RemainTimeText, Mode=OneWay}"
           FontFamily="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}"
           FontWeight="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}"
           FontStyle="{Binding Path=StyleModel.Font.Style, Mode=OneWay}"
@@ -225,7 +242,7 @@
             <DropShadowEffect
               BlurRadius="{Binding Path=StyleModel.Font.OutlineThickness, Converter={StaticResource BlurConverter}, Mode=OneWay}"
               Direction="0"
-              RenderingBias="Performance"
+              RenderingBias="Quality"
               ShadowDepth="0"
               Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
           </ctrl:OutlineTextBlock.Effect>

@@ -20,6 +20,31 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         Subroutine
     }
 
+    public static class TimelineElementTypesEx
+    {
+        public static string ToText(
+            this TimelineElementTypes t)
+            => new[]
+            {
+                "timeline",
+                "default",
+                "activity",
+                "trigger",
+                "subroutine",
+            }[(int)t];
+
+        public static TimelineElementTypes FromText(
+            string text)
+        {
+            if (Enum.TryParse<TimelineElementTypes>(text, out TimelineElementTypes e))
+            {
+                return e;
+            }
+
+            return TimelineElementTypes.Timeline;
+        }
+    }
+
     [Serializable]
     public abstract class TimelineBase :
         BindableBase

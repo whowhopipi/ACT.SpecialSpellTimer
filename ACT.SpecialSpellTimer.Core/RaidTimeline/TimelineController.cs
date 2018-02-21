@@ -20,6 +20,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     public enum TimelineStatus
     {
         Unloaded = 0,
+        Loading,
         Loaded,
         Runnning
     }
@@ -31,6 +32,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             => new[]
             {
                 string.Empty,
+                "Loading...",
                 "Standby",
                 "Running",
             }[(int)s];
@@ -61,12 +63,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             this.Model = model;
         }
-
-        public TimelineOverlay View
-        {
-            get;
-            set;
-        } = null;
 
         public TimelineModel Model
         {
@@ -108,11 +104,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// 現在の経過時間
         /// </summary>
-        private TimeSpan CurrentTime
+        public TimeSpan CurrentTime
         {
             get => this.currentTime;
-            set => this.SetProperty(ref this.currentTime, value);
+            private set
+            {
+                if (this.SetProperty(ref this.currentTime, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.CurrentTimeText));
+                }
+            }
         }
+
+        public string CurrentTimeText => this.CurrentTime.ToTLString();
 
         /// <summary>
         /// 前回の判定時刻
@@ -127,8 +131,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             lock (Locker)
             {
+                this.Status = TimelineStatus.Loading;
+
+                CurrentController = this;
+
                 this.LoadActivityLine();
-                this.SetStyle();
+                TimelineOverlay.ShowTimeline(this.Model);
 
                 this.LogWorker = new Thread(this.DetectLogLoop)
                 {
@@ -142,8 +150,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
                 ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
-                CurrentController = this;
                 this.Status = TimelineStatus.Loaded;
+                this.AppLogger.Trace($"[TL] Timeline loaded. name={this.Model.Name}");
             }
         }
 
@@ -153,12 +161,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.isLogWorkerRunning = false;
 
+                TimelineOverlay.CloseTimeline();
+
                 this.CurrentTime = TimeSpan.Zero;
                 this.ClearActivity();
 
                 if (this.LogWorker != null)
                 {
-                    this.LogWorker.Join(TimeSpan.FromSeconds(1));
+                    if (this.LogWorker.IsAlive)
+                    {
+                        this.LogWorker.Join(TimeSpan.FromSeconds(0.2));
+                    }
 
                     if (this.LogWorker.IsAlive)
                     {
@@ -172,62 +185,58 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.logInfoQueue = null;
 
                 CurrentController = null;
+
                 this.Status = TimelineStatus.Unloaded;
+                this.AppLogger.Trace($"[TL] Timeline unloaded. name={this.Model.Name}");
             }
         }
 
         private void LoadActivityLine()
         {
             this.CurrentTime = TimeSpan.Zero;
+            TimelineActivityModel.CurrentTime = TimeSpan.Zero;
             this.ClearActivity();
+
+            var defaultStyle = TimelineSettings.Instance.DefaultStyle;
+            var acts = new List<TimelineActivityModel>();
 
             int seq = 1;
             foreach (var src in this.Model.Activities
-                .Where(x => x.Enabled ?? true))
+                .Where(x => x.Enabled.GetValueOrDefault()))
             {
                 var act = src.Clone();
                 act.Init(seq++);
-                this.AddActivity(act);
-            }
-        }
+                act.RefreshProgress();
+                setStyle(act);
 
-        private void SetStyle()
-        {
-            var defaultStyle = TimelineSettings.Instance.DefaultStyle;
-
-            foreach (var act in this.Model.Activities)
-            {
-                set(act);
+                acts.Add(act);
             }
 
-            foreach (var sub in this.Model.Subroutines)
+            foreach (var sub in this.Model.Subroutines
+                .Where(x => x.Enabled.GetValueOrDefault()))
             {
-                foreach (var act in sub.Activities)
+                foreach (var act in sub.Activities
+                    .Where(x => x.Enabled.GetValueOrDefault()))
                 {
-                    set(act);
+                    setStyle(act);
                 }
             }
 
-            void set(TimelineActivityModel act)
+            this.AddRangeActivity(acts);
+
+            void setStyle(TimelineActivityModel act)
             {
                 if (string.IsNullOrEmpty(act.Style))
                 {
                     act.StyleModel = defaultStyle;
+                    return;
                 }
-                else
-                {
-                    var style = TimelineSettings.Instance.Styles.FirstOrDefault(x =>
-                        string.Equals(x.Name == act.Style, StringComparison.OrdinalIgnoreCase));
 
-                    if (style != null)
-                    {
-                        act.StyleModel = style;
-                    }
-                    else
-                    {
-                        act.StyleModel = defaultStyle;
-                    }
-                }
+                act.StyleModel = TimelineSettings.Instance.Styles
+                    .FirstOrDefault(x => string.Equals(
+                        x.Name == act.Style,
+                        StringComparison.OrdinalIgnoreCase)) ??
+                    defaultStyle;
             }
         }
 
@@ -263,6 +272,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public int RemoveAllActivity(
             Func<TimelineActivityModel, bool> condition)
         {
+            var count = 0;
+
             lock (this)
             {
                 var itemsToRemove = this.ActivityLine.Where(condition).ToList();
@@ -272,8 +283,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     this.ActivityLine.Remove(itemToRemove);
                 }
 
-                return itemsToRemove.Count;
+                count = itemsToRemove.Count;
             }
+
+            return count;
         }
 
         public void ClearActivity()
@@ -303,7 +316,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 // 対象のサブルーチンを取得する
                 var targetSub = this.Model.Subroutines.FirstOrDefault(x =>
-                    x.Enabled ?? true &&
+                    x.Enabled.GetValueOrDefault() &&
                     string.Equals(x.Name == name, StringComparison.OrdinalIgnoreCase));
 
                 if (targetSub == null)
@@ -313,7 +326,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 // サブルーチン配下のActivityを取得する
                 var acts = targetSub.Activities
-                    .Where(x => x.Enabled ?? true)
+                    .Where(x => x.Enabled.GetValueOrDefault())
                     .Select(x => x.Clone());
 
                 if (!acts.Any())
@@ -384,7 +397,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 // サブルーチンに飛ぶ
                 var targetSub = this.Model.Subroutines.FirstOrDefault(x =>
-                    x.Enabled ?? true &&
+                    x.Enabled.GetValueOrDefault() &&
                     string.Equals(x.Name == name, StringComparison.OrdinalIgnoreCase));
 
                 if (targetSub == null)
@@ -394,7 +407,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 // サブルーチン配下のActivityを取得する
                 var acts = targetSub.Activities
-                    .Where(x => x.Enabled ?? true)
+                    .Where(x => x.Enabled.GetValueOrDefault())
                     .Select(x => x.Clone());
 
                 if (!acts.Any())
@@ -561,7 +574,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 detectors = (
                     from x in this.Model.Triggers
                     where
-                    x.Enabled ?? true &&
+                    x.Enabled.GetValueOrDefault() &&
                     !string.IsNullOrEmpty(x.SyncKeyword) &&
                     x.SynqRegex != null
                     select
@@ -570,7 +583,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 var acts =
                     from x in this.ActivityLine
                     where
-                    x.Enabled ?? true &&
+                    x.Enabled.GetValueOrDefault() &&
                     !string.IsNullOrEmpty(x.SyncKeyword) &&
                     x.SynqRegex != null &&
                     this.CurrentTime >= x.Time + TimeSpan.FromSeconds(x.SyncOffsetStart.Value) &&
@@ -602,11 +615,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     switch (key.Category)
                     {
                         case KewordTypes.Start:
-                            this.StartActivityLine();
+                            WPFHelper.BeginInvoke(() => this.StartActivityLine());
                             break;
 
                         case KewordTypes.End:
-                            this.EndActivityLine();
+                            WPFHelper.BeginInvoke(() => this.EndActivityLine());
                             break;
                     }
                 }
@@ -745,6 +758,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.isRunning = true;
                 this.Status = TimelineStatus.Runnning;
+                this.AppLogger.Trace($"[TL] Timeline started. name={this.Model.Name}");
             }
         }
 
@@ -762,6 +776,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.isRunning = false;
                 this.Status = TimelineStatus.Loaded;
+                this.AppLogger.Trace($"[TL] Timeline stoped. name={this.Model.Name}");
             }
         }
 
@@ -796,9 +811,28 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
 
             // 現在の時間を更新する
-            foreach (var act in this.ActivityLine)
+            TimelineActivityModel.CurrentTime = this.CurrentTime;
+
+            // 表示するものだけ進捗状況を更新する
+            var toShow =
+                from x in this.ActivityLine
+                where
+                x.Enabled.GetValueOrDefault() &&
+                !x.IsDone &&
+                !string.IsNullOrEmpty(x.Text)
+                select
+                x;
+
+            var count = 0;
+            foreach (var act in toShow)
             {
-                act.CurrentTime = this.CurrentTime;
+                if (count >= TimelineSettings.Instance.ShowActivitiesCount * 2)
+                {
+                    break;
+                }
+
+                act.RefreshProgress();
+                count++;
             }
 
             // 通知を判定する
@@ -865,22 +899,25 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region 通知に関するメソッド
 
-        public const string TimelineNoticeLog =
-            "00:0038:Notice from TL. text={0}, notice={1}, offset={2:N1}";
-
         private void NotifyActivity(
             TimelineActivityModel act)
         {
             act.IsNotified = true;
 
-            var offset = this.CurrentTime - act.Time;
-            var log = string.Format(
-                TimelineNoticeLog,
-                act.Text,
-                act.Notice,
-                offset.TotalSeconds);
+            if (string.IsNullOrEmpty(act.Name) &&
+                string.IsNullOrEmpty(act.Text) &&
+                string.IsNullOrEmpty(act.Notice))
+            {
+                return;
+            }
 
-            ActGlobals.oFormActMain.ParseRawLogLine(false, DateTime.Now, log);
+            var now = DateTime.Now;
+            var offset = this.CurrentTime - act.Time;
+            var log =
+                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:Notice from TL. " +
+                $"name={act.Name}, text={act.Text}, notice={act.Notice}, offset={offset.TotalSeconds:N1}";
+
+            ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
 
             if (string.IsNullOrEmpty(act.Notice))
             {
@@ -919,13 +956,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private void NotifyTrigger(
             TimelineTriggerModel tri)
         {
-            var log = string.Format(
-                TimelineNoticeLog,
-                tri.Text,
-                tri.Notice,
-                0);
+            if (string.IsNullOrEmpty(tri.Name) &&
+                string.IsNullOrEmpty(tri.Text) &&
+                string.IsNullOrEmpty(tri.Notice))
+            {
+                return;
+            }
 
-            ActGlobals.oFormActMain.ParseRawLogLine(false, DateTime.Now, log);
+            var now = DateTime.Now;
+            var log =
+                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:Notice from TL. " +
+                $"name={tri.Name}, text={tri.Text}, notice={tri.Notice}";
+
+            ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
 
             if (string.IsNullOrEmpty(tri.Notice))
             {
