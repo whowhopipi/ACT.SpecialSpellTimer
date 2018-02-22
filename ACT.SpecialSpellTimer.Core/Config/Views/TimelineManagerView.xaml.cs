@@ -94,6 +94,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         private void ZoneChanger_Tick(object sender, EventArgs e)
         {
+            var log = string.Empty;
+
             try
             {
                 lock (this)
@@ -101,6 +103,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     if (this.currentZoneName != ActGlobals.oFormActMain.CurrentZone)
                     {
                         this.currentZoneName = ActGlobals.oFormActMain.CurrentZone;
+
+                        log = $"[TL] CurrentZoneChanged new_zone={currentZoneName}.";
 
                         var tls = TimelineManager.Instance.TimelineModels.ToArray();
 
@@ -117,6 +121,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                             {
                                 nextTimeline.Controller.Load();
                                 nextTimeline.IsActive = true;
+
+                                log = $"[TL] CurrentZoneChanged new_zone={currentZoneName}, active_timeline={nextTimeline.Name}.";
                             }
                         }
                     }
@@ -135,6 +141,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 this.AppLogger.Error(
                     ex,
                     $"[TL] Auto loading error. zone={ActGlobals.oFormActMain.CurrentZone}");
+            }
+            finally
+            {
+                if (!string.IsNullOrEmpty(log))
+                {
+                    this.AppLogger.Trace(log);
+                }
             }
         }
 

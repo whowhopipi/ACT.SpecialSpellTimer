@@ -222,7 +222,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
             }
 
+            // 一括して登録する
             this.AddRangeActivity(acts);
+
+            // 表示設定を更新しておく
+            this.RefreshActivityLineVisibility();
 
             void setStyle(TimelineActivityModel act)
             {
@@ -238,9 +242,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         StringComparison.OrdinalIgnoreCase)) ??
                     defaultStyle;
             }
-
-            // 表示設定を更新しておく
-            this.RefreshActivityLineVisibility();
         }
 
         #region Activityライン捌き

@@ -134,27 +134,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
 
                 await WPFHelper.BeginInvoke(() =>
-                {
-                    var combatLogs = this.CombatLogs.Cast<CombatLog>();
-
-                    foreach (var log in combatLogs)
-                    {
-                        log.IsOrigin = false;
-
-                        var ts = log.TimeStamp - originLog.TimeStamp;
-                        if (ts.TotalMinutes <= 60 &&
-                            ts.TotalMinutes >= -60)
-                        {
-                            log.TimeStampElapted = ts;
-                        }
-                        else
-                        {
-                            log.TimeStampElapted = TimeSpan.Zero;
-                        }
-                    }
-
-                    originLog.IsOrigin = true;
-                });
+                    CombatAnalyzer.Instance.SetOrigin(
+                        this.CombatLogs.Cast<CombatLog>(),
+                        originLog));
             }));
 
         private ICommand changeSecondsFormatCommand;
@@ -168,9 +150,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
 
                 await WPFHelper.BeginInvoke(() =>
-                {
-                    this.CombatLogs.Refresh();
-                });
+                    this.CombatLogs.Refresh());
             }));
 
         private ICommand copyCommand;

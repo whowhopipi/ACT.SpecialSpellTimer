@@ -13,7 +13,7 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-  d:DataContext="{d:DesignInstance Type=local:TimelineManagerView, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:TimelineManagerView}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   Background="White"
   FontFamily="{DynamicResource UIFont}"

@@ -148,6 +148,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public const string WipeoutLog = "00:0038:wipeout";
         public const string ImportLog = "00:0038:import";
+        public const string CombatStartNow = "0039:戦闘開始！";
 
         public static readonly Regex ActionRegex = new Regex(
             @"\[.+?\] 00:....:(?<actor>.+?)の「(?<skill>.+?)」$",
@@ -1037,6 +1038,34 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         #endregion Store Log
 
         /// <summary>
+        /// ログに基点をセットする
+        /// </summary>
+        /// <param name="logs">logs</param>
+        /// <param name="origin">origin log</param>
+        public void SetOrigin(
+            IEnumerable<CombatLog> logs,
+            CombatLog origin)
+        {
+            foreach (var log in logs)
+            {
+                log.IsOrigin = false;
+
+                var ts = log.TimeStamp - origin.TimeStamp;
+                if (ts.TotalMinutes <= 60 &&
+                    ts.TotalMinutes >= -60)
+                {
+                    log.TimeStampElapted = ts;
+                }
+                else
+                {
+                    log.TimeStampElapted = TimeSpan.Zero;
+                }
+            }
+
+            origin.IsOrigin = true;
+        }
+
+        /// <summary>
         /// ログ行をインポートして解析する
         /// </summary>
         /// <param name="logLines">インポートするログ行</param>
@@ -1095,6 +1124,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                     this.AnalyzeLogLine(arg);
                 }
+
+                var startCombat = this.CurrentCombatLogList.FirstOrDefault(x => x.Raw.Contains(CombatStartNow));
+                if (startCombat != null)
+                {
+                    this.SetOrigin(this.CurrentCombatLogList, startCombat);
+                }
             }
             finally
             {
@@ -1119,6 +1154,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             if (!logs.Any())
             {
                 return;
+            }
+
+            var startCombat = logs.FirstOrDefault(x => x.Raw.Contains(CombatStartNow));
+            if (startCombat != null)
+            {
+                this.SetOrigin(logs, startCombat);
             }
 
             var timeStamp = logs.Last().TimeStamp;
@@ -1189,7 +1230,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     var col = 0;
 
                     writeCell<long>(sheet, row, col++, data.No, noStyle);
-                    writeCell<DateTime>(sheet, row, col++, data.TimeStamp, timestampStyle);
                     writeCell<DateTime>(sheet, row, col++, timeAsDateTime, timeStyle);
                     writeCell<double>(sheet, row, col++, data.TimeStampElapted.TotalSeconds, noStyle);
                     writeCell<string>(sheet, row, col++, data.LogTypeName, textStyle);
@@ -1197,9 +1237,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     writeCell<decimal>(sheet, row, col++, data.HPRate, perStyle);
                     writeCell<string>(sheet, row, col++, data.Activity, textStyle);
                     writeCell<string>(sheet, row, col++, data.RawWithoutTimestamp, textStyle);
-                    writeCell<string>(sheet, row, col++, data.Zone, textStyle);
                     writeCell<string>(sheet, row, col++, data.Text, textStyle);
                     writeCell<string>(sheet, row, col++, data.SyncKeyword, textStyle);
+                    writeCell<DateTime>(sheet, row, col++, data.TimeStamp, timestampStyle);
+                    writeCell<string>(sheet, row, col++, data.Zone, textStyle);
 
                     row++;
                 }
@@ -1356,11 +1397,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            var startIndex = 0;
+
+            var origin = combatLogs.FirstOrDefault(x => x.IsOrigin);
+            if (origin != null)
+            {
+                startIndex = combatLogs.IndexOf(origin);
+            }
+            else
+            {
+                var startCombat = combatLogs.FirstOrDefault(x => x.Raw.Contains(CombatStartNow));
+                if (startCombat != null)
+                {
+                    startIndex = combatLogs.IndexOf(startCombat);
+                }
+            }
+
             var sb = new StringBuilder(5012);
 
             using (var sw = new StreamWriter(file, false, new UTF8Encoding(false)))
             {
-                foreach (var log in combatLogs)
+                foreach (var log in combatLogs.Skip(startIndex))
                 {
                     sb.AppendLine(log.Raw
                         .Replace("(?<pcid>.{8})", "00000000"));
