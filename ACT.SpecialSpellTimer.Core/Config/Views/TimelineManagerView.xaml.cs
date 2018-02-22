@@ -9,14 +9,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
-using FFXIV.Framework.Dialog;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 
@@ -46,6 +44,17 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 TimelineManager.Instance.LoadTimelineModels();
                 this.SetupZoneChanger();
             }
+
+            this.StyleListView.SelectionChanged += (x, y) =>
+            {
+                if (this.TimelineConfig.DesignMode)
+                {
+                    var selectedStyle = this.StyleListView.SelectedItem as TimelineStyle;
+
+                    TimelineOverlay.HideDesignOverlay(false);
+                    TimelineOverlay.ShowDesignOverlay(selectedStyle);
+                }
+            };
         }
 
         public string TimelineDirectory => TimelineManager.Instance.TimelineDirectory;
@@ -279,25 +288,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                 if (isChecked.Value)
                 {
-                    TimelineOverlay.ShowDesignOverlay();
+                    var selectedStyle = this.StyleListView.SelectedItem as TimelineStyle;
+                    TimelineOverlay.ShowDesignOverlay(selectedStyle);
                 }
                 else
                 {
                     TimelineOverlay.HideDesignOverlay();
                 }
             }));
-
-        private ICommand CreateChangeColorCommand(
-            Func<Color> getCurrentColor,
-            Action<Color> changeColorAction)
-            => new DelegateCommand(() =>
-            {
-                var result = ColorDialogWrapper.ShowDialog(getCurrentColor(), false);
-                if (result.Result)
-                {
-                    changeColorAction.Invoke(result.Color);
-                }
-            });
 
         private ICommand addStyleCommand;
 
@@ -316,8 +314,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
 
                 style.Name = "New Style";
+                style.IsDefault = false;
+
                 TimelineSettings.Instance.Styles.Add(style);
-                this.StyleListView.SelectedItem = style;
             }));
 
         private ICommand deleteStyleCommand;
@@ -332,13 +331,18 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     if (TimelineSettings.Instance.Styles.Count > 1)
                     {
                         TimelineSettings.Instance.Styles.Remove(style);
-                        this.StyleListView.SelectedItem = TimelineSettings.Instance.Styles.First();
+                        this.StyleListView.SelectedIndex = 0;
                     }
                 }
             }));
 
         #endregion Commands 右側ペイン
 
+        /// <summary>
+        /// トップアクティビティ or トップじゃないアクティビティへの表示制御を反映させる
+        /// </summary>
+        /// <param name="sender">sender</param>
+        /// <param name="e">event arg</param>
         private void TopActivityStyle_ValueChanged(
             object sender,
             RoutedPropertyChangedEventArgs<object> e)

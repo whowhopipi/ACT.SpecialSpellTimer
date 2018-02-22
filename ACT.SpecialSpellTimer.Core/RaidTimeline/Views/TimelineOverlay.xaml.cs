@@ -20,17 +20,21 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         private static TimelineOverlay designOverlay;
 
-        public static void ShowDesignOverlay()
+        public static void ShowDesignOverlay(
+            TimelineStyle testStyle = null)
         {
             if (designOverlay == null)
             {
+                var tl = TimelineModel.CreateDummyTimeline(testStyle);
+                tl.Controller.RefreshActivityLineVisibility();
+
                 designOverlay = CreateDesignOverlay();
-                designOverlay.Model = TimelineModel.DummyTimeline;
-                TimelineModel.DummyTimeline.Controller.RefreshActivityLineVisibility();
+                designOverlay.Model = tl;
             }
 
             // 本番ビューを隠す
-            if (TimelineView.OverlayVisible)
+            if (TimelineView != null &&
+                TimelineView.OverlayVisible)
             {
                 TimelineView.OverlayVisible = false;
             }
@@ -39,20 +43,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             designOverlay.OverlayVisible = true;
         }
 
-        public static void HideDesignOverlay()
+        public static void HideDesignOverlay(
+            bool restoreTimelineView = true)
         {
             if (designOverlay != null)
             {
                 designOverlay.OverlayVisible = false;
                 designOverlay.Hide();
+                designOverlay.Close();
+                designOverlay = null;
 
-                // 本番ビューを復帰させる
-                if (TimelineSettings.Instance.OverlayVisible)
+                // 本番ビューを復帰させるか？
+                if (restoreTimelineView)
                 {
-                    if (!TimelineView.OverlayVisible &&
-                        TimelineView.Model != null)
+                    if (TimelineSettings.Instance.OverlayVisible)
                     {
-                        TimelineView.OverlayVisible = true;
+                        if (TimelineView != null &&
+                            !TimelineView.OverlayVisible &&
+                            TimelineView.Model != null)
+                        {
+                            TimelineView.OverlayVisible = true;
+                        }
                     }
                 }
             }
@@ -69,21 +80,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         #region View
 
-        private static TimelineOverlay timelineView;
-
-        private static TimelineOverlay TimelineView
-        {
-            get
-            {
-                if (timelineView == null)
-                {
-                    timelineView = new TimelineOverlay();
-                    timelineView.Show();
-                }
-
-                return timelineView;
-            }
-        }
+        private static TimelineOverlay TimelineView { get; set; }
 
         public static void ShowTimeline(
             TimelineModel timelineModel)
@@ -96,6 +93,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             WPFHelper.Invoke(() =>
             {
+                if (TimelineView == null)
+                {
+                    TimelineView = new TimelineOverlay();
+                    TimelineView.Show();
+                }
+
                 TimelineView.Model = timelineModel;
                 TimelineView.OverlayVisible = true;
 
@@ -106,9 +109,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         public static void ChangeClickthrough(
             bool isClickthrough)
         {
-            if (timelineView != null)
+            if (TimelineView != null)
             {
-                timelineView.IsClickthrough = isClickthrough;
+                TimelineView.IsClickthrough = isClickthrough;
             }
         }
 
@@ -116,12 +119,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         {
             WPFHelper.Invoke(() =>
             {
-                if (TimelineOverlay.timelineView != null)
+                if (TimelineView != null)
                 {
-                    TimelineOverlay.timelineView.Model = null;
-                    TimelineOverlay.timelineView.DataContext = null;
-                    TimelineOverlay.timelineView.Close();
-                    TimelineOverlay.timelineView = null;
+                    TimelineView.Model = null;
+                    TimelineView.DataContext = null;
+                    TimelineView.Close();
+                    TimelineView = null;
                 }
             });
         }
@@ -139,6 +142,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             this.LoadResourcesDictionary();
 
             this.ToNonActive();
+            this.IsClickthrough = this.Config.Clickthrough;
+
             this.MouseLeftButtonDown += (x, y) => this.DragMove();
 
             this.Opacity = 0;
@@ -197,10 +202,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                     if (this.isClickthrough.Value)
                     {
                         this.ToTransparent();
+                        this.ResizeMode = ResizeMode.NoResize;
                     }
                     else
                     {
                         this.ToNotTransparent();
+                        this.ResizeMode = ResizeMode.CanResizeWithGrip;
                     }
                 }
             }

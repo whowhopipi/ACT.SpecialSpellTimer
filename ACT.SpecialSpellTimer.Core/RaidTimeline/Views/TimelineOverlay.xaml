@@ -19,11 +19,13 @@
   WindowStyle="None"
   AllowsTransparency="True"
   ShowInTaskbar="False"
-  SizeToContent="WidthAndHeight"
+  ResizeMode="CanResizeWithGrip"
   Title="Timeline"
   Background="#01000000"
   Left="{Binding Path=Config.Left, Mode=TwoWay}"
   Top="{Binding Path=Config.Top, Mode=TwoWay}"
+  Width="{Binding Path=Config.Width, Mode=TwoWay}"
+  Height="{Binding Path=Config.Height, Mode=TwoWay}"
   d:DataContext="{d:DesignInstance Type=local:TimelineOverlay}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}">
 

@@ -134,7 +134,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.SetProperty(ref this.barColor, value))
                 {
-                    this.RaisePropertyChanged(nameof(this.BarColor));
+                    this.RaisePropertyChanged(nameof(this.BarColorBrush));
                 }
             }
         }
@@ -232,6 +232,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             return clone;
         }
 
+        #region Change Default
+
         private ICommand changeDefaultCommand;
 
         public ICommand ChangeDefaultCommand =>
@@ -256,71 +258,75 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
             }));
 
-        #region Change Font
+        #endregion Change Default
 
-        private ICommand CreateChangeFontCommand(
-            Func<FontInfo> getCurrentoFont,
-            Action<FontInfo> changeFont)
-            => new DelegateCommand(() =>
-            {
-                var result = FontDialogWrapper.ShowDialog(getCurrentoFont());
-                if (result.Result)
-                {
-                    changeFont.Invoke(result.Font);
-                }
-            });
+        #region Change Font
 
         private ICommand changeFontCommand;
 
         public ICommand ChangeFontCommand =>
-            this.changeFontCommand ?? (this.changeFontCommand = this.CreateChangeFontCommand(
-                () => this.Font,
-                (font) =>
+            this.changeFontCommand ?? (this.changeFontCommand = new DelegateCommand<TimelineStyle>((style) =>
+            {
+                if (style == null)
                 {
-                    this.Font.FontFamily = font.FontFamily;
-                    this.Font.Size = font.Size;
-                    this.Font.Style = font.Style;
-                    this.Font.Weight = font.Weight;
-                    this.Font.Stretch = font.Stretch;
-                    this.Font.RaisePropertyChanged(nameof(this.Font.DisplayText));
-                }));
+                    return;
+                }
+
+                var result = FontDialogWrapper.ShowDialog(style.Font);
+                if (result.Result)
+                {
+                    style.Font = result.Font;
+                }
+            }));
 
         #endregion Change Font
 
         #region Change Colors
 
-        private ICommand CreateChangeColorCommand(
-            Func<Color> getCurrentColor,
-            Action<Color> changeColorAction)
-            => new DelegateCommand(() =>
-            {
-                var result = ColorDialogWrapper.ShowDialog(getCurrentColor(), true);
-                if (result.Result)
-                {
-                    changeColorAction.Invoke(result.Color);
-                }
-            });
-
         private ICommand changeFontColorCommand;
 
         public ICommand ChangeFontColorCommand =>
-            this.changeFontColorCommand ?? (this.changeFontColorCommand = this.CreateChangeColorCommand(
-                () => this.Color,
-                (color) => this.Color = color));
+            this.changeFontColorCommand ?? (this.changeFontColorCommand = new DelegateCommand<TimelineStyle>((style) =>
+            {
+                if (style != null)
+                {
+                    var result = ColorDialogWrapper.ShowDialog(style.Color, true);
+                    if (result.Result)
+                    {
+                        style.Color = result.Color;
+                    }
+                }
+            }));
 
         private ICommand changeFontOutlineColorCommand;
 
         public ICommand ChangeFontOutlineColorCommand =>
-            this.changeFontOutlineColorCommand ?? (this.changeFontOutlineColorCommand = this.CreateChangeColorCommand(
-                () => this.OutlineColor,
-                (color) => this.OutlineColor = color));
+            this.changeFontOutlineColorCommand ?? (this.changeFontOutlineColorCommand = new DelegateCommand<TimelineStyle>((style) =>
+            {
+                if (style != null)
+                {
+                    var result = ColorDialogWrapper.ShowDialog(style.OutlineColor, true);
+                    if (result.Result)
+                    {
+                        style.OutlineColor = result.Color;
+                    }
+                }
+            }));
 
         private ICommand changeBarColorCommand;
 
         public ICommand ChangeBarColorCommand =>
-            this.changeBarColorCommand ?? (this.changeBarColorCommand = this.CreateChangeColorCommand(
-                () => this.BarColor,
-                (color) => this.BarColor = color));
+            this.changeBarColorCommand ?? (this.changeBarColorCommand = new DelegateCommand<TimelineStyle>((style) =>
+            {
+                if (style != null)
+                {
+                    var result = ColorDialogWrapper.ShowDialog(style.BarColor, true);
+                    if (result.Result)
+                    {
+                        style.BarColor = result.Color;
+                    }
+                }
+            }));
 
         #endregion Change Colors
 
@@ -329,15 +335,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private ICommand selectIconCommand;
 
         public ICommand SelectIconCommand =>
-            this.selectIconCommand ?? (this.selectIconCommand = new DelegateCommand(() =>
+            this.selectIconCommand ?? (this.selectIconCommand = new DelegateCommand<TimelineStyle>((style) =>
             {
+                if (style == null)
+                {
+                    return;
+                }
+
                 var view = new IconBrowserView();
 
-                view.SelectedIconName = this.Icon;
+                view.SelectedIconName = style.Icon;
 
                 if (view.ShowDialog() ?? false)
                 {
-                    this.Icon = view.SelectedIconName;
+                    style.Icon = view.SelectedIconName;
                 }
             }));
 

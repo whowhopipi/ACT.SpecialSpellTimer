@@ -575,19 +575,24 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private static TimelineModel dummyTimeline;
 
-        public static TimelineModel DummyTimeline => dummyTimeline ?? (dummyTimeline = CreateDummyTimeline());
+        public static TimelineModel DummyTimeline =>
+            dummyTimeline ?? (dummyTimeline = CreateDummyTimeline());
 
-        private static TimelineModel CreateDummyTimeline()
+        public static TimelineModel CreateDummyTimeline(
+            TimelineStyle testStyle = null)
         {
             var tl = new TimelineModel();
 
-            tl.Name = "ダミータイムライン";
-            tl.Zone = "Dummy Zone V1.0 (Savage)";
+            tl.Name = "サンプルタイムライン";
+            tl.Zone = "Hojoring Zone v1.0 (Ultimate)";
 
-            var defaultStyle = TimelineStyle.SuperDefaultStyle;
-            if (!WPFHelper.IsDesignMode)
+            if (testStyle == null)
             {
-                defaultStyle = TimelineSettings.Instance.DefaultStyle;
+                testStyle = TimelineStyle.SuperDefaultStyle;
+                if (!WPFHelper.IsDesignMode)
+                {
+                    testStyle = TimelineSettings.Instance.DefaultStyle;
+                }
             }
 
             var act1 = new TimelineActivityModel()
@@ -598,9 +603,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Time = TimeSpan.FromSeconds(10.1),
                 Parent = new TimelineSubroutineModel()
                 {
-                    Name = "ダミーフェーズ"
+                    Name = "PHASE-1"
                 },
-                StyleModel = defaultStyle,
+                StyleModel = testStyle,
             };
 
             var act2 = new TimelineActivityModel()
@@ -609,7 +614,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Seq = 2,
                 Text = "ツイスター",
                 Time = TimeSpan.FromSeconds(16.1),
-                StyleModel = defaultStyle,
+                StyleModel = testStyle,
             };
 
             var act3 = new TimelineActivityModel()
@@ -618,8 +623,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Seq = 3,
                 Text = "メガフレア",
                 Time = TimeSpan.FromSeconds(20.1),
-                CallTarget = "フェーズ2",
-                StyleModel = defaultStyle,
+                CallTarget = "PHASE-2",
+                StyleModel = testStyle,
             };
 
             tl.Controller.ActivityLine.Add(act1);
@@ -634,7 +639,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     Seq = act3.Seq + i,
                     Text = "アクション" + i,
                     Time = TimeSpan.FromSeconds(30 + i),
-                    StyleModel = defaultStyle,
+                    StyleModel = testStyle,
                 };
 
                 tl.Controller.ActivityLine.Add(a);

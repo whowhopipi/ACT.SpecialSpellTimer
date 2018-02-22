@@ -79,6 +79,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.top, Math.Round(value));
         }
 
+        private double width = 300;
+
+        public double Width
+        {
+            get => this.width;
+            set => this.SetProperty(ref this.width, Math.Round(value));
+        }
+
+        private double height = 400;
+
+        public double Height
+        {
+            get => this.height;
+            set => this.SetProperty(ref this.height, Math.Round(value));
+        }
+
         private bool clickthrough = false;
 
         public bool Clickthrough
