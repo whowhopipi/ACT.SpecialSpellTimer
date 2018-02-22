@@ -35,6 +35,7 @@
   <system:String x:Key="Common_Import">インポート</system:String>
   <system:String x:Key="Common_Export">エクスポート</system:String>
   <system:String x:Key="Common_Copy">コピー</system:String>
+  <system:String x:Key="Common_AdvancedSettings">高度な設定</system:String>
 
   <system:String x:Key="Common_VisibleSpell">スペルパネルに表示する</system:String>
   <system:String x:Key="Common_VisibleSpellDiscription">OFFの場合はサウンド専用という扱いになる。</system:String>
@@ -240,4 +241,5 @@
   <system:String x:Key="Timeline_Header">ヘッダ</system:String>
   <system:String x:Key="Timeline_ShowHeader">ヘッダを表示する</system:String>
   <system:String x:Key="Timeline_HeaderStyle">ヘッダのスタイル</system:String>
+  <system:String x:Key="Timeline_OpenResourcesDictionary">ResourcesDictionary.xaml の配置場所を開く</system:String>
 </ResourceDictionary>

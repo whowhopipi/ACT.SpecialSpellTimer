@@ -35,6 +35,7 @@
   <system:String x:Key="Common_Import">Import</system:String>
   <system:String x:Key="Common_Export">Export</system:String>
   <system:String x:Key="Common_Copy">Copy</system:String>
+  <system:String x:Key="Common_AdvancedSettings">高度な設定</system:String>
 
   <system:String x:Key="Common_VisibleSpell">Show visual timer and progress bar</system:String>
   <system:String x:Key="Common_VisibleSpellDiscription">For OFF, only for sound</system:String>

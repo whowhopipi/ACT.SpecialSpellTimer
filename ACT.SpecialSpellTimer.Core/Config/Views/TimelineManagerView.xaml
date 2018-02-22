@@ -229,13 +229,10 @@
 
             <Label Margin="0 15 0 0" Content="{DynamicResource Timeline_NextActivityBrightness}" />
             <xctk:DoubleUpDown Value="{Binding Path=TimelineConfig.NextActivityBrightness, Mode=TwoWay}" FormatString="N2" Increment="0.01" Width="80" HorizontalAlignment="Left" ValueChanged="TopActivityStyle_ValueChanged" />
-          </StackPanel>
-          <!-- 見た目の左側 end -->
 
-          <StackPanel Grid.Column="1" Margin="0 90 40 0">
             <!-- ヘッダ -->
-            <Label Margin="0 01 0 0" Content="{DynamicResource Timeline_Header}" FontWeight="Bold" />
-            <StackPanel Margin="10 0 0 0">
+            <Label Margin="0 20 0 0" Content="{DynamicResource Timeline_Header}" FontWeight="Bold" />
+            <StackPanel Margin="0 0 0 0">
               <CheckBox Margin="0 8 0 0" Content="{DynamicResource Timeline_ShowHeader}" IsChecked="{Binding Path=TimelineConfig.IndicatorVisible, Mode=TwoWay}" />
 
               <Label Margin="0 15 0 0" Content="{DynamicResource Timeline_HeaderStyle}" />
@@ -245,6 +242,10 @@
                 DisplayMemberPath="Name"
                 SelectedValue="{Binding Path=TimelineConfig.IndicatorStyle, Mode=TwoWay}" />
             </StackPanel>
+          </StackPanel>
+          <!-- 見た目の左側 end -->
+
+          <StackPanel Grid.Column="1" Margin="0 90 40 0">
           </StackPanel>
 
           <!-- 見た目の右側 -->
@@ -370,10 +371,13 @@
               <!-- Style詳細 end -->
             </Grid>
 
-            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 5 0 0">
-              <Button Content="Add" Padding="5 0 5 0" Command="{Binding Path=AddStyleCommand, Mode=OneWay}" />
-              <Button Margin="5 0 0 0" Content="Delete" Padding="5 0 5 0" Command="{Binding Path=DeleteStyleCommand, Mode=OneWay}" />
-            </StackPanel>
+            <DockPanel Grid.Row="2" Margin="0 5 0 0">
+              <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <Button Content="Add" Padding="5 0 5 0" Command="{Binding Path=AddStyleCommand, Mode=OneWay}" />
+                <Button Margin="5 0 0 0" Content="Delete" Padding="5 0 5 0" Command="{Binding Path=DeleteStyleCommand, Mode=OneWay}" />
+              </StackPanel>
+              <Button DockPanel.Dock="Right" Padding="5 0 5 0" Content="{DynamicResource Common_AdvancedSettings}" HorizontalAlignment="Right" VerticalContentAlignment="Center" FontSize="13" ToolTip="{DynamicResource Timeline_OpenResourcesDictionary}" Command="{Binding OpenResourcesFolderCommand}" />
+            </DockPanel>
           </Grid>
           <!-- 見た目の右側 end -->
         </Grid>

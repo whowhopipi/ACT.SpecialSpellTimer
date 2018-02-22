@@ -13,6 +13,7 @@ using System.Windows.Threading;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
+using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Globalization;
@@ -350,6 +351,18 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         TimelineSettings.Instance.Styles.Remove(style);
                         this.StyleListView.SelectedIndex = 0;
                     }
+                }
+            }));
+
+        private ICommand openResourcesFolderCommand;
+
+        public ICommand OpenResourcesFolderCommand =>
+            this.openResourcesFolderCommand ?? (this.openResourcesFolderCommand = new DelegateCommand(() =>
+            {
+                var dir = DirectoryHelper.FindSubDirectory(@"Resources\Styles");
+                if (Directory.Exists(dir))
+                {
+                    Process.Start(dir);
                 }
             }));
 
