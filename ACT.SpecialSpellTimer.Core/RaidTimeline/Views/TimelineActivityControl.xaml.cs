@@ -29,13 +29,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         public TimelineActivityControl()
         {
-#if DEBUG
-            if (FFXIV.Framework.Common.WPFHelper.IsDesignMode &&
-                this.Activity == null)
-            {
-                this.Activity = DummyActivity;
-            }
-#endif
             this.InitializeComponent();
             this.LoadResourcesDictionary();
         }
@@ -45,6 +38,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             get => this.DataContext as TimelineActivityModel;
             set => this.DataContext = value;
         }
+
+        public TimelineSettings Config => TimelineSettings.Instance;
 
         #region Resources Dictionary
 

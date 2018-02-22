@@ -362,6 +362,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.isVisible, value);
         }
 
+        private bool isTop = false;
+
+        [XmlIgnore]
+        public bool IsTop
+        {
+            get => this.isTop;
+            set => this.SetProperty(ref this.isTop, value);
+        }
+
         [XmlIgnore]
         public string JumpDestination => (
             !string.IsNullOrEmpty(this.CallTarget) ?

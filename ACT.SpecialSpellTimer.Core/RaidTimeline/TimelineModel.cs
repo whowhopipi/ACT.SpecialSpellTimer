@@ -429,9 +429,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public ICollectionView ActivityView => this.ActivitySource?.View;
 
-        public TimelineActivityModel TopActivity => this.ActivityView?.Cast<TimelineActivityModel>().FirstOrDefault();
-
-        public string SubName => (this.TopActivity?.Parent as TimelineSubroutineModel)?.Name;
+        public string SubName => (
+            this.ActivityView?.Cast<TimelineActivityModel>()?
+            .FirstOrDefault()?
+            .Parent as TimelineSubroutineModel)?.Name;
 
         public string DisplayName =>
             !string.IsNullOrEmpty(this.Name) ?
@@ -448,41 +449,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             };
 
             cvs.Filter += (x, y) =>
-            {
-                y.Accepted = false;
+                y.Accepted = (y.Item as TimelineActivityModel).IsVisible;
 
-                var maxTime = this.Controller.CurrentTime.Add(
-                    TimeSpan.FromSeconds(TimelineSettings.Instance.ShowActivitiesTime));
-
-                var act = y.Item as TimelineActivityModel;
-
-                if (!act.Enabled.GetValueOrDefault())
-                {
-                    return;
-                }
-
-                if (act.IsDone)
-                {
-                    return;
-                }
-
-                if (string.IsNullOrEmpty(act.Text))
-                {
-                    return;
-                }
-
-                if (act.Time > maxTime)
-                {
-                    return;
-                }
-
-                y.Accepted = true;
-            };
-
-            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Enabled));
-            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.Text));
-            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.IsDone));
-            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.RemainTime));
+            cvs.LiveFilteringProperties.Add(nameof(TimelineActivityModel.IsVisible));
 
             cvs.SortDescriptions.AddRange(new[]
             {
@@ -495,59 +464,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             cvs.View.CollectionChanged += (x, y) =>
             {
-                this.RaisePropertyChanged(nameof(this.TopActivity));
                 this.RaisePropertyChanged(nameof(this.SubName));
-
-                this.RefreshTopActivityStyle();
             };
 
-            this.RefreshTopActivityStyle(cvs);
-
             return cvs;
-        }
-
-        public void RefreshTopActivityStyle(
-            CollectionViewSource cvs = null)
-        {
-            if (cvs == null)
-            {
-                cvs = this.ActivitySource;
-            }
-
-            if (cvs.View == null)
-            {
-                return;
-            }
-
-            var acts = cvs.View.Cast<TimelineActivityModel>().ToArray();
-            var top = acts.FirstOrDefault();
-
-            if (top == null)
-            {
-                return;
-            }
-
-            var i = 0;
-            foreach (var act in acts)
-            {
-                act.IsVisible = i < TimelineSettings.Instance.ShowActivitiesCount;
-
-                if (act.IsVisible)
-                {
-                    if (act == top)
-                    {
-                        act.Opacity = 1.0d;
-                        act.Scale = TimelineSettings.Instance.NearestActivityScale;
-                    }
-                    else
-                    {
-                        act.Opacity = TimelineSettings.Instance.NextActivityBrightness;
-                        act.Scale = 1.0d;
-                    }
-                }
-
-                i++;
-            }
         }
 
         #endregion To View

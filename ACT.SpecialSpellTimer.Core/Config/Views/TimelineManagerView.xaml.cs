@@ -343,8 +343,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
             object sender,
             RoutedPropertyChangedEventArgs<object> e)
         {
-            TimelineController.CurrentController?.Model?.RefreshTopActivityStyle();
-            TimelineModel.DummyTimeline.RefreshTopActivityStyle();
+            TimelineController.CurrentController?.RefreshActivityLineVisibility();
+            TimelineModel.DummyTimeline.Controller.RefreshActivityLineVisibility();
         }
 
         #region ILocalizebale

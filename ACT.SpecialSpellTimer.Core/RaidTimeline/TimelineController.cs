@@ -238,6 +238,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         StringComparison.OrdinalIgnoreCase)) ??
                     defaultStyle;
             }
+
+            // 表示設定を更新しておく
+            this.RefreshActivityLineVisibility();
         }
 
         #region Activityライン捌き
@@ -834,28 +837,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             // 現在の時間を更新する
             TimelineActivityModel.CurrentTime = this.CurrentTime;
 
-            // 表示するものだけ進捗状況を更新する
-            var toShow =
-                from x in this.ActivityLine
-                where
-                x.Enabled.GetValueOrDefault() &&
-                !x.IsDone &&
-                !string.IsNullOrEmpty(x.Text)
-                select
-                x;
-
-            var count = 0;
-            foreach (var act in toShow)
-            {
-                if (count >= TimelineSettings.Instance.ShowActivitiesCount * 2)
-                {
-                    break;
-                }
-
-                act.RefreshProgress();
-                count++;
-            }
-
             // 通知を判定する
             var toNotify =
                 from x in this.ActivityLine
@@ -912,6 +893,55 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (!this.CallActivity(active))
                 {
                     this.GoToActivity(active);
+                }
+            }
+
+            // 表示を更新する
+            this.RefreshActivityLineVisibility();
+        }
+
+        public void RefreshActivityLineVisibility()
+        {
+            var maxTime = this.CurrentTime.Add(TimeSpan.FromSeconds(
+                TimelineSettings.Instance.ShowActivitiesTime));
+
+            var toShow =
+                from x in this.ActivityLine
+                where
+                x.Enabled.GetValueOrDefault() &&
+                !string.IsNullOrEmpty(x.Text)
+                orderby
+                x.Seq ascending
+                select
+                x;
+
+            var count = 0;
+            foreach (var x in toShow)
+            {
+                if (count < TimelineSettings.Instance.ShowActivitiesCount &&
+                    !x.IsDone &&
+                    x.Time <= maxTime)
+                {
+                    if (count == 0)
+                    {
+                        x.IsTop = true;
+                        x.Opacity = 1.0d;
+                        x.Scale = TimelineSettings.Instance.NearestActivityScale;
+                    }
+                    else
+                    {
+                        x.IsTop = false;
+                        x.Opacity = TimelineSettings.Instance.NextActivityBrightness;
+                        x.Scale = 1.0d;
+                    }
+
+                    x.IsVisible = true;
+                    x.RefreshProgress();
+                    count++;
+                }
+                else
+                {
+                    x.IsVisible = false;
                 }
             }
         }

@@ -26,6 +26,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             {
                 designOverlay = CreateDesignOverlay();
                 designOverlay.Model = TimelineModel.DummyTimeline;
+                TimelineModel.DummyTimeline.Controller.RefreshActivityLineVisibility();
             }
 
             // 本番ビューを隠す
