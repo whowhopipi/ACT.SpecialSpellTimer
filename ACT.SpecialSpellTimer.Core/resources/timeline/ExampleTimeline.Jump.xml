@@ -1,48 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <timeline>
-  <name>極白虎征魂戦</name>
+  <name>極白虎征魂戦(J)</name>
   <zone>The Jade Stoa</zone>
   <locale>JA</locale>
 
   <!--
-  プレーンなタイムラインの見本
-  デザインや動作の確認用にご利用でください。
+  ジャンプステートメントのテスト用
+  goto, call 及び t の動作確認用です。
   実用向けではありません。
   -->
-  <a time="00:00" sync="オオオオオ……この衝動、もはや止められん！" />
-  <a time="00:06" text="風雷波動" notice="次は、風雷波動。" />
-  <a time="00:12" text="天雷掌" notice="次は、天雷掌。" />
-  <a time="00:22" text="呪縛雷" notice="次は、呪縛雷。" />
-  <a time="00:27" sync="捉えたぞ！　叩きのめしてくれるわ！" />
-  <a enabled="False" time="00:29" text="Marker:003E" sync="1B:(?&lt;pcid&gt;.{8}):&lt;PC&gt;:0000:0000:003E:0000:0000:0000:" />
-  <a time="00:29" text="乾坤一擲" notice="次は、乾坤一擲。" />
-  <a time="00:37" text="呪縛雷" notice="次は、呪縛雷。" />
-  <a time="00:37" sync="まだだッ！　これで終いと思うなよ！" />
-  <a enabled="False" time="00:39" text="Marker:003E" sync="1B:(?&lt;pcid&gt;.{8}):&lt;PC&gt;:0000:0000:003E:0000:0000:0000:" />
-  <a time="00:39" text="乾坤一擲" notice="次は、乾坤一擲。" />
-  <a time="00:54" sync="吹けよ、荒れよ、我がアラミタマ！" />
-  <a time="00:55" text="無間地獄" notice="次は、無間地獄。" />
-  <a time="01:00" text="風雷波動" notice="次は、風雷波動。" />
-  <a time="01:07" text="祟り風" notice="次は、祟り風。" />
-  <a time="01:12" text="雷火一閃" notice="次は、雷火一閃。" />
-  <a time="01:26" sync="駆けろ、我が半身ッ！ 歯向かう者どもに、牙と爪を突き立ててやれ！" />
-  <a time="01:28" text="半獣舞踏" notice="次は、半獣舞踏。" />
-  <a time="01:38" text="風雷波動" notice="次は、風雷波動。" />
-  <a time="01:43" text="鉄爪斬" notice="次は、鉄爪斬。" />
-  <a time="01:48" text="天雷掌" notice="次は、天雷掌。" />
-  <a time="01:49" text="鉄爪斬" notice="次は、鉄爪斬。" />
-  <a time="01:59" text="遠雷" notice="次は、遠雷。" />
-  <a time="02:02" text="白帝衝" notice="次は、白帝衝。" />
-  <a time="02:03" text="雷火一閃" notice="次は、雷火一閃。" />
-  <a time="02:08" text="風雷波動" notice="次は、風雷波動。" />
-  <a time="02:16" text="雷声" notice="次は、雷声。" />
-  <a time="02:18" text="雷轟" notice="次は、雷轟。" />
-  <a time="02:19" text="Add 荒魂" notice="次は、荒魂。" />
-  <a time="02:39" text="雷轟" notice="次は、雷轟。" />
-  <a time="03:06" sync="我が憤怒は、無間の矢の如く……逃れてみせよ！" />
-  <a time="03:22" text="Add 白帝" notice="次は、白帝。" />
-  <a time="04:28" sync="ほう……凌いで見せたか…… ならば、全力を以て応えよう！" />
-  <a time="04:38" text="天雷掌" notice="次は、天雷掌。" />
+
+  <!--
+  <a time="00:00" sync="オオオオオ……この衝動、もはや止められん！" call="フェーズ1" />
+  <a time="01:26" sync="駆けろ、我が半身ッ！ 歯向かう者どもに、牙と爪を突き立ててやれ！" call="フェーズ2" />
+  <a time="04:28" sync="ほう……凌いで見せたか…… ならば、全力を以て応えよう！" goto="最終フェーズ" />
+  -->
+  <t sync="オオオオオ……この衝動、もはや止められん！" call="フェーズ1" />
+  <t sync="駆けろ、我が半身ッ！ 歯向かう者どもに、牙と爪を突き立ててやれ！" call="フェーズ2" />
+  <t sync="ほう……凌いで見せたか…… ならば、全力を以て応えよう！" goto="最終フェーズ" />
+
+  <s name="フェーズ1">
+    <a time="00:06" text="風雷波動" notice="次は、風雷波動。" />
+    <a time="00:12" text="天雷掌" notice="次は、天雷掌。" />
+    <a time="00:22" text="呪縛雷" notice="次は、呪縛雷。" />
+    <a time="00:27" sync="捉えたぞ！　叩きのめしてくれるわ！" />
+    <a enabled="False" time="00:29" text="Marker:003E" sync="1B:(?&lt;pcid&gt;.{8}):&lt;PC&gt;:0000:0000:003E:0000:0000:0000:" />
+    <a time="00:29" text="乾坤一擲" notice="次は、乾坤一擲。" />
+    <a time="00:37" text="呪縛雷" notice="次は、呪縛雷。" />
+    <a time="00:37" sync="まだだッ！　これで終いと思うなよ！" />
+    <a enabled="False" time="00:39" text="Marker:003E" sync="1B:(?&lt;pcid&gt;.{8}):&lt;PC&gt;:0000:0000:003E:0000:0000:0000:" />
+    <a time="00:39" text="乾坤一擲" notice="次は、乾坤一擲。" />
+    <a time="00:54" sync="吹けよ、荒れよ、我がアラミタマ！" />
+    <a time="00:55" text="無間地獄" notice="次は、無間地獄。" />
+    <a time="01:00" text="風雷波動" notice="次は、風雷波動。" />
+    <a time="01:07" text="祟り風" notice="次は、祟り風。" />
+    <a time="01:12" text="雷火一閃" notice="次は、雷火一閃。" />
+  </s>
+
+  <s name="フェーズ2">
+    <a time="00:02" text="半獣舞踏" notice="次は、半獣舞踏。" />
+    <a time="00:12" text="風雷波動" notice="次は、風雷波動。" />
+    <a time="00:17" text="鉄爪斬" notice="次は、鉄爪斬。" />
+    <a time="00:22" text="天雷掌" notice="次は、天雷掌。" />
+    <a time="00:23" text="鉄爪斬" notice="次は、鉄爪斬。" />
+    <a time="00:33" text="遠雷" notice="次は、遠雷。" />
+    <a time="00:36" text="白帝衝" notice="次は、白帝衝。" />
+    <a time="00:37" text="雷火一閃" notice="次は、雷火一閃。" />
+    <a time="00:41" text="風雷波動" notice="次は、風雷波動。" />
+    <a time="00:49" text="雷声" notice="次は、雷声。" />
+    <a time="00:51" text="雷轟" notice="次は、雷轟。" />
+    <a time="00:52" text="Add 荒魂" notice="次は、荒魂。" />
+    <a time="01:12" text="雷轟" notice="次は、雷轟。" />
+  </s>
+
+  <a name="最終フェーズ" time="04:38" text="天雷掌" notice="次は、天雷掌。" />
   <a time="04:48" sync="天つ雷よ、焼き払え！" />
   <a time="04:49" text="天つ雷" notice="次は、天つ雷。" />
   <a time="04:50" text="呪縛雷" notice="次は、呪縛雷。" />
