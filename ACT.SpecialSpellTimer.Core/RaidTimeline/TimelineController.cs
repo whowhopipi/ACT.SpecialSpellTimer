@@ -305,7 +305,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             string destination = null)
         {
             var name = string.IsNullOrEmpty(destination) ?
-                currentActivity.GoToDestination :
+                currentActivity?.CallTarget ?? string.Empty :
                 destination;
 
             if (string.IsNullOrEmpty(name))
@@ -315,12 +315,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             lock (this)
             {
-                var currentIndex = this.ActivityLine.IndexOf(currentActivity);
+                var currentIndex = 0;
+                var currnetSeq = 1;
+
+                if (currentActivity != null)
+                {
+                    currentIndex = this.ActivityLine.IndexOf(currentActivity);
+                    currnetSeq = currentActivity.Seq;
+                }
 
                 // 対象のサブルーチンを取得する
                 var targetSub = this.Model.Subroutines.FirstOrDefault(x =>
                     x.Enabled.GetValueOrDefault() &&
-                    string.Equals(x.Name == name, StringComparison.OrdinalIgnoreCase));
+                    string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
 
                 if (targetSub == null)
                 {
@@ -337,26 +344,33 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
-                // 差し込まれる次のシーケンスを取得する
-                var nextSeq = currentActivity.Seq + 1;
-
-                // 差し込まれる後のActivityのシーケンスを振り直す
-                var seq = nextSeq + acts.Count();
-                var time = acts.Max(x => x.Time) + this.CurrentTime;
-                foreach (var item in this.ActivityLine.Where(x =>
-                    x.Seq > currentActivity.Seq))
+                try
                 {
-                    item.Seq = seq++;
-                    item.Time += time;
+                    this.Model.StopLive();
+
+                    // 差し込まれる次のシーケンスを取得する
+                    var nextSeq = currnetSeq + 1;
+
+                    // 差し込まれる後のActivityのシーケンスを振り直す
+                    var seq = nextSeq + acts.Count();
+                    foreach (var item in this.ActivityLine.Where(x =>
+                        x.Seq > currnetSeq))
+                    {
+                        item.Seq = seq++;
+                    }
+
+                    // 差し込むActivityにシーケンスをふる
+                    var i = currentIndex + 1;
+                    foreach (var act in acts)
+                    {
+                        act.Seq = nextSeq++;
+                        act.Time += this.CurrentTime;
+                        this.ActivityLine.Insert(i++, act);
+                    }
                 }
-
-                // 差し込むActivityにシーケンスをふる
-                var i = currentIndex + 1;
-                foreach (var act in acts)
+                finally
                 {
-                    act.Seq = nextSeq++;
-                    act.Time += this.CurrentTime;
-                    this.ActivityLine.Insert(i++, act);
+                    this.Model.ResumeLive();
                 }
 
                 return true;
@@ -368,7 +382,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             string destination = null)
         {
             var name = string.IsNullOrEmpty(destination) ?
-                currentActivity.GoToDestination :
+                currentActivity?.GoToDestination ?? string.Empty :
                 destination;
 
             if (string.IsNullOrEmpty(name))
@@ -379,21 +393,38 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             lock (this)
             {
                 var currentIndex = this.ActivityLine.IndexOf(currentActivity);
+                var currnetSeq = 1;
+
+                if (currentActivity != null)
+                {
+                    currentIndex = this.ActivityLine.IndexOf(currentActivity);
+                    currnetSeq = currentActivity.Seq;
+                }
 
                 // 対象のActivityを探す
                 var targetAct = this.ActivityLine.FirstOrDefault(x =>
-                    string.Equals(x.Name == name, StringComparison.OrdinalIgnoreCase));
+                    string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
 
                 if (targetAct != null)
                 {
-                    foreach (var item in this.ActivityLine.Where(x =>
-                        x.IsDone &&
-                        x.Seq >= targetAct.Seq))
+                    try
                     {
-                        item.Init();
-                    }
+                        this.Model.StopLive();
 
-                    this.CurrentTime = targetAct.Time;
+                        // ジャンプ後のアクティビティを最初期化する
+                        foreach (var item in this.ActivityLine.Where(x =>
+                            x.IsDone &&
+                            x.Seq >= targetAct.Seq))
+                        {
+                            item.Init();
+                        }
+
+                        this.CurrentTime = targetAct.Time;
+                    }
+                    finally
+                    {
+                        this.Model.ResumeLive();
+                    }
 
                     return true;
                 }
@@ -401,7 +432,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 // サブルーチンに飛ぶ
                 var targetSub = this.Model.Subroutines.FirstOrDefault(x =>
                     x.Enabled.GetValueOrDefault() &&
-                    string.Equals(x.Name == name, StringComparison.OrdinalIgnoreCase));
+                    string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase));
 
                 if (targetSub == null)
                 {
@@ -418,19 +449,28 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
-                // 差し込まれる次のシーケンスを取得する
-                var nextSeq = currentActivity.Seq + 1;
-
-                // 後のActivityを削除する
-                this.RemoveAllActivity(x => x.Seq > currentActivity.Seq);
-
-                // 差し込むActivityにシーケンスをふる
-                var i = currentIndex + 1;
-                foreach (var act in acts)
+                try
                 {
-                    act.Seq = nextSeq++;
-                    act.Time += this.CurrentTime;
-                    this.ActivityLine.Insert(i++, act);
+                    this.Model.StopLive();
+
+                    // 差し込まれる次のシーケンスを取得する
+                    var nextSeq = currnetSeq + 1;
+
+                    // 後のActivityを削除する
+                    this.RemoveAllActivity(x => x.Seq > currnetSeq);
+
+                    // 差し込むActivityにシーケンスをふる
+                    var i = currentIndex + 1;
+                    foreach (var act in acts)
+                    {
+                        act.Seq = nextSeq++;
+                        act.Time += this.CurrentTime;
+                        this.ActivityLine.Insert(i++, act);
+                    }
+                }
+                finally
+                {
+                    this.Model.ResumeLive();
                 }
 
                 return true;
@@ -719,13 +759,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             select
                             x).FirstOrDefault();
 
-                        if (active != null)
+                        try
                         {
+                            this.Model.StopLive();
+
                             // jumpを判定する
                             if (!this.CallActivity(active, tri.CallTarget))
                             {
                                 this.GoToActivity(active, tri.GoToDestination);
                             }
+                        }
+                        finally
+                        {
+                            this.Model.ResumeLive();
                         }
                     }
                 });
@@ -926,6 +972,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     if (count == 0)
                     {
+                        this.Model.SubName = (x.Parent as TimelineSubroutineModel).Name ?? string.Empty;
+
                         x.IsTop = true;
                         x.Opacity = 1.0d;
                         x.Scale = TimelineSettings.Instance.NearestActivityScale;

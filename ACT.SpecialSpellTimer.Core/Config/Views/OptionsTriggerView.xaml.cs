@@ -15,6 +15,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
         }
 
         public void SetLocale(Locales locale) => this.ReloadLocaleDictionary(locale);

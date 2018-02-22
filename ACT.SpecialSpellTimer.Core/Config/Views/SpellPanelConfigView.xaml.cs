@@ -16,6 +16,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
         }
 
         public SpellPanelConfigViewModel ViewModel => this.DataContext as SpellPanelConfigViewModel;

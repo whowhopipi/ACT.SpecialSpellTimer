@@ -22,6 +22,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
 
             // ウィンドウのスタート位置を決める
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;

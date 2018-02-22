@@ -429,15 +429,38 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public ICollectionView ActivityView => this.ActivitySource?.View;
 
-        public string SubName => (
-            this.ActivityView?.Cast<TimelineActivityModel>()?
-            .FirstOrDefault()?
-            .Parent as TimelineSubroutineModel)?.Name;
+        private string subName = string.Empty;
+
+        public string SubName
+        {
+            get => this.subName;
+            set => this.SetProperty(ref this.subName, value);
+        }
 
         public string DisplayName =>
             !string.IsNullOrEmpty(this.Name) ?
             this.Name :
             this.Zone;
+
+        private bool isActivitiesVisible = true;
+
+        public bool IsActivitiesVisible
+        {
+            get => this.isActivitiesVisible;
+            set => this.SetProperty(ref this.isActivitiesVisible, value);
+        }
+
+        public void StopLive()
+        {
+            this.ActivitySource.IsLiveFilteringRequested = false;
+            this.ActivitySource.IsLiveSortingRequested = false;
+        }
+
+        public void ResumeLive()
+        {
+            this.ActivitySource.IsLiveFilteringRequested = true;
+            this.ActivitySource.IsLiveSortingRequested = true;
+        }
 
         private CollectionViewSource CreateActivityView()
         {
@@ -461,11 +484,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     Direction = ListSortDirection.Ascending,
                 }
             });
-
-            cvs.View.CollectionChanged += (x, y) =>
-            {
-                this.RaisePropertyChanged(nameof(this.SubName));
-            };
 
             return cvs;
         }

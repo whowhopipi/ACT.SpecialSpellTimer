@@ -25,6 +25,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
 
             this.partyListSource.SortDescriptions.Add(new SortDescription(
                 nameof(TTSDictionary.PCPhonetic.SortOrder),

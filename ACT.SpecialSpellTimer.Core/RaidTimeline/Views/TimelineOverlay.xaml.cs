@@ -21,16 +21,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         private static TimelineOverlay designOverlay;
 
+        private static TimelineModel dummyTimeline;
+
+        public static TimelineModel BindingDummyTimeline => dummyTimeline;
+
         public static void ShowDesignOverlay(
             TimelineStyle testStyle = null)
         {
             if (designOverlay == null)
             {
-                var tl = TimelineModel.CreateDummyTimeline(testStyle);
-                tl.Controller.RefreshActivityLineVisibility();
+                dummyTimeline = TimelineModel.CreateDummyTimeline(testStyle);
+                dummyTimeline.Controller.RefreshActivityLineVisibility();
 
                 designOverlay = CreateDesignOverlay();
-                designOverlay.Model = tl;
+                designOverlay.Model = dummyTimeline;
             }
 
             // 本番ビューを隠す

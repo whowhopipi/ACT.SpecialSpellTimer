@@ -23,6 +23,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
 
             this.timer.Interval = TimeSpan.FromSeconds(5);
             this.timer.Tick += (x, y) =>

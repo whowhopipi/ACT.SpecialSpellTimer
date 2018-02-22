@@ -143,7 +143,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.showActivitiesCount, value);
         }
 
-        private double showActivitiesTime = 60;
+        private double showActivitiesTime = 120;
 
         public double ShowActivitiesTime
         {

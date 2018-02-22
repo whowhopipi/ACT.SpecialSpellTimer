@@ -39,6 +39,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
 
             if (!WPFHelper.IsDesignMode)
             {
@@ -378,7 +379,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
             RoutedPropertyChangedEventArgs<object> e)
         {
             TimelineController.CurrentController?.RefreshActivityLineVisibility();
-            TimelineModel.DummyTimeline.Controller.RefreshActivityLineVisibility();
+            TimelineOverlay.BindingDummyTimeline?.Controller?.RefreshActivityLineVisibility();
         }
 
         #region ILocalizebale

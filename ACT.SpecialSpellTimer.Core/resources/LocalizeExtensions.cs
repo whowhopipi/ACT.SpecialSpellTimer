@@ -1,32 +1,50 @@
 using System;
-using System.Linq;
+using System.IO;
 using System.Windows;
+using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.resources
 {
     public static class LocalizeExtensions
     {
+        public static void LoadConfigViewResources(
+            this ILocalizable target)
+        {
+            const string Direcotry = @"resources\styles";
+            const string Resources = @"ConfigViewResources.xaml";
+
+            var element = target as FrameworkElement;
+            if (element == null)
+            {
+                return;
+            }
+
+            var file = Path.Combine(DirectoryHelper.FindSubDirectory(Direcotry), Resources);
+            if (File.Exists(file))
+            {
+                element.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(file, UriKind.Absolute)
+                });
+            }
+        }
+
         public static void ReloadLocaleDictionary<T>(
             this T element,
             Locales locale) where T : FrameworkElement, ILocalizable
         {
-            var dictionary = new ResourceDictionary();
-            dictionary.Source = new Uri(
-                $@"ACT.SpecialSpellTimer.Core;component/resources/strings/Strings.{locale.ToText()}.xaml",
-                UriKind.Relative);
+            const string Direcotry = @"resources\strings";
+            var Resources = $"Strings.{locale.ToText()}.xaml";
 
-            // 旧文字列を削除する
-            var removeItems = element.Resources.MergedDictionaries
-                .Where(x => x.Source.ToString().Contains("Strings"))
-                .ToArray();
-            foreach (var item in removeItems)
+            var file = Path.Combine(DirectoryHelper.FindSubDirectory(Direcotry), Resources);
+            if (File.Exists(file))
             {
-                element.Resources.MergedDictionaries.Remove(item);
+                element.Resources.MergedDictionaries.Add(new ResourceDictionary()
+                {
+                    Source = new Uri(file, UriKind.Absolute)
+                });
             }
-
-            // 新しい文字列辞書を登録する
-            element.Resources.MergedDictionaries.Add(dictionary);
         }
     }
 }

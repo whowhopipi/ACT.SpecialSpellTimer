@@ -31,6 +31,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             this.InitializeComponent();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
 
             this.CombatLogs.CollectionChanged += (x, y) =>
             {

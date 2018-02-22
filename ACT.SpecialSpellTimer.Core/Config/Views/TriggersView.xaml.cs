@@ -24,6 +24,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             this.DataContext = new TriggersViewModel();
             this.SetLocale(Settings.Default.UILocale);
+            this.LoadConfigViewResources();
 
             // タグツリービューへのイベントの割当
             this.TagsTreeView.SelectedItemChanged += this.TriggersTreeViewOnSelectedItemChanged;
