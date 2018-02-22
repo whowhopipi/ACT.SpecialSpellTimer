@@ -209,5 +209,5 @@
   bool, 任意項目, 既定値true
   このエレメントが有効か無効か
   -->
-  <default target-element="Activity" target-attr="notice-o" value="-3">
+  <default target-element="Activity" target-attr="notice-o" value="-3" />
 </timeline>
