@@ -972,7 +972,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     if (count == 0)
                     {
-                        this.Model.SubName = (x.Parent as TimelineSubroutineModel).Name ?? string.Empty;
+                        this.Model.SubName = (x.Parent as TimelineSubroutineModel)?.Name ?? string.Empty;
 
                         x.IsTop = true;
                         x.Opacity = 1.0d;
