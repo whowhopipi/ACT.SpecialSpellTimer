@@ -35,7 +35,7 @@
   <system:String x:Key="Common_Import">Import</system:String>
   <system:String x:Key="Common_Export">Export</system:String>
   <system:String x:Key="Common_Copy">Copy</system:String>
-  <system:String x:Key="Common_AdvancedSettings">高度な設定</system:String>
+  <system:String x:Key="Common_AdvancedSettings">Advanced settings</system:String>
 
   <system:String x:Key="Common_VisibleSpell">Show visual timer and progress bar</system:String>
   <system:String x:Key="Common_VisibleSpellDiscription">For OFF, only for sound</system:String>
@@ -218,7 +218,28 @@
   <system:String x:Key="Timeline_AutoCombatSaveDirectory">Save to</system:String>
   <system:String x:Key="Timeline_SaveToSpreadsheet">Save to Spreadsheet</system:String>
   <system:String x:Key="Timeline_SaveToDraftTimeline">Save to draft Timeline</system:String>
+  <system:String x:Key="Timeline_SaveToTestLog">Save to test</system:String>
   <system:String x:Key="Timeline_TotalSecoundsFormat">Show total secounds</system:String>
   <system:String x:Key="Timeline_ThisIsOrigin">This record is Origin</system:String>
   <system:String x:Key="Timeline_ImportCombatLog">Import CombatLog</system:String>
+
+  <system:String x:Key="Timeline_ShowDummyTimeline">Show dummy overlay for Design</system:String>
+  <system:String x:Key="Timeline_Enable">Use Timeline</system:String>
+  <system:String x:Key="Timeline_Folder">Timelines folder</system:String>
+  <system:String x:Key="Timeline_Visual">Visual</system:String>
+  <system:String x:Key="Timeline_OverlayVisible">Show overlay</system:String>
+  <system:String x:Key="Timeline_Opacity">Opacity</system:String>
+  <system:String x:Key="Timeline_OverlayScale">Overlay scale</system:String>
+  <system:String x:Key="Timeline_NearestActivityScale">Nearest activity scale</system:String>
+  <system:String x:Key="Timeline_NextActivityBrightness">After the next activities brightness</system:String>
+  <system:String x:Key="Timeline_Styles">Activity style</system:String>
+  <system:String x:Key="Timeline_StyleName">Style name</system:String>
+  <system:String x:Key="Timeline_CircleStyle">Circle style</system:String>
+  <system:String x:Key="Timeline_TestTimeline">Test timeline</system:String>
+  <system:String x:Key="Timeline_TimelineTester">Timeline Tester</system:String>
+  <system:String x:Key="Timeline_ShowActivitiesCount">Number of activities to show</system:String>
+  <system:String x:Key="Timeline_Header">Header</system:String>
+  <system:String x:Key="Timeline_ShowHeader">Show header</system:String>
+  <system:String x:Key="Timeline_HeaderStyle">Header style</system:String>
+  <system:String x:Key="Timeline_OpenResourcesDictionary">Open ResourcesDictionary.xaml Folder</system:String>
 </ResourceDictionary>
