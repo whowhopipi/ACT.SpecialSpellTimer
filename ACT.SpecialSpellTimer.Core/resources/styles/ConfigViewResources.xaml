@@ -4,7 +4,7 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib">
 
   <FontFamily x:Key="UIFont">
-    Consolas, Yu Gothic UI, Meiryo UI"
+    Consolas, Yu Gothic UI, Meiryo UI
   </FontFamily>
 
   <system:Double x:Key="UIFontSize">
