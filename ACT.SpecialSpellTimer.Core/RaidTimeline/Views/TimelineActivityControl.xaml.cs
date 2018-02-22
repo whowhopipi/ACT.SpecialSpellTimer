@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using ACT.SpecialSpellTimer.Utility;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 {
@@ -45,9 +46,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         private void LoadResourcesDictionary()
         {
-            const string Resources = @"Resources\Styles\TimelineActivityControlResources.xaml";
-
-            var file = Path.Combine(PluginCore.Instance?.Location, Resources);
+            const string Direcotry = @"Resources\Styles";
+            const string Resources = @"TimelineActivityControlResources.xaml";
+            var file = Path.Combine(DirectoryHelper.FindSubDirectory(Direcotry), Resources);
             if (File.Exists(file))
             {
                 this.Resources.MergedDictionaries.Add(new ResourceDictionary()

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.WPF.Views;
 
@@ -164,9 +165,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         private void LoadResourcesDictionary()
         {
-            const string Resources = @"Resources\Styles\TimelineOverlayResources.xaml";
-
-            var file = Path.Combine(PluginCore.Instance?.Location, Resources);
+            const string Direcotry = @"Resources\Styles";
+            const string Resources = @"TimelineOverlayResources.xaml";
+            var file = Path.Combine(DirectoryHelper.FindSubDirectory(Direcotry), Resources);
             if (File.Exists(file))
             {
                 this.Resources.MergedDictionaries.Add(new ResourceDictionary()

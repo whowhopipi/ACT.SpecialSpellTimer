@@ -60,7 +60,7 @@
 
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="500" />
+      <ColumnDefinition Width="Auto" MinWidth="500" MaxWidth="550" />
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
 
@@ -84,7 +84,7 @@
 
           <StackPanel Margin="0 20 0 0">
             <Label Content="{DynamicResource Timeline_Folder}" />
-            <TextBox Margin="0 5 20 0" BorderThickness="0" IsReadOnly="True" Text="{Binding Path=TimelineDirectory, Mode=OneWay}" FontSize="15" />
+            <TextBox Margin="0 5 20 0" BorderThickness="0" IsReadOnly="True" Text="{Binding Path=TimelineDirectory, Mode=OneWay}" FontSize="15" HorizontalAlignment="Left" MaxWidth="460" TextWrapping="WrapWithOverflow" />
             <StackPanel Margin="0 5 0 0" Orientation="Horizontal">
               <Button Content="Open" Command="{Binding OpenTimelineFolderCommand, Mode=OneWay}" />
               <Button Margin="10 0 0 0" Content="Reload" Command="{Binding ReloadTimelineFolderCommand, Mode=OneWay}" />
@@ -166,7 +166,7 @@
           <Button
             HorizontalAlignment="Left"
             Padding="5 0 5 0"
-            Content="Start"
+            Content="{Binding Path=StartButtonLabel, Mode=OneWay}"
             Command="{Binding StartTimelineCommand, Mode=OneWay}"
             CommandParameter="{Binding RelativeSource={RelativeSource Self}, Mode=OneWay}"
             FontWeight="Bold"

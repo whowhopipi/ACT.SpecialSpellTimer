@@ -7,10 +7,8 @@
 
   <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
 
-  <!-- 背景用のボーダー -->
-  <Style x:Key="BaseBorder" TargetType="Border">
-    <Setter Property="CornerRadius" Value="6" />
-    <Setter Property="Background" Value="#60000000" />
+  <!-- 最も外側のグリッド -->
+  <Style x:Key="BaseGrid" TargetType="Grid">
     <Setter Property="LayoutTransform">
       <Setter.Value>
         <ScaleTransform
@@ -20,15 +18,38 @@
     </Setter>
   </Style>
 
-  <!-- ヘッダとコンテンツを分けるグリッド -->
-  <Style x:Key="BaseGrid" TargetType="Grid">
+  <!-- 背景用のボーダー -->
+  <Style x:Key="BaseBorder" TargetType="Border">
+    <Setter Property="Panel.ZIndex" Value="-1" />
     <Setter Property="Margin" Value="8" />
+    <Setter Property="BorderBrush" Value="Gainsboro" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Background" Value="#FF000000" />
+    <Setter Property="Opacity" Value="0.85" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Effect">
+      <Setter.Value>
+        <DropShadowEffect
+          BlurRadius="8"
+          Direction="0"
+          ShadowDepth="0"
+          Color="White" />
+      </Setter.Value>
+    </Setter>
   </Style>
 
-  <!-- ヘッダパネル -->
-  <Style x:Key="HeaderPanel" TargetType="StackPanel">
+  <!-- ヘッダとコンテンツを分けるグリッド -->
+  <Style x:Key="ContentsGrid" TargetType="Grid">
+    <Setter Property="Margin" Value="16" />
+  </Style>
+
+  <!-- ヘッダBorder -->
+  <Style x:Key="HeaderPanel" TargetType="Border">
     <Setter Property="Grid.Row" Value="0" />
     <Setter Property="Visibility" Value="{Binding Path=Config.IndicatorVisible, Converter={StaticResource VisibilityConverter}, Mode=OneWay}" />
+    <Setter Property="BorderThickness" Value="0 0 0 1" />
+    <Setter Property="Padding" Value="0 0 0 3" />
+    <Setter Property="BorderBrush" Value="Gainsboro" />
   </Style>
 
   <!-- ヘッダ1行目 -->
@@ -122,7 +143,7 @@
   <Style x:Key="Status" TargetType="controls:OutlineTextBlock">
     <Setter Property="Margin" Value="10 0 0 0" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Text" Value="Standby" />
+    <Setter Property="Text" Value="{Binding Path=Model.Controller.StatusText, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}" />
     <Setter Property="FontStyle" Value="{Binding Path=Config.IndicatorStyleModel.Font.Style, Mode=OneWay}" />
@@ -149,10 +170,14 @@
     </Setter>
   </Style>
 
-  <!-- アクティビティItemsControl -->
-  <Style x:Key="ActivitiesControl" TargetType="ItemsControl">
+  <!-- アクティビティItemsControlのBorder -->
+  <Style x:Key="ActivityPanel" TargetType="Border">
     <Setter Property="Grid.Row" Value="1" />
     <Setter Property="Margin" Value="0 0 0 3" />
+  </Style>
+
+  <!-- アクティビティItemsControl -->
+  <Style x:Key="ActivitiesControl" TargetType="ItemsControl">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Focusable" Value="False" />
@@ -180,5 +205,9 @@
         <Setter Property="Visibility" Value="Collapsed" />
       </DataTrigger>
     </Style.Triggers>
+  </Style>
+
+  <!-- アクティビティのBorder -->
+  <Style x:Key="ActivityBorder" TargetType="Border">
   </Style>
 </ResourceDictionary>

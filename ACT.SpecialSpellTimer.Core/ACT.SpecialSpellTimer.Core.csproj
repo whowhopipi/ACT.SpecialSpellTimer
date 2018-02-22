@@ -242,6 +242,9 @@
     <Compile Include="RaidTimeline\TimelineStyle.cs" />
     <Compile Include="RaidTimeline\TimelineSubroutineModel.cs" />
     <Compile Include="RaidTimeline\TimelineTriggerModel.cs" />
+    <Compile Include="RaidTimeline\Views\Sketchbook.xaml.cs">
+      <DependentUpon>Sketchbook.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RaidTimeline\Views\TimelineActivityControl.xaml.cs">
       <DependentUpon>TimelineActivityControl.xaml</DependentUpon>
     </Compile>
@@ -312,9 +315,7 @@
     </Compile>
     <Compile Include="Models\SpellTable.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="resources\timeline\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="resources\color\サンプル灰色系.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -335,6 +336,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\color\回復風緑系.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\timeline\ExampleTimeline.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="resources\icon\Rampart.png" />
@@ -646,6 +650,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="RaidTimeline\Views\Sketchbook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RaidTimeline\Views\TimelineActivityControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -743,6 +751,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\icon\Timeline.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\timeline\極白虎征魂戦.log">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

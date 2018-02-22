@@ -217,7 +217,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     log.IsDone = true;
 
                     var logInfo = new LogLineEventArgs(
-                        log.Log,
+                        $"[{DateTime.Now:HH:mm:ss.fff}] {log.Log}",
                         0,
                         DateTime.Now,
                         string.Empty,

@@ -37,45 +37,56 @@
     </ResourceDictionary>
   </Window.Resources>
 
-  <Border Style="{DynamicResource BaseBorder}">
-    <Grid Style="{DynamicResource BaseGrid}">
+  <Grid Style="{DynamicResource BaseGrid}">
+
+    <!-- 背景用ボーダー-->
+    <Border Style="{DynamicResource BaseBorder}" />
+
+    <!-- コンテンツ用グリッド -->
+    <Grid Style="{DynamicResource ContentsGrid}">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition />
       </Grid.RowDefinitions>
 
       <!-- ヘッダ -->
-      <StackPanel Style="{DynamicResource HeaderPanel}">
-        <StackPanel Style="{DynamicResource Header1Panel}">
-          <!-- 現在時刻 -->
-          <controls:OutlineTextBlock Style="{DynamicResource CurrentTime}" />
+      <Border Style="{DynamicResource HeaderPanel}">
+        <StackPanel>
+          <StackPanel Style="{DynamicResource Header1Panel}">
+            <!-- 現在時刻 -->
+            <controls:OutlineTextBlock Style="{DynamicResource CurrentTime}" />
 
-          <!-- サブルーチン -->
-          <controls:OutlineTextBlock Style="{DynamicResource Subroutine}" />
+            <!-- サブルーチン -->
+            <controls:OutlineTextBlock Style="{DynamicResource Subroutine}" />
+          </StackPanel>
+
+          <StackPanel Style="{DynamicResource Header2Panel}">
+            <!-- ゾーン or Name -->
+            <controls:OutlineTextBlock Style="{DynamicResource Title}" />
+
+            <!-- ステータス -->
+            <controls:OutlineTextBlock Style="{DynamicResource Status}" />
+          </StackPanel>
         </StackPanel>
-
-        <StackPanel Style="{DynamicResource Header2Panel}">
-          <!-- ゾーン or Name -->
-          <controls:OutlineTextBlock Style="{DynamicResource Title}" />
-
-          <!-- ステータス -->
-          <controls:OutlineTextBlock Style="{DynamicResource Status}" />
-        </StackPanel>
-      </StackPanel>
-      <!-- インジケータ end -->
+      </Border>
+      <!-- ヘッダ end -->
 
       <!-- アクティビティ -->
-      <ItemsControl
-        Style="{DynamicResource ActivitiesControl}"
-        ItemContainerStyle="{DynamicResource ActivityContainer}"
-        ItemsSource="{Binding Path=Model.ActivityView, Mode=OneWay}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate DataType="{x:Type tl:TimelineActivityModel}">
-            <local:TimelineActivityControl DataContext="{Binding}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+      <Border Style="{DynamicResource ActivityPanel}">
+        <ItemsControl
+          Style="{DynamicResource ActivitiesControl}"
+          ItemContainerStyle="{DynamicResource ActivityContainer}"
+          ItemsSource="{Binding Path=Model.ActivityView, Mode=OneWay}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type tl:TimelineActivityModel}">
+              <Border Style="{DynamicResource ActivityBorder}">
+                <local:TimelineActivityControl DataContext="{Binding}" />
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
       <!-- アクティビティ end -->
     </Grid>
-  </Border>
+  </Grid>
 </Window>

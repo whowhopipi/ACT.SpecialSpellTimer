@@ -746,6 +746,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private volatile bool isRunning = false;
 
+        public bool IsRunning => this.isRunning;
+
         public void StartActivityLine()
         {
             if (!TimelineSettings.Instance.Enabled)

@@ -63,6 +63,17 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         public TimelineSettings TimelineConfig => TimelineSettings.Instance;
 
+        private const string StartString = "Start";
+        private const string StopString = "Stop";
+
+        private string startButtonLabel = StartString;
+
+        public string StartButtonLabel
+        {
+            get => this.startButtonLabel;
+            set => this.SetProperty(ref this.startButtonLabel, value);
+        }
+
         #region Zone Changer
 
         private string currentZoneName = string.Empty;
@@ -106,6 +117,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
                                 nextTimeline.IsActive = true;
                             }
                         }
+                    }
+
+                    // ついでにスタートボタンのラベルを切り替える
+                    if (TimelineController.CurrentController != null)
+                    {
+                        this.StartButtonLabel = TimelineController.CurrentController.IsRunning ?
+                            StopString :
+                            StartString;
                     }
                 }
             }
@@ -190,17 +209,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     return;
                 }
 
-                var toStart = button.Content.ToString() == "Start";
-
-                if (toStart)
+                if (activeTL.Controller.IsRunning)
                 {
-                    activeTL.Controller.StartActivityLine();
-                    button.Content = "Stop";
+                    activeTL.Controller.EndActivityLine();
+                    this.StartButtonLabel = StartString;
                 }
                 else
                 {
-                    activeTL.Controller.EndActivityLine();
-                    button.Content = "Start";
+                    activeTL.Controller.StartActivityLine();
+                    this.StartButtonLabel = StopString;
                 }
             }));
 
