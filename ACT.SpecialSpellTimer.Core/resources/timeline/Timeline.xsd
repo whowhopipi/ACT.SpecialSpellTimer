@@ -7,33 +7,6 @@
   (c) anoyetta, 2018
   -->
 
-  <xs:element name="timeline" type="Timeline" />
-
-  <!-- Timeline -->
-  <xs:complexType name="Timeline">
-    <xs:choice>
-      <xs:element name="name" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1" />
-      <xs:element name="zone" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1" />
-      <xs:element name="locale" default="JA" nillable="false" minOccurs="1" maxOccurs="1">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="EN" />
-            <xs:enumeration value="JA" />
-            <xs:enumeration value="FR" />
-            <xs:enumeration value="DE" />
-            <xs:enumeration value="KO" />
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:element>
-      <xs:element name="a" type="Activity" minOccurs="1" maxOccurs="unbounded" />
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="t" type="Trigger" />
-        <xs:element name="s" type="Sub" />
-        <xs:element name="default" type="Default" />
-      </xs:choice>
-    </xs:choice>
-  </xs:complexType>
-
   <!-- Activity -->
   <xs:complexType name="Activity">
     <xs:attribute name="time" type="xs:duration" use="required" />
@@ -94,4 +67,32 @@
     <xs:attribute name="value" type="xs:string" use="required" />
     <xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
   </xs:complexType>
+
+  <!-- Timeline -->
+  <xs:complexType name="Timeline">
+    <xs:choice>
+      <xs:element name="name" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1" />
+      <xs:element name="zone" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1" />
+      <xs:element name="locale" default="JA" nillable="false" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="EN" />
+            <xs:enumeration value="JA" />
+            <xs:enumeration value="FR" />
+            <xs:enumeration value="DE" />
+            <xs:enumeration value="KO" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="a" type="Activity" minOccurs="1" maxOccurs="unbounded" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="t" type="Trigger" />
+        <xs:element name="s" type="Sub" />
+        <xs:element name="default" type="Default" />
+      </xs:choice>
+    </xs:choice>
+  </xs:complexType>
+
+  <!-- timeline element -->
+  <xs:element name="timeline" type="Timeline" />
 </xs:schema>
