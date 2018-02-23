@@ -243,7 +243,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 act.StyleModel = TimelineSettings.Instance.Styles
                     .FirstOrDefault(x => string.Equals(
-                        x.Name == act.Style,
+                        x.Name,
+                        act.Style,
                         StringComparison.OrdinalIgnoreCase)) ??
                     defaultStyle;
             }

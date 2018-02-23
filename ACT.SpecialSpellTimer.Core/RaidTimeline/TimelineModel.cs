@@ -278,7 +278,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             NewDefault(TimelineElementTypes.Activity, "SyncOffsetStart", -12),
             NewDefault(TimelineElementTypes.Activity, "SyncOffsetEnd", 12),
             NewDefault(TimelineElementTypes.Activity, "NoticeDevice", NoticeDevices.Both),
-            NewDefault(TimelineElementTypes.Activity, "noticeOffset", -6),
+            NewDefault(TimelineElementTypes.Activity, "NoticeOffset", -6),
 
             // トリガ
             NewDefault(TimelineElementTypes.Trigger, "Enabled", true),
@@ -293,7 +293,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private void SetDefaultValues()
         {
-            var defaults = SuperDefaultValues.Union(this.Defaults)
+            var defaults = this.Defaults.Union(SuperDefaultValues)
                 .Where(x => (x.Enabled ?? true));
 
             foreach (var el in this.Elements)
