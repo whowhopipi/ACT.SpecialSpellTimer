@@ -626,6 +626,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             lock (this)
             {
+                // Globalトリガを登録する
                 detectors = (
                     from x in this.Model.Triggers
                     where
@@ -635,6 +636,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     select
                     x).Cast<TimelineBase>().ToList();
 
+                // 判定期間中のアクティビティを登録する
                 var acts =
                     from x in this.ActivityLine
                     where
@@ -648,6 +650,25 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     x;
 
                 detectors.AddRange(acts);
+
+                // カレントサブルーチンのトリガを登録する
+                if (this.ActiveActivity != null)
+                {
+                    var sub = this.ActiveActivity.Parent as TimelineSubroutineModel;
+                    if (sub != null)
+                    {
+                        var triggers =
+                            from x in sub.Triggers
+                            where
+                            x.Enabled.GetValueOrDefault() &&
+                            !string.IsNullOrEmpty(x.SyncKeyword) &&
+                            x.SynqRegex != null
+                            select
+                            x;
+
+                        detectors.AddRange(triggers);
+                    }
+                }
             }
 
             // 開始・終了判定のキーワードを取得する
@@ -705,6 +726,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
+                // ログを発生させる
+                raiseLog(act);
+
                 WPFHelper.BeginInvoke(() =>
                 {
                     lock (this)
@@ -743,6 +767,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
                 }
 
+                // ログを発生させる
+                raiseLog(tri);
+
                 WPFHelper.BeginInvoke(() =>
                 {
                     lock (this)
@@ -779,6 +806,35 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 return true;
             }
+
+            void raiseLog(
+                TimelineBase element)
+            {
+                var now = DateTime.Now;
+                var log = string.Empty;
+
+                var sub = element.Parent as TimelineSubroutineModel;
+
+                switch (element)
+                {
+                    case TimelineActivityModel act:
+                        log =
+                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:TL Synced to activity. " +
+                            $"name={act.Name}, sync={act.SyncKeyword}, sub={sub?.Name}";
+                        break;
+
+                    case TimelineTriggerModel tri:
+                        log =
+                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:TL Synced to trigger. " +
+                            $"name={tri.Name}, sync={tri.SyncKeyword}, sync-count={tri.MatchedCounter}, sub={tri?.Name}";
+                        break;
+
+                    default:
+                        return;
+                }
+
+                ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
+            }
         }
 
         #endregion Log 関係のスレッド
@@ -794,6 +850,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private volatile bool isRunning = false;
 
         public bool IsRunning => this.isRunning;
+
+        public TimelineActivityModel ActiveActivity
+        {
+            get;
+            private set;
+        }
 
         public void StartActivityLine()
         {
@@ -933,6 +995,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 x.Seq descending
                 select
                 x).FirstOrDefault();
+
+            // アクティブなアクティビティを設定する
+            this.ActiveActivity = active;
 
             if (active != null)
             {

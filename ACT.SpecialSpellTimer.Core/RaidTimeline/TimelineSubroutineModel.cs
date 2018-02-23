@@ -27,6 +27,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.AddRange(value);
         }
 
+        [XmlElement(ElementName = "t")]
+        public TimelineTriggerModel[] Triggers
+        {
+            get => this.statements.Where(x => x.TimelineType == TimelineElementTypes.Trigger).Cast<TimelineTriggerModel>().ToArray();
+            set => this.AddRange(value);
+        }
+
         #region Methods
 
         public void Add(TimelineBase timeline)
