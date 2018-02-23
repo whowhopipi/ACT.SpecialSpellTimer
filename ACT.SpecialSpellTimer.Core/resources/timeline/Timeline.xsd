@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema
-  id="Timeline"
-  targetNamespace="https://github.com/anoyetta/ACT.Hojoring/Timeline"
-  xmlns="https://github.com/anoyetta/ACT.Hojoring/Timeline"
+  targetNamespace="https://github.com/anoyetta/Hojoring/Timeline"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
   <!--
   Timeline 定義ファイル XML Scheme
   (c) anoyetta, 2018

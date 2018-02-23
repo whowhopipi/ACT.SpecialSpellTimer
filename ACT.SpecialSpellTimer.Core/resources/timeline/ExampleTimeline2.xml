@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<timeline>
+<timeline
+  xmlns="https://github.com/anoyetta/Hojoring/Timeline"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://github.com/anoyetta/Hojoring/Timeline https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/ACT.SpecialSpellTimer.Core/resources/timeline/Timeline.xsd">
+
   <name>極白虎征魂戦</name>
   <zone>The Jade Stoa (Dummy)</zone>
   <locale>JA</locale>

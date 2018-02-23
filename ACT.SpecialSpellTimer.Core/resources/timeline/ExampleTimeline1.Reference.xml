@@ -3,7 +3,11 @@
 タイムライン定義ファイルの書き方の説明
 (c) anoyetta, 2018
 -->
-<timeline>
+<timeline
+  xmlns="https://github.com/anoyetta/Hojoring/Timeline"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://github.com/anoyetta/Hojoring/Timeline https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/ACT.SpecialSpellTimer.Core/resources/timeline/Timeline.xsd">
+
   <!--
   <name> タグ
   string, 任意項目
