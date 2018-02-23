@@ -769,7 +769,11 @@
     <Content Include="resources\icon\Timeline.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\timeline\極白虎征魂戦.log">
+    <Content Include="resources\timeline\ExampleTimeline.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\timeline\Timeline.xsd">
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
