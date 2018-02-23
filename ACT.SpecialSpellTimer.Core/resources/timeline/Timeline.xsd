@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema
-  targetNamespace="https://github.com/anoyetta/Hojoring/Timeline"
-  xmlns:tl="https://github.com/anoyetta/Hojoring/Timeline"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <!--
   Timeline 定義ファイル XML Scheme
@@ -10,7 +8,7 @@
 
   <!-- Activity -->
   <xs:complexType name="Activity">
-    <xs:attribute name="time" type="xs:duration" use="required" />
+    <xs:attribute name="time" use="required" />
     <xs:attribute name="name" type="xs:string" use="optional" />
     <xs:attribute name="text" type="xs:string" use="optional" />
     <xs:attribute name="sync" type="xs:string" use="optional" />
@@ -54,11 +52,9 @@
 
   <!-- Sub -->
   <xs:complexType name="Sub">
-    <xs:choice>
-      <xs:element name="a" type="tl:Activity" minOccurs="1" maxOccurs="unbounded" />
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="t" type="tl:Trigger" />
-      </xs:choice>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="a" type="Activity" />
+      <xs:element name="t" type="Trigger" />
     </xs:choice>
     <xs:attribute name="name" type="xs:string" use="optional" />
     <xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
@@ -74,7 +70,7 @@
 
   <!-- Timeline -->
   <xs:complexType name="Timeline">
-    <xs:choice>
+    <xs:sequence>
       <xs:element name="name" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1" />
       <xs:element name="zone" type="xs:string" nillable="false" minOccurs="1" maxOccurs="1" />
       <xs:element name="locale" default="JA" nillable="false" minOccurs="1" maxOccurs="1">
@@ -88,15 +84,15 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
-      <xs:element name="a" type="tl:Activity" minOccurs="1" maxOccurs="unbounded" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="t" type="tl:Trigger" />
-        <xs:element name="s" type="tl:Sub" />
-        <xs:element name="default" type="tl:Default" />
+        <xs:element name="a" type="Activity" />
+        <xs:element name="t" type="Trigger" />
+        <xs:element name="s" type="Sub" />
+        <xs:element name="default" type="Default" />
       </xs:choice>
-    </xs:choice>
+    </xs:sequence>
   </xs:complexType>
 
   <!-- timeline element -->
-  <xs:element name="timeline" type="tl:Timeline" />
+  <xs:element name="timeline" type="Timeline" />
 </xs:schema>
