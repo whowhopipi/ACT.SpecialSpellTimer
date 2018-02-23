@@ -114,7 +114,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlElement(ElementName = "a")]
         public TimelineActivityModel[] Activities
         {
-            get => this.Elements.Where(x => x.TimelineType == TimelineElementTypes.Activity).Cast<TimelineActivityModel>().ToArray();
+            get => this.Elements.Where(x => x.TimelineType == TimelineElementTypes.Activity).Cast<TimelineActivityModel>().OrderBy(x => x.Time).ToArray();
             set => this.AddRange(value);
         }
 
