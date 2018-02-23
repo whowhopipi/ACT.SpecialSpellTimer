@@ -273,6 +273,8 @@
               <ListView
                 x:Name="StyleListView"
                 Grid.Column="0"
+                VerticalAlignment="Top"
+                Height="500"
                 Width="180"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
