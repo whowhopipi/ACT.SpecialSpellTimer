@@ -163,7 +163,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.barHeight, value);
         }
 
-        public bool isCircleStyle = false;
+        private bool isCircleStyle = false;
 
         /// <summary>
         /// プログレスCircleを使用する？
