@@ -35,8 +35,8 @@
   AllowsTransparency="True"
   ShowInTaskbar="True"
   Title="{DynamicResource Timeline_TimelineTester}"
-  Width="1130"
-  Height="520">
+  Width="740"
+  Height="600">
 
   <Window.Resources>
     <ResourceDictionary>

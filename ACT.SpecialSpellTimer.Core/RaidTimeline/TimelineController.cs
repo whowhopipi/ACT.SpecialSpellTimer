@@ -50,6 +50,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private static readonly object Locker = new object();
 
         /// <summary>
+        /// タイムラインから発生するログのSymbol
+        /// </summary>
+        private const string TLSymbol = "[TL]";
+
+        /// <summary>
         /// 現在のController
         /// </summary>
         public static TimelineController CurrentController
@@ -485,6 +490,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private ConcurrentQueue<LogLineEventArgs> logInfoQueue;
         private volatile bool isLogWorkerRunning = false;
 
+        /// <summary>
+        /// 明らかにTLの判定外とするログキーワード
+        /// </summary>
+        private static readonly string[] IgnoreKeywords = new[]
+        {
+            "] 15:",    // ダメージかアクションの生ログ
+            "] 16:",    // エフェクトの生ログ
+            "] 17:",    // Cancel
+            "] 18:",    // DoT/HoT Tick
+            "] 19:",    // defeated
+        };
+
         private Thread LogWorker
         {
             get;
@@ -594,9 +611,25 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (this.logInfoQueue != null)
             {
+                var prelog = string.Empty;
+
                 while (this.logInfoQueue.TryDequeue(out LogLineEventArgs logInfo))
                 {
                     var logLine = logInfo.logLine;
+
+                    // 直前とまったく同じログはスキップする
+                    if (prelog == logLine)
+                    {
+                        continue;
+                    }
+
+                    prelog = logLine;
+
+                    // 無効キーワードが含まれていればスキップする
+                    if (IgnoreKeywords.Any(x => logLine.Contains(x)))
+                    {
+                        continue;
+                    }
 
                     // エフェクトに付与されるツールチップ文字を除去する
                     // 4文字分のツールチップ文字を除去する
@@ -676,7 +709,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 x.Category == KewordTypes.Start ||
                 x.Category == KewordTypes.End);
 
-            logs.AsParallel().ForAll(xivlog =>
+            // [TL] キーワードを含まないログに対して判定する
+            logs.AsParallel().Where(x => !x.Log.Contains(TLSymbol)).ForAll(xivlog =>
             {
                 // 開始・終了を判定する
                 var key = (
@@ -726,9 +760,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
-                // ログを発生させる
-                raiseLog(act);
-
                 WPFHelper.BeginInvoke(() =>
                 {
                     lock (this)
@@ -741,6 +772,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         }
 
                         this.CurrentTime = act.Time;
+
+                        // ログを発生させる
+                        raiseLog(act);
                     }
                 });
 
@@ -766,9 +800,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         return false;
                     }
                 }
-
-                // ログを発生させる
-                raiseLog(tri);
 
                 WPFHelper.BeginInvoke(() =>
                 {
@@ -796,6 +827,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             {
                                 this.GoToActivity(active, tri.GoToDestination);
                             }
+
+                            // ログを発生させる
+                            raiseLog(tri);
                         }
                         finally
                         {
@@ -819,14 +853,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     case TimelineActivityModel act:
                         log =
-                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:TL Synced to activity. " +
-                            $"name={act.Name}, sync={act.SyncKeyword}, sub={sub?.Name}";
+                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Synced to activity. " +
+                            $"name={act.Name}, sub={sub?.Name}";
                         break;
 
                     case TimelineTriggerModel tri:
                         log =
-                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:TL Synced to trigger. " +
-                            $"name={tri.Name}, sync={tri.SyncKeyword}, sync-count={tri.MatchedCounter}, sub={tri?.Name}";
+                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Synced to trigger. " +
+                            $"name={tri.Name}, sync-count={tri.MatchedCounter}, sub={sub?.Name}";
                         break;
 
                     default:
@@ -888,7 +922,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.isRunning = true;
                 this.Status = TimelineStatus.Runnning;
-                this.AppLogger.Trace($"[TL] Timeline started. name={this.Model.Name}");
+                this.AppLogger.Trace($"{TLSymbol} Timeline started. name={this.Model.Name}");
             }
         }
 
@@ -906,7 +940,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.isRunning = false;
                 this.Status = TimelineStatus.Loaded;
-                this.AppLogger.Trace($"[TL] Timeline stoped. name={this.Model.Name}");
+                this.AppLogger.Trace($"{TLSymbol} Timeline stoped. name={this.Model.Name}");
             }
         }
 
@@ -996,11 +1030,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 select
                 x).FirstOrDefault();
 
-            // アクティブなアクティビティを設定する
-            this.ActiveActivity = active;
-
             if (active != null)
             {
+                // アクティブなアクティビティを設定する
+                this.ActiveActivity = active;
                 active.IsActive = true;
 
                 // jumpを判定する
@@ -1081,7 +1114,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var now = DateTime.Now;
             var offset = this.CurrentTime - act.Time;
             var log =
-                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:Notice from TL. " +
+                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={act.Name}, text={act.Text}, notice={act.Notice}, offset={offset.TotalSeconds:N1}";
 
             ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
@@ -1132,7 +1165,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var now = DateTime.Now;
             var log =
-                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:Notice from TL. " +
+                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={tri.Name}, text={tri.Text}, notice={tri.Notice}";
 
             ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);

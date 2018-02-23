@@ -23,14 +23,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlElement(ElementName = "a")]
         public TimelineActivityModel[] Activities
         {
-            get => this.statements.Where(x => x.TimelineType == TimelineElementTypes.Activity).Cast<TimelineActivityModel>().ToArray();
+            get => this.Statements.Where(x => x.TimelineType == TimelineElementTypes.Activity).Cast<TimelineActivityModel>().ToArray();
             set => this.AddRange(value);
         }
 
         [XmlElement(ElementName = "t")]
         public TimelineTriggerModel[] Triggers
         {
-            get => this.statements.Where(x => x.TimelineType == TimelineElementTypes.Trigger).Cast<TimelineTriggerModel>().ToArray();
+            get => this.Statements.Where(x => x.TimelineType == TimelineElementTypes.Trigger).Cast<TimelineTriggerModel>().ToArray();
             set => this.AddRange(value);
         }
 
@@ -38,13 +38,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public void Add(TimelineBase timeline)
         {
-            if (timeline.TimelineType != TimelineElementTypes.Activity)
+            if (timeline.TimelineType == TimelineElementTypes.Activity ||
+                timeline.TimelineType == TimelineElementTypes.Trigger)
             {
-                return;
+                timeline.Parent = this;
+                this.statements.Add(timeline);
             }
-
-            timeline.Parent = this;
-            this.statements.Add(timeline);
         }
 
         public void AddRange(IEnumerable<TimelineBase> timelines)

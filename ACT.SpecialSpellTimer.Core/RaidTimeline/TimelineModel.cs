@@ -254,6 +254,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
 
                 sb.Replace("utf-16", "utf-8");
+                sb.Replace("True", "true");
+                sb.Replace("False", "false");
 
                 System.IO.File.WriteAllText(
                     file,
