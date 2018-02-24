@@ -524,6 +524,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
             {
+                // 無効なログ？
+                // 無効なログをカットする
+                if (TimelineController.IgnoreLogKeywords.Any(x => log.logLine.Contains(x)))
+                {
+                    continue;
+                }
+
                 Thread.Yield();
                 this.AnalyzeLogLine(log);
             }

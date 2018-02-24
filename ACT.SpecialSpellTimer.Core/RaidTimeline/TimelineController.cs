@@ -494,7 +494,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// 明らかにTLの判定外とするログキーワード
         /// </summary>
-        private static readonly string[] IgnoreKeywords = new[]
+        public static readonly string[] IgnoreLogKeywords = new[]
         {
             "] 15:",    // ダメージかアクションの生ログ
             "] 16:",    // エフェクトの生ログ
@@ -627,7 +627,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     prelog = logLine;
 
                     // 無効キーワードが含まれていればスキップする
-                    if (IgnoreKeywords.Any(x => logLine.Contains(x)))
+                    if (IgnoreLogKeywords.Any(x => logLine.Contains(x)))
                     {
                         continue;
                     }

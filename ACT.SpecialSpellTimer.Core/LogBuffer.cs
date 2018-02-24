@@ -318,6 +318,22 @@ namespace ACT.SpecialSpellTimer
 
         #region ログ処理
 
+        /// <summary>
+        /// 明らかにTLの判定外とするログキーワード
+        /// </summary>
+        public static readonly string[] IgnoreLogKeywords = new[]
+        {
+            /*
+            "] 15:",    // ダメージかアクションの生ログ
+            "] 16:",    // エフェクトの生ログ
+            "] 17:",    // Cancel
+            */
+            "] 18:",    // DoT/HoT Tick
+            /*
+            "] 19:",    // defeated
+            */
+        };
+
         public bool IsEmpty => this.logInfoQueue.IsEmpty;
 
         /// <summary>
@@ -358,6 +374,12 @@ namespace ACT.SpecialSpellTimer
                 out LogLineEventArgs logInfo))
             {
                 var logLine = logInfo.logLine;
+
+                // 無効なログ行をカットする
+                if (IgnoreLogKeywords.Any(x => logLine.Contains(x)))
+                {
+                    continue;
+                }
 
                 // エフェクトに付与されるツールチップ文字を除去する
                 if (Settings.Default.RemoveTooltipSymbols)
