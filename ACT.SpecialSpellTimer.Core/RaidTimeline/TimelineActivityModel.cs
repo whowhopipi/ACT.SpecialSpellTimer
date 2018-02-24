@@ -1,6 +1,8 @@
 using System;
 using System.Text.RegularExpressions;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Image;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
@@ -190,6 +192,38 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.style;
             set => this.SetProperty(ref this.style, value);
         }
+
+        private string icon = null;
+
+        [XmlAttribute(AttributeName = "icon")]
+        public string Icon
+        {
+            get => this.icon;
+            set
+            {
+                if (this.SetProperty(ref this.icon, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.IconImage));
+                    this.RaisePropertyChanged(nameof(this.ThisIconImage));
+                    this.RaisePropertyChanged(nameof(this.ExistsIcon));
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public bool ExistsIcon =>
+            !string.IsNullOrEmpty(this.Icon) ||
+            !string.IsNullOrEmpty(this.StyleModel?.Icon);
+
+        [XmlIgnore]
+        public BitmapImage IconImage =>
+            this.ThisIconImage ?? this.StyleModel?.IconImage;
+
+        [XmlIgnore]
+        private BitmapImage ThisIconImage =>
+            string.IsNullOrEmpty(this.Icon) ?
+            null :
+            IconController.Instance.GetIconFile(this.Icon)?.CreateBitmapImage();
 
         public TimelineActivityModel Clone()
         {

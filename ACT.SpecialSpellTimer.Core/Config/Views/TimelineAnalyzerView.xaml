@@ -12,7 +12,7 @@
   xmlns:resources="clr-namespace:ACT.SpecialSpellTimer.resources"
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
-  d:DataContext="{d:DesignInstance Type=local:TimelineAnalyzerView, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:TimelineAnalyzerView}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   d:DesignWidth="1280"
   Background="White"

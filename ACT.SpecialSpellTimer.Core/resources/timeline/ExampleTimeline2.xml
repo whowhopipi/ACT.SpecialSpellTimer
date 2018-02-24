@@ -13,8 +13,8 @@
   実用向けではありません。
   -->
   <a time="00:00" sync="オオオオオ……この衝動、もはや止められん！" />
-  <a time="00:06" text="風雷波動" notice="次は、風雷波動。" />
-  <a time="00:12" text="天雷掌" notice="次は、天雷掌。" />
+  <a time="00:06" text="風雷波動" notice="次は、風雷波動。" icon="サンダー系128px.png" />
+  <a time="00:12" text="天雷掌" notice="次は、天雷掌。" icon="サンダー系128px.png" />
   <a time="00:22" text="呪縛雷" notice="次は、呪縛雷。" />
   <a time="00:27" sync="捉えたぞ！　叩きのめしてくれるわ！" />
   <a enabled="false" time="00:29" text="Marker:003E" sync="1B:(?&lt;pcid&gt;.{8}):&lt;PC&gt;:0000:0000:003E:0000:0000:0000:" />

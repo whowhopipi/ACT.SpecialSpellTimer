@@ -195,7 +195,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.SetProperty(ref this.icon, value))
                 {
-                    this.RaisePropertyChanged(nameof(this.IconFile));
                     this.RaisePropertyChanged(nameof(this.IconImage));
                     this.RaisePropertyChanged(nameof(this.ExistsIcon));
                 }
@@ -204,12 +203,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         [XmlIgnore]
         public bool ExistsIcon => !string.IsNullOrEmpty(this.Icon);
-
-        [XmlIgnore]
-        public string IconFile =>
-            string.IsNullOrEmpty(this.Icon) ?
-            string.Empty :
-            IconController.Instance.GetIconFile(this.Icon)?.FullPath;
 
         [XmlIgnore]
         public BitmapImage IconImage =>

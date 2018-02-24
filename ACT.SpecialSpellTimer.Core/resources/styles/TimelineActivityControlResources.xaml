@@ -25,10 +25,10 @@
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
-    <Setter Property="Source" Value="{Binding Path=StyleModel.IconImage, Mode=OneWay}" />
+    <Setter Property="Source" Value="{Binding Path=IconImage, Mode=OneWay}" />
     <Setter Property="Height" Value="{Binding Path=StyleModel.IconSize, Mode=OneWay}" />
     <Setter Property="Width" Value="{Binding Path=StyleModel.IconSize, Mode=OneWay}" />
-    <Setter Property="Visibility" Value="{Binding Path=StyleModel.ExistsIcon, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
+    <Setter Property="Visibility" Value="{Binding Path=ExistsIcon, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
   </Style>
 
   <Style x:Key="ActivityTextPanel" TargetType="StackPanel">
@@ -153,10 +153,10 @@
     <Setter Property="HorizontalAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality" />
-    <Setter Property="Source" Value="{Binding Path=StyleModel.IconImage, Mode=OneWay}" />
+    <Setter Property="Source" Value="{Binding Path=IconImage, Mode=OneWay}" />
     <Setter Property="Height" Value="{Binding Path=StyleModel.IconSize, Mode=OneWay}" />
     <Setter Property="Width" Value="{Binding Path=StyleModel.IconSize, Mode=OneWay}" />
-    <Setter Property="Visibility" Value="{Binding Path=StyleModel.ExistsIcon, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
+    <Setter Property="Visibility" Value="{Binding Path=ExistsIcon, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
   </Style>
 
   <Style x:Key="ActivityTextPanelCircle" TargetType="StackPanel">

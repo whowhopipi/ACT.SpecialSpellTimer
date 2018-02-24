@@ -13,7 +13,7 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib"
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
-  d:DataContext="{d:DesignInstance Type=local:TimelineView, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:TimelineView}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   d:DesignWidth="1280"
   Background="White"
@@ -59,15 +59,6 @@
       <system:Double x:Key="TabIconSize">20</system:Double>
     </TabControl.Resources>
 
-    <!-- Timeline Analyzer タブ -->
-    <TabItem Height="60">
-      <TabItem.Header>
-        <fa:ImageAwesome Icon="Pencil" Height="{StaticResource TabIconSize}" ToolTip="{DynamicResource Timeline_Analyzer}" Foreground="Crimson" />
-      </TabItem.Header>
-      <local:TimelineAnalyzerView />
-    </TabItem>
-    <!-- Timeline Analyzer タブ end -->
-
     <!-- Timeline Manager タブ -->
     <TabItem Height="60">
       <TabItem.Header>
@@ -76,5 +67,14 @@
       <local:TimelineManagerView />
     </TabItem>
     <!-- Timeline Manager タブ end -->
+
+    <!-- Timeline Analyzer タブ -->
+    <TabItem Height="60">
+      <TabItem.Header>
+        <fa:ImageAwesome Icon="Pencil" Height="{StaticResource TabIconSize}" ToolTip="{DynamicResource Timeline_Analyzer}" Foreground="Crimson" />
+      </TabItem.Header>
+      <local:TimelineAnalyzerView />
+    </TabItem>
+    <!-- Timeline Analyzer タブ end -->
   </TabControl>
 </UserControl>

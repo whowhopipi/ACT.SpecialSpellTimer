@@ -211,8 +211,9 @@
 
   <system:String x:Key="AddToTag_AddToTag">Add to tag</system:String>
 
-  <system:String x:Key="Timeline_Analyzer">Timeline Aanalyzer</system:String>
-  <system:String x:Key="Timeline_Manager">Timeline Manager</system:String>
+  <system:String x:Key="Timeline_Analyzer">SPESPE Time Aanalyzer</system:String>
+  <system:String x:Key="Timeline_Manager">SPESPE Time</system:String>
+
   <system:String x:Key="Timeline_AutoCombatAnalyze">Auto timeline analyze</system:String>
   <system:String x:Key="Timeline_AutoCombatSave">Auto save result of analysis</system:String>
   <system:String x:Key="Timeline_AutoCombatSaveDirectory">Save to</system:String>

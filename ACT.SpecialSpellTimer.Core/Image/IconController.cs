@@ -226,14 +226,28 @@ namespace ACT.SpecialSpellTimer.Image
                     return null;
                 }
 
-                var img = new BitmapImage();
+                var img = default(BitmapImage);
+                var path = this.FullPath.ToLower();
 
-                img.BeginInit();
-                img.CacheOption = BitmapCacheOption.OnLoad;
-                img.CreateOptions = BitmapCreateOptions.None;
-                img.UriSource = new Uri(this.FullPath);
-                img.EndInit();
-                img.Freeze();
+                lock (iconDictionary)
+                {
+                    if (iconDictionary.ContainsKey(path))
+                    {
+                        img = iconDictionary[path];
+                    }
+                    else
+                    {
+                        img = new BitmapImage();
+                        img.BeginInit();
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.CreateOptions = BitmapCreateOptions.None;
+                        img.UriSource = new Uri(path);
+                        img.EndInit();
+                        img.Freeze();
+
+                        iconDictionary[path] = img;
+                    }
+                }
 
                 return img;
             }
@@ -248,6 +262,8 @@ namespace ACT.SpecialSpellTimer.Image
 
                 return string.Equals(this.FullPath, other.FullPath, StringComparison.OrdinalIgnoreCase);
             }
+
+            private static Dictionary<string, BitmapImage> iconDictionary = new Dictionary<string, BitmapImage>();
         }
     }
 }

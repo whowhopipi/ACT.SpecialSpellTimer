@@ -28,6 +28,7 @@
     </xs:attribute>
     <xs:attribute name="notice-o" type="xs:double" use="optional" default="-6" />
     <xs:attribute name="style" type="xs:string" use="optional" />
+    <xs:attribute name="icon" type="xs:string" use="optional" />
     <xs:attribute name="enabled" type="xs:boolean" use="optional" default="true" />
   </xs:complexType>
 
