@@ -1077,8 +1077,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         x.IsTop = true;
                         x.Opacity = 1.0d;
                         x.Scale = TimelineSettings.Instance.NearestActivityScale;
-
-                        x.RefreshProgress();
                     }
                     else
                     {
@@ -1088,6 +1086,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
 
                     x.IsVisible = true;
+                    x.RefreshProgress();
                     count++;
                 }
                 else
