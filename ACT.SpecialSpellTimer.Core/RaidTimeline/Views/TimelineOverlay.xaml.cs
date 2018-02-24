@@ -147,12 +147,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             this.LoadResourcesDictionary();
 
             this.ToNonActive();
-            this.IsClickthrough = this.Config.Clickthrough;
 
             this.MouseLeftButtonDown += (x, y) => this.DragMove();
 
             this.Opacity = 0;
             this.Topmost = false;
+
+            this.Loaded += (x, y) =>
+            {
+                this.IsClickthrough = this.Config.Clickthrough;
+            };
         }
 
         private TimelineModel model;
