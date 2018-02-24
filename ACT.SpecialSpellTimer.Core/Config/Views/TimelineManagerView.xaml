@@ -322,7 +322,7 @@
                 <Label Margin="0 0 0 0" Content="{DynamicResource Timeline_StyleName}" />
                 <TextBox Text="{Binding Name, Mode=TwoWay}" />
 
-                <CheckBox Margin="0 5 0 0" Content="Default" IsChecked="{Binding Path=IsDefault, Mode=TwoWay}" Command="{Binding ChangeDefaultCommand, Mode=OneWay}" />
+                <CheckBox Margin="0 5 0 0" Content="Default" IsChecked="{Binding Path=IsDefault, Mode=TwoWay}" Command="{Binding ChangeDefaultCommand, Mode=OneWay}" CommandParameter="{Binding}" />
 
                 <!-- フォント -->
                 <Label Margin="0 10 0 0" Content="{DynamicResource Common_Font}" FontWeight="Bold" />

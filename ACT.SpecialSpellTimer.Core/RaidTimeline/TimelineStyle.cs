@@ -230,15 +230,21 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private ICommand changeDefaultCommand;
 
         public ICommand ChangeDefaultCommand =>
-            this.changeDefaultCommand ?? (this.changeDefaultCommand = new DelegateCommand(() =>
+            this.changeDefaultCommand ?? (this.changeDefaultCommand = new DelegateCommand<TimelineStyle>((style) =>
             {
-                if (this.IsDefault)
+                if (style == null)
                 {
-                    foreach (var style in TimelineSettings.Instance.Styles)
+                    return;
+                }
+
+                if (style.IsDefault)
+                {
+                    foreach (var item in TimelineSettings.Instance.Styles)
                     {
-                        if (style != this)
+                        if (item != style &&
+                            item.IsDefault)
                         {
-                            style.IsDefault = false;
+                            item.IsDefault = false;
                         }
                     }
                 }
