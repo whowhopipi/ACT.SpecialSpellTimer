@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
@@ -203,6 +206,84 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         private ObservableCollection<TimelineStyle> styles = new ObservableCollection<TimelineStyle>();
+
+        private string activityMarginString = "0 15 0 0";
+
+        [XmlElement(ElementName = "ActivityMargin")]
+        public string ActivityMarginString
+        {
+            get => this.activityMarginString;
+            set
+            {
+                if (this.SetProperty(ref this.activityMarginString, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.ActivityMargin));
+                }
+            }
+        }
+
+        private static readonly ThicknessConverter thicknessConverter = new ThicknessConverter();
+
+        [XmlIgnore]
+        public Thickness ActivityMargin =>
+            (Thickness)thicknessConverter.ConvertFromString(this.ActivityMarginString);
+
+        private string overlayBackgroundString = "#F0000000";
+
+        [XmlElement(ElementName = "OverlayBackground")]
+        public string OverlayBackgroundString
+        {
+            get => this.overlayBackgroundString;
+            set
+            {
+                if (this.SetProperty(ref this.overlayBackgroundString, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.OverlayBackground));
+                }
+            }
+        }
+
+        private static readonly BrushConverter brushConverter = new BrushConverter();
+
+        [XmlIgnore]
+        public Brush OverlayBackground
+        {
+            get
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(this.OverlayBackgroundString))
+                    {
+                        return null;
+                    }
+
+                    if (File.Exists(this.OverlayBackgroundString))
+                    {
+                        var img = new BitmapImage();
+
+                        img.BeginInit();
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.CreateOptions = BitmapCreateOptions.None;
+                        img.UriSource = new Uri(this.OverlayBackgroundString);
+                        img.EndInit();
+                        img.Freeze();
+
+                        var brush = new ImageBrush(img);
+                        brush.Stretch = Stretch.Uniform;
+                        RenderOptions.SetEdgeMode(brush, EdgeMode.Aliased);
+                        RenderOptions.SetBitmapScalingMode(brush, BitmapScalingMode.NearestNeighbor);
+
+                        return brush;
+                    }
+
+                    return (Brush)brushConverter.ConvertFromString(this.OverlayBackgroundString);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
 
         public ObservableCollection<TimelineStyle> Styles
         {

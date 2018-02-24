@@ -283,7 +283,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (style != null)
                 {
-                    var result = ColorDialogWrapper.ShowDialog(style.Color, true);
+                    var result = ColorDialogWrapper.ShowDialog(style.Color, false);
                     if (result.Result)
                     {
                         style.Color = result.Color;
@@ -298,7 +298,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (style != null)
                 {
-                    var result = ColorDialogWrapper.ShowDialog(style.OutlineColor, true);
+                    var result = ColorDialogWrapper.ShowDialog(style.OutlineColor, false);
                     if (result.Result)
                     {
                         style.OutlineColor = result.Color;
@@ -313,7 +313,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (style != null)
                 {
-                    var result = ColorDialogWrapper.ShowDialog(style.BarColor, true);
+                    var result = ColorDialogWrapper.ShowDialog(style.BarColor, false);
                     if (result.Result)
                     {
                         style.BarColor = result.Color;

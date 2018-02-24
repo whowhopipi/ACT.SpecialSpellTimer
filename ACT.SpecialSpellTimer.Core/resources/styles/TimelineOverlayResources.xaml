@@ -25,8 +25,8 @@
     <Setter Property="Margin" Value="8" />
     <Setter Property="BorderBrush" Value="Gainsboro" />
     <Setter Property="BorderThickness" Value="1" />
-    <Setter Property="Background" Value="#FF000000" />
-    <Setter Property="Opacity" Value="0.85" />
+    <Setter Property="Background" Value="{Binding Path=Config.OverlayBackground, Mode=OneWay}" />
+    <Setter Property="Opacity" Value="0.95" />
     <Setter Property="CornerRadius" Value="6" />
     <Setter Property="Effect">
       <Setter.Value>
@@ -76,6 +76,7 @@
           Direction="0"
           RenderingBias="Quality"
           ShadowDepth="0"
+          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -100,6 +101,7 @@
           Direction="0"
           RenderingBias="Quality"
           ShadowDepth="0"
+          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -129,6 +131,7 @@
           Direction="0"
           RenderingBias="Quality"
           ShadowDepth="0"
+          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -160,6 +163,7 @@
           Direction="0"
           RenderingBias="Quality"
           ShadowDepth="0"
+          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -191,7 +195,7 @@
 
   <!-- アクティビティItemsControlのコンテンツプレゼンタ -->
   <Style x:Key="ActivityContainer" TargetType="ContentPresenter">
-    <Setter Property="Margin" Value="0 15 0 0" />
+    <Setter Property="Margin" Value="{Binding Path=Config.ActivityMargin, Mode=OneWay}" />
     <Setter Property="Opacity" Value="{Binding Path=Opacity, Mode=OneWay}" />
     <Setter Property="LayoutTransform">
       <Setter.Value>

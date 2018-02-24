@@ -233,6 +233,8 @@
   <system:String x:Key="Timeline_OverlayScale">Overlay scale</system:String>
   <system:String x:Key="Timeline_NearestActivityScale">Nearest activity scale</system:String>
   <system:String x:Key="Timeline_NextActivityBrightness">After the next activities brightness</system:String>
+  <system:String x:Key="Timeline_ActivityMargin">Margin of activities</system:String>
+  <system:String x:Key="Timeline_OverlayBackground">Overlay background</system:String>
   <system:String x:Key="Timeline_Styles">Activity style</system:String>
   <system:String x:Key="Timeline_StyleName">Style name</system:String>
   <system:String x:Key="Timeline_CircleStyle">Circle style</system:String>

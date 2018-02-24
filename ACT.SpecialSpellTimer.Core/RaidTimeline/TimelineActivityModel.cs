@@ -237,6 +237,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region 動作を制御するためのフィールド
 
+        [XmlIgnore]
+        public TimelineSettings Config => TimelineSettings.Instance;
+
         private static TimeSpan currentTime = TimeSpan.Zero;
 
         [XmlIgnore]

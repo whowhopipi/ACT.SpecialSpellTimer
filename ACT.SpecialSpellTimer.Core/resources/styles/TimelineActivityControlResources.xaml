@@ -53,8 +53,9 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
+          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -76,8 +77,9 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
+          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -132,8 +134,9 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
+          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -180,8 +183,9 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
+          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -203,8 +207,9 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
+          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
       </Setter.Value>
     </Setter>
@@ -257,9 +262,11 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
+          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
+          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}">
+        </DropShadowEffect>
       </Setter.Value>
     </Setter>
   </Style>
