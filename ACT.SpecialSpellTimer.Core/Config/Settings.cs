@@ -188,7 +188,7 @@ namespace ACT.SpecialSpellTimer.Config
         public long RefreshInterval { get; set; }
 
         public int MaxFPS { get; set; }
-        public bool RenderCPUOnly { get; set; } = true;
+        public bool RenderCPUOnly { get; set; } = false;
 
         private NameStyles pcNameInitialOnDisplayStyle = NameStyles.FullName;
 
@@ -585,7 +585,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.TextBlurRate), 1.2d },
             { nameof(Settings.TextOutlineThicknessRate), 1.0d },
             { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
-            { nameof(Settings.RenderCPUOnly), true },
+            { nameof(Settings.RenderCPUOnly), false },
             { nameof(Settings.ToComplementUnknownSkill), true },
             { nameof(Settings.SingleTaskLogMatching), false },
             { nameof(Settings.DisableStartCondition), false },
