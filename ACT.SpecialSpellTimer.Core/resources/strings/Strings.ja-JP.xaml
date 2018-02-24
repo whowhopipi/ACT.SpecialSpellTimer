@@ -211,23 +211,23 @@
 
   <system:String x:Key="AddToTag_AddToTag">タグに追加する</system:String>
 
-  <system:String x:Key="Timeline_Analyzer">スペスペたいむ分析</system:String>
-  <system:String x:Key="Timeline_Manager">スペスペたいむ</system:String>
+  <system:String x:Key="Timeline_Analyzer">スペスペたいむ™ 分析</system:String>
+  <system:String x:Key="Timeline_Manager">スペスペたいむ™</system:String>
 
   <system:String x:Key="Timeline_AutoCombatAnalyze">自動タイムライン分析</system:String>
   <system:String x:Key="Timeline_AutoCombatSave">分析結果の自動保存</system:String>
   <system:String x:Key="Timeline_AutoCombatSaveDirectory">分析結果の自動保存先</system:String>
   <system:String x:Key="Timeline_SaveToSpreadsheet">スプレッドシートに保存する</system:String>
-  <system:String x:Key="Timeline_SaveToDraftTimeline">スペスペたいむとして保存する</system:String>
+  <system:String x:Key="Timeline_SaveToDraftTimeline">スペスペたいむ™ として保存する</system:String>
   <system:String x:Key="Timeline_SaveToTestLog">テスト用ログとして保存する</system:String>
   <system:String x:Key="Timeline_TotalSecoundsFormat">トータル秒数表示にする</system:String>
   <system:String x:Key="Timeline_ThisIsOrigin">このレコードを基点にする</system:String>
   <system:String x:Key="Timeline_ImportCombatLog">過去の戦闘ログをインポートする</system:String>
 
   <system:String x:Key="Timeline_ShowDummyTimeline">デザイン用のダミーを表示する</system:String>
-  <system:String x:Key="Timeline_Enable">スペスペたいむを使用する</system:String>
+  <system:String x:Key="Timeline_Enable">スペスペたいむ™ を使用する</system:String>
   <system:String x:Key="Timeline_Folder">タイムラインの参照フォルダ</system:String>
-  <system:String x:Key="Timeline_Visual">スペスペたいむの見た目</system:String>
+  <system:String x:Key="Timeline_Visual">スペスペたいむ™ の見た目</system:String>
   <system:String x:Key="Timeline_OverlayVisible">オーバーレイを表示する</system:String>
   <system:String x:Key="Timeline_Opacity">不透明度</system:String>
   <system:String x:Key="Timeline_OverlayScale">オーバーレイのスケール</system:String>
@@ -236,8 +236,8 @@
   <system:String x:Key="Timeline_Styles">アクティビティの表示スタイル</system:String>
   <system:String x:Key="Timeline_StyleName">スタイルの名前</system:String>
   <system:String x:Key="Timeline_CircleStyle">サークルスタイル</system:String>
-  <system:String x:Key="Timeline_TestTimeline">過去の戦闘ログを使用してスペスペたいむをテストする</system:String>
-  <system:String x:Key="Timeline_TimelineTester">スペスペたいむテスター</system:String>
+  <system:String x:Key="Timeline_TestTimeline">過去の戦闘ログを使用して スペスペたいむ™ をテストする</system:String>
+  <system:String x:Key="Timeline_TimelineTester">スペスペたいむ™テスター</system:String>
   <system:String x:Key="Timeline_ShowActivitiesCount">表示するアクティビティの数</system:String>
   <system:String x:Key="Timeline_Header">ヘッダ</system:String>
   <system:String x:Key="Timeline_ShowHeader">ヘッダを表示する</system:String>
