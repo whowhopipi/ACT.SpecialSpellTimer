@@ -38,6 +38,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         Added,
         Start,
         End,
+        TimelineStart,
     }
 
     /// <summary>
@@ -208,6 +209,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
             new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始", Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始まで5秒！", Category = KewordTypes.TimelineStart },
             new AnalyzeKeyword() { Keyword = "の攻略を終了した。", Category = KewordTypes.End },
             new AnalyzeKeyword() { Keyword = "ロットを行ってください。", Category = KewordTypes.End },
             new AnalyzeKeyword() { Keyword = WipeoutLog, Category = KewordTypes.End },

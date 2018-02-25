@@ -230,33 +230,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         this.Model.Entry,
                         StringComparison.OrdinalIgnoreCase));
 
-            if (entry != null)
+            var srcs = entry?.Activities ?? this.Model.Activities;
+            foreach (var src in srcs
+                .Where(x => x.Enabled.GetValueOrDefault()))
             {
-                // entryポイントを読み込む
-                foreach (var src in entry.Activities
-                    .Where(x => x.Enabled.GetValueOrDefault()))
-                {
-                    var act = src.Clone();
-                    act.Init(seq++);
-                    act.RefreshProgress();
-                    setStyle(act);
+                var act = src.Clone();
+                act.Init(seq++);
+                act.RefreshProgress();
+                setStyle(act);
 
-                    acts.Add(act);
-                }
-            }
-            else
-            {
-                // 平のActivityを読み込む
-                foreach (var src in this.Model.Activities
-                    .Where(x => x.Enabled.GetValueOrDefault()))
-                {
-                    var act = src.Clone();
-                    act.Init(seq++);
-                    act.RefreshProgress();
-                    setStyle(act);
-
-                    acts.Add(act);
-                }
+                acts.Add(act);
             }
 
             foreach (var sub in this.Model.Subroutines
@@ -749,7 +732,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             // 開始・終了判定のキーワードを取得する
             var keywords = CombatAnalyzer.Keywords.Where(x =>
-                x.Category == KewordTypes.Start ||
+                x.Category == KewordTypes.TimelineStart ||
                 x.Category == KewordTypes.End);
 
             // [TL] キーワードを含まないログに対して判定する
@@ -767,8 +750,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     switch (key.Category)
                     {
-                        case KewordTypes.Start:
-                            WPFHelper.BeginInvoke(() => this.StartActivityLine());
+                        case KewordTypes.TimelineStart:
+                            WPFHelper.BeginInvoke(() =>
+                            {
+                                Thread.Sleep(TimeSpan.FromSeconds(4.8));
+                                this.StartActivityLine();
+                            });
                             break;
 
                         case KewordTypes.End:
