@@ -868,6 +868,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
                 }
 
+                // StartTriggerがある？
+                if (!this.isRunning)
+                {
+                    if (this.Model.StartTriggerRegex != null)
+                    {
+                        var match = this.Model.StartTriggerRegex.Match(xivlog.Log);
+                        if (match.Success)
+                        {
+                            WPFHelper.BeginInvoke(() => this.StartActivityLine());
+                        }
+                    }
+                }
+
                 // アクティビティ・トリガとマッチングする
                 detectors.AsParallel().ForAll(detector =>
                 {

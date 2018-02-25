@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -79,6 +80,41 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.entry;
             set => this.SetProperty(ref this.entry, value);
+        }
+
+        private string startTrigger = null;
+
+        [XmlElement(ElementName = "start")]
+        public string StartTrigger
+        {
+            get => this.startTrigger;
+            set
+            {
+                if (this.SetProperty(ref this.startTrigger, value))
+                {
+                    if (string.IsNullOrEmpty(this.startTrigger))
+                    {
+                        this.StartTriggerRegex = null;
+                    }
+                    else
+                    {
+                        this.StartTriggerRegex = new Regex(
+                            this.startTrigger,
+                            RegexOptions.Compiled |
+                            RegexOptions.ExplicitCapture |
+                            RegexOptions.IgnoreCase);
+                    }
+                }
+            }
+        }
+
+        private Regex startTriggerRegex = null;
+
+        [XmlIgnore]
+        public Regex StartTriggerRegex
+        {
+            get => this.startTriggerRegex;
+            private set => this.SetProperty(ref this.startTriggerRegex, value);
         }
 
         private string file = string.Empty;
