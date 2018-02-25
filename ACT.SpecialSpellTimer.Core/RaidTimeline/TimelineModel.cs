@@ -72,6 +72,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlIgnore]
         public string LocaleText => this.Locale.ToText();
 
+        private string entry = null;
+
+        [XmlElement(ElementName = "entry")]
+        public string Entry
+        {
+            get => this.entry;
+            set => this.SetProperty(ref this.entry, value);
+        }
+
         private string file = string.Empty;
 
         [XmlIgnore]

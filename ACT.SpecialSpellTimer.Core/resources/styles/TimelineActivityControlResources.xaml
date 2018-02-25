@@ -62,8 +62,8 @@
   </Style>
 
   <Style x:Key="JumpDestinationText" TargetType="controls:OutlineTextBlock">
-    <Setter Property="Margin" Value="20 0 0 0" />
-    <Setter Property="Text" Value="{Binding Path=JumpDestination, StringFormat=➡ {0}, Mode=OneWay}" />
+    <Setter Property="Margin" Value="10 0 0 0" />
+    <Setter Property="Text" Value="{Binding Path=JumpDestination, StringFormat=➜ {0}, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
     <Setter Property="FontStyle" Value="{Binding Path=StyleModel.Font.Style, Mode=OneWay}" />

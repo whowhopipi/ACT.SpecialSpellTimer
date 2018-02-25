@@ -24,14 +24,14 @@
     <Setter Property="Panel.ZIndex" Value="-1" />
     <Setter Property="Margin" Value="8" />
     <Setter Property="BorderBrush" Value="Gainsboro" />
-    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Background" Value="{Binding Path=Config.OverlayBackground, Mode=OneWay}" />
     <Setter Property="Opacity" Value="0.95" />
     <Setter Property="CornerRadius" Value="6" />
     <Setter Property="Effect">
       <Setter.Value>
         <DropShadowEffect
-          BlurRadius="8"
+          BlurRadius="0"
           Direction="0"
           ShadowDepth="0"
           Color="White" />
@@ -55,6 +55,7 @@
 
   <!-- ヘッダ1行目 -->
   <Style x:Key="Header1Panel" TargetType="StackPanel">
+    <Setter Property="Margin" Value="0 -5 0 0 " />
     <Setter Property="Orientation" Value="Horizontal" />
   </Style>
 
@@ -109,7 +110,7 @@
 
   <!-- ヘッダ2段目 -->
   <Style x:Key="Header2Panel" TargetType="StackPanel">
-    <Setter Property="Margin" Value="2 5 0 0" />
+    <Setter Property="Margin" Value="0 2 0 0" />
     <Setter Property="Orientation" Value="Horizontal" />
   </Style>
 
@@ -146,7 +147,7 @@
 
   <!-- タイムラインの実行ステータス -->
   <Style x:Key="Status" TargetType="controls:OutlineTextBlock">
-    <Setter Property="Margin" Value="0 0 2 -2" />
+    <Setter Property="Margin" Value="0 0 2 0" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Text" Value="{Binding Path=Model.Controller.StatusIndicator, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="Consolas" />
@@ -176,10 +177,10 @@
     </Setter>
     <Style.Triggers>
       <Trigger Property="Text" Value="Ｒ">
-        <Setter Property="Fill" Value="LightGray" />
+        <Setter Property="Fill" Value="Silver" />
       </Trigger>
       <Trigger Property="Text" Value="⬛">
-        <Setter Property="Fill" Value="Navy" />
+        <Setter Property="Fill" Value="Gray" />
       </Trigger>
       <Trigger Property="Text" Value="▶">
         <Setter Property="Fill" Value="OrangeRed" />

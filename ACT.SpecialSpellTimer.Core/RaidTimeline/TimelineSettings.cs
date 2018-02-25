@@ -308,6 +308,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             DirectoryHelper.FindSubDirectory(@"resources\timeline"),
             @"Timeline.config");
 
+        public static readonly string MasterFile = Path.Combine(
+            DirectoryHelper.FindSubDirectory(@"resources\timeline"),
+            @"Timeline.master.config");
+
         public static void Load() => instance = Load(FileName);
 
         public static void Save() => instance.Save(FileName);
@@ -325,8 +329,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                     if (!File.Exists(file))
                     {
-                        data = new TimelineSettings();
-                        return data;
+                        if (File.Exists(MasterFile))
+                        {
+                            File.Copy(MasterFile, file);
+                        }
+                        else
+                        {
+                            data = new TimelineSettings();
+                            return data;
+                        }
                     }
 
                     using (var sr = new StreamReader(file, new UTF8Encoding(false)))

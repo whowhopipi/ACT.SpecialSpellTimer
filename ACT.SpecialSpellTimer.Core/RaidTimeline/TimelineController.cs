@@ -219,15 +219,44 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var acts = new List<TimelineActivityModel>();
 
             int seq = 1;
-            foreach (var src in this.Model.Activities
-                .Where(x => x.Enabled.GetValueOrDefault()))
-            {
-                var act = src.Clone();
-                act.Init(seq++);
-                act.RefreshProgress();
-                setStyle(act);
 
-                acts.Add(act);
+            // entryポイントの指定がある？
+            var entry = string.IsNullOrEmpty(this.Model.Entry) ?
+                null :
+                this.Model.Subroutines.FirstOrDefault(x =>
+                    x.Enabled.GetValueOrDefault() &&
+                    string.Equals(
+                        x.Name,
+                        this.Model.Entry,
+                        StringComparison.OrdinalIgnoreCase));
+
+            if (entry != null)
+            {
+                // entryポイントを読み込む
+                foreach (var src in entry.Activities
+                    .Where(x => x.Enabled.GetValueOrDefault()))
+                {
+                    var act = src.Clone();
+                    act.Init(seq++);
+                    act.RefreshProgress();
+                    setStyle(act);
+
+                    acts.Add(act);
+                }
+            }
+            else
+            {
+                // 平のActivityを読み込む
+                foreach (var src in this.Model.Activities
+                    .Where(x => x.Enabled.GetValueOrDefault()))
+                {
+                    var act = src.Clone();
+                    act.Init(seq++);
+                    act.RefreshProgress();
+                    setStyle(act);
+
+                    acts.Add(act);
+                }
             }
 
             foreach (var sub in this.Model.Subroutines

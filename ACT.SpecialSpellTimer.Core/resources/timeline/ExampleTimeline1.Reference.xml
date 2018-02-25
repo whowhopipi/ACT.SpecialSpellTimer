@@ -7,15 +7,8 @@
 <!--
 <timeline> タグ
 ルート要素
-xmlnsによる名前空間の宣言はなくてもよい。すなわち
-<timeline>
-</timeline>
-というシンプルな要素定義でも問題ない。
 -->
-<timeline
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="https://github.com/anoyetta/Hojoring/Timeline https://raw.githubusercontent.com/anoyetta/ACT.SpecialSpellTimer/master/ACT.SpecialSpellTimer.Core/resources/timeline/Timeline.xsd">
-
+<timeline>
   <!--
   <name> タグ
   string, 任意項目
