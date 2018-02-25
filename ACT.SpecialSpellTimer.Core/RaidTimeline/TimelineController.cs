@@ -630,6 +630,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             "] 17:",    // Cancel
             "] 18:",    // DoT/HoT Tick
             "] 19:",    // defeated
+            "] 0D:",    // HP Rate
         };
 
         private Thread LogWorker

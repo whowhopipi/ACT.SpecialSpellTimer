@@ -351,18 +351,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (el.TimelineType == TimelineElementTypes.Subroutine)
                 {
                     var sub = el as TimelineSubroutineModel;
-                    foreach (var act in sub.Statements)
+                    foreach (var el2 in sub.Statements)
                     {
-                        setDefaultValuesToElement(act);
+                        setDefaultValuesToElement(el2);
+
+                        if (el2.TimelineType == TimelineElementTypes.Trigger)
+                        {
+                            var tri = el2 as TimelineTriggerModel;
+                            foreach (var el3 in tri.Statements)
+                            {
+                                setDefaultValuesToElement(el3);
+                            }
+                        }
                     }
                 }
 
                 if (el.TimelineType == TimelineElementTypes.Trigger)
                 {
                     var tri = el as TimelineTriggerModel;
-                    foreach (var act in tri.Statements)
+                    foreach (var el2 in tri.Statements)
                     {
-                        setDefaultValuesToElement(act);
+                        setDefaultValuesToElement(el2);
                     }
                 }
             }
@@ -627,10 +636,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         return;
                     }
 
+                    this.File = tl.File;
                     this.Name = tl.Name;
                     this.Zone = tl.Zone;
                     this.Locale = tl.Locale;
-                    this.File = tl.File;
+                    this.Entry = tl.Entry;
+                    this.StartTrigger = tl.StartTrigger;
 
                     if (this.IsActive)
                     {

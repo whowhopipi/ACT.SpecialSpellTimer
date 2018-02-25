@@ -97,6 +97,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     }
 
                     this.TestStartTime = DateTime.MinValue;
+
+                    TimelineController.CurrentController?.EndActivityLine();
                 }
             };
         }
@@ -166,6 +168,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     while (!sr.EndOfStream)
                     {
                         var logline = sr.ReadLine();
+
+                        if (TimelineController.IgnoreLogKeywords.Any(x =>
+                            logline.Contains(x)))
+                        {
+                            continue;
+                        }
+
                         var log = new TestLog(logline)
                         {
                             Seq = seq++
@@ -178,6 +187,20 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 if (!list.Any())
                 {
                     return;
+                }
+
+                // 頭出しをする
+                var combatStart = list.FirstOrDefault(x => x.Log.Contains("戦闘開始"));
+                if (combatStart != null)
+                {
+                    list.RemoveRange(0, list.IndexOf(combatStart));
+                }
+                else
+                {
+                    // ダミー戦闘開始5秒前を挿入する
+                    var head = list.First();
+                    list.Insert(0, new TestLog(
+                        $"[{head.Timestamp.AddSeconds(-5):HH:mm:ss.fff}] 00:0039:戦闘開始まで5秒！ [DUMMY]"));
                 }
 
                 var first = list.First();
