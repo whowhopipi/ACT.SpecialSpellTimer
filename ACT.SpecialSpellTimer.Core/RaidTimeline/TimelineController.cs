@@ -1180,7 +1180,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public void StopNotifyWorker()
         {
-            this.notifyWorker.Abort(100);
+            this.notifyWorker.Abort(50);
             while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
             this.notifyWorker = null;
         }
