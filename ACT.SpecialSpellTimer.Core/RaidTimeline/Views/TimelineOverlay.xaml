@@ -61,11 +61,11 @@
           </StackPanel>
 
           <StackPanel Style="{DynamicResource Header2Panel}">
-            <!-- ゾーン or Name -->
-            <controls:OutlineTextBlock Style="{DynamicResource Title}" />
-
             <!-- ステータス -->
             <controls:OutlineTextBlock Style="{DynamicResource Status}" />
+
+            <!-- ゾーン or Name -->
+            <controls:OutlineTextBlock Style="{DynamicResource Title}" />
           </StackPanel>
         </StackPanel>
       </Border>

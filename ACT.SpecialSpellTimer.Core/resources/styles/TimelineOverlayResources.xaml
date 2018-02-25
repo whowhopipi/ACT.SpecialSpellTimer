@@ -74,7 +74,7 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
           Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
@@ -99,7 +99,7 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
           Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
@@ -115,6 +115,7 @@
 
   <!-- タイトル（タイムライン名 or ゾーン名） -->
   <Style x:Key="Title" TargetType="controls:OutlineTextBlock">
+    <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Text" Value="{Binding Path=Model.DisplayName, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}" />
@@ -129,7 +130,7 @@
         <DropShadowEffect
           BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
           Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
@@ -145,23 +146,23 @@
 
   <!-- タイムラインの実行ステータス -->
   <Style x:Key="Status" TargetType="controls:OutlineTextBlock">
-    <Setter Property="Margin" Value="10 0 0 0" />
+    <Setter Property="Margin" Value="0 0 2 -2" />
     <Setter Property="VerticalAlignment" Value="Center" />
-    <Setter Property="Text" Value="{Binding Path=Model.Controller.StatusText, Mode=OneWay}" />
-    <Setter Property="FontFamily" Value="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}" />
-    <Setter Property="FontWeight" Value="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}" />
-    <Setter Property="FontStyle" Value="{Binding Path=Config.IndicatorStyleModel.Font.Style, Mode=OneWay}" />
-    <Setter Property="FontStretch" Value="{Binding Path=Config.IndicatorStyleModel.Font.Stretch, Mode=OneWay}" />
+    <Setter Property="Text" Value="{Binding Path=Model.Controller.StatusIndicator, Mode=OneWay}" />
+    <Setter Property="FontFamily" Value="Consolas" />
+    <Setter Property="FontWeight" Value="Bold" />
     <Setter Property="FontSize" Value="{Binding Path=Config.IndicatorStyleModel.Font.Size, Mode=OneWay}" />
+    <!--
     <Setter Property="Fill" Value="{Binding Path=Config.IndicatorStyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    -->
     <Setter Property="Effect">
       <Setter.Value>
         <DropShadowEffect
           BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
           Direction="0"
-          RenderingBias="Quality"
+          RenderingBias="Performance"
           ShadowDepth="0"
           Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
           Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
@@ -173,6 +174,17 @@
         <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
       </Setter.Value>
     </Setter>
+    <Style.Triggers>
+      <Trigger Property="Text" Value="Ｒ">
+        <Setter Property="Fill" Value="LightGray" />
+      </Trigger>
+      <Trigger Property="Text" Value="⬛">
+        <Setter Property="Fill" Value="Navy" />
+      </Trigger>
+      <Trigger Property="Text" Value="▶">
+        <Setter Property="Fill" Value="OrangeRed" />
+      </Trigger>
+    </Style.Triggers>
   </Style>
 
   <!-- アクティビティItemsControlのBorder -->

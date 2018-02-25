@@ -36,6 +36,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 "Standby",
                 "Running",
             }[(int)s];
+
+        public static string ToIndicator(
+            this TimelineStatus s)
+            => new[]
+            {
+                string.Empty,
+                "Ｒ",
+                "⬛",
+                "▶",
+            }[(int)s];
     }
 
     public partial class TimelineController :
@@ -98,11 +108,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (this.SetProperty(ref status, value))
                 {
                     this.RaisePropertyChanged(nameof(this.StatusText));
+                    this.RaisePropertyChanged(nameof(this.StatusIndicator));
                 }
             }
         }
 
         public string StatusText => this.status.ToText();
+
+        public string StatusIndicator => this.status.ToIndicator();
 
         private TimeSpan currentTime = TimeSpan.Zero;
 
