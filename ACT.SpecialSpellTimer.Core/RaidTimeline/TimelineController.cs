@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
@@ -174,6 +175,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
                 ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
+                this.StartNotifyWorker();
+
                 this.Status = TimelineStatus.Loaded;
                 this.AppLogger.Trace($"[TL] Timeline loaded. name={this.Model.Name}");
             }
@@ -207,6 +210,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
                 this.logInfoQueue = null;
+
+                this.StopNotifyWorker();
 
                 CurrentController = null;
 
@@ -845,7 +850,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     lock (this)
                     {
-                        this.NotifyTrigger(tri);
+                        this.notifyQueue.Enqueue(tri);
 
                         var active = (
                             from x in this.ActivityLine
@@ -1033,7 +1038,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             foreach (var act in toNotify)
             {
-                this.NotifyActivity(act);
+                this.notifyQueue.Enqueue(act);
             }
 
             // 表示を終了させる
@@ -1139,6 +1144,47 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region 通知に関するメソッド
 
+        private readonly ConcurrentQueue<TimelineBase> notifyQueue = new ConcurrentQueue<TimelineBase>();
+
+        private ThreadWorker notifyWorker;
+
+        private void StartNotifyWorker()
+        {
+            if (this.notifyWorker == null)
+            {
+                this.notifyWorker = new ThreadWorker(
+                    () =>
+                    {
+                        while (this.notifyQueue.TryDequeue(out TimelineBase element))
+                        {
+                            switch (element)
+                            {
+                                case TimelineActivityModel act:
+                                    this.NotifyActivity(act);
+                                    break;
+
+                                case TimelineTriggerModel tri:
+                                    this.NotifyTrigger(tri);
+                                    break;
+                            }
+
+                            Thread.Yield();
+                        }
+                    },
+                    150,
+                    "Timeline Notify Worker");
+            }
+
+            this.notifyWorker.Run();
+        }
+
+        public void StopNotifyWorker()
+        {
+            this.notifyWorker.Abort(100);
+            while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
+            this.notifyWorker = null;
+        }
+
         private void NotifyActivity(
             TimelineActivityModel act)
         {
@@ -1157,7 +1203,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={act.Name}, text={act.Text}, notice={act.Notice}, offset={offset.TotalSeconds:N1}";
 
-            ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
+            ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
+            {
+                ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
+            });
 
             if (string.IsNullOrEmpty(act.Notice))
             {
@@ -1208,7 +1257,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={tri.Name}, text={tri.Text}, notice={tri.Notice}";
 
-            ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
+            ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
+            {
+                ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
+            });
 
             if (string.IsNullOrEmpty(tri.Notice))
             {
