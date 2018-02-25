@@ -55,7 +55,7 @@
 
   <!-- ヘッダ1行目 -->
   <Style x:Key="Header1Panel" TargetType="StackPanel">
-    <Setter Property="Margin" Value="0 -5 0 0 " />
+    <Setter Property="Margin" Value="0 2 0 0 " />
     <Setter Property="Orientation" Value="Horizontal" />
   </Style>
 
@@ -110,7 +110,7 @@
 
   <!-- ヘッダ2段目 -->
   <Style x:Key="Header2Panel" TargetType="StackPanel">
-    <Setter Property="Margin" Value="0 2 0 0" />
+    <Setter Property="Margin" Value="0 5 0 0" />
     <Setter Property="Orientation" Value="Horizontal" />
   </Style>
 

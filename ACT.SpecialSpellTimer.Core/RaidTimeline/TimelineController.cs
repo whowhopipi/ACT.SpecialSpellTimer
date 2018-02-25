@@ -134,7 +134,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
-        private string currentTimeText;
+        private string currentTimeText = "00:00";
 
         public string CurrentTimeText
         {
