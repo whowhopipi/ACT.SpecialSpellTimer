@@ -349,6 +349,7 @@
           <TreeView
             Name="TagsTreeView"
             BorderThickness="0"
+            Padding="0 0 40 0"
             DataContext="{Binding TagsTreeRoot, Mode=OneWay}"
             ItemsSource="{Binding Children, Mode=OneWay}">
 
@@ -380,6 +381,7 @@
           <TreeView
             Name="SpellsTreeView"
             BorderThickness="0"
+            Padding="0 0 40 0"
             DataContext="{Binding SpellsTreeRoot, Mode=OneWay}"
             ItemsSource="{Binding Children, Mode=OneWay}">
 
@@ -408,6 +410,7 @@
           <TreeView
             Name="TickersTreeView"
             BorderThickness="0"
+            Padding="0 0 40 0"
             DataContext="{Binding TickersTreeRoot, Mode=OneWay}"
             ItemsSource="{Binding Children, Mode=OneWay}">
 

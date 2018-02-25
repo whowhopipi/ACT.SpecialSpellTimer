@@ -193,6 +193,11 @@ namespace ACT.SpecialSpellTimer.Models
                                 item.PanelID = SpellPanelTable.Instance.Table
                                     .FirstOrDefault(x => x.PanelName == item.PanelName)?
                                     .ID ?? Guid.Empty;
+
+                                if (item.PanelID == Guid.Empty)
+                                {
+                                    item.PanelID = SpellPanel.GeneralPanel.ID;
+                                }
                             }
 
                             this.table.Add(item);
