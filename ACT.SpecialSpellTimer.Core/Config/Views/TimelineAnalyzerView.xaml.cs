@@ -111,7 +111,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
         private const string SpreadExt = ".xlsx";
         private const string TimelineFilter = "Timeline Files|*.xml|All Files|*.*";
         private const string TimelineExt = ".xml";
-        private const string LogFilter = "Log Files|*.xml|All Files|*.*";
+        private const string LogFilter = "Log Files|*.log|All Files|*.*";
         private const string LogExt = ".log";
 
         private System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog()

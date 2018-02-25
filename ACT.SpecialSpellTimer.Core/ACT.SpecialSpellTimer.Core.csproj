@@ -236,6 +236,7 @@
     <Compile Include="RaidTimeline\TimelineBase.cs" />
     <Compile Include="RaidTimeline\TimelineDefaultModel.cs" />
     <Compile Include="RaidTimeline\TimelineController.cs" />
+    <Compile Include="RaidTimeline\TimelineLoadModel.cs" />
     <Compile Include="RaidTimeline\TimelineManager.cs" />
     <Compile Include="RaidTimeline\TimelineModel.cs" />
     <Compile Include="RaidTimeline\TimelineSettings.cs" />
@@ -336,6 +337,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\color\回復風緑系.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\icon\Timeline\セリフ128px.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\icon\Timeline\重ね捨て128px.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\icon\Timeline mono\セリフ128px_BW.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\icon\Timeline mono\重ね捨て128px_BW.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\timeline\ExampleTimeline3.Jump.xml">

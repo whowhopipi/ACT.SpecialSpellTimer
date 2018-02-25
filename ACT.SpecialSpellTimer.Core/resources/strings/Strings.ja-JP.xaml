@@ -239,7 +239,7 @@
   <system:String x:Key="Timeline_StyleName">スタイルの名前</system:String>
   <system:String x:Key="Timeline_CircleStyle">サークルスタイル</system:String>
   <system:String x:Key="Timeline_TestTimeline">過去の戦闘ログを使用して スペスペたいむ™ をテストする</system:String>
-  <system:String x:Key="Timeline_TimelineTester">スペスペたいむ™テスター</system:String>
+  <system:String x:Key="Timeline_TimelineTester">スペスペたいむ™ テスター</system:String>
   <system:String x:Key="Timeline_ShowActivitiesCount">表示するアクティビティの数</system:String>
   <system:String x:Key="Timeline_Header">ヘッダ</system:String>
   <system:String x:Key="Timeline_ShowHeader">ヘッダを表示する</system:String>

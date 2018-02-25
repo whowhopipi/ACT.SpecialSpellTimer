@@ -524,8 +524,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// </summary>
         private void StoreLogPoller()
         {
+            var preLog = string.Empty;
+
             while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
             {
+                if (preLog == log.logLine)
+                {
+                    continue;
+                }
+
+                preLog = log.logLine;
+
                 // 無効なログ？
                 // 無効なログをカットする
                 if (TimelineController.IgnoreLogKeywords.Any(x => log.logLine.Contains(x)))
@@ -1172,7 +1181,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
 
             var timeStamp = logs.Last().TimeStamp;
-            var zone = logs.First().Zone;
+            var zone = startCombat != null ?
+                startCombat.Zone :
+                logs.First().Zone;
+
             zone = zone.Replace(" ", "_");
             foreach (var c in Path.GetInvalidFileNameChars())
             {

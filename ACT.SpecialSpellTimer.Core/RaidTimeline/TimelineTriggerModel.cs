@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -10,6 +12,50 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     {
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Trigger;
+
+        #region Children
+
+        private List<TimelineBase> statements = new List<TimelineBase>();
+
+        [XmlIgnore]
+        public IReadOnlyList<TimelineBase> Statements => this.statements;
+
+        [XmlElement(ElementName = "load")]
+        public TimelineLoadModel[] LoadStatements
+        {
+            get => this.Statements
+                .Where(x => x.TimelineType == TimelineElementTypes.Load)
+                .Cast<TimelineLoadModel>()
+                .ToArray();
+
+            set => this.AddRange(value);
+        }
+
+        #region Methods
+
+        public void Add(TimelineBase timeline)
+        {
+            if (timeline.TimelineType == TimelineElementTypes.Load)
+            {
+                timeline.Parent = this;
+                this.statements.Add(timeline);
+            }
+        }
+
+        public void AddRange(IEnumerable<TimelineBase> timelines)
+        {
+            if (timelines != null)
+            {
+                foreach (var tl in timelines)
+                {
+                    this.Add(tl);
+                }
+            }
+        }
+
+        #endregion Methods
+
+        #endregion Children
 
         private string text = null;
 

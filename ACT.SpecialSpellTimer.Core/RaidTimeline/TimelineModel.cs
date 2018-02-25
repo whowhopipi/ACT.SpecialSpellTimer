@@ -298,6 +298,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             NewDefault(TimelineElementTypes.Subroutine, "Enabled", true),
             NewDefault(TimelineElementTypes.Subroutine, "SyncCount", 0),
             NewDefault(TimelineElementTypes.Subroutine, "NoticeDevice", NoticeDevices.Both),
+
+            // Load
+            NewDefault(TimelineElementTypes.Load, "Enabled", true),
         };
 
         private void SetDefaultValues()
@@ -313,6 +316,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     var sub = el as TimelineSubroutineModel;
                     foreach (var act in sub.Statements)
+                    {
+                        setDefaultValuesToElement(act);
+                    }
+                }
+
+                if (el.TimelineType == TimelineElementTypes.Trigger)
+                {
+                    var tri = el as TimelineTriggerModel;
+                    foreach (var act in tri.Statements)
                     {
                         setDefaultValuesToElement(act);
                     }

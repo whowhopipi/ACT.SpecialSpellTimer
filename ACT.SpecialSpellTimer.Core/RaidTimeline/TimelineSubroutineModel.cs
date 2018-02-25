@@ -23,7 +23,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlElement(ElementName = "a")]
         public TimelineActivityModel[] Activities
         {
-            get => this.Statements.Where(x => x.TimelineType == TimelineElementTypes.Activity).Cast<TimelineActivityModel>().OrderBy(x => x.Time).ToArray();
+            get => this.Statements
+                .Where(x => x.TimelineType == TimelineElementTypes.Activity)
+                .Cast<TimelineActivityModel>()
+                .OrderBy(x => x.Time)
+                .ToArray();
+
             set => this.AddRange(value);
         }
 

@@ -17,7 +17,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         Default,
         Activity,
         Trigger,
-        Subroutine
+        Subroutine,
+        Load
     }
 
     public static class TimelineElementTypesEx

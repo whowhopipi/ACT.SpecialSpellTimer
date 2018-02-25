@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -524,6 +525,93 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
+        private void LoadSubs(
+            TimelineTriggerModel parent)
+        {
+            lock (this)
+            {
+                foreach (var item in parent.LoadStatements
+                    .Where(x => x.Enabled.GetValueOrDefault()))
+                {
+                    this.LoadSub(item);
+                    Thread.Yield();
+                }
+            }
+        }
+
+        private void LoadSub(
+            TimelineLoadModel load)
+        {
+            if (string.IsNullOrEmpty(load.Target))
+            {
+                return;
+            }
+
+            var sub = this.Model.Subroutines.FirstOrDefault(x =>
+                x.Enabled.GetValueOrDefault() &&
+                string.Equals(
+                    x.Name,
+                    load.Target,
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (sub == null)
+            {
+                return;
+            }
+
+            var acts = sub.Activities
+                .Where(x => x.Enabled.GetValueOrDefault())
+                .Select(x => x.Clone());
+
+            if (!acts.Any())
+            {
+                return;
+            }
+
+            try
+            {
+                this.Model.StopLive();
+
+                // truncateする？
+                if (load.IsTruncate)
+                {
+                    this.ActivityLine.Clear();
+                }
+
+                // 最後のアクティビティを取得する
+                var last = this.ActivityLine
+                    .OrderBy(x => x.Seq)
+                    .LastOrDefault();
+
+                var nextSeq = 1;
+                var originTime = this.CurrentTime;
+                if (last != null)
+                {
+                    nextSeq = last.Seq + 1;
+
+                    if (last.Time > originTime)
+                    {
+                        originTime = last.Time;
+                    }
+                }
+
+                // 差し込むActivityにシーケンスをふる
+                var toInsert = new List<TimelineActivityModel>();
+                foreach (var act in acts)
+                {
+                    act.Seq = nextSeq++;
+                    act.Time += originTime;
+                    toInsert.Add(act);
+                }
+
+                this.ActivityLine.AddRange(toInsert);
+            }
+            finally
+            {
+                this.Model.ResumeLive();
+            }
+        }
+
         #endregion Activityライン捌き
 
         #region Log 関係のスレッド
@@ -870,7 +958,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             // jumpを判定する
                             if (!this.CallActivity(active, tri.CallTarget))
                             {
-                                this.GoToActivity(active, tri.GoToDestination);
+                                if (!this.GoToActivity(active, tri.GoToDestination))
+                                {
+                                    this.LoadSubs(tri);
+                                }
                             }
 
                             // ログを発生させる

@@ -367,6 +367,7 @@ namespace ACT.SpecialSpellTimer
             var summoned = false;
             var doneCommand = false;
 
+            var preLog = string.Empty;
 #if DEBUG
             var sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
@@ -374,6 +375,14 @@ namespace ACT.SpecialSpellTimer
                 out LogLineEventArgs logInfo))
             {
                 var logLine = logInfo.logLine;
+
+                // 直前とまったく同じ行はカットする
+                if (preLog == logLine)
+                {
+                    continue;
+                }
+
+                preLog = logLine;
 
                 // 無効なログ行をカットする
                 if (IgnoreLogKeywords.Any(x => logLine.Contains(x)))
