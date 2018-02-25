@@ -129,12 +129,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.SetProperty(ref this.currentTime, value))
                 {
-                    this.RaisePropertyChanged(nameof(this.CurrentTimeText));
+                    this.CurrentTimeText = this.currentTime.ToTLString();
                 }
             }
         }
 
-        public string CurrentTimeText => this.CurrentTime.ToTLString();
+        private string currentTimeText;
+
+        public string CurrentTimeText
+        {
+            get => this.currentTimeText;
+            set => this.SetProperty(ref this.currentTimeText, value);
+        }
 
         /// <summary>
         /// 前回の判定時刻
@@ -392,13 +398,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
 
                     // 差し込むActivityにシーケンスをふる
-                    var i = currentIndex + 1;
+                    var toInsert = new List<TimelineActivityModel>();
                     foreach (var act in acts)
                     {
                         act.Seq = nextSeq++;
                         act.Time += this.CurrentTime;
-                        this.ActivityLine.Insert(i++, act);
+                        toInsert.Add(act);
                     }
+
+                    this.ActivityLine.AddRange(toInsert);
                 }
                 finally
                 {
@@ -492,13 +500,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     this.RemoveAllActivity(x => x.Seq > currnetSeq);
 
                     // 差し込むActivityにシーケンスをふる
-                    var i = currentIndex + 1;
+                    var toInsert = new List<TimelineActivityModel>();
                     foreach (var act in acts)
                     {
                         act.Seq = nextSeq++;
                         act.Time += this.CurrentTime;
-                        this.ActivityLine.Insert(i++, act);
+                        toInsert.Add(act);
                     }
+
+                    this.ActivityLine.AddRange(toInsert);
                 }
                 finally
                 {
