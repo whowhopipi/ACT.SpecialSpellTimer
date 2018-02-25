@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Threading;
@@ -407,7 +408,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     var toInsert = new List<TimelineActivityModel>();
                     foreach (var act in acts)
                     {
-                        act.Seq = nextSeq++;
+                        act.Init(nextSeq++);
                         act.Time += this.CurrentTime;
                         toInsert.Add(act);
                     }
@@ -509,7 +510,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     var toInsert = new List<TimelineActivityModel>();
                     foreach (var act in acts)
                     {
-                        act.Seq = nextSeq++;
+                        act.Init(nextSeq++);
                         act.Time += this.CurrentTime;
                         toInsert.Add(act);
                     }
@@ -599,7 +600,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 var toInsert = new List<TimelineActivityModel>();
                 foreach (var act in acts)
                 {
-                    act.Seq = nextSeq++;
+                    act.Init(nextSeq++);
                     act.Time += originTime;
                     toInsert.Add(act);
                 }
@@ -887,10 +888,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 XIVLog xivlog,
                 TimelineActivityModel act)
             {
-                var match = act.SynqRegex.Match(xivlog.Log);
-                if (!match.Success)
+                var match = default(Match);
+
+                lock (act)
                 {
-                    return false;
+                    if (act.IsSynced)
+                    {
+                        return false;
+                    }
+
+                    match = act.SynqRegex.Match(xivlog.Log);
+                    if (!match.Success)
+                    {
+                        return false;
+                    }
+
+                    act.IsSynced = true;
                 }
 
                 WPFHelper.BeginInvoke(() =>
@@ -1279,13 +1292,21 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private void NotifyActivity(
             TimelineActivityModel act)
         {
-            act.IsNotified = true;
-
             if (string.IsNullOrEmpty(act.Name) &&
                 string.IsNullOrEmpty(act.Text) &&
                 string.IsNullOrEmpty(act.Notice))
             {
                 return;
+            }
+
+            lock (act)
+            {
+                if (act.IsNotified)
+                {
+                    return;
+                }
+
+                act.IsNotified = true;
             }
 
             var now = DateTime.Now;
@@ -1294,43 +1315,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={act.Name}, text={act.Text}, notice={act.Notice}, offset={offset.TotalSeconds:N1}";
 
-            ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
-            {
-                ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
-            });
-
-            if (string.IsNullOrEmpty(act.Notice))
-            {
-                return;
-            }
-
-            var notice = act.Notice;
-
-            var isWave =
-                notice.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
-                notice.EndsWith(".wave", StringComparison.OrdinalIgnoreCase);
-
-            if (isWave)
-            {
-                notice = Path.Combine(
-                    SoundController.Instance.WaveDirectory,
-                    notice);
-            }
-
-            switch (act.NoticeDevice.Value)
-            {
-                case NoticeDevices.Both:
-                    SoundController.Instance.Play(notice);
-                    break;
-
-                case NoticeDevices.Main:
-                    PlayBridge.Instance.PlayMainDeviceDelegate?.Invoke(notice);
-                    break;
-
-                case NoticeDevices.Sub:
-                    PlayBridge.Instance.PlaySubDeviceDelegate?.Invoke(notice);
-                    break;
-            }
+            RaiseLog(log);
+            NotifySound(act.Notice, act.NoticeDevice.GetValueOrDefault());
         }
 
         private void NotifyTrigger(
@@ -1343,22 +1329,47 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            lock (tri)
+            {
+                if ((DateTime.Now - tri.LastNotifiedTimestamp).TotalSeconds <= 0.1)
+                {
+                    return;
+                }
+
+                tri.LastNotifiedTimestamp = DateTime.Now;
+            }
+
             var now = DateTime.Now;
             var log =
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={tri.Name}, text={tri.Text}, notice={tri.Notice}";
 
-            ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
-            {
-                ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
-            });
+            RaiseLog(log);
+            NotifySound(tri.Notice, tri.NoticeDevice.GetValueOrDefault());
+        }
 
-            if (string.IsNullOrEmpty(tri.Notice))
+        private static void RaiseLog(
+            string log)
+        {
+            if (string.IsNullOrEmpty(log))
             {
                 return;
             }
 
-            var notice = tri.Notice;
+            ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
+            {
+                ActGlobals.oFormActMain.ParseRawLogLine(false, DateTime.Now, log);
+            });
+        }
+
+        private static void NotifySound(
+            string notice,
+            NoticeDevices device)
+        {
+            if (string.IsNullOrEmpty(notice))
+            {
+                return;
+            }
 
             var isWave =
                 notice.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
@@ -1371,7 +1382,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     notice);
             }
 
-            switch (tri.NoticeDevice.Value)
+            switch (device)
             {
                 case NoticeDevices.Both:
                     SoundController.Instance.Play(notice);
