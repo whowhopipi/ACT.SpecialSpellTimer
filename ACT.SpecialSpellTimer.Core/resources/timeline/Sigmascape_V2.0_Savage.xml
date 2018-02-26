@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <timeline>
   <name>次元の狭間オメガ零式：シグマ編2</name>
+  <rev>rev3</rev>
+  <description>
+    シグマ2層向けの実用可能なタイムラインです。
+    notice, notice-o などは自分の好みに合せて使用してください。
+  </description>
   <zone>Sigmascape V2.0 (Savage)</zone>
   <locale>JA</locale>
   <entry>フェーズ１(青)</entry>
@@ -11,7 +16,7 @@
   <default target-element="Activity" target-attr="sync-s" value="-10" />
   <default target-element="Activity" target-attr="sync-e" value="10" />
 
-  <s name="フェーズ１(青)" >
+  <s name="フェーズ１(青)">
     <a time="0" sync="こいつは久しぶりに良い絵だわい……。 誰にも邪魔はさせんぞ！！" icon="フルバフ128px.png" />
     <a time="5" text="デモニックハウル" notice="全体範囲3秒前" icon="全体攻撃128px.png" />
     <a time="16" text="デモニックシアー" sync="「デモニックシアー」の構え" notice="単体シアー3秒前" icon="単体攻撃128px.png" />
@@ -28,7 +33,7 @@
     <a time="112" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" goto="フェーズ２(ピンク)" />
   </s>
 
-  <s name="フェーズ２(ピンク)" >
+  <s name="フェーズ２(ピンク)">
     <a time="5" text="絵画憑依(学ピンク)" sync="チャダルヌーク・デーモン starts using 絵画憑依" />
     <a time="18" text="AOE捨てる" sync="貴様らなど、まとめて吹き飛ばしてくれるわ！" notice="AOEまとめて捨てて" notice-o="0" icon="重ね捨て128px.png" />
     <a time="24" text="デモニックシアー" sync="「デモニックシアー」の構え" notice="単体シアー3秒前" icon="単体攻撃128px.png" />
@@ -45,7 +50,7 @@
     <a time="102" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" goto="フェーズ３(青黒)" notice="次は青ぬって黒" />
   </s>
 
-  <s name="フェーズ３(青黒)" >
+  <s name="フェーズ３(青黒)">
     <a time="5" text="絵画憑依(青→黒)" sync="チャダルヌーク・デーモン starts using 絵画憑依" />
     <a time="20" text="ファイア＆地震" notice="地震来てから降りるよ" />
     <a time="26" text="フラッシュレイン" sync="の「フラッシュレイン」" notice="フラッシュレイン気をつけて" />
@@ -61,7 +66,7 @@
     <a time="114" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" goto="フェーズ４(黄)" notice="次は岩出して、絵画横にAOEすてる" />
   </s>
 
-  <s name="フェーズ４(黄)" >
+  <s name="フェーズ４(黄)">
     <a time="5" text="絵画憑依(黄ピンク)" sync="チャダルヌーク・デーモン starts using 絵画憑依" notice="岩だして" notice-o="0" />
     <a time="15" text="デモニックタイフーン" notice="Aマーカーにすてて、岩の後ろに隠れる" icon="重ね捨て128px.png" />
     <a time="15" text="デモニックウェーブ" sync="「デモニックウェーブ」の構え" />
@@ -82,7 +87,7 @@
     <a time="121" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" goto="フェーズ５" />
   </s>
 
-  <s name="フェーズ５(青黒)" >
+  <s name="フェーズ５(青黒)">
     <a time="5" text="絵画憑依(青→黒)" sync="チャダルヌーク・デーモン starts using 絵画憑依" notice="青ぬって黒で乗る" />
     <a time="20" text="ファイア＆地震" notice="地震来てから降りるよ" />
     <a time="25" text="フラッシュウィンド" notice="リビデで風うけて" />
@@ -99,7 +104,7 @@
     <a time="107" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" />
   </s>
 
-  <s name="フェーズ６(黄ピンク)" >
+  <s name="フェーズ６(黄ピンク)">
     <a time="5" text="絵画憑依(黄ピンク)" sync="チャダルヌーク・デーモン starts using 絵画憑依" notice="岩だして" notice-o="0" />
     <a time="20" text="デモニックタイフーン" notice="Aマーカーにすてて、岩の後ろに隠れる" icon="重ね捨て128px.png" />
     <a time="20" text="デモニックウェーブ" sync="「デモニックウェーブ」の構え" />

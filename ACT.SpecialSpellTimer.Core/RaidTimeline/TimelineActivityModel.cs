@@ -34,7 +34,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlAttribute(AttributeName = "time")]
         public string TimeText
         {
-            get => this.time.ToTLString();
+            get => this.time.TotalSeconds.ToString("000");
             set => this.SetProperty(ref this.time, TimeSpanExtensions.FromTLString(value));
         }
 

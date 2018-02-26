@@ -46,6 +46,51 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
+        private string revision = null;
+
+        [XmlElement(ElementName = "rev")]
+        public string Revision
+        {
+            get => this.revision;
+            set => this.SetProperty(ref this.revision, value);
+        }
+
+        private string description = null;
+
+        [XmlElement(ElementName = "description")]
+        public string Description
+        {
+            get => this.description;
+            set
+            {
+                var text = string.Empty;
+
+                using (var sr = new StringReader(value))
+                {
+                    while (true)
+                    {
+                        var line = sr.ReadLine();
+                        if (line == null)
+                        {
+                            break;
+                        }
+
+                        line = line.Trim();
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            continue;
+                        }
+
+                        text += !string.IsNullOrEmpty(text) ?
+                            Environment.NewLine + line :
+                            line;
+                    }
+                }
+
+                this.SetProperty(ref this.description, text);
+            }
+        }
+
         private string zone = string.Empty;
 
         [XmlElement(ElementName = "zone")]
@@ -234,50 +279,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 // 既定値を適用する
                 tl.SetDefaultValues();
             }
-#if false
-            if (tl == null)
-            {
-                return tl;
-            }
 
-            void setSubroutinesParent(
-                TimelineSubroutineModel sub)
-            {
-                foreach (var state in sub.Statements
-                    .Where(x =>
-                        x.TimelineType == TimelineElementTypes.Default ||
-                        x.TimelineType == TimelineElementTypes.Activity ||
-                        x.TimelineType == TimelineElementTypes.Trigger))
-                {
-                    state.Parent = sub;
-                }
-
-                foreach (var subsub in sub.Statements
-                    .Where(x =>
-                        x.TimelineType == TimelineElementTypes.Subroutine))
-                {
-                    subsub.Parent = sub;
-                    setSubroutinesParent(subsub as TimelineSubroutineModel);
-                }
-            }
-
-            foreach (var el in tl.Elements)
-            {
-                switch (el.TimelineType)
-                {
-                    case TimelineElementTypes.Default:
-                    case TimelineElementTypes.Activity:
-                    case TimelineElementTypes.Trigger:
-                        el.Parent = tl;
-                        break;
-
-                    case TimelineElementTypes.Subroutine:
-                        el.Parent = tl;
-                        setSubroutinesParent(el as TimelineSubroutineModel);
-                        break;
-                }
-            }
-#endif
             return tl;
         }
 
@@ -638,6 +640,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                     this.File = tl.File;
                     this.Name = tl.Name;
+                    this.Revision = tl.Revision;
+                    this.Description = tl.Description;
                     this.Zone = tl.Zone;
                     this.Locale = tl.Locale;
                     this.Entry = tl.Entry;

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <timeline>
   <name>極白虎征魂戦 サンプル</name>
+  <rev>rev1</rev>
+  <description>
+    プレーンなタイムラインの見本
+    デザインや動作の確認用にご利用ください。
+    実用向けではありません。
+  </description>
   <zone>The Jade Stoa (Dummy)</zone>
   <locale>JA</locale>
   <entry>メインフェーズ</entry>
 
-  <!--
-  プレーンなタイムラインの見本
-  デザインや動作の確認用にご利用ください。
-  実用向けではありません。
-  -->
   <s name="メインフェーズ">
     <a time="00:00" sync="オオオオオ……この衝動、もはや止められん！" />
     <a time="00:06" text="風雷波動" notice="次は、風雷波動。" goto="戦闘開始" />

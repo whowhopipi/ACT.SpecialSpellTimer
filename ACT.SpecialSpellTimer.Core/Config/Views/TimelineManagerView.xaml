@@ -66,7 +66,7 @@
 
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="500" MaxWidth="550" />
+      <ColumnDefinition Width="Auto" MinWidth="550" MaxWidth="750" />
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
 
@@ -85,12 +85,12 @@
           <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-          <CheckBox Margin="0 10 0 0" Content="{DynamicResource Timeline_Enable}" IsChecked="{Binding Path=TimelineConfig.Enabled, Mode=TwoWay}" FontWeight="Black" />
+        <StackPanel Grid.Row="0" HorizontalAlignment="Left">
+          <CheckBox Margin="0 10 0 0" Content="{DynamicResource Timeline_Enable}" IsChecked="{Binding Path=TimelineConfig.Enabled, Mode=TwoWay}" FontWeight="Black" HorizontalAlignment="Left" />
 
           <StackPanel Margin="0 20 0 0">
             <Label Content="{DynamicResource Timeline_Folder}" />
-            <TextBox Margin="0 5 20 0" BorderThickness="0" IsReadOnly="True" Text="{Binding Path=TimelineDirectory, Mode=OneWay}" FontSize="15" HorizontalAlignment="Left" MaxWidth="460" TextWrapping="WrapWithOverflow" />
+            <TextBox Margin="0 5 10 0" BorderThickness="0" IsReadOnly="True" Text="{Binding Path=TimelineDirectory, Mode=OneWay}" FontSize="15" HorizontalAlignment="Left" MaxWidth="460" TextWrapping="WrapWithOverflow" />
             <StackPanel Margin="0 5 0 0" Orientation="Horizontal">
               <Button Content="Open" Command="{Binding OpenTimelineFolderCommand, Mode=OneWay}" />
               <Button Margin="10 0 0 0" Content="Reload" Command="{Binding ReloadTimelineFolderCommand, Mode=OneWay}" />
@@ -99,8 +99,9 @@
         </StackPanel>
 
         <ListView
+          x:Name="TimelineList"
           Grid.Row="1"
-          Margin="0 15 20 15"
+          Margin="0 15 0 15"
           BorderThickness="0"
           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
           ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -114,7 +115,7 @@
 
           <ListView.ItemTemplate>
             <DataTemplate>
-              <Grid Margin="5">
+              <Grid Margin="0 5 3 5">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition />
                   <ColumnDefinition Width="Auto" />
@@ -122,20 +123,24 @@
 
                 <CheckBox
                   Grid.Column="0"
-                  Margin="10 0 20 0"
+                  Margin="0 0 0 0"
                   IsChecked="{Binding Path=IsActive, Mode=TwoWay}"
                   Command="{Binding Path=ChangeActiveCommand, Mode=OneWay}"
                   CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked, Mode=OneWay}"
                   VerticalAlignment="Center"
                   IsTabStop="False"
-                  Focusable="False">
+                  Focusable="False"
+                  ToolTip="{Binding Description, Mode=OneWay}">
 
-                  <StackPanel Margin="10 0 0 0">
-                    <Label Content="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="18" />
+                  <StackPanel Margin="5 0 0 0">
+                    <StackPanel Orientation="Horizontal">
+                      <Label Content="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" />
+                      <Label Margin="15 0 0 0" Content="{Binding Path=Revision, Mode=OneWay}" FontSize="14" VerticalAlignment="Center" />
+                    </StackPanel>
 
-                    <TextBlock Margin="10 5 0 0" Text="{Binding Path=Zone, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
-                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=LocaleText, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
-                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=FileName, Mode=OneWay}" FontSize="14" Foreground="DimGray" />
+                    <TextBlock Margin="10 5 0 0" Text="{Binding Path=Zone, Mode=OneWay}" FontSize="13" Foreground="DimGray" />
+                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=LocaleText, Mode=OneWay}" FontSize="13" Foreground="DimGray" />
+                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=FileName, Mode=OneWay}" FontSize="13" Foreground="DimGray" />
                   </StackPanel>
                 </CheckBox>
 

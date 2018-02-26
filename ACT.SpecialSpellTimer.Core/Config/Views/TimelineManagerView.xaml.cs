@@ -123,6 +123,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                                 nextTimeline.IsActive = true;
 
                                 log = $"[TL] CurrentZoneChanged new_zone={currentZoneName}, active_timeline={nextTimeline.Name}.";
+
+                                this.TimelineList.ScrollIntoView(nextTimeline);
                             }
                         }
                     }
