@@ -63,7 +63,8 @@
       <fwcnv:BoolToHiddenConverter x:Key="HiddenConverter" />
 
       <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
+        <wpf:DesignTimeResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
+        <wpf:DesignTimeResourceDictionary Source="../../resources/styles/ConfigViewResources.xaml" />
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </Window.Resources>

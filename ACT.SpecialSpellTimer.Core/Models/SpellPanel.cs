@@ -24,7 +24,8 @@ namespace ACT.SpecialSpellTimer.Models
     [Serializable]
     [XmlType(TypeName = "PanelSettings")]
     public class SpellPanel :
-        TreeItemBase
+        TreeItemBase,
+        ITrigger
     {
         #region プリセットパネル
 
@@ -272,5 +273,10 @@ namespace ACT.SpecialSpellTimer.Models
         }
 
         #endregion ITreeItem
+
+        public void MatchTrigger(string logLine)
+        {
+            // キャスト用のダミーメソッド
+        }
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <timeline>
   <name>次元の狭間オメガ零式：シグマ編2</name>
-  <rev>rev3</rev>
+  <rev>rev4</rev>
   <description>
     シグマ2層向けの実用可能なタイムラインです。
     notice, notice-o などは自分の好みに合せて使用してください。
@@ -84,7 +84,7 @@
     <a time="88" text="フラッシュレイン" sync="「フラッシュレイン」の構え" notice="ボス付近に寄る" />
     <a time="95" text="デモニックハウル" sync="「デモニックハウル」の構え" notice="全体範囲3秒前" icon="全体攻撃128px.png" />
     <a time="110" text="デモニックシアー" sync="「デモニックシアー」の構え" notice="単体シアー3秒前" icon="単体攻撃128px.png" />
-    <a time="121" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" goto="フェーズ５" />
+    <a time="121" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" goto="フェーズ５(青黒)" />
   </s>
 
   <s name="フェーズ５(青黒)">
@@ -101,7 +101,7 @@
     <a time="77" text="デモニックシアー" sync="「デモニックシアー」の構え" notice="単体シアー3秒前" icon="単体攻撃128px.png" />
     <a time="87" text="デモニックペイン" sync="「デモニックペイン」の構え" notice="ペイン3秒前、対象離れて" icon="ペア処理128px.png" />
     <a time="97" text="デモニックハウル" sync="「デモニックハウル」の構え" notice="全体範囲3秒前" icon="全体攻撃128px.png" />
-    <a time="107" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" />
+    <a time="107" text="憑依解除" sync="チャダルヌーク・デーモン starts using 憑依解除" goto="フェーズ６(黄ピンク)" />
   </s>
 
   <s name="フェーズ６(黄ピンク)">

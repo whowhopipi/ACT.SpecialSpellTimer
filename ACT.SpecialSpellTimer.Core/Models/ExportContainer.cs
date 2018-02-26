@@ -109,7 +109,11 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 spell.ID = seq++;
                 spell.Guid = Guid.NewGuid();
-                spell.PanelID = panelIDConverter[spell.PanelID];
+
+                if (panelIDConverter.ContainsKey(spell.PanelID))
+                {
+                    spell.PanelID = panelIDConverter[spell.PanelID];
+                }
             }
 
             seq =

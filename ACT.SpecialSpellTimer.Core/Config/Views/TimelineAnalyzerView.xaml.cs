@@ -225,7 +225,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 this.saveFileDialog.Filter = SpreadFilter;
                 this.saveFileDialog.DefaultExt = SpreadExt;
                 this.saveFileDialog.FileName =
-                    $"{timestamp.ToString("yyyy-MM-dd")}.{zone}.AnalyzedLog.xlsx";
+                    $"{timestamp.ToString("yyyy-MM-dd")}.{zone}.xlsx";
 
                 if (this.saveFileDialog.ShowDialog(ActGlobals.oFormActMain)
                     == System.Windows.Forms.DialogResult.OK)
@@ -270,7 +270,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 this.saveFileDialog.Filter = TimelineFilter;
                 this.saveFileDialog.DefaultExt = TimelineExt;
                 this.saveFileDialog.FileName =
-                    $"{zone}.DraftTimeline.xml";
+                    $"{zone}.xml";
 
                 if (this.saveFileDialog.ShowDialog(ActGlobals.oFormActMain)
                     == System.Windows.Forms.DialogResult.OK)
@@ -315,7 +315,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 this.saveFileDialog.Filter = LogFilter;
                 this.saveFileDialog.DefaultExt = LogExt;
                 this.saveFileDialog.FileName =
-                    $"{zone}.forTest.log";
+                    $"{zone}.test.log";
 
                 if (this.saveFileDialog.ShowDialog(ActGlobals.oFormActMain)
                     == System.Windows.Forms.DialogResult.OK)

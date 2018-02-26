@@ -1342,6 +1342,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             timeline.Zone = combatLogs.First().Zone;
             timeline.Locale = Settings.Default.FFXIVLocale;
             timeline.Name = $"{timeline.Zone} draft timeline";
+            timeline.Revision = "draft";
+            timeline.Description =
+                "自動生成によるドラフト版タイムラインです。タイムライン定義の作成にご活用ください。" + Environment.NewLine +
+                "なお未編集のままで運用できるようには設計されていません。";
 
             foreach (var log in combatLogs.Where(x =>
                 outputTypes.Contains(x.LogType)))
