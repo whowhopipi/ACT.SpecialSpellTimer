@@ -501,6 +501,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private string subName = string.Empty;
 
+        [XmlIgnore]
         public string SubName
         {
             get => this.subName;
@@ -514,6 +515,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private bool isActivitiesVisible = true;
 
+        [XmlIgnore]
         public bool IsActivitiesVisible
         {
             get => this.isActivitiesVisible;
