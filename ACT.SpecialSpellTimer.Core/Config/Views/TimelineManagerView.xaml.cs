@@ -43,8 +43,23 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             if (!WPFHelper.IsDesignMode)
             {
-                TimelineManager.Instance.LoadTimelineModels();
-                this.SetupZoneChanger();
+                WPFHelper.BeginInvoke(() =>
+                {
+                    try
+                    {
+                        TimelineManager.Instance.LoadTimelineModels();
+                    }
+                    catch (Exception ex)
+                    {
+                        ModernMessageBox.ShowDialog(
+                            ex.Message,
+                            "Timeline Loader",
+                            MessageBoxButton.OK,
+                            ex.InnerException);
+                    }
+
+                    this.SetupZoneChanger();
+                });
             }
 
             this.StyleListView.SelectionChanged += (x, y) =>
@@ -197,7 +212,20 @@ namespace ACT.SpecialSpellTimer.Config.Views
         public ICommand ReloadTimelineFolderCommand =>
             this.reloadTimelineFolderCommand ?? (this.reloadTimelineFolderCommand = new DelegateCommand(async () =>
             {
-                await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
+                try
+                {
+                    await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
+                }
+                catch (Exception ex)
+                {
+                    ModernMessageBox.ShowDialog(
+                        ex.Message,
+                        "Timeline Loader",
+                        MessageBoxButton.OK,
+                        ex.InnerException);
+
+                    return;
+                }
 
                 lock (this)
                 {

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using ACT.SpecialSpellTimer.resources;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.Config.Views
@@ -18,11 +19,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
         ILocalizable,
         INotifyPropertyChanged
     {
-        private ModernMessageBox()
+        public ModernMessageBox()
         {
             this.InitializeComponent();
-            this.SetLocale(Settings.Default.UILocale);
-            this.LoadConfigViewResources();
+
+            if (!WPFHelper.IsDesignMode)
+            {
+                this.SetLocale(Settings.Default.UILocale);
+                this.LoadConfigViewResources();
+            }
 
             // ウィンドウのスタート位置を決める
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -99,6 +104,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
             else
             {
                 view.WindowBorderBrush = Brushes.Gold;
+                view.SizeToContent = SizeToContent.WidthAndHeight;
                 SystemSounds.Asterisk.Play();
             }
 
@@ -126,7 +132,10 @@ namespace ACT.SpecialSpellTimer.Config.Views
             "あいうえおかきくけこさしすせそ" + Environment.NewLine +
             "あいうえおかきくけこさしすせそ";
 
-        public bool HasDetails => !string.IsNullOrEmpty(this.Details);
+        public bool HasDetails =>
+            WPFHelper.IsDesignMode ?
+            true :
+            !string.IsNullOrEmpty(this.Details);
 
         #region INotifyPropertyChanged
 

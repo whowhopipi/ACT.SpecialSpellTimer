@@ -31,14 +31,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public ObservableCollection<TimelineModel> TimelineModels => this.timelineModels;
 
-        public bool LoadTimelineModels()
+        public void LoadTimelineModels()
         {
-            var result = true;
-
             var dir = this.TimelineDirectory;
             if (!Directory.Exists(dir))
             {
-                return result;
+                return;
             }
 
             var list = new List<TimelineModel>();
@@ -55,7 +53,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         ex,
                         $"[TL] Load error. file={file}");
 
-                    result = false;
+                    throw new FileLoadException(
+                        $"Timeline file Load error.\n{Path.GetFileName(file)}",
+                        ex);
                 }
             }
 
@@ -74,7 +74,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.TimelineModels.AddRange(list.OrderBy(x => x.FileName));
             });
 
-            return result;
+            return;
         }
     }
 }
