@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <timeline>
   <name>次元の狭間オメガ零式：シグマ編3</name>
-  <rev>rev3</rev>
+  <rev>rev4</rev>
   <description>
     シグマ3層向けの実用可能なタイムラインです。
     notice, notice-o などは自分の好みに合せて使用してください。
@@ -9,7 +9,7 @@
   <zone>Sigmascape V3.0 (Savage)</zone>
   <locale>JA</locale>
   <entry>開幕</entry>
-  <start>戦闘開始</start>
+  <start>戦闘開始！</start>
 
   <default target-element="Activity" target-attr="notice-d" value="Both" />
   <default target-element="Activity" target-attr="notice-o" value="-3" />
