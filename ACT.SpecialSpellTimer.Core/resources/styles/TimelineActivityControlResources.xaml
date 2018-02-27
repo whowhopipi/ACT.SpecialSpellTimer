@@ -107,6 +107,8 @@
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.BarColorBrush, Mode=OneWay}" />
     <Setter Property="Height" Value="{Binding Path=StyleModel.BarHeight, Mode=OneWay}" />
     <Setter Property="Progress" Value="{Binding Path=Progress, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="0" />
+    <Setter Property="BlurRadius" Value="0" />
     <Style.Triggers>
       <Trigger Property="Progress" Value="0">
         <Setter Property="Visibility" Value="Hidden" />
@@ -236,6 +238,8 @@
     <Setter Property="Radius" Value="{Binding ElementName=CounterTextCircle, Path=ActualHeight, Mode=OneWay}" />
     <Setter Property="Progress" Value="{Binding Path=Progress, Mode=OneWay}" />
     <Setter Property="IsCCW" Value="True" />
+    <Setter Property="BlurOpacity" Value="0" />
+    <Setter Property="BlurRadius" Value="0" />
     <Style.Triggers>
       <Trigger Property="Progress" Value="0">
         <Setter Property="Visibility" Value="Hidden" />
