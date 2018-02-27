@@ -37,6 +37,7 @@
       <fw:HelpView x:Name="HelpView" />
     </TabItem>
 
+    <!--
     <TabItem
       Padding="10 0 10 0"
       Background="AntiqueWhite">
@@ -87,5 +88,6 @@
         </StackPanel>
       </StackPanel>
     </TabItem>
+    -->
   </TabControl>
 </UserControl>
