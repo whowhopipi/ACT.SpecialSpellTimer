@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using Prism.Mvvm;
@@ -304,12 +305,28 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region Methods
 
+        public static string TimelineDirectory
+        {
+            get
+            {
+                var dir = Settings.Default.TimelineDirectory;
+
+                if (string.IsNullOrEmpty(dir) ||
+                    !Directory.Exists(dir))
+                {
+                    dir = DirectoryHelper.FindSubDirectory(@"resources\timeline");
+                }
+
+                return dir;
+            }
+        }
+
         public static readonly string FileName = Path.Combine(
-            DirectoryHelper.FindSubDirectory(@"resources\timeline"),
+            TimelineDirectory,
             @"Timeline.config");
 
         public static readonly string MasterFile = Path.Combine(
-            DirectoryHelper.FindSubDirectory(@"resources\timeline"),
+            TimelineDirectory,
             @"Timeline.master.config");
 
         public static void Load() => instance = Load(FileName);

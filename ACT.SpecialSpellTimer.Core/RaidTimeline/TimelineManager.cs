@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -25,7 +24,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #endregion Singleton
 
-        public string TimelineDirectory => DirectoryHelper.FindSubDirectory(@"resources\timeline");
+        public string TimelineDirectory => TimelineSettings.TimelineDirectory;
 
         private ObservableCollection<TimelineModel> timelineModels = new ObservableCollection<TimelineModel>();
 

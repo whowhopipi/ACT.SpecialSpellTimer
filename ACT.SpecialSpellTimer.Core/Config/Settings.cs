@@ -354,6 +354,14 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.saveLogDirectory, value);
         }
 
+        private string timelineDirectory = string.Empty;
+
+        public string TimelineDirectory
+        {
+            get => this.timelineDirectory;
+            set => this.SetProperty(ref this.timelineDirectory, value);
+        }
+
         #region Data - Timeline
 
         private bool timelineTotalSecoundsFormat = false;
