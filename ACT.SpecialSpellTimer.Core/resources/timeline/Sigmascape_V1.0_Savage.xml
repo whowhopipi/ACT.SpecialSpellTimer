@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<timeline>
+  <name>次元の狭間オメガ零式：シグマ編1</name>
+  <rev>rev2</rev>
+  <description>
+    シグマ1層向けのタイムラインです。
+    既存のタイムラインをスペスペたいむに変換するとこのような感じになると思います。
+
+    designed by Hojoring Forum
+    https://discord.gg/n6Mut3F
+  </description>
+  <zone>Sigmascape V1.0 (Savage)</zone>
+  <locale>JA</locale>
+  <entry>前半フェーズ</entry>
+  <start>0039:戦闘開始！</start>
+
+  <default target-element="Activity" target-attr="notice-d" value="Both" />
+  <default target-element="Activity" target-attr="notice-o" value="-3" />
+  <default target-element="Activity" target-attr="sync-s"   value="-10" />
+  <default target-element="Activity" target-attr="sync-e"   value="10" />
+
+  <!-- トリガ スペスペに登録してもいい TLロード時のみ有効 -->
+  <t text="ロスゴースト"   sync="Added new combatant ロスゴースト"   notice="ロスゴーストポップ" />
+  <t text="未練のゴースト" sync="Added new combatant 未練のゴースト" notice="未練のゴーストポップ" />
+  <t text="ゴースト"       sync="Added new combatant ゴースト"       notice="ゴーストポップ" />
+  <t text="念力"           sync="未練のゴーストは「念力」の構え。"   notice="ノックバック注意" />
+  <t text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。"   notice="直線頭割り" />
+  <t text="酸性雨"         sync="魔列車は「酸性雨」の構え。"         notice="全体範囲攻撃" />
+  <t text="追突"           sync="魔列車は「追突」の構え。"           notice="後ろに移動" />
+  <t text="マーカー"       sync="(.*:0001:0000:|.*:0046:0000:)"      notice="マーカー付いたよ" />
+
+  <s name="前半フェーズ">
+    <a time="12"  text="ゴーストポップ" />
+    <a time="28"  text="セイントビーム" sync="魔列車の「セイントビーム」" />
+    <a time="30"  text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="ノックバックゴースト注意" />
+    <a time="37"  text="念力"           sync="未練のゴーストは「念力」の構え。" />
+    <a time="47"  text="魔霊撃"         sync="魔列車は「魔霊撃」の構え。"       notice="MT大ダメ" />
+    <a time="56"  text="追突"           sync="魔列車は「追突」の構え。" />
+    <a time="67"  text="酸性雨"         sync="魔列車は「酸性雨」の構え。" />
+    <a time="78"  text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="左右のゴースト注意" />
+    <a time="99"  text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。" />
+    <a time="114" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="ゴースト消して" />
+    <a time="134" text="セイントビーム" sync="魔列車の「セイントビーム」" />
+    <a time="140" text="魔界の光(MT+1)" sync="に「マーキング」の効果。"         notice="タンク交代準備" />
+    <a time="147" text="魔霊撃"         sync="魔列車は「魔霊撃」の構え。"       notice="MT大ダメ" />
+    <a time="154" text="酸性雨"         sync="魔列車は「酸性雨」の構え。"       goto="雑魚フェーズ" />
+  </s>
+
+  <s name="雑魚フェーズ">
+    <!-- ここから雑魚を倒す時間に依存するため時間が狂いやすい -->
+    <a time="190" text="雑魚ポップ"                                             notice="雑魚POP" />
+    <a time="191" text="AOE→DPS"                                               notice="範囲捨てて" />
+    <a time="192" text="叩きつけ" />
+    <a time="196" text="叩きつけ" />
+    <a time="198" text="叩きつけ" />
+    <a time="198" text="AOE→タンク+ヒラ"                                       notice="範囲捨てて" />
+    <a time="202" text="叩きつけ" />
+    <a time="207" text="Add 魔煙突"     sync="Added new combatant 魔煙突"       notice="煙突壊して" />
+    <a time="233" text="窒息"           sync="魔列車の「魔界の噴煙」"           notice="幽霊に触って" sync-s="-40" sync-e="20" />
+    <a time="237" text="ゴーストポップ" sync="Added new combatant 悔恨のゴースト.  Job: 0 Level: 70 Max HP: 57250 Max MP: 12000." sync-s="-40" sync-e="20" />
+    <a time="237" text="大：タンク" />
+    <a time="237" text="小：ヒーラ" />
+    <a time="241" text="赤：DPS"                                                goto="後半フェーズ" />
+  </s>
+
+  <s name="後半フェーズ">
+    <a time="292" text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。" sync-s="-40" sync-e="20" />
+    <a time="292" text="魔界の光(ヒラ)" sync="に「マーキング」の効果。"         notice="後ろに捨てて" />
+    <a time="310" text="魔霊撃"         sync="魔列車は「魔霊撃」の構え。"       notice="MT大ダメ" />
+    <a time="322" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="ゴースト消して" />
+    <a time="339" text="セイントビーム" sync="魔列車の「セイントビーム」" />
+    <a time="345" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="ノックバックゴースト注意" />
+    <a time="352" text="念力"           sync="未練のゴーストは「念力」の構え。" />
+    <a time="354" text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。" />
+    <a time="369" text="追突"           sync="魔列車は「追突」の構え。" />
+    <a time="377" text="ゴーストポップ" />
+    <a time="388" text="セイントビーム" sync="魔列車の「セイントビーム」" />
+    <a time="394" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="左右のゴースト注意" />
+    <a time="398" text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。" />
+    <a time="405" text="範囲4人"                                                notice="範囲捨てて" />
+    <a time="411" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="ゴースト消して" />
+    <a time="413" text="ゴーストポップ" />
+    <a time="428" text="セイントビーム" sync="魔列車の「セイントビーム」" />
+    <a time="429" text="ゴーストポップ" />
+    <a time="430" text="魔界の光(MT+1)" sync="に「マーキング」の効果。"         notice="タンク交代準備" />
+    <a time="437" text="魔霊撃"         sync="魔列車は「魔霊撃」の構え。"       notice="MT大ダメ" />
+    <a time="444" text="酸性雨"         sync="魔列車は「酸性雨」の構え。" />
+    <a time="457" text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。" />
+    <a time="465" text="酸性雨"         sync="魔列車は「酸性雨」の構え。" />
+    <a time="482" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="ゴースト消して" />
+    <a time="484" text="ゴーストポップ" />
+    <a time="503" text="魔界の光(MT+1)" sync="に「マーキング」の効果。"         notice="タンク交代準備" />
+    <a time="503" text="酸性雨"         sync="魔列車は「酸性雨」の構え。" />
+    <a time="510" text="魔霊撃"         sync="魔列車は「魔霊撃」の構え。"       notice="MT大ダメ" />
+    <a time="525" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="ノックバックゴースト注意" />
+    <a time="534" text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。" />
+    <a time="547" text="追突"           sync="魔列車は「追突」の構え。" />
+    <a time="558" text="酸性雨"         sync="魔列車は「酸性雨」の構え。" />
+    <a time="575" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="左右のゴースト注意" />
+    <a time="579" text="魔界の前照灯"   sync="魔列車は「魔界の前照灯」の構え。" />
+    <a time="592" text="魔界の汽笛"     sync="魔列車は「魔界の汽笛」の構え。"   notice="時間切れ近いよー" />
+    <a time="596" text="セイントビーム" sync="魔列車の「セイントビーム」"       notice="時間切れ" />
+  </s>
+</timeline>

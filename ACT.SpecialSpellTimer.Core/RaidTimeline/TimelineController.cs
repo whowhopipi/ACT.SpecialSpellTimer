@@ -1328,8 +1328,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={act.Name}, text={act.Text}, notice={act.Notice}, offset={offset.TotalSeconds:N1}";
 
+            var notice = act.Notice;
+            if (string.Equals(notice, "auto", StringComparison.OrdinalIgnoreCase))
+            {
+                notice = !string.IsNullOrEmpty(act.Text) ?
+                    act.Text :
+                    act.Name;
+
+                if (offset.TotalSeconds < 0)
+                {
+                    var ofsetText = (offset.TotalSeconds * -1).ToString("N0");
+                    notice += $" まで、あと{ofsetText}秒";
+                }
+
+                if (!string.IsNullOrEmpty(notice))
+                {
+                    notice += "。";
+                }
+            }
+
             RaiseLog(log);
-            NotifySound(act.Notice, act.NoticeDevice.GetValueOrDefault());
+            NotifySound(notice, act.NoticeDevice.GetValueOrDefault());
         }
 
         private void NotifyTrigger(
@@ -1357,8 +1376,21 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
                 $"name={tri.Name}, text={tri.Text}, notice={tri.Notice}";
 
+            var notice = tri.Notice;
+            if (string.Equals(notice, "auto", StringComparison.OrdinalIgnoreCase))
+            {
+                notice = !string.IsNullOrEmpty(tri.Text) ?
+                    tri.Text :
+                    tri.Name;
+
+                if (!string.IsNullOrEmpty(notice))
+                {
+                    notice += "。";
+                }
+            }
+
             RaiseLog(log);
-            NotifySound(tri.Notice, tri.NoticeDevice.GetValueOrDefault());
+            NotifySound(notice, tri.NoticeDevice.GetValueOrDefault());
         }
 
         private static void RaiseLog(
