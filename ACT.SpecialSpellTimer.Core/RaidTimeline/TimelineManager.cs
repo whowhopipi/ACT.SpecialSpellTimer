@@ -38,6 +38,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            if (!Directory.GetFiles(dir, "*.xml").Any())
+            {
+                var sampleDirectory = Path.Combine(dir, "sample");
+                foreach (var file in Directory.GetFiles(sampleDirectory))
+                {
+                    var dest = Path.Combine(dir, Path.GetFileName(file));
+                    File.Copy(file, dest, true);
+                }
+            }
+
             var list = new List<TimelineModel>();
             foreach (var file in Directory.GetFiles(dir, "*.xml"))
             {
