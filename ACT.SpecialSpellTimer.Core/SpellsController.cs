@@ -120,7 +120,16 @@ namespace ACT.SpecialSpellTimer
                             targetSpell.TimeupDone = false;
 
                             var now = DateTime.Now;
-                            targetSpell.CompleteScheduledTime = now.AddSeconds(targetSpell.RecastTime);
+
+                            // ホットバーからリキャスト時間の読み込みを試みる
+                            // 設定してないか、読み込めない場合は false が返るので、標準時間をセットする
+                            double recastTime;
+                            if (!TryGetHotbarRecast(targetSpell, out recastTime))
+                            {
+                                recastTime = targetSpell.RecastTime;
+                            }
+                            targetSpell.CompleteScheduledTime = now.AddSeconds(recastTime);
+
                             targetSpell.MatchDateTime = now;
 
                             // マッチング計測終了
@@ -179,7 +188,12 @@ namespace ACT.SpecialSpellTimer
                             double duration;
                             if (!double.TryParse(durationAsText, out duration))
                             {
-                                duration = targetSpell.RecastTime;
+                                // ホットバーからリキャスト時間の読み込みを試みる
+                                // 設定してないか、読み込めない場合は false が返るので、標準時間をセットする
+                                if (!TryGetHotbarRecast(targetSpell, out duration))
+                                {
+                                    duration = targetSpell.RecastTime;
+                                }
                             }
 
                             targetSpell.CompleteScheduledTime = now.AddSeconds(duration);
@@ -433,6 +447,32 @@ namespace ACT.SpecialSpellTimer
             {
                 TableCompiler.Instance.CompileSpells();
             }
+        }
+
+        private bool TryGetHotbarRecast(Spell spell, out double recastTime)
+        {
+            bool result = false;
+            recastTime = 0;
+
+            if (FFXIV.Framework.FFXIVHelper.FFXIVReader.Instance.IsAvailable &&
+                spell.UseHotbarRecastTime && !string.IsNullOrEmpty(spell.HotbarName))
+            {
+                var hotbarRecastListV1 = FFXIV.Framework.FFXIVHelper.FFXIVReader.Instance.GetHotbarRecastV1();
+                if (hotbarRecastListV1 != null)
+                {
+                    foreach (var hotbar in hotbarRecastListV1)
+                    {
+                        if (hotbar != null && hotbar.Name == spell.HotbarName && hotbar.CoolDownPercent > 0)
+                        {
+                            recastTime = hotbar.RemainingOrCost;
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         #region Panel controller

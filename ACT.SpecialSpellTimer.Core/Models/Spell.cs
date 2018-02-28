@@ -340,6 +340,10 @@ namespace ACT.SpecialSpellTimer.Models
 
         public double RecastTime { get; set; } = 0;
 
+        public bool UseHotbarRecastTime { get; set; } = false;
+
+        public string HotbarName { get; set; } = string.Empty;
+
         public double RecastTimeExtending1 { get; set; } = 0;
 
         public double RecastTimeExtending2 { get; set; } = 0;
