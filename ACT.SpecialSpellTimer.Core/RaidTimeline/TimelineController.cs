@@ -1335,7 +1335,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     act.Text :
                     act.Name;
 
-                if (offset.TotalSeconds < 0)
+                if (offset.TotalSeconds <= -1.0)
                 {
                     var ofsetText = (offset.TotalSeconds * -1).ToString("N0");
                     notice += $" まで、あと{ofsetText}秒";
