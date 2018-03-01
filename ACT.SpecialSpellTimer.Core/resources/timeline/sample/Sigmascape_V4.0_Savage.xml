@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<timeline>
+  <name>次元の狭間オメガ零式：シグマ編4前半</name>
+  <rev>rev2</rev>
+  <zone>Sigmascape V4.0 (Savage)</zone>
+  <description>
+    シグマ零式4層前半向けの実用可能なタイムラインです。
+    notice, notice-o,icon などは自分の好みに合せて使用してください。
+    後半はアイコンなし、通知フルオート、未検証という状態の暫定版です。
+
+    designed by Hojoring Forum
+    https://discord.gg/n6Mut3F
+  </description>
+  <locale>JA</locale>
+  <entry>ENTRY</entry>
+  <start>0039:戦闘開始！</start>
+
+  <default target-element="Activity" target-attr="notice-d" value="Both" />
+  <default target-element="Activity" target-attr="notice-o" value="-3" />
+  <default target-element="Activity" target-attr="sync-s" value="-10" />
+  <default target-element="Activity" target-attr="sync-e" value="10" />
+
+  <!-- トリガ スペスペに登録してもいい TLロード時のみ有効 -->
+  <t text="石像見ない"     sync="惰眠の神気 on 神々の像"             notice="見ない、見ちゃダメ" />
+  <t text="石像見る"       sync="アヴェ・マリア on 神々の像"         notice="見るよ、見るんだよ" />
+  <t text="左が安置"       sync="神々の像 starts using 撲殺の神気"   notice="左が安置" />
+  <t text="右が安置"       sync="神々の像 starts using 重力波"       notice="右が安置" />
+
+  <!-- 名前部分をDPSの誰かに変更して使う -->
+  <t text="DPS中央・ヒラタン外周"   sync="神々の像 starts using 睡魔の神気 on DPSの誰かの名前" />
+  <t text="DPS外周・ヒラタン中央"   sync="神々の像 starts using 聖母の神気 on DPSの誰かの名前" />
+
+  <!-- 前半/後半の切替用トリガ begin -->
+  <t sync="「マジックチャージ」の構え" sync-count="1" notice="前半だぜ、ハニー。">
+    <load target="vs KEFKA" truncate="true" />
+  </t>
+
+  <t sync="「心ない天使」の構え" sync-count="1" notice="後半だぜ、ベイビー。">
+    <load target="PHASE1 心ない大天使" truncate="true" />
+  </t>
+  <!-- 前半/後半の切替用トリガ end -->
+
+  <!-- 前半/後半の識別用エントリフェーズ -->
+  <s name="ENTRY">
+    <a time="07" text="後半？心ない天使" icon="分岐128px.png" />
+    <a time="10" text="前半？マジックチャージ" icon="分岐128px.png" />
+  </s>
+
+  <!-- ケフカの定義 begin -->
+  <s name="vs KEFKA">
+    <!-- 10秒目 マジックチャージ からの相対 -->
+    <a time="05" text="めらめらファイガ" sync="「めらめらファイガ」の構え" notice="確認するよ" icon="真偽128px.png" />
+    <a time="13" text="ハイパードライブ" sync="「ハイパードライブ」の構え" notice="MT大ダメージ、近寄らない" icon="単体強攻撃128px.png" />
+    <a time="22" text="マジックアウト" sync="「マジックアウト」の構え" notice="さっきと同じのがくるよ" />
+    <a time="29" text="もりもりサンダガ" sync="「もりもりサンダガ」の構え" notice="確認するよ" icon="真偽128px.png" />
+    <a time="36" text="どきどきアルテマ" sync="「どきどきアルテマ」の構え" notice="全体攻撃3秒前" icon="全体攻撃128px.png" />
+
+    <a time="56" text="神々の像" sync="「神々の像」の構え" notice="背面、集合して散開" icon="背面集合128px.png" />
+    <a time="56" text="HOT" notice="ホット忘れずに" notice-o="0" icon="HOT128px.png" />
+    <a time="65" text="波動砲2名" />
+    <a time="65" text="線4名ノックバック" icon="ノックバック128px.png" />
+    <a time="65" text="ペアで頭割り" icon="頭割り128px.png" />
+    <a time="73" text="ぶっとびテレポ" sync="「ぶっとびテレポ」の構え" notice="後ろに回って" />
+    <a time="77" text="ばりばりルインガ" />
+    <a time="88" text="裁きの光" notice="全体大ダメージ5秒前" notice-o="-5" icon="全体強攻撃128px.png" />
+    <a time="095" text="マジックチャージ" sync="「マジックチャージ」の構え" notice="マジックチャージ" />
+    <a time="099" text="もりもりサンダガ" sync="「もりもりサンダガ」の構え" notice="確認して覚える" icon="真偽128px.png" />
+    <a time="106" text="ぐるぐるブリザガ" sync="「ぐるぐるブリザガ」の構え" notice="中か外か覚える" icon="真偽128px.png" />
+
+    <a time="114" text="神々の像" sync="「神々の像」の構え" notice="バリアとホット" icon="HOT128px.png" />
+    <a time="120" text="左右からノックバック" notice="ノックバック禁止忘れずに" icon="ノックバック128px.png" />
+    <a time="124" text="マジックアウト" sync="「マジックアウト」の構え" notice="さっきの組み合わせてくるよ" />
+    <a time="141" text="どきどきアルテマ" sync="「どきどきアルテマ」の構え" notice="全体攻撃3秒前" icon="全体攻撃128px.png" />
+    <a time="148" text="ハイパードライブ" sync="「ハイパードライブ」の構え" notice="MT大ダメージ、近寄らない" icon="単体強攻撃128px.png" />
+
+    <a time="162" text="神々の像" sync="「神々の像」の構え" notice="ホット、忘れずに" icon="HOT128px.png" />
+    <a time="167" text="線処理" />
+    <a time="178" text="床半分即死" />
+    <a time="180" text="線処理" />
+    <a time="185" text="ずんずんエアロガ" sync="「ずんずんエアロガ」の構え" notice="ノックバックくるよ" icon="ノックバック128px.png" />
+    <a time="192" text="裁きの光" notice="全体大ダメージ5秒前" notice-o="-5" icon="全体強攻撃128px.png" />
+    <a time="206" text="マジックチャージ" sync="「マジックチャージ」の構え" notice="マジックチャージ" />
+    <a time="209" text="めらめらファイガ" sync="「めらめらファイガ」の構え" notice="確認するよ" icon="真偽128px.png" />
+    <a time="218" text="どきどきアルテマ" sync="「どきどきアルテマ」の構え" notice="全体ダメージ3秒前" icon="全体攻撃128px.png" />
+
+    <a time="225" text="神々の像" sync="「神々の像」の構え" notice="左右どちらか確認" />
+    <a time="232" text="マジックアウト" sync="「マジックアウト」の構え" notice="さっきと同じのがくるよ" />
+    <a time="235" text="さっきのファイガ" notice="さっきと同じファイガ" icon="ファイヤ系128px.png" />
+    <a time="240" text="もりもりサンダガ" sync="「もりもりサンダガ」の構え" notice="確認するよ" icon="真偽128px.png" />
+    <a time="247" text="どきどきアルテマ" sync="「どきどきアルテマ」の構え" notice="全体ダメージ3秒前" icon="全体攻撃128px.png" />
+    <a time="254" text="ハイパードライブ" notice="MT大ダメージ、近寄らない" icon="単体強攻撃128px.png" />
+
+    <a time="263" text="神々の像" sync="「神々の像」の構え" notice="中央集合、中央集合" icon="集合128px.png" />
+    <a time="270" text="AOE重ね捨て" notice="視線で逃げる方向決める" icon="重ね捨て128px.png" />
+    <a time="274" text="視線発動" notice="視線ちゅうい" icon="視線128px.png" />
+    <a time="283" text="視線発動" notice="視線ちゅうい" icon="視線128px.png" />
+    <a time="285" text="ぶっとびテレポ" sync="「ぶっとびテレポ」の構え" notice="視線処理して後ろに回る" />
+    <a time="290" text="ばりばりルインガ" notice="薬つかえるよ" icon="薬128px.png" />
+    <a time="295" text="裁きの光" notice="全体大ダメージ5秒前" notice-o="-5" icon="全体強攻撃128px.png" />
+    <a time="305" text="どきどきアルテマ" sync="「どきどきアルテマ」の構え" notice="全体攻撃3秒前" icon="全体攻撃128px.png" />
+    <a time="313" text="マジックチャージ" sync="「マジックチャージ」の構え" notice="マジックチャージ" />
+    <a time="317" text="もりもりサンダガ" sync="「もりもりサンダガ」の構え" notice="確認して覚える" icon="真偽128px.png" />
+    <a time="324" text="ぐるぐるブリザガ" notice="確認して覚える" icon="真偽128px.png" />
+
+    <a time="332" text="神々の像" sync="「神々の像」の構え" notice="ボスによって視線確認" icon="視線128px.png" />
+    <a time="335" text="視線確認" icon="視線128px.png" />
+    <a time="339" text="マジックアウト" sync="「マジックアウト」の構え" notice="さっきの組み合わせてくるよ" />
+    <a time="352" text="ハイパードライブ" sync="「ハイパードライブ」の構え" notice="MT大ダメージ、近寄らない" icon="単体強攻撃128px.png" />
+    <a time="359" text="どきどきアルテマ" notice="全体攻撃3連続" icon="全体攻撃128px.png" />
+    <a time="367" text="どきどきアルテマ" notice="2回目全体攻撃" icon="全体攻撃128px.png" />
+    <a time="375" text="どきどきアルテマ" notice="ラストの攻撃、時間切れなるよ" icon="全体攻撃128px.png" />
+    <a time="390" text="昇天" />
+    <a time="390" text="裁きの光" icon="時間切れ128px.png" />
+
+    <a time="600" text="後半まで待機" />
+  </s>
+  <!-- ケフカの定義 end -->
+
+  <!-- ゴッドケフカの定義 begin -->
+  <s name="PHASE1 心ない大天使">
+    <!-- 7秒目 心ない天使 からの相対時間 -->
+    <a time="006" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="013" text="ハイパードライブ" sync="「ハイパードライブ」の構え" notice="auto" />
+    <a time="021" text="スリースターズ" sync="「スリースターズ」の構え" notice="auto" />
+    <a time="031" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="042" text="ミッシング" sync="「ミッシング」の構え" notice="auto" />
+    <a time="053" text="心ない大天使" sync="「心ない大天使」の構え" notice="auto" />
+    <a time="067" text="破壊の翼(両翼)" sync="「破壊の翼」の構え" notice="auto" />
+    <a time="073" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="083" text="心ない大天使" sync="「心ない大天使」の構え" notice="auto" />
+    <a time="098" text="裁きの光" sync="「裁きの光」の構え" notice="auto" goto="PHASE2 トライン" />
+  </s>
+
+  <s name="PHASE2 トライン">
+    <a time="095" text="トラインtake1" sync="「トライン」の構え" notice="auto" />
+    <a time="101" text="破壊の翼(片翼)" sync="「破壊の翼」の構え" notice="auto" />
+    <a time="113" text="破壊の翼(両翼)" sync="「破壊の翼」の構え" notice="auto" />
+    <a time="137" text="未来/過去の破滅" notice="auto" />
+    <a time="130" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="148" text="終末の双腕take1" sync="「終末の双腕」の構え" notice="auto" />
+    <a time="155" text="ハイパードライブ" sync="「ハイパードライブ」の構え" notice="auto" />
+    <a time="162" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="178" text="ミッシング" sync="「ミッシング」の構え" notice="auto" goto="PHASE3 妖星乱舞" />
+  </s>
+
+  <s name="PHASE3 妖星乱舞">
+    <a time="017" text="妖星乱舞" sync="「妖星乱舞」の構え" notice="auto" />
+    <a time="022" text="未来/過去の終焉" notice="auto" />
+    <a time="031" text="消滅の脚" sync="「消滅の脚」の構え" notice="auto" />
+    <a time="032" text="光の波動" notice="auto" />
+    <a time="037" text="メテオ" notice="auto" />
+    <a time="040" text="裁きの光" sync="「裁きの光」の構え" notice="auto" goto="PHASE4 トライン" />
+  </s>
+
+  <s name="PHASE4 トライン">
+    <a time="017" text="スリースターズ" sync="「スリースターズ」の構え" notice="auto" />
+    <a time="026" text="破壊の翼:片翼" notice="auto" />
+    <a time="032" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="050" text="トラインtake2" sync="「トライン」の構え" notice="auto" />
+    <a time="057" text="未来/過去の破滅" notice="auto" />
+    <a time="070" text="破壊の翼:両翼" notice="auto" />
+    <a time="075" text="終末の双腕take2" sync="「終末の双腕」の構え" notice="auto" />
+    <a time="083" text="ハイパードライブ" sync="「ハイパードライブ」の構え" notice="auto" />
+    <a time="091" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="107" text="ミッシング" sync="「ミッシング」の構え" notice="auto" goto="PHASE5 神々の像" />
+  </s>
+
+  <s name="PHASE5 神々の像">
+    <a time="010" text="in 神々の像" sync="" notice="auto" />
+    <a time="015" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="021" text="終末の双腕take3" sync="「終末の双腕」の構え" notice="auto" />
+    <a time="027" text="睡魔/聖母の神気" notice="auto" />
+    <a time="034" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="042" text="心ない大天使" sync="「心ない大天使」の構え" notice="auto" />
+    <a time="055" text="破壊の翼:両翼" notice="auto" />
+    <a time="060" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="067" text="破壊の翼:片翼" sync="" notice="auto" />
+    <a time="073" text="裁きの光" sync="「裁きの光」の構え" notice="auto" goto="PHASE6 トライン" />
+  </s>
+
+  <s name="PHASE6 トライン">
+    <a time="097" text="トライン" sync="「トライン」の構え" notice="auto" />
+    <a time="103" text="破壊の翼:片翼" notice="auto" />
+    <a time="114" text="破壊の翼:両翼" notice="auto" />
+    <a time="120" text="終末の双腕take4" sync="「終末の双腕」の構え" notice="auto" />
+    <a time="137" text="トライン" sync="「トライン」の構え" notice="auto" />
+    <a time="145" text="未来/過去の破滅" notice="auto" />
+    <a time="157" text="ハイパードライブ" sync="「ハイパードライブ」の構え" notice="auto" />
+    <a time="164" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="172" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="189" text="ミッシング" sync="「ミッシング」の構え" notice="auto" goto="FINAL" />
+  </s>
+
+  <s name="FINAL">
+    <a time="010" text="in 神々の像" sync="" notice="auto" />
+    <a time="014" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="020" text="終末の双腕take5" sync="「終末の双腕」の構え" notice="auto" />
+    <a time="026" text="睡魔/聖母の神気" sync="" notice="auto" />
+    <a time="033" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="041" text="心ない大天使" sync="「心ない大天使」の構え" notice="auto" />
+    <a time="053" text="破壊の翼:両翼" sync="「破壊の翼」の構え" notice="auto" />
+    <a time="059" text="アルテマ" sync="「アルテマ」の構え" notice="auto" />
+    <a time="066" text="破壊の翼:片翼" sync="「破壊の翼」の構え" notice="auto" />
+    <a time="073" text="アルテマ" notice="auto" />
+    <a time="081" text="アルテマ" notice="auto" />
+    <a time="089" text="アルテマ" notice="auto" />
+    <a time="097" text="アルテマ" notice="auto" />
+    <a time="105" text="裁きの光" sync="「裁きの光」の構え" notice="auto" />
+    <a time="115" text="WIPEOUT" notice="auto" />
+  </s>
+  <!-- ゴッドケフカの定義 end -->
+</timeline>
