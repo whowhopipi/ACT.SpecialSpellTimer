@@ -324,14 +324,21 @@ namespace ACT.SpecialSpellTimer
         public static readonly string[] IgnoreLogKeywords = new[]
         {
             /*
-            "] 15:",    // ダメージかアクションの生ログ
-            "] 16:",    // エフェクトの生ログ
             "] 17:",    // Cancel
             */
             "] 18:",    // DoT/HoT Tick
             /*
             "] 19:",    // defeated
             */
+        };
+
+        /// <summary>
+        /// カットする可能性のある詳細ログのキーワード
+        /// </summary>
+        public static readonly string[] IgnoreDetailLogKeywords = new[]
+        {
+            "] 15:",    // ダメージかアクションの生ログ
+            "] 16:",    // エフェクトの生ログ
         };
 
         public bool IsEmpty => this.logInfoQueue.IsEmpty;
@@ -367,7 +374,8 @@ namespace ACT.SpecialSpellTimer
             var summoned = false;
             var doneCommand = false;
 
-            var preLog = string.Empty;
+            var preLog = new string[3];
+            var preLogIndex = 0;
 #if DEBUG
             var sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
@@ -377,17 +385,32 @@ namespace ACT.SpecialSpellTimer
                 var logLine = logInfo.logLine;
 
                 // 直前とまったく同じ行はカットする
-                if (preLog == logLine)
+                if (preLog[0] == logLine ||
+                    preLog[1] == logLine ||
+                    preLog[2] == logLine)
                 {
                     continue;
                 }
 
-                preLog = logLine;
+                preLog[preLogIndex++] = logLine;
+                if (preLogIndex >= 3)
+                {
+                    preLogIndex = 0;
+                }
 
                 // 無効なログ行をカットする
                 if (IgnoreLogKeywords.Any(x => logLine.Contains(x)))
                 {
                     continue;
+                }
+
+                if (Settings.Default.IgnoreDetailLogs)
+                {
+                    // 詳細なログをカットする
+                    if (IgnoreDetailLogKeywords.Any(x => logLine.Contains(x)))
+                    {
+                        continue;
+                    }
                 }
 
                 // エフェクトに付与されるツールチップ文字を除去する

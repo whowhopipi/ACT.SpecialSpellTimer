@@ -279,6 +279,14 @@ namespace ACT.SpecialSpellTimer.Config
 
         public bool ToComplementUnknownSkill { get; set; } = true;
 
+        private bool ignoreDetailLogs = false;
+
+        public bool IgnoreDetailLogs
+        {
+            get => this.ignoreDetailLogs;
+            set => this.SetProperty(ref this.ignoreDetailLogs, value);
+        }
+
         public bool DetectPacketDump { get; set; }
 
         private bool resetOnWipeOut;
