@@ -435,7 +435,7 @@
     <Content Include="resources\timeline\sample\Sigmascape_V3.0_Savage.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\timeline\sample\Sigmascape_V4.0_Savage_1stHalf.xml">
+    <Content Include="resources\timeline\sample\Sigmascape_V4.0_Savage.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\timeline\wallpaper\biolike.png">
