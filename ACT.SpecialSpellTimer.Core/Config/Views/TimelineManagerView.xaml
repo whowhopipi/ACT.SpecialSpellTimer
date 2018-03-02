@@ -66,7 +66,7 @@
 
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" MinWidth="550" MaxWidth="750" />
+      <ColumnDefinition Width="Auto" MinWidth="550" />
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
 
@@ -134,8 +134,8 @@
 
                   <StackPanel Margin="5 0 0 0">
                     <StackPanel Orientation="Horizontal">
-                      <Label Content="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" />
-                      <Label Margin="15 0 0 0" Content="{Binding Path=Revision, Mode=OneWay}" FontSize="14" VerticalAlignment="Center" />
+                      <TextBlock Text="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" MaxWidth="330" TextWrapping="WrapWithOverflow" />
+                      <TextBlock Margin="15 0 0 0" Text="{Binding Path=Revision, Mode=OneWay}" FontSize="14" VerticalAlignment="Center" />
                     </StackPanel>
 
                     <TextBlock Margin="10 5 0 0" Text="{Binding Path=Zone, Mode=OneWay}" FontSize="13" Foreground="DimGray" />

@@ -65,25 +65,28 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 var text = string.Empty;
 
-                using (var sr = new StringReader(value))
+                if (!string.IsNullOrEmpty(value))
                 {
-                    while (true)
+                    using (var sr = new StringReader(value))
                     {
-                        var line = sr.ReadLine();
-                        if (line == null)
+                        while (true)
                         {
-                            break;
-                        }
+                            var line = sr.ReadLine();
+                            if (line == null)
+                            {
+                                break;
+                            }
 
-                        line = line.Trim();
-                        if (string.IsNullOrEmpty(line))
-                        {
-                            continue;
-                        }
+                            line = line.Trim();
+                            if (string.IsNullOrEmpty(line))
+                            {
+                                continue;
+                            }
 
-                        text += !string.IsNullOrEmpty(text) ?
-                            Environment.NewLine + line :
-                            line;
+                            text += !string.IsNullOrEmpty(text) ?
+                                Environment.NewLine + line :
+                                line;
+                        }
                     }
                 }
 
