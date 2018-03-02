@@ -12,6 +12,13 @@ namespace XIVDBDownloader.Models
         public T GET(
             Locales language)
         {
+            // SSL/TLSを有効にする
+            ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Ssl3 |
+                SecurityProtocolType.Tls |
+                SecurityProtocolType.Tls11 |
+                SecurityProtocolType.Tls12;
+
             var resultList = default(T);
 
             if (string.IsNullOrEmpty(this.Uri))
