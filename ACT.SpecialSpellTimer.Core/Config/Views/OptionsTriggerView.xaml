@@ -77,7 +77,9 @@
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledNotifyDefaultSpellTimer}" IsChecked="{Binding Config.NotifyNormalSpellTimerPrefix, Mode=TwoWay}" />
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledSimplyRegex}" IsChecked="{Binding Config.SimpleRegex, Mode=TwoWay}" />
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledRemoveTooltipSymbol}" IsChecked="{Binding Config.RemoveTooltipSymbols, Mode=TwoWay}" />
+    <!--
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledCompleteUnknownSkill}" IsChecked="{Binding Config.ToComplementUnknownSkill, Mode=TwoWay}" />
+    -->
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledIgnoreDetailLogs}" IsChecked="{Binding Config.IgnoreDetailLogs, Mode=TwoWay}" />
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_EnabledDetectPacketDump}" IsChecked="{Binding Config.DetectPacketDump, Mode=TwoWay}" />
 

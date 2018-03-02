@@ -88,8 +88,7 @@ namespace ACT.SpecialSpellTimer
             FFXIVPlugin.Instance.Start(
                 Settings.Default.LogPollSleepInterval,
                 Settings.Default.FFXIVLocale,
-                Settings.Default.PCNameInitialOnDisplayStyle,
-                Settings.Default.ToComplementUnknownSkill);
+                Settings.Default.PCNameInitialOnDisplayStyle);
 
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
@@ -227,6 +226,7 @@ namespace ACT.SpecialSpellTimer
             // FFXIVのスキャンを停止する
             FFXIVPlugin.Instance.End();
             FFXIVPlugin.Free();
+            FFXIVReader.Free();
         }
 
         #endregion Begin / End

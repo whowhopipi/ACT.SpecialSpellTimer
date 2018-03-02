@@ -282,8 +282,6 @@ namespace ACT.SpecialSpellTimer.Config
 
         public bool RemoveTooltipSymbols { get; set; }
 
-        public bool ToComplementUnknownSkill { get; set; } = true;
-
         private bool ignoreDetailLogs = false;
 
         public bool IgnoreDetailLogs
@@ -607,7 +605,6 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.TextOutlineThicknessRate), 1.0d },
             { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
             { nameof(Settings.RenderCPUOnly), false },
-            { nameof(Settings.ToComplementUnknownSkill), true },
             { nameof(Settings.SingleTaskLogMatching), false },
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
