@@ -741,19 +741,26 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (this.logInfoQueue != null)
             {
-                var prelog = string.Empty;
+                var prelog = new string[3];
+                var prelogIndex = 0;
 
                 while (this.logInfoQueue.TryDequeue(out LogLineEventArgs logInfo))
                 {
                     var logLine = logInfo.logLine;
 
                     // 直前とまったく同じログはスキップする
-                    if (prelog == logLine)
+                    if (prelog[0] == logLine ||
+                        prelog[1] == logLine ||
+                        prelog[2] == logLine)
                     {
                         continue;
                     }
 
-                    prelog = logLine;
+                    prelog[prelogIndex++] = logLine;
+                    if (prelogIndex >= 3)
+                    {
+                        prelogIndex = 0;
+                    }
 
                     // 無効キーワードが含まれていればスキップする
                     if (IgnoreLogKeywords.Any(x => logLine.Contains(x)))
