@@ -8,11 +8,11 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer
 {

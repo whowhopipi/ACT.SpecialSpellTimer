@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Windows;
-using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.resources

@@ -10,9 +10,10 @@ using System.Threading;
 using System.Windows.Media;
 using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 using NPOI.SS.UserModel;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline

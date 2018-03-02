@@ -8,11 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.FFXIVHelper;
+using TamanegiMage.FFXIV_MemoryReader.Model;
 using static ACT.SpecialSpellTimer.Sound.TTSDictionary;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -572,7 +572,7 @@ namespace ACT.SpecialSpellTimer.Models
             var r = false;
 
             var party = this.partyList
-                .Where(x => x.MobType == MobType.Player)
+                .Where(x => x.type == ObjectType.PC)
                 .ToList();
 
             if (this.previousParty.Count !=

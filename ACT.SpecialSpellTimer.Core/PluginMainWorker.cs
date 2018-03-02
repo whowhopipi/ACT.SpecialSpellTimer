@@ -7,16 +7,15 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -86,8 +85,11 @@ namespace ACT.SpecialSpellTimer
             this.isOver = false;
 
             // FFXIVのスキャンを開始する
-            FFXIVPlugin.Initialize();
-            FFXIVPlugin.Instance.Start();
+            FFXIVPlugin.Instance.Start(
+                Settings.Default.LogPollSleepInterval,
+                Settings.Default.FFXIVLocale,
+                Settings.Default.PCNameInitialOnDisplayStyle,
+                Settings.Default.ToComplementUnknownSkill);
 
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();

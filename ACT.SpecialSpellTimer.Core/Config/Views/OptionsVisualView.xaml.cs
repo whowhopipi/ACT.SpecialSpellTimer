@@ -3,9 +3,9 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.resources;
 using FFXIV.Framework.Dialog;
+using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 

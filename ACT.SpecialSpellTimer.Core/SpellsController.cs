@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer

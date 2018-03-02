@@ -46,6 +46,9 @@
     <Reference Include="CommonServiceLocator, Version=2.0.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.1\lib\net45\CommonServiceLocator.dll</HintPath>
     </Reference>
+    <Reference Include="FFXIV_MemoryReader.Model">
+      <HintPath>..\..\FFXIV.Framework\Thirdparty\FFXIV_MemoryReader.Model.dll</HintPath>
+    </Reference>
     <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
     </Reference>
@@ -210,14 +213,6 @@
     </Compile>
     <Compile Include="Config\FontSerializationHelper.cs" />
     <Compile Include="Config\SerializableSize.cs" />
-    <Compile Include="FFXIVHelper\Buff.cs" />
-    <Compile Include="FFXIVHelper\Combatant.cs" />
-    <Compile Include="FFXIVHelper\FFXIVPlugin.cs" />
-    <Compile Include="FFXIVHelper\MobType.cs" />
-    <Compile Include="FFXIVHelper\NameStyles.cs" />
-    <Compile Include="FFXIVHelper\Skill.cs" />
-    <Compile Include="FFXIVHelper\XIVDB.cs" />
-    <Compile Include="FFXIVHelper\Zone.cs" />
     <Compile Include="Image\IconController.cs" />
     <Compile Include="JobExtensions.cs" />
     <Compile Include="LogBuffer.cs" />
@@ -260,7 +255,6 @@
     <Compile Include="Models\TickerTable.cs" />
     <Compile Include="Config\Settings.cs" />
     <Compile Include="PluginCore.cs" />
-    <Compile Include="Utility\DirectoryHelper.cs" />
     <Compile Include="Views\AdvancedSpellPanelWindow.xaml.cs">
       <DependentUpon>AdvancedSpellPanelWindow.xaml</DependentUpon>
     </Compile>

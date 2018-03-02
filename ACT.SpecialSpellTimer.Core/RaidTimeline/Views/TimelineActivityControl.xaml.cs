@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.Common;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 {

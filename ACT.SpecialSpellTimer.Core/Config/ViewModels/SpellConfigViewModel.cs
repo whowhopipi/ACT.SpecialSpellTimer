@@ -8,7 +8,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Config.Views;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.FFXIVHelper;
 using Prism.Commands;

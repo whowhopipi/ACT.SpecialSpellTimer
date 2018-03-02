@@ -9,10 +9,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Config.Views;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.Globalization;
 using FFXIV.Framework.WPF.Views;
 using Prism.Mvvm;
@@ -190,12 +190,17 @@ namespace ACT.SpecialSpellTimer.Config
         public int MaxFPS { get; set; }
         public bool RenderCPUOnly { get; set; } = false;
 
-        private NameStyles pcNameInitialOnDisplayStyle = NameStyles.FullName;
-
         public NameStyles PCNameInitialOnDisplayStyle
         {
-            get => this.pcNameInitialOnDisplayStyle;
-            set => this.SetProperty(ref this.pcNameInitialOnDisplayStyle, value);
+            get => FFXIVPlugin.Instance.PCNameStyle;
+            set
+            {
+                if (FFXIVPlugin.Instance.PCNameStyle != value)
+                {
+                    FFXIVPlugin.Instance.PCNameStyle = value;
+                    this.RaisePropertyChanged();
+                }
+            }
         }
 
         public double TextBlurRate

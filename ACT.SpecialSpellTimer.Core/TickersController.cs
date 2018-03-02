@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer
