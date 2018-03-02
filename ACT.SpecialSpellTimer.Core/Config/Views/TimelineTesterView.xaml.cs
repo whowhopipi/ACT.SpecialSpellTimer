@@ -207,7 +207,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                 foreach (var log in list)
                 {
-                    log.Time = log.Timestamp - first.Timestamp;
+                    if (log.Timestamp >= first.Timestamp)
+                    {
+                        log.Time = log.Timestamp - first.Timestamp;
+                    }
+                    else
+                    {
+                        log.Time = log.Timestamp.AddDays(1) - first.Timestamp;
+                    }
                 }
             });
 
