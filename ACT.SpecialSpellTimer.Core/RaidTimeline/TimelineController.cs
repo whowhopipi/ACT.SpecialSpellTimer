@@ -232,6 +232,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             int seq = 1;
 
+            // トリガのカウンタを初期化する
+            foreach (var tri in this.Model.Triggers.Where(x =>
+                x.Enabled.GetValueOrDefault()))
+            {
+                tri.MatchedCounter = 0;
+            }
+
             // entryポイントの指定がある？
             var entry = string.IsNullOrEmpty(this.Model.Entry) ?
                 null :
@@ -257,6 +264,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             foreach (var sub in this.Model.Subroutines
                 .Where(x => x.Enabled.GetValueOrDefault()))
             {
+                // サブルーチン中のトリガのカウンタを初期化する
+                foreach (var tri in sub.Triggers.Where(x =>
+                    x.Enabled.GetValueOrDefault()))
+                {
+                    tri.MatchedCounter = 0;
+                }
+
                 foreach (var act in sub.Activities
                     .Where(x => x.Enabled.GetValueOrDefault()))
                 {
@@ -378,6 +392,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
+                // サブルーチン中のトリガのカウンタを初期化する
+                foreach (var tri in targetSub.Triggers.Where(x =>
+                    x.Enabled.GetValueOrDefault()))
+                {
+                    tri.MatchedCounter = 0;
+                }
+
                 // サブルーチン配下のActivityを取得する
                 var acts = targetSub.Activities
                     .Where(x => x.Enabled.GetValueOrDefault())
@@ -485,6 +506,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
+                // サブルーチン中のトリガのカウンタを初期化する
+                foreach (var tri in targetSub.Triggers.Where(x =>
+                    x.Enabled.GetValueOrDefault()))
+                {
+                    tri.MatchedCounter = 0;
+                }
+
                 // サブルーチン配下のActivityを取得する
                 var acts = targetSub.Activities
                     .Where(x => x.Enabled.GetValueOrDefault())
@@ -557,6 +585,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             if (sub == null)
             {
                 return;
+            }
+
+            // サブルーチン中のトリガのカウンタを初期化する
+            foreach (var tri in sub.Triggers.Where(x =>
+                x.Enabled.GetValueOrDefault()))
+            {
+                tri.MatchedCounter = 0;
             }
 
             var acts = sub.Activities
