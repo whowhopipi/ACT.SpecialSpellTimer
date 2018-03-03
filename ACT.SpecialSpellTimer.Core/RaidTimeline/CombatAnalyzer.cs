@@ -1192,10 +1192,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 zone = zone.Replace(c, '_');
             }
 
-            var file = $"{timeStamp.ToString("yyyy-MM-dd_HHmm")}.{zone}.AutoAnalyzedLog.xlsx";
+            var xlsx = $"{timeStamp.ToString("yyyy-MM-dd_HHmm")}.{zone}.auto.xlsx";
+            var log = $"{timeStamp.ToString("yyyy-MM-dd_HHmm")}.{zone}.auto.log";
 
             this.SaveToSpreadsheet(
-                Path.Combine(Settings.Default.CombatLogSaveDirectory, file),
+                Path.Combine(Settings.Default.CombatLogSaveDirectory, xlsx),
+                logs);
+
+            this.SaveToTestLog(
+                Path.Combine(Settings.Default.CombatLogSaveDirectory, log),
                 logs);
         }
 
