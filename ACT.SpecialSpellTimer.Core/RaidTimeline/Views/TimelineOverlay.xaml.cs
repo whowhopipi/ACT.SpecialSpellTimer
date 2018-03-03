@@ -105,9 +105,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 }
 
                 TimelineView.Model = timelineModel;
-                TimelineView.OverlayVisible = true;
 
                 ChangeClickthrough(TimelineSettings.Instance.Clickthrough);
+
+                TimelineView.OverlayVisible = true;
+                TimelineView.Activate();
             });
         }
 
