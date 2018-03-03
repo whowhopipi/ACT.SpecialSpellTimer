@@ -210,8 +210,14 @@ namespace ACT.SpecialSpellTimer.Models
             }
         }
 
+        private string spellTitleReplaced = string.Empty;
+
         [XmlIgnore]
-        public string SpellTitleReplaced { get; set; } = string.Empty;
+        public string SpellTitleReplaced
+        {
+            get => this.spellTitleReplaced;
+            set => this.SetProperty(ref this.spellTitleReplaced, value);
+        }
 
         /// <summary>
         /// ※注意が必要な項目※

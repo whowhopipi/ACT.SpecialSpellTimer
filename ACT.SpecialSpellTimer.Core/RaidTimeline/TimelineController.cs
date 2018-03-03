@@ -897,11 +897,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     switch (key.Category)
                     {
                         case KewordTypes.TimelineStart:
-                            WPFHelper.BeginInvoke(() =>
+                            if (this.Model.StartTriggerRegex == null)
                             {
-                                Thread.Sleep(TimeSpan.FromSeconds(4.8));
-                                this.StartActivityLine();
-                            });
+                                WPFHelper.BeginInvoke(() =>
+                                {
+                                    Thread.Sleep(TimeSpan.FromSeconds(4.8));
+                                    this.StartActivityLine();
+                                });
+                            }
                             break;
 
                         case KewordTypes.End:

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -360,8 +361,8 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
-        private volatile Dictionary<string, Spell> instanceSpells =
-            new Dictionary<string, Spell>();
+        private readonly ConcurrentDictionary<string, Spell> instanceSpells =
+            new ConcurrentDictionary<string, Spell>();
 
         /// <summary>
         /// 同じスペル表示名のインスタンスを取得するか新たに作成する
@@ -373,18 +374,11 @@ namespace ACT.SpecialSpellTimer.Models
             string spellTitle,
             Spell sourceSpell)
         {
-            var instance = default(Spell);
+            var instance = this.instanceSpells.GetOrAdd(
+                spellTitle,
+                sourceSpell.CreateInstanceNew(spellTitle));
 
-            if (this.instanceSpells.ContainsKey(spellTitle))
-            {
-                instance = this.instanceSpells[spellTitle];
-            }
-            else
-            {
-                instance = sourceSpell.CreateInstanceNew(spellTitle);
-                this.instanceSpells[spellTitle] = instance;
-            }
-
+            instance.SpellTitleReplaced = spellTitle;
             instance.CompleteScheduledTime = DateTime.MinValue;
             instance.StartGarbageInstanceTimer();
 
@@ -441,7 +435,7 @@ namespace ACT.SpecialSpellTimer.Models
                 {
                     isRemove = true;
                     instance.StopGarbageInstanceTimer();
-                    this.instanceSpells.Remove(instance.SpellTitleReplaced);
+                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out Spell s);
                 }
 
                 if (!isRemove)
