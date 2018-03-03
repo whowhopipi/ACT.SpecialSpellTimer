@@ -111,7 +111,9 @@ namespace ACT.SpecialSpellTimer
                             var replacedTitle = ConditionUtility.GetReplacedTitle(targetSpell);
 
                             // PC名を置換する
-                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
+                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                                replacedTitle,
+                                Settings.Default.PCNameInitialOnDisplayStyle);
 
                             targetSpell.SpellTitleReplaced = replacedTitle;
                             targetSpell.UpdateDone = false;
@@ -153,7 +155,9 @@ namespace ACT.SpecialSpellTimer
                             var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
 
                             // PC名を置換する
-                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
+                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                                replacedTitle,
+                                Settings.Default.PCNameInitialOnDisplayStyle);
 
                             // インスタンス化する？
                             if (spell.ToInstance)

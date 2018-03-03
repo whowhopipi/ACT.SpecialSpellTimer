@@ -190,17 +190,12 @@ namespace ACT.SpecialSpellTimer.Config
         public int MaxFPS { get; set; }
         public bool RenderCPUOnly { get; set; } = false;
 
+        private NameStyles pcNameInitialOnDisplayStyle = NameStyles.FullName;
+
         public NameStyles PCNameInitialOnDisplayStyle
         {
-            get => FFXIVPlugin.Instance.PCNameStyle;
-            set
-            {
-                if (FFXIVPlugin.Instance.PCNameStyle != value)
-                {
-                    FFXIVPlugin.Instance.PCNameStyle = value;
-                    this.RaisePropertyChanged();
-                }
-            }
+            get => this.pcNameInitialOnDisplayStyle;
+            set => this.SetProperty(ref pcNameInitialOnDisplayStyle, value);
         }
 
         public double TextBlurRate

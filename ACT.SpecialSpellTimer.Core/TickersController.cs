@@ -99,7 +99,9 @@ namespace ACT.SpecialSpellTimer
                             var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
 
                             // PC名を置換する
-                            messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
+                            messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                                messageReplaced,
+                                Settings.Default.PCNameInitialOnDisplayStyle);
 
                             if (!telop.AddMessageEnabled)
                             {
@@ -138,7 +140,9 @@ namespace ACT.SpecialSpellTimer
                         messageReplaced = match.Result(messageReplaced);
 
                         // PC名を置換する
-                        messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
+                        messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                            messageReplaced,
+                            Settings.Default.PCNameInitialOnDisplayStyle);
 
                         if (!telop.AddMessageEnabled)
                         {

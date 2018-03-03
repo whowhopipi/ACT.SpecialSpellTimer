@@ -87,8 +87,7 @@ namespace ACT.SpecialSpellTimer
             // FFXIVのスキャンを開始する
             FFXIVPlugin.Instance.Start(
                 Settings.Default.LogPollSleepInterval,
-                Settings.Default.FFXIVLocale,
-                Settings.Default.PCNameInitialOnDisplayStyle);
+                Settings.Default.FFXIVLocale);
 
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
