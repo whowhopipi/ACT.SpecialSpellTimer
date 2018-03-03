@@ -146,30 +146,50 @@ namespace ACT.SpecialSpellTimer
                         var match = regex.Match(logLine);
                         if (match.Success)
                         {
-                            var targetSpell = spell;
+                            var targetSpell = default(Spell);
 
-                            // ヒットしたログを格納する
-                            targetSpell.MatchedLog = logLine;
-
-                            // スペル名（表示テキスト）を置換する
-                            var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
-
-                            // PC名を置換する
-                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(
-                                replacedTitle,
-                                Settings.Default.PCNameInitialOnDisplayStyle);
-
-                            // インスタンス化する？
-                            if (spell.ToInstance)
+                            void setTitle()
                             {
-                                // 同じタイトルのインスタンススペルを探す
-                                // 存在すればそれを使用して、なければ新しいインスタンスを生成する
-                                targetSpell = SpellTable.Instance.GetOrAddInstance(
+                                targetSpell = spell;
+
+                                // ヒットしたログを格納する
+                                targetSpell.MatchedLog = logLine;
+
+                                // スペル名（表示テキスト）を置換する
+                                var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
+
+                                // PC名を置換する
+                                replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(
                                     replacedTitle,
-                                    spell);
+                                    Settings.Default.PCNameInitialOnDisplayStyle);
+
+                                // インスタンス化する？
+                                if (targetSpell.ToInstance)
+                                {
+                                    // 同じタイトルのインスタンススペルを探す
+                                    // 存在すればそれを使用して、なければ新しいインスタンスを生成する
+                                    targetSpell = SpellTable.Instance.GetOrAddInstance(
+                                        replacedTitle,
+                                        targetSpell);
+                                }
+                                else
+                                {
+                                    targetSpell.SpellTitleReplaced = replacedTitle;
+                                }
                             }
 
-                            targetSpell.SpellTitleReplaced = replacedTitle;
+                            if (spell.ToInstance)
+                            {
+                                lock (SpellTable.InstanceLocker)
+                                {
+                                    setTitle();
+                                }
+                            }
+                            else
+                            {
+                                setTitle();
+                            }
+
                             targetSpell.UpdateDone = false;
                             targetSpell.OverDone = false;
                             targetSpell.BeforeDone = false;

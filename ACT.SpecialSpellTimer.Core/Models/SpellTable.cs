@@ -355,7 +355,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region To Instance spells
 
-        private static readonly object lockObject = new object();
+        public static readonly object InstanceLocker = new object();
 
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
@@ -375,32 +375,25 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var instance = default(Spell);
 
-            lock (this.instanceSpells)
+            if (this.instanceSpells.ContainsKey(spellTitle))
             {
-                if (this.instanceSpells.ContainsKey(spellTitle))
-                {
-                    instance = this.instanceSpells[spellTitle];
-                }
-                else
-                {
-                    instance = sourceSpell.CreateInstanceNew(spellTitle);
-                    this.instanceSpells[spellTitle] = instance;
-                }
-
-                instance.CompleteScheduledTime = DateTime.MinValue;
-                instance.StartGarbageInstanceTimer();
+                instance = this.instanceSpells[spellTitle];
+            }
+            else
+            {
+                instance = sourceSpell.CreateInstanceNew(spellTitle);
+                this.instanceSpells[spellTitle] = instance;
             }
 
-            // スペルテーブル本体に登録する
-            lock (lockObject)
-            {
-                WPFHelper.BeginInvoke(() =>
-                {
-                    this.Add(instance);
-                });
+            instance.CompleteScheduledTime = DateTime.MinValue;
+            instance.StartGarbageInstanceTimer();
 
-                TableCompiler.Instance.AddSpell(instance);
-            }
+            WPFHelper.Invoke(() =>
+            {
+                this.Add(instance);
+            });
+
+            TableCompiler.Instance.AddSpell(instance);
 
             return instance;
         }
@@ -410,13 +403,10 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public void RemoveInstanceSpellsAll()
         {
-            lock (this.instanceSpells)
+            lock (InstanceLocker)
             {
                 this.instanceSpells.Clear();
-            }
 
-            lock (lockObject)
-            {
                 var targets = this.table.Where(x => x.IsInstance).ToArray();
                 foreach (var item in targets)
                 {
@@ -444,7 +434,7 @@ namespace ACT.SpecialSpellTimer.Models
 
             var isRemove = false;
 
-            lock (this.instanceSpells)
+            lock (InstanceLocker)
             {
                 if (instance.CompleteScheduledTime != DateTime.MinValue &&
                     (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
@@ -453,25 +443,21 @@ namespace ACT.SpecialSpellTimer.Models
                     instance.StopGarbageInstanceTimer();
                     this.instanceSpells.Remove(instance.SpellTitleReplaced);
                 }
-            }
 
-            if (!isRemove)
-            {
-                return;
-            }
+                if (!isRemove)
+                {
+                    return;
+                }
 
-            // スペルコレクション本体から除去する
-            lock (lockObject)
-            {
-                WPFHelper.BeginInvoke(() =>
+                WPFHelper.Invoke(() =>
                 {
                     this.Remove(instance);
                 });
 
                 TableCompiler.Instance.RemoveSpell(instance);
-            }
 
-            instance.Dispose();
+                instance.Dispose();
+            }
         }
 
         #endregion To Instance spells
