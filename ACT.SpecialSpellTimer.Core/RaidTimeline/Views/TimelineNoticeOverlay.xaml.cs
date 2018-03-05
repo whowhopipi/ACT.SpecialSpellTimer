@@ -29,7 +29,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         private static IList<TimelineVisualNoticeModel> dummyNoticeList;
 
-        public static IList<TimelineVisualNoticeModel> BindingDummyNoticeList => dummyNoticeList;
+        private static IList<TimelineVisualNoticeModel> BindingDummyNoticeList => dummyNoticeList;
 
         public static void ShowDesignOverlay(
             TimelineStyle testStyle = null)
@@ -50,8 +50,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             }
         }
 
-        public static void HideDesignOverlay(
-            bool restoreTimelineView = true)
+        public static void HideDesignOverlay()
         {
             if (designOverlay != null)
             {

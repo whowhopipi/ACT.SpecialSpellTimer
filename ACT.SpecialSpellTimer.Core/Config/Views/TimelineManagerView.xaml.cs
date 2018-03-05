@@ -69,6 +69,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                     TimelineOverlay.HideDesignOverlay(false);
                     TimelineOverlay.ShowDesignOverlay(selectedStyle);
+
+                    TimelineNoticeOverlay.HideDesignOverlay();
+                    TimelineNoticeOverlay.ShowDesignOverlay(selectedStyle);
                 }
             };
         }
