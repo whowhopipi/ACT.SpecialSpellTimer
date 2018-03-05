@@ -25,8 +25,8 @@
     <Setter Property="Margin" Value="8" />
     <Setter Property="BorderBrush" Value="Gainsboro" />
     <Setter Property="BorderThickness" Value="0" />
-    <Setter Property="Background" Value="#FF000000" />
-    <Setter Property="Opacity" Value="0.01" />
+    <Setter Property="Background" Value="#01000000" />
+    <Setter Property="Opacity" Value="0.001" />
     <Setter Property="CornerRadius" Value="6" />
     <!--
     <Setter Property="Effect">
@@ -112,10 +112,10 @@
   <!-- カウンタテキスト -->
   <Style x:Key="DurationText" TargetType="controls:OutlineTextBlock">
     <Setter Property="DockPanel.Dock" Value="Right" />
-    <Setter Property="Margin" Value="10 0 0 0" />
+    <Setter Property="Margin" Value="10 0 5 0" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="TextAlignment" Value="Right" />
-    <Setter Property="Text" Value="{Binding Path=Duration, Mode=OneWay, StringFormat=N0}" />
+    <Setter Property="Text" Value="{Binding Path=DurationToDisplay, Mode=OneWay, StringFormat=N0}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
     <Setter Property="FontStyle" Value="{Binding Path=StyleModel.Font.Style, Mode=OneWay}" />

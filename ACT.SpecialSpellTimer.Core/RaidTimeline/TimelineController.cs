@@ -1200,6 +1200,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.TimelineTimer.Stop();
                 this.LoadActivityLine();
 
+                TimelineNoticeOverlay.NoticeView?.ClearNotice();
+
                 this.isRunning = false;
                 this.Status = TimelineStatus.Loaded;
                 this.AppLogger.Trace($"{TLSymbol} Timeline stoped. name={this.Model.TimelineName}");
@@ -1397,9 +1399,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public void StopNotifyWorker()
         {
-            this.notifyWorker.Abort(50);
-            while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
-            this.notifyWorker = null;
+            if (this.notifyWorker != null)
+            {
+                this.notifyWorker.Abort(50);
+                while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
+                this.notifyWorker = null;
+            }
         }
 
         private void NotifyActivity(

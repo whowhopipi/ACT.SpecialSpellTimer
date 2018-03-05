@@ -338,6 +338,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
 
                 TimelineOverlay.ChangeClickthrough(isChecked.Value);
+                TimelineNoticeOverlay.ChangeClickthrough(isChecked.Value);
             }));
 
         private ICommand showDummyOverlayCommand;

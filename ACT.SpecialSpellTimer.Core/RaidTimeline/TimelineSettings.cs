@@ -114,6 +114,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.noticeTop, Math.Round(value));
         }
 
+        private double noticeWidth = 100;
+
+        public double NoticeWidth
+        {
+            get => this.noticeWidth;
+            set => this.SetProperty(ref this.noticeWidth, Math.Round(value));
+        }
+
+        private double noticeHeight = 300;
+
+        public double NoticeHeight
+        {
+            get => this.noticeHeight;
+            set => this.SetProperty(ref this.noticeHeight, Math.Round(value));
+        }
+
         private bool clickthrough = false;
 
         public bool Clickthrough

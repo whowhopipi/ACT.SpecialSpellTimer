@@ -152,8 +152,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             TimelineVisualNoticeModel notice,
             bool dummyMode = false)
         {
-            notice.StartNotice(dummyMode);
+            notice.StartNotice(
+                (toRemove) => this.noticeList.Remove(toRemove),
+                dummyMode);
             this.noticeList.Add(notice);
+        }
+
+        public void ClearNotice()
+        {
+            this.noticeList.Clear();
         }
 
         private CollectionViewSource noticesSource;
@@ -182,7 +189,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             {
                 new SortDescription()
                 {
-                    PropertyName = nameof(TimelineVisualNoticeModel.Duration),
+                    PropertyName = nameof(TimelineVisualNoticeModel.DurationToDisplay),
                     Direction = ListSortDirection.Ascending,
                 }
             });
@@ -232,10 +239,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                     if (this.isClickthrough.Value)
                     {
                         this.ToTransparent();
+                        this.ResizeMode = ResizeMode.NoResize;
                     }
                     else
                     {
                         this.ToNotTransparent();
+                        this.ResizeMode = ResizeMode.CanResizeWithGrip;
                     }
                 }
             }

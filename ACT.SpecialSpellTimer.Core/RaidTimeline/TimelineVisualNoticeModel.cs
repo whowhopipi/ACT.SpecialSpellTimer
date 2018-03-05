@@ -53,6 +53,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.duration, value);
         }
 
+        private double durationToDisplay = 3;
+
+        [XmlIgnore]
+        public double DurationToDisplay
+        {
+            get => this.durationToDisplay;
+            set => this.SetProperty(ref this.durationToDisplay, value);
+        }
+
         [XmlAttribute(AttributeName = "duration")]
         public string DurationXML
         {
@@ -88,8 +97,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private DispatcherTimer timer;
 
         public void StartNotice(
+            Action<TimelineVisualNoticeModel> removeAction,
             bool dummyMode = false)
         {
+            this.DurationToDisplay = this.Duration.GetValueOrDefault();
             this.IsVisible = true;
 
             if (this.timer == null)
@@ -101,15 +112,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.timer.Tick += (x, y) =>
                 {
-                    if (this.Duration > 0)
+                    if (this.DurationToDisplay > 0)
                     {
-                        this.Duration--;
+                        this.DurationToDisplay--;
                     }
                     else
                     {
                         if (!dummyMode)
                         {
                             this.IsVisible = false;
+                            removeAction?.Invoke(this);
                         }
 
                         (x as DispatcherTimer)?.Stop();
