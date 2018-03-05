@@ -13,7 +13,6 @@ using System.Windows.Threading;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
-using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Globalization;
@@ -137,7 +136,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                                 nextTimeline.Controller.Load();
                                 nextTimeline.IsActive = true;
 
-                                log = $"[TL] CurrentZoneChanged new_zone={currentZoneName}, active_timeline={nextTimeline.Name}.";
+                                log = $"[TL] CurrentZoneChanged new_zone={currentZoneName}, active_timeline={nextTimeline.TimelineName}.";
 
                                 this.TimelineList.ScrollIntoView(nextTimeline);
                             }
@@ -352,10 +351,12 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 {
                     var selectedStyle = this.StyleListView.SelectedItem as TimelineStyle;
                     TimelineOverlay.ShowDesignOverlay(selectedStyle);
+                    TimelineNoticeOverlay.ShowDesignOverlay(selectedStyle);
                 }
                 else
                 {
                     TimelineOverlay.HideDesignOverlay();
+                    TimelineNoticeOverlay.HideDesignOverlay();
                 }
             }));
 
@@ -377,6 +378,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                 style.Name = "New Style";
                 style.IsDefault = false;
+                style.IsDefaultNotice = false;
 
                 TimelineSettings.Instance.Styles.Add(style);
             }));

@@ -141,7 +141,7 @@ namespace ACT.SpecialSpellTimer.Sound
             return textToSpeak;
         }
 
-        public string ReplaceTTS(
+        private string ReplaceTTS(
             string textToSpeak)
         {
             lock (this.locker)

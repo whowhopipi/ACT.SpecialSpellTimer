@@ -15,6 +15,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Subroutine;
 
+        public override IList<TimelineBase> Children => this.statements;
+
         private List<TimelineBase> statements = new List<TimelineBase>();
 
         [XmlIgnore]

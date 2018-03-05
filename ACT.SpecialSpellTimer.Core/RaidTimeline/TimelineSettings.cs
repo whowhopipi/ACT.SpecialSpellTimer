@@ -9,7 +9,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using Prism.Mvvm;
 
@@ -97,6 +96,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.height;
             set => this.SetProperty(ref this.height, Math.Round(value));
+        }
+
+        private double noticeLeft = 10;
+
+        public double NoticeLeft
+        {
+            get => this.noticeLeft;
+            set => this.SetProperty(ref this.noticeLeft, Math.Round(value));
+        }
+
+        private double noticeTop = 10;
+
+        public double NoticeTop
+        {
+            get => this.noticeTop;
+            set => this.SetProperty(ref this.noticeTop, Math.Round(value));
         }
 
         private bool clickthrough = false;
@@ -301,6 +316,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimelineStyle DefaultStyle =>
             this.Styles.FirstOrDefault(x => x.IsDefault) ?? TimelineStyle.SuperDefaultStyle;
 
+        public TimelineStyle DefaultNoticeStyle =>
+            this.Styles.FirstOrDefault(x => x.IsDefaultNotice) ?? this.DefaultStyle;
+
         #endregion Data
 
         #region Methods
@@ -373,6 +391,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     {
                         var style = TimelineStyle.SuperDefaultStyle;
                         style.IsDefault = true;
+                        style.IsDefaultNotice = true;
                         data.Styles.Add(style);
                     }
 

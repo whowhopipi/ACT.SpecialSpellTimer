@@ -225,6 +225,8 @@
   <system:String x:Key="Timeline_ThisIsOrigin">This record is Origin</system:String>
   <system:String x:Key="Timeline_ImportCombatLog">Import CombatLog</system:String>
 
+  <system:String x:Key="Timeline_Location">Location - Timeline</system:String>
+  <system:String x:Key="Timeline_LocationNotice">Location - Notice</system:String>
   <system:String x:Key="Timeline_ShowDummyTimeline">Show dummy overlay for Design</system:String>
   <system:String x:Key="Timeline_Enable">Use Timeline</system:String>
   <system:String x:Key="Timeline_Folder">Timelines folder</system:String>
@@ -235,7 +237,7 @@
   <system:String x:Key="Timeline_NearestActivityScale">Nearest activity scale</system:String>
   <system:String x:Key="Timeline_NextActivityBrightness">After the next activities brightness</system:String>
   <system:String x:Key="Timeline_ActivityMargin">Margin of activities</system:String>
-  <system:String x:Key="Timeline_OverlayBackground">Overlay background</system:String>
+  <system:String x:Key="Timeline_OverlayBackground">Timeline background</system:String>
   <system:String x:Key="Timeline_Styles">Activity style</system:String>
   <system:String x:Key="Timeline_StyleName">Style name</system:String>
   <system:String x:Key="Timeline_CircleStyle">Circle style</system:String>

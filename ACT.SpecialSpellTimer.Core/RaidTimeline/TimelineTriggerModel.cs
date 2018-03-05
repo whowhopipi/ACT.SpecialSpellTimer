@@ -8,10 +8,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 {
     [XmlType(TypeName = "t")]
     public class TimelineTriggerModel :
-        TimelineBase
+        TimelineBase,
+        ISynchronizable
     {
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Trigger;
+
+        public override IList<TimelineBase> Children => this.statements;
 
         #region Children
 
@@ -31,11 +34,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.AddRange(value);
         }
 
+        [XmlElement(ElementName = "v-notice")]
+        public TimelineVisualNoticeModel[] VisualNoticeStatements
+        {
+            get => this.Statements
+                .Where(x => x.TimelineType == TimelineElementTypes.VisualNotice)
+                .Cast<TimelineVisualNoticeModel>()
+                .ToArray();
+
+            set => this.AddRange(value);
+        }
+
         #region Methods
 
         public void Add(TimelineBase timeline)
         {
-            if (timeline.TimelineType == TimelineElementTypes.Load)
+            if (timeline.TimelineType == TimelineElementTypes.Load ||
+                timeline.TimelineType == TimelineElementTypes.VisualNotice)
             {
                 timeline.Parent = this;
                 this.statements.Add(timeline);
@@ -66,6 +81,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.text, value);
         }
 
+        private string textReplaced = null;
+
+        /// <summary>
+        /// 正規表現置換後のText
+        /// </summary>
+        [XmlIgnore]
+        public string TextReplaced
+        {
+            get => this.textReplaced;
+            set => this.SetProperty(ref this.textReplaced, value);
+        }
+
         private string syncKeyword = null;
 
         [XmlAttribute(AttributeName = "sync")]
@@ -76,16 +103,30 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.SetProperty(ref this.syncKeyword, value))
                 {
-                    if (string.IsNullOrEmpty(this.syncKeyword))
+                    this.SyncKeywordReplaced = null;
+                }
+            }
+        }
+
+        private string syncKeywordReplaced = null;
+
+        [XmlIgnore]
+        public string SyncKeywordReplaced
+        {
+            get => this.syncKeywordReplaced;
+            set
+            {
+                if (this.SetProperty(ref this.syncKeywordReplaced, value))
+                {
+                    if (string.IsNullOrEmpty(this.syncKeywordReplaced))
                     {
-                        this.SyncKeyword = null;
+                        this.SynqRegex = null;
                     }
                     else
                     {
                         this.SynqRegex = new Regex(
-                            this.syncKeyword,
+                            this.syncKeywordReplaced,
                             RegexOptions.Compiled |
-                            RegexOptions.ExplicitCapture |
                             RegexOptions.IgnoreCase);
                     }
                 }
@@ -142,6 +183,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.notice;
             set => this.SetProperty(ref this.notice, value);
+        }
+
+        private string noticeReplaced = null;
+
+        /// <summary>
+        /// 正規表現置換後のNotice
+        /// </summary>
+        [XmlIgnore]
+        public string NoticeReplaced
+        {
+            get => this.noticeReplaced;
+            set => this.SetProperty(ref this.noticeReplaced, value);
         }
 
         private NoticeDevices? noticeDevice = null;

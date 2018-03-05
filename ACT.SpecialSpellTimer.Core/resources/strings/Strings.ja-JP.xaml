@@ -225,6 +225,8 @@
   <system:String x:Key="Timeline_ThisIsOrigin">このレコードを基点にする</system:String>
   <system:String x:Key="Timeline_ImportCombatLog">過去の戦闘ログをインポートする</system:String>
 
+  <system:String x:Key="Timeline_Location">位置 (タイムライン)</system:String>
+  <system:String x:Key="Timeline_LocationNotice">位置 (通知)</system:String>
   <system:String x:Key="Timeline_ShowDummyTimeline">デザイン用のダミーを表示する</system:String>
   <system:String x:Key="Timeline_Enable">スペスペたいむ™ を使用する</system:String>
   <system:String x:Key="Timeline_Folder">タイムラインの参照フォルダ</system:String>
@@ -235,7 +237,7 @@
   <system:String x:Key="Timeline_NearestActivityScale">直近のアクティビティの拡大率</system:String>
   <system:String x:Key="Timeline_NextActivityBrightness">次点以降のアクティビティの明るさ</system:String>
   <system:String x:Key="Timeline_ActivityMargin">アクティビティのマージン</system:String>
-  <system:String x:Key="Timeline_OverlayBackground">オーバーレイの背景</system:String>
+  <system:String x:Key="Timeline_OverlayBackground">タイムラインの背景</system:String>
   <system:String x:Key="Timeline_Styles">アクティビティの表示スタイル</system:String>
   <system:String x:Key="Timeline_StyleName">スタイルの名前</system:String>
   <system:String x:Key="Timeline_CircleStyle">サークルスタイル</system:String>

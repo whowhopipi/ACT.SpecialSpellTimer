@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Xml.Serialization;
 
@@ -11,6 +12,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     {
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Load;
+
+        public override IList<TimelineBase> Children => null;
 
         private string target = null;
 

@@ -19,7 +19,6 @@ using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
-using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -29,12 +28,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     [XmlInclude(typeof(TimelineTriggerModel))]
     [XmlInclude(typeof(TimelineSubroutineModel))]
     public partial class TimelineModel :
-        BindableBase
+        TimelineBase
     {
-        private string name = string.Empty;
+        public override TimelineElementTypes TimelineType => TimelineElementTypes.Timeline;
+
+        public override IList<TimelineBase> Children => this.elements;
 
         [XmlElement(ElementName = "name")]
-        public string Name
+        public string TimelineName
         {
             get => this.name;
             set
@@ -325,10 +326,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             // アクティビティ
             NewDefault(TimelineElementTypes.Activity, "Enabled", true),
-            NewDefault(TimelineElementTypes.Activity, "SyncOffsetStart", -12),
-            NewDefault(TimelineElementTypes.Activity, "SyncOffsetEnd", 12),
+            NewDefault(TimelineElementTypes.Activity, "SyncOffsetStart", -12d),
+            NewDefault(TimelineElementTypes.Activity, "SyncOffsetEnd", 12d),
             NewDefault(TimelineElementTypes.Activity, "NoticeDevice", NoticeDevices.Both),
-            NewDefault(TimelineElementTypes.Activity, "NoticeOffset", -6),
+            NewDefault(TimelineElementTypes.Activity, "NoticeOffset", -6d),
 
             // トリガ
             NewDefault(TimelineElementTypes.Trigger, "Enabled", true),
@@ -337,11 +338,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             // サブルーチン
             NewDefault(TimelineElementTypes.Subroutine, "Enabled", true),
-            NewDefault(TimelineElementTypes.Subroutine, "SyncCount", 0),
-            NewDefault(TimelineElementTypes.Subroutine, "NoticeDevice", NoticeDevices.Both),
 
             // Load
             NewDefault(TimelineElementTypes.Load, "Enabled", true),
+
+            // VisualNotice
+            NewDefault(TimelineElementTypes.VisualNotice, "Enabled", true),
+            NewDefault(TimelineElementTypes.VisualNotice, "Text", TimelineVisualNoticeModel.ParentTextPlaceholder),
+            NewDefault(TimelineElementTypes.VisualNotice, "Duration", 3d),
+            NewDefault(TimelineElementTypes.VisualNotice, "DurationVisible", true),
         };
 
         private void SetDefaultValues()
@@ -349,37 +354,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var defaults = this.Defaults.Union(SuperDefaultValues)
                 .Where(x => (x.Enabled ?? true));
 
-            foreach (var el in this.Elements)
-            {
-                setDefaultValuesToElement(el);
-
-                if (el.TimelineType == TimelineElementTypes.Subroutine)
-                {
-                    var sub = el as TimelineSubroutineModel;
-                    foreach (var el2 in sub.Statements)
-                    {
-                        setDefaultValuesToElement(el2);
-
-                        if (el2.TimelineType == TimelineElementTypes.Trigger)
-                        {
-                            var tri = el2 as TimelineTriggerModel;
-                            foreach (var el3 in tri.Statements)
-                            {
-                                setDefaultValuesToElement(el3);
-                            }
-                        }
-                    }
-                }
-
-                if (el.TimelineType == TimelineElementTypes.Trigger)
-                {
-                    var tri = el as TimelineTriggerModel;
-                    foreach (var el2 in tri.Statements)
-                    {
-                        setDefaultValuesToElement(el2);
-                    }
-                }
-            }
+            this.Walk((element) => setDefaultValuesToElement(element));
 
             void setDefaultValuesToElement(TimelineBase element)
             {
@@ -512,8 +487,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         public string DisplayName =>
-            !string.IsNullOrEmpty(this.Name) ?
-            this.Name :
+            !string.IsNullOrEmpty(this.TimelineName) ?
+            this.TimelineName :
             this.Zone;
 
         private bool isActivitiesVisible = true;
@@ -644,7 +619,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
 
                     this.File = tl.File;
-                    this.Name = tl.Name;
+                    this.TimelineName = tl.TimelineName;
                     this.Revision = tl.Revision;
                     this.Description = tl.Description;
                     this.Zone = tl.Zone;
@@ -686,7 +661,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             var tl = new TimelineModel();
 
-            tl.Name = "サンプルタイムライン";
+            tl.TimelineName = "サンプルタイムライン";
             tl.Zone = "Hojoring Zone v1.0 (Ultimate)";
 
             if (testStyle == null)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -8,6 +9,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     {
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Default;
+
+        public override IList<TimelineBase> Children => null;
 
         private TimelineElementTypes targetElement = TimelineElementTypes.Activity;
 

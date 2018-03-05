@@ -238,11 +238,15 @@
     <Compile Include="RaidTimeline\TimelineStyle.cs" />
     <Compile Include="RaidTimeline\TimelineSubroutineModel.cs" />
     <Compile Include="RaidTimeline\TimelineTriggerModel.cs" />
+    <Compile Include="RaidTimeline\TimelineVisualNoticeModel.cs" />
     <Compile Include="RaidTimeline\Views\Sketchbook.xaml.cs">
       <DependentUpon>Sketchbook.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaidTimeline\Views\TimelineActivityControl.xaml.cs">
       <DependentUpon>TimelineActivityControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RaidTimeline\Views\TimelineNoticeOverlay.xaml.cs">
+      <DependentUpon>TimelineNoticeOverlay.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaidTimeline\Views\TimelineOverlay.xaml.cs">
       <DependentUpon>TimelineOverlay.xaml</DependentUpon>
@@ -734,6 +738,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="RaidTimeline\Views\TimelineNoticeOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RaidTimeline\Views\TimelineOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -776,6 +784,11 @@
     <Content Include="resources\styles\ConfigViewResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\styles\TimelineNoticeOverlayResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Page Include="Views\AdvancedSpellPanelWindow.xaml">

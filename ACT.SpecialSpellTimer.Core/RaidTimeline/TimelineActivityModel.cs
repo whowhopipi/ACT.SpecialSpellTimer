@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.Image;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
@@ -11,10 +11,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     [Serializable]
     [XmlType(TypeName = "a")]
     public class TimelineActivityModel :
-        TimelineBase
+        TimelineBase,
+        ISynchronizable,
+        IStylable
     {
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Activity;
+
+        public override IList<TimelineBase> Children => null;
 
         private TimeSpan time = TimeSpan.Zero;
 
@@ -47,6 +51,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.text, value);
         }
 
+        /// <summary>
+        /// 正規表現置換後のText
+        /// </summary>
+        /// <remarks>ただしActivityでは置換を使用しない</remarks>
+        [XmlIgnore]
+        public string TextReplaced
+        {
+            get => this.text;
+            set { }
+        }
+
         private string syncKeyword = null;
 
         [XmlAttribute(AttributeName = "sync")]
@@ -57,16 +72,30 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.SetProperty(ref this.syncKeyword, value))
                 {
-                    if (string.IsNullOrEmpty(this.syncKeyword))
+                    this.SyncKeywordReplaced = null;
+                }
+            }
+        }
+
+        private string syncKeywordReplaced = null;
+
+        [XmlIgnore]
+        public string SyncKeywordReplaced
+        {
+            get => this.syncKeywordReplaced;
+            set
+            {
+                if (this.SetProperty(ref this.syncKeywordReplaced, value))
+                {
+                    if (string.IsNullOrEmpty(this.syncKeywordReplaced))
                     {
-                        this.SyncKeyword = null;
+                        this.SynqRegex = null;
                     }
                     else
                     {
                         this.SynqRegex = new Regex(
-                            this.syncKeyword,
+                            this.syncKeywordReplaced,
                             RegexOptions.Compiled |
-                            RegexOptions.ExplicitCapture |
                             RegexOptions.IgnoreCase);
                     }
                 }
@@ -152,6 +181,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.notice, value);
         }
 
+        /// <summary>
+        /// 正規表現置換後のNotice
+        /// </summary>
+        /// <remarks>ただしActivityでは置換を使用しない</remarks>
+        [XmlIgnore]
+        public string NoticeReplaced
+        {
+            get => this.notice;
+            set { }
+        }
+
         private NoticeDevices? noticeDevice = null;
 
         [XmlIgnore]
@@ -193,6 +233,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.style, value);
         }
 
+        private TimelineStyle styleModel = null;
+
+        [XmlIgnore]
+        public TimelineStyle StyleModel
+        {
+            get => this.styleModel;
+            set => this.SetProperty(ref this.styleModel, value);
+        }
+
         private string icon = null;
 
         [XmlAttribute(AttributeName = "icon")]
@@ -211,19 +260,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         [XmlIgnore]
-        public bool ExistsIcon =>
-            !string.IsNullOrEmpty(this.Icon) ||
-            !string.IsNullOrEmpty(this.StyleModel?.Icon);
+        public bool ExistsIcon => this.GetExistsIcon();
 
         [XmlIgnore]
-        public BitmapImage IconImage =>
-            this.ThisIconImage ?? this.StyleModel?.IconImage;
+        public BitmapImage IconImage => this.GetIconImage();
 
         [XmlIgnore]
-        private BitmapImage ThisIconImage =>
-            string.IsNullOrEmpty(this.Icon) ?
-            null :
-            IconController.Instance.GetIconFile(this.Icon)?.CreateBitmapImage();
+        public BitmapImage ThisIconImage => this.GetThisIconImage();
 
         public TimelineActivityModel Clone()
         {
@@ -361,15 +404,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.isSynced;
             set => this.SetProperty(ref this.isSynced, value);
-        }
-
-        private TimelineStyle styleModel = null;
-
-        [XmlIgnore]
-        public TimelineStyle StyleModel
-        {
-            get => this.styleModel;
-            set => this.SetProperty(ref this.styleModel, value);
         }
 
         private double opacity = 1.0d;

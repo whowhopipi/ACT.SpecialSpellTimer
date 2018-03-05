@@ -717,6 +717,15 @@ namespace ACT.SpecialSpellTimer.Models
             var newList =
                 new List<PlaceholderContainer>();
 
+            // パーティメンバのいずれを示す <pc> を登録する
+            var names = string.Join("|", this.partyList.Select(x => x.NamesRegex).ToArray());
+            var oldValue = $"<pc>";
+            var newValue = $"(?<_pc>{names})";
+            newList.Add(new PlaceholderContainer(
+                oldValue,
+                newValue,
+                PlaceholderTypes.Party));
+
             // FF14内部のPTメンバ自動ソート順で並び替える
             var partyListSorted =
                 from x in this.partyList
@@ -732,9 +741,9 @@ namespace ACT.SpecialSpellTimer.Models
                 x;
 
             // 自分以外のPTメンバを示す <nex> を登録する
-            var names = string.Join("|", partyListSorted.Select(x => x.NamesRegex).ToArray());
-            var oldValue = $"<nex>";
-            var newValue = $"(?<_nex>{names})";
+            names = string.Join("|", partyListSorted.Select(x => x.NamesRegex).ToArray());
+            oldValue = $"<nex>";
+            newValue = $"(?<_nex>{names})";
             newList.Add(new PlaceholderContainer(
                 oldValue,
                 newValue,

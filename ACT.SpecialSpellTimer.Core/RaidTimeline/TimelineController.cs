@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.Sound;
 using Advanced_Combat_Tracker;
@@ -16,6 +17,7 @@ using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using Prism.Mvvm;
+using static ACT.SpecialSpellTimer.Models.TableCompiler;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -163,6 +165,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.LoadActivityLine();
                 TimelineOverlay.ShowTimeline(this.Model);
+                TimelineNoticeOverlay.ShowNotice();
 
                 this.LogWorker = new Thread(this.DetectLogLoop)
                 {
@@ -179,7 +182,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.StartNotifyWorker();
 
                 this.Status = TimelineStatus.Loaded;
-                this.AppLogger.Trace($"[TL] Timeline loaded. name={this.Model.Name}");
+                this.AppLogger.Trace($"[TL] Timeline loaded. name={this.Model.TimelineName}");
             }
         }
 
@@ -190,6 +193,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.isLogWorkerRunning = false;
 
                 TimelineOverlay.CloseTimeline();
+                TimelineNoticeOverlay.CloseNotice();
 
                 this.CurrentTime = TimeSpan.Zero;
                 this.ClearActivity();
@@ -217,7 +221,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 CurrentController = null;
 
                 this.Status = TimelineStatus.Unloaded;
-                this.AppLogger.Trace($"[TL] Timeline unloaded. name={this.Model.Name}");
+                this.AppLogger.Trace($"[TL] Timeline unloaded. name={this.Model.TimelineName}");
             }
         }
 
@@ -228,16 +232,37 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             this.ClearActivity();
 
             var defaultStyle = TimelineSettings.Instance.DefaultStyle;
-            var acts = new List<TimelineActivityModel>();
+            var defaultNoticeStyle = TimelineSettings.Instance.DefaultNoticeStyle;
 
-            int seq = 1;
+            // <HOGE>を[HOGE]に置き換えたプレースホルダリストを生成する
+            var placeholders = TableCompiler.Instance.PlaceholderList
+                .Select(x =>
+                    new PlaceholderContainer(
+                        x.Placeholder
+                            .Replace("<", "[")
+                            .Replace(">", "]"),
+                        x.ReplaceString,
+                        x.Type))
+                .ToArray();
 
-            // トリガのカウンタを初期化する
-            foreach (var tri in this.Model.Triggers.Where(x =>
-                x.Enabled.GetValueOrDefault()))
+            // 全体の初期化を行う
+            this.Model.Walk((element) =>
             {
-                tri.MatchedCounter = 0;
-            }
+                // トリガのマッチカウンタを初期化する
+                if (element is TimelineTriggerModel tri)
+                {
+                    tri.MatchedCounter = 0;
+                }
+
+                // アクティビティにスタイルを設定する
+                setStyle(element);
+
+                // sync用の正規表現にプレースホルダをセットしてコンパイルし直す
+                setRegex(element, placeholders);
+            });
+
+            var acts = new List<TimelineActivityModel>();
+            int seq = 1;
 
             // entryポイントの指定がある？
             var entry = string.IsNullOrEmpty(this.Model.Entry) ?
@@ -249,6 +274,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         this.Model.Entry,
                         StringComparison.OrdinalIgnoreCase));
 
+            // entryサブルーチンをロードする
             var srcs = entry?.Activities ?? this.Model.Activities;
             foreach (var src in srcs
                 .Where(x => x.Enabled.GetValueOrDefault()))
@@ -256,26 +282,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 var act = src.Clone();
                 act.Init(seq++);
                 act.RefreshProgress();
-                setStyle(act);
-
                 acts.Add(act);
-            }
-
-            foreach (var sub in this.Model.Subroutines
-                .Where(x => x.Enabled.GetValueOrDefault()))
-            {
-                // サブルーチン中のトリガのカウンタを初期化する
-                foreach (var tri in sub.Triggers.Where(x =>
-                    x.Enabled.GetValueOrDefault()))
-                {
-                    tri.MatchedCounter = 0;
-                }
-
-                foreach (var act in sub.Activities
-                    .Where(x => x.Enabled.GetValueOrDefault()))
-                {
-                    setStyle(act);
-                }
             }
 
             // 一括して登録する
@@ -284,20 +291,65 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             // 表示設定を更新しておく
             this.RefreshActivityLineVisibility();
 
-            void setStyle(TimelineActivityModel act)
+            // スタイルを適用する
+            void setStyle(TimelineBase element)
             {
-                if (string.IsNullOrEmpty(act.Style))
+                if (element is TimelineActivityModel act)
                 {
-                    act.StyleModel = defaultStyle;
+                    if (string.IsNullOrEmpty(act.Style))
+                    {
+                        act.StyleModel = defaultStyle;
+                        return;
+                    }
+
+                    act.StyleModel = TimelineSettings.Instance.Styles
+                        .FirstOrDefault(x => string.Equals(
+                            x.Name,
+                            act.Style,
+                            StringComparison.OrdinalIgnoreCase)) ??
+                        defaultStyle;
+                }
+
+                if (element is TimelineVisualNoticeModel notice)
+                {
+                    if (string.IsNullOrEmpty(notice.Style))
+                    {
+                        notice.StyleModel = defaultNoticeStyle;
+                        return;
+                    }
+
+                    notice.StyleModel = TimelineSettings.Instance.Styles
+                        .FirstOrDefault(x => string.Equals(
+                            x.Name,
+                            notice.Style,
+                            StringComparison.OrdinalIgnoreCase)) ??
+                        defaultNoticeStyle;
+                }
+            }
+
+            // 正規表現をセットする
+            void setRegex(
+                TimelineBase element,
+                IList<PlaceholderContainer> placeholderList)
+            {
+                if (!(element is ISynchronizable sync))
+                {
                     return;
                 }
 
-                act.StyleModel = TimelineSettings.Instance.Styles
-                    .FirstOrDefault(x => string.Equals(
-                        x.Name,
-                        act.Style,
-                        StringComparison.OrdinalIgnoreCase)) ??
-                    defaultStyle;
+                var replacedKeyword = sync.SyncKeyword;
+
+                if (!string.IsNullOrEmpty(replacedKeyword))
+                {
+                    foreach (var ph in placeholderList)
+                    {
+                        replacedKeyword = replacedKeyword.Replace(
+                            ph.Placeholder,
+                            ph.ReplaceString);
+                    }
+                }
+
+                sync.SyncKeywordReplaced = replacedKeyword;
             }
         }
 
@@ -713,7 +765,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.AppLogger.Error(
                     ex,
-                    $"[TL] Error OnLoglineRead. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.File}");
+                    $"[TL] Error OnLoglineRead. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
             }
         }
 
@@ -754,7 +806,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     this.AppLogger.Error(
                         ex,
-                        $"[TL] Error DetectLog. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.File}");
+                        $"[TL] Error DetectLog. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
                 }
                 finally
                 {
@@ -995,6 +1047,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
+                tri.TextReplaced = match.Result(tri.Text ?? string.Empty);
+                tri.NoticeReplaced = match.Result(tri.Notice ?? string.Empty);
+
                 tri.MatchedCounter++;
 
                 if (tri.SyncCount.Value != 0)
@@ -1129,7 +1184,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.isRunning = true;
                 this.Status = TimelineStatus.Runnning;
-                this.AppLogger.Trace($"{TLSymbol} Timeline started. name={this.Model.Name}");
+                this.AppLogger.Trace($"{TLSymbol} Timeline started. name={this.Model.TimelineName}");
             }
         }
 
@@ -1147,7 +1202,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.isRunning = false;
                 this.Status = TimelineStatus.Loaded;
-                this.AppLogger.Trace($"{TLSymbol} Timeline stoped. name={this.Model.Name}");
+                this.AppLogger.Trace($"{TLSymbol} Timeline stoped. name={this.Model.TimelineName}");
             }
         }
 
@@ -1175,7 +1230,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.AppLogger.Error(
                     ex,
-                    $"[TL] Error Timeline ticker. name={this.Model.Name}, zone={this.Model.Zone}, file={this.Model.File}");
+                    $"[TL] Error Timeline ticker. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
             }
         }
 
@@ -1371,13 +1426,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var offset = this.CurrentTime - act.Time;
             var log =
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
-                $"name={act.Name}, text={act.Text}, notice={act.Notice}, offset={offset.TotalSeconds:N1}";
+                $"name={act.Name}, text={act.TextReplaced}, notice={act.NoticeReplaced}, offset={offset.TotalSeconds:N1}";
 
-            var notice = act.Notice;
+            var notice = act.NoticeReplaced;
             if (string.Equals(notice, "auto", StringComparison.OrdinalIgnoreCase))
             {
-                notice = !string.IsNullOrEmpty(act.Text) ?
-                    act.Text :
+                notice = !string.IsNullOrEmpty(act.TextReplaced) ?
+                    act.TextReplaced :
                     act.Name;
 
                 if (offset.TotalSeconds <= -1.0)
@@ -1436,6 +1491,40 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             RaiseLog(log);
             NotifySound(notice, tri.NoticeDevice.GetValueOrDefault());
+
+            var vnotices = tri.VisualNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+            if (!vnotices.Any())
+            {
+                return;
+            }
+
+            WPFHelper.BeginInvoke(() =>
+            {
+                foreach (var v in vnotices)
+                {
+                    switch (v.Text)
+                    {
+                        case TimelineVisualNoticeModel.ParentTextPlaceholder:
+                            v.TextToDisplay = tri.TextReplaced;
+                            break;
+
+                        case TimelineVisualNoticeModel.ParentNoticePlaceholder:
+                            v.TextToDisplay = tri.NoticeReplaced;
+                            break;
+
+                        default:
+                            v.TextToDisplay = v.Text;
+                            break;
+                    }
+
+                    if (string.IsNullOrEmpty(v.Text))
+                    {
+                        continue;
+                    }
+
+                    TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+                }
+            });
         }
 
         private static void RaiseLog(
@@ -1470,6 +1559,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 notice = Path.Combine(
                     SoundController.Instance.WaveDirectory,
                     notice);
+            }
+            else
+            {
+                notice = TTSDictionary.Instance.ReplaceWordsTTS(notice);
             }
 
             switch (device)

@@ -41,6 +41,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.isDefault, value);
         }
 
+        private bool isDefaultNotice;
+
+        /// <summary>
+        /// 規定の視覚通知スタイル？
+        /// </summary>
+        public bool IsDefaultNotice
+        {
+            get => this.isDefaultNotice;
+            set => this.SetProperty(ref this.isDefaultNotice, value);
+        }
+
         private FontInfo font = new FontInfo();
 
         /// <summary>
@@ -253,6 +264,36 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     if (!TimelineSettings.Instance.Styles.Any(x => x.IsDefault))
                     {
                         TimelineSettings.Instance.Styles.FirstOrDefault().IsDefault = true;
+                    }
+                }
+            }));
+
+        private ICommand changeDefaultVisualCommand;
+
+        public ICommand ChangeDefaultVisualCommand =>
+            this.changeDefaultVisualCommand ?? (this.changeDefaultVisualCommand = new DelegateCommand<TimelineStyle>((style) =>
+            {
+                if (style == null)
+                {
+                    return;
+                }
+
+                if (style.IsDefaultNotice)
+                {
+                    foreach (var item in TimelineSettings.Instance.Styles)
+                    {
+                        if (item != style &&
+                            item.IsDefaultNotice)
+                        {
+                            item.IsDefaultNotice = false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!TimelineSettings.Instance.Styles.Any(x => x.IsDefaultNotice))
+                    {
+                        TimelineSettings.Instance.Styles.FirstOrDefault().IsDefaultNotice = true;
                     }
                 }
             }));
