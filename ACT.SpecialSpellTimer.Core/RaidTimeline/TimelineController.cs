@@ -1369,6 +1369,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region 通知に関するメソッド
 
+        private static readonly object NoticeLocker = new object();
+
         private readonly ConcurrentQueue<TimelineBase> notifyQueue = new ConcurrentQueue<TimelineBase>();
 
         private ThreadWorker notifyWorker;
@@ -1396,7 +1398,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             Thread.Yield();
                         }
                     },
-                    150,
+                    50,
                     "Timeline Notify Worker");
             }
 
@@ -1472,16 +1474,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
-            lock (tri)
-            {
-                if ((DateTime.Now - tri.LastNotifiedTimestamp).TotalSeconds <= 0.1)
-                {
-                    return;
-                }
-
-                tri.LastNotifiedTimestamp = DateTime.Now;
-            }
-
             var now = DateTime.Now;
             var log =
                 $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
@@ -1503,7 +1495,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             RaiseLog(log);
             NotifySound(notice, tri.NoticeDevice.GetValueOrDefault());
 
-            var vnotices = tri.VisualNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+            var vnotices = tri.VisualNoticeStatements
+                .Where(x => x.Enabled.GetValueOrDefault())
+                .Select(x => x.Clone());
+
             if (!vnotices.Any())
             {
                 return;
@@ -1543,6 +1538,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             });
         }
 
+        private static string lastRaisedLog = string.Empty;
+        private static DateTime lastRaisedLogTimestamp = DateTime.MinValue;
+
         private static void RaiseLog(
             string log)
         {
@@ -1551,11 +1549,28 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            lock (NoticeLocker)
+            {
+                if (lastRaisedLog == log)
+                {
+                    if ((DateTime.Now - lastRaisedLogTimestamp).TotalSeconds <= 0.1)
+                    {
+                        return;
+                    }
+                }
+
+                lastRaisedLog = log;
+                lastRaisedLogTimestamp = DateTime.Now;
+            }
+
             ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
             {
                 ActGlobals.oFormActMain.ParseRawLogLine(false, DateTime.Now, log);
             });
         }
+
+        private static string lastNotice = string.Empty;
+        private static DateTime lastNoticeTimestamp = DateTime.MinValue;
 
         private static void NotifySound(
             string notice,
@@ -1564,6 +1579,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             if (string.IsNullOrEmpty(notice))
             {
                 return;
+            }
+
+            lock (NoticeLocker)
+            {
+                if (lastNotice == notice)
+                {
+                    if ((DateTime.Now - lastNoticeTimestamp).TotalSeconds <= 0.1)
+                    {
+                        return;
+                    }
+                }
+
+                lastNotice = notice;
+                lastNoticeTimestamp = DateTime.Now;
             }
 
             var isWave =

@@ -180,6 +180,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #endregion IStylable
 
+        #region IClonable
+
+        public TimelineVisualNoticeModel Clone()
+        {
+            var clone = this.MemberwiseClone() as TimelineVisualNoticeModel;
+
+            if (clone.timer != null)
+            {
+                clone.timer.Stop();
+                clone.timer = null;
+            }
+
+            return clone;
+        }
+
+        #endregion IClonable
+
         #region Dummy Notice
 
         private static List<TimelineVisualNoticeModel> dummyNotices;

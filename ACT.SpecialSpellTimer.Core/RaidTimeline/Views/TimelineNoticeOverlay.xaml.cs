@@ -162,10 +162,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             TimelineVisualNoticeModel notice,
             bool dummyMode = false)
         {
-            notice.StartNotice(
-                (toRemove) => this.noticeList.Remove(toRemove),
-                dummyMode);
-            this.noticeList.Add(notice);
+            lock (this)
+            {
+                if (this.noticeList.Any(x =>
+                    x.IsVisible &&
+                    x.TextToDisplay == notice.TextToDisplay))
+                {
+                    return;
+                }
+
+                notice.StartNotice(
+                    (toRemove) =>
+                    {
+                        lock (this)
+                        {
+                            this.noticeList.Remove(toRemove);
+                        }
+                    },
+                    dummyMode);
+
+                this.noticeList.Add(notice);
+            }
         }
 
         public void ClearNotice()

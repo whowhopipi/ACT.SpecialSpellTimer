@@ -230,12 +230,5 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.matchedCounter;
             set => this.SetProperty(ref this.matchedCounter, value);
         }
-
-        [XmlIgnore]
-        public DateTime LastNotifiedTimestamp
-        {
-            get;
-            set;
-        }
     }
 }

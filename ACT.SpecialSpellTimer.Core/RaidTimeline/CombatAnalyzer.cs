@@ -169,7 +169,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         public static readonly Regex StartsUsingRegex = new Regex(
-            @"14:..:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$",
+            @"14:....:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+        public static readonly Regex StartsUsingUnknownRegex = new Regex(
+            @"14:....:(?<actor>.+?) starts using (?<skill>.+?) on Unknown\.$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
         public static readonly Regex DialogRegex = new Regex(
@@ -192,6 +196,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             @"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$",
             RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
+        public static readonly Regex MarkingRegex = new Regex(
+            @"00:(?<id>....):(?<target>.+?)に「マーキング」の効果。",
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
         public static readonly IList<AnalyzeKeyword> Keywords = new[]
         {
             new AnalyzeKeyword() { Keyword = "・エギ", Category = KewordTypes.Pet },
@@ -202,10 +210,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "アーサリースター", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "を唱えた。", Category = KewordTypes.Cast },
             new AnalyzeKeyword() { Keyword = "の構え。", Category = KewordTypes.Cast },
+            new AnalyzeKeyword() { Keyword = "starts using", Category = KewordTypes.Cast },
+            /*
             new AnalyzeKeyword() { Keyword = "starts using", Category = KewordTypes.CastStartsUsing },
+            */
             new AnalyzeKeyword() { Keyword = "HP at", Category = KewordTypes.HPRate },
             new AnalyzeKeyword() { Keyword = "Added new combatant", Category = KewordTypes.Added },
             new AnalyzeKeyword() { Keyword = "] 1B:", Category = KewordTypes.Marker },
+            new AnalyzeKeyword() { Keyword = "「マーキング」", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
             new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
@@ -427,7 +439,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     list.Add(player);
                     list.AddRange(ptlist);
 
-                    this.combatants = list;
+                    this.combatants = list.Where(x => x != null).ToList();
                 }
             }
 
@@ -494,15 +506,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private string ToNameToJob(
             string name)
         {
-            var jobName = "[PC]";
+            var jobName = "[pc]";
 
             var combs = this.GetCombatants();
 
             var com = combs.FirstOrDefault(x =>
-                x.Name == name ||
-                x.NameFI == name ||
-                x.NameIF == name ||
-                x.NameII == name);
+                x?.Name == name ||
+                x?.NameFI == name ||
+                x?.NameIF == name ||
+                x?.NameII == name);
 
             if (com != null)
             {
@@ -809,7 +821,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var match = CastRegex.Match(logInfo.logLine);
             if (!match.Success)
             {
-                return;
+                match = StartsUsingUnknownRegex.Match(logInfo.logLine);
+                if (!match.Success)
+                {
+                    return;
+                }
             }
 
             var log = new CombatLog()
@@ -914,32 +930,57 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             const string PCIDPlaceholder = "(?<pcid>.{8})";
 
+            var log = default(CombatLog);
+
             var match = MarkerRegex.Match(logInfo.logLine);
-            if (!match.Success)
+            if (match.Success)
             {
-                return;
+                // ログなしマーカ
+                var id = match.Groups["id"].ToString();
+                var target = match.Groups["target"].ToString();
+                var targetJobName = this.ToNameToJob(target);
+
+                log = new CombatLog()
+                {
+                    TimeStamp = logInfo.detectedTime,
+                    Raw = logInfo.logLine
+                        .Replace(id, PCIDPlaceholder)
+                        .Replace(target, targetJobName),
+                    Activity = $"Marker:{match.Groups["type"].ToString()}",
+                    LogType = LogTypes.Marker
+                };
+            }
+            else
+            {
+                // マーキング
+                match = MarkingRegex.Match(logInfo.logLine);
+                if (!match.Success)
+                {
+                    return;
+                }
+
+                var target = match.Groups["target"].ToString();
+                var targetJobName = this.ToNameToJob(target);
+
+                log = new CombatLog()
+                {
+                    TimeStamp = logInfo.detectedTime,
+                    Raw = logInfo.logLine
+                        .Replace(target, targetJobName),
+                    Activity = $"Marking",
+                    LogType = LogTypes.Marker
+                };
             }
 
-            var id = match.Groups["id"].ToString();
-            var target = match.Groups["target"].ToString();
-            var targetJobName = this.ToNameToJob(target);
-
-            var log = new CombatLog()
+            if (log != null)
             {
-                TimeStamp = logInfo.detectedTime,
-                Raw = logInfo.logLine
-                    .Replace(id, PCIDPlaceholder)
-                    .Replace(target, targetJobName),
-                Activity = $"Marker:{match.Groups["type"].ToString()}",
-                LogType = LogTypes.Marker
-            };
+                log.Text = log.Activity;
+                log.SyncKeyword = log.RawWithoutTimestamp;
 
-            log.Text = log.Activity;
-            log.SyncKeyword = log.RawWithoutTimestamp;
-
-            if (this.ToStoreActor(log.Actor))
-            {
-                this.StoreLog(log);
+                if (this.ToStoreActor(log.Actor))
+                {
+                    this.StoreLog(log);
+                }
             }
         }
 
