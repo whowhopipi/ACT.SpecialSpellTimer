@@ -11,7 +11,7 @@
   <locale>JA</locale>
   <entry>メインフェーズ</entry>
 
-  <t sync="は「天雷掌」の構え" text="天雷掌">
+  <t sync="は「天雷掌」の構え" text="天雷掌\n ➜タンク">
     <v-notice
       duration="5"
       icon="単体強攻撃.png" />

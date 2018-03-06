@@ -63,7 +63,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         private static TimelineNoticeOverlay CreateDesignOverlay()
         {
-            var overlay = new TimelineNoticeOverlay();
+            var overlay = new TimelineNoticeOverlay()
+            {
+                DummyMode = true
+            };
+
             return overlay;
         }
 
@@ -133,7 +137,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.Loaded += (x, y) =>
             {
-                this.IsClickthrough = this.Config.Clickthrough;
+                if (!this.DummyMode)
+                {
+                    this.IsClickthrough = this.Config.Clickthrough;
+                }
+
                 this.StartZOrderCorrector();
             };
 
@@ -144,6 +152,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.SetupNoticesSource();
         }
+
+        public bool DummyMode { get; set; } = false;
 
         private readonly ObservableCollection<TimelineVisualNoticeModel> noticeList =
             new ObservableCollection<TimelineVisualNoticeModel>();

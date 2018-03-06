@@ -19,6 +19,30 @@
   <default target-element="Activity" target-attr="sync-s" value="-10" />
   <default target-element="Activity" target-attr="sync-e" value="10" />
 
+  <!-- 敵の技などのトリガのサンプル begin -->
+  <!-- 通常の正規表現グループによる置換 -->
+  <t name="デモニックシアー" sync="starts using デモニックシアー on (.+)\." text="デモニックシアー\n ➜ $1" notice="シアー">
+    <v-notice
+      icon="HardAttack.png" />
+  </t>
+
+  <!-- [pc]プレースホルダによる置換 -->
+  <!--
+  <t name="デモニックシアー" sync="starts using デモニックシアー on [pc]\." text="デモニックシアー\n ➜ ${_pc}" notice="シアー">
+    <v-notice
+      icon="HardAttack.png" />
+  </t>
+  -->
+
+  <!-- [TANK]プレースホルダによる置換 -->
+  <!--
+  <t name="デモニックシアー" sync="starts using デモニックシアー on [TANK]\." text="デモニックシアー\n ➜ ${_TANK}" notice="シアー">
+    <v-notice
+      icon="HardAttack.png" />
+  </t>
+  -->
+  <!-- 敵の技などのトリガのサンプル end -->
+
   <s name="フェーズ１(青)">
     <a time="0" sync="こいつは久しぶりに良い絵だわい……。 誰にも邪魔はさせんぞ！！" icon="フルバフ.png" />
     <a time="5" text="デモニックハウル" notice="全体範囲3秒前" icon="全体攻撃.png" />

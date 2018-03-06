@@ -96,6 +96,7 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
     <Setter Property="Effect">
       <Setter.Value>
         <DropShadowEffect

@@ -494,7 +494,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private string ToNameToJob(
             string name)
         {
-            var jobName = "<PC>";
+            var jobName = "[PC]";
 
             var combs = this.GetCombatants();
 
@@ -506,7 +506,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (com != null)
             {
-                jobName = $"<{com.JobID.ToString()}>";
+                jobName = $"[{com.JobID.ToString()}]";
             }
 
             return jobName;

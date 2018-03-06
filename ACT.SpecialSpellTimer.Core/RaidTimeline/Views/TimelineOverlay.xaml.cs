@@ -79,7 +79,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         private static TimelineOverlay CreateDesignOverlay()
         {
-            var overlay = new TimelineOverlay();
+            var overlay = new TimelineOverlay()
+            {
+                DummyMode = true
+            };
 
             return overlay;
         }
@@ -159,7 +162,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.Loaded += (x, y) =>
             {
-                this.IsClickthrough = this.Config.Clickthrough;
+                if (!this.DummyMode)
+                {
+                    this.IsClickthrough = this.Config.Clickthrough;
+                }
+
                 this.StartZOrderCorrector();
             };
 
@@ -168,6 +175,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 this.StopZOrderCorrector();
             };
         }
+
+        public bool DummyMode { get; set; } = false;
 
         private TimelineModel model;
 

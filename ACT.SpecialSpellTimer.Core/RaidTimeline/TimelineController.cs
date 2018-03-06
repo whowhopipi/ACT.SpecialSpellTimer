@@ -16,6 +16,7 @@ using Advanced_Combat_Tracker;
 using FFXIV.Framework.Bridge;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
 using Prism.Mvvm;
 using static ACT.SpecialSpellTimer.Models.TableCompiler;
 
@@ -822,6 +823,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
+        private long no = 0L;
+
         private IReadOnlyList<XIVLog> GetLogs()
         {
             var list = new List<XIVLog>(this.logInfoQueue.Count);
@@ -869,7 +872,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     // 残ったReplacementCharを除去する
                     logLine = logLine.Replace(LogBuffer.TooltipReplacementChar, string.Empty);
 
-                    list.Add(new XIVLog(logLine));
+                    list.Add(new XIVLog(logLine)
+                    {
+                        No = this.no++
+                    });
                 }
             }
 
@@ -1522,10 +1528,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             break;
                     }
 
-                    if (string.IsNullOrEmpty(v.Text))
+                    if (string.IsNullOrEmpty(v.TextToDisplay))
                     {
                         continue;
                     }
+
+                    // PC名をルールに従って置換する
+                    v.TextToDisplay = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                        v.TextToDisplay,
+                        Settings.Default.PCNameInitialOnDisplayStyle);
 
                     TimelineNoticeOverlay.NoticeView?.AddNotice(v);
                 }

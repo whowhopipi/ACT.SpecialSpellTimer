@@ -114,7 +114,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.noticeTop, Math.Round(value));
         }
 
-        private double noticeWidth = 100;
+        private double noticeWidth = 300;
 
         public double NoticeWidth
         {
@@ -122,7 +122,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.noticeWidth, Math.Round(value));
         }
 
-        private double noticeHeight = 300;
+        private double noticeHeight = 250;
 
         public double NoticeHeight
         {

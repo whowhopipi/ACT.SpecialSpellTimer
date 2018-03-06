@@ -54,21 +54,24 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.Loaded += this.TimelineTesterView_Loaded;
             this.testTimer.Tick += this.TestTimer_Tick;
 
-            this.RunButton.Click += (x, y) =>
+            this.RunButton.Click += async (x, y) =>
             {
-                lock (this)
+                await Task.Run(() =>
                 {
-                    this.testTimer.Stop();
-                    this.isPause = false;
-
-                    foreach (var log in this.Logs)
+                    lock (this)
                     {
-                        log.IsDone = false;
-                    }
+                        this.testTimer.Stop();
+                        this.isPause = false;
 
-                    this.TestStartTime = DateTime.Now;
-                    this.testTimer.Start();
-                }
+                        foreach (var log in this.Logs)
+                        {
+                            log.IsDone = false;
+                        }
+
+                        this.TestStartTime = DateTime.Now;
+                        this.testTimer.Start();
+                    }
+                });
             };
 
             this.PauseButton.Click += (x, y) =>
@@ -85,21 +88,24 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
             };
 
-            this.StopButton.Click += (x, y) =>
+            this.StopButton.Click += async (x, y) =>
             {
-                lock (this)
+                await Task.Run(() =>
                 {
-                    this.testTimer.Stop();
-
-                    foreach (var log in this.Logs)
+                    lock (this)
                     {
-                        log.IsDone = false;
+                        this.testTimer.Stop();
+
+                        foreach (var log in this.Logs)
+                        {
+                            log.IsDone = false;
+                        }
+
+                        this.TestStartTime = DateTime.MinValue;
                     }
+                });
 
-                    this.TestStartTime = DateTime.MinValue;
-
-                    TimelineController.CurrentController?.EndActivityLine();
-                }
+                TimelineController.CurrentController?.EndActivityLine();
             };
         }
 

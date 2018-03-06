@@ -204,11 +204,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var notice1 = new TimelineVisualNoticeModel()
             {
                 Enabled = true,
-                TextToDisplay = "デスセンテンス",
+                TextToDisplay = "デスセンテンス\n→ タンク",
                 Duration = 3,
                 DurationVisible = true,
                 StyleModel = testStyle,
-                Icon = "1マーカー128px.png",
+                Icon = "1マーカー.png",
                 IsVisible = true,
             };
 
@@ -219,7 +219,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Duration = 10,
                 DurationVisible = true,
                 StyleModel = testStyle,
-                Icon = "2マーカー128px.png",
+                Icon = "2マーカー.png",
                 IsVisible = true,
             };
 

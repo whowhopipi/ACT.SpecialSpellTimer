@@ -522,6 +522,8 @@ namespace ACT.SpecialSpellTimer
             this.Log = log;
         }
 
+        public long No { get; set; } = 0;
+
         public string Timestamp { get; set; } = string.Empty;
 
         public string Log { get; set; } = string.Empty;
