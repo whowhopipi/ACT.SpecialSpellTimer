@@ -119,8 +119,12 @@ namespace ACT.SpecialSpellTimer.Views
                 this.Ticker.IsTest;
 
             var message = forceVisible ?
-                this.Ticker.Message.Replace(",", Environment.NewLine) :
-                this.Ticker.MessageReplaced.Replace(",", Environment.NewLine);
+                this.Ticker.Message
+                    .Replace(",", Environment.NewLine)
+                    .Replace("\\n", Environment.NewLine) :
+                this.Ticker.MessageReplaced
+                    .Replace(",", Environment.NewLine)
+                    .Replace("\\n", Environment.NewLine);
 
             // カウントダウンプレースホルダを置換する
             var count = (

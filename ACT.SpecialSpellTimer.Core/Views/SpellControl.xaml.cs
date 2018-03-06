@@ -219,6 +219,7 @@ namespace ACT.SpecialSpellTimer.Views
                 this.Spell.SpellTitleReplaced;
             title = string.IsNullOrWhiteSpace(title) ? "　" : title;
             title = title.Replace(",", Environment.NewLine);
+            title = title.Replace("\\n", Environment.NewLine);
 
             if (tb.Text != title) tb.Text = title;
             if (tb.Fill != this.FontBrush) tb.Fill = this.FontBrush;

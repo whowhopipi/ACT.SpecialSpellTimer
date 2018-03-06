@@ -1563,6 +1563,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 lastRaisedLogTimestamp = DateTime.Now;
             }
 
+            log = log.Replace(Environment.NewLine, "\\n");
+
             ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
             {
                 ActGlobals.oFormActMain.ParseRawLogLine(false, DateTime.Now, log);
