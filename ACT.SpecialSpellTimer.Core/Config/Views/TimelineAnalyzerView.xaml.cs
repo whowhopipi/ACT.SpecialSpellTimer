@@ -37,6 +37,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
             {
                 this.RaisePropertyChanged(nameof(this.Zone));
             };
+
+            this.CombatLogDataGrid.CopyingRowClipboardContent += (x, y) =>
+            {
+                var grid = x as DataGrid;
+                var currentCell = y.ClipboardRowContent[grid.CurrentCell.Column.DisplayIndex];
+                y.ClipboardRowContent.Clear();
+                y.ClipboardRowContent.Add(currentCell);
+            };
         }
 
         private CollectionViewSource combatLogSource = new CollectionViewSource()
@@ -158,7 +166,46 @@ namespace ACT.SpecialSpellTimer.Config.Views
         public ICommand CopyCommand =>
             this.copyCommand ?? (this.copyCommand = new DelegateCommand(() =>
             {
-                // NO-OP
+                var currentCell = this.CombatLogDataGrid.CurrentCell;
+                var log = currentCell.Item as CombatLog;
+
+                if (currentCell != null &&
+                    log != null)
+                {
+                    var text = string.Empty;
+                    switch (currentCell.Column.Header)
+                    {
+                        case "No":
+                            text = log.No.ToString();
+                            break;
+
+                        case "Time":
+                            text = log.TimeStampElapted.ToString();
+                            break;
+
+                        case "Activity Type":
+                            text = log.LogTypeName.ToString();
+                            break;
+
+                        case "Actor":
+                            text = log.Actor.ToString();
+                            break;
+
+                        case "HP":
+                            text = log.HPRate.ToString();
+                            break;
+
+                        case "Activity":
+                            text = log.Activity.ToString();
+                            break;
+
+                        case "Log":
+                            text = log.RawWithoutTimestamp.ToString();
+                            break;
+                    }
+
+                    Clipboard.SetText(text);
+                }
             }));
 
         private ICommand importCombatLogCommand;

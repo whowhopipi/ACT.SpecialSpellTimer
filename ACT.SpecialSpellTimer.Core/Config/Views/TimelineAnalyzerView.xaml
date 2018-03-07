@@ -114,6 +114,7 @@
       VerticalGridLinesBrush="Transparent"
       HorizontalAlignment="Stretch"
       HeadersVisibility="All"
+      Focusable="False"
       VirtualizingPanel.IsVirtualizing="True"
       VirtualizingPanel.VirtualizationMode="Recycling"
       ClipboardCopyMode="ExcludeHeader"
@@ -123,20 +124,23 @@
         <ContextMenu>
           <MenuItem Header="{DynamicResource Timeline_ThisIsOrigin}"  Command="{Binding SetOriginCommand, Mode=OneWay}" />
           <MenuItem Header="{DynamicResource Timeline_TotalSecoundsFormat}" IsCheckable="true" IsChecked="{Binding Path=RootConfig.TimelineTotalSecoundsFormat, Mode=TwoWay}" Command="{Binding ChangeSecondsFormatCommand, Mode=OneWay}" />
-          <!--
           <Separator />
-          <MenuItem Header="{DynamicResource Common_Copy}" InputGestureText="Ctrl + C" Command="{Binding CopyCommand, Mode=OneWay}" />
-          -->
+          <MenuItem Header="{DynamicResource Common_Copy}" InputGestureText="Ctrl+C" Command="{Binding Path=CopyCommand, Mode=OneWay}" />
         </ContextMenu>
       </DataGrid.ContextMenu>
 
       <DataGrid.CellStyle>
         <Style TargetType="DataGridCell">
+          <Setter Property="FocusVisualStyle" Value="{x:Null}" />
           <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
               <Setter Property="Background" Value="Transparent" />
               <Setter Property="Foreground" Value="Black" />
               <Setter Property="BorderThickness" Value="0" />
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+              <Setter Property="BorderThickness" Value="1 1 1 1" />
+              <Setter Property="BorderBrush" Value="Chocolate" />
             </Trigger>
           </Style.Triggers>
         </Style>
@@ -149,11 +153,7 @@
 
           <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-              <!--
-              <Setter Property="BorderBrush" Value="Navy" />
-              <Setter Property="BorderThickness" Value="1.5" />
-              -->
-              <Setter Property="Background" Value="Gainsboro" />
+              <Setter Property="Background" Value="AntiqueWhite" />
             </Trigger>
           </Style.Triggers>
         </Style>
@@ -204,6 +204,7 @@
         <DataGridTemplateColumn
           IsReadOnly="True"
           Header="Activity Type"
+          ClipboardContentBinding="{Binding LogTypeName, Mode=OneWay}"
           MinWidth="130">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
