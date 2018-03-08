@@ -148,8 +148,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region Keywords
 
-        public const string WipeoutLog = "00:0038:wipeout";
-        public const string ImportLog = "00:0038:import";
+        public const string Wipeout = "wipeout";
+        public const string WipeoutLog = "00:0000:wipeout";
+        public const string ImportLog = "00:0000:import";
         public const string CombatStartNow = "0039:戦闘開始！";
 
         public static readonly Regex ActionRegex = new Regex(

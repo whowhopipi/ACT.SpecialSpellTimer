@@ -190,6 +190,9 @@ namespace ACT.SpecialSpellTimer
 
             try
             {
+                /*
+                Debug.WriteLine(logInfo.logLine);
+                */
                 var data = logInfo.logLine.Split('|');
 
                 if (data.Length >= 2)

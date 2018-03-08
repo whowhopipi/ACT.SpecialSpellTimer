@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Forms;
 using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
@@ -1121,13 +1120,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     case TimelineActivityModel act:
                         log =
-                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Synced to activity. " +
+                            $"{TLSymbol} Synced to activity. " +
                             $"name={act.Name}, sub={sub?.Name}";
                         break;
 
                     case TimelineTriggerModel tri:
                         log =
-                            $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Synced to trigger. " +
+                            $"{TLSymbol} Synced to trigger. " +
                             $"name={tri.Name}, sync-count={tri.MatchedCounter}, sub={sub?.Name}";
                         break;
 
@@ -1135,7 +1134,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         return;
                 }
 
-                ActGlobals.oFormActMain.ParseRawLogLine(false, now, log);
+                RaiseLog(log);
             }
         }
 
@@ -1438,7 +1437,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var now = DateTime.Now;
             var offset = this.CurrentTime - act.Time;
             var log =
-                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
+                $"{TLSymbol} Notice from TL. " +
                 $"name={act.Name}, text={act.TextReplaced}, notice={act.NoticeReplaced}, offset={offset.TotalSeconds:N1}";
 
             var notice = act.NoticeReplaced;
@@ -1476,7 +1475,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var now = DateTime.Now;
             var log =
-                $"[{now.ToString("HH:mm:ss.fff")}] 00:0038:{TLSymbol} Notice from TL. " +
+                $"{TLSymbol} Notice from TL. " +
                 $"name={tri.Name}, text={tri.Text}, notice={tri.Notice}";
 
             var notice = tri.Notice;
@@ -1565,10 +1564,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             log = log.Replace(Environment.NewLine, "\\n");
 
-            ActGlobals.oFormActMain.BeginInvoke((MethodInvoker)delegate
-            {
-                ActGlobals.oFormActMain.ParseRawLogLine(false, DateTime.Now, log);
-            });
+            LogParser.RaiseLog(DateTime.Now, log);
         }
 
         private static string lastNotice = string.Empty;

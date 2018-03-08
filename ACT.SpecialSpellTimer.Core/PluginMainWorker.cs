@@ -498,14 +498,11 @@ namespace ACT.SpecialSpellTimer
 
                     this.lastWipeOutDateTime = DateTime.Now;
 
+                    // wipeoutログを発生させる
+                    LogParser.RaiseLog(DateTime.Now, CombatAnalyzer.Wipeout);
+
                     ActInvoker.Invoke(() =>
                     {
-                        // wipeouログを発生させる
-                        ActGlobals.oFormActMain.ParseRawLogLine(
-                            false,
-                            DateTime.Now,
-                            $"[{DateTime.Now.ToString("HH:mm:ss.fff")}] {CombatAnalyzer.WipeoutLog}");
-
                         // ACT本体に戦闘終了を通知する
                         if (Settings.Default.WipeoutNotifyToACT)
                         {
