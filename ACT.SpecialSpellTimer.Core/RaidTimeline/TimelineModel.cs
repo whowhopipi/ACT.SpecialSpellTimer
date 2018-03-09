@@ -261,7 +261,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         private static readonly Regex DefineRegex = new Regex(
-            @"^#define\s+(?<define>\w*)\s*(?<value>.*)$",
+            @"^#define[ \t]+(?<define>\w*)[ \t]*(?<value>.*)$",
             RegexOptions.Compiled |
             RegexOptions.ExplicitCapture |
             RegexOptions.Multiline);
@@ -318,7 +318,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 foreach (Match match in matches)
                 {
                     var define = match.Groups["define"].Value;
-                    var value = match.Groups["value"].Value.Replace("\"", string.Empty);
+                    var value = match.Groups["value"].Value?
+                        .Replace("\"", string.Empty)
+                        ?? string.Empty;
+
                     buffer.Replace(define, value);
                 }
             }

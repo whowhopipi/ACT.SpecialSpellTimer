@@ -103,12 +103,32 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             private set;
         } = new ObservableCollection<TimelineActivityModel>();
 
-        public bool IsAvailable =>
-            string.Equals(
-                ActGlobals.oFormActMain.CurrentZone,
-                this.Model.Zone,
-                StringComparison.OrdinalIgnoreCase) &&
-            Settings.Default.FFXIVLocale == this.Model.Locale;
+        public bool IsAvailable
+        {
+            get
+            {
+                if (Settings.Default.FFXIVLocale != this.Model.Locale)
+                {
+                    return false;
+                }
+
+                if (string.Equals(
+                        ActGlobals.oFormActMain.CurrentZone,
+                        this.Model.Zone,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                var zones = this.Model.Zone.Split(',');
+
+                return zones.Any(x =>
+                    string.Equals(
+                        ActGlobals.oFormActMain.CurrentZone,
+                        x,
+                        StringComparison.OrdinalIgnoreCase));
+            }
+        }
 
         private TimelineStatus status = TimelineStatus.Unloaded;
 
