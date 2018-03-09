@@ -335,6 +335,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimelineStyle DefaultNoticeStyle =>
             this.Styles.FirstOrDefault(x => x.IsDefaultNotice) ?? this.DefaultStyle;
 
+        private string[] ignoreKeywords = new[]
+        {
+            "] 15:",    // ダメージかアクションの生ログ
+            "] 16:",    // エフェクトの生ログ
+            "] 17:",    // Cancel
+            "] 18:",    // DoT/HoT Tick
+            "] 19:",    // defeated
+            "] 0D:",    // HP Rate
+        };
+
+        public string[] IgnoreKeywords
+        {
+            get => this.ignoreKeywords;
+            set => this.SetProperty(ref this.ignoreKeywords, value);
+        }
+
         #endregion Data
 
         #region Methods

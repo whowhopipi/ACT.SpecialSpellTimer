@@ -168,6 +168,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             await Task.Run(() =>
             {
+                var ignores = TimelineSettings.Instance.IgnoreKeywords;
+
                 var seq = 1L;
                 using (var sr = new StreamReader(this.LogFile, new UTF8Encoding(false)))
                 {
@@ -175,8 +177,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     {
                         var logline = sr.ReadLine();
 
-                        if (TimelineController.IgnoreLogKeywords.Any(x =>
-                            logline.Contains(x)))
+                        if (ignores.Any(x => logline.Contains(x)))
                         {
                             continue;
                         }

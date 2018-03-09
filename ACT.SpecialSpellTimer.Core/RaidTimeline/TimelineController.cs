@@ -616,19 +616,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private ConcurrentQueue<LogLineEventArgs> logInfoQueue;
         private volatile bool isLogWorkerRunning = false;
 
-        /// <summary>
-        /// 明らかにTLの判定外とするログキーワード
-        /// </summary>
-        public static readonly string[] IgnoreLogKeywords = new[]
-        {
-            "] 15:",    // ダメージかアクションの生ログ
-            "] 16:",    // エフェクトの生ログ
-            "] 17:",    // Cancel
-            "] 18:",    // DoT/HoT Tick
-            "] 19:",    // defeated
-            "] 0D:",    // HP Rate
-        };
-
         private Thread LogWorker
         {
             get;
@@ -743,6 +730,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 var prelog = new string[3];
                 var prelogIndex = 0;
 
+                var ignores = TimelineSettings.Instance.IgnoreKeywords;
+
                 while (this.logInfoQueue.TryDequeue(out LogLineEventArgs logInfo))
                 {
                     var logLine = logInfo.logLine;
@@ -762,7 +751,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
 
                     // 無効キーワードが含まれていればスキップする
-                    if (IgnoreLogKeywords.Any(x => logLine.Contains(x)))
+                    if (ignores.Any(x => logLine.Contains(x)))
                     {
                         continue;
                     }

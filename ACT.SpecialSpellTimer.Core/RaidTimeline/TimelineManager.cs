@@ -65,8 +65,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
             else
             {
-                var reference = Path.Combine(dir, "ExampleTimeline1.Reference.xml");
-                var referenceSample = Path.Combine(sampleDirectory, "ExampleTimeline1.Reference.xml");
+                var reference = Path.Combine(dir, "Reference.xml");
+                var referenceSample = Path.Combine(sampleDirectory, "Reference.xml");
                 if (File.Exists(reference) &&
                     File.Exists(referenceSample))
                 {
@@ -114,7 +114,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
 
                 this.TimelineModels.Clear();
-                this.TimelineModels.AddRange(list.OrderBy(x => x.FileName));
+                this.TimelineModels.AddRange(
+                    from x in list
+                    orderby
+                    x.FileName.Contains("Reference.xml") ? 0 : 1,
+                    x.IsGlobalZone ? 0 : 1,
+                    x.FileName
+                    select
+                    x);
             });
         }
 

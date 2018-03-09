@@ -740,6 +740,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             var preLog = string.Empty;
 
+            var ignores = TimelineSettings.Instance.IgnoreKeywords;
+
             while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
             {
                 if (preLog == log.logLine)
@@ -751,7 +753,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 // 無効なログ？
                 // 無効なログをカットする
-                if (TimelineController.IgnoreLogKeywords.Any(x => log.logLine.Contains(x)))
+                if (ignores.Any(x => log.logLine.Contains(x)))
                 {
                     continue;
                 }

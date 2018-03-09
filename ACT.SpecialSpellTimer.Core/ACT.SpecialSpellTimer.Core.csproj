@@ -622,13 +622,13 @@
     <Content Include="resources\presets\_dummy.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\timeline\sample\ExampleTimeline3.Jump.xml">
+    <Content Include="resources\timeline\sample\ExampleTimeline2.Jump.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\timeline\sample\ExampleTimeline1.Reference.xml">
+    <Content Include="resources\timeline\sample\Reference.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\timeline\sample\ExampleTimeline2.xml">
+    <Content Include="resources\timeline\sample\ExampleTimeline1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="resources\timeline\sample\GlobalTrigger.xml">

@@ -261,7 +261,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         private static readonly Regex DefineRegex = new Regex(
-            @"#define\s+(?<define>.+?)\s+(?<value>.+?)$",
+            @"^#define\s+(?<define>\w*)\s*(?<value>.*)$",
             RegexOptions.Compiled |
             RegexOptions.ExplicitCapture |
             RegexOptions.Multiline);

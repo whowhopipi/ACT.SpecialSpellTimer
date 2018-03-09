@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-#define REPLACE1 "置換しました1"
-#define REPLACE2 "置換しました2"
--->
 <timeline>
-  <name>グローバルトリガ REPLACE1 REPLACE2</name>
+  <name>グローバルトリガ</name>
   <rev>rev1</rev>
   <description>
     ゾーンに依存せず常に使用するトリガを定義する。
