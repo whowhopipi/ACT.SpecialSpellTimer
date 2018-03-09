@@ -75,6 +75,7 @@ namespace ACT.SpecialSpellTimer.Models
 
                     if (isZoneChanged)
                     {
+                        this.RefreshPartyPlaceholders();
                         this.RefreshPetPlaceholder();
                     }
 
@@ -709,6 +710,12 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void RefreshPartyPlaceholders()
         {
+            // PC名辞書を更新する
+            foreach (var pc in this.partyList)
+            {
+                PCNameDictionary.Instance.Add(pc.Name);
+            }
+
             if (!Settings.Default.EnabledPartyMemberPlaceholder)
             {
                 return;

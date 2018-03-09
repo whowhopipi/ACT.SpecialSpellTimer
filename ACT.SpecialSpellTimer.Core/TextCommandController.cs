@@ -19,7 +19,7 @@ namespace ACT.SpecialSpellTimer
         /// コマンド解析用の正規表現
         /// </summary>
         private readonly static Regex regexCommand = new Regex(
-            @".*/spespe (?<command>refresh|changeenabled|analyze|set|clear|on|off) ?(?<target>spells|telops|me|pt|pet|on|off|placeholder|$) ?(?<windowname>"".*""|all)? ?(?<value>.*)",
+            @".*/spespe (?<command>refresh|changeenabled|set|clear|on|off) ?(?<target>spells|telops|me|pt|pet|placeholder|$) ?(?<windowname>"".*""|all)? ?(?<value>.*)",
             RegexOptions.Compiled |
             RegexOptions.IgnoreCase);
 
@@ -101,24 +101,6 @@ namespace ACT.SpecialSpellTimer
 
             switch (command)
             {
-                /*
-                case "analyze":
-                    switch (target)
-                    {
-                        case "on":
-                            PluginCore.Instance.ConfigPanel.CombatAnalyzerEnabled = true;
-                            r = true;
-                            break;
-
-                        case "off":
-                            PluginCore.Instance.ConfigPanel.CombatAnalyzerEnabled = false;
-                            r = true;
-                            break;
-                    }
-
-                    break;
-                */
-
                 case "refresh":
                     switch (target)
                     {

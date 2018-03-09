@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.Sound;
 using Advanced_Combat_Tracker;
@@ -17,7 +16,6 @@ using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.FFXIVHelper;
 using Prism.Mvvm;
-using static ACT.SpecialSpellTimer.Models.TableCompiler;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -231,35 +229,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             TimelineActivityModel.CurrentTime = TimeSpan.Zero;
             this.ClearActivity();
 
-            var defaultStyle = TimelineSettings.Instance.DefaultStyle;
-            var defaultNoticeStyle = TimelineSettings.Instance.DefaultNoticeStyle;
-
-            // <HOGE>を[HOGE]に置き換えたプレースホルダリストを生成する
-            var placeholders = TableCompiler.Instance.PlaceholderList
-                .Select(x =>
-                    new PlaceholderContainer(
-                        x.Placeholder
-                            .Replace("<", "[")
-                            .Replace(">", "]"),
-                        x.ReplaceString,
-                        x.Type))
-                .ToArray();
-
-            // 全体の初期化を行う
-            this.Model.Walk((element) =>
-            {
-                // トリガのマッチカウンタを初期化する
-                if (element is TimelineTriggerModel tri)
-                {
-                    tri.MatchedCounter = 0;
-                }
-
-                // アクティビティにスタイルを設定する
-                setStyle(element);
-
-                // sync用の正規表現にプレースホルダをセットしてコンパイルし直す
-                setRegex(element, placeholders);
-            });
+            // 初期化する
+            TimelineManager.Instance.InitElements(this.Model);
 
             var acts = new List<TimelineActivityModel>();
             int seq = 1;
@@ -290,67 +261,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             // 表示設定を更新しておく
             this.RefreshActivityLineVisibility();
-
-            // スタイルを適用する
-            void setStyle(TimelineBase element)
-            {
-                if (element is TimelineActivityModel act)
-                {
-                    if (string.IsNullOrEmpty(act.Style))
-                    {
-                        act.StyleModel = defaultStyle;
-                        return;
-                    }
-
-                    act.StyleModel = TimelineSettings.Instance.Styles
-                        .FirstOrDefault(x => string.Equals(
-                            x.Name,
-                            act.Style,
-                            StringComparison.OrdinalIgnoreCase)) ??
-                        defaultStyle;
-                }
-
-                if (element is TimelineVisualNoticeModel notice)
-                {
-                    if (string.IsNullOrEmpty(notice.Style))
-                    {
-                        notice.StyleModel = defaultNoticeStyle;
-                        return;
-                    }
-
-                    notice.StyleModel = TimelineSettings.Instance.Styles
-                        .FirstOrDefault(x => string.Equals(
-                            x.Name,
-                            notice.Style,
-                            StringComparison.OrdinalIgnoreCase)) ??
-                        defaultNoticeStyle;
-                }
-            }
-
-            // 正規表現をセットする
-            void setRegex(
-                TimelineBase element,
-                IList<PlaceholderContainer> placeholderList)
-            {
-                if (!(element is ISynchronizable sync))
-                {
-                    return;
-                }
-
-                var replacedKeyword = sync.SyncKeyword;
-
-                if (!string.IsNullOrEmpty(replacedKeyword))
-                {
-                    foreach (var ph in placeholderList)
-                    {
-                        replacedKeyword = replacedKeyword.Replace(
-                            ph.Placeholder,
-                            ph.ReplaceString);
-                    }
-                }
-
-                sync.SyncKeywordReplaced = replacedKeyword;
-            }
         }
 
         #region Activityライン捌き
@@ -884,19 +794,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private void DetectLogs(
             IReadOnlyList<XIVLog> logs)
         {
-            var detectors = default(List<TimelineBase>);
+            var detectors = new List<TimelineBase>(64);
 
             lock (this)
             {
-                // Globalトリガを登録する
-                detectors = (
+                // グローバルトリガを登録する
+                detectors.AddRange(TimelineManager.Instance.GlobalTriggers);
+
+                // タイムラインスコープのトリガを登録する
+                detectors.AddRange(
                     from x in this.Model.Triggers
                     where
                     x.Enabled.GetValueOrDefault() &&
                     !string.IsNullOrEmpty(x.SyncKeyword) &&
                     x.SynqRegex != null
                     select
-                    x).Cast<TimelineBase>().ToList();
+                    x);
 
                 // 判定期間中のアクティビティを登録する
                 var acts =

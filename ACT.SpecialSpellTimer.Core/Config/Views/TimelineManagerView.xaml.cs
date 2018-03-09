@@ -143,6 +143,9 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                                 this.TimelineList.ScrollIntoView(nextTimeline);
                             }
+
+                            // グローバルトリガを初期化する
+                            TimelineManager.Instance.InitGlobalTriggers();
                         }
                     }
 

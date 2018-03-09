@@ -14,6 +14,7 @@ using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.FFXIVHelper;
+using FFXIV.Framework.Globalization;
 using NPOI.SS.UserModel;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -149,59 +150,108 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         #region Keywords
 
         public const string Wipeout = "wipeout";
-        public const string WipeoutLog = "00:0000:wipeout";
         public const string ImportLog = "00:0000:import";
-        public const string CombatStartNow = "0039:戦闘開始！";
+        public static readonly string WipeoutLog = $"00:0000:{Wipeout}";
 
-        public static readonly Regex ActionRegex = new Regex(
-            @"\[.+?\] 00:....:(?<actor>.+?)の「(?<skill>.+?)」$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        public static Regex ActionRegex => AnalyzeRegexes[nameof(ActionRegex)];
+        public static Regex AddedRegex => AnalyzeRegexes[nameof(AddedRegex)];
+        public static Regex CastRegex => AnalyzeRegexes[nameof(CastRegex)];
+        public static Regex HPRateRegex => AnalyzeRegexes[nameof(HPRateRegex)];
+        public static Regex StartsUsingRegex => AnalyzeRegexes[nameof(StartsUsingRegex)];
+        public static Regex StartsUsingUnknownRegex => AnalyzeRegexes[nameof(StartsUsingUnknownRegex)];
+        public static Regex DialogRegex => AnalyzeRegexes[nameof(DialogRegex)];
+        public static Regex CombatStartRegex => AnalyzeRegexes[nameof(CombatStartRegex)];
+        public static Regex CombatEndRegex => AnalyzeRegexes[nameof(CombatEndRegex)];
+        public static Regex EffectRegex => AnalyzeRegexes[nameof(EffectRegex)];
+        public static Regex MarkerRegex => AnalyzeRegexes[nameof(MarkerRegex)];
+        public static Regex MarkingRegex => AnalyzeRegexes[nameof(MarkingRegex)];
 
-        public static readonly Regex AddedRegex = new Regex(
-            @"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        public static string CombatStartNow
+        {
+            get
+            {
+                var keyword = default(string);
 
-        public static readonly Regex CastRegex = new Regex(
-            @"\[.+?\] 00:....:(?<actor>.+?)は「(?<skill>.+?)」(を唱えた。|の構え。)$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                switch (Settings.Default.FFXIVLocale)
+                {
+                    case Locales.JA:
+                        keyword = CombatStartNowJA;
+                        break;
 
-        public static readonly Regex HPRateRegex = new Regex(
-            @"\[.+?\] ..:(?<actor>.+?) HP at (?<hprate>\d+?)%",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                    case Locales.EN:
+                    case Locales.FR:
+                    case Locales.DE:
+                    case Locales.KO:
+                    default:
+                        keyword = CombatStartNowEN;
+                        break;
+                }
 
-        public static readonly Regex StartsUsingRegex = new Regex(
-            @"14:....:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                return keyword;
+            }
+        }
 
-        public static readonly Regex StartsUsingUnknownRegex = new Regex(
-            @"14:....:(?<actor>.+?) starts using (?<skill>.+?) on Unknown\.$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        public static IList<AnalyzeKeyword> Keywords
+        {
+            get
+            {
+                var keywords = default(IList<AnalyzeKeyword>);
 
-        public static readonly Regex DialogRegex = new Regex(
-            @"00:0044:(?<dialog>.+?)$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                switch (Settings.Default.FFXIVLocale)
+                {
+                    case Locales.JA:
+                        keywords = KeywordsJA;
+                        break;
 
-        public static readonly Regex CombatStartRegex = new Regex(
-            @"00:(0038|0039):(?<discription>.+?)$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                    case Locales.EN:
+                    case Locales.FR:
+                    case Locales.DE:
+                    case Locales.KO:
+                    default:
+                        keywords = KeywordsEN;
+                        break;
+                }
 
-        public static readonly Regex CombatEndRegex = new Regex(
-            @"00:....:(?<discription>.+?)$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                return keywords;
+            }
+        }
 
-        public static readonly Regex EffectRegex = new Regex(
-            @"1A:(?<victim>.+?) gains the effect of (?<effect>.+?) from (?<actor>.+?) for (?<duration>[0-9\.]*?) Seconds.$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        private static IDictionary<string, Regex> AnalyzeRegexes
+        {
+            get
+            {
+                var regexes = default(IDictionary<string, Regex>);
 
-        public static readonly Regex MarkerRegex = new Regex(
-            @"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                switch (Settings.Default.FFXIVLocale)
+                {
+                    case Locales.JA:
+                        regexes = AnalyzeRegexedJA;
+                        break;
 
-        public static readonly Regex MarkingRegex = new Regex(
-            @"00:(?<id>....):(?<target>.+?)に「マーキング」の効果。",
-            RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+                    case Locales.EN:
+                    case Locales.FR:
+                    case Locales.DE:
+                    case Locales.KO:
+                    default:
+                        regexes = AnalyzeRegexedEN;
+                        break;
+                }
 
-        public static readonly IList<AnalyzeKeyword> Keywords = new[]
+                return regexes;
+            }
+        }
+
+        private static Regex CreateRegex(string pattern)
+            => new Regex(
+                pattern,
+                RegexOptions.Compiled |
+                RegexOptions.ExplicitCapture);
+
+        #region JA
+
+        public const string CombatStartNowJA = "0039:戦闘開始！";
+
+        public static readonly IList<AnalyzeKeyword> KeywordsJA = new[]
         {
             new AnalyzeKeyword() { Keyword = "・エギ", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "フェアリー・", Category = KewordTypes.Pet },
@@ -222,14 +272,157 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
             new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "/spespetime -a start", Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始", Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始まで5秒！", Category = KewordTypes.TimelineStart },
+            new AnalyzeKeyword() { Keyword = "/spespetime -a end", Category = KewordTypes.End },
             new AnalyzeKeyword() { Keyword = "の攻略を終了した。", Category = KewordTypes.End },
             new AnalyzeKeyword() { Keyword = "ロットを行ってください。", Category = KewordTypes.End },
             new AnalyzeKeyword() { Keyword = WipeoutLog, Category = KewordTypes.End },
             new AnalyzeKeyword() { Keyword = "「", Category = KewordTypes.Action },
             new AnalyzeKeyword() { Keyword = "」", Category = KewordTypes.Action },
         };
+
+        public static readonly Dictionary<string, Regex> AnalyzeRegexedJA = new Dictionary<string, Regex>()
+        {
+            {
+                nameof(ActionRegex),
+                CreateRegex(@"\[.+?\] 00:....:(?<actor>.+?)の「(?<skill>.+?)」$")
+            },
+            {
+                nameof(AddedRegex),
+                CreateRegex(@"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ")
+            },
+            {
+                nameof(CastRegex),
+                CreateRegex(@"\[.+?\] 00:....:(?<actor>.+?)は「(?<skill>.+?)」(を唱えた。|の構え。)$")
+            },
+            {
+                nameof(HPRateRegex),
+                CreateRegex(@"\[.+?\] ..:(?<actor>.+?) HP at (?<hprate>\d+?)%")
+            },
+            {
+                nameof(StartsUsingRegex),
+                CreateRegex(@"14:....:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$")
+            },
+            {
+                nameof(StartsUsingUnknownRegex),
+                CreateRegex(@"14:....:(?<actor>.+?) starts using (?<skill>.+?) on Unknown\.$")
+            },
+            {
+                nameof(DialogRegex),
+                CreateRegex(@"00:0044:(?<dialog>.+?)$")
+            },
+            {
+                nameof(CombatStartRegex),
+                CreateRegex(@"00:(0038|0039):(?<discription>.+?)$")
+            },
+            {
+                nameof(CombatEndRegex),
+                CreateRegex(@"00:....:(?<discription>.+?)$")
+            },
+            {
+                nameof(EffectRegex),
+                CreateRegex(@"1A:(?<victim>.+?) gains the effect of (?<effect>.+?) from (?<actor>.+?) for (?<duration>[0-9\.]*?) Seconds.$")
+            },
+            {
+                nameof(MarkerRegex),
+                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$")
+            },
+            {
+                nameof(MarkingRegex),
+                CreateRegex(@"00:(?<id>....):(?<target>.+?)に「マーキング」の効果。")
+            },
+        };
+
+        #endregion JA
+
+        #region EN
+
+        public const string CombatStartNowEN = "0039:Engage!";
+
+        public static readonly IList<AnalyzeKeyword> KeywordsEN = new[]
+        {
+            new AnalyzeKeyword() { Keyword = "-Egi", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "Eos", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "Selene", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "Carbuncle", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "Autoturret", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "Demi-Bahamut", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "Earthly Star", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "begins casting", Category = KewordTypes.Cast },
+            new AnalyzeKeyword() { Keyword = "readies", Category = KewordTypes.Cast },
+            new AnalyzeKeyword() { Keyword = "starts using", Category = KewordTypes.Cast },
+            new AnalyzeKeyword() { Keyword = "HP at", Category = KewordTypes.HPRate },
+            new AnalyzeKeyword() { Keyword = "Added new combatant", Category = KewordTypes.Added },
+            new AnalyzeKeyword() { Keyword = "] 1B:", Category = KewordTypes.Marker },
+            new AnalyzeKeyword() { Keyword = "suffers the effect of Prey.", Category = KewordTypes.Marker },
+            new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
+            new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
+            new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "/spespetime -a start", Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "00:0039:Engage!", Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "00:0039:Battle commencing in 5 seconds!", Category = KewordTypes.TimelineStart },
+            new AnalyzeKeyword() { Keyword = "/spespetime -a end", Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = "has ended.", Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = "Cast your lot.", Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = WipeoutLog, Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = "uses", Category = KewordTypes.Action },
+        };
+
+        public static readonly Dictionary<string, Regex> AnalyzeRegexedEN = new Dictionary<string, Regex>()
+        {
+            {
+                nameof(ActionRegex),
+                CreateRegex(@"\[.+?\] 00:....:(?<actor>.+?) uses (?<skill>.+?)\.$")
+            },
+            {
+                nameof(AddedRegex),
+                CreateRegex(@"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ")
+            },
+            {
+                nameof(CastRegex),
+                CreateRegex(@"\[.+?\] 00:....:(?<actor>.+?) (readies|begins casting) (?<skill>.+?)\.$")
+            },
+            {
+                nameof(HPRateRegex),
+                CreateRegex(@"\[.+?\] ..:(?<actor>.+?) HP at (?<hprate>\d+?)%")
+            },
+            {
+                nameof(StartsUsingRegex),
+                CreateRegex(@"14:....:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$")
+            },
+            {
+                nameof(StartsUsingUnknownRegex),
+                CreateRegex(@"14:....:(?<actor>.+?) starts using (?<skill>.+?) on Unknown\.$")
+            },
+            {
+                nameof(DialogRegex),
+                CreateRegex(@"00:0044:(?<dialog>.+?)$")
+            },
+            {
+                nameof(CombatStartRegex),
+                CreateRegex(@"00:(0038|0039):(?<discription>.+?)$")
+            },
+            {
+                nameof(CombatEndRegex),
+                CreateRegex(@"00:....:(?<discription>.+?)$")
+            },
+            {
+                nameof(EffectRegex),
+                CreateRegex(@"1A:(?<victim>.+?) gains the effect of (?<effect>.+?) from (?<actor>.+?) for (?<duration>[0-9\.]*?) Seconds.$")
+            },
+            {
+                nameof(MarkerRegex),
+                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$")
+            },
+            {
+                nameof(MarkingRegex),
+                CreateRegex(@"00:(?<id>....):(?<target>.+?) suffers the effect of Prey\.$")
+            },
+        };
+
+        #endregion EN
 
         #endregion Keywords
 
@@ -467,6 +660,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         names.Add(combatant.NameII);
                     }
 
+                    names.AddRange(PCNameDictionary.Instance.GetNames());
+
                     this.partyNames = names;
                 }
             }
@@ -491,9 +686,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (names != null &&
                 names.Any() &&
-                names.Contains(actor))
+                names.AsParallel().Contains(actor))
             {
                 return false;
+            }
+
+            if (Settings.Default.FFXIVLocale != Locales.JA)
+            {
+                return true;
             }
 
             return !PCNameRegex.Match(actor).Success;

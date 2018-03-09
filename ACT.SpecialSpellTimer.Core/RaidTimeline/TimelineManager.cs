@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Common;
+using static ACT.SpecialSpellTimer.Models.TableCompiler;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -26,9 +28,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public string TimelineDirectory => TimelineSettings.TimelineDirectory;
 
-        private ObservableCollection<TimelineModel> timelineModels = new ObservableCollection<TimelineModel>();
+        private readonly ObservableCollection<TimelineModel> timelineModels
+            = new ObservableCollection<TimelineModel>();
 
         public ObservableCollection<TimelineModel> TimelineModels => this.timelineModels;
+
+        private readonly List<(string TimelineName, TimelineTriggerModel Trigger)> globalTriggers
+            = new List<(string TimelineName, TimelineTriggerModel Trigger)>();
+
+        public TimelineTriggerModel[] GlobalTriggers
+            => this.globalTriggers
+                .Where(x =>
+                    x.Trigger.Enabled.GetValueOrDefault() &&
+                    !string.IsNullOrEmpty(x.Trigger.SyncKeyword) &&
+                    x.Trigger.SynqRegex != null)
+                .Select(x => x.Trigger)
+                .ToArray();
 
         public void LoadTimelineModels()
         {
@@ -68,6 +83,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
             }
 
+            // グローバルトリガをロードする
+            this.globalTriggers.Clear();
+            var globals = list.Where(x => x.IsGlobalZone);
+            foreach (var tl in globals)
+            {
+                this.LoadGlobalTriggers(tl);
+            }
+
             WPFHelper.Invoke(() =>
             {
                 foreach (var tl in this.TimelineModels)
@@ -82,8 +105,178 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.TimelineModels.Clear();
                 this.TimelineModels.AddRange(list.OrderBy(x => x.FileName));
             });
+        }
 
-            return;
+        public void InitGlobalTriggers()
+        {
+            if (this.GlobalTriggers.Any())
+            {
+                this.InitElements(this.GlobalTriggers);
+            }
+        }
+
+        public void LoadGlobalTriggers(
+            TimelineModel timeline)
+        {
+            if (!timeline.IsGlobalZone)
+            {
+                return;
+            }
+
+            var name = timeline.Name.ToUpper();
+
+            foreach (var tri in timeline.Triggers)
+            {
+                this.globalTriggers.Add((name, tri));
+            }
+
+            this.InitElements(this.GlobalTriggers);
+
+            this.AppLogger.Trace("[TL] Loaded global triggers.");
+        }
+
+        public void ReloadGlobalTriggers(
+            TimelineModel timeline)
+        {
+            if (!timeline.IsGlobalZone)
+            {
+                return;
+            }
+
+            var name = timeline.Name.ToUpper();
+
+            this.globalTriggers.RemoveAll(x => x.TimelineName == name);
+            foreach (var tri in timeline.Triggers)
+            {
+                this.globalTriggers.Add((name, tri));
+            }
+
+            this.InitElements(this.GlobalTriggers);
+
+            this.AppLogger.Trace("[TL] Reloaded global triggers.");
+        }
+
+        public void InitElements(
+            TimelineBase timeline)
+            => this.InitElements(timeline, null);
+
+        public void InitElements(
+            IList<TimelineBase> elements)
+            => this.InitElements(null, elements);
+
+        /// <summary>
+        /// Elementを初期化する
+        /// </summary>
+        private void InitElements(
+            TimelineBase timeline = null,
+            IList<TimelineBase> elements = null)
+        {
+            var defaultStyle = TimelineSettings.Instance.DefaultStyle;
+            var defaultNoticeStyle = TimelineSettings.Instance.DefaultNoticeStyle;
+
+            // <HOGE>を[HOGE]に置き換えたプレースホルダリストを生成する
+            var placeholders = TableCompiler.Instance.PlaceholderList
+                .Select(x =>
+                    new PlaceholderContainer(
+                        x.Placeholder
+                            .Replace("<", "[")
+                            .Replace(">", "]"),
+                        x.ReplaceString,
+                        x.Type))
+                .ToArray();
+
+            // 初期化する
+            if (timeline != null)
+            {
+                timeline.Walk((element) =>
+                    initElement(element));
+            }
+
+            // 初期化する
+            if (elements != null)
+            {
+                foreach (var element in elements)
+                {
+                    element.Walk((child) =>
+                        initElement(child));
+                }
+            }
+
+            void initElement(TimelineBase element)
+            {
+                // トリガのマッチカウンタを初期化する
+                if (element is TimelineTriggerModel tri)
+                {
+                    tri.MatchedCounter = 0;
+                }
+
+                // アクティビティにスタイルを設定する
+                setStyle(element);
+
+                // sync用の正規表現にプレースホルダをセットしてコンパイルし直す
+                setRegex(element, placeholders);
+            }
+
+            // スタイルを適用する
+            void setStyle(TimelineBase element)
+            {
+                if (element is TimelineActivityModel act)
+                {
+                    if (string.IsNullOrEmpty(act.Style))
+                    {
+                        act.StyleModel = defaultStyle;
+                        return;
+                    }
+
+                    act.StyleModel = TimelineSettings.Instance.Styles
+                        .FirstOrDefault(x => string.Equals(
+                            x.Name,
+                            act.Style,
+                            StringComparison.OrdinalIgnoreCase)) ??
+                        defaultStyle;
+                }
+
+                if (element is TimelineVisualNoticeModel notice)
+                {
+                    if (string.IsNullOrEmpty(notice.Style))
+                    {
+                        notice.StyleModel = defaultNoticeStyle;
+                        return;
+                    }
+
+                    notice.StyleModel = TimelineSettings.Instance.Styles
+                        .FirstOrDefault(x => string.Equals(
+                            x.Name,
+                            notice.Style,
+                            StringComparison.OrdinalIgnoreCase)) ??
+                        defaultNoticeStyle;
+                }
+            }
+
+            // 正規表現をセットする
+            void setRegex(
+                TimelineBase element,
+                IList<PlaceholderContainer> placeholderList)
+            {
+                if (!(element is ISynchronizable sync))
+                {
+                    return;
+                }
+
+                var replacedKeyword = sync.SyncKeyword;
+
+                if (!string.IsNullOrEmpty(replacedKeyword))
+                {
+                    foreach (var ph in placeholderList)
+                    {
+                        replacedKeyword = replacedKeyword.Replace(
+                            ph.Placeholder,
+                            ph.ReplaceString);
+                    }
+                }
+
+                sync.SyncKeywordReplaced = replacedKeyword;
+            }
         }
     }
 }

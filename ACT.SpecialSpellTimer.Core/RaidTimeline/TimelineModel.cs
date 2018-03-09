@@ -95,6 +95,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
+        public const string GlobalZone = "{GLOBAL}";
+
         private string zone = string.Empty;
 
         [XmlElement(ElementName = "zone")]
@@ -106,9 +108,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (this.SetProperty(ref this.zone, value))
                 {
                     this.RaisePropertyChanged(nameof(this.DisplayName));
+                    this.RaisePropertyChanged(nameof(this.IsGlobalZone));
                 }
             }
         }
+
+        [XmlIgnore]
+        public bool IsGlobalZone => string.Equals(this.Zone, GlobalZone, StringComparison.OrdinalIgnoreCase);
 
         private Locales locale = Locales.JA;
 
@@ -626,6 +632,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     this.Locale = tl.Locale;
                     this.Entry = tl.Entry;
                     this.StartTrigger = tl.StartTrigger;
+
+                    if (this.IsGlobalZone)
+                    {
+                        TimelineManager.Instance.ReloadGlobalTriggers(this);
+                    }
 
                     if (this.IsActive)
                     {
