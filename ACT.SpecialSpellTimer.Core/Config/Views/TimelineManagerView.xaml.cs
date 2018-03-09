@@ -333,13 +333,19 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 if (!isChecked.Value)
                 {
                     TimelineOverlay.CloseTimeline();
+                    TimelineNoticeOverlay.CloseNotice();
                     return;
                 }
 
                 var active = TimelineManager.Instance.TimelineModels.FirstOrDefault(x => x.IsActive);
                 if (active != null)
                 {
-                    TimelineOverlay.ShowTimeline(active);
+                    if (!active.IsGlobalZone)
+                    {
+                        TimelineOverlay.ShowTimeline(active);
+                    }
+
+                    TimelineNoticeOverlay.ShowNotice();
                 }
             }));
 

@@ -112,9 +112,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return false;
                 }
 
+                if (string.IsNullOrEmpty(this.Model.Zone))
+                {
+                    return false;
+                }
+
                 if (string.Equals(
-                        ActGlobals.oFormActMain.CurrentZone,
-                        this.Model.Zone,
+                        ActGlobals.oFormActMain.CurrentZone.Trim(),
+                        this.Model.Zone.Trim(),
                         StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
@@ -124,8 +129,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 return zones.Any(x =>
                     string.Equals(
-                        ActGlobals.oFormActMain.CurrentZone,
-                        x,
+                        ActGlobals.oFormActMain.CurrentZone.Trim(),
+                        x.Trim(),
                         StringComparison.OrdinalIgnoreCase));
             }
         }

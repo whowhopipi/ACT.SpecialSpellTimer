@@ -48,7 +48,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string Text
         {
             get => this.text;
-            set => this.SetProperty(ref this.text, value.Replace("\\n", Environment.NewLine));
+            set => this.SetProperty(ref this.text, value?.Replace("\\n", Environment.NewLine));
         }
 
         /// <summary>

@@ -379,7 +379,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             @"Timeline.config");
 
         public static readonly string MasterFile = Path.Combine(
-            TimelineDirectory,
+            Path.Combine(TimelineDirectory, "sample"),
             @"Timeline.master.config");
 
         public static void Load() => instance = Load(FileName);

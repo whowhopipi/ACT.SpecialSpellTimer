@@ -59,6 +59,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 foreach (var file in Directory.GetFiles(sampleDirectory))
                 {
+                    if (file.EndsWith(".config"))
+                    {
+                        continue;
+                    }
+
                     var dest = Path.Combine(dir, Path.GetFileName(file));
                     File.Copy(file, dest, true);
                 }

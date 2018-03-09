@@ -94,8 +94,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 }
 
                 ChangeClickthrough(TimelineSettings.Instance.Clickthrough);
-
-                NoticeView.OverlayVisible = true;
             });
         }
 
@@ -134,6 +132,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.Opacity = 0;
             this.Topmost = false;
+            this.OverlayVisible = false;
 
             this.Loaded += (x, y) =>
             {
@@ -177,11 +176,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                         lock (this)
                         {
                             this.noticeList.Remove(toRemove);
+                            this.OverlayVisible = this.noticeList.Any(x => x.IsVisible);
                         }
                     },
                     dummyMode);
 
                 this.noticeList.Add(notice);
+                this.OverlayVisible = true;
             }
         }
 
