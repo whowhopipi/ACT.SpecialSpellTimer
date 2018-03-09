@@ -12,6 +12,9 @@
   <zone>{GLOBAL}</zone>
   <locale>JA</locale>
 
+  <!-- 初期設定では無効にしてあります -->
+  <default target-element="Trigger" target-attr="enabled" value="false" />
+
   <!-- 重要なアクティビティを通知するトリガ begin -->
   <!--
   マーカー、マーキングなどはゾーンを問わずに出現するためグローバルゾーンとして定義する。
