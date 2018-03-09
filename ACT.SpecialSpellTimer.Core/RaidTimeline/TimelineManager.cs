@@ -53,13 +53,24 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            var sampleDirectory = Path.Combine(dir, "sample");
+
             if (!Directory.GetFiles(dir, "*.xml").Any())
             {
-                var sampleDirectory = Path.Combine(dir, "sample");
                 foreach (var file in Directory.GetFiles(sampleDirectory))
                 {
                     var dest = Path.Combine(dir, Path.GetFileName(file));
                     File.Copy(file, dest, true);
+                }
+            }
+            else
+            {
+                var reference = Path.Combine(dir, "ExampleTimeline1.Reference.xml");
+                var referenceSample = Path.Combine(sampleDirectory, "ExampleTimeline1.Reference.xml");
+                if (File.Exists(reference) &&
+                    File.Exists(referenceSample))
+                {
+                    File.Copy(referenceSample, reference, true);
                 }
             }
 

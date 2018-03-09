@@ -260,6 +260,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
+        private static readonly Regex DefineRegex = new Regex(
+            @"#define\s+(?<define>.+?)\s+(?<value>.+?)$",
+            RegexOptions.Compiled |
+            RegexOptions.ExplicitCapture |
+            RegexOptions.Multiline);
+
         public static TimelineModel Load(
             string file)
         {
@@ -270,9 +276,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var tl = default(TimelineModel);
 
-            using (var sr = new StreamReader(file, new UTF8Encoding(false)))
+            var sb = new StringBuilder(
+                System.IO.File.ReadAllText(
+                    file,
+                    new UTF8Encoding(false)));
+
+            // #defineプリプロセッサを処理する
+            preprocessDefine(sb);
+
+            if (sb.Length > 0)
             {
-                if (sr.BaseStream.Length > 0)
+                using (var sr = new StringReader(sb.ToString()))
                 {
                     var xs = new XmlSerializer(typeof(TimelineModel));
                     var data = xs.Deserialize(sr) as TimelineModel;
@@ -291,6 +305,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
 
             return tl;
+
+            // #define プリプロセス
+            void preprocessDefine(StringBuilder buffer)
+            {
+                var matches = DefineRegex.Matches(buffer.ToString());
+                if (matches.Count < 1)
+                {
+                    return;
+                }
+
+                foreach (Match match in matches)
+                {
+                    var define = match.Groups["define"].Value;
+                    var value = match.Groups["value"].Value.Replace("\"", string.Empty);
+                    buffer.Replace(define, value);
+                }
+            }
         }
 
         public void Save(

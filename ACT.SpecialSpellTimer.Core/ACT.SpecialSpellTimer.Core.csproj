@@ -631,9 +631,9 @@
     <Content Include="resources\timeline\sample\ExampleTimeline2.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="resources\timeline\sample\GlobalTrigger.xml">
+    <Content Include="resources\timeline\sample\GlobalTrigger.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Content Include="resources\timeline\sample\Sigmascape_V1.0_Savage.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
