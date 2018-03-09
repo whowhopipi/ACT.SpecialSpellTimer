@@ -347,7 +347,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public string[] IgnoreKeywords
         {
-            get => this.ignoreKeywords;
+            get => this.ignoreKeywords?
+                .Where(x => !string.IsNullOrEmpty(x))?
+                .ToArray() ?? new string[0];
+
             set => this.SetProperty(ref this.ignoreKeywords, value);
         }
 
