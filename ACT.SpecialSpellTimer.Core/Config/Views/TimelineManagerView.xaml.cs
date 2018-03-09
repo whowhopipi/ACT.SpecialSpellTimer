@@ -139,9 +139,22 @@ namespace ACT.SpecialSpellTimer.Config.Views
                                 nextTimeline.Controller.Load();
                                 nextTimeline.IsActive = true;
 
-                                log = $"[TL] CurrentZoneChanged new_zone={currentZoneName}, active_timeline={nextTimeline.TimelineName}.";
+                                log = $"[TL] Timeline auto loaded. active_timeline={nextTimeline.TimelineName}.";
 
                                 this.TimelineList.ScrollIntoView(nextTimeline);
+                            }
+                            else
+                            {
+                                var global = TimelineController.GetGlobalTriggerController();
+                                if (global != null)
+                                {
+                                    global.Load();
+                                    global.Model.IsActive = true;
+
+                                    log = $"[TL] Global trigger activated.";
+
+                                    this.TimelineList.ScrollIntoView(global.Model);
+                                }
                             }
 
                             // グローバルトリガを初期化する

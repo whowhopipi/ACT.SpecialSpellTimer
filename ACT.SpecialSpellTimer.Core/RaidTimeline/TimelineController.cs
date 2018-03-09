@@ -75,6 +75,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             private set;
         }
 
+        /// <summary>
+        /// グローバルトリガのコントローラを取得する
+        /// </summary>
+        /// <returns>
+        /// グローバルトリガのコントローラ</returns>
+        public static TimelineController GetGlobalTriggerController()
+            => TimelineManager.Instance.TimelineModels
+                .FirstOrDefault(x => x.IsGlobalZone)?
+                .Controller;
+
         public TimelineController(
             TimelineModel model)
         {
@@ -162,7 +172,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 CurrentController = this;
 
                 this.LoadActivityLine();
-                TimelineOverlay.ShowTimeline(this.Model);
+
+                if (!this.Model.IsGlobalZone)
+                {
+                    TimelineOverlay.ShowTimeline(this.Model);
+                }
+
                 TimelineNoticeOverlay.ShowNotice();
 
                 this.LogWorker = new Thread(this.DetectLogLoop)
@@ -790,47 +805,50 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 // グローバルトリガを登録する
                 detectors.AddRange(TimelineManager.Instance.GlobalTriggers);
 
-                // タイムラインスコープのトリガを登録する
-                detectors.AddRange(
-                    from x in this.Model.Triggers
-                    where
-                    x.Enabled.GetValueOrDefault() &&
-                    !string.IsNullOrEmpty(x.SyncKeyword) &&
-                    x.SynqRegex != null
-                    select
-                    x);
-
-                // 判定期間中のアクティビティを登録する
-                var acts =
-                    from x in this.ActivityLine
-                    where
-                    x.Enabled.GetValueOrDefault() &&
-                    !string.IsNullOrEmpty(x.SyncKeyword) &&
-                    x.SynqRegex != null &&
-                    this.CurrentTime >= x.Time + TimeSpan.FromSeconds(x.SyncOffsetStart.Value) &&
-                    this.CurrentTime <= x.Time + TimeSpan.FromSeconds(x.SyncOffsetEnd.Value) &&
-                    !x.IsSynced
-                    select
-                    x;
-
-                detectors.AddRange(acts);
-
-                // カレントサブルーチンのトリガを登録する
-                if (this.ActiveActivity != null)
+                if (!this.Model.IsGlobalZone)
                 {
-                    var sub = this.ActiveActivity.Parent as TimelineSubroutineModel;
-                    if (sub != null)
-                    {
-                        var triggers =
-                            from x in sub.Triggers
-                            where
-                            x.Enabled.GetValueOrDefault() &&
-                            !string.IsNullOrEmpty(x.SyncKeyword) &&
-                            x.SynqRegex != null
-                            select
-                            x;
+                    // タイムラインスコープのトリガを登録する
+                    detectors.AddRange(
+                        from x in this.Model.Triggers
+                        where
+                        x.Enabled.GetValueOrDefault() &&
+                        !string.IsNullOrEmpty(x.SyncKeyword) &&
+                        x.SynqRegex != null
+                        select
+                        x);
 
-                        detectors.AddRange(triggers);
+                    // 判定期間中のアクティビティを登録する
+                    var acts =
+                        from x in this.ActivityLine
+                        where
+                        x.Enabled.GetValueOrDefault() &&
+                        !string.IsNullOrEmpty(x.SyncKeyword) &&
+                        x.SynqRegex != null &&
+                        this.CurrentTime >= x.Time + TimeSpan.FromSeconds(x.SyncOffsetStart.Value) &&
+                        this.CurrentTime <= x.Time + TimeSpan.FromSeconds(x.SyncOffsetEnd.Value) &&
+                        !x.IsSynced
+                        select
+                        x;
+
+                    detectors.AddRange(acts);
+
+                    // カレントサブルーチンのトリガを登録する
+                    if (this.ActiveActivity != null)
+                    {
+                        var sub = this.ActiveActivity.Parent as TimelineSubroutineModel;
+                        if (sub != null)
+                        {
+                            var triggers =
+                                from x in sub.Triggers
+                                where
+                                x.Enabled.GetValueOrDefault() &&
+                                !string.IsNullOrEmpty(x.SyncKeyword) &&
+                                x.SynqRegex != null
+                                select
+                                x;
+
+                            detectors.AddRange(triggers);
+                        }
                     }
                 }
             }
