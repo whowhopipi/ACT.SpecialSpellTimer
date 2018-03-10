@@ -18,6 +18,7 @@ using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Utility;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Globalization;
+using Microsoft.VisualBasic.FileIO;
 using Prism.Commands;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -261,7 +262,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         private static readonly Regex DefineRegex = new Regex(
-            @"^#define[ \t]+(?<define>\w*)[ \t]*(?<value>.*)$",
+            @"^#define[ \t].*$",
             RegexOptions.Compiled |
             RegexOptions.ExplicitCapture |
             RegexOptions.Multiline);
@@ -317,12 +318,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 foreach (Match match in matches)
                 {
-                    var define = match.Groups["define"].Value;
-                    var value = match.Groups["value"].Value?
-                        .Replace("\"", string.Empty)
-                        ?? string.Empty;
+                    var text = match.Value;
 
-                    buffer.Replace(define, value);
+                    using (var sr = new StringReader(text))
+                    using (var parser = new TextFieldParser(sr))
+                    {
+                        parser.TextFieldType = FieldType.Delimited;
+                        parser.SetDelimiters(" ", "\t");
+                        parser.HasFieldsEnclosedInQuotes = true;
+                        parser.TrimWhiteSpace = true;
+
+                        var values = parser.ReadFields();
+
+                        var ident = values.Length > 1 ? values[1] : string.Empty;
+                        var token = values.Length > 2 ? values[2] : string.Empty;
+
+                        buffer.Replace(ident, token);
+                    }
                 }
             }
         }

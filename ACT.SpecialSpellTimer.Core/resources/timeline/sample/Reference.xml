@@ -7,10 +7,19 @@
 -->
 
 <!--
-#define PLACEHOLDER "REPLACEMENT_SAMPLE"
+#define SIGN anoyetta
 
-いわゆる、#define プリプロセッサとして動作する。
+#define ディレクティブ
+
+Syntax
+#define identifier token-string
+
+XML Parser のプリプロセスとして動作する。
 XMLの仕様ではないのでコメント内に記述する。
+
+プリプロセッサはファイル内に identifier を見つけるたびに、token-string に置換える。
+identifier, token-string 中にスペースが含まれる場合は "" で囲まれた範囲を連続した一つのフィールドとして認識する。
+フィールド内にダブルクォートが出現する場合は、ダブルクォートを重ねてエスケープする。
 -->
 
 <!--
@@ -38,7 +47,7 @@ XMLの仕様ではないのでコメント内に記述する。
     スペスペたいむの定義ファイルの説明書です。
     これ自体をタイムラインとして使用することは出来ません。
     ファイルに書かれたコメントを定義ファイル作成時の参考としてください。
-    PLACEHOLDER
+    SIGN
   </description>
 
   <!--
