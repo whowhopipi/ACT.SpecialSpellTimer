@@ -151,9 +151,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             foreach (var tri in timeline.Triggers)
             {
                 this.globalTriggers.Add((name, tri));
+                this.InitElements(tri);
             }
-
-            this.InitElements(this.GlobalTriggers);
 
             this.AppLogger.Trace("[TL] Loaded global triggers.");
         }
@@ -168,13 +167,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var name = timeline.Name.ToUpper();
 
-            this.globalTriggers.RemoveAll(x => x.TimelineName == name);
+            this.globalTriggers.RemoveAll(x => x.TimelineName.ToUpper() == name);
             foreach (var tri in timeline.Triggers)
             {
                 this.globalTriggers.Add((name, tri));
+                this.InitElements(tri);
             }
-
-            this.InitElements(this.GlobalTriggers);
 
             this.AppLogger.Trace("[TL] Reloaded global triggers.");
         }

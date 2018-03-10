@@ -993,31 +993,34 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 XIVLog xivlog,
                 TimelineTriggerModel tri)
             {
-                var match = tri.SynqRegex.Match(xivlog.Log);
-                if (!match.Success)
+                lock (tri)
                 {
-                    return false;
-                }
-
-                tri.TextReplaced = match.Result(tri.Text ?? string.Empty);
-                tri.NoticeReplaced = match.Result(tri.Notice ?? string.Empty);
-
-                tri.MatchedCounter++;
-
-                if (tri.SyncCount.Value != 0)
-                {
-                    if (tri.SyncCount.Value != tri.MatchedCounter)
+                    var match = tri.SynqRegex.Match(xivlog.Log);
+                    if (!match.Success)
                     {
                         return false;
                     }
+
+                    tri.TextReplaced = match.Result(tri.Text ?? string.Empty);
+                    tri.NoticeReplaced = match.Result(tri.Notice ?? string.Empty);
+
+                    tri.MatchedCounter++;
+
+                    if (tri.SyncCount.Value != 0)
+                    {
+                        if (tri.SyncCount.Value != tri.MatchedCounter)
+                        {
+                            return false;
+                        }
+                    }
+
+                    this.notifyQueue.Enqueue(tri.Clone());
                 }
 
                 WPFHelper.BeginInvoke(() =>
                 {
                     lock (this)
                     {
-                        this.notifyQueue.Enqueue(tri);
-
                         var active = (
                             from x in this.ActivityLine
                             where
@@ -1450,7 +1453,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
-            WPFHelper.BeginInvoke(() =>
+            WPFHelper.Invoke(() =>
             {
                 foreach (var v in vnotices)
                 {

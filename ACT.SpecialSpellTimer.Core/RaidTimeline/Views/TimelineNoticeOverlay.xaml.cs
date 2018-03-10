@@ -176,10 +176,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         {
             lock (this)
             {
-                if (this.noticeList.Any(x =>
+                var same = this.noticeList.FirstOrDefault(x =>
                     x.IsVisible &&
-                    x.TextToDisplay == notice.TextToDisplay))
+                    x.TextToDisplay == notice.TextToDisplay);
+                if (same != null)
                 {
+                    lock (same)
+                    {
+                        same.DurationToDisplay = same.Duration.Value;
+                        same.Timestamp = DateTime.Now;
+                    }
+
                     return;
                 }
 
@@ -194,6 +201,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                     },
                     dummyMode);
 
+                notice.Timestamp = DateTime.Now;
                 this.noticeList.Add(notice);
                 this.EnsureTopMost();
 
@@ -235,7 +243,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             {
                 new SortDescription()
                 {
-                    PropertyName = nameof(TimelineVisualNoticeModel.DurationToDisplay),
+                    PropertyName = nameof(TimelineVisualNoticeModel.Timestamp),
                     Direction = ListSortDirection.Ascending,
                 }
             });

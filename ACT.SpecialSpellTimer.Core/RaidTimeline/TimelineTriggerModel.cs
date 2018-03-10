@@ -230,5 +230,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.matchedCounter;
             set => this.SetProperty(ref this.matchedCounter, value);
         }
+
+        public TimelineTriggerModel Clone()
+        {
+            var clone = this.MemberwiseClone() as TimelineTriggerModel;
+            return clone;
+        }
     }
 }
