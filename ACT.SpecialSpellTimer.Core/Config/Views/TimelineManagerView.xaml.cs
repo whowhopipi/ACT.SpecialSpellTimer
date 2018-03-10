@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -111,8 +112,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         private void ZoneChanger_Tick(object sender, EventArgs e)
         {
-            var log = string.Empty;
-
             try
             {
                 lock (this)
@@ -121,7 +120,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     {
                         this.currentZoneName = ActGlobals.oFormActMain.CurrentZone;
 
-                        log = $"[TL] CurrentZoneChanged new_zone={currentZoneName}.";
+                        this.AppLogger.Trace($"[TL] CurrentZoneChanged new_zone={currentZoneName}.");
 
                         var tls = TimelineManager.Instance.TimelineModels.ToArray();
 
@@ -133,32 +132,38 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                         if (this.TimelineConfig.Enabled)
                         {
-                            var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
-                            if (nextTimeline != null)
+                            WPFHelper.BeginInvoke(() =>
                             {
-                                nextTimeline.Controller.Load();
-                                nextTimeline.IsActive = true;
+                                // 5秒ディレイしてからロードする
+                                Thread.Sleep(TimeSpan.FromSeconds(5));
 
-                                log = $"[TL] Timeline auto loaded. active_timeline={nextTimeline.TimelineName}.";
-
-                                this.TimelineList.ScrollIntoView(nextTimeline);
-                            }
-                            else
-                            {
-                                var global = TimelineController.GetGlobalTriggerController();
-                                if (global != null)
+                                var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
+                                if (nextTimeline != null)
                                 {
-                                    global.Load();
-                                    global.Model.IsActive = true;
+                                    nextTimeline.Controller.Load();
+                                    nextTimeline.IsActive = true;
 
-                                    log = $"[TL] Global trigger activated.";
+                                    this.AppLogger.Trace($"[TL] Timeline auto loaded. active_timeline={nextTimeline.TimelineName}.");
 
-                                    this.TimelineList.ScrollIntoView(global.Model);
+                                    this.TimelineList.ScrollIntoView(nextTimeline);
                                 }
-                            }
+                                else
+                                {
+                                    var global = TimelineController.GetGlobalTriggerController();
+                                    if (global != null)
+                                    {
+                                        global.Load();
+                                        global.Model.IsActive = true;
 
-                            // グローバルトリガを初期化する
-                            TimelineManager.Instance.InitGlobalTriggers();
+                                        this.AppLogger.Trace($"[TL] Global trigger activated.");
+
+                                        this.TimelineList.ScrollIntoView(global.Model);
+                                    }
+                                }
+
+                                // グローバルトリガを初期化する
+                                TimelineManager.Instance.InitGlobalTriggers();
+                            });
                         }
                     }
 
@@ -176,13 +181,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 this.AppLogger.Error(
                     ex,
                     $"[TL] Auto loading error. zone={ActGlobals.oFormActMain.CurrentZone}");
-            }
-            finally
-            {
-                if (!string.IsNullOrEmpty(log))
-                {
-                    this.AppLogger.Trace(log);
-                }
             }
         }
 
