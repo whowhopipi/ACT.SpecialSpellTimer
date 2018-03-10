@@ -332,7 +332,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             }
         }
 
-        public IntPtr Handle => new WindowInteropHelper(this).Handle;
+        private IntPtr? handle = null;
+
+        public IntPtr Handle =>
+            this.handle ?? (this.handle = new WindowInteropHelper(this).Handle).Value;
 
         private bool IsOverlaysGameWindow()
         {
