@@ -121,6 +121,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         #endregion View
 
+        private readonly TimelineVisualNoticeModel FirstNotice = new TimelineVisualNoticeModel()
+        {
+            Text = "Loading...",
+            TextToDisplay = "Loading...",
+            Duration = 0.0,
+            DurationVisible = false,
+            StyleModel = TimelineSettings.Instance.DefaultNoticeStyle,
+        };
+
         public TimelineNoticeOverlay()
         {
             this.InitializeComponent();
@@ -142,6 +151,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 }
 
                 this.StartZOrderCorrector();
+
+                // 描画用に最初の通知を装填する
+                this.AddNotice(this.FirstNotice, false, true);
             };
 
             this.Closed += (x, y) =>
@@ -159,7 +171,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
         public void AddNotice(
             TimelineVisualNoticeModel notice,
-            bool dummyMode = false)
+            bool dummyMode = false,
+            bool init = false)
         {
             lock (this)
             {
@@ -182,7 +195,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                     dummyMode);
 
                 this.noticeList.Add(notice);
-                this.OverlayVisible = true;
+                this.EnsureTopMost();
+
+                if (!init)
+                {
+                    this.OverlayVisible = true;
+                }
             }
         }
 

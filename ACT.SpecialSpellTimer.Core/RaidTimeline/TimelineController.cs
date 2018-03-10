@@ -125,7 +125,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return true;
                 }
 
-                var zones = this.Model.Zone.Split(',');
+                var zones = this.Model.Zone
+                    .Replace(Environment.NewLine, string.Empty)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                 return zones.Any(x =>
                     string.Equals(
