@@ -779,6 +779,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         name = (item as Tag).Name;
                         SaveFileDialog.FileName = $"{name}.tag.xml";
                         ExportTag(exports, item as Tag);
+
+                        if (!exports.Panels.Any() &&
+                            !exports.Tickers.Any())
+                        {
+                            return;
+                        }
                         break;
 
                     default:
@@ -822,6 +828,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
             Tag tag)
         {
             exports.Tag = tag;
+
             foreach (ITreeItem child in tag.Children)
             {
                 if (child is SpellPanel panel)
@@ -833,6 +840,20 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         {
                             exports.Spells.Add(spell);
                         }
+                    }
+                }
+
+                if (child is Spell singleSpell)
+                {
+                    if (!singleSpell.IsInstance)
+                    {
+                        var parentPanel = singleSpell.Panel;
+                        if (!exports.Panels.Any(x => x.ID == parentPanel.ID))
+                        {
+                            exports.Panels.Add(parentPanel);
+                        }
+
+                        exports.Spells.Add(singleSpell);
                     }
                 }
 
