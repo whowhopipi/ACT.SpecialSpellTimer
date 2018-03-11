@@ -289,6 +289,10 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
     bool, 任意項目, 既定値true
     durationを通知オーバーレイに表示するか否か。
 
+  order :
+    int, 任意項目, 既定値0
+    通知オーバーレイ内の表示順序
+
   style :
     string, 任意項目
     設定UIで定義したStyleを割り当てる。指定しない場合は規定のStyleが割当てられる。

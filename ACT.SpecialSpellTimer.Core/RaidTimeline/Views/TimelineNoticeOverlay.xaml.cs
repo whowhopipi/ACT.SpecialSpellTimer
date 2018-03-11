@@ -104,6 +104,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             {
                 NoticeView.IsClickthrough = isClickthrough;
             }
+
+            if (designOverlay != null)
+            {
+                designOverlay.IsClickthrough = isClickthrough;
+            }
         }
 
         public static void CloseNotice()
@@ -145,14 +150,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.Loaded += (x, y) =>
             {
-                if (!this.DummyMode)
-                {
-                    this.IsClickthrough = this.Config.Clickthrough;
-                }
-
+                this.IsClickthrough = this.Config.Clickthrough;
                 this.StartZOrderCorrector();
 
                 // 描画用に最初の通知を装填する
+                // ダミーのときは見えてしまうためフォントサイズを小さくしておく
+                var style = TimelineSettings.Instance.DefaultNoticeStyle.Clone();
+                style.Font.Size /= 2;
+                this.FirstNotice.StyleModel = style;
                 this.AddNotice(this.FirstNotice, false, true);
             };
 
@@ -241,6 +246,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.noticesSource.SortDescriptions.AddRange(new[]
             {
+                new SortDescription()
+                {
+                    PropertyName = nameof(TimelineVisualNoticeModel.Order),
+                    Direction = ListSortDirection.Ascending,
+                },
+                new SortDescription()
+                {
+                    PropertyName = nameof(TimelineVisualNoticeModel.LogSeq),
+                    Direction = ListSortDirection.Ascending,
+                },
                 new SortDescription()
                 {
                     PropertyName = nameof(TimelineVisualNoticeModel.Timestamp),

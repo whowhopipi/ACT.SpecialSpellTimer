@@ -231,6 +231,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.matchedCounter, value);
         }
 
+        private long logSeq = 0L;
+
+        [XmlIgnore]
+        public long LogSeq
+        {
+            get => this.logSeq;
+            set => this.SetProperty(ref this.logSeq, value);
+        }
+
         public TimelineTriggerModel Clone()
         {
             var clone = this.MemberwiseClone() as TimelineTriggerModel;

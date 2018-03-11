@@ -1014,7 +1014,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         }
                     }
 
-                    this.notifyQueue.Enqueue(tri.Clone());
+                    var toNotice = tri.Clone();
+                    toNotice.LogSeq = xivlog.No;
+                    this.notifyQueue.Enqueue(toNotice);
                 }
 
                 WPFHelper.BeginInvoke(() =>
@@ -1457,6 +1459,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 foreach (var v in vnotices)
                 {
+                    // ヒットしたログのシーケンスを格納する
+                    // ソート用
+                    v.LogSeq = tri.LogSeq;
+
                     switch (v.Text)
                     {
                         case TimelineVisualNoticeModel.ParentTextPlaceholder:

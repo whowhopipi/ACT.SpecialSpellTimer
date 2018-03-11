@@ -102,6 +102,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 return;
             }
 
+            // 有効な表示データが含まれていない？
+            if (!timelineModel.Activities.Any(x => x.Enabled.GetValueOrDefault()) &&
+                !timelineModel.Subroutines.Any(x => x.Enabled.GetValueOrDefault()))
+            {
+                return;
+            }
+
             WPFHelper.Invoke(() =>
             {
                 if (TimelineView == null)
@@ -124,6 +131,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             if (TimelineView != null)
             {
                 TimelineView.IsClickthrough = isClickthrough;
+            }
+
+            if (designOverlay != null)
+            {
+                designOverlay.IsClickthrough = isClickthrough;
             }
         }
 
@@ -162,11 +174,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
 
             this.Loaded += (x, y) =>
             {
-                if (!this.DummyMode)
-                {
-                    this.IsClickthrough = this.Config.Clickthrough;
-                }
-
+                this.IsClickthrough = this.Config.Clickthrough;
                 this.StartZOrderCorrector();
             };
 

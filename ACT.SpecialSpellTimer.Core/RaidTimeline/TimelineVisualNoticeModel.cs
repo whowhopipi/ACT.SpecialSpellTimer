@@ -62,15 +62,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.durationToDisplay, value);
         }
 
-        private DateTime timestamp = DateTime.MinValue;
-
-        [XmlIgnore]
-        public DateTime Timestamp
-        {
-            get => this.timestamp;
-            set => this.SetProperty(ref this.timestamp, value);
-        }
-
         [XmlAttribute(AttributeName = "duration")]
         public string DurationXML
         {
@@ -94,6 +85,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.DurationVisible = bool.TryParse(value, out var v) ? v : (bool?)null;
         }
 
+        private int? order = null;
+
+        [XmlIgnore]
+        public int? Order
+        {
+            get => this.order;
+            set => this.SetProperty(ref this.order, value);
+        }
+
+        [XmlAttribute(AttributeName = "order")]
+        public string OrderXML
+        {
+            get => this.Order?.ToString();
+            set => this.Duration = int.TryParse(value, out var v) ? v : (int?)null;
+        }
+
         private bool isVisible = false;
 
         [XmlIgnore]
@@ -101,6 +108,24 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.isVisible;
             set => this.SetProperty(ref this.isVisible, value);
+        }
+
+        private long logSeq = 0L;
+
+        [XmlIgnore]
+        public long LogSeq
+        {
+            get => this.logSeq;
+            set => this.SetProperty(ref this.logSeq, value);
+        }
+
+        private DateTime timestamp = DateTime.MinValue;
+
+        [XmlIgnore]
+        public DateTime Timestamp
+        {
+            get => this.timestamp;
+            set => this.SetProperty(ref this.timestamp, value);
         }
 
         private DispatcherTimer timer;
