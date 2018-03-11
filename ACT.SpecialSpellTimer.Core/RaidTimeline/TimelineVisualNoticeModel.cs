@@ -98,7 +98,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string OrderXML
         {
             get => this.Order?.ToString();
-            set => this.Duration = int.TryParse(value, out var v) ? v : (int?)null;
+            set => this.Order = int.TryParse(value, out var v) ? v : (int?)null;
         }
 
         private bool isVisible = false;
