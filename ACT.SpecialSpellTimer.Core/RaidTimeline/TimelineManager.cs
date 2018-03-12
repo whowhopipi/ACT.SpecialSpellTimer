@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Common;
 using static ACT.SpecialSpellTimer.Models.TableCompiler;
@@ -55,11 +56,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var sampleDirectory = Path.Combine(dir, "sample");
 
-            if (!Directory.GetFiles(dir, "*.xml").Any())
+            if (!Directory.EnumerateFiles(dir).Where(x =>
+                x.ToLower().EndsWith(".xml") ||
+                x.ToLower().EndsWith(".cshtml")).
+                Any())
             {
                 foreach (var file in Directory.GetFiles(sampleDirectory))
                 {
-                    if (file.EndsWith(".config"))
+                    if (file.EndsWith(".config") ||
+                        file.Contains("SampleInclude"))
                     {
                         continue;
                     }
@@ -70,8 +75,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
             else
             {
-                var reference = Path.Combine(dir, "Reference.xml");
-                var referenceSample = Path.Combine(sampleDirectory, "Reference.xml");
+                var reference = Path.Combine(dir, "Reference.cshtml");
+                var referenceSample = Path.Combine(sampleDirectory, "Reference.cshtml");
                 if (File.Exists(reference) &&
                     File.Exists(referenceSample))
                 {
@@ -79,8 +84,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
             }
 
+            Thread.Sleep(10);
+
+            // RazorEngine にわたすモデルを更新する
+            TimelineModel.RefreshRazorModel();
+
             var list = new List<TimelineModel>();
-            foreach (var file in Directory.GetFiles(dir, "*.xml"))
+            foreach (var file in Directory.EnumerateFiles(dir).Where(x =>
+                x.ToLower().EndsWith(".xml") ||
+                x.ToLower().EndsWith(".cshtml")))
             {
                 try
                 {
@@ -97,6 +109,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         $"Timeline file Load error.\n{Path.GetFileName(file)}",
                         ex);
                 }
+
+                Thread.Sleep(10);
             }
 
             // グローバルトリガをロードする
@@ -105,6 +119,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             foreach (var tl in globals)
             {
                 this.LoadGlobalTriggers(tl);
+                Thread.Sleep(10);
             }
 
             WPFHelper.Invoke(() =>
@@ -122,7 +137,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.TimelineModels.AddRange(
                     from x in list
                     orderby
-                    x.FileName.Contains("Reference.xml") ? 0 : 1,
+                    x.FileName.Contains("Reference") ? 0 : 1,
                     x.IsGlobalZone ? 0 : 1,
                     x.FileName
                     select

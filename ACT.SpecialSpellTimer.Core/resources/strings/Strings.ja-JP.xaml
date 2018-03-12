@@ -248,4 +248,5 @@
   <system:String x:Key="Timeline_ShowHeader">ヘッダを表示する</system:String>
   <system:String x:Key="Timeline_HeaderStyle">ヘッダのスタイル</system:String>
   <system:String x:Key="Timeline_OpenResourcesDictionary">ResourcesDictionary.xaml の配置場所を開く</system:String>
+  <system:String x:Key="Timeline_ShowCompiledText">RazorEngine によってパースされた後の定義内容を見る</system:String>
 </ResourceDictionary>

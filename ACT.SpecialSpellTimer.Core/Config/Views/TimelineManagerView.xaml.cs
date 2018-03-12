@@ -11,11 +11,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 
@@ -96,6 +98,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         #region Zone Changer
 
+        private JobIDs currentJob = JobIDs.Unknown;
         private string currentZoneName = string.Empty;
         private DispatcherTimer timer = null;
 
@@ -116,9 +119,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
             {
                 lock (this)
                 {
-                    if (this.currentZoneName != ActGlobals.oFormActMain.CurrentZone)
+                    var player = TableCompiler.Instance.Player;
+                    var jobID = player?.JobID ?? JobIDs.Unknown;
+
+                    if (this.currentZoneName != ActGlobals.oFormActMain.CurrentZone ||
+                        this.currentJob != jobID)
                     {
                         this.currentZoneName = ActGlobals.oFormActMain.CurrentZone;
+                        this.currentJob = jobID;
 
                         this.AppLogger.Trace($"[TL] CurrentZoneChanged new_zone={currentZoneName}.");
 
@@ -136,33 +144,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                             {
                                 // 5秒ディレイしてからロードする
                                 Thread.Sleep(TimeSpan.FromSeconds(5));
-
-                                var nextTimeline = tls.FirstOrDefault(x => x.Controller.IsAvailable);
-                                if (nextTimeline != null)
-                                {
-                                    nextTimeline.Controller.Load();
-                                    nextTimeline.IsActive = true;
-
-                                    this.AppLogger.Trace($"[TL] Timeline auto loaded. active_timeline={nextTimeline.TimelineName}.");
-
-                                    this.TimelineList.ScrollIntoView(nextTimeline);
-                                }
-                                else
-                                {
-                                    var global = TimelineController.GetGlobalTriggerController();
-                                    if (global != null)
-                                    {
-                                        global.Load();
-                                        global.Model.IsActive = true;
-
-                                        this.AppLogger.Trace($"[TL] Global trigger activated.");
-
-                                        this.TimelineList.ScrollIntoView(global.Model);
-                                    }
-                                }
-
-                                // グローバルトリガを初期化する
-                                TimelineManager.Instance.InitGlobalTriggers();
+                                this.LoadCurrentTimeline();
                             });
                         }
                     }
@@ -182,6 +164,50 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     ex,
                     $"[TL] Auto loading error. zone={ActGlobals.oFormActMain.CurrentZone}");
             }
+        }
+
+        /// <summary>
+        /// 現在のタイムラインをロードする
+        /// </summary>
+        private void LoadCurrentTimeline()
+        {
+            var currentTimeline = TimelineManager.Instance.TimelineModels
+                .FirstOrDefault(x => x.Controller.IsAvailable);
+
+            if (currentTimeline == null)
+            {
+                // 該当ゾーンのTLがない場合はグローバルトリガをいずれかをロードする
+                currentTimeline = TimelineController.GetGlobalTriggerController()?.Model;
+            }
+
+            // グローバルトリガファイルをリロードする
+            var globals = TimelineManager.Instance.TimelineModels.Where(x =>
+                x.IsGlobalZone);
+            foreach (var global in globals)
+            {
+                global.Reload();
+                Thread.Yield();
+            }
+
+            if (currentTimeline != null)
+            {
+                // 該当のタイムラインファイルをリロードする
+                if (!currentTimeline.IsGlobalZone)
+                {
+                    currentTimeline.Reload();
+                }
+
+                // コントローラをロードする
+                currentTimeline.Controller.Load();
+                currentTimeline.IsActive = true;
+
+                this.AppLogger.Trace($"[TL] Timeline auto loaded. active_timeline={currentTimeline.TimelineName}.");
+
+                this.TimelineList.ScrollIntoView(currentTimeline);
+            }
+
+            // グローバルトリガを初期化する
+            TimelineManager.Instance.InitGlobalTriggers();
         }
 
         #endregion Zone Changer

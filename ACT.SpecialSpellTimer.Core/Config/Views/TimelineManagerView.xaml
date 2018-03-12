@@ -166,6 +166,7 @@
                   <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Padding="3 0 3 0" Content="Edit" FontSize="16" Command="{Binding EditCommand, Mode=OneWay}" />
                     <Button Padding="3 0 3 0" Margin="10 0 0 0" Content="Reload" FontSize="16" Command="{Binding ReloadCommand, Mode=OneWay}" />
+                    <Button Padding="3 0 3 0" Margin="10 0 0 0" Content="debug" FontSize="13" Command="{Binding ShowCommand, Mode=OneWay}" ToolTip="{DynamicResource Timeline_ShowCompiledText}" Foreground="#FF17184b" VerticalAlignment="Center" />
                   </StackPanel>
                 </Grid>
               </Grid>

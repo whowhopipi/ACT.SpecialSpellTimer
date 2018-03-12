@@ -15,11 +15,16 @@ using System.Windows.Input;
 using System.Xml;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config.Views;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.Globalization;
-using Microsoft.VisualBasic.FileIO;
 using Prism.Commands;
+using RazorEngine;
+using RazorEngine.Configuration;
+using RazorEngine.Templating;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -242,6 +247,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimelineController Controller =>
             this.controller = (this.controller ?? new TimelineController(this));
 
+        /// <summary>
+        /// Compile後のテキスト
+        /// </summary>
+        [XmlIgnore]
+        public string CompiledText
+        {
+            get;
+            private set;
+        }
+
         #region Methods
 
         public void Add(TimelineBase timeline)
@@ -261,12 +276,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
-        private static readonly Regex DefineRegex = new Regex(
-            @"^#define[ \t].*$",
-            RegexOptions.Compiled |
-            RegexOptions.ExplicitCapture |
-            RegexOptions.Multiline);
-
         public static TimelineModel Load(
             string file)
         {
@@ -282,8 +291,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     file,
                     new UTF8Encoding(false)));
 
-            // #defineプリプロセッサを処理する
-            preprocessDefine(sb);
+            // Razorエンジンで処理する
+            CompileRazor(sb);
 
             if (sb.Length > 0)
             {
@@ -305,38 +314,116 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 tl.SetDefaultValues();
             }
 
+            // Compile後のテキストを保存する
+            tl.CompiledText = tl != null ?
+                sb.ToString() :
+                string.Empty;
+
             return tl;
+        }
 
-            // #define プリプロセス
-            void preprocessDefine(StringBuilder buffer)
+        /// <summary>
+        /// テキストを RazorEngine でCompile(パース)する
+        /// </summary>
+        /// <param name="source">
+        /// 元のテキスト</param>
+        /// <returns>
+        /// パース後のテキスト</returns>
+        private static void CompileRazor(
+            StringBuilder source)
+        {
+            const string SourceKey = "source";
+
+            var sourceText = source.ToString();
+            source.Clear();
+
+            using (var sw = new StringWriter(source))
+            using (var engine = CreateTimelineEngine())
             {
-                var matches = DefineRegex.Matches(buffer.ToString());
-                if (matches.Count < 1)
-                {
-                    return;
-                }
-
-                foreach (Match match in matches)
-                {
-                    var text = match.Value;
-
-                    using (var sr = new StringReader(text))
-                    using (var parser = new TextFieldParser(sr))
-                    {
-                        parser.TextFieldType = FieldType.Delimited;
-                        parser.SetDelimiters(" ", "\t");
-                        parser.HasFieldsEnclosedInQuotes = true;
-                        parser.TrimWhiteSpace = true;
-
-                        var values = parser.ReadFields();
-
-                        var ident = values.Length > 1 ? values[1] : string.Empty;
-                        var token = values.Length > 2 ? values[2] : string.Empty;
-
-                        buffer.Replace(ident, token);
-                    }
-                }
+                engine.AddTemplate(SourceKey, sourceText);
+                engine.RunCompile(SourceKey, sw, typeof(TimelineRazorModel), razorModel);
             }
+        }
+
+        /// <summary>
+        /// タイムライン定義ファイル用の RazorEngine を生成する
+        /// </summary>
+        /// <returns>RazorEngine</returns>
+        private static IRazorEngineService CreateTimelineEngine()
+        {
+            var config = new TemplateServiceConfiguration();
+            config.Language = Language.CSharp;
+            config.Namespaces.Add("ACT.SpecialSpellTimer.RaidTimeline");
+
+            var service = RazorEngineService.Create(config);
+
+            return service;
+        }
+
+        private static TimelineRazorModel razorModel;
+
+        /// <summary>
+        /// Razorパーサに渡すモデルを更新する
+        /// </summary>
+        public static void RefreshRazorModel()
+        {
+            var model = new TimelineRazorModel();
+
+            var party = TableCompiler.Instance.SortedPartyList;
+            var player = party.FirstOrDefault();
+
+            if (player == null)
+            {
+                model.Player = new TimelineRazorPlayer();
+                model.Party = new[]
+                {
+                    new TimelineRazorPlayer(),
+                    new TimelineRazorPlayer(),
+                    new TimelineRazorPlayer(),
+                    new TimelineRazorPlayer(),
+                    new TimelineRazorPlayer(),
+                    new TimelineRazorPlayer(),
+                    new TimelineRazorPlayer(),
+                    new TimelineRazorPlayer(),
+                };
+
+                razorModel = model;
+
+                return;
+            }
+
+            model.Zone = ActGlobals.oFormActMain.CurrentZone;
+
+            model.Player = new TimelineRazorPlayer()
+            {
+                Number = 0,
+                Name = player.Name,
+                Job = player.JobID.ToString(),
+                Role = player.AsJob().Role.ToString()
+            };
+
+            var combatants = new List<TimelineRazorPlayer>();
+
+            for (int i = 1; i <= 8; i++)
+            {
+                var data = i < party.Count ?
+                    party[i] :
+                    null;
+
+                var member = new TimelineRazorPlayer()
+                {
+                    Number = i + 1,
+                    Name = data?.Name ?? string.Empty,
+                    Job = data?.JobID.ToString() ?? string.Empty,
+                    Role = data?.AsJob().Role.ToString() ?? string.Empty,
+                };
+
+                combatants.Add(member);
+            }
+
+            model.Party = combatants.ToArray();
+
+            razorModel = model;
         }
 
         public void Save(
@@ -631,6 +718,30 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
             }));
 
+        private ICommand showCommand;
+
+        public ICommand ShowCommand =>
+            this.showCommand ?? (this.showCommand = new DelegateCommand(() =>
+            {
+                if (string.IsNullOrEmpty(this.CompiledText))
+                {
+                    return;
+                }
+
+                var temp = Path.Combine(
+                    Path.GetTempPath(),
+                    Path.GetFileName(this.File
+                        .Replace(".xml", ".compiled.xml")
+                        .Replace(".cshtml", ".compiled.cshtml")));
+
+                System.IO.File.WriteAllText(
+                    temp,
+                    this.CompiledText,
+                    new UTF8Encoding(false));
+
+                Process.Start(temp);
+            }));
+
         private ICommand editCommand;
 
         public ICommand EditCommand =>
@@ -645,7 +756,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private ICommand reloadCommand;
 
         public ICommand ReloadCommand =>
-            this.reloadCommand ?? (this.reloadCommand = new DelegateCommand(async () =>
+            this.reloadCommand ?? (this.reloadCommand = new DelegateCommand(() =>
             {
                 if (!System.IO.File.Exists(this.File))
                 {
@@ -654,36 +765,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 try
                 {
-                    var tl = default(TimelineModel);
-                    await Task.Run(() =>
-                    {
-                        tl = TimelineModel.Load(this.File);
-
-                        if (tl != null)
-                        {
-                            this.elements.Clear();
-                            this.AddRange(tl.Elements);
-                        }
-                    });
-
-                    if (tl == null)
-                    {
-                        return;
-                    }
-
-                    this.File = tl.File;
-                    this.TimelineName = tl.TimelineName;
-                    this.Revision = tl.Revision;
-                    this.Description = tl.Description;
-                    this.Zone = tl.Zone;
-                    this.Locale = tl.Locale;
-                    this.Entry = tl.Entry;
-                    this.StartTrigger = tl.StartTrigger;
-
-                    if (this.IsGlobalZone)
-                    {
-                        TimelineManager.Instance.ReloadGlobalTriggers(this);
-                    }
+                    this.Reload();
 
                     if (this.IsActive)
                     {
@@ -704,6 +786,46 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         ex);
                 }
             }));
+
+        public async void Reload()
+        {
+            // Razorの引数モデルを更新する
+            RefreshRazorModel();
+
+            var tl = default(TimelineModel);
+            await Task.Run(() =>
+            {
+                tl = TimelineModel.Load(this.File);
+
+                if (tl != null)
+                {
+                    this.elements.Clear();
+                    this.AddRange(tl.Elements);
+                }
+            });
+
+            if (tl == null)
+            {
+                return;
+            }
+
+            this.File = tl.File;
+            this.TimelineName = tl.TimelineName;
+            this.Revision = tl.Revision;
+            this.Description = tl.Description;
+            this.Zone = tl.Zone;
+            this.Locale = tl.Locale;
+            this.Entry = tl.Entry;
+            this.StartTrigger = tl.StartTrigger;
+            this.CompiledText = tl.CompiledText;
+
+            this.controller = null;
+
+            if (this.IsGlobalZone)
+            {
+                TimelineManager.Instance.ReloadGlobalTriggers(this);
+            }
+        }
 
         #endregion Commands
 

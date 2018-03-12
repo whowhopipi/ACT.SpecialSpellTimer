@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
 スペスペたいむの書き方の説明
 (c) anoyetta, 2018
@@ -6,28 +6,66 @@
 変更履歴はファイル末尾に。
 -->
 
+@{
+    var sign = "anoyetta";
+
+    /*
+    Razor 構文
+    Razor 構文を使用できます。
+
+    Razor の構文リファレンス - MSDN
+    https://docs.microsoft.com/ja-jp/aspnet/core/mvc/views/razor
+
+    テキストエディタで編集する際にシンタックスハイライトを使用しやすいように拡張子をcshtmlにしています。
+    しかし、RazorEngine によるパースはは定義ファイルの拡張子と問わず実施しています。
+    したがって、従来どおりの xml 拡張子でも RazorEngine によるパースは作用します。
+
+    Razor のパーサには、定義ファイルのロード時点の情報をデータモデルとして渡しています。
+    データモデルの内容は下記のダンプを参考にしてください。
+    */
+}
+
 <!--
-#define SIGN anoyetta
+  Razor への引数として渡しているモデルのダンプ
 
-#define ディレクティブ
+  Zone   : @(Model.Zone)
 
-Syntax
-#define identifier token-string
+  Player.Number : @(Model.Player.Number)
+  Player.Name   : @(Model.Player.Name)
+  Player.Job    : @(Model.Player.Job)
+  Player.Role   : @(Model.Player.Role)
 
-XML Parser のプリプロセスとして動作する。
-XMLの仕様ではないのでコメント内に記述する。
+  Party :
+    Party[0].Number : @(Model.Party[0].Number)
+    Party[0].Name   : @(Model.Party[0].Name)
+    Party[0].Job    : @(Model.Party[0].Job)
+    Party[0].Role   : @(Model.Party[0].Role)
 
-プリプロセッサはファイル内に identifier を見つけるたびに、token-string に置換える。
-identifier, token-string 中にスペースが含まれる場合は "" で囲まれた範囲を連続した一つのフィールドとして認識する。
-フィールド内にダブルクォートが出現する場合は、ダブルクォートを重ねてエスケープしなければならない。
-また、必ず行頭から書かなければならない。
+    Party[1].Number : @(Model.Party[1].Number)
+    Party[1].Name   : @(Model.Party[1].Name)
+    Party[1].Job    : @(Model.Party[1].Job)
+    Party[1].Role   : @(Model.Party[1].Role)
 
-* 注意
-エキスパート向けの機能です。
-いわゆるC言語の #define のような強力な動作をするため、不意に使用すると XML の記述を壊しXML Parser が読めなくなる
-可能性があります。十分に理解した上で使用してください。
+    Party[2].Number : @(Model.Party[2].Number)
+    Party[2].Name   : @(Model.Party[2].Name)
+    Party[2].Job    : @(Model.Party[2].Job)
+    Party[2].Role   : @(Model.Party[2].Role)
+
+    Party[3].Number : @(Model.Party[3].Number)
+    Party[3].Name   : @(Model.Party[3].Name)
+    Party[3].Job    : @(Model.Party[3].Job)
+    Party[3].Role   : @(Model.Party[3].Role)
+
+    Party[4...8] more...
+
+  Job  : PLD, WAR, DRK, WHM, SCH, AST...
+  Role : Tank, Healer, MeleeDPS, RangeDPS, MagicDPS, Crafter, Gatherer
 -->
+<!--
+  Razor による include の例
 
+  @(Model.Include(@".\sample\SampleInclude.xml"))
+-->
 <!--
 <timeline> タグ
   ルート要素
@@ -48,12 +86,12 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
     ファイルの識別用にリビジョンと詳細説明を記述できる。
     それぞれ設定画面で参照できる。
   -->
-  <rev>rev7</rev>
+  <rev>rev8</rev>
   <description>
     スペスペたいむの定義ファイルの説明書です。
     これ自体をタイムラインとして使用することは出来ません。
     ファイルに書かれたコメントを定義ファイル作成時の参考としてください。
-    SIGN
+    @sign sigend by Razor
   </description>
 
   <!--
@@ -182,7 +220,6 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
     bool, 任意項目, 既定値true
     このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
   -->
-
   <!-- トリガ -->
   <t text="天雷掌" sync="白虎は「天雷掌」の構え。" notice="天雷掌" goto="フェーズ1" />
   <!--
@@ -245,7 +282,6 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
     bool, 任意項目, 既定値true
     このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
   -->
-
   <!-- トリガ＋ロード -->
   <t name="to Phase1" sync="オオオオオ……この衝動、もはや止められん！">
     <load target="フェーズ1" truncate="true" />
@@ -270,11 +306,9 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
     bool, 任意項目, 既定値true
     このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
   -->
-
   <!-- トリガ＋v-notice -->
   <t name="to Phase1" sync="オオオオオ……この衝動、もはや止められん！">
-    <v-notice
-      text="おおおお！" />
+    <v-notice text="おおおお！" />
   </t>
   <!--
   <v-notice> タグ
@@ -313,7 +347,6 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
     bool, 任意項目, 既定値true
     このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
   -->
-
   <!-- サブルーチン -->
   <s name="メインフェーズ">
     <a time="00:29" text="乾坤一擲" notice="次は、乾坤一擲。" />
@@ -340,7 +373,6 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
     bool, 任意項目, 既定値true
     このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
   -->
-
   <!-- デフォルト値設定 -->
   <default target-element="Activity" target-attr="notice-o" value="-3" />
   <!--
@@ -377,6 +409,10 @@ identifier, token-string 中にスペースが含まれる場合は "" で囲ま
 
 <!--
 変更履歴
+
+2018-03-12 rev8
+  * #define を廃止した
+  * 代わりに RazorEngine を搭載した
 
 2018-03-11 rev7
   * <v-notice> に order 属性を追加した

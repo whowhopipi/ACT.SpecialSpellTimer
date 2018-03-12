@@ -112,6 +112,28 @@ namespace ACT.SpecialSpellTimer.Models
 
         public Combatant Player => this.player;
 
+        public IList<Combatant> SortedPartyList
+        {
+            get
+            {
+                var partyListSorted = (
+                    from x in this.partyList
+                    join y in Jobs.List on
+                        x.Job equals (int)y.ID
+                    where
+                    x.ID != this.player.ID
+                    orderby
+                    x.ID == this.player.ID ? 0 : 1,
+                    y.Role,
+                    x.Job,
+                    x.ID descending
+                    select
+                    x).ToList();
+
+                return partyListSorted;
+            }
+        }
+
         private List<Combatant> partyList = new List<Combatant>();
 
         private Combatant player = new Combatant();
@@ -735,15 +757,9 @@ namespace ACT.SpecialSpellTimer.Models
 
             // FF14内部のPTメンバ自動ソート順で並び替える
             var partyListSorted =
-                from x in this.partyList
-                join y in Jobs.List on
-                    x.Job equals (int)y.ID
+                from x in this.SortedPartyList
                 where
                 x.ID != this.player.ID
-                orderby
-                y.Role,
-                x.Job,
-                x.ID descending
                 select
                 x;
 
