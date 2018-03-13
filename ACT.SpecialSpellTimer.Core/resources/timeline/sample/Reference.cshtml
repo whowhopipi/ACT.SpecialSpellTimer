@@ -6,6 +6,12 @@
 変更履歴はファイル末尾に。
 -->
 
+@using ACT.SpecialSpellTimer.RaidTimeline
+@{
+    // 最初にデータモデルをキャストしておく
+    var data = Model as TimelineRazorModel;
+}
+
 @{
     var sign = "anoyetta";
 
@@ -17,7 +23,7 @@
     https://docs.microsoft.com/ja-jp/aspnet/core/mvc/views/razor
 
     テキストエディタで編集する際にシンタックスハイライトを使用しやすいように拡張子をcshtmlにしています。
-    しかし、RazorEngine によるパースはは定義ファイルの拡張子と問わず実施しています。
+    しかし、RazorEngine によるパースはは定義ファイルの拡張子を問わず実施しています。
     したがって、従来どおりの xml 拡張子でも RazorEngine によるパースは作用します。
 
     Razor のパーサには、定義ファイルのロード時点の情報をデータモデルとして渡しています。
@@ -28,43 +34,92 @@
 <!--
   Razor への引数として渡しているモデルのダンプ
 
-  Zone   : @(Model.Zone)
+  Zone   : @(data.Zone)
+  Locale : @(data.Locale)
 
-  Player.Number : @(Model.Player.Number)
-  Player.Name   : @(Model.Player.Name)
-  Player.Job    : @(Model.Player.Job)
-  Player.Role   : @(Model.Player.Role)
+  Player.Number : @(data.Player.Number)
+  Player.Name   : @(data.Player.Name)
+  Player.Job    : @(data.Player.Job)
+  Player.Role   : @(data.Player.Role)
 
   Party :
-    Party[0].Number : @(Model.Party[0].Number)
-    Party[0].Name   : @(Model.Party[0].Name)
-    Party[0].Job    : @(Model.Party[0].Job)
-    Party[0].Role   : @(Model.Party[0].Role)
+    Party[0].Number : @(data.Party[0].Number)
+    Party[0].Name   : @(data.Party[0].Name)
+    Party[0].Job    : @(data.Party[0].Job)
+    Party[0].Role   : @(data.Party[0].Role)
 
-    Party[1].Number : @(Model.Party[1].Number)
-    Party[1].Name   : @(Model.Party[1].Name)
-    Party[1].Job    : @(Model.Party[1].Job)
-    Party[1].Role   : @(Model.Party[1].Role)
+    Party[1].Number : @(data.Party[1].Number)
+    Party[1].Name   : @(data.Party[1].Name)
+    Party[1].Job    : @(data.Party[1].Job)
+    Party[1].Role   : @(data.Party[1].Role)
 
-    Party[2].Number : @(Model.Party[2].Number)
-    Party[2].Name   : @(Model.Party[2].Name)
-    Party[2].Job    : @(Model.Party[2].Job)
-    Party[2].Role   : @(Model.Party[2].Role)
+    Party[2].Number : @(data.Party[2].Number)
+    Party[2].Name   : @(data.Party[2].Name)
+    Party[2].Job    : @(data.Party[2].Job)
+    Party[2].Role   : @(data.Party[2].Role)
 
-    Party[3].Number : @(Model.Party[3].Number)
-    Party[3].Name   : @(Model.Party[3].Name)
-    Party[3].Job    : @(Model.Party[3].Job)
-    Party[3].Role   : @(Model.Party[3].Role)
+    Party[3].Number : @(data.Party[3].Number)
+    Party[3].Name   : @(data.Party[3].Name)
+    Party[3].Job    : @(data.Party[3].Job)
+    Party[3].Role   : @(data.Party[3].Role)
 
     Party[4...8] more...
 
+  Locale :
+    FFXIV Game Locale
+    JA, EN, FR, DE, KO
+
   Job  : PLD, WAR, DRK, WHM, SCH, AST...
   Role : Tank, Healer, MeleeDPS, RangeDPS, MagicDPS, Crafter, Gatherer
+
+  Zone の判定
+    if (Model.Zone == "Sigmascape")
+    と通常の条件式を使用してもよいが判定用のメソッドも提供されている。
+
+    bool Model.InZone(param string[] zones)
+    現在のゾーンが引数で与えられたゾーンのリストのいずれかに該当するかを返す。
+    大文字/小文字は識別しない。現在のゾーン名に引数のゾーン名が含まれるとき、真を返す。
+
+  Job の判定
+    Zone と同様に専用の判定メソッドが提供されている。
+
+    bool Model.Player.InJob(param string[] jobs)
+    プレイヤーのジョブが引数で与えられたジョブのリストのいずれかに該当するかを返す。
+    大文字/小文字は識別しない。現在のジョブに引数のジョブが含まれるとき、真を返す。
+
+    例)
+    if (Model.Player.InJob("PLD", "WAR", "DRK")) {
+        do something...
+    }
+
+  Role の判定
+    Zone と同様に専用の判定メソッドが提供されている。
+
+    bool Model.Player.InRole(param string[] jobs)
+    プレイヤーのロールが引数で与えられたロールのリストのいずれかに該当するかを返す。
+    大文字/小文字は識別しない。現在のロールに引数のロールが含まれるとき、真を返す。
+
+    例)
+    if (Model.Player.InRole("Tank")) {
+        do something...
+    }
+
+    if (Model.Player.InRole("Healer")) {
+        do something...
+    }
+
+    if (Model.Player.InRole("DPS")) {
+        do something...
+    }
+
+    if (Model.Player.InRole("MeleeDPS")) {
+        do something...
+    }
 -->
 <!--
   Razor による include の例
 
-  @(Model.Include(@".\sample\SampleInclude.xml"))
+  @Include(@".\sample\SampleInclude.xml")
 -->
 <!--
 <timeline> タグ
@@ -409,6 +464,14 @@
 
 <!--
 変更履歴
+
+2018-03-13 rev9
+  * 各種判定メソッドを用意した。
+    InZone, InJob, InRole
+  * Include を Razor ネイティブの方式に変えた
+  * データモデルへのアクセス例の記述を変えた
+    キャストしてからアクセスするようにした。
+    以前の書き方でも問題なく動くが dynamic アクセスになるためこちらのほうが早い。
 
 2018-03-12 rev8
   * #define を廃止した

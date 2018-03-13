@@ -1,5 +1,5 @@
-using System.IO;
-using System.Text;
+using System.Linq;
+using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -7,27 +7,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     {
         public string Zone { get; set; } = string.Empty;
 
+        public string Locale { get; set; } = string.Empty;
+
         public TimelineRazorPlayer Player { get; set; }
 
         public TimelineRazorPlayer[] Party { get; set; }
 
-        public string Include(
-            string file)
-        {
-            if (!Path.IsPathRooted(file))
-            {
-                file = Path.Combine(
-                    TimelineManager.Instance.TimelineDirectory,
-                    file);
-            }
-
-            if (File.Exists(file))
-            {
-                return File.ReadAllText(file, new UTF8Encoding(false)).TrimEnd('\r', '\n');
-            }
-
-            return string.Empty;
-        }
+        public bool InZone(
+            string zone)
+            => this.Zone.ContainsIgnoreCase(zone);
     }
 
     public class TimelineRazorPlayer
@@ -39,5 +27,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string Job { get; set; } = string.Empty;
 
         public string Role { get; set; } = string.Empty;
+
+        public bool InJob(
+            params string[] jobs)
+        {
+            if (jobs == null)
+            {
+                return false;
+            }
+
+            return jobs.Any(x => this.Job.ContainsIgnoreCase(x));
+        }
+
+        public bool InRole(
+            params string[] roles)
+        {
+            if (roles == null)
+            {
+                return false;
+            }
+
+            return roles.Any(x => this.Role.ContainsIgnoreCase(x));
+        }
     }
 }

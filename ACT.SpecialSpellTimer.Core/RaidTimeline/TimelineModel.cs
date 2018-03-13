@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Serialization;
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
@@ -25,6 +26,7 @@ using Prism.Commands;
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
+using RazorEngine.Text;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -276,6 +278,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
+        public static string RazorDumpFile
+            => Path.Combine(
+                Path.GetTempPath(),
+                "dump.cshtml");
+
+        public static void ShowRazorDumpFile()
+        {
+            if (System.IO.File.Exists(RazorDumpFile))
+            {
+                Process.Start(RazorDumpFile);
+            }
+        }
+
         public static TimelineModel Load(
             string file)
         {
@@ -286,26 +301,38 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var tl = default(TimelineModel);
 
-            var sb = new StringBuilder(
-                System.IO.File.ReadAllText(
-                    file,
-                    new UTF8Encoding(false)));
+            // Razorエンジンで読み込む
+            var sb = CompileRazor(file);
 
-            // Razorエンジンで処理する
-            CompileRazor(sb);
-
-            if (sb.Length > 0)
+            try
             {
-                using (var sr = new StringReader(sb.ToString()))
+                if (System.IO.File.Exists(RazorDumpFile))
                 {
-                    var xs = new XmlSerializer(typeof(TimelineModel));
-                    var data = xs.Deserialize(sr) as TimelineModel;
-                    if (data != null)
+                    System.IO.File.Delete(RazorDumpFile);
+                }
+
+                if (sb.Length > 0)
+                {
+                    using (var sr = new StringReader(sb.ToString()))
                     {
-                        tl = data;
-                        tl.File = file;
+                        var xs = new XmlSerializer(typeof(TimelineModel));
+                        var data = xs.Deserialize(sr) as TimelineModel;
+                        if (data != null)
+                        {
+                            tl = data;
+                            tl.File = file;
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                System.IO.File.WriteAllText(
+                    RazorDumpFile,
+                    sb.ToString(),
+                    new UTF8Encoding(false));
+
+                throw;
             }
 
             if (tl != null)
@@ -329,20 +356,21 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// 元のテキスト</param>
         /// <returns>
         /// パース後のテキスト</returns>
-        private static void CompileRazor(
-            StringBuilder source)
+        private static StringBuilder CompileRazor(
+            string file)
         {
-            const string SourceKey = "source";
+            var sb = new StringBuilder();
 
-            var sourceText = source.ToString();
-            source.Clear();
-
-            using (var sw = new StringWriter(source))
+            using (var sw = new StringWriter(sb))
             using (var engine = CreateTimelineEngine())
             {
-                engine.AddTemplate(SourceKey, sourceText);
-                engine.RunCompile(SourceKey, sw, typeof(TimelineRazorModel), razorModel);
+                engine.RunCompile(
+                    Path.GetFileName(file),
+                    sw,
+                    typeof(TimelineRazorModel), razorModel);
             }
+
+            return sb;
         }
 
         /// <summary>
@@ -352,12 +380,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private static IRazorEngineService CreateTimelineEngine()
         {
             var config = new TemplateServiceConfiguration();
+
             config.Language = Language.CSharp;
+
+            config.Namespaces.Add("System.IO");
+            config.Namespaces.Add("System.Linq");
+            config.Namespaces.Add("System.Text");
+            config.Namespaces.Add("System.Text.RegularExpressions");
             config.Namespaces.Add("ACT.SpecialSpellTimer.RaidTimeline");
 
-            var service = RazorEngineService.Create(config);
+            config.TemplateManager = new ResolvePathTemplateManager(new[]
+            {
+                TimelineManager.Instance.TimelineDirectory
+            });
 
-            return service;
+            config.EncodedStringFactory = new RawStringFactory();
+
+            return RazorEngineService.Create(config);
         }
 
         private static TimelineRazorModel razorModel;
@@ -393,6 +432,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
 
             model.Zone = ActGlobals.oFormActMain.CurrentZone;
+            model.Locale = Settings.Default.FFXIVLocale.ToString();
 
             model.Player = new TimelineRazorPlayer()
             {
@@ -779,6 +819,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
                 catch (Exception ex)
                 {
+                    TimelineModel.ShowRazorDumpFile();
+
                     ModernMessageBox.ShowDialog(
                         "Timeline reload error !",
                         "Timeline Manager",

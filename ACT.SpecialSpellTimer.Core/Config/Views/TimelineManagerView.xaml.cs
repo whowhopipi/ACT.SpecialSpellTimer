@@ -53,6 +53,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     }
                     catch (Exception ex)
                     {
+                        TimelineModel.ShowRazorDumpFile();
+
                         ModernMessageBox.ShowDialog(
                             ex.Message,
                             "Timeline Loader",
@@ -142,8 +144,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         {
                             WPFHelper.BeginInvoke(() =>
                             {
-                                // 5秒ディレイしてからロードする
-                                Thread.Sleep(TimeSpan.FromSeconds(5));
+                                // ディレイしてからロードする
+                                Thread.Sleep(TimeSpan.FromSeconds(3));
                                 this.LoadCurrentTimeline();
                             });
                         }
@@ -260,6 +262,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 }
                 catch (Exception ex)
                 {
+                    TimelineModel.ShowRazorDumpFile();
+
                     ModernMessageBox.ShowDialog(
                         ex.Message,
                         "Timeline Loader",
