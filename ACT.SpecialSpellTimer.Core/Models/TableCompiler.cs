@@ -120,8 +120,6 @@ namespace ACT.SpecialSpellTimer.Models
                     from x in this.partyList
                     join y in Jobs.List on
                         x.Job equals (int)y.ID
-                    where
-                    x.ID != this.player.ID
                     orderby
                     x.ID == this.player.ID ? 0 : 1,
                     y.Role,
