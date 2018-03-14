@@ -828,17 +828,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
             }));
 
-        public async void Reload()
+        public void Reload()
         {
             // Razorの引数モデルを更新する
             RefreshRazorModel();
 
-            var tl = default(TimelineModel);
-            await Task.Run(() =>
-            {
-                tl = TimelineModel.Load(this.File);
-            });
-
+            var tl = TimelineModel.Load(this.File);
             if (tl == null)
             {
                 return;
@@ -856,8 +851,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             this.Entry = tl.Entry;
             this.StartTrigger = tl.StartTrigger;
             this.CompiledText = tl.CompiledText;
-
-            this.controller = null;
 
             if (this.IsGlobalZone)
             {

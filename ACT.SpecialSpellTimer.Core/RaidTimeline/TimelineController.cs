@@ -55,7 +55,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     {
         #region Logger
 
-        private NLog.Logger AppLogger => FFXIV.Framework.Common.AppLog.DefaultLogger;
+        private NLog.Logger AppLogger => AppLog.DefaultLogger;
 
         #endregion Logger
 
@@ -65,6 +65,40 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// タイムラインから発生するログのSymbol
         /// </summary>
         private const string TLSymbol = "[TL]";
+
+        public static void Init()
+        {
+            ActGlobals.oFormActMain.OnLogLineRead -= OnLogLineRead;
+            ActGlobals.oFormActMain.OnLogLineRead += OnLogLineRead;
+        }
+
+        public static void Free()
+        {
+            ActGlobals.oFormActMain.OnLogLineRead -= OnLogLineRead;
+        }
+
+        private static void OnLogLineRead(
+            bool isImport,
+            LogLineEventArgs logInfo)
+        {
+            try
+            {
+                if (isImport)
+                {
+                    return;
+                }
+
+                CurrentController?.ArrivalLogLine(
+                    CurrentController,
+                    logInfo);
+            }
+            catch (Exception ex)
+            {
+                AppLog.DefaultLogger?.Error(
+                    ex,
+                    $"[TL] Error OnLoglineRead.");
+            }
+        }
 
         /// <summary>
         /// 現在のController
@@ -216,8 +250,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.LogWorker.Start();
 
                 this.logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
-                ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
-                ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
                 this.StartNotifyWorker();
 
@@ -253,7 +285,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     this.LogWorker = null;
                 }
 
-                ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
                 this.logInfoQueue = null;
 
                 this.StopNotifyWorker();
@@ -675,8 +706,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             this.logInfoQueue?.Enqueue(logInfo);
         }
 
-        private void OnLogLineRead(
-            bool isImport,
+        private void ArrivalLogLine(
+            TimelineController controller,
             LogLineEventArgs logInfo)
         {
             try
@@ -704,7 +735,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.AppLogger.Error(
                     ex,
-                    $"[TL] Error OnLoglineRead. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
+                    $"[TL] Error ArrivalLogLine. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
             }
         }
 

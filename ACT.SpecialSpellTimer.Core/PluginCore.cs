@@ -83,6 +83,7 @@ namespace ACT.SpecialSpellTimer
 
                 PluginMainWorker.Instance.End();
                 PluginMainWorker.Free();
+                TimelineController.Free();
 
                 this.RemoveSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Exited";
@@ -185,6 +186,7 @@ namespace ACT.SpecialSpellTimer
 
                 // 本体を開始する
                 PluginMainWorker.Instance.Begin();
+                TimelineController.Init();
 
                 // LPSViewを表示する
                 LPSView.ShowLPS();

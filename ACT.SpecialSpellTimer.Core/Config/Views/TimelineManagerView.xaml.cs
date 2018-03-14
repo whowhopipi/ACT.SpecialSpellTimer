@@ -184,28 +184,29 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                 var timelines = TimelineManager.Instance.TimelineModels.ToArray();
 
-                foreach (var tl in timelines.Where(x => x.IsActive))
+                // グローバルトリガファイルをリロードする
+                var globals = timelines.Where(x => x.IsGlobalZone);
+                foreach (var global in globals)
+                {
+                    global.Reload();
+                    Thread.Yield();
+                }
+
+                // すでにコントローラがロードされていたらアンロードする
+                foreach (var tl in timelines)
                 {
                     tl.Controller.Unload();
                     tl.IsActive = false;
                 }
 
+                // 現在のゾーンで有効なタイムラインを取得する
                 var newTimeline = timelines
                     .FirstOrDefault(x => x.Controller.IsAvailable);
 
+                // 有効なTLが存在しないならばグローバルのいずれかをカレントにする
                 if (newTimeline == null)
                 {
-                    // 該当ゾーンのTLがない場合はグローバルトリガのいずれかをロードする
-                    newTimeline = TimelineController.GetGlobalTriggerController()?.Model;
-                }
-
-                // グローバルトリガファイルをリロードする
-                var globals = timelines.Where(x =>
-                    x.IsGlobalZone);
-                foreach (var global in globals)
-                {
-                    global.Reload();
-                    Thread.Yield();
+                    newTimeline = globals.FirstOrDefault();
                 }
 
                 if (newTimeline != null)
