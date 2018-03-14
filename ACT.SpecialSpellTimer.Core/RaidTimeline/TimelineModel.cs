@@ -16,7 +16,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Views;
-using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
@@ -408,8 +407,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             var model = new TimelineRazorModel();
 
-            var party = TableCompiler.Instance.SortedPartyList;
-            var player = party.FirstOrDefault();
+            var party = FFXIVPlugin.Instance.GetPartyList();
+            var player = FFXIVPlugin.Instance.GetPlayer();
 
             if (player == null)
             {
@@ -439,12 +438,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 Number = 0,
                 Name = player.Name,
                 Job = player.JobID.ToString(),
-                Role = player.AsJob().Role.ToString()
+                Role = player.Role.ToString(),
             };
 
             var combatants = new List<TimelineRazorPlayer>();
 
-            for (int i = 1; i <= 8; i++)
+            for (int i = 0; i < 8; i++)
             {
                 var data = i < party.Count ?
                     party[i] :
@@ -455,7 +454,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     Number = i + 1,
                     Name = data?.Name ?? string.Empty,
                     Job = data?.JobID.ToString() ?? string.Empty,
-                    Role = data?.AsJob().Role.ToString() ?? string.Empty,
+                    Role = data?.Role.ToString() ?? string.Empty,
                 };
 
                 combatants.Add(member);
@@ -838,18 +837,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             await Task.Run(() =>
             {
                 tl = TimelineModel.Load(this.File);
-
-                if (tl != null)
-                {
-                    this.elements.Clear();
-                    this.AddRange(tl.Elements);
-                }
             });
 
             if (tl == null)
             {
                 return;
             }
+
+            this.elements.Clear();
+            this.AddRange(tl.Elements);
 
             this.File = tl.File;
             this.TimelineName = tl.TimelineName;

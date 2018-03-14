@@ -112,25 +112,7 @@ namespace ACT.SpecialSpellTimer.Models
 
         public Combatant Player => this.player;
 
-        public IList<Combatant> SortedPartyList
-        {
-            get
-            {
-                var partyListSorted = (
-                    from x in this.partyList
-                    join y in Jobs.List on
-                        x.Job equals (int)y.ID
-                    orderby
-                    x.ID == this.player.ID ? 0 : 1,
-                    y.Role,
-                    x.Job,
-                    x.ID descending
-                    select
-                    x).ToList();
-
-                return partyListSorted;
-            }
-        }
+        public IList<Combatant> SortedPartyList => this.partyList;
 
         private List<Combatant> partyList = new List<Combatant>();
 
@@ -322,35 +304,6 @@ namespace ACT.SpecialSpellTimer.Models
                         $"Regex compile error! spell={spell.SpellTitle}",
                         ex);
                 }
-
-                /*
-                spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
-                spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
-                spell.KeywordForExtendReplaced2 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced2, spell.KeywordForExtend2);
-
-                if (!spell.RegexEnabled)
-                {
-                    spell.RegexPattern = string.Empty;
-                    spell.Regex = null;
-                    spell.RegexForExtendPattern1 = string.Empty;
-                    spell.RegexForExtend1 = null;
-                    spell.RegexForExtendPattern2 = string.Empty;
-                    spell.RegexForExtend2 = null;
-                }
-                else
-                {
-                    var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
-                    var r2 = this.GetRegex(spell.RegexForExtend1, spell.RegexForExtendPattern1, spell.KeywordForExtendReplaced1);
-                    var r3 = this.GetRegex(spell.RegexForExtend2, spell.RegexForExtendPattern2, spell.KeywordForExtendReplaced2);
-
-                    spell.Regex = r1.Regex;
-                    spell.RegexPattern = r1.RegexPattern;
-                    spell.RegexForExtend1 = r2.Regex;
-                    spell.RegexForExtendPattern1 = r2.RegexPattern;
-                    spell.RegexForExtend2 = r3.Regex;
-                    spell.KeywordForExtendReplaced2 = r3.RegexPattern;
-                }
-                */
             });
 
             this.RaiseTableChenged();
@@ -439,29 +392,6 @@ namespace ACT.SpecialSpellTimer.Models
                         $"Regex compile error! ticker={spell.Title}",
                         ex);
                 }
-
-                /*
-                spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
-                spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
-
-                if (!spell.RegexEnabled)
-                {
-                    spell.RegexPattern = string.Empty;
-                    spell.Regex = null;
-                    spell.RegexPatternToHide = string.Empty;
-                    spell.RegexToHide = null;
-                }
-                else
-                {
-                    var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
-                    var r2 = this.GetRegex(spell.RegexToHide, spell.RegexPatternToHide, spell.KeywordToHideReplaced);
-
-                    spell.Regex = r1.Regex;
-                    spell.RegexPattern = r1.RegexPattern;
-                    spell.RegexToHide = r2.Regex;
-                    spell.RegexPatternToHide = r2.RegexPattern;
-                }
-                */
             });
 
             this.RaiseTableChenged();

@@ -311,7 +311,7 @@
                 <ListView
                   x:Name="StyleListView"
                   Grid.Column="0"
-                  Width="180"
+                  MinWidth="250"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ItemsSource="{Binding Path=TimelineConfig.Styles, Mode=OneWay}"
@@ -325,7 +325,7 @@
 
                   <ListView.ItemTemplate>
                     <DataTemplate>
-                      <StackPanel Orientation="Horizontal">
+                      <StackPanel Orientation="Horizontal" Margin="0 0 23 0">
                         <TextBlock Text="✔" FontWeight="Bold" Visibility="{Binding Path=IsDefault, Mode=OneWay, Converter={StaticResource HiddenConverter}}" Foreground="DarkGreen" />
                         <TextBlock Text="✔" FontWeight="Bold" Visibility="{Binding Path=IsDefaultNotice, Mode=OneWay, Converter={StaticResource HiddenConverter}}" Foreground="MediumBlue" />
                         <TextBlock Margin="5 0 0 0" Text="{Binding Path=Name, Mode=OneWay}" />
