@@ -1,10 +1,16 @@
+using System;
 using System.Linq;
+using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
     public class TimelineRazorModel
     {
+        public DateTimeOffset LT => DateTimeOffset.Now;
+
+        public EorzeaTime ET => this.LT.ToEozeaTime();
+
         public string Zone { get; set; } = string.Empty;
 
         public string Locale { get; set; } = string.Empty;
