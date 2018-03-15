@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -103,6 +102,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         public const string GlobalZone = "{GLOBAL}";
+        public const string ReferenceZone = "{REFERENCE}";
 
         private string zone = string.Empty;
 
@@ -122,6 +122,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         [XmlIgnore]
         public bool IsGlobalZone => string.Equals(this.Zone, GlobalZone, StringComparison.OrdinalIgnoreCase);
+
+        [XmlIgnore]
+        public bool IsReference => string.Equals(this.Zone, ReferenceZone, StringComparison.OrdinalIgnoreCase);
 
         private Locales locale = Locales.JA;
 

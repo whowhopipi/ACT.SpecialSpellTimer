@@ -184,11 +184,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                 var timelines = TimelineManager.Instance.TimelineModels.ToArray();
 
-                // グローバルトリガファイルをリロードする
-                var globals = timelines.Where(x => x.IsGlobalZone);
-                foreach (var global in globals)
+                // グローバルトリガとリファンレスファイルをリロードする
+                var toReloads = timelines.Where(x =>
+                    x.IsGlobalZone ||
+                    x.IsReference);
+                foreach (var tl in toReloads)
                 {
-                    global.Reload();
+                    tl.Reload();
                     Thread.Yield();
                 }
 
@@ -206,7 +208,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 // 有効なTLが存在しないならばグローバルのいずれかをカレントにする
                 if (newTimeline == null)
                 {
-                    newTimeline = globals.FirstOrDefault();
+                    newTimeline = toReloads.FirstOrDefault(x => x.IsGlobalZone);
                 }
 
                 if (newTimeline != null)
