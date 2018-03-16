@@ -7,6 +7,8 @@ using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
 using Newtonsoft.Json.Linq;
+using Prism.Mvvm;
+using RazorEngine;
 using RazorEngine.Compilation;
 using RazorEngine.Compilation.ReferenceResolver;
 
@@ -85,39 +87,5 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             return roles.Any(x => this.Role.ContainsIgnoreCase(x));
         }
-    }
-
-    public class RazorReferenceResolver :
-        IReferenceResolver
-    {
-        public IEnumerable<CompilerReference> GetReferences(
-            TypeContext context,
-            IEnumerable<CompilerReference> includeAssemblies = null)
-        {
-            var loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
-                .GetReferences(context, includeAssemblies)
-                .ToArray();
-
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "mscorlib.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "System.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "System.Core.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Microsoft.CSharp.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Microsoft.VisualBasic.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "RazorEngine.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Prism.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Prism.Wpf.dll"));
-            yield return CompilerReference.From(typeof(AppLog).Assembly);
-            yield return CompilerReference.From(typeof(RazorReferenceResolver).Assembly);
-
-            foreach (var compref in loadedAssemblies)
-            {
-                yield return compref;
-            }
-        }
-
-        public string FindLoaded(
-            IEnumerable<string> refs,
-            string find)
-            => refs.First(r => r.EndsWith(Path.DirectorySeparatorChar + find));
     }
 }

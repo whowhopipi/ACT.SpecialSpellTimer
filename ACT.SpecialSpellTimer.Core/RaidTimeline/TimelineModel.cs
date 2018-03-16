@@ -390,6 +390,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             config.Namespaces.Add("System.Linq");
             config.Namespaces.Add("System.Text");
             config.Namespaces.Add("System.Text.RegularExpressions");
+            config.Namespaces.Add("FFXIV.Framework.Common");
+            config.Namespaces.Add("FFXIV.Framework.Extensions");
             config.Namespaces.Add("ACT.SpecialSpellTimer.RaidTimeline");
 
             config.EncodedStringFactory = new RawStringFactory();
@@ -412,8 +414,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 return name;
             });
-
-            config.ReferenceResolver = new RazorReferenceResolver();
 
             return RazorEngineService.Create(config);
         }
