@@ -146,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatLogWorker.cs" />
+    <Compile Include="Config\Views\CalendarView.xaml.cs">
+      <DependentUpon>CalendarView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\TimelineAnalyzerView.xaml.cs">
       <DependentUpon>TimelineAnalyzerView.xaml</DependentUpon>
     </Compile>
@@ -690,6 +693,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Config\Views\AddToTagView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\CalendarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

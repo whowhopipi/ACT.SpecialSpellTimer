@@ -73,9 +73,29 @@ namespace ACT.SpecialSpellTimer.Config
         [XmlIgnore]
         public string Language => this.UILocale == Locales.JA ? "JP" : "EN";
 
-        public Locales UILocale { get; set; } = Locales.JA;
+        private Locales uiLocale = Locales.JA;
 
-        public Locales FFXIVLocale { get; set; } = Locales.JA;
+        public Locales UILocale
+        {
+            get => this.uiLocale;
+            set
+            {
+                if (this.SetProperty(ref this.uiLocale, value))
+                {
+                    EorzeaTime.DefaultLocale = this.uiLocale == Locales.JA ?
+                        EorzeaCalendarLocale.JA :
+                        EorzeaCalendarLocale.EN;
+                }
+            }
+        }
+
+        private Locales ffxivLocale = Locales.JA;
+
+        public Locales FFXIVLocale
+        {
+            get => this.ffxivLocale;
+            set => this.SetProperty(ref this.ffxivLocale, value);
+        }
 
         private bool overlayVisible;
 

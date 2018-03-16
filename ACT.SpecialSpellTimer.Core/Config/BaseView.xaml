@@ -27,6 +27,9 @@
     <TabItem Header="Timeline">
       <views:TimelineView x:Name="TimelineView" />
     </TabItem>
+    <TabItem Header="Calendar">
+      <views:CalendarView x:Name="CalendarView" />
+    </TabItem>
     <TabItem Header="Options">
       <views:OptionsView x:Name="OptionsView" />
     </TabItem>

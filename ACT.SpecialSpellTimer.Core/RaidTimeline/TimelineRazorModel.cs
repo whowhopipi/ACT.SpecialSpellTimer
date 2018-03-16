@@ -9,7 +9,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     {
         public DateTimeOffset LT => DateTimeOffset.Now;
 
-        public EorzeaTime ET => this.LT.ToEozeaTime();
+        public EorzeaTime ET => this.LT.ToEorzeaTime();
 
         public string Zone { get; set; } = string.Empty;
 
