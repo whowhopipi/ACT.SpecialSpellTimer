@@ -96,19 +96,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             var loadedAssemblies = (new UseCurrentAssembliesReferenceResolver())
                 .GetReferences(context, includeAssemblies)
-                .Select(r => r.GetFile())
                 .ToArray();
 
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "mscorlib.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "System.Core.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Microsoft.CSharp.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Microsoft.VisualBasic.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "RazorEngine.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Prism.dll"));
-            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Prism.Wpf.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "mscorlib.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "System.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "System.Core.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Microsoft.CSharp.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Microsoft.VisualBasic.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "RazorEngine.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Prism.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies.Select(x => x.GetFile()), "Prism.Wpf.dll"));
             yield return CompilerReference.From(typeof(AppLog).Assembly);
             yield return CompilerReference.From(typeof(RazorReferenceResolver).Assembly);
+
+            foreach (var compref in loadedAssemblies)
+            {
+                yield return compref;
+            }
         }
 
         public string FindLoaded(
