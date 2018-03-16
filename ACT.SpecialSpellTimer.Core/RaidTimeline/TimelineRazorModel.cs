@@ -105,6 +105,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Microsoft.CSharp.dll"));
             yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Microsoft.VisualBasic.dll"));
             yield return CompilerReference.From(FindLoaded(loadedAssemblies, "RazorEngine.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Prism.dll"));
+            yield return CompilerReference.From(FindLoaded(loadedAssemblies, "Prism.Wpf.dll"));
             yield return CompilerReference.From(typeof(AppLog).Assembly);
             yield return CompilerReference.From(typeof(RazorReferenceResolver).Assembly);
         }
