@@ -413,6 +413,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return name;
             });
 
+            config.ReferenceResolver = new RazorReferenceResolver();
+
             return RazorEngineService.Create(config);
         }
 
@@ -504,7 +506,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 sb.Replace("True", "true");
                 sb.Replace("False", "false");
 
-                System.IO.File.WriteAllText(
+                File.WriteAllText(
                     file,
                     sb.ToString() + Environment.NewLine,
                     new UTF8Encoding(false));

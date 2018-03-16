@@ -35,7 +35,6 @@
   Razor への引数として渡しているモデルのダンプ
 
   LT     : @(data.LT)
-  ET     : @(data.ET)
   Zone   : @(data.Zone)
   Locale : @(data.Locale)
 
@@ -117,11 +116,12 @@
     if (Model.Player.InRole("MeleeDPS")) {
         do something...
     }
--->
-<!--
-  Razor による include の例
 
-  @Include(@".\sample\SampleInclude.xml")
+  JSON ファイルの読み込み
+    dynamic Model.ParseJsonFile(strinf file)
+
+    JSON ファイルを読み込みます。
+    パスは timeline フォルダからの相対パスまたは絶対パスで指定します。
 -->
 <!--
 <timeline> タグ
@@ -143,7 +143,7 @@
     ファイルの識別用にリビジョンと詳細説明を記述できる。
     それぞれ設定画面で参照できる。
   -->
-  <rev>rev8</rev>
+  <rev>rev10</rev>
   <description>
     スペスペたいむの定義ファイルの説明書です。
     これ自体をタイムラインとして使用することは出来ません。
@@ -466,6 +466,11 @@
 
 <!--
 変更履歴
+
+2018-03-17 rev10
+  * JSON を読み込むメソッドを追加した
+  * Include の説明を削除した
+    従来どおり Include は使用できますが、積極的に使うものではなくなったため説明を削除した。
 
 2018-03-13 rev9
   * 各種判定メソッドを用意した。
