@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -815,16 +816,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private ICommand reloadCommand;
 
         public ICommand ReloadCommand =>
-            this.reloadCommand ?? (this.reloadCommand = new DelegateCommand(() =>
+            this.reloadCommand ?? (this.reloadCommand = new DelegateCommand(async () =>
             {
-                if (!System.IO.File.Exists(this.SourceFile))
+                if (!File.Exists(this.SourceFile))
                 {
                     return;
                 }
 
                 try
                 {
-                    this.Reload();
+                    await Task.Run(() => this.Reload());
 
                     if (this.IsActive)
                     {

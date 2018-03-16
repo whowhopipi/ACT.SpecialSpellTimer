@@ -54,6 +54,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            WPFHelper.Invoke(() => this.TimelineModels.Clear());
+
             var sampleDirectory = Path.Combine(dir, "sample");
 
             if (!Directory.EnumerateFiles(dir).Where(x =>

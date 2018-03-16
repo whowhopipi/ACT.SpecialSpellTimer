@@ -44,11 +44,11 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             if (!WPFHelper.IsDesignMode)
             {
-                WPFHelper.BeginInvoke(() =>
+                WPFHelper.BeginInvoke(async () =>
                 {
                     try
                     {
-                        TimelineManager.Instance.LoadTimelineModels();
+                        await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
                     }
                     catch (Exception ex)
                     {
