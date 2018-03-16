@@ -182,17 +182,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             private set => this.SetProperty(ref this.startTriggerRegex, value);
         }
 
-        private string file = string.Empty;
+        private string sourceFile = string.Empty;
 
         [XmlIgnore]
-        public string File
+        public string SourceFile
         {
-            get => this.file;
+            get => this.sourceFile;
             private set
             {
-                if (this.SetProperty(ref this.file, value))
+                if (this.SetProperty(ref this.sourceFile, value))
                 {
-                    this.RaisePropertyChanged(nameof(this.FileName));
+                    this.RaisePropertyChanged(nameof(this.SourceFileName));
                 }
             }
         }
@@ -207,7 +207,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         [XmlIgnore]
-        public string FileName => Path.GetFileName(this.File);
+        public string SourceFileName => Path.GetFileName(this.SourceFile);
 
         private List<TimelineBase> elements = new List<TimelineBase>();
 
@@ -287,7 +287,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public static void ShowRazorDumpFile()
         {
-            if (System.IO.File.Exists(RazorDumpFile))
+            if (File.Exists(RazorDumpFile))
             {
                 Process.Start(RazorDumpFile);
             }
@@ -296,7 +296,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public static TimelineModel Load(
             string file)
         {
-            if (!System.IO.File.Exists(file))
+            if (!File.Exists(file))
             {
                 return null;
             }
@@ -308,9 +308,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             try
             {
-                if (System.IO.File.Exists(RazorDumpFile))
+                if (File.Exists(RazorDumpFile))
                 {
-                    System.IO.File.Delete(RazorDumpFile);
+                    File.Delete(RazorDumpFile);
                 }
 
                 if (sb.Length > 0)
@@ -322,14 +322,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         if (data != null)
                         {
                             tl = data;
-                            tl.File = file;
+                            tl.SourceFile = file;
                         }
                     }
                 }
             }
             catch (Exception)
             {
-                System.IO.File.WriteAllText(
+                File.WriteAllText(
                     RazorDumpFile,
                     sb.ToString(),
                     new UTF8Encoding(false));
@@ -367,9 +367,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             using (var engine = CreateTimelineEngine())
             {
                 engine.RunCompile(
-                    Path.GetFileName(file),
+                    file,
                     sw,
-                    typeof(TimelineRazorModel), razorModel);
+                    typeof(TimelineRazorModel),
+                    razorModel);
             }
 
             return sb;
@@ -391,12 +392,26 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             config.Namespaces.Add("System.Text.RegularExpressions");
             config.Namespaces.Add("ACT.SpecialSpellTimer.RaidTimeline");
 
-            config.TemplateManager = new ResolvePathTemplateManager(new[]
-            {
-                TimelineManager.Instance.TimelineDirectory
-            });
-
             config.EncodedStringFactory = new RawStringFactory();
+
+            config.TemplateManager = new DelegateTemplateManager((name) =>
+            {
+                if (File.Exists(name))
+                {
+                    return File.ReadAllText(name, new UTF8Encoding(false));
+                }
+
+                var path = Path.Combine(
+                    TimelineManager.Instance.TimelineDirectory,
+                    name);
+
+                if (File.Exists(path))
+                {
+                    return File.ReadAllText(path, new UTF8Encoding(false));
+                }
+
+                return name;
+            });
 
             return RazorEngineService.Create(config);
         }
@@ -412,6 +427,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var party = FFXIVPlugin.Instance.GetPartyList();
             var player = FFXIVPlugin.Instance.GetPlayer();
+
+            model.Zone = ActGlobals.oFormActMain.CurrentZone;
+            model.Locale = Settings.Default.FFXIVLocale.ToString();
 
             if (player == null)
             {
@@ -432,9 +450,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 return;
             }
-
-            model.Zone = ActGlobals.oFormActMain.CurrentZone;
-            model.Locale = Settings.Default.FFXIVLocale.ToString();
 
             model.Player = new TimelineRazorPlayer()
             {
@@ -772,7 +787,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 var temp = Path.Combine(
                     Path.GetTempPath(),
-                    Path.GetFileName(this.File
+                    Path.GetFileName(this.SourceFile
                         .Replace(".xml", ".compiled.xml")
                         .Replace(".cshtml", ".compiled.cshtml")));
 
@@ -789,9 +804,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public ICommand EditCommand =>
             this.editCommand ?? (this.editCommand = new DelegateCommand(() =>
             {
-                if (System.IO.File.Exists(this.File))
+                if (System.IO.File.Exists(this.SourceFile))
                 {
-                    Process.Start(this.File);
+                    Process.Start(this.SourceFile);
                 }
             }));
 
@@ -800,7 +815,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public ICommand ReloadCommand =>
             this.reloadCommand ?? (this.reloadCommand = new DelegateCommand(() =>
             {
-                if (!System.IO.File.Exists(this.File))
+                if (!System.IO.File.Exists(this.SourceFile))
                 {
                     return;
                 }
@@ -836,7 +851,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             // Razorの引数モデルを更新する
             RefreshRazorModel();
 
-            var tl = TimelineModel.Load(this.File);
+            var tl = TimelineModel.Load(this.SourceFile);
             if (tl == null)
             {
                 return;
@@ -845,7 +860,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             this.elements.Clear();
             this.AddRange(tl.Elements);
 
-            this.File = tl.File;
+            this.SourceFile = tl.SourceFile;
             this.TimelineName = tl.TimelineName;
             this.Revision = tl.Revision;
             this.Description = tl.Description;

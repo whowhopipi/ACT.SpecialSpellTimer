@@ -1,7 +1,11 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Text;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.Globalization;
+using Newtonsoft.Json.Linq;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -13,7 +17,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public string Zone { get; set; } = string.Empty;
 
-        public string Locale { get; set; } = string.Empty;
+        public string Locale { get; set; } = Locales.JA.ToString();
 
         public TimelineRazorPlayer Player { get; set; }
 
@@ -22,6 +26,29 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public bool InZone(
             string zone)
             => this.Zone.ContainsIgnoreCase(zone);
+
+        public dynamic ParseJsonString(
+            string json)
+            => JObject.Parse(json);
+
+        public dynamic ParseJsonFile(
+            string file)
+        {
+            if (!File.Exists(file))
+            {
+                file = Path.Combine(
+                    TimelineManager.Instance.TimelineDirectory,
+                    file);
+
+                if (!File.Exists(file))
+                {
+                    return null;
+                }
+            }
+
+            return this.ParseJsonString(
+                File.ReadAllText(file, new UTF8Encoding(false)));
+        }
     }
 
     public class TimelineRazorPlayer

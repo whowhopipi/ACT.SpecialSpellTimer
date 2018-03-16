@@ -140,7 +140,7 @@
 
                     <TextBlock Margin="10 5 0 0" Text="{Binding Path=Zone, Mode=OneWay}" FontSize="13" Foreground="DimGray" />
                     <TextBlock Margin="10 1 0 0" Text="{Binding Path=LocaleText, Mode=OneWay}" FontSize="13" Foreground="DimGray" />
-                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=FileName, Mode=OneWay}" FontSize="13" Foreground="DimGray" />
+                    <TextBlock Margin="10 1 0 0" Text="{Binding Path=SourceFileName, Mode=OneWay}" FontSize="13" Foreground="DimGray" />
                   </StackPanel>
                 </CheckBox>
 

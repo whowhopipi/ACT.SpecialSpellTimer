@@ -137,9 +137,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.TimelineModels.AddRange(
                     from x in list
                     orderby
-                    x.FileName.Contains("Reference") ? 0 : 1,
+                    x.SourceFileName.Contains("Reference") ? 0 : 1,
                     x.IsGlobalZone ? 0 : 1,
-                    x.FileName
+                    x.SourceFileName
                     select
                     x);
             });

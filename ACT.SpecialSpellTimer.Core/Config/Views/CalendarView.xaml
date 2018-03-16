@@ -43,10 +43,10 @@
 
       <ResourceDictionary.MergedDictionaries>
         <wpf:DesignTimeResourceDictionary Source="../../resources/strings/Strings.ja-JP.xaml" />
-        <!--
         <wpf:DesignTimeResourceDictionary Source="../../resources/styles/ConfigViewResources.xaml" />
-        -->
+        <!--
         <ResourceDictionary Source="../../resources/styles/ConfigViewResources.xaml" />
+        -->
       </ResourceDictionary.MergedDictionaries>
     </ResourceDictionary>
   </UserControl.Resources>

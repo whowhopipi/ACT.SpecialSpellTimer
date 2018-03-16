@@ -735,7 +735,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.AppLogger.Error(
                     ex,
-                    $"[TL] Error ArrivalLogLine. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
+                    $"[TL] Error ArrivalLogLine. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.SourceFile}");
             }
         }
 
@@ -776,7 +776,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     this.AppLogger.Error(
                         ex,
-                        $"[TL] Error DetectLog. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
+                        $"[TL] Error DetectLog. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.SourceFile}");
                 }
                 finally
                 {
@@ -1220,7 +1220,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 this.AppLogger.Error(
                     ex,
-                    $"[TL] Error Timeline ticker. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.File}");
+                    $"[TL] Error Timeline ticker. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.SourceFile}");
             }
         }
 
