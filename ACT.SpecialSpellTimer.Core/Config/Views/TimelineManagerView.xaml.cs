@@ -11,12 +11,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
-using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 
@@ -61,7 +61,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
                             ex.InnerException);
                     }
 
-                    this.SetupZoneChanger();
+                    // テーブルコンパイラにイベントを設定する
+                    TableCompiler.Instance.CompileConditionChanged += this.OnCompilerConditionChanged;
                 });
             }
 
@@ -78,7 +79,25 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     TimelineNoticeOverlay.ShowDesignOverlay(selectedStyle);
                 }
             };
+
+            this.timer.Tick += (x, y) =>
+            {
+                if (TimelineController.CurrentController != null)
+                {
+                    // ついでにスタートボタンのラベルを切り替える
+                    this.StartButtonLabel = TimelineController.CurrentController.IsRunning ?
+                        StopString :
+                        StartString;
+                }
+            };
+
+            this.timer.Start();
         }
+
+        private DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Background)
+        {
+            Interval = TimeSpan.FromSeconds(1),
+        };
 
         public string TimelineDirectory => TimelineManager.Instance.TimelineDirectory;
 
@@ -99,75 +118,36 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         #region Zone Changer
 
-        private volatile JobIDs currentJob = JobIDs.Unknown;
-        private volatile string currentZoneName = string.Empty;
-        private DispatcherTimer timer = null;
+        private volatile bool isLoading = false;
 
-        private void SetupZoneChanger()
+        /// <summary>
+        /// Tableコンパイラのコンパイルの前提条件が変わった
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnCompilerConditionChanged(
+            object sender,
+            EventArgs e)
         {
-            this.timer = new DispatcherTimer(DispatcherPriority.Background)
+            if (this.isLoading)
             {
-                Interval = TimeSpan.FromSeconds(2),
-            };
+                return;
+            }
 
-            this.timer.Tick += this.ZoneChanger_Tick;
-            this.timer.Start();
-        }
+            this.isLoading = true;
 
-        private volatile bool queueLoadTimeline = false;
-
-        private void ZoneChanger_Tick(object sender, EventArgs e)
-        {
-            try
+            WPFHelper.BeginInvoke(() =>
             {
-                lock (this)
+                try
                 {
-                    // ついでにスタートボタンのラベルを切り替える
-                    if (TimelineController.CurrentController != null)
-                    {
-                        this.StartButtonLabel = TimelineController.CurrentController.IsRunning ?
-                            StopString :
-                            StartString;
-                    }
-
-                    var newZone = ActGlobals.oFormActMain.CurrentZone;
-
-                    var player = FFXIVPlugin.Instance.GetPlayer();
-                    var newJobID = player?.JobID ?? JobIDs.Unknown;
-
-                    if (newJobID == JobIDs.Unknown)
-                    {
-                        return;
-                    }
-
-                    if (this.currentZoneName != newZone ||
-                        this.currentJob != newJobID)
-                    {
-                        this.currentZoneName = newZone;
-                        this.currentJob = newJobID;
-
-                        this.AppLogger.Trace($"[TL] CurrentZoneChanged new_zone={currentZoneName}.");
-
-                        if (this.TimelineConfig.Enabled)
-                        {
-                            this.queueLoadTimeline = true;
-
-                            WPFHelper.BeginInvoke(() =>
-                            {
-                                // ディレイしてからロードする
-                                Thread.Sleep(TimeSpan.FromSeconds(4));
-                                this.LoadCurrentTimeline();
-                            });
-                        }
-                    }
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                    this.LoadCurrentTimeline();
                 }
-            }
-            catch (Exception ex)
-            {
-                this.AppLogger.Error(
-                    ex,
-                    $"[TL] Auto loading error. zone={ActGlobals.oFormActMain.CurrentZone}");
-            }
+                finally
+                {
+                    this.isLoading = false;
+                }
+            });
         }
 
         /// <summary>
@@ -177,11 +157,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             lock (this)
             {
-                if (!this.queueLoadTimeline)
-                {
-                    return;
-                }
-
                 var timelines = TimelineManager.Instance.TimelineModels.ToArray();
 
                 // グローバルトリガとリファンレスファイルをリロードする
@@ -230,8 +205,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                 // グローバルトリガを初期化する
                 TimelineManager.Instance.InitGlobalTriggers();
-
-                this.queueLoadTimeline = false;
             }
         }
 
@@ -296,10 +269,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     return;
                 }
 
-                lock (this)
-                {
-                    this.currentZoneName = string.Empty;
-                }
+                this.LoadCurrentTimeline();
             }));
 
         private ICommand startTimelineCommand;

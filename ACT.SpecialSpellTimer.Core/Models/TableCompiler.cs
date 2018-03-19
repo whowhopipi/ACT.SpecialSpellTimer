@@ -61,6 +61,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Begin / End
 
+        public event EventHandler CompileConditionChanged;
+
         private void DoWork()
         {
             try
@@ -73,18 +75,13 @@ namespace ACT.SpecialSpellTimer.Models
                     var isPartyChanged = this.IsPartyChanged();
                     var isZoneChanged = this.IsZoneChanged();
 
-                    if (isZoneChanged)
-                    {
-                        this.RefreshPartyPlaceholders();
-                        this.RefreshPetPlaceholder();
-                    }
-
                     if (isPlayerChanged)
                     {
                         this.RefreshPlayerPlacceholder();
                     }
 
-                    if (isPartyChanged)
+                    if (isZoneChanged ||
+                        isPartyChanged)
                     {
                         this.RefreshPartyPlaceholders();
                         this.RefreshPetPlaceholder();
@@ -99,6 +96,8 @@ namespace ACT.SpecialSpellTimer.Models
 
                         TickersController.Instance.GarbageWindows(this.TickerList);
                         SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
+
+                        this.CompileConditionChanged?.Invoke(this, new EventArgs());
                     }
                 }
             }
