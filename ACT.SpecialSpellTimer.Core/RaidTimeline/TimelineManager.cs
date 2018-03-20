@@ -25,6 +25,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public static TimelineManager Instance =>
             instance ?? (instance = new TimelineManager());
 
+        private TimelineManager()
+        {
+            this.Init();
+        }
+
         #endregion Singleton
 
         public string TimelineDirectory => TimelineSettings.TimelineDirectory;
@@ -45,6 +50,101 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     x.Trigger.SynqRegex != null)
                 .Select(x => x.Trigger)
                 .ToArray();
+
+        public void Init()
+        {
+            // テーブルコンパイラにイベントを設定する
+            TableCompiler.Instance.CompileConditionChanged -= this.OnCompilerConditionChanged;
+            TableCompiler.Instance.CompileConditionChanged += this.OnCompilerConditionChanged;
+        }
+
+        private volatile bool isLoading = false;
+
+        /// <summary>
+        /// Tableコンパイラのコンパイルの前提条件が変わった
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnCompilerConditionChanged(
+            object sender,
+            EventArgs e)
+        {
+            if (this.isLoading)
+            {
+                return;
+            }
+
+            this.isLoading = true;
+
+            WPFHelper.BeginInvoke(() =>
+            {
+                try
+                {
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                    this.LoadCurrentTimeline();
+                }
+                finally
+                {
+                    this.isLoading = false;
+                }
+            });
+        }
+
+        /// <summary>
+        /// 現在のタイムラインをロードする
+        /// </summary>
+        public void LoadCurrentTimeline()
+        {
+            lock (this)
+            {
+                var timelines = TimelineManager.Instance.TimelineModels.ToArray();
+
+                // グローバルトリガとリファンレスファイルをリロードする
+                var toReloads = timelines.Where(x =>
+                    x.IsGlobalZone ||
+                    x.IsReference);
+                foreach (var tl in toReloads)
+                {
+                    tl.Reload();
+                    Thread.Yield();
+                }
+
+                // すでにコントローラがロードされていたらアンロードする
+                foreach (var tl in timelines)
+                {
+                    tl.Controller.Unload();
+                    tl.IsActive = false;
+                }
+
+                // 現在のゾーンで有効なタイムラインを取得する
+                var newTimeline = timelines
+                    .FirstOrDefault(x => x.Controller.IsAvailable);
+
+                // 有効なTLが存在しないならばグローバルのいずれかをカレントにする
+                if (newTimeline == null)
+                {
+                    newTimeline = toReloads.FirstOrDefault(x => x.IsGlobalZone);
+                }
+
+                if (newTimeline != null)
+                {
+                    // 該当のタイムラインファイルをリロードする
+                    if (!newTimeline.IsGlobalZone)
+                    {
+                        newTimeline.Reload();
+                    }
+
+                    // コントローラをロードする
+                    newTimeline.Controller.Load();
+                    newTimeline.IsActive = true;
+
+                    this.AppLogger.Trace($"[TL] Timeline auto loaded. active_timeline={newTimeline.TimelineName}.");
+                }
+
+                // グローバルトリガを初期化する
+                TimelineManager.Instance.InitGlobalTriggers();
+            }
+        }
 
         public void LoadTimelineModels()
         {

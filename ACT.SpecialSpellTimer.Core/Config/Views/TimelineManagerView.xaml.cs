@@ -5,13 +5,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.resources;
@@ -60,10 +58,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                             MessageBoxButton.OK,
                             ex.InnerException);
                     }
-
-                    // テーブルコンパイラにイベントを設定する
-                    TableCompiler.Instance.CompileConditionChanged -= this.OnCompilerConditionChanged;
-                    TableCompiler.Instance.CompileConditionChanged += this.OnCompilerConditionChanged;
                 });
             }
 
@@ -116,100 +110,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
             get => this.startButtonLabel;
             set => this.SetProperty(ref this.startButtonLabel, value);
         }
-
-        #region Zone Changer
-
-        private volatile bool isLoading = false;
-
-        /// <summary>
-        /// Tableコンパイラのコンパイルの前提条件が変わった
-        /// </summary>
-        /// <param name="sender">イベント発生元</param>
-        /// <param name="e">イベント引数</param>
-        private void OnCompilerConditionChanged(
-            object sender,
-            EventArgs e)
-        {
-            if (this.isLoading)
-            {
-                return;
-            }
-
-            this.isLoading = true;
-
-            WPFHelper.BeginInvoke(() =>
-            {
-                try
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
-                    this.LoadCurrentTimeline();
-                }
-                finally
-                {
-                    this.isLoading = false;
-                }
-            });
-        }
-
-        /// <summary>
-        /// 現在のタイムラインをロードする
-        /// </summary>
-        private void LoadCurrentTimeline()
-        {
-            lock (this)
-            {
-                var timelines = TimelineManager.Instance.TimelineModels.ToArray();
-
-                // グローバルトリガとリファンレスファイルをリロードする
-                var toReloads = timelines.Where(x =>
-                    x.IsGlobalZone ||
-                    x.IsReference);
-                foreach (var tl in toReloads)
-                {
-                    tl.Reload();
-                    Thread.Yield();
-                }
-
-                // すでにコントローラがロードされていたらアンロードする
-                foreach (var tl in timelines)
-                {
-                    tl.Controller.Unload();
-                    tl.IsActive = false;
-                }
-
-                // 現在のゾーンで有効なタイムラインを取得する
-                var newTimeline = timelines
-                    .FirstOrDefault(x => x.Controller.IsAvailable);
-
-                // 有効なTLが存在しないならばグローバルのいずれかをカレントにする
-                if (newTimeline == null)
-                {
-                    newTimeline = toReloads.FirstOrDefault(x => x.IsGlobalZone);
-                }
-
-                if (newTimeline != null)
-                {
-                    // 該当のタイムラインファイルをリロードする
-                    if (!newTimeline.IsGlobalZone)
-                    {
-                        newTimeline.Reload();
-                    }
-
-                    // コントローラをロードする
-                    newTimeline.Controller.Load();
-                    newTimeline.IsActive = true;
-
-                    this.AppLogger.Trace($"[TL] Timeline auto loaded. active_timeline={newTimeline.TimelineName}.");
-
-                    this.TimelineList.ScrollIntoView(newTimeline);
-                }
-
-                // グローバルトリガを初期化する
-                TimelineManager.Instance.InitGlobalTriggers();
-            }
-        }
-
-        #endregion Zone Changer
 
         #region Commands 左側ペイン
 
@@ -270,7 +170,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     return;
                 }
 
-                this.LoadCurrentTimeline();
+                TimelineManager.Instance.LoadCurrentTimeline();
             }));
 
         private ICommand startTimelineCommand;
