@@ -76,10 +76,7 @@ namespace ACT.SpecialSpellTimer.Views
         public Spell Spell
         {
             get => this.DataContext as Spell;
-            set
-            {
-                this.DataContext = value;
-            }
+            set => this.DataContext = value;
         }
 
         public double Progress { get; set; }

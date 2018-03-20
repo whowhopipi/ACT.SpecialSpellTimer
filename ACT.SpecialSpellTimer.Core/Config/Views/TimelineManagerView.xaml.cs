@@ -62,6 +62,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     }
 
                     // テーブルコンパイラにイベントを設定する
+                    TableCompiler.Instance.CompileConditionChanged -= this.OnCompilerConditionChanged;
                     TableCompiler.Instance.CompileConditionChanged += this.OnCompilerConditionChanged;
                 });
             }
