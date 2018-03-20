@@ -42,23 +42,26 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             if (!WPFHelper.IsDesignMode)
             {
-                WPFHelper.BeginInvoke(async () =>
+                if (this.TimelineConfig.Enabled)
                 {
-                    try
+                    WPFHelper.BeginInvoke(async () =>
                     {
-                        await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
-                    }
-                    catch (Exception ex)
-                    {
-                        TimelineModel.ShowRazorDumpFile();
+                        try
+                        {
+                            await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
+                        }
+                        catch (Exception ex)
+                        {
+                            TimelineModel.ShowRazorDumpFile();
 
-                        ModernMessageBox.ShowDialog(
-                            ex.Message,
-                            "Timeline Loader",
-                            MessageBoxButton.OK,
-                            ex.InnerException);
-                    }
-                });
+                            ModernMessageBox.ShowDialog(
+                                ex.Message,
+                                "Timeline Loader",
+                                MessageBoxButton.OK,
+                                ex.InnerException);
+                        }
+                    });
+                }
             }
 
             this.StyleListView.SelectionChanged += (x, y) =>
@@ -135,7 +138,33 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         active.IsActive = false;
                     }
                 }
+                else
+                {
+                    this.LoadTimelineModels();
+                }
             }));
+
+        private async void LoadTimelineModels()
+        {
+            try
+            {
+                await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
+            }
+            catch (Exception ex)
+            {
+                TimelineModel.ShowRazorDumpFile();
+
+                ModernMessageBox.ShowDialog(
+                    ex.Message,
+                    "Timeline Loader",
+                    MessageBoxButton.OK,
+                    ex.InnerException);
+
+                return;
+            }
+
+            TimelineManager.Instance.LoadCurrentTimeline();
+        }
 
         private ICommand openTimelineFolderCommand;
 
@@ -151,27 +180,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
         private ICommand reloadTimelineFolderCommand;
 
         public ICommand ReloadTimelineFolderCommand =>
-            this.reloadTimelineFolderCommand ?? (this.reloadTimelineFolderCommand = new DelegateCommand(async () =>
-            {
-                try
-                {
-                    await Task.Run(() => TimelineManager.Instance.LoadTimelineModels());
-                }
-                catch (Exception ex)
-                {
-                    TimelineModel.ShowRazorDumpFile();
-
-                    ModernMessageBox.ShowDialog(
-                        ex.Message,
-                        "Timeline Loader",
-                        MessageBoxButton.OK,
-                        ex.InnerException);
-
-                    return;
-                }
-
-                TimelineManager.Instance.LoadCurrentTimeline();
-            }));
+            this.reloadTimelineFolderCommand ?? (this.reloadTimelineFolderCommand = new DelegateCommand(() =>
+                this.LoadTimelineModels()));
 
         private ICommand startTimelineCommand;
 

@@ -69,6 +69,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             object sender,
             EventArgs e)
         {
+            if (!TimelineSettings.Instance.Enabled)
+            {
+                return;
+            }
+
             if (this.isLoading)
             {
                 return;
