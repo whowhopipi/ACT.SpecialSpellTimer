@@ -10,6 +10,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.FFXIVHelper;
 using TamanegiMage.FFXIV_MemoryReader.Model;
@@ -91,6 +92,10 @@ namespace ACT.SpecialSpellTimer.Models
                         isPartyChanged ||
                         isZoneChanged)
                     {
+                        var job = this.player.JobID;
+                        var zone = ActGlobals.oFormActMain?.CurrentZone;
+                        Logger.Write($"compiler condition changed. player_job={job}, zone={zone}, etc...");
+
                         this.RecompileSpells();
                         this.RecompileTickers();
 

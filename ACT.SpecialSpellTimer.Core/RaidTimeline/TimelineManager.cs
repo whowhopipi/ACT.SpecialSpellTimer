@@ -119,6 +119,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     tl.Controller.Unload();
                     tl.IsActive = false;
+                    Thread.Yield();
                 }
 
                 // 現在のゾーンで有効なタイムラインを取得する
