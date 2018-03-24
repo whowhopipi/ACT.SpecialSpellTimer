@@ -62,6 +62,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Begin / End
 
+        public event EventHandler ZoneChanged;
+
         public event EventHandler CompileConditionChanged;
 
         private void DoWork()
@@ -92,10 +94,6 @@ namespace ACT.SpecialSpellTimer.Models
                         isPartyChanged ||
                         isZoneChanged)
                     {
-                        var job = this.player.JobID;
-                        var zone = ActGlobals.oFormActMain?.CurrentZone;
-                        Logger.Write($"compiler condition changed. player_job={job}, zone={zone}, etc...");
-
                         this.RecompileSpells();
                         this.RecompileTickers();
 
@@ -103,6 +101,13 @@ namespace ACT.SpecialSpellTimer.Models
                         SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
 
                         this.CompileConditionChanged?.Invoke(this, new EventArgs());
+                    }
+
+                    if (isZoneChanged)
+                    {
+                        var zone = ActGlobals.oFormActMain.CurrentZone;
+                        Logger.Write($"zone changed. zone={zone}");
+                        this.ZoneChanged?.Invoke(this, new EventArgs());
                     }
                 }
             }

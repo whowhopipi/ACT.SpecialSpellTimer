@@ -54,18 +54,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public void Init()
         {
             // テーブルコンパイラにイベントを設定する
-            TableCompiler.Instance.CompileConditionChanged -= this.OnCompilerConditionChanged;
-            TableCompiler.Instance.CompileConditionChanged += this.OnCompilerConditionChanged;
+            TableCompiler.Instance.ZoneChanged -= this.OnTimelineConditionChanged;
+            TableCompiler.Instance.ZoneChanged += this.OnTimelineConditionChanged;
         }
 
         private volatile bool isLoading = false;
 
         /// <summary>
-        /// Tableコンパイラのコンパイルの前提条件が変わった
+        /// タイムラインに関連する条件が変わった
         /// </summary>
         /// <param name="sender">イベント発生元</param>
         /// <param name="e">イベント引数</param>
-        private void OnCompilerConditionChanged(
+        private void OnTimelineConditionChanged(
             object sender,
             EventArgs e)
         {
