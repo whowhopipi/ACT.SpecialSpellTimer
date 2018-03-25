@@ -188,8 +188,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 {
                     lock (same)
                     {
-                        same.DurationToDisplay = same.Duration.Value;
-                        same.Timestamp = DateTime.Now;
+                        same.Timestamp = notice.Timestamp;
                     }
 
                     return;
@@ -206,7 +205,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                     },
                     dummyMode);
 
-                notice.Timestamp = DateTime.Now;
                 this.noticeList.Add(notice);
                 this.EnsureTopMost();
 

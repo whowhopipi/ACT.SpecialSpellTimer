@@ -1024,6 +1024,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 XIVLog xivlog,
                 TimelineTriggerModel tri)
             {
+                var now = DateTime.Now;
+
                 lock (tri)
                 {
                     var match = tri.SynqRegex.Match(xivlog.Log);
@@ -1047,6 +1049,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                     var toNotice = tri.Clone();
                     toNotice.LogSeq = xivlog.No;
+
+                    var vnotices = toNotice.VisualNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+                    if (vnotices.Any())
+                    {
+                        foreach (var vnotice in vnotices)
+                        {
+                            vnotice.Timestamp = now;
+                        }
+                    }
+
                     this.notifyQueue.Enqueue(toNotice);
                 }
 

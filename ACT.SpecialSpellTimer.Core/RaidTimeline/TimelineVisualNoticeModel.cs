@@ -53,13 +53,26 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.duration, value);
         }
 
-        private double durationToDisplay = 3;
+        private double durationToDisplay = 0;
 
         [XmlIgnore]
         public double DurationToDisplay
         {
             get => this.durationToDisplay;
             set => this.SetProperty(ref this.durationToDisplay, value);
+        }
+
+        private void RefreshDuration()
+        {
+            var remain = (this.TimeToHide - DateTime.Now).TotalSeconds;
+            if (remain < 0d)
+            {
+                remain = 0d;
+            }
+
+            remain = Math.Ceiling(remain);
+
+            this.DurationToDisplay = remain;
         }
 
         [XmlAttribute(AttributeName = "duration")]
@@ -128,31 +141,32 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.timestamp, value);
         }
 
+        [XmlIgnore]
+        public DateTime TimeToHide
+            => this.Timestamp.AddSeconds(this.Duration.GetValueOrDefault());
+
         private DispatcherTimer timer;
 
         public void StartNotice(
             Action<TimelineVisualNoticeModel> removeAction,
             bool dummyMode = false)
         {
-            this.DurationToDisplay = this.Duration.GetValueOrDefault();
             this.IsVisible = true;
 
             if (this.timer == null)
             {
                 this.timer = new DispatcherTimer(DispatcherPriority.Background)
                 {
-                    Interval = TimeSpan.FromSeconds(1)
+                    Interval = TimeSpan.FromSeconds(0.25d)
                 };
 
                 this.timer.Tick += (x, y) =>
                 {
+                    this.RefreshDuration();
+
                     lock (this)
                     {
-                        if (this.DurationToDisplay > 0)
-                        {
-                            this.DurationToDisplay--;
-                        }
-                        else
+                        if (DateTime.Now >= this.TimeToHide.AddSeconds(1.0d))
                         {
                             if (!dummyMode)
                             {
