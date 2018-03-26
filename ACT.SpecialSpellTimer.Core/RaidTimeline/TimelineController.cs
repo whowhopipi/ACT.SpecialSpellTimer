@@ -856,6 +856,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private void DetectLogs(
             IReadOnlyList<XIVLog> logs)
         {
+            var detectTime = DateTime.Now;
             var detectors = new List<TimelineBase>(64);
 
             lock (this)
@@ -1024,8 +1025,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 XIVLog xivlog,
                 TimelineTriggerModel tri)
             {
-                var now = DateTime.Now;
-
                 lock (tri)
                 {
                     var match = tri.SynqRegex.Match(xivlog.Log);
@@ -1055,7 +1054,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     {
                         foreach (var vnotice in vnotices)
                         {
-                            vnotice.Timestamp = now;
+                            vnotice.Timestamp = detectTime;
                         }
                     }
 
@@ -1533,7 +1532,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                     TimelineNoticeOverlay.NoticeView?.AddNotice(v);
                 }
-            });
+            },
+            DispatcherPriority.Normal);
         }
 
         private static string lastRaisedLog = string.Empty;
