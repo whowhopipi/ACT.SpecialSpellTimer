@@ -180,6 +180,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 };
             }
 
+            this.RefreshDuration();
             this.timer.Start();
         }
 
