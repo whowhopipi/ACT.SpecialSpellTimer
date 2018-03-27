@@ -91,6 +91,17 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void Refresh()
         {
+            // Titleを描画する
+            var tb = this.SpellTitleTextBlock;
+            var title =
+                string.IsNullOrWhiteSpace(this.Spell.SpellTitleReplaced) ?
+                this.Spell.SpellTitle :
+                this.Spell.SpellTitleReplaced;
+            title = string.IsNullOrWhiteSpace(title) ? "　" : title;
+            title = title.Replace(",", Environment.NewLine);
+            title = title.Replace("\\n", Environment.NewLine);
+
+            if (tb.Text != title) tb.Text = title;
             // 点滅を判定する
             if (!this.StartBlink())
             {
@@ -121,7 +132,7 @@ namespace ACT.SpecialSpellTimer.Views
             // リキャスト時間を描画する
             if (!this.Spell.HideCounter)
             {
-                var tb = this.RecastTimeTextBlock;
+                tb = this.RecastTimeTextBlock;
                 var recast = this.RecastTime > 0 ?
                     this.RecastTime.ToString(RecastTimeFormat) :
                     this.Spell.IsReverse ? Settings.Default.OverText : Settings.Default.ReadyText;

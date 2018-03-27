@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Media;
 using System.Windows;
 using System.Windows.Controls;
+using FFXIV.Framework.Globalization;
 
 namespace ACT.SpecialSpellTimer.Config
 {
@@ -26,7 +27,14 @@ namespace ACT.SpecialSpellTimer.Config
             object sender,
             RoutedEventArgs e)
         {
-            Process.Start(@"https://www.amazon.co.jp/dp/BT00DHI8G4");
+            if (Settings.Default.UILocale == Locales.JA)
+            {
+                Process.Start(@"https://www.amazon.co.jp/dp/BT00DHI8G4");
+            }
+            else
+            {
+                Process.Start(@"https://www.amazon.com/dp/B004LLIKVU");
+            }
         }
 
         private void CopyAddress_Click(
