@@ -190,7 +190,7 @@
           Width="76">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal">
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Padding="5 0 0 0" Text="*" Visibility="{Binding IsOrigin, Converter={StaticResource HiddenConverter}, Mode=OneWay}" />
                 <TextBlock
                   Padding="3 0 10 0"
