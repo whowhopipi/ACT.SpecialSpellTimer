@@ -1,16 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
+using Hjson;
 using Newtonsoft.Json.Linq;
-using Prism.Mvvm;
-using RazorEngine;
-using RazorEngine.Compilation;
-using RazorEngine.Compilation.ReferenceResolver;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -33,8 +28,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             => this.Zone.ContainsIgnoreCase(zone);
 
         public dynamic ParseJsonString(
-            string json)
-            => JObject.Parse(json);
+            string hjson)
+        {
+            // HJSON -> JSON
+            var json = HjsonValue.Parse(hjson).ToString();
+
+            // JSON Parse
+            return JObject.Parse(json);
+        }
 
         public dynamic ParseJsonFile(
             string file)
