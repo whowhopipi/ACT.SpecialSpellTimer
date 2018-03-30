@@ -137,6 +137,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             private set;
         } = new ObservableCollection<TimelineActivityModel>();
 
+        /// <summary>
+        /// アクティブなアクティビティライン（タイムライン）
+        /// </summary>
+        public IReadOnlyList<TimelineActivityModel> ActiveActivityLine
+            => this.Model.ActivityView?.Cast<TimelineActivityModel>().ToList();
+
+        /// <summary>
+        /// アクティブな視覚通知のリスト
+        /// </summary>
+        public IReadOnlyList<TimelineVisualNoticeModel> ActiveVisualNoticeList
+            => TimelineNoticeOverlay.NoticeView?.NoticeList.Cast<TimelineVisualNoticeModel>().ToList();
+
         public bool IsAvailable
         {
             get
