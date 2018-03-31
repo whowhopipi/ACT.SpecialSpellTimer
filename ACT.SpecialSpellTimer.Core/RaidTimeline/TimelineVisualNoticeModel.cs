@@ -155,7 +155,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (this.timer == null)
             {
-                this.timer = new DispatcherTimer(DispatcherPriority.Background)
+                this.timer = new DispatcherTimer(DispatcherPriority.Normal)
                 {
                     Interval = TimeSpan.FromSeconds(0.25d)
                 };
