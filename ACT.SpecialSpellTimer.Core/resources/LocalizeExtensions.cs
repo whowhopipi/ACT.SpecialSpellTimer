@@ -35,7 +35,7 @@ namespace ACT.SpecialSpellTimer.resources
             Locales locale) where T : FrameworkElement, ILocalizable
         {
             const string Direcotry = @"resources\strings";
-            var Resources = $"Strings.{locale.ToText()}.xaml";
+            var Resources = $"Strings.SpeSpe.{locale.ToText()}.xaml";
 
             var file = Path.Combine(DirectoryHelper.FindSubDirectory(Direcotry), Resources);
             if (File.Exists(file))
