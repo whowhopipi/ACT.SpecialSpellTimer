@@ -1203,9 +1203,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 if (this.TimelineTimer == null)
                 {
-                    this.TimelineTimer = new DispatcherTimer(DispatcherPriority.Background)
+                    this.TimelineTimer = new DispatcherTimer()
                     {
-                        Interval = TimeSpan.FromSeconds(0.05),
+                        Interval = TimeSpan.FromSeconds(0.02),
                     };
 
                     this.TimelineTimer.Tick += this.TimelineTimer_Tick;
