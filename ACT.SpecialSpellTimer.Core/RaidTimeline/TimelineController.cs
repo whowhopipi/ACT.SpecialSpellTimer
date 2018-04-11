@@ -1053,6 +1053,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             }
                         }
 
+                        foreach (var item in ActivityLine.Where(x =>
+                            !x.IsDone &&
+                            x.Seq < act.Seq))
+                        {
+                            item.IsDone = true;
+                            item.IsNotified = true;
+                        }
+
                         this.CurrentTime = act.Time;
 
                         // ログを発生させる
