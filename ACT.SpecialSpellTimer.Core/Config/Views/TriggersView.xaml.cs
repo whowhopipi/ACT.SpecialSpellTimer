@@ -374,5 +374,16 @@ namespace ACT.SpecialSpellTimer.Config.Views
         }
 
         #endregion 動的コンテキストメニュー
+
+        /// <summary>
+        /// シミュレータを開くボタン click
+        /// </summary>
+        /// <param name="sender">イベント発生元</param>
+        /// <param name="e">イベント引数</param>
+        private void OpenSimulatorButton_Click(object sender, RoutedEventArgs e)
+        {
+            var view = new TriggerTesterView();
+            view.Show();
+        }
     }
 }

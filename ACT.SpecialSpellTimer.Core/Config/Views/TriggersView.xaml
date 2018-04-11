@@ -455,6 +455,19 @@
           VerticalAlignment="Bottom"
           VerticalContentAlignment="Center"
           IsChecked="{Binding RootConfig.ClickThroughEnabled, Mode=TwoWay}" />
+
+        <!-- シミュレータ -->
+        <Button
+          Margin="20 0 0 0"
+          Background="Transparent"
+          BorderThickness="0"
+          Padding="5"
+          Content="{DynamicResource TriggerTester_OpenSimulator}"
+          FontWeight="Bold"
+          Foreground="#69821b"
+          VerticalAlignment="Bottom"
+          VerticalContentAlignment="Center"
+          Click="OpenSimulatorButton_Click" />
       </StackPanel>
     </Grid>
 

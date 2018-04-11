@@ -161,6 +161,9 @@
     <Compile Include="Config\Views\TimelineManagerView.xaml.cs">
       <DependentUpon>TimelineManagerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config\Views\TriggerTesterView.xaml.cs">
+      <DependentUpon>TriggerTesterView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\Views\TimelineTesterView.xaml.cs">
       <DependentUpon>TimelineTesterView.xaml</DependentUpon>
     </Compile>
@@ -781,6 +784,10 @@
     <Page Include="Config\Views\TimelineManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Config\Views\TriggerTesterView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Config\Views\TimelineTesterView.xaml">
       <SubType>Designer</SubType>
