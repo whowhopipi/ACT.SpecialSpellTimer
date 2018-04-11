@@ -1041,7 +1041,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             x.IsDone &&
                             x.Seq >= act.Seq))
                         {
-                            item.Init();
+                            // 表示の制御に関するフラグを初期化する
+                            item.IsActive = false;
+                            item.IsDone = false;
+
+                            // まだ通知時間が到来していないことになるアクティビティの通知済みフラグを落とす
+                            if (item.Time.Add(TimeSpan.FromSeconds(item.NoticeOffset.GetValueOrDefault()))
+                                > act.Time)
+                            {
+                                item.IsNotified = false;
+                            }
                         }
 
                         this.CurrentTime = act.Time;
@@ -1654,6 +1663,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     PlayBridge.Instance.PlaySubDeviceDelegate?.Invoke(notice);
                     break;
             }
+
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine($"{DateTime.Now:HH:mm:ss.fff} notify={notice}");
+#endif
         }
 
         #endregion 通知に関するメソッド
