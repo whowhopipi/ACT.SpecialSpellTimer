@@ -235,6 +235,7 @@
         <!-- ボタンエリア -->
         <DockPanel Grid.Row="2" Grid.Column="1">
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 5 5">
+            <Button x:Name="ClearButton" Margin="10 0 10 0" Padding="5 0 5 0" Content="Clear" />
             <Button x:Name="ApplyButton" Margin="10 0 10 0" Padding="5 0 5 0" Content="Apply" />
           </StackPanel>
         </DockPanel>

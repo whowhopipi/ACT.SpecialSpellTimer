@@ -1414,6 +1414,11 @@ namespace ACT.SpecialSpellTimer.Models
             TableCompiler.Instance.AddTestTrigger(this);
         }
 
+        public override string ToString()
+            => !string.IsNullOrEmpty(this.SpellTitleReplaced) ?
+                this.SpellTitleReplaced :
+                this.SpellTitle;
+
         #region Sample Spells
 
         public static readonly Spell[] SampleSpells = new[]

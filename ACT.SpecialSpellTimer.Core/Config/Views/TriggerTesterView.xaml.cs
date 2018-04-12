@@ -123,6 +123,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     "Test Condition was applied.",
                     "Trigger Simulator");
             };
+
+            this.ClearButton.Click += async (x, y) =>
+            {
+                await Task.Run(() => this.ClearTestCondition());
+
+                ModernMessageBox.ShowDialog(
+                    "Test Condition was cleard.",
+                    "Trigger Simulator");
+            };
         }
 
         private System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
