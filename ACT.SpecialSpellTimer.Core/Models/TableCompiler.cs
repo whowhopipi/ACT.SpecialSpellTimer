@@ -13,12 +13,14 @@ using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.FFXIVHelper;
+using Prism.Mvvm;
 using TamanegiMage.FFXIV_MemoryReader.Model;
 using static ACT.SpecialSpellTimer.Sound.TTSDictionary;
 
 namespace ACT.SpecialSpellTimer.Models
 {
-    public class TableCompiler
+    public class TableCompiler :
+        BindableBase
     {
         #region Singleton
 
@@ -230,7 +232,20 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void CompileSpells()
         {
-            var currentZoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
+            var currentZoneID = default(int?);
+
+            lock (this.SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationZoneID != 0)
+                {
+                    currentZoneID = this.SimulationZoneID;
+                }
+                else
+                {
+                    currentZoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                }
+            }
 
             bool filter(Spell spell)
             {
@@ -320,7 +335,20 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void CompileTickers()
         {
-            var currentZoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
+            var currentZoneID = default(int?);
+
+            lock (this.SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationZoneID != 0)
+                {
+                    currentZoneID = this.SimulationZoneID;
+                }
+                else
+                {
+                    currentZoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                }
+            }
 
             bool filter(Ticker spell)
             {
@@ -527,6 +555,32 @@ namespace ACT.SpecialSpellTimer.Models
         private volatile Combatant previousPlayer = new Combatant();
         private volatile int previousZoneID = 0;
 
+        public readonly object SimulationLocker = new object();
+
+        public bool InSimulation
+        {
+            get;
+            set;
+        } = false;
+
+        public Combatant SimulationPlayer
+        {
+            get;
+            set;
+        }
+
+        public List<Combatant> SimulationParty
+        {
+            get;
+            private set;
+        } = new List<Combatant>();
+
+        public int SimulationZoneID
+        {
+            get;
+            set;
+        }
+
         public bool IsPartyChanged()
         {
             var r = false;
@@ -580,7 +634,21 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var r = false;
 
-            var zoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+            var zoneID = default(int?);
+
+            lock (this.SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationZoneID != 0)
+                {
+                    zoneID = this.SimulationZoneID;
+                }
+                else
+                {
+                    zoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                }
+            }
+
             if (zoneID != null &&
                 this.previousZoneID != zoneID)
             {
@@ -594,13 +662,30 @@ namespace ACT.SpecialSpellTimer.Models
 
         private void RefreshCombatants()
         {
-            var player = FFXIVPlugin.Instance?.GetPlayer();
+            var player = default(Combatant);
+            var party = default(IReadOnlyList<Combatant>);
+
+            lock (SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationPlayer != null &&
+                    this.SimulationParty.Any())
+                {
+                    player = this.SimulationPlayer;
+                    party = this.SimulationParty;
+                }
+                else
+                {
+                    player = FFXIVPlugin.Instance?.GetPlayer();
+                    party = FFXIVPlugin.Instance?.GetPartyList();
+                }
+            }
+
             if (player != null)
             {
                 this.player = player;
             }
 
-            var party = FFXIVPlugin.Instance?.GetPartyList();
             if (party != null)
             {
                 var newList = new List<Combatant>(party);

@@ -10,13 +10,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using ACT.SpecialSpellTimer.RaidTimeline;
+using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.resources;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Extensions;
 using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.Globalization;
 using Prism.Mvvm;
+using TamanegiMage.FFXIV_MemoryReader.Model;
 
 namespace ACT.SpecialSpellTimer.Config.Views
 {
@@ -34,10 +35,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.SetLocale(Settings.Default.UILocale);
             this.LoadConfigViewResources();
 
-#if !DEBUG
-            this.Topmost = true;
-#endif
-
             // ウィンドウのスタート位置を決める
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
@@ -49,10 +46,18 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 this.Close();
             };
 
+            this.Closed += (x, y) =>
+            {
+                PluginMainWorker.Instance.InSimulation = false;
+                this.ClearTestCondition();
+            };
+
             this.testTimer.Tick += this.TestTimer_Tick;
 
             this.RunButton.Click += async (x, y) =>
             {
+                PluginMainWorker.Instance.InSimulation = true;
+
                 await Task.Run(() =>
                 {
                     lock (this)
@@ -74,15 +79,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.PauseButton.Click += (x, y) =>
             {
                 this.isPause = !this.isPause;
-
-                if (this.isPause)
-                {
-                    this.PauseButton.Content = "Resume";
-                }
-                else
-                {
-                    this.PauseButton.Content = "Pause";
-                }
+                this.PauseButton.Content =
+                    this.isPause ? "Resume" : "Pause";
             };
 
             this.StopButton.Click += async (x, y) =>
@@ -102,22 +100,39 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     }
                 });
 
-                TimelineController.CurrentController?.EndActivityLine();
+                PluginMainWorker.Instance.InSimulation = false;
+            };
+
+            this.OpenButton.Click += (x, y) =>
+            {
+                var result = this.openFileDialog.ShowDialog(ActGlobals.oFormActMain);
+                if (result != System.Windows.Forms.DialogResult.OK)
+                {
+                    return;
+                }
+
+                this.LogFile = this.openFileDialog.FileName;
+                this.LoadLog();
+            };
+
+            this.ApplyButton.Click += async (x, y) =>
+            {
+                await Task.Run(() => this.ApplyTestCondition());
+
+                ModernMessageBox.ShowDialog(
+                    "Test Condition was applied.",
+                    "Trigger Simulator");
             };
         }
 
-        public IReadOnlyList<Job> JobList => Jobs.SortedList.Where(x =>
-            x.ID != JobIDs.Unknown &&
-            x.ID != JobIDs.ADV).ToList();
-
-        public IReadOnlyList<Zone> ZoneList => (
-            from x in FFXIVPlugin.Instance?.ZoneList
-            orderby
-            x.IsAddedByUser ? 0 : 1,
-            x.Rank,
-            x.ID descending
-            select
-            x).ToList();
+        private System.Windows.Forms.OpenFileDialog openFileDialog = new System.Windows.Forms.OpenFileDialog()
+        {
+            RestoreDirectory = true,
+            Filter = "CombatLog Files|*.log|All Files|*.*",
+            FilterIndex = 0,
+            DefaultExt = ".log",
+            SupportMultiDottedExtensions = true,
+        };
 
         public string LogFile
         {
@@ -176,7 +191,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             await Task.Run(() =>
             {
-                var ignores = TimelineSettings.Instance.IgnoreKeywords;
+                var ignores = LogBuffer.IgnoreLogKeywords;
 
                 var seq = 1L;
                 using (var sr = new StreamReader(this.LogFile, new UTF8Encoding(false)))
@@ -209,13 +224,6 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 if (combatStart != null)
                 {
                     list.RemoveRange(0, list.IndexOf(combatStart));
-                }
-                else
-                {
-                    // ダミー戦闘開始5秒前を挿入する
-                    var head = list.First();
-                    list.Insert(0, new TestLog(
-                        $"[{head.Timestamp.AddSeconds(-5):HH:mm:ss.fff}] 00:0039:戦闘開始まで5秒！ [DUMMY]"));
                 }
 
                 var first = list.First();
@@ -273,12 +281,216 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         string.Empty,
                         true);
 
-                    TimelineController.CurrentController?.EnqueueLog(logInfo);
+                    PluginMainWorker.Instance.LogBuffer.LogInfoQueue.Enqueue(logInfo);
 
                     this.TimelineTestListView.ScrollIntoView(log);
                 }
             }
         }
+
+        #region Test Conditions
+
+        public IReadOnlyList<Job> JobList => Jobs.SortedList.Where(x =>
+            x.ID != JobIDs.Unknown &&
+            x.ID != JobIDs.ADV).ToList();
+
+        public IReadOnlyList<Zone> ZoneList => (
+            from x in FFXIVPlugin.Instance?.ZoneList
+            orderby
+            x.IsAddedByUser ? 0 : 1,
+            x.Rank,
+            x.ID descending
+            select
+            x).ToList();
+
+        private string meName = "Paladin Taro";
+        private JobIDs meJob = JobIDs.PLD;
+
+        private string party2Name = "Warrior Jiro";
+        private JobIDs party2Job = JobIDs.WAR;
+
+        private string party3Name = "White Hanako";
+        private JobIDs party3Job = JobIDs.WHM;
+
+        private string party4Name = "Scholar Yoshiko";
+        private JobIDs party4Job = JobIDs.SCH;
+
+        private string party5Name = "Monk Saburo";
+        private JobIDs party5Job = JobIDs.MNK;
+
+        private string party6Name = "Ryusan InTheSky";
+        private JobIDs party6Job = JobIDs.DRG;
+
+        private string party7Name = "Archer Shiro";
+        private JobIDs party7Job = JobIDs.BRD;
+
+        private string party8Name = "Black Yoshida";
+        private JobIDs party8Job = JobIDs.BLM;
+
+        private int zoneID;
+
+        public int ZoneID
+        {
+            get => this.zoneID;
+            set => this.SetProperty(ref this.zoneID, value);
+        }
+
+        public string MeName
+        {
+            get => this.meName;
+            set => this.SetProperty(ref this.meName, value);
+        }
+
+        public JobIDs MeJob
+        {
+            get => this.meJob;
+            set => this.SetProperty(ref this.meJob, value);
+        }
+
+        public string Party2Name
+        {
+            get => this.party2Name;
+            set => this.SetProperty(ref this.party2Name, value);
+        }
+
+        public JobIDs Party2Job
+        {
+            get => this.party2Job;
+            set => this.SetProperty(ref this.party2Job, value);
+        }
+
+        public string Party3Name
+        {
+            get => this.party3Name;
+            set => this.SetProperty(ref this.party3Name, value);
+        }
+
+        public JobIDs Party3Job
+        {
+            get => this.party3Job;
+            set => this.SetProperty(ref this.party3Job, value);
+        }
+
+        public string Party4Name
+        {
+            get => this.party4Name;
+            set => this.SetProperty(ref this.party4Name, value);
+        }
+
+        public JobIDs Party4Job
+        {
+            get => this.party4Job;
+            set => this.SetProperty(ref this.party4Job, value);
+        }
+
+        public string Party5Name
+        {
+            get => this.party5Name;
+            set => this.SetProperty(ref this.party5Name, value);
+        }
+
+        public JobIDs Party5Job
+        {
+            get => this.party5Job;
+            set => this.SetProperty(ref this.party5Job, value);
+        }
+
+        public string Party6Name
+        {
+            get => this.party6Name;
+            set => this.SetProperty(ref this.party6Name, value);
+        }
+
+        public JobIDs Party6Job
+        {
+            get => this.party6Job;
+            set => this.SetProperty(ref this.party6Job, value);
+        }
+
+        public string Party7Name
+        {
+            get => this.party7Name;
+            set => this.SetProperty(ref this.party7Name, value);
+        }
+
+        public JobIDs Party7Job
+        {
+            get => this.party7Job;
+            set => this.SetProperty(ref this.party7Job, value);
+        }
+
+        public string Party8Name
+        {
+            get => this.party8Name;
+            set => this.SetProperty(ref this.party8Name, value);
+        }
+
+        public JobIDs Party8Job
+        {
+            get => this.party8Job;
+            set => this.SetProperty(ref this.party8Job, value);
+        }
+
+        private void ApplyTestCondition()
+        {
+            lock (TableCompiler.Instance.SimulationLocker)
+            {
+                var dummyPartys = new(string Name, JobIDs Job)[]
+                {
+                    (this.MeName, this.MeJob),
+                    (this.Party2Name, this.Party2Job),
+                    (this.Party3Name, this.Party3Job),
+                    (this.Party4Name, this.Party4Job),
+                    (this.Party5Name, this.Party5Job),
+                    (this.Party6Name, this.Party6Job),
+                    (this.Party7Name, this.Party7Job),
+                    (this.Party8Name, this.Party8Job),
+                };
+
+                TableCompiler.Instance.SimulationParty.Clear();
+
+                foreach (var dummy in dummyPartys)
+                {
+                    if (string.IsNullOrEmpty(dummy.Name))
+                    {
+                        continue;
+                    }
+
+                    var combatant = new Combatant();
+                    combatant.type = ObjectType.PC;
+                    combatant.SetName(dummy.Name);
+                    combatant.Job = (byte)dummy.Job;
+
+                    if (!TableCompiler.Instance.SimulationParty.Any())
+                    {
+                        combatant.ID = 1;
+                    }
+                    else
+                    {
+                        combatant.ID = (uint)(8 - TableCompiler.Instance.SimulationParty.Count());
+                    }
+
+                    TableCompiler.Instance.SimulationParty.Add(combatant);
+                }
+
+                TableCompiler.Instance.SimulationPlayer = TableCompiler.Instance.SimulationParty.FirstOrDefault();
+                TableCompiler.Instance.SimulationZoneID = this.ZoneID;
+                TableCompiler.Instance.InSimulation = true;
+            }
+        }
+
+        private void ClearTestCondition()
+        {
+            lock (TableCompiler.Instance.SimulationLocker)
+            {
+                TableCompiler.Instance.InSimulation = false;
+                TableCompiler.Instance.SimulationPlayer = null;
+                TableCompiler.Instance.SimulationParty.Clear();
+                TableCompiler.Instance.SimulationZoneID = 0;
+            }
+        }
+
+        #endregion Test Conditions
 
         #region ILocalizebale
 

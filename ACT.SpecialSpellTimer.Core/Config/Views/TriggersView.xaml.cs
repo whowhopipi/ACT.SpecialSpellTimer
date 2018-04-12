@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using ACT.SpecialSpellTimer.Config.Models;
@@ -383,6 +384,10 @@ namespace ACT.SpecialSpellTimer.Config.Views
         private void OpenSimulatorButton_Click(object sender, RoutedEventArgs e)
         {
             var view = new TriggerTesterView();
+
+            // これがないとTextBoxに半角が入力できない
+            ElementHost.EnableModelessKeyboardInterop(view);
+
             view.Show();
         }
     }

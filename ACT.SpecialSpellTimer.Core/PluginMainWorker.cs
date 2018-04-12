@@ -75,6 +75,11 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public LogBuffer LogBuffer { get; private set; }
 
+        /// <summary>
+        /// Simulation中か？
+        /// </summary>
+        public bool InSimulation { get; set; }
+
         #region Begin / End
 
         /// <summary>
@@ -94,11 +99,6 @@ namespace ACT.SpecialSpellTimer
 
             // テーブルコンパイラを開始する
             TableCompiler.Instance.Begin();
-
-            // 戦闘分析を初期化する
-            /*
-            CombatAnalyzer.Default.Initialize();
-            */
 
             // サウンドコントローラを開始する
             SoundController.Instance.Begin();
@@ -176,11 +176,6 @@ namespace ACT.SpecialSpellTimer
         public void End()
         {
             this.isOver = true;
-
-            // 戦闘分析を開放する
-            /*
-            CombatAnalyzer.Default.Denitialize();
-            */
 
             // Workerを開放する
             this.refreshSpellOverlaysWorker?.Stop();
@@ -272,11 +267,13 @@ namespace ACT.SpecialSpellTimer
         {
             var existsLog = false;
 
-            if (!Settings.Default.VisibleOverlayWithoutFFXIV)
+            if (!this.InSimulation)
             {
-                // FFXIVがいない？
-                if (!this.existFFXIVProcess)
+                if (!Settings.Default.VisibleOverlayWithoutFFXIV)
                 {
+                    // FFXIVがいない？
+                    if (!this.existFFXIVProcess)
+                    {
 #if !DEBUG
                     // importログの解析用にログを取り出しておく
                     if (!this.LogBuffer.IsEmpty)
@@ -287,16 +284,21 @@ namespace ACT.SpecialSpellTimer
                     Thread.Sleep(TimeSpan.FromSeconds(3));
                     return;
 #endif
+                    }
                 }
             }
 
             // 全滅によるリセットを判定する
-            var resetTask = Task.Run(() => this.ResetCountAtRestart());
+            var resetTask = default(Task);
+            if (this.existFFXIVProcess)
+            {
+                resetTask = Task.Run(() => this.ResetCountAtRestart());
+            }
 
             // ログがないなら抜ける
             if (this.LogBuffer.IsEmpty)
             {
-                resetTask.Wait();
+                resetTask?.Wait();
                 Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
                 return;
             }
@@ -368,26 +370,29 @@ namespace ACT.SpecialSpellTimer
                 (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
 
             // FFXIVが実行されていない？
-            if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
-                !this.existFFXIVProcess)
+            if (!this.InSimulation)
             {
-                // 一時表示スペルがない？
-                if (!spells.Any(x =>
-                    x.IsDesignMode ||
-                    x.IsTest))
+                if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
+                    !this.existFFXIVProcess)
                 {
-                    SpellsController.Instance.ClosePanels();
-                    return;
-                }
+                    // 一時表示スペルがない？
+                    if (!spells.Any(x =>
+                        x.IsDesignMode ||
+                        x.IsTest))
+                    {
+                        SpellsController.Instance.ClosePanels();
+                        return;
+                    }
 
-                if (!isHideOverlay)
-                {
-                    // 一時表示スペルだけ表示する
-                    SpellsController.Instance.RefreshSpellOverlays(
-                        spells.Where(x =>
-                            x.IsDesignMode ||
-                            x.IsTest).ToList());
-                    return;
+                    if (!isHideOverlay)
+                    {
+                        // 一時表示スペルだけ表示する
+                        SpellsController.Instance.RefreshSpellOverlays(
+                            spells.Where(x =>
+                                x.IsDesignMode ||
+                                x.IsTest).ToList());
+                        return;
+                    }
                 }
             }
 
@@ -429,26 +434,29 @@ namespace ACT.SpecialSpellTimer
                 (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
 
             // FFXIVが実行されていない？
-            if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
-                !this.existFFXIVProcess)
+            if (!this.InSimulation)
             {
-                // デザインモードのテロップがない？
-                // テストモードのテロップがない？
-                if (!telops.Any(x =>
-                    x.IsDesignMode ||
-                    x.IsTest))
+                if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
+                    !this.existFFXIVProcess)
                 {
-                    TickersController.Instance.CloseTelops();
-                    return;
-                }
+                    // デザインモードのテロップがない？
+                    // テストモードのテロップがない？
+                    if (!telops.Any(x =>
+                        x.IsDesignMode ||
+                        x.IsTest))
+                    {
+                        TickersController.Instance.CloseTelops();
+                        return;
+                    }
 
-                if (!isHideOverlay)
-                {
-                    TickersController.Instance.RefreshTelopOverlays(
-                        telops.Where(x =>
-                            x.IsDesignMode ||
-                            x.IsTest).ToList());
-                    return;
+                    if (!isHideOverlay)
+                    {
+                        TickersController.Instance.RefreshTelopOverlays(
+                            telops.Where(x =>
+                                x.IsDesignMode ||
+                                x.IsTest).ToList());
+                        return;
+                    }
                 }
             }
 

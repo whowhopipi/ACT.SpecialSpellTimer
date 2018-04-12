@@ -241,8 +241,8 @@
   <system:String x:Key="Timeline_Styles">アクティビティの表示スタイル</system:String>
   <system:String x:Key="Timeline_StyleName">スタイルの名前</system:String>
   <system:String x:Key="Timeline_CircleStyle">サークルスタイル</system:String>
-  <system:String x:Key="Timeline_TestTimeline">過去の戦闘ログを使用して スペスペたいむ™ をテストする</system:String>
-  <system:String x:Key="Timeline_TimelineTester">スペスペたいむ™ テスター</system:String>
+  <system:String x:Key="Timeline_TestTimeline">過去の戦闘ログを使用して スペスペたいむ™ をシミュレーションする</system:String>
+  <system:String x:Key="Timeline_TimelineTester">スペスペたいむ™ シミュレータ</system:String>
   <system:String x:Key="Timeline_ShowActivitiesCount">表示するアクティビティの数</system:String>
   <system:String x:Key="Timeline_Header">ヘッダ</system:String>
   <system:String x:Key="Timeline_ShowHeader">ヘッダを表示する</system:String>
@@ -251,6 +251,6 @@
   <system:String x:Key="Timeline_ShowCompiledText">RazorEngine によってパースされた後の定義内容を見る</system:String>
 
   <system:String x:Key="TriggerTester_OpenSimulator">シミュレータ</system:String>
-  <system:String x:Key="TriggerTester_Title">トリガテスター</system:String>
+  <system:String x:Key="TriggerTester_Title">トリガシミュレータ</system:String>
   <system:String x:Key="TriggerTester_Condition">テスト条件</system:String>
 </ResourceDictionary>

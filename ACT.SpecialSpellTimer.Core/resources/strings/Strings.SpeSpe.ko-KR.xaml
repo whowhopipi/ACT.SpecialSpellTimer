@@ -249,4 +249,8 @@
   <system:String x:Key="Timeline_HeaderStyle">헤더 스타일</system:String>
   <system:String x:Key="Timeline_OpenResourcesDictionary">ResourcesDictionary.xaml 폴더 열기</system:String>
   <system:String x:Key="Timeline_ShowCompiledText">RazorEngine으로 컴파일 된 텍스트 표시</system:String>
+
+  <system:String x:Key="TriggerTester_OpenSimulator">Simulator</system:String>
+  <system:String x:Key="TriggerTester_Title">Trigger Simulator</system:String>
+  <system:String x:Key="TriggerTester_Condition">Condition</system:String>
 </ResourceDictionary>

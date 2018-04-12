@@ -249,4 +249,8 @@
   <system:String x:Key="Timeline_HeaderStyle">Header style</system:String>
   <system:String x:Key="Timeline_OpenResourcesDictionary">Open ResourcesDictionary.xaml Folder</system:String>
   <system:String x:Key="Timeline_ShowCompiledText">Show compiled text by RazorEngine</system:String>
+
+  <system:String x:Key="TriggerTester_OpenSimulator">Simulator</system:String>
+  <system:String x:Key="TriggerTester_Title">Trigger Simulator</system:String>
+  <system:String x:Key="TriggerTester_Condition">Condition</system:String>
 </ResourceDictionary>

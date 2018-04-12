@@ -49,6 +49,11 @@ namespace ACT.SpecialSpellTimer
         private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
 
         /// <summary>
+        /// 内部バッファ
+        /// </summary>
+        public ConcurrentQueue<LogLineEventArgs> LogInfoQueue => this.logInfoQueue;
+
+        /// <summary>
         /// 最初のログが到着したか？
         /// </summary>
         private bool firstLogArrived;
