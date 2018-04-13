@@ -102,6 +102,7 @@ namespace ACT.SpecialSpellTimer.Views
             title = title.Replace("\\n", Environment.NewLine);
 
             if (tb.Text != title) tb.Text = title;
+
             // 点滅を判定する
             if (!this.StartBlink())
             {
