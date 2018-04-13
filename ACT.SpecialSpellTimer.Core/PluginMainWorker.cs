@@ -321,12 +321,6 @@ namespace ACT.SpecialSpellTimer
                 {
                     foreach (var log in logs)
                     {
-                        // 0D:残HP率のログならば判定しない
-                        if (log.LogLine.Contains("] 0D:"))
-                        {
-                            continue;
-                        }
-
                         trigger.MatchTrigger(log.Log);
                     }
                 });
