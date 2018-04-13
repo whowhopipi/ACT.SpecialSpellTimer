@@ -78,15 +78,11 @@ namespace ACT.SpecialSpellTimer.Models
         [XmlIgnore]
         private Timer timeupSoundTimer = new Timer() { AutoReset = false, Enabled = false };
 
-        [XmlIgnore]
-        private Timer garbageInstanceTimer = new Timer(10 * 1000) { AutoReset = false, Enabled = false };
-
         public Spell()
         {
             this.overSoundTimer.Elapsed += this.OverSoundTimer_Elapsed;
             this.beforeSoundTimer.Elapsed += this.BeforeSoundTimer_Elapsed;
             this.timeupSoundTimer.Elapsed += this.TimeupSoundTimer_Elapsed;
-            this.garbageInstanceTimer.Elapsed += this.GarbageInstanceTimer_Elapsed;
         }
 
         private double left, top;
@@ -655,13 +651,6 @@ namespace ACT.SpecialSpellTimer.Models
                 this.timeupSoundTimer.Dispose();
                 this.timeupSoundTimer = null;
             }
-
-            if (this.garbageInstanceTimer != null)
-            {
-                this.garbageInstanceTimer.Stop();
-                this.garbageInstanceTimer.Dispose();
-                this.garbageInstanceTimer = null;
-            }
         }
 
         /// <summary>
@@ -759,7 +748,6 @@ namespace ACT.SpecialSpellTimer.Models
             this.StartOverSoundTimer();
             this.StartBeforeSoundTimer();
             this.StartTimeupSoundTimer();
-            this.StartGarbageInstanceTimer();
         }
 
         /// <summary>
@@ -880,58 +868,6 @@ namespace ACT.SpecialSpellTimer.Models
                 this.Play(speak, this.TimeupAdvancedConfig);
             }
         }
-
-        #region To Instance Spells
-
-        /// <summary>
-        /// インスタンススペルのガーベージタイマを開始する
-        /// </summary>
-        public void StartGarbageInstanceTimer()
-        {
-            lock (this)
-            {
-                var timer = this.garbageInstanceTimer;
-
-                if (timer == null)
-                {
-                    return;
-                }
-
-                if (timer.Enabled)
-                {
-                    timer.Stop();
-                }
-
-                if (!this.IsInstance)
-                {
-                    return;
-                }
-
-                timer.AutoReset = true;
-                timer.Start();
-            }
-        }
-
-        /// <summary>
-        /// インスタンススペルのガーベージタイマを開始する
-        /// </summary>
-        public void StopGarbageInstanceTimer()
-        {
-            var timer = this.garbageInstanceTimer;
-
-            if (timer != null)
-            {
-                timer.AutoReset = false;
-                timer.Stop();
-            }
-        }
-
-        private void GarbageInstanceTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            SpellTable.Instance.TryRemoveInstance(this);
-        }
-
-        #endregion To Instance Spells
 
         #region Clone
 
@@ -1414,6 +1350,10 @@ namespace ACT.SpecialSpellTimer.Models
             TableCompiler.Instance.AddTestTrigger(this);
         }
 
+        /// <summary>
+        /// ToString()
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
             => !string.IsNullOrEmpty(this.SpellTitleReplaced) ?
                 this.SpellTitleReplaced :

@@ -56,10 +56,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             this.RunButton.Click += async (x, y) =>
             {
-                PluginMainWorker.Instance.InSimulation = true;
+                // インスタンススペルを消去する
+                SpellTable.Instance.RemoveInstanceSpellsAll();
 
                 await Task.Run(() =>
                 {
+                    PluginMainWorker.Instance.InSimulation = true;
+
                     lock (this)
                     {
                         this.testTimer.Stop();
@@ -98,9 +101,12 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                         this.TestStartTime = DateTime.MinValue;
                     }
+
+                    PluginMainWorker.Instance.InSimulation = false;
                 });
 
-                PluginMainWorker.Instance.InSimulation = false;
+                // インスタンススペルを消去する
+                SpellTable.Instance.RemoveInstanceSpellsAll();
             };
 
             this.OpenButton.Click += (x, y) =>
@@ -117,7 +123,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             this.ApplyButton.Click += async (x, y) =>
             {
-                await Task.Run(() => this.ApplyTestCondition());
+                await Task.Run(() =>
+                {
+                    // インスタンススペルを消去する
+                    SpellTable.Instance.RemoveInstanceSpellsAll();
+
+                    // テスト条件を適用する
+                    this.ApplyTestCondition();
+                });
 
                 ModernMessageBox.ShowDialog(
                     "Test Condition was applied.",
@@ -126,7 +139,14 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             this.ClearButton.Click += async (x, y) =>
             {
-                await Task.Run(() => this.ClearTestCondition());
+                await Task.Run(() =>
+                {
+                    // インスタンススペルを消去する
+                    SpellTable.Instance.RemoveInstanceSpellsAll();
+
+                    // テスト条件を解除する
+                    this.ClearTestCondition();
+                });
 
                 ModernMessageBox.ShowDialog(
                     "Test Condition was cleard.",
@@ -208,6 +228,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     while (!sr.EndOfStream)
                     {
                         var logline = sr.ReadLine();
+
+                        if (string.IsNullOrEmpty(logline) ||
+                            logline.StartsWith("#") ||
+                            logline.StartsWith("//"))
+                        {
+                            continue;
+                        }
 
                         if (ignores.Any(x => logline.Contains(x)))
                         {

@@ -146,6 +146,12 @@ namespace ACT.SpecialSpellTimer
                         var match = regex.Match(logLine);
                         if (match.Success)
                         {
+#if DEBUG
+                            if (logLine.Contains("MARK"))
+                            {
+                                Debug.WriteLine("MARK");
+                            }
+#endif
                             var targetSpell = default(Spell);
 
                             void setTitle()

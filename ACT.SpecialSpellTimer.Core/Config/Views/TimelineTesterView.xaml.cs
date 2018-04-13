@@ -177,6 +177,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     {
                         var logline = sr.ReadLine();
 
+                        if (string.IsNullOrEmpty(logline) ||
+                            logline.StartsWith("#") ||
+                            logline.StartsWith("//"))
+                        {
+                            continue;
+                        }
+
                         if (ignores.Any(x => logline.Contains(x)))
                         {
                             continue;

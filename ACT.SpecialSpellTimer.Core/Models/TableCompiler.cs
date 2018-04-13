@@ -107,6 +107,9 @@ namespace ACT.SpecialSpellTimer.Models
 
                     if (isZoneChanged)
                     {
+                        // インスタンススペルを消去する
+                        SpellTable.Instance.RemoveInstanceSpellsAll();
+
                         var zone = ActGlobals.oFormActMain.CurrentZone;
                         Logger.Write($"zone changed. zone={zone}");
                         this.ZoneChanged?.Invoke(this, new EventArgs());

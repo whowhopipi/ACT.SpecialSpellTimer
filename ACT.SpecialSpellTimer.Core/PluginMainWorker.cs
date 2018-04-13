@@ -501,6 +501,9 @@ namespace ACT.SpecialSpellTimer
                 // 暗転中もずっとリセットし続けてしまうので
                 if ((DateTime.Now - this.lastWipeOutDateTime).TotalSeconds >= 15.0)
                 {
+                    // インスタンススペルを消去する
+                    SpellTable.Instance.RemoveInstanceSpellsAll();
+
                     SpellTable.ResetCount();
                     TickerTable.Instance.ResetCount();
 

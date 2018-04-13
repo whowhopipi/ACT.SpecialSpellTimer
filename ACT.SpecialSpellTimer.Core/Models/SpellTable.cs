@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
@@ -86,7 +85,6 @@ namespace ACT.SpecialSpellTimer.Models
                 row.StartOverSoundTimer();
                 row.StartBeforeSoundTimer();
                 row.StartTimeupSoundTimer();
-                row.StartGarbageInstanceTimer();
             }
         }
 
@@ -374,13 +372,14 @@ namespace ACT.SpecialSpellTimer.Models
             string spellTitle,
             Spell sourceSpell)
         {
+            var key = sourceSpell.KeywordReplaced + spellTitle;
+
             var instance = this.instanceSpells.GetOrAdd(
-                spellTitle,
+                key,
                 sourceSpell.CreateInstanceNew(spellTitle));
 
             instance.SpellTitleReplaced = spellTitle;
             instance.CompleteScheduledTime = DateTime.MinValue;
-            instance.StartGarbageInstanceTimer();
 
             WPFHelper.Invoke(() =>
             {
@@ -402,55 +401,16 @@ namespace ACT.SpecialSpellTimer.Models
                 this.instanceSpells.Clear();
 
                 var targets = this.table.Where(x => x.IsInstance).ToArray();
-                foreach (var item in targets)
-                {
-                    this.Remove(item);
-                }
-
-                TableCompiler.Instance.RemoveInstanceSpells();
-            }
-        }
-
-        /// <summary>
-        /// instanceが不要になっていたらコレクションから除去する
-        /// </summary>
-        /// <param name="instance">インスタンス</param>
-        public void TryRemoveInstance(
-            Spell instance)
-        {
-            var ttl = Settings.Default.TimeOfHideSpell + 30;
-
-            if (!instance.IsInstance ||
-                instance.IsDesignMode)
-            {
-                return;
-            }
-
-            var isRemove = false;
-
-            lock (InstanceLocker)
-            {
-                if (instance.CompleteScheduledTime != DateTime.MinValue &&
-                    (DateTime.Now - instance.CompleteScheduledTime).TotalSeconds >= ttl)
-                {
-                    isRemove = true;
-                    instance.StopGarbageInstanceTimer();
-                    this.instanceSpells.TryRemove(instance.SpellTitleReplaced, out Spell s);
-                }
-
-                if (!isRemove)
-                {
-                    return;
-                }
 
                 WPFHelper.Invoke(() =>
                 {
-                    this.Remove(instance);
+                    foreach (var item in targets)
+                    {
+                        this.Remove(item);
+                    }
                 });
 
-                TableCompiler.Instance.RemoveSpell(instance);
-
-                instance.Dispose();
+                TableCompiler.Instance.RemoveInstanceSpells();
             }
         }
 
