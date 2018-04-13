@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
@@ -354,8 +355,6 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region To Instance spells
 
-        public static readonly object InstanceLocker = new object();
-
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
@@ -372,7 +371,7 @@ namespace ACT.SpecialSpellTimer.Models
             string spellTitle,
             Spell sourceSpell)
         {
-            var key = sourceSpell.KeywordReplaced + spellTitle;
+            var key = $"{sourceSpell.Guid}+{spellTitle}";
 
             var instance = this.instanceSpells.GetOrAdd(
                 key,
@@ -384,7 +383,8 @@ namespace ACT.SpecialSpellTimer.Models
             WPFHelper.Invoke(() =>
             {
                 this.Add(instance);
-            });
+            },
+            DispatcherPriority.Normal);
 
             TableCompiler.Instance.AddSpell(instance);
 
@@ -396,22 +396,19 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public void RemoveInstanceSpellsAll()
         {
-            lock (InstanceLocker)
+            this.instanceSpells.Clear();
+
+            var targets = this.table.Where(x => x.IsInstance).ToArray();
+
+            WPFHelper.Invoke(() =>
             {
-                this.instanceSpells.Clear();
-
-                var targets = this.table.Where(x => x.IsInstance).ToArray();
-
-                WPFHelper.Invoke(() =>
+                foreach (var item in targets)
                 {
-                    foreach (var item in targets)
-                    {
-                        this.Remove(item);
-                    }
-                });
+                    this.Remove(item);
+                }
+            });
 
-                TableCompiler.Instance.RemoveInstanceSpells();
-            }
+            TableCompiler.Instance.RemoveInstanceSpells();
         }
 
         #endregion To Instance spells

@@ -307,14 +307,17 @@ namespace ACT.SpecialSpellTimer
             var sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
             // ログを取り出す
-            var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
+            // 0D: 残HP率 のログは判定から除外する
+            var logsTask = Task.Run(()
+                => this.LogBuffer.GetLogLines().Where(x =>
+                    !x.LogLine.Contains("] 0D:")));
 
             // 有効なスペルとテロップのリストを取得する
             var triggers = TableCompiler.Instance.TriggerList;
             this.lastActiveTriggerCount = triggers.Count;
 
             var logs = logsTask.Result;
-            if (logs.Count > 0)
+            if (logs.Count() > 0)
             {
                 triggers.AsParallel().ForAll((trigger) =>
                 {
@@ -329,10 +332,10 @@ namespace ACT.SpecialSpellTimer
 
 #if DEBUG
             sw.Stop();
-            if (logs.Count != 0)
+            if (logs.Count() != 0)
             {
                 var time = sw.ElapsedMilliseconds;
-                var count = logs.Count;
+                var count = logs.Count();
                 Debug.WriteLine($"●DetectLogs\t{time:N1} ms\t{count:N0} lines\tavg {time / count:N2}");
             }
 #endif

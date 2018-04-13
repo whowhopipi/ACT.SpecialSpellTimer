@@ -184,17 +184,8 @@ namespace ACT.SpecialSpellTimer
                                 }
                             }
 
-                            if (spell.ToInstance)
-                            {
-                                lock (SpellTable.InstanceLocker)
-                                {
-                                    setTitle();
-                                }
-                            }
-                            else
-                            {
-                                setTitle();
-                            }
+                            // スペルタイトルを編集する
+                            setTitle();
 
                             targetSpell.UpdateDone = false;
                             targetSpell.OverDone = false;

@@ -327,21 +327,15 @@ namespace ACT.SpecialSpellTimer
         #region ログ処理
 
         /// <summary>
-        /// 明らかにTLの判定外とするログキーワード
+        /// 設定によらず必ずカットするログのキーワード
         /// </summary>
         public static readonly string[] IgnoreLogKeywords = new[]
         {
-            /*
-            "] 17:",    // Cancel
-            */
             "] 18:",    // DoT/HoT Tick
-            /*
-            "] 19:",    // defeated
-            */
         };
 
         /// <summary>
-        /// カットする可能性のある詳細ログのキーワード
+        /// 設定よってカットする場合があるログのキーワード
         /// </summary>
         public static readonly string[] IgnoreDetailLogKeywords = new[]
         {
