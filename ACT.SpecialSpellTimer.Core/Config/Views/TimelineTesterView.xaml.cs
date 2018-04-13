@@ -273,8 +273,12 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         true);
 
                     TimelineController.CurrentController?.EnqueueLog(logInfo);
+                }
 
-                    this.TimelineTestListView.ScrollIntoView(log);
+                var last = logs.LastOrDefault();
+                if (last != null)
+                {
+                    this.TimelineTestListView.ScrollIntoView(last);
                 }
             }
         }

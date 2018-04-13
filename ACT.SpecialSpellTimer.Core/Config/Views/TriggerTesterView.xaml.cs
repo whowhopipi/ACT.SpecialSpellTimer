@@ -318,8 +318,12 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         true);
 
                     PluginMainWorker.Instance.LogBuffer.LogInfoQueue.Enqueue(logInfo);
+                }
 
-                    this.TimelineTestListView.ScrollIntoView(log);
+                var last = logs.LastOrDefault();
+                if (last != null)
+                {
+                    this.TimelineTestListView.ScrollIntoView(last);
                 }
             }
         }

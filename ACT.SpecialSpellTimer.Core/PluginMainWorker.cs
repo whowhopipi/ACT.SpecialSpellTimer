@@ -308,9 +308,7 @@ namespace ACT.SpecialSpellTimer
 #endif
             // ログを取り出す
             // 0D: 残HP率 のログは判定から除外する
-            var logsTask = Task.Run(()
-                => this.LogBuffer.GetLogLines().Where(x =>
-                    !x.LogLine.Contains("] 0D:")));
+            var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
 
             // 有効なスペルとテロップのリストを取得する
             var triggers = TableCompiler.Instance.TriggerList;
@@ -323,6 +321,12 @@ namespace ACT.SpecialSpellTimer
                 {
                     foreach (var log in logs)
                     {
+                        // 0D:残HP率のログならば判定しない
+                        if (log.LogLine.Contains("] 0D:"))
+                        {
+                            continue;
+                        }
+
                         trigger.MatchTrigger(log.Log);
                     }
                 });
@@ -340,7 +344,7 @@ namespace ACT.SpecialSpellTimer
             }
 #endif
 
-            resetTask.Wait();
+            resetTask?.Wait();
 
             if (existsLog)
             {
