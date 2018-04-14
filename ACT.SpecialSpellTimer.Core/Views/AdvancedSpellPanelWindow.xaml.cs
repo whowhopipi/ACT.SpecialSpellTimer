@@ -164,8 +164,8 @@ namespace ACT.SpecialSpellTimer.Views
             // 表示するものがなければ何もしない
             if (this.Spells == null)
             {
-                this.ActiveSpells.Clear();
                 this.HideOverlay();
+                this.ActiveSpells.Clear();
                 return;
             }
 
@@ -192,8 +192,8 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (!spells.Any())
             {
-                this.ActiveSpells.Clear();
                 this.HideOverlay();
+                this.ActiveSpells.Clear();
                 return;
             }
 
@@ -285,10 +285,6 @@ namespace ACT.SpecialSpellTimer.Views
                 {
                     control.Progress = 1.0d;
                     control.RecastTime = 0;
-                    control.Update();
-                    control.StartBarAnimation();
-
-                    spell.UpdateDone = true;
                 }
                 else
                 {
@@ -306,14 +302,13 @@ namespace ACT.SpecialSpellTimer.Views
                     {
                         control.Progress = 1.0d;
                     }
+                }
 
-                    if (!spell.UpdateDone)
-                    {
-                        control.Update();
-                        control.StartBarAnimation();
-
-                        spell.UpdateDone = true;
-                    }
+                if (!spell.UpdateDone)
+                {
+                    control.Update();
+                    control.StartBarAnimation();
+                    spell.UpdateDone = true;
                 }
 
                 control.Refresh();

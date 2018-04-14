@@ -220,9 +220,9 @@ namespace ACT.SpecialSpellTimer.Views
             title = title.Replace(",", Environment.NewLine);
             title = title.Replace("\\n", Environment.NewLine);
 
-            if (tb.Text != title) tb.Text = title;
-            if (tb.Fill != this.FontBrush) tb.Fill = this.FontBrush;
-            if (tb.Stroke != this.FontOutlineBrush) tb.Stroke = this.FontOutlineBrush;
+            tb.Text = title;
+            tb.Fill = this.FontBrush;
+            tb.Stroke = this.FontOutlineBrush;
             tb.SetFontInfo(font);
             tb.SetAutoStrokeThickness();
 
@@ -254,20 +254,20 @@ namespace ACT.SpecialSpellTimer.Views
 
             // ProgressBarを描画する
             var foreRect = this.BarRectangle;
-            if (foreRect.Fill != this.BarBrush) foreRect.Fill = this.BarBrush;
-            if (foreRect.Width != this.Spell.BarWidth) foreRect.Width = this.Spell.BarWidth;
-            if (foreRect.Height != this.Spell.BarHeight) foreRect.Height = this.Spell.BarHeight;
+            foreRect.Fill = this.BarBrush;
+            foreRect.Width = this.Spell.BarWidth;
+            foreRect.Height = this.Spell.BarHeight;
 
             var backRect = this.BarBackRectangle;
-            if (backRect.Width != this.Spell.BarWidth) backRect.Width = this.Spell.BarWidth;
+            backRect.Width = this.Spell.BarWidth;
 
             var outlineRect = this.BarOutlineRectangle;
-            if (outlineRect.Stroke != this.BarOutlineBrush) outlineRect.Stroke = this.BarOutlineBrush;
+            outlineRect.Stroke = this.BarOutlineBrush;
 
             // バーのエフェクトカラーも手動で設定する
             // Bindingだとアニメーションでエラーが発生するため
             var effectColor = this.BarBrush.Color.ChangeBrightness(1.1);
-            if (this.BarEffect.Color != effectColor) this.BarEffect.Color = effectColor;
+            this.BarEffect.Color = effectColor;
         }
 
         #region Bar Animations

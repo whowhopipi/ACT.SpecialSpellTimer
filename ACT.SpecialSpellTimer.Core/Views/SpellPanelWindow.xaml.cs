@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -49,8 +48,6 @@ namespace ACT.SpecialSpellTimer.Views
                     this.Panel = null;
                 }
             };
-
-            this.activeSpells.CollectionChanged += this.ActiveSpells_CollectionChanged;
 
             this.ActiveSpellViewSource = new CollectionViewSource()
             {
@@ -142,8 +139,9 @@ namespace ACT.SpecialSpellTimer.Views
             // 表示するものがなければ何もしない
             if (this.Spells == null)
             {
-                this.activeSpells.Clear();
                 this.HideOverlay();
+                this.activeSpells.Clear();
+                this.ClearSpellControls();
                 return;
             }
 
@@ -171,8 +169,9 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (!spells.Any())
             {
-                this.activeSpells.Clear();
                 this.HideOverlay();
+                this.activeSpells.Clear();
+                this.ClearSpellControls();
                 return;
             }
 
@@ -282,19 +281,6 @@ namespace ACT.SpecialSpellTimer.Views
             }
         }
 
-        private void ActiveSpells_CollectionChanged(
-            object sender,
-            NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (Spell spell in e.NewItems)
-                {
-                    spell.UpdateDone = false;
-                }
-            }
-        }
-
         private void SpellControl_Loaded(
             object sender,
             RoutedEventArgs e)
@@ -303,14 +289,24 @@ namespace ACT.SpecialSpellTimer.Views
 
             lock (this.spellControls)
             {
-                if (!this.spellControls.Contains(control))
+                if (!this.spellControls.Any(x =>
+                    x.Spell.Guid == control.Spell.Guid))
                 {
+                    control.Spell.UpdateDone = false;
                     this.spellControls.Add(control);
                 }
             }
         }
 
-        public void RefreshRender()
+        private void ClearSpellControls()
+        {
+            lock (this.spellControls)
+            {
+                this.spellControls.Clear();
+            }
+        }
+
+        private void RefreshRender()
         {
             var controls = default(SpellControl[]);
 
@@ -356,10 +352,6 @@ namespace ACT.SpecialSpellTimer.Views
                 {
                     control.Progress = 1.0d;
                     control.RecastTime = 0;
-                    control.Update();
-                    control.StartBarAnimation();
-
-                    spell.UpdateDone = true;
                 }
                 else
                 {
@@ -377,14 +369,13 @@ namespace ACT.SpecialSpellTimer.Views
                     {
                         control.Progress = 1.0d;
                     }
+                }
 
-                    if (!spell.UpdateDone)
-                    {
-                        control.Update();
-                        control.StartBarAnimation();
-
-                        spell.UpdateDone = true;
-                    }
+                if (!spell.UpdateDone)
+                {
+                    control.Update();
+                    control.StartBarAnimation();
+                    spell.UpdateDone = true;
                 }
 
                 control.Refresh();
