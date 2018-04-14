@@ -359,7 +359,7 @@ namespace ACT.SpecialSpellTimer.Models
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
         private readonly Dictionary<string, Spell> instanceSpells =
-            new Dictionary<string, Spell>();
+            new Dictionary<string, Spell>(32);
 
         /// <summary>
         /// インスタンススペルを取得して返す
