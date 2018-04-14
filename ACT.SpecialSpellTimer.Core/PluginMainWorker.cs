@@ -364,6 +364,7 @@ namespace ACT.SpecialSpellTimer
             var spells = TableCompiler.Instance.TriggerList
                 .Where(x => x.ItemType == ItemTypes.Spell)
                 .Select(x => x as Spell)
+                .Concat(SpellTable.Instance.GetInstanceSpells())
                 .ToList();
 
             var isHideOverlay =

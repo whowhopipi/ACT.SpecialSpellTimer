@@ -358,8 +358,21 @@ namespace ACT.SpecialSpellTimer.Models
         /// <summary>
         /// インスタンス化されたスペルの辞書 key : スペルの表示名
         /// </summary>
-        private readonly ConcurrentDictionary<string, Spell> instanceSpells =
-            new ConcurrentDictionary<string, Spell>();
+        private readonly Dictionary<string, Spell> instanceSpells =
+            new Dictionary<string, Spell>();
+
+        /// <summary>
+        /// インスタンススペルを取得して返す
+        /// </summary>
+        /// <returns>
+        /// インスタンススペルのリスト</returns>
+        public IReadOnlyList<Spell> GetInstanceSpells()
+        {
+            lock (this.instanceSpells)
+            {
+                return this.instanceSpells.Values.ToList();
+            }
+        }
 
         /// <summary>
         /// 同じスペル表示名のインスタンスを取得するか新たに作成する
@@ -373,20 +386,23 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var key = $"{sourceSpell.Guid}+{spellTitle}";
 
-            var instance = this.instanceSpells.GetOrAdd(
-                key,
-                sourceSpell.CreateInstanceNew(spellTitle));
+            var instance = default(Spell);
+
+            lock (this.instanceSpells)
+            {
+                if (this.instanceSpells.ContainsKey(key))
+                {
+                    instance = this.instanceSpells[key];
+                }
+                else
+                {
+                    instance = sourceSpell.CreateInstanceNew(spellTitle);
+                    this.instanceSpells[key] = instance;
+                }
+            }
 
             instance.SpellTitleReplaced = spellTitle;
             instance.CompleteScheduledTime = DateTime.MinValue;
-
-            WPFHelper.Invoke(() =>
-            {
-                this.Add(instance);
-            },
-            DispatcherPriority.Normal);
-
-            TableCompiler.Instance.AddSpell(instance);
 
             return instance;
         }
@@ -396,19 +412,10 @@ namespace ACT.SpecialSpellTimer.Models
         /// </summary>
         public void RemoveInstanceSpellsAll()
         {
-            this.instanceSpells.Clear();
-
-            var targets = this.table.Where(x => x.IsInstance).ToArray();
-
-            WPFHelper.Invoke(() =>
+            lock (this.instanceSpells)
             {
-                foreach (var item in targets)
-                {
-                    this.Remove(item);
-                }
-            });
-
-            TableCompiler.Instance.RemoveInstanceSpells();
+                this.instanceSpells.Clear();
+            }
         }
 
         #endregion To Instance spells
