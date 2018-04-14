@@ -68,7 +68,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                             log.IsDone = false;
                         }
 
-                        this.TestStartTime = DateTime.Now;
+                        this.prevTestTimestamp = DateTime.Now;
                         this.testTimer.Start();
                     }
                 });
@@ -101,7 +101,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                             log.IsDone = false;
                         }
 
-                        this.TestStartTime = DateTime.MinValue;
+                        this.prevTestTimestamp = DateTime.MinValue;
                     }
                 });
 
@@ -121,20 +121,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
             private set;
         } = new ObservableCollection<TestLog>();
 
-        private DateTime testStartTime;
+        private DateTime prevTestTimestamp;
         private TimeSpan testTime;
-
-        private DateTime TestStartTime
-        {
-            get => this.testStartTime;
-            set
-            {
-                if (this.SetProperty(ref this.testStartTime, value))
-                {
-                    this.TestTime = TimeSpan.Zero;
-                }
-            }
-        }
 
         private TimeSpan TestTime
         {
@@ -242,12 +230,16 @@ namespace ACT.SpecialSpellTimer.Config.Views
         {
             lock (this)
             {
+                var now = DateTime.Now;
+
                 if (this.isPause)
                 {
+                    this.prevTestTimestamp = now;
                     return;
                 }
 
-                this.TestTime = DateTime.Now - this.TestStartTime;
+                this.TestTime += now - this.prevTestTimestamp;
+                this.prevTestTimestamp = now;
 
                 var logs = (
                     from x in this.Logs
