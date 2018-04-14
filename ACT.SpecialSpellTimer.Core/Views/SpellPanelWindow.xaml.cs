@@ -327,8 +327,6 @@ namespace ACT.SpecialSpellTimer.Views
             {
                 var spell = control.Spell;
 
-                control.Visibility = Visibility.Visible;
-
                 // Designモードならば必ず再描画する
                 if (spell.IsDesignMode)
                 {
@@ -379,6 +377,8 @@ namespace ACT.SpecialSpellTimer.Views
                 }
 
                 control.Refresh();
+
+                control.Visibility = Visibility.Visible;
             }
         }
 
