@@ -404,6 +404,15 @@ namespace ACT.SpecialSpellTimer.Models
 
         public bool BlinkBar { get; set; } = false;
 
+        private int actualSortOrder = 0;
+
+        [XmlIgnore]
+        public int ActualSortOrder
+        {
+            get => this.actualSortOrder;
+            set => this.SetProperty(ref this.actualSortOrder, value);
+        }
+
         #region Sequential TTS
 
         /// <summary>

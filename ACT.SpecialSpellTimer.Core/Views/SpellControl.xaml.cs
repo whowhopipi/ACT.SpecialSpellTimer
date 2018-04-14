@@ -24,18 +24,8 @@ namespace ACT.SpecialSpellTimer.Views
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public SpellControl() : this(new Spell())
+        public SpellControl()
         {
-        }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public SpellControl(
-            Spell spell)
-        {
-            this.Spell = spell;
-
             this.InitializeComponent();
         }
 

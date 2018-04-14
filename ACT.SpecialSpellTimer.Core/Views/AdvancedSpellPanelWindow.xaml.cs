@@ -224,7 +224,10 @@ namespace ACT.SpecialSpellTimer.Views
             {
                 foreach (Spell spell in e.NewItems)
                 {
-                    var control = new SpellControl(spell);
+                    var control = new SpellControl()
+                    {
+                        Spell = spell
+                    };
 
                     control.SetBinding(Canvas.LeftProperty, new Binding(nameof(Spell.Left)));
                     control.SetBinding(Canvas.TopProperty, new Binding(nameof(Spell.Top)));

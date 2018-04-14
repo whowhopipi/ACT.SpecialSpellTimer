@@ -182,7 +182,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
                 this.TriggerList.AddRange(query);
 
-                this.ActiveTriggerCount = newList.LongCount();
+                this.ActiveTriggerCount = newList.LongCount() + SpellTable.Instance.GetInstanceSpells().Count;
                 this.RaisePropertyChanged(nameof(this.ActiveTriggerCount));
             }
         }
