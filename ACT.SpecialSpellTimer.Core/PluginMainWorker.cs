@@ -315,7 +315,7 @@ namespace ACT.SpecialSpellTimer
             this.lastActiveTriggerCount = triggers.Count;
 
             var logs = logsTask.Result;
-            if (logs.Count() > 0)
+            if (logs.Count > 0)
             {
                 triggers.AsParallel().ForAll((trigger) =>
                 {
@@ -330,10 +330,10 @@ namespace ACT.SpecialSpellTimer
 
 #if DEBUG
             sw.Stop();
-            if (logs.Count() != 0)
+            if (logs.Count != 0)
             {
                 var time = sw.ElapsedMilliseconds;
-                var count = logs.Count();
+                var count = logs.Count;
                 Debug.WriteLine($"●DetectLogs\t{time:N1} ms\t{count:N0} lines\tavg {time / count:N2}");
             }
 #endif
