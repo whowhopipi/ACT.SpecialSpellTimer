@@ -30,18 +30,21 @@
         x:Name="SpellsControl"
         BorderThickness="0"
         ItemsSource="{Binding ActiveSpellView, Mode=OneWay}">
+
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <StackPanel Orientation="{Binding SpellOrientation, Mode=OneWay}" />
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
+
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <local:SpellControl
               x:Name="SpellControl"
               Visibility="Collapsed"
               DataContext="{Binding}"
-              Margin="{Binding SpellMargin, Mode=OneWay}"
+              HorizontalAlignment="Left"
+              Margin="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=SpellMargin, Mode=OneWay}"
               Loaded="SpellControl_Loaded" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>
