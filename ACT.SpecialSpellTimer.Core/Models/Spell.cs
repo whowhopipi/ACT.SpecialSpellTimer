@@ -413,6 +413,15 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.actualSortOrder, value);
         }
 
+        private Visibility visibility = Visibility.Collapsed;
+
+        [XmlIgnore]
+        public Visibility Visibility
+        {
+            get => this.visibility;
+            set => this.SetProperty(ref this.visibility, value);
+        }
+
         #region Sequential TTS
 
         /// <summary>

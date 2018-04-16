@@ -41,10 +41,11 @@
           <DataTemplate>
             <local:SpellControl
               x:Name="SpellControl"
-              Visibility="Collapsed"
-              DataContext="{Binding}"
               HorizontalAlignment="Left"
+              DataContext="{Binding}"
               Margin="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=SpellMargin, Mode=OneWay}"
+              Visibility="{Binding Visibility, Mode=OneWay}"
+              Opacity="0"
               Loaded="SpellControl_Loaded" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>

@@ -136,6 +136,8 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void Refresh()
         {
+            var now = DateTime.Now;
+
             // 表示するものがなければ何もしない
             if (this.Spells == null)
             {
@@ -153,21 +155,34 @@ namespace ACT.SpecialSpellTimer.Views
                 select
                 x;
 
-            // タイムアップしたものを除外する
-            if ((Settings.Default.TimeOfHideSpell > 0.0d) &&
-                this.Panel.SortOrder != SpellOrders.Fixed)
+            // タイムアップしたものを非表示にする
+            foreach (var spell in spells)
             {
-                spells =
-                    from x in spells
-                    where
-                    x.DontHide ||
-                    x.IsDesignMode ||
-                    (DateTime.Now - x.CompleteScheduledTime).TotalSeconds <= Settings.Default.TimeOfHideSpell
-                    select
-                    x;
+                var toHide = false;
+
+                if (Settings.Default.TimeOfHideSpell > 0.0d)
+                {
+                    if (!spell.DontHide &&
+                        !spell.IsDesignMode &&
+                        (now - spell.CompleteScheduledTime).TotalSeconds > Settings.Default.TimeOfHideSpell)
+                    {
+                        toHide = true;
+                    }
+                }
+
+                if (!toHide)
+                {
+                    spell.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    spell.Visibility = this.Panel.SortOrder == SpellOrders.Fixed ?
+                        Visibility.Hidden :
+                        Visibility.Collapsed;
+                }
             }
 
-            if (!spells.Any())
+            if (!spells.Any(x => x.Visibility == Visibility.Visible))
             {
                 this.HideOverlay();
                 this.activeSpells.Clear();
@@ -239,20 +254,17 @@ namespace ACT.SpecialSpellTimer.Views
             }
 
             // 背景色を設定する
-            if (spells.Any())
+            var s = spells.FirstOrDefault();
+            if (s != null)
             {
-                var s = spells.FirstOrDefault();
-                if (s != null)
-                {
-                    var c = s.BackgroundColor.FromHTMLWPF();
-                    var backGroundColor = Color.FromArgb(
-                        (byte)s.BackgroundAlpha,
-                        c.R,
-                        c.G,
-                        c.B);
+                var c = s.BackgroundColor.FromHTMLWPF();
+                var backGroundColor = Color.FromArgb(
+                    (byte)s.BackgroundAlpha,
+                    c.R,
+                    c.G,
+                    c.B);
 
-                    this.BackgroundBrush = this.GetBrush(backGroundColor);
-                }
+                this.BackgroundBrush = this.GetBrush(backGroundColor);
             }
 
             // 有効なスペルリストを入れ替える
@@ -378,7 +390,8 @@ namespace ACT.SpecialSpellTimer.Views
 
                 control.Refresh();
 
-                control.Visibility = Visibility.Visible;
+                // 最初は非表示（Opacity=0）にしているので表示する
+                control.Opacity = 1.0;
             }
         }
 
