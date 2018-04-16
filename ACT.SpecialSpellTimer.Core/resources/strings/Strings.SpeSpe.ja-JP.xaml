@@ -66,6 +66,7 @@
   <system:String x:Key="Tag_Title">タグを付ける</system:String>
 
   <system:String x:Key="Trigger_JobFilter">ジョブフィルタ</system:String>
+  <system:String x:Key="Trigger_PartyJobFilter">Party Job Filter</system:String>
   <system:String x:Key="Trigger_ZoneFilter">ゾーンフィルタ</system:String>
   <system:String x:Key="Trigger_Preconditions">前提条件</system:String>
   <system:String x:Key="Trigger_ClearFilter">フィルタを解除する</system:String>

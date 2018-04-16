@@ -184,6 +184,14 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.jobFilter, value);
         }
 
+        private string partyJobFilter = string.Empty;
+
+        public string PartyJobFilter
+        {
+            get => this.partyJobFilter;
+            set => this.SetProperty(ref this.partyJobFilter, value);
+        }
+
         private string zoneFilter = string.Empty;
 
         public string ZoneFilter
