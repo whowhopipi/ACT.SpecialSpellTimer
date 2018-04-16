@@ -253,6 +253,7 @@ namespace ACT.SpecialSpellTimer.Models
             bool filter(Spell spell)
             {
                 var enabledByJob = false;
+                var enabledByPartyJob = false;
                 var enabledByZone = false;
 
                 // ジョブフィルタをかける
@@ -271,6 +272,22 @@ namespace ACT.SpecialSpellTimer.Models
                     }
                 }
 
+                // filter by specific jobs in party
+                if (this.player == null ||
+                    this.player.ID == 0 ||
+                    string.IsNullOrEmpty(spell.PartyJobFilter))
+                {
+                    enabledByPartyJob = true;
+                }
+                else
+                {
+                    var jobs = spell.PartyJobFilter.Split(',');
+                    if (jobs.Any(x => this.partyList.Where(c => !c.IsPlayer).Any(c => c.Job.ToString() == x)))
+                    {
+                        enabledByPartyJob = true;
+                    }
+                }
+
                 // ゾーンフィルタをかける
                 if (currentZoneID == 0 ||
                     string.IsNullOrEmpty(spell.ZoneFilter))
@@ -286,7 +303,7 @@ namespace ACT.SpecialSpellTimer.Models
                     }
                 }
 
-                return enabledByJob && enabledByZone;
+                return enabledByJob && enabledByZone && enabledByPartyJob;
             }
 
             var query =

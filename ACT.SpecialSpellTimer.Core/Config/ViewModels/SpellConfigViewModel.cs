@@ -44,6 +44,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
 
                         // ジョブ・ゾーン・前提条件のセレクタを初期化する
                         this.SetJobSelectors();
+                        this.SetPartyJobSelectors();
                         this.SetZoneSelectors();
                         PreconditionSelectors.Instance.SetModel(this.model);
 
@@ -61,6 +62,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                     }
 
                     this.RaisePropertyChanged(nameof(this.IsJobFiltered));
+                    this.RaisePropertyChanged(nameof(this.IsPartyJobFiltered));
                     this.RaisePropertyChanged(nameof(this.IsZoneFiltered));
                     this.RaisePropertyChanged(nameof(this.PreconditionSelectors));
                     this.RaisePropertyChanged(nameof(this.Model.MatchAdvancedConfig));
@@ -135,7 +137,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
         #region Job filter
 
         public bool IsJobFiltered => !string.IsNullOrEmpty(this.Model?.JobFilter);
-
+      
         private static List<JobSelector> jobSelectors;
 
         public List<JobSelector> JobSelectors => jobSelectors;
@@ -213,7 +215,94 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 }
             }));
 
+       
+
         #endregion Job filter
+
+        #region Party Job Filter
+        public bool IsPartyJobFiltered => !string.IsNullOrEmpty(this.Model?.PartyJobFilter);
+
+        private static List<JobSelector> partyJobSelectors;
+
+        public List<JobSelector> PartyJobSelectors => partyJobSelectors;
+
+        private void SetPartyJobSelectors()
+        {
+            if (partyJobSelectors == null)
+            {
+                partyJobSelectors = new List<JobSelector>();
+
+                foreach (var job in
+                    from x in Jobs.List
+                    where
+                        x.ID != JobIDs.Unknown &&
+                        x.ID != JobIDs.ADV &&
+                        x.Role != Roles.Crafter &&
+                        x.Role != Roles.Gatherer
+                    orderby
+                        x.Role.ToSortOrder(),
+                        x.ID
+                    select
+                        x)
+                {
+                    partyJobSelectors.Add(new JobSelector(job));
+                }
+            }
+
+            var jobFilters = this.Model.PartyJobFilter?.Split(',');
+            foreach (var selector in this.PartyJobSelectors)
+            {
+                if (jobFilters != null)
+                {
+                    selector.IsSelected = jobFilters.Contains(((int)selector.Job.ID).ToString());
+                }
+
+                selector.SelectedChangedDelegate = this.PartyJobFilterChanged;
+            }
+
+            this.RaisePropertyChanged(nameof(this.PartyJobSelectors));
+        }
+
+        private void PartyJobFilterChanged()
+        {
+            if (!this.isInitialize)
+            {
+                this.Model.PartyJobFilter = string.Join(",",
+                    this.PartyJobSelectors
+                        .Where(x => x.IsSelected)
+                        .Select(x => ((int)x.Job.ID).ToString())
+                        .ToArray());
+
+                this.RaisePropertyChanged(nameof(this.IsPartyJobFiltered));
+                Task.Run(() => TableCompiler.Instance.CompileSpells());
+            }
+        }
+
+        private ICommand clearPartyJobFilterCommand;
+
+        public ICommand ClearPartyJobFilterCommand =>
+            this.clearPartyJobFilterCommand ?? (this.clearPartyJobFilterCommand = new DelegateCommand(() =>
+            {
+                try
+                {
+                    this.isInitialize = true;
+                    foreach (var selector in this.PartyJobSelectors)
+                    {
+                        selector.IsSelected = false;
+                    }
+
+                    this.Model.PartyJobFilter = string.Empty;
+                    this.RaisePropertyChanged(nameof(this.IsPartyJobFiltered));
+                    Task.Run(() => TableCompiler.Instance.CompileSpells());
+                }
+                finally
+                {
+                    this.isInitialize = false;
+                }
+            }));
+
+
+        #endregion
 
         #region Zone filter
 

@@ -66,6 +66,7 @@
   <system:String x:Key="Tag_Title">Add tags</system:String>
 
   <system:String x:Key="Trigger_JobFilter">Job filter</system:String>
+    <system:String x:Key="Trigger_PartyJobFilter">Party Job Filter</system:String>
   <system:String x:Key="Trigger_ZoneFilter">Zone filter</system:String>
   <system:String x:Key="Trigger_Preconditions">Precondition</system:String>
   <system:String x:Key="Trigger_ClearFilter">Clear filter</system:String>
