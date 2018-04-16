@@ -74,6 +74,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                         }
 
                         this.prevTestTimestamp = DateTime.Now;
+                        this.TestTime = TimeSpan.Zero;
                         this.testTimer.Start();
                     }
                 });
