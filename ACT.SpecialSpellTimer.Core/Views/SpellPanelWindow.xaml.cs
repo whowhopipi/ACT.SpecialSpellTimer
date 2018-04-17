@@ -1,3 +1,7 @@
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
+using FFXIV.Framework.Extensions;
+using FFXIV.Framework.WPF.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +14,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
-using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Models;
-using FFXIV.Framework.Extensions;
-using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer.Views
 {
@@ -324,13 +324,8 @@ namespace ACT.SpecialSpellTimer.Views
 
             lock (this.spellControls)
             {
-                var toRemove = this.spellControls.Where(x =>
+                this.spellControls.RemoveAll(x =>
                     !this.activeSpells.Any(y => y.Guid == x.Spell.Guid));
-
-                foreach (var item in toRemove)
-                {
-                    this.spellControls.Remove(item);
-                }
 
                 controls = this.spellControls.ToArray();
             }
