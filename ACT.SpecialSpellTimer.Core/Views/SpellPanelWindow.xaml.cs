@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -25,6 +26,9 @@ namespace ACT.SpecialSpellTimer.Views
         ISpellPanelWindow,
         INotifyPropertyChanged
     {
+
+        private Point _originalPoint;
+        private bool _isRestorePosition = false;
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -34,9 +38,14 @@ namespace ACT.SpecialSpellTimer.Views
             this.Panel = panel;
             this.Panel.PanelWindow = this;
 
+            _originalPoint = new Point(panel.Left,panel.Top);
+
             this.InitializeComponent();
 
-            this.MouseLeftButtonDown += (x, y) => this.DragMove();
+            this.MouseLeftButtonDown += (x, y) =>
+            {
+                if (!Panel.Locked) this.DragMove();
+            };
 
             this.Closed += (x, y) =>
             {
@@ -47,6 +56,19 @@ namespace ACT.SpecialSpellTimer.Views
                     this.Panel.PanelWindow = null;
                     this.Panel = null;
                 }
+            };
+
+            this.LocationChanged += (sender, args) =>
+            {
+                if (_isRestorePosition) return;
+                if (Panel.Locked)
+                {
+                    _isRestorePosition = true;
+                    Top = _originalPoint.Y;
+                    Left = _originalPoint.X;
+                }
+
+                _isRestorePosition = false;
             };
 
             this.ActiveSpellViewSource = new CollectionViewSource()
