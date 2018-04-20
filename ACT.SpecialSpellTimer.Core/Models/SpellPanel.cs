@@ -123,7 +123,11 @@ namespace ACT.SpecialSpellTimer.Models
 
         public bool Horizontal { get; set; } = false;
 
-        public bool Locked { get; set; } = false;
+        public bool Locked
+        {
+            get => locked;
+            set => this.SetProperty(ref this.locked, value);
+        }
 
         public double Margin { get; set; } = 0;
 
