@@ -123,6 +123,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         public bool Horizontal { get; set; } = false;
 
+        public bool Locked { get; set; } = false;
+
         public double Margin { get; set; } = 0;
 
         [XmlIgnore]

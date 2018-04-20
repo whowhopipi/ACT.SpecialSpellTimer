@@ -135,7 +135,9 @@
             <xctk:DoubleUpDown Value="{Binding Model.Left, Mode=TwoWay}" FormatString="F0" MinWidth="75" Increment="1" />
             <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
             <xctk:DoubleUpDown Value="{Binding Model.Top, Mode=TwoWay}" FormatString="F0" MinWidth="75" Increment="1" />
-          </StackPanel>
+            <Label Margin="10 0 5 0" Content="Lock" VerticalAlignment="Center" />
+            <CheckBox IsChecked="{Binding Model.Locked, Mode=TwoWay}" />
+               </StackPanel>
 
           <!-- Margin -->
           <Label Margin="0 10 0 0" Content="{DynamicResource SpellPanel_Margin}" />
