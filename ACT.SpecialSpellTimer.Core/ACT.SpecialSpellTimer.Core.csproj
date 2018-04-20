@@ -276,12 +276,16 @@
     <Compile Include="RaidTimeline\TimelineStyle.cs" />
     <Compile Include="RaidTimeline\TimelineSubroutineModel.cs" />
     <Compile Include="RaidTimeline\TimelineTriggerModel.cs" />
+    <Compile Include="RaidTimeline\TimelineImageNoticeModel.cs" />
     <Compile Include="RaidTimeline\TimelineVisualNoticeModel.cs" />
     <Compile Include="RaidTimeline\Views\Sketchbook.xaml.cs">
       <DependentUpon>Sketchbook.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaidTimeline\Views\TimelineActivityControl.xaml.cs">
       <DependentUpon>TimelineActivityControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RaidTimeline\Views\TimelineImageNoticeOverlay.xaml.cs">
+      <DependentUpon>TimelineImageNoticeOverlay.xaml</DependentUpon>
     </Compile>
     <Compile Include="RaidTimeline\Views\TimelineNoticeOverlay.xaml.cs">
       <DependentUpon>TimelineNoticeOverlay.xaml</DependentUpon>
@@ -654,6 +658,9 @@
     <Content Include="resources\icon\Timeline JP\頭割り.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\images\Sample.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\PCNameHistory.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -806,6 +813,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RaidTimeline\Views\TimelineActivityControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RaidTimeline\Views\TimelineImageNoticeOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

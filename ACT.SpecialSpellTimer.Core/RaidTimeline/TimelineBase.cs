@@ -24,6 +24,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         Subroutine,
         Load,
         VisualNotice,
+        ImageNotice,
     }
 
     public static class TimelineElementTypesEx
@@ -39,6 +40,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 "subroutine",
                 "load",
                 "visualnotice",
+                "imagenotice",
             }[(int)t];
 
         public static TimelineElementTypes FromText(
