@@ -55,10 +55,10 @@
               <Image Style="{DynamicResource Icon}" />
 
               <!-- 通知のテキスト -->
-              <controls:OutlineTextBlock Style="{DynamicResource NoticeText}" />
+              <controls:LightOutlineTextBlock Style="{DynamicResource NoticeText}" />
 
               <!-- カウンタ -->
-              <controls:OutlineTextBlock Style="{DynamicResource DurationText}" />
+              <controls:LightOutlineTextBlock Style="{DynamicResource DurationText}" />
             </DockPanel>
           </DataTemplate>
         </ItemsControl.ItemTemplate>

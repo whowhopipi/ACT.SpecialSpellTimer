@@ -51,17 +51,17 @@
 
         <StackPanel Style="{DynamicResource ActivityTextPanel}">
           <!-- アクティビティのテキスト -->
-          <controls:OutlineTextBlock Style="{DynamicResource ActivityText}" />
+          <controls:LightOutlineTextBlock Style="{DynamicResource ActivityText}" />
 
           <!-- ジャンプ先のテキスト -->
-          <controls:OutlineTextBlock Style="{DynamicResource JumpDestinationText}" />
+          <controls:LightOutlineTextBlock Style="{DynamicResource JumpDestinationText}" />
         </StackPanel>
 
         <!-- プログレスバー -->
         <controls:RichProgressBar Style="{DynamicResource Bar}" />
 
         <!-- カウンター -->
-        <controls:OutlineTextBlock Style="{DynamicResource CounterText}" />
+        <controls:LightOutlineTextBlock Style="{DynamicResource CounterText}" />
       </Grid>
     </Grid>
     <!-- Barスタイル end -->
@@ -79,10 +79,10 @@
 
       <StackPanel Style="{DynamicResource ActivityTextPanelCircle}">
         <!-- アクティビティのテキスト -->
-        <controls:OutlineTextBlock Style="{DynamicResource ActivityTextCircle}" />
+        <controls:LightOutlineTextBlock Style="{DynamicResource ActivityTextCircle}" />
 
         <!-- ジャンプ先のテキスト -->
-        <controls:OutlineTextBlock Style="{DynamicResource JumpDestinationTextCircle}" />
+        <controls:LightOutlineTextBlock Style="{DynamicResource JumpDestinationTextCircle}" />
       </StackPanel>
 
       <Grid Style="{DynamicResource CircleGrid}">
@@ -90,7 +90,7 @@
         <controls:ProgressCircle Style="{DynamicResource Circle}" />
 
         <!-- カウンター -->
-        <controls:OutlineTextBlock
+        <controls:LightOutlineTextBlock
           x:Name="CounterTextCircle"
           Style="{DynamicResource CounterTextCircle}" />
       </Grid>

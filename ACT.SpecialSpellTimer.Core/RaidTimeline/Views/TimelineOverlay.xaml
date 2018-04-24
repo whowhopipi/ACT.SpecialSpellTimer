@@ -54,18 +54,18 @@
         <StackPanel>
           <StackPanel Style="{DynamicResource Header1Panel}">
             <!-- 現在時刻 -->
-            <controls:OutlineTextBlock Style="{DynamicResource CurrentTime}" />
+            <controls:LightOutlineTextBlock Style="{DynamicResource CurrentTime}" />
 
             <!-- サブルーチン -->
-            <controls:OutlineTextBlock Style="{DynamicResource Subroutine}" />
+            <controls:LightOutlineTextBlock Style="{DynamicResource Subroutine}" />
           </StackPanel>
 
           <StackPanel Style="{DynamicResource Header2Panel}">
             <!-- ステータス -->
-            <controls:OutlineTextBlock Style="{DynamicResource Status}" />
+            <controls:LightOutlineTextBlock Style="{DynamicResource Status}" />
 
             <!-- ゾーン or Name -->
-            <controls:OutlineTextBlock Style="{DynamicResource Title}" />
+            <controls:LightOutlineTextBlock Style="{DynamicResource Title}" />
           </StackPanel>
         </StackPanel>
       </Border>

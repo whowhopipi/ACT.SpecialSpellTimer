@@ -130,7 +130,8 @@ namespace ACT.SpecialSpellTimer.Views
 
                 if (tb.Text != recast) tb.Text = recast;
                 tb.SetFontInfo(this.Spell.Font);
-                tb.SetAutoStrokeThickness();
+                tb.StrokeThickness = this.Spell.Font.OutlineThickness;
+                tb.BlurRadius = this.Spell.Font.BlurRadius;
 
                 var fill = this.FontBrush;
                 var stroke = this.FontOutlineBrush;
@@ -182,7 +183,7 @@ namespace ACT.SpecialSpellTimer.Views
             this.BarBrush = this.GetBrush(barColor);
             this.BarOutlineBrush = this.GetBrush(barOutlineColor);
 
-            var tb = default(OutlineTextBlock);
+            var tb = default(LightOutlineTextBlock);
             var font = this.Spell.Font;
 
             // アイコンを描画する
@@ -224,9 +225,8 @@ namespace ACT.SpecialSpellTimer.Views
             tb.Fill = this.FontBrush;
             tb.Stroke = this.FontOutlineBrush;
             tb.SetFontInfo(font);
-            tb.SetAutoStrokeThickness();
-
-            this.SpellTitleTextBlockEffect.BlurRadius = font.BlurRadius;
+            tb.StrokeThickness = font.OutlineThickness;
+            tb.BlurRadius = font.BlurRadius;
 
             tb.Visibility = this.Spell.HideSpellName ?
                 Visibility.Collapsed :

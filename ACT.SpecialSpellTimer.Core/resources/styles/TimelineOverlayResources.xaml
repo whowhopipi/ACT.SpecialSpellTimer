@@ -60,7 +60,7 @@
   </Style>
 
   <!-- 現在時刻 -->
-  <Style x:Key="CurrentTime" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="CurrentTime" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Text" Value="{Binding Path=Model.Controller.CurrentTimeText, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=Config.IndicatorStyleModel.Font.Weight, Mode=OneWay}" />
@@ -70,21 +70,13 @@
     <Setter Property="Fill" Value="{Binding Path=Config.IndicatorStyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}" />
   </Style>
 
   <!-- 現在のサブルーチン名 -->
-  <Style x:Key="Subroutine" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="Subroutine" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Margin" Value="10 0 0 0" />
     <Setter Property="Text" Value="{Binding Path=Model.SubName, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}" />
@@ -95,17 +87,9 @@
     <Setter Property="Fill" Value="{Binding Path=Config.IndicatorStyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}" />
   </Style>
 
   <!-- ヘッダ2段目 -->
@@ -115,7 +99,7 @@
   </Style>
 
   <!-- タイトル（タイムライン名 or ゾーン名） -->
-  <Style x:Key="Title" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="Title" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Text" Value="{Binding Path=Model.DisplayName, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=Config.IndicatorStyleModel.Font.FontFamily, Mode=OneWay}" />
@@ -126,53 +110,38 @@
     <Setter Property="Fill" Value="{Binding Path=Config.IndicatorStyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}" />
     <Setter Property="Opacity" Value="0.8" />
     <Setter Property="LayoutTransform">
       <Setter.Value>
-        <ScaleTransform ScaleX="0.6" ScaleY="0.6" />
+        <ScaleTransform
+          ScaleX="0.6"
+          ScaleY="0.6" />
       </Setter.Value>
     </Setter>
   </Style>
 
   <!-- タイムラインの実行ステータス -->
-  <Style x:Key="Status" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="Status" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Margin" Value="0 0 2 0" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Text" Value="{Binding Path=Model.Controller.StatusIndicator, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="Consolas" />
     <Setter Property="FontWeight" Value="Bold" />
     <Setter Property="FontSize" Value="{Binding Path=Config.IndicatorStyleModel.Font.Size, Mode=OneWay}" />
-    <!--
-    <Setter Property="Fill" Value="{Binding Path=Config.IndicatorStyleModel.ColorBrush, Mode=OneWay}" />
-    <Setter Property="Stroke" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColorBrush, Mode=OneWay}" />
-    <Setter Property="StrokeThickness" Value="{Binding Path=Config.IndicatorStyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    -->
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=Config.IndicatorStyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=Config.IndicatorStyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=Config.IndicatorStyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="Stroke" Value="Transparent" />
+    <Setter Property="StrokeThickness" Value="0" />
+    <Setter Property="StrokeOpacity" Value="0" />
     <Setter Property="Opacity" Value="0.9" />
     <Setter Property="LayoutTransform">
       <Setter.Value>
-        <ScaleTransform ScaleX="0.5" ScaleY="0.5" />
+        <ScaleTransform
+          ScaleX="0.5"
+          ScaleY="0.5" />
       </Setter.Value>
     </Setter>
     <Style.Triggers>

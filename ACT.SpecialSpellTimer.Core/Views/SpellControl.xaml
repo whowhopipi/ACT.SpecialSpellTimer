@@ -113,22 +113,15 @@
       HorizontalAlignment="Left"
       VerticalAlignment="Bottom"
       Visibility="{Binding ElementName=SpellTitleTextBlock, Path=Visibility, Mode=OneWay}">
-      <ctrl:OutlineTextBlock
+
+      <ctrl:LightOutlineTextBlock
         x:Name="SpellTitleTextBlock"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         Fill="AliceBlue"
         Stroke="Blue"
         Text="Sample Spell"
-        TextWrapping="Wrap">
-        <ctrl:OutlineTextBlock.Effect>
-          <DropShadowEffect
-            x:Name="SpellTitleTextBlockEffect"
-            RenderingBias="Performance"
-            ShadowDepth="0"
-            Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />
-        </ctrl:OutlineTextBlock.Effect>
-      </ctrl:OutlineTextBlock>
+        TextWrapping="Wrap" />
     </DockPanel>
 
     <Viewbox
@@ -140,7 +133,7 @@
       Stretch="Uniform"
       StretchDirection="DownOnly">
 
-      <ctrl:OutlineTextBlock
+      <ctrl:LightOutlineTextBlock
         x:Name="RecastTimeTextBlock"
         Margin="0,0,3,0"
         HorizontalAlignment="Right"
@@ -149,15 +142,7 @@
         Stroke="Blue"
         Text="3.0"
         TextAlignment="Right"
-        TextWrapping="NoWrap">
-        <ctrl:OutlineTextBlock.Effect>
-          <DropShadowEffect
-            BlurRadius="{Binding ElementName=SpellTitleTextBlockEffect, Path=BlurRadius, Mode=OneWay}"
-            RenderingBias="Performance"
-            ShadowDepth="0"
-            Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />
-        </ctrl:OutlineTextBlock.Effect>
-      </ctrl:OutlineTextBlock>
+        TextWrapping="NoWrap" />
     </Viewbox>
 
     <Viewbox
@@ -173,7 +158,7 @@
       Stretch="Uniform"
       StretchDirection="DownOnly">
 
-      <ctrl:OutlineTextBlock
+      <ctrl:LightOutlineTextBlock
         RenderOptions.BitmapScalingMode="HighQuality"
         RenderOptions.ClearTypeHint="Enabled"
         RenderOptions.EdgeMode="Unspecified"
@@ -186,15 +171,7 @@
         FontSize="{Binding ElementName=RecastTimeTextBlock, Path=FontSize, Mode=OneWay}"
         FontStyle="{Binding ElementName=RecastTimeTextBlock, Path=FontStyle, Mode=OneWay}"
         FontWeight="{Binding ElementName=RecastTimeTextBlock, Path=FontWeight, Mode=OneWay}"
-        FontStretch="{Binding ElementName=RecastTimeTextBlock, Path=FontStretch, Mode=OneWay}">
-        <ctrl:OutlineTextBlock.Effect>
-          <DropShadowEffect
-            BlurRadius="{Binding ElementName=SpellTitleTextBlockEffect, Path=BlurRadius, Mode=OneWay}"
-            RenderingBias="Performance"
-            ShadowDepth="0"
-            Color="{Binding ElementName=RecastTimeTextBlock, Path=Stroke.Color, Mode=OneWay}" />
-        </ctrl:OutlineTextBlock.Effect>
-      </ctrl:OutlineTextBlock>
+        FontStretch="{Binding ElementName=RecastTimeTextBlock, Path=FontStretch, Mode=OneWay}" />
     </Viewbox>
   </Grid>
 </UserControl>

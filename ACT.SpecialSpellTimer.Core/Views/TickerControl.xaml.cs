@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
 using FFXIV.Framework.WPF.Controls;
 
 namespace ACT.SpecialSpellTimer.Views
@@ -20,7 +21,7 @@ namespace ACT.SpecialSpellTimer.Views
 #if DEBUG
             if (WPFHelper.IsDesignMode)
             {
-                this.Message = "サンプルテロップ";
+                this.Message = "戦士サンプルテロップ";
                 this.Font = new FontInfo(
                     "メイリオ",
                     30.0,
@@ -64,8 +65,8 @@ namespace ACT.SpecialSpellTimer.Views
             {
                 if (this.MessageTextBlock.SetFontInfo(value))
                 {
-                    this.MessageTextBlock.SetAutoStrokeThickness();
-                    this.MessageTextBlockEffect.BlurRadius = value.BlurRadius;
+                    this.MessageTextBlock.StrokeThickness = value.OutlineThickness;
+                    this.MessageTextBlock.BlurRadius = value.BlurRadius;
                 }
             }
         }

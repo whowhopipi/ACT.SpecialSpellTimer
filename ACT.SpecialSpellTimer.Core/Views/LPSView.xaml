@@ -14,9 +14,12 @@
   Background="Transparent"
   ShowInTaskbar="False"
   SizeToContent="WidthAndHeight"
-  TextOptions.TextFormattingMode="Display"
+  TextOptions.TextFormattingMode="Ideal"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
+  RenderOptions.BitmapScalingMode="HighQuality"
+  RenderOptions.ClearTypeHint="Enabled"
+  RenderOptions.EdgeMode="Unspecified"
   FontFamily="Arial"
   FontWeight="Black"
   Topmost="True"
@@ -33,54 +36,35 @@
     x:Name="BaseGrid"
     Margin="10"
     Background="#01FFFFFF">
-    
+
     <Grid.LayoutTransform>
       <ScaleTransform
-      x:Name="WindowScale"
-      ScaleX="{Binding Config.LPSViewScale, Mode=OneWay}"
-      ScaleY="{Binding Config.LPSViewScale, Mode=OneWay}" />
+        x:Name="WindowScale"
+        ScaleX="{Binding Config.LPSViewScale, Mode=OneWay}"
+        ScaleY="{Binding Config.LPSViewScale, Mode=OneWay}" />
     </Grid.LayoutTransform>
 
-    <Border x:Name="Border">
-      <Border.Effect>
-        <DropShadowEffect
-          Opacity="0.99"
+    <Grid Width="190">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <ctrl:LightOutlineTextBlock
+          x:Name="LPSTextBlock"
+          Text="10,000.0"
+          Fill="White"
+          Stroke="Navy"
+          StrokeThickness="4"
           BlurRadius="6"
-          Color="Navy"
-          Direction="0"
-          ShadowDepth="0" />
-      </Border.Effect>
+          FontSize="30" />
 
-      <Grid Width="190">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-          <ctrl:OutlineTextBlock
-            x:Name="LPSTextBlock"
-            Text="10,000.0"
-            Fill="White"
-            Stroke="Navy"
-            StrokeThickness="1"
-            FontSize="30">
-            <ctrl:OutlineTextBlock.Effect>
-              <DropShadowEffect
-                Opacity="0.99"
-                BlurRadius="3"
-                Color="Navy"
-                Direction="0"
-                ShadowDepth="0" />
-            </ctrl:OutlineTextBlock.Effect>
-          </ctrl:OutlineTextBlock>
-
-          <ctrl:OutlineTextBlock
-            VerticalAlignment="Bottom"
-            Margin="5 0 0 5"
-            Text="LPS"
-            Fill="White"
-            Stroke="Navy"
-            StrokeThickness="1"
-            FontSize="15"
-            Effect="{Binding ElementName=LPSTextBlock, Mode=OneWay}" />
-        </StackPanel>
-      </Grid>
-    </Border>
+        <ctrl:LightOutlineTextBlock
+          VerticalAlignment="Bottom"
+          Margin="5 0 0 5"
+          Text="LPS"
+          Fill="White"
+          Stroke="Navy"
+          StrokeThickness="4"
+          BlurRadius="6"
+          FontSize="15" />
+      </StackPanel>
+    </Grid>
   </Grid>
 </Window>

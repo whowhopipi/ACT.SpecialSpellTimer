@@ -38,7 +38,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 
-  <Style x:Key="ActivityText" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="ActivityText" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Text" Value="{Binding Path=Text, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
@@ -48,21 +48,13 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
     <Setter Property="TextWrapping" Value="Wrap" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
   </Style>
 
-  <Style x:Key="JumpDestinationText" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="JumpDestinationText" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Margin" Value="10 0 0 0" />
     <Setter Property="Text" Value="{Binding Path=JumpDestination, StringFormat=➜ {0}, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
@@ -73,17 +65,9 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
     <Setter Property="LayoutTransform">
       <Setter.Value>
         <ScaleTransform
@@ -117,7 +101,7 @@
     </Style.Triggers>
   </Style>
 
-  <Style x:Key="CounterText" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="CounterText" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Grid.Row" Value="0" />
     <Setter Property="Grid.Column" Value="1" />
     <Setter Property="Margin" Value="0 0 2 0" />
@@ -132,17 +116,9 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
   </Style>
 
   <Style x:Key="CircleStyleGrid" TargetType="Grid">
@@ -171,7 +147,7 @@
     <Setter Property="VerticalAlignment" Value="Center" />
   </Style>
 
-  <Style x:Key="ActivityTextCircle" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="ActivityTextCircle" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Text" Value="{Binding Path=Text, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
     <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
@@ -181,21 +157,13 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
     <Setter Property="TextWrapping" Value="Wrap" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
   </Style>
 
-  <Style x:Key="JumpDestinationTextCircle" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="JumpDestinationTextCircle" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Margin" Value="20 0 0 0" />
     <Setter Property="Text" Value="{Binding Path=JumpDestination, StringFormat=➡ {0}, Mode=OneWay}" />
     <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
@@ -206,17 +174,9 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
     <Setter Property="LayoutTransform">
       <Setter.Value>
         <ScaleTransform
@@ -249,7 +209,7 @@
     </Style.Triggers>
   </Style>
 
-  <Style x:Key="CounterTextCircle" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="CounterTextCircle" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="Margin" Value="0 0 2 0" />
     <Setter Property="TextAlignment" Value="Center" />
     <Setter Property="VerticalAlignment" Value="Center" />
@@ -263,17 +223,8 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}">
-        </DropShadowEffect>
-      </Setter.Value>
-    </Setter>
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
   </Style>
 </ResourceDictionary>

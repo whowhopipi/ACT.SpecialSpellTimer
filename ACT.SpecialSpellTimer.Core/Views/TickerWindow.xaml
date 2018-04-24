@@ -12,9 +12,9 @@
   ShowInTaskbar="False"
   SizeToContent="WidthAndHeight"
   RenderOptions.BitmapScalingMode="HighQuality"
-  RenderOptions.ClearTypeHint="Enabled"
+  RenderOptions.ClearTypeHint="Auto"
   RenderOptions.EdgeMode="Unspecified"
-  TextOptions.TextFormattingMode="Display"
+  TextOptions.TextFormattingMode="Ideal"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   Topmost="True"
@@ -30,6 +30,7 @@
         RadiusX="8"
         RadiusY="8" />
     </Canvas>
+
     <local:TickerControl x:Name="TickerControl" />
   </Grid>
 </Window>

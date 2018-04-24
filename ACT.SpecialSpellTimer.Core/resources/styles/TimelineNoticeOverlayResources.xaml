@@ -84,7 +84,7 @@
   </Style>
 
   <!-- 通知テキスト -->
-  <Style x:Key="NoticeText" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="NoticeText" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="DockPanel.Dock" Value="Left" />
     <Setter Property="VerticalAlignment" Value="Center" />
     <Setter Property="Text" Value="{Binding Path=TextToDisplay, Mode=OneWay}" />
@@ -96,22 +96,14 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
     <Setter Property="TextWrapping" Value="Wrap" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
   </Style>
 
   <!-- カウンタテキスト -->
-  <Style x:Key="DurationText" TargetType="controls:OutlineTextBlock">
+  <Style x:Key="DurationText" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="DockPanel.Dock" Value="Right" />
     <Setter Property="Margin" Value="10 0 5 0" />
     <Setter Property="VerticalAlignment" Value="Center" />
@@ -125,18 +117,10 @@
     <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
     <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
     <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
     <Setter Property="Visibility" Value="{Binding Path=DurationVisible, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
-    <Setter Property="Effect">
-      <Setter.Value>
-        <DropShadowEffect
-          BlurRadius="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}"
-          Direction="0"
-          RenderingBias="Performance"
-          ShadowDepth="0"
-          Opacity="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}"
-          Color="{Binding Path=StyleModel.OutlineColor, Mode=OneWay}" />
-      </Setter.Value>
-    </Setter>
     <Setter Property="LayoutTransform">
       <Setter.Value>
         <ScaleTransform

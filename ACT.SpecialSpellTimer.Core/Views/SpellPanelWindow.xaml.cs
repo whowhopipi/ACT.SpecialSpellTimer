@@ -1,7 +1,3 @@
-using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.Models;
-using FFXIV.Framework.Extensions;
-using FFXIV.Framework.WPF.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +10,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Interop;
 using System.Windows.Media;
+using ACT.SpecialSpellTimer.Config;
+using ACT.SpecialSpellTimer.Models;
+using FFXIV.Framework.Extensions;
+using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer.Views
 {
@@ -25,6 +25,9 @@ namespace ACT.SpecialSpellTimer.Views
         ISpellPanelWindow,
         INotifyPropertyChanged
     {
+        private Point _originalPoint;
+        private bool _isRestorePosition = false;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -34,9 +37,17 @@ namespace ACT.SpecialSpellTimer.Views
             this.Panel = panel;
             this.Panel.PanelWindow = this;
 
+            _originalPoint = new Point(panel.Left, panel.Top);
+
             this.InitializeComponent();
 
-            this.MouseLeftButtonDown += (x, y) => this.DragMove();
+            this.MouseLeftButtonDown += (x, y) =>
+            {
+                if (!this.Panel.Locked)
+                {
+                    this.DragMove();
+                }
+            };
 
             this.Closed += (x, y) =>
             {
@@ -47,6 +58,23 @@ namespace ACT.SpecialSpellTimer.Views
                     this.Panel.PanelWindow = null;
                     this.Panel = null;
                 }
+            };
+
+            this.LocationChanged += (sender, args) =>
+            {
+                if (this._isRestorePosition)
+                {
+                    return;
+                }
+
+                if (this.Panel.Locked)
+                {
+                    this._isRestorePosition = true;
+                    this.Top = this._originalPoint.Y;
+                    this.Left = this._originalPoint.X;
+                }
+
+                this._isRestorePosition = false;
             };
 
             this.ActiveSpellViewSource = new CollectionViewSource()

@@ -11,7 +11,7 @@
   RenderOptions.BitmapScalingMode="HighQuality"
   RenderOptions.ClearTypeHint="Enabled"
   RenderOptions.EdgeMode="Unspecified"
-  TextOptions.TextFormattingMode="Display"
+  TextOptions.TextFormattingMode="Ideal"
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType">
 
@@ -46,23 +46,13 @@
         VerticalAlignment="Top"
         IsStrokeBackground="False" />
 
-      <ctrl:OutlineTextBlock
+      <ctrl:LightOutlineTextBlock
         x:Name="MessageTextBlock"
         Grid.Row="0"
         Margin="0"
         Text="サンプルテキストですよ"
         HorizontalAlignment="Left"
-        TextWrapping="Wrap">
-
-        <ctrl:OutlineTextBlock.Effect>
-          <DropShadowEffect
-            x:Name="MessageTextBlockEffect"
-            Direction="0"
-            RenderingBias="Performance"
-            ShadowDepth="0"
-            Color="{Binding ElementName=MessageTextBlock, Path=Stroke.Color, Mode=OneWay}" />
-        </ctrl:OutlineTextBlock.Effect>
-      </ctrl:OutlineTextBlock>
+        TextWrapping="Wrap" />
     </Grid>
   </Grid>
 </UserControl>
