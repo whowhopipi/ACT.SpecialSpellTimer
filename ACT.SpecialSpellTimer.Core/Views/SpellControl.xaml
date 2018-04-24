@@ -116,6 +116,7 @@
 
       <ctrl:LightOutlineTextBlock
         x:Name="SpellTitleTextBlock"
+        Padding="2 0 0 0"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         Fill="AliceBlue"
