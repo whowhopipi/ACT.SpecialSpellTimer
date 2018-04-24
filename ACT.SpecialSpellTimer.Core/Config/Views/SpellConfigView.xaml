@@ -81,7 +81,7 @@
       <TabItem Header="General" Padding="20 2 20 2">
         <ScrollViewer
           x:Name="BaseScrollViewer"
-          HorizontalScrollBarVisibility="Disabled"
+          HorizontalScrollBarVisibility="Auto"
           VerticalScrollBarVisibility="Auto"
           Margin="5"
           Padding="0 0 0 20">
@@ -272,7 +272,7 @@
                 <StackPanel Orientation="Horizontal">
                   <Label Content="{DynamicResource Trigger_PartyJobFilter}" VerticalAlignment="Center" VerticalContentAlignment="Center" />
                   <Label Margin="20 0 0 0" Content="filtered!" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" Foreground="Crimson" FontStyle="Italic" FontWeight="Black" Visibility="{Binding IsPartyJobFiltered, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
-                 </StackPanel>
+                </StackPanel>
               </Expander.Header>
               <Grid>
                 <TextBlock Margin="0 3 0 5">
@@ -509,7 +509,7 @@
       <!-- Visual タブ start -->
       <TabItem x:Name="VisualTab" Header="Visual" Padding="20 2 20 2">
         <ScrollViewer
-          HorizontalScrollBarVisibility="Disabled"
+          HorizontalScrollBarVisibility="Auto"
           VerticalScrollBarVisibility="Auto"
           Margin="5"
           Padding="0 0 0 20">

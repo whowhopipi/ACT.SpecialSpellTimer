@@ -75,7 +75,7 @@
     <TabItem Header="General" Padding="20 2 20 2">
       <ScrollViewer
         Margin="5"
-        HorizontalScrollBarVisibility="Disabled"
+        HorizontalScrollBarVisibility="Auto"
         VerticalScrollBarVisibility="Auto">
         <StackPanel>
           <!-- Name -->
@@ -168,7 +168,7 @@
     <!-- Visualタブ -->
     <TabItem Header="Visual" Padding="20 2 20 2">
       <ScrollViewer
-        HorizontalScrollBarVisibility="Disabled"
+        HorizontalScrollBarVisibility="Auto"
         VerticalScrollBarVisibility="Auto"
         Margin="5"
         Padding="0 0 0 20">
@@ -321,7 +321,7 @@
     <!-- Advanced Layoutタブ -->
     <TabItem Header="Advanced Layout" Padding="20 2 20 2">
       <ScrollViewer
-        HorizontalScrollBarVisibility="Disabled"
+        HorizontalScrollBarVisibility="Auto"
         VerticalScrollBarVisibility="Auto"
         Margin="5"
         Padding="0 0 0 20">

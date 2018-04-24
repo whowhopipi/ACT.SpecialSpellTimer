@@ -80,7 +80,7 @@
       <TabItem Header="General" Padding="20 2 20 2">
         <ScrollViewer
           x:Name="BaseScrollViewer"
-          HorizontalScrollBarVisibility="Disabled"
+          HorizontalScrollBarVisibility="Auto"
           VerticalScrollBarVisibility="Auto"
           Margin="5"
           Padding="0 0 0 20">
@@ -431,7 +431,7 @@
       <!-- Visual タブ start -->
       <TabItem x:Name="VisualTab" Header="Visual" Padding="20 2 20 2">
         <ScrollViewer
-          HorizontalScrollBarVisibility="Disabled"
+          HorizontalScrollBarVisibility="Auto"
           VerticalScrollBarVisibility="Auto"
           Margin="5"
           Padding="0 0 0 20">
