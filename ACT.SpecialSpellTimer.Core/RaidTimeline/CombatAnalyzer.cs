@@ -178,10 +178,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         keyword = CombatStartNowJA;
                         break;
 
+                    case Locales.KO:
+                        keyword = CombatStartNowKO;
+                        break;
+
                     case Locales.EN:
                     case Locales.FR:
                     case Locales.DE:
-                    case Locales.KO:
                     default:
                         keyword = CombatStartNowEN;
                         break;
@@ -203,10 +206,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         keywords = KeywordsJA;
                         break;
 
+                    case Locales.KO:
+                        keywords = KeywordsKO;
+                        break;
+
                     case Locales.EN:
                     case Locales.FR:
                     case Locales.DE:
-                    case Locales.KO:
                     default:
                         keywords = KeywordsEN;
                         break;
@@ -228,10 +234,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         regexes = AnalyzeRegexedJA;
                         break;
 
+                    case Locales.KO:
+                        regexes = AnalyzeRegexedKO;
+                        break;
+
                     case Locales.EN:
                     case Locales.FR:
                     case Locales.DE:
-                    case Locales.KO:
                     default:
                         regexes = AnalyzeRegexedEN;
                         break;
@@ -423,6 +432,91 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         };
 
         #endregion EN
+
+        #region KO
+
+        public const string CombatStartNowKO = "0039:전투 시작!";
+
+        public static readonly IList<AnalyzeKeyword> KeywordsKO = new[]
+        {
+            new AnalyzeKeyword() { Keyword = "(이프리트|타이탄|가루다) 에기", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "요정 (셀레네|에오스)", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "카벙클 (에메랄드|토파즈|루비)", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "자동포탑 (룩|비숍)", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "데미바하무트", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "지상의 별", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "시전합니다.", Category = KewordTypes.Cast },
+            new AnalyzeKeyword() { Keyword = "starts using", Category = KewordTypes.Cast },
+            new AnalyzeKeyword() { Keyword = "HP at", Category = KewordTypes.HPRate },
+            new AnalyzeKeyword() { Keyword = "Added new combatant", Category = KewordTypes.Added },
+            new AnalyzeKeyword() { Keyword = "] 1B:", Category = KewordTypes.Marker },
+            new AnalyzeKeyword() { Keyword = "「マーキング」", Category = KewordTypes.Marker },
+            new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
+            new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
+            new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "/spespetime -a start", Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "00:0039:전투 시작!", Category = KewordTypes.Start },
+            new AnalyzeKeyword() { Keyword = "00:0039:전투 시작 5초 전!", Category = KewordTypes.TimelineStart },
+            new AnalyzeKeyword() { Keyword = "/spespetime -a end", Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = "공략을 종료했습니다.", Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = "입찰을 진행하십시오", Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = WipeoutLog, Category = KewordTypes.End },
+            new AnalyzeKeyword() { Keyword = "시전했습니다.", Category = KewordTypes.Action },
+        };
+
+        public static readonly Dictionary<string, Regex> AnalyzeRegexedKO = new Dictionary<string, Regex>()
+        {
+            {
+                nameof(ActionRegex),
+                CreateRegex(@"\[.+?\] 00:....:(?<actor>.+?)(이|가) (?<skill>.+?)(을|를) 시전했습니다.$")
+            },
+            {
+                nameof(AddedRegex),
+                CreateRegex(@"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ")
+            },
+            {
+                nameof(CastRegex),
+                CreateRegex(@"\[.+?\] 00:....:(?<actor>.+?)(이|가) (?<skill>.+?)(을|를) 시전합니다.$")
+            },
+            {
+                nameof(HPRateRegex),
+                CreateRegex(@"\[.+?\] ..:(?<actor>.+?) HP at (?<hprate>\d+?)%")
+            },
+            {
+                nameof(StartsUsingRegex),
+                CreateRegex(@"14:....:(?<actor>.+?) starts using (?<skill>.+?) on (?<target>.+?)\.$")
+            },
+            {
+                nameof(StartsUsingUnknownRegex),
+                CreateRegex(@"14:....:(?<actor>.+?) starts using (?<skill>.+?) on Unknown\.$")
+            },
+            {
+                nameof(DialogRegex),
+                CreateRegex(@"00:0044:(?<dialog>.+?)$")
+            },
+            {
+                nameof(CombatStartRegex),
+                CreateRegex(@"00:(0038|0039):(?<discription>.+?)$")
+            },
+            {
+                nameof(CombatEndRegex),
+                CreateRegex(@"00:....:(?<discription>.+?)$")
+            },
+            {
+                nameof(EffectRegex),
+                CreateRegex(@"1A:(?<victim>.+?) gains the effect of (?<effect>.+?) from (?<actor>.+?) for (?<duration>[0-9\.]*?) Seconds.$")
+            },
+            {
+                nameof(MarkerRegex),
+                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$")
+            },
+            {
+                nameof(MarkingRegex),
+                CreateRegex(@"00:(?<id>....):(?<target>.+?)に「マーキング」の効果。")
+            },
+        };
+
+        #endregion KO
 
         #endregion Keywords
 
