@@ -1108,6 +1108,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         }
                     }
 
+                    var inotices = toNotice.ImageNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+                    if (inotices.Any())
+                    {
+                        foreach (var inotice in inotices)
+                        {
+                            inotice.Timestamp = detectTime;
+                        }
+                    }
+
                     this.notifyQueue.Enqueue(toNotice);
                 }
 
@@ -1542,7 +1551,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 .Where(x => x.Enabled.GetValueOrDefault())
                 .Select(x => x.Clone());
 
-            if (!vnotices.Any())
+            var inotices = tri.ImageNoticeStatements
+                .Where(x => x.Enabled.GetValueOrDefault());
+
+            if (!vnotices.Any() &&
+                !inotices.Any())
             {
                 return;
             }
@@ -1581,6 +1594,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         Settings.Default.PCNameInitialOnDisplayStyle);
 
                     TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+                }
+
+                foreach (var i in inotices)
+                {
+                    i.StartNotice();
                 }
             },
             DispatcherPriority.Normal);

@@ -354,6 +354,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     tri.MatchedCounter = 0;
                 }
 
+                // ImageNoticeを準備する
+                if (element is TimelineImageNoticeModel image)
+                {
+                    image.StanbyNotice();
+                }
+
                 // アクティビティにスタイルを設定する
                 setStyle(element);
 

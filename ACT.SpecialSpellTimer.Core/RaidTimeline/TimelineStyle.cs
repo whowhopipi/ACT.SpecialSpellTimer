@@ -101,7 +101,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.Color = this.Color.FromString(value);
         }
 
-        private Color outlineColor = Colors.Navy;
+        private Color outlineColor = Colors.Transparent;
 
         /// <summary>
         /// アウトラインのカラー

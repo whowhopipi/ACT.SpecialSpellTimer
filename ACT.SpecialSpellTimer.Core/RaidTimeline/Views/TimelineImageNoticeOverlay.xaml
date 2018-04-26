@@ -8,6 +8,7 @@
   xmlns:wpf="clr-namespace:FFXIV.Framework.WPF;assembly=FFXIV.Framework"
   xmlns:controls="clr-namespace:FFXIV.Framework.WPF.Controls;assembly=FFXIV.Framework"
   xmlns:tl="clr-namespace:ACT.SpecialSpellTimer.RaidTimeline"
+  xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
   mc:Ignorable="d"
   RenderOptions.BitmapScalingMode="HighQuality"
   RenderOptions.ClearTypeHint="Enabled"
@@ -24,8 +25,57 @@
   Top="{Binding Path=Model.Top, Mode=TwoWay}"
   d:DataContext="{d:DesignInstance Type=local:TimelineImageNoticeOverlay}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
+  FontFamily="{DynamicResource UIFont}"
+  FontSize="{DynamicResource UIFontSize}"
+  FontWeight="{DynamicResource UIFontWeight}"
+  FontStyle="{DynamicResource UIFontStyle}"
+  FontStretch="{DynamicResource UIFontStretch}"
   SizeToContent="WidthAndHeight"
+  ResizeMode="NoResize"
   Title="Timeline Image Notice">
+
+  <Window.Resources>
+    <ResourceDictionary>
+      <Style TargetType="Button">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:IntegerUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:LongUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <Style TargetType="{x:Type xctk:DoubleUpDown}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+      </Style>
+
+      <!--
+      <Style TargetType="TextBox">
+        <Style.Triggers>
+          <Trigger Property="IsReadOnly" Value="True">
+            <Setter Property="Foreground" Value="Silver" />
+          </Trigger>
+        </Style.Triggers>
+      </Style>
+      -->
+
+      <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
+
+      <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+
+      <ResourceDictionary.MergedDictionaries>
+        <wpf:DesignTimeResourceDictionary Source="../../resources/styles/ConfigViewResources.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
 
   <Grid>
     <Grid.RowDefinitions>
@@ -34,12 +84,81 @@
     </Grid.RowDefinitions>
 
     <Border
+      Grid.Row="0"
+      HorizontalAlignment="Left"
+      VerticalAlignment="Top"
+      BorderBrush="{Binding ImageBorderBrush, Mode=OneWay}"
+      BorderThickness="3"
+      CornerRadius="2"
+      Visibility="{Binding Model.ExistsImage, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
+
+      <controls:FantImage
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        RenderOptions.BitmapScalingMode="Fant"
+        Stretch="UniformToFill"
+        Width="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelWidth, Mode=OneWay}"
+        Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelHeight, Mode=OneWay}"
+        Source="{Binding Model.BitmapImage, Mode=OneWay}"
+        Visibility="{Binding Model.ExistsImage, Converter={StaticResource VisibilityConverter}, Mode=OneWay}">
+
+        <controls:FantImage.LayoutTransform>
+          <ScaleTransform
+            ScaleX="{Binding Model.Scale, Mode=OneWay}"
+            ScaleY="{Binding Model.Scale, Mode=OneWay}" />
+        </controls:FantImage.LayoutTransform>
+      </controls:FantImage>
+    </Border>
+
+    <Border
+      Visibility="{Binding DummyMode, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
       Grid.Row="1"
+      Opacity="0.9"
       Margin="0 5 0 0"
-      Background="#F0FFFFFF"
+      HorizontalAlignment="Left"
+      VerticalAlignment="Top"
+      MinWidth="646"
+      Background="White"
+      BorderBrush="Gold"
       CornerRadius="3"
-      BorderThickness="0">
-      <StackPanel>
+      BorderThickness="3">
+
+      <StackPanel Margin="5">
+        <StackPanel Orientation="Horizontal">
+          <Label Content="Image" MinWidth="90" />
+          <TextBox Width="400" Text="{Binding Model.Image, Mode=TwoWay}" VerticalContentAlignment="Center" />
+          <Button Margin="5 0 0 0" Content="Browse" Command="{Binding Model.BrowseImageCommand, Mode=OneWay}" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
+          <Label Content="Scale" MinWidth="90" />
+          <xctk:DoubleUpDown Width="83" FormatString="N2" Value="{Binding Model.Scale, Mode=TwoWay}" Increment="0.01" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
+          <Label Content="Location" MinWidth="90" />
+          <StackPanel Orientation="Horizontal">
+            <Label Margin="0 0 5 0" Content="X" />
+            <xctk:DoubleUpDown Value="{Binding Model.Left, Mode=TwoWay}" FormatString="F0" MinWidth="75" Increment="1" />
+            <Label Margin="10 0 5 0" Content="Y" />
+            <xctk:DoubleUpDown Value="{Binding Model.Top, Mode=TwoWay}" FormatString="F0" MinWidth="75" Increment="1" />
+          </StackPanel>
+        </StackPanel>
+
+        <StackPanel Margin="0 8 0 0">
+          <Label Content="Tag" />
+          <TextBox
+            Padding="5"
+            BorderThickness="0"
+            TextWrapping="Wrap"
+            IsReadOnly="True"
+            Text="{Binding Model.Tag, Mode=OneWay}" />
+          <Button
+            Margin="5"
+            HorizontalAlignment="Left"
+            Content="Copy"
+            Command="{Binding Model.CcopyTagCommand, Mode=OneWay}" />
+        </StackPanel>
       </StackPanel>
     </Border>
   </Grid>

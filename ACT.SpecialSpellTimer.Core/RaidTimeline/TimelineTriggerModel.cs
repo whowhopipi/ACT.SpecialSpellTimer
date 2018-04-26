@@ -14,9 +14,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Trigger;
 
-        public override IList<TimelineBase> Children => this.statements;
-
         #region Children
+
+        public override IList<TimelineBase> Children => this.statements;
 
         private List<TimelineBase> statements = new List<TimelineBase>();
 
@@ -45,12 +45,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.AddRange(value);
         }
 
-        #region Methods
+        [XmlElement(ElementName = "i-notice")]
+        public TimelineImageNoticeModel[] ImageNoticeStatements
+        {
+            get => this.Statements
+                .Where(x => x.TimelineType == TimelineElementTypes.ImageNotice)
+                .Cast<TimelineImageNoticeModel>()
+                .ToArray();
+
+            set => this.AddRange(value);
+        }
 
         public void Add(TimelineBase timeline)
         {
             if (timeline.TimelineType == TimelineElementTypes.Load ||
-                timeline.TimelineType == TimelineElementTypes.VisualNotice)
+                timeline.TimelineType == TimelineElementTypes.VisualNotice ||
+                timeline.TimelineType == TimelineElementTypes.ImageNotice)
             {
                 timeline.Parent = this;
                 this.statements.Add(timeline);
@@ -67,8 +77,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
             }
         }
-
-        #endregion Methods
 
         #endregion Children
 

@@ -310,11 +310,13 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     var selectedStyle = this.StyleListView.SelectedItem as TimelineStyle;
                     TimelineOverlay.ShowDesignOverlay(selectedStyle);
                     TimelineNoticeOverlay.ShowDesignOverlay(selectedStyle);
+                    TimelineImageNoticeOverlay.ShowDesignOverlay();
                 }
                 else
                 {
                     TimelineOverlay.HideDesignOverlay();
                     TimelineNoticeOverlay.HideDesignOverlay();
+                    TimelineImageNoticeOverlay.HideDesignOverlay();
                 }
             }));
 
