@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <timeline>
   <name>極白虎征魂戦 サンプル (ジャンプ版)</name>
-  <rev>rev1</rev>
+  <rev>rev2</rev>
   <description>
     ジャンプステートメントのテスト用
     goto, call 及び t, t+load の動作確認用です。
@@ -32,6 +32,12 @@
     <load target="最終フェーズ" />
   </t>
   -->
+
+  <!-- i-notice の実験 -->
+  <t sync="は「天雷掌」の構え" text="天雷掌\n ➜タンク">
+    <i-notice
+      image="Sample.png" />
+  </t>
 
   <s name="フェーズ1">
     <a time="00:06" text="P1風雷波動" notice="次は、風雷波動。" />

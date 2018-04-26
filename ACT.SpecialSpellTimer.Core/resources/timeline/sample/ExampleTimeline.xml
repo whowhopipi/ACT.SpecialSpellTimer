@@ -15,8 +15,6 @@
     <v-notice
       duration="5"
       icon="単体強攻撃.png" />
-    <i-notice
-      image="Sample.png" />
   </t>
 
   <t sync="は「呪縛雷」の構え" text="呪縛雷">
