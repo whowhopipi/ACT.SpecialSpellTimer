@@ -141,6 +141,13 @@ namespace ACT.SpecialSpellTimer
                 Settings.Default.Load();
                 Settings.Default.ApplyRenderMode();
 
+                // 最小化する？
+                if (Settings.Default.IsMinimizeOnStart)
+                {
+                    ActGlobals.oFormActMain.WindowState = FormWindowState.Minimized;
+                    Application.DoEvents();
+                }
+
                 pluginScreenSpace.Text = "SPESPE";
 
                 // HojoringのSplashを表示する

@@ -65,6 +65,6 @@
   </UserControl.Resources>
 
   <StackPanel>
-    <Label Margin="10" Content="NOTHING" />
+    <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_MinimizeOnStart}" IsChecked="{Binding Config.IsMinimizeOnStart, Mode=TwoWay}" />
   </StackPanel>
 </UserControl>

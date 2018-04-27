@@ -66,7 +66,7 @@
   <system:String x:Key="Tag_Title">Add tags</system:String>
 
   <system:String x:Key="Trigger_JobFilter">Job filter</system:String>
-    <system:String x:Key="Trigger_PartyJobFilter">Party Job Filter</system:String>
+  <system:String x:Key="Trigger_PartyJobFilter">Party Job Filter</system:String>
   <system:String x:Key="Trigger_ZoneFilter">Zone filter</system:String>
   <system:String x:Key="Trigger_Preconditions">Precondition</system:String>
   <system:String x:Key="Trigger_ClearFilter">Clear filter</system:String>
@@ -192,6 +192,8 @@
   <system:String x:Key="Options_TestPhonetics">Test callsign</system:String>
   <system:String x:Key="Options_OpenTTSDictionary">Open TTS dictionary</system:String>
   <system:String x:Key="Options_ReloadTTSDictionary">Reload TTS dictionary</system:String>
+
+  <system:String x:Key="Options_MinimizeOnStart">Minimize on start ACT</system:String>
 
   <system:String x:Key="Info_Placeholders">Placeholders</system:String>
   <system:String x:Key="Info_Triggers">Active triggers</system:String>

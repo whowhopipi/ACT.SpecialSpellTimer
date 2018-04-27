@@ -388,6 +388,14 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.timelineDirectory, value);
         }
 
+        private bool isMinimizeOnStart = false;
+
+        public bool IsMinimizeOnStart
+        {
+            get => this.isMinimizeOnStart;
+            set => this.SetProperty(ref this.isMinimizeOnStart, value);
+        }
+
         #region Data - Timeline
 
         private bool timelineTotalSecoundsFormat = false;
