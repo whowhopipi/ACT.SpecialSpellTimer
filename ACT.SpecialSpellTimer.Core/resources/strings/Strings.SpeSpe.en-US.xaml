@@ -231,7 +231,7 @@
   <system:String x:Key="Timeline_ShowDummyTimeline">Show dummy overlay for Design</system:String>
   <system:String x:Key="Timeline_Enable">Use Timeline</system:String>
   <system:String x:Key="Timeline_Folder">Timelines folder</system:String>
-  <system:String x:Key="Timeline_Visual">Visual</system:String>
+  <system:String x:Key="Timeline_Visual">SPESPE Time Settings</system:String>
   <system:String x:Key="Timeline_OverlayVisible">Show overlay</system:String>
   <system:String x:Key="Timeline_Opacity">Opacity</system:String>
   <system:String x:Key="Timeline_OverlayScale">Overlay scale</system:String>
@@ -250,6 +250,8 @@
   <system:String x:Key="Timeline_HeaderStyle">Header style</system:String>
   <system:String x:Key="Timeline_OpenResourcesDictionary">Open ResourcesDictionary.xaml Folder</system:String>
   <system:String x:Key="Timeline_ShowCompiledText">Show compiled text by RazorEngine</system:String>
+
+  <system:String x:Key="Timeline_IgnoreLogs">Exclude the following log types</system:String>
 
   <system:String x:Key="TriggerTester_OpenSimulator">Simulator</system:String>
   <system:String x:Key="TriggerTester_Title">Trigger Simulator</system:String>

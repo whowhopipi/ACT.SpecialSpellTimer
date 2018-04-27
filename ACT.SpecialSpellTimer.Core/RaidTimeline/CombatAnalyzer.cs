@@ -439,10 +439,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public static readonly IList<AnalyzeKeyword> KeywordsKO = new[]
         {
-            new AnalyzeKeyword() { Keyword = "(이프리트|타이탄|가루다) 에기", Category = KewordTypes.Pet },
-            new AnalyzeKeyword() { Keyword = "요정 (셀레네|에오스)", Category = KewordTypes.Pet },
-            new AnalyzeKeyword() { Keyword = "카벙클 (에메랄드|토파즈|루비)", Category = KewordTypes.Pet },
-            new AnalyzeKeyword() { Keyword = "자동포탑 (룩|비숍)", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "에기", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "요정", Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "카벙클" , Category = KewordTypes.Pet },
+            new AnalyzeKeyword() { Keyword = "자동포탑", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "데미바하무트", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "지상의 별", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "시전합니다.", Category = KewordTypes.Cast },
@@ -834,7 +834,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             var preLog = string.Empty;
 
-            var ignores = TimelineSettings.Instance.IgnoreKeywords;
+            var ignores = TimelineSettings.Instance.IgnoreLogTypes.Where(x => x.IsIgnore);
 
             while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
             {
@@ -847,7 +847,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 // 無効なログ？
                 // 無効なログをカットする
-                if (ignores.Any(x => log.logLine.Contains(x)))
+                if (ignores.Any(x => log.logLine.Contains(x.Keyword)))
                 {
                     continue;
                 }

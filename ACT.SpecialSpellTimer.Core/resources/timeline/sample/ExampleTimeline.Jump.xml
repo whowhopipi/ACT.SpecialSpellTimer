@@ -35,14 +35,20 @@
 
   <!-- i-notice の実験 -->
   <t sync="は「天雷掌」の構え" text="天雷掌\n ➜タンク">
-    <i-notice
-      image="Sample.png" />
   </t>
 
   <s name="フェーズ1">
     <a time="00:06" text="P1風雷波動" notice="次は、風雷波動。" />
-    <a time="00:12" text="P1天雷掌" notice="次は、天雷掌。" />
-    <a time="00:22" text="P1呪縛雷" notice="次は、呪縛雷。" />
+    <a time="00:12" text="P1天雷掌" notice="次は、天雷掌。">
+      <i-notice
+        image="Sample.png" />
+    </a>
+    <a time="00:22" text="P1呪縛雷" notice="次は、呪縛雷。">
+      <v-notice
+        text="呪縛雷"
+        duration="4" 
+        icon="HardAttack.png" />
+    </a>
     <a time="00:27" sync="捉えたぞ！　叩きのめしてくれるわ！" />
     <a enabled="false" time="00:29" text="Marker:003E" sync="1B:(?&lt;pcid&gt;.{8}):&lt;PC&gt;:0000:0000:003E:0000:0000:0000:" />
     <a time="00:29" text="P1乾坤一擲" notice="次は、乾坤一擲。" />

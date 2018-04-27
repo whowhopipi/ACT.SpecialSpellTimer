@@ -331,19 +331,35 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public static readonly string[] IgnoreLogKeywords = new[]
         {
-            "] 18:",    // DoT/HoT Tick
+            MessageType.NetworkDoT.ToKeyword()
         };
 
         /// <summary>
-        /// 設定よってカットする場合があるログのキーワード
+        /// 設定によってカットする場合があるログのキーワード
         /// </summary>
         public static readonly string[] IgnoreDetailLogKeywords = new[]
         {
-            "] 15:",    // ダメージかアクションの生ログ
-            "] 16:",    // エフェクトの生ログ
+            MessageType.NetworkAbility.ToKeyword(),
+            MessageType.NetworkAOEAbility.ToKeyword()
         };
 
         public bool IsEmpty => this.logInfoQueue.IsEmpty;
+
+        /// <summary>
+        /// パーティメンバについてのHPログか？
+        /// </summary>
+        /// <param name="log"></param>
+        /// <returns></returns>
+        public static bool IsHPLogByPartyMember(
+            string log)
+        {
+            if (!log.Contains(MessageType.CombatantHP.ToKeyword()))
+            {
+                return false;
+            }
+
+            return TableCompiler.Instance?.SortedPartyList?.Any(x => log.Contains(x.Name)) ?? false;
+        }
 
         /// <summary>
         /// ログ行を返す

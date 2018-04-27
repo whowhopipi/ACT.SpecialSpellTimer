@@ -836,7 +836,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 var prelog = new string[3];
                 var prelogIndex = 0;
 
-                var ignores = TimelineSettings.Instance.IgnoreKeywords;
+                var ignores = TimelineSettings.Instance.IgnoreLogTypes.Where(x => x.IsIgnore);
 
                 while (this.logInfoQueue.TryDequeue(out LogLineEventArgs logInfo))
                 {
@@ -857,7 +857,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
 
                     // 無効キーワードが含まれていればスキップする
-                    if (ignores.Any(x => logLine.Contains(x)))
+                    if (ignores.Any(x => logLine.Contains(x.Keyword)))
+                    {
+                        continue;
+                    }
+
+                    // パーティメンバに対するHPログならばスキップする
+                    if (LogBuffer.IsHPLogByPartyMember(logLine))
                     {
                         continue;
                     }
@@ -1313,8 +1319,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 select
                 x;
 
+            // 通知キューを登録する
+            var now = DateTime.Now;
             foreach (var act in toNotify)
             {
+                var vnotices = act.VisualNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+                foreach (var vnotice in vnotices)
+                {
+                    vnotice.Timestamp = now;
+                }
+
+                var inotices = act.ImageNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+                foreach (var inotice in inotices)
+                {
+                    inotice.Timestamp = now;
+                }
+
                 this.notifyQueue.Enqueue(act);
             }
 
@@ -1514,6 +1534,62 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             RaiseLog(log);
             NotifySound(notice, act.NoticeDevice.GetValueOrDefault());
+
+            var vnotices = act.VisualNoticeStatements
+                .Where(x => x.Enabled.GetValueOrDefault())
+                .Select(x => x.Clone());
+
+            var inotices = act.ImageNoticeStatements
+                .Where(x => x.Enabled.GetValueOrDefault());
+
+            if (!vnotices.Any() &&
+                !inotices.Any())
+            {
+                return;
+            }
+
+            WPFHelper.Invoke(() =>
+            {
+                foreach (var v in vnotices)
+                {
+                    // ソート用にログ番号を格納する
+                    // 優先順位は最後尾とする
+                    v.LogSeq = long.MaxValue;
+
+                    switch (v.Text)
+                    {
+                        case TimelineVisualNoticeModel.ParentTextPlaceholder:
+                            v.TextToDisplay = act.TextReplaced;
+                            break;
+
+                        case TimelineVisualNoticeModel.ParentNoticePlaceholder:
+                            v.TextToDisplay = act.NoticeReplaced;
+                            break;
+
+                        default:
+                            v.TextToDisplay = v.Text;
+                            break;
+                    }
+
+                    if (string.IsNullOrEmpty(v.TextToDisplay))
+                    {
+                        continue;
+                    }
+
+                    // PC名をルールに従って置換する
+                    v.TextToDisplay = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                        v.TextToDisplay,
+                        Settings.Default.PCNameInitialOnDisplayStyle);
+
+                    TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+                }
+
+                foreach (var i in inotices)
+                {
+                    i.StartNotice();
+                }
+            },
+            DispatcherPriority.Normal);
         }
 
         private void NotifyTrigger(

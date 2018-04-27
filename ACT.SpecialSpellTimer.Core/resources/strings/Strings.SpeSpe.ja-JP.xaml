@@ -231,7 +231,7 @@
   <system:String x:Key="Timeline_ShowDummyTimeline">デザイン用のダミーを表示する</system:String>
   <system:String x:Key="Timeline_Enable">スペスペたいむ™ を使用する</system:String>
   <system:String x:Key="Timeline_Folder">タイムラインの参照フォルダ</system:String>
-  <system:String x:Key="Timeline_Visual">スペスペたいむ™ の見た目</system:String>
+  <system:String x:Key="Timeline_Visual">スペスペたいむ™ の設定</system:String>
   <system:String x:Key="Timeline_OverlayVisible">オーバーレイを表示する</system:String>
   <system:String x:Key="Timeline_Opacity">不透明度</system:String>
   <system:String x:Key="Timeline_OverlayScale">オーバーレイのスケール</system:String>
@@ -250,6 +250,8 @@
   <system:String x:Key="Timeline_HeaderStyle">ヘッダのスタイル</system:String>
   <system:String x:Key="Timeline_OpenResourcesDictionary">ResourcesDictionary.xaml の配置場所を開く</system:String>
   <system:String x:Key="Timeline_ShowCompiledText">RazorEngine によってパースされた後の定義内容を見る</system:String>
+
+  <system:String x:Key="Timeline_IgnoreLogs">判定対象外とするログの種類</system:String>
 
   <system:String x:Key="TriggerTester_OpenSimulator">シミュレータ</system:String>
   <system:String x:Key="TriggerTester_Title">トリガシミュレータ</system:String>

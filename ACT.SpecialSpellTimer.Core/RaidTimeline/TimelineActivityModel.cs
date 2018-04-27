@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
@@ -18,7 +19,60 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         [XmlIgnore]
         public override TimelineElementTypes TimelineType => TimelineElementTypes.Activity;
 
-        public override IList<TimelineBase> Children => null;
+        #region Children
+
+        public override IList<TimelineBase> Children => this.statements;
+
+        private List<TimelineBase> statements = new List<TimelineBase>();
+
+        [XmlIgnore]
+        public IReadOnlyList<TimelineBase> Statements => this.statements;
+
+        [XmlElement(ElementName = "v-notice")]
+        public TimelineVisualNoticeModel[] VisualNoticeStatements
+        {
+            get => this.Statements
+                .Where(x => x.TimelineType == TimelineElementTypes.VisualNotice)
+                .Cast<TimelineVisualNoticeModel>()
+                .ToArray();
+
+            set => this.AddRange(value);
+        }
+
+        [XmlElement(ElementName = "i-notice")]
+        public TimelineImageNoticeModel[] ImageNoticeStatements
+        {
+            get => this.Statements
+                .Where(x => x.TimelineType == TimelineElementTypes.ImageNotice)
+                .Cast<TimelineImageNoticeModel>()
+                .ToArray();
+
+            set => this.AddRange(value);
+        }
+
+        public void Add(TimelineBase timeline)
+        {
+            if (timeline.TimelineType == TimelineElementTypes.VisualNotice ||
+                timeline.TimelineType == TimelineElementTypes.ImageNotice)
+            {
+                timeline.Parent = this;
+                this.statements.Add(timeline);
+            }
+        }
+
+        public void AddRange(IEnumerable<TimelineBase> timelines)
+        {
+            if (timelines != null)
+            {
+                foreach (var tl in timelines)
+                {
+                    this.Add(tl);
+                }
+            }
+        }
+
+        #endregion Children
+
 
         private TimeSpan time = TimeSpan.Zero;
 

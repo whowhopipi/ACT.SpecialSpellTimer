@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -10,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -335,23 +337,49 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimelineStyle DefaultNoticeStyle =>
             this.Styles.FirstOrDefault(x => x.IsDefaultNotice) ?? this.DefaultStyle;
 
-        private string[] ignoreKeywords = new[]
+        private List<IgnoreLogType> ignoreLogTypes = new List<IgnoreLogType>()
         {
-            "] 15:",    // ダメージかアクションの生ログ
-            "] 16:",    // エフェクトの生ログ
-            "] 17:",    // Cancel
-            "] 18:",    // DoT/HoT Tick
-            "] 19:",    // defeated
-            "] 0D:",    // HP Rate
+            new IgnoreLogType()
+            {
+                MessageType = MessageType.NetworkAbility,
+                IsIgnore = true
+            },
+            new IgnoreLogType()
+            {
+                MessageType = MessageType.NetworkAOEAbility,
+                IsIgnore = true
+            },
+            new IgnoreLogType()
+            {
+                MessageType = MessageType.NetworkCancelAbility,
+                IsIgnore = true
+            },
+            new IgnoreLogType()
+            {
+                MessageType = MessageType.NetworkDoT,
+                IsIgnore = true
+            },
+            new IgnoreLogType()
+            {
+                MessageType = MessageType.NetworkDeath,
+                IsIgnore = true
+            },
+            new IgnoreLogType()
+            {
+                MessageType = MessageType.CombatantHP,
+                IsIgnore = false
+            },
         };
 
-        public string[] IgnoreKeywords
+        [XmlArray("IgnoreLogs")]
+        [XmlArrayItem("IgnoreLog")]
+        public IgnoreLogType[] IgnoreLogTypes
         {
-            get => this.ignoreKeywords?
-                .Where(x => !string.IsNullOrEmpty(x))?
-                .ToArray() ?? new string[0];
+            get => this.ignoreLogTypes?
+                .Where(x => x != null)?
+                .ToArray() ?? new IgnoreLogType[0];
 
-            set => this.SetProperty(ref this.ignoreKeywords, value);
+            set => this.SetProperty(ref this.ignoreLogTypes, value?.ToList());
         }
 
         #endregion Data
