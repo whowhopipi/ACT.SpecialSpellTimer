@@ -84,7 +84,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 {
                     this.OverlayVisible = true;
                 },
-                DispatcherPriority.Normal);
+                DispatcherPriority.Background);
             }
         }
 

@@ -190,7 +190,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.timer == null)
                 {
-                    this.timer = new DispatcherTimer(DispatcherPriority.Normal)
+                    this.timer = new DispatcherTimer(DispatcherPriority.Background)
                     {
                         Interval = TimeSpan.FromSeconds(0.25d)
                     };
