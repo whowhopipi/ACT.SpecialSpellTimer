@@ -1589,7 +1589,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     i.StartNotice();
                 }
             },
-            DispatcherPriority.Normal);
+            DispatcherPriority.Background);
         }
 
         private void NotifyTrigger(
@@ -1677,7 +1677,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     i.StartNotice();
                 }
             },
-            DispatcherPriority.Normal);
+            DispatcherPriority.Background);
         }
 
         private static string lastRaisedLog = string.Empty;
