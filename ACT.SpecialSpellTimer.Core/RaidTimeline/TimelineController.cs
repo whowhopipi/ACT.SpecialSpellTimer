@@ -1446,9 +1446,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private readonly ConcurrentQueue<TimelineBase> notifyQueue = new ConcurrentQueue<TimelineBase>();
 
         private ThreadWorker notifyWorker;
+        private DispatcherTimer notifyTimer;
 
         private void StartNotifyWorker()
         {
+            /*
             if (this.notifyWorker == null)
             {
                 this.notifyWorker = new ThreadWorker(
@@ -1475,15 +1477,68 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
 
             this.notifyWorker.Run();
+            */
+
+            if (this.notifyTimer == null)
+            {
+                this.notifyTimer = new DispatcherTimer(DispatcherPriority.Background)
+                {
+                    Interval = TimeSpan.FromMilliseconds(50)
+                };
+
+                this.notifyTimer.Tick += (sender, args) =>
+                {
+                    if (this.notifyQueue.IsEmpty)
+                    {
+                        return;
+                    }
+
+                    lock (this.notifyTimer)
+                    {
+                        var toNotices = new List<TimelineBase>(this.notifyQueue.Count);
+                        while (this.notifyQueue.TryDequeue(out TimelineBase element))
+                        {
+                            toNotices.Add(element);
+                        }
+
+                        foreach (var element in toNotices)
+                        {
+                            switch (element)
+                            {
+                                case TimelineActivityModel act:
+                                    this.NotifyActivity(act);
+                                    break;
+
+                                case TimelineTriggerModel tri:
+                                    this.NotifyTrigger(tri);
+                                    break;
+                            }
+
+                            Thread.Yield();
+                        }
+                    }
+                };
+            }
+
+            this.notifyTimer?.Start();
         }
 
         public void StopNotifyWorker()
         {
+            /*
             if (this.notifyWorker != null)
             {
                 this.notifyWorker.Abort(50);
                 while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
                 this.notifyWorker = null;
+            }
+            */
+
+            if (this.notifyTimer != null)
+            {
+                this.notifyTimer.Stop();
+                while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
+                this.notifyTimer = null;
             }
         }
 
@@ -1548,48 +1603,44 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
-            WPFHelper.Invoke(() =>
+            foreach (var v in vnotices)
             {
-                foreach (var v in vnotices)
+                // ソート用にログ番号を格納する
+                // 優先順位は最後尾とする
+                v.LogSeq = long.MaxValue;
+
+                switch (v.Text)
                 {
-                    // ソート用にログ番号を格納する
-                    // 優先順位は最後尾とする
-                    v.LogSeq = long.MaxValue;
+                    case TimelineVisualNoticeModel.ParentTextPlaceholder:
+                        v.TextToDisplay = act.TextReplaced;
+                        break;
 
-                    switch (v.Text)
-                    {
-                        case TimelineVisualNoticeModel.ParentTextPlaceholder:
-                            v.TextToDisplay = act.TextReplaced;
-                            break;
+                    case TimelineVisualNoticeModel.ParentNoticePlaceholder:
+                        v.TextToDisplay = act.NoticeReplaced;
+                        break;
 
-                        case TimelineVisualNoticeModel.ParentNoticePlaceholder:
-                            v.TextToDisplay = act.NoticeReplaced;
-                            break;
-
-                        default:
-                            v.TextToDisplay = v.Text;
-                            break;
-                    }
-
-                    if (string.IsNullOrEmpty(v.TextToDisplay))
-                    {
-                        continue;
-                    }
-
-                    // PC名をルールに従って置換する
-                    v.TextToDisplay = FFXIVPlugin.Instance.ReplacePartyMemberName(
-                        v.TextToDisplay,
-                        Settings.Default.PCNameInitialOnDisplayStyle);
-
-                    TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+                    default:
+                        v.TextToDisplay = v.Text;
+                        break;
                 }
 
-                foreach (var i in inotices)
+                if (string.IsNullOrEmpty(v.TextToDisplay))
                 {
-                    i.StartNotice();
+                    continue;
                 }
-            },
-            DispatcherPriority.Background);
+
+                // PC名をルールに従って置換する
+                v.TextToDisplay = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                    v.TextToDisplay,
+                    Settings.Default.PCNameInitialOnDisplayStyle);
+
+                TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+            }
+
+            foreach (var i in inotices)
+            {
+                i.StartNotice();
+            }
         }
 
         private void NotifyTrigger(
@@ -1636,48 +1687,44 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
-            WPFHelper.Invoke(() =>
+            foreach (var v in vnotices)
             {
-                foreach (var v in vnotices)
+                // ヒットしたログのシーケンスを格納する
+                // ソート用
+                v.LogSeq = tri.LogSeq;
+
+                switch (v.Text)
                 {
-                    // ヒットしたログのシーケンスを格納する
-                    // ソート用
-                    v.LogSeq = tri.LogSeq;
+                    case TimelineVisualNoticeModel.ParentTextPlaceholder:
+                        v.TextToDisplay = tri.TextReplaced;
+                        break;
 
-                    switch (v.Text)
-                    {
-                        case TimelineVisualNoticeModel.ParentTextPlaceholder:
-                            v.TextToDisplay = tri.TextReplaced;
-                            break;
+                    case TimelineVisualNoticeModel.ParentNoticePlaceholder:
+                        v.TextToDisplay = tri.NoticeReplaced;
+                        break;
 
-                        case TimelineVisualNoticeModel.ParentNoticePlaceholder:
-                            v.TextToDisplay = tri.NoticeReplaced;
-                            break;
-
-                        default:
-                            v.TextToDisplay = v.Text;
-                            break;
-                    }
-
-                    if (string.IsNullOrEmpty(v.TextToDisplay))
-                    {
-                        continue;
-                    }
-
-                    // PC名をルールに従って置換する
-                    v.TextToDisplay = FFXIVPlugin.Instance.ReplacePartyMemberName(
-                        v.TextToDisplay,
-                        Settings.Default.PCNameInitialOnDisplayStyle);
-
-                    TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+                    default:
+                        v.TextToDisplay = v.Text;
+                        break;
                 }
 
-                foreach (var i in inotices)
+                if (string.IsNullOrEmpty(v.TextToDisplay))
                 {
-                    i.StartNotice();
+                    continue;
                 }
-            },
-            DispatcherPriority.Background);
+
+                // PC名をルールに従って置換する
+                v.TextToDisplay = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                    v.TextToDisplay,
+                    Settings.Default.PCNameInitialOnDisplayStyle);
+
+                TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+            }
+
+            foreach (var i in inotices)
+            {
+                i.StartNotice();
+            }
         }
 
         private static string lastRaisedLog = string.Empty;
