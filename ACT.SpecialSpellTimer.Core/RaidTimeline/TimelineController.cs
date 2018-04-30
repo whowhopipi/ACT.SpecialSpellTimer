@@ -1445,79 +1445,67 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private readonly ConcurrentQueue<TimelineBase> notifyQueue = new ConcurrentQueue<TimelineBase>();
 
-        private ThreadWorker notifyWorker;
         private DispatcherTimer notifyTimer;
+        private volatile bool isNotifyExcuting = false;
 
         private void StartNotifyWorker()
         {
-            /*
-            if (this.notifyWorker == null)
+            lock (NoticeLocker)
             {
-                this.notifyWorker = new ThreadWorker(
-                    () =>
+                if (this.notifyTimer == null)
+                {
+                    this.notifyTimer = new DispatcherTimer(DispatcherPriority.Background)
                     {
-                        while (this.notifyQueue.TryDequeue(out TimelineBase element))
-                        {
-                            switch (element)
-                            {
-                                case TimelineActivityModel act:
-                                    this.NotifyActivity(act);
-                                    break;
+                        Interval = TimeSpan.FromMilliseconds(50)
+                    };
 
-                                case TimelineTriggerModel tri:
-                                    this.NotifyTrigger(tri);
-                                    break;
+                    this.notifyTimer.Tick += (sender, args) =>
+                    {
+                        if (this.notifyQueue.IsEmpty)
+                        {
+                            return;
+                        }
+
+                        try
+                        {
+                            if (this.isNotifyExcuting)
+                            {
+                                return;
                             }
 
-                            Thread.Yield();
-                        }
-                    },
-                    50,
-                    "Timeline Notify Worker");
-            }
+                            this.isNotifyExcuting = true;
 
-            this.notifyWorker.Run();
-            */
-
-            if (this.notifyTimer == null)
-            {
-                this.notifyTimer = new DispatcherTimer(DispatcherPriority.Background)
-                {
-                    Interval = TimeSpan.FromMilliseconds(50)
-                };
-
-                this.notifyTimer.Tick += (sender, args) =>
-                {
-                    if (this.notifyQueue.IsEmpty)
-                    {
-                        return;
-                    }
-
-                    lock (this.notifyTimer)
-                    {
-                        var toNotices = new List<TimelineBase>(this.notifyQueue.Count);
-                        while (this.notifyQueue.TryDequeue(out TimelineBase element))
-                        {
-                            toNotices.Add(element);
-                        }
-
-                        foreach (var element in toNotices)
-                        {
-                            switch (element)
+                            lock (this.notifyTimer)
                             {
-                                case TimelineActivityModel act:
-                                    this.NotifyActivity(act);
-                                    break;
+                                var toNotices = new List<TimelineBase>(this.notifyQueue.Count);
+                                while (this.notifyQueue.TryDequeue(out TimelineBase element))
+                                {
+                                    toNotices.Add(element);
+                                }
 
-                                case TimelineTriggerModel tri:
-                                    this.NotifyTrigger(tri);
-                                    break;
+                                foreach (var element in toNotices)
+                                {
+                                    switch (element)
+                                    {
+                                        case TimelineActivityModel act:
+                                            this.NotifyActivity(act);
+                                            break;
+
+                                        case TimelineTriggerModel tri:
+                                            this.NotifyTrigger(tri);
+                                            break;
+                                    }
+
+                                    Thread.Yield();
+                                }
                             }
-
-                            Thread.Yield();
                         }
-                    }
-                };
+                        finally
+                        {
+                            this.isNotifyExcuting = false;
+                        }
+                    };
+                }
             }
 
             this.notifyTimer?.Start();
@@ -1525,20 +1513,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public void StopNotifyWorker()
         {
-            /*
-            if (this.notifyWorker != null)
+            lock (NoticeLocker)
             {
-                this.notifyWorker.Abort(50);
-                while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
-                this.notifyWorker = null;
-            }
-            */
-
-            if (this.notifyTimer != null)
-            {
-                this.notifyTimer.Stop();
-                while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
-                this.notifyTimer = null;
+                if (this.notifyTimer != null)
+                {
+                    this.notifyTimer.Stop();
+                    while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
+                    this.notifyTimer = null;
+                }
             }
         }
 
