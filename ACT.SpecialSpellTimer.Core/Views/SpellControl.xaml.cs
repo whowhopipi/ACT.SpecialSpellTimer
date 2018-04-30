@@ -204,10 +204,13 @@ namespace ACT.SpecialSpellTimer.Views
 
                     this.SpellIconPanel.OpacityMask = new ImageBrush(bitmap);
                 }
+
+                this.SpellIconPanel.Background = Brushes.Black;
             }
             else
             {
                 this.SpellIconImage.Source = null;
+                this.SpellIconPanel.Background = Brushes.Transparent;
             }
 
             // Titleを描画する
