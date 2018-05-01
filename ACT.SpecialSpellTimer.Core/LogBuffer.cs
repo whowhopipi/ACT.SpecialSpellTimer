@@ -87,7 +87,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         ~LogBuffer()
         {
-            Dispose();
+            this.Dispose();
         }
 
         /// <summary>

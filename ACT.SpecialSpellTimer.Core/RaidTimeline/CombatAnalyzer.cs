@@ -538,7 +538,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// ログ格納中？
         /// </summary>
-        private bool isStoreLogAnalyzing;
+        private volatile bool isStoreLogAnalyzing;
 
         /// <summary>
         /// 戦闘ログのリスト
@@ -603,13 +603,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             this.storeLogWorker.Interval = TimeSpan.FromSeconds(3);
             this.storeLogWorker.Tick += (s, e) =>
             {
+                if (this.isStoreLogAnalyzing)
+                {
+                    return;
+                }
+
                 lock (this)
                 {
-                    if (this.isStoreLogAnalyzing)
-                    {
-                        return;
-                    }
-
                     this.isStoreLogAnalyzing = true;
 
                     try
@@ -832,9 +832,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// </summary>
         private void StoreLogPoller()
         {
-            var preLog = string.Empty;
+            if (this.logInfoQueue.IsEmpty)
+            {
+                return;
+            }
 
+            var preLog = string.Empty;
             var ignores = TimelineSettings.Instance.IgnoreLogTypes.Where(x => x.IsIgnore);
+
+            var logs = new List<LogLineEventArgs>(this.logInfoQueue.Count);
 
             while (this.logInfoQueue.TryDequeue(out LogLineEventArgs log))
             {
@@ -852,8 +858,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     continue;
                 }
 
+                logs.Add(log);
                 Thread.Yield();
+            }
+
+            foreach (var log in logs)
+            {
                 this.AnalyzeLogLine(log);
+                Thread.Yield();
             }
         }
 
