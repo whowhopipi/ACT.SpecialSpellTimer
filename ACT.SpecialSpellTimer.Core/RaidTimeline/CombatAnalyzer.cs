@@ -859,7 +859,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 }
 
                 logs.Add(log);
-                Thread.Yield();
             }
 
             foreach (var log in logs)
