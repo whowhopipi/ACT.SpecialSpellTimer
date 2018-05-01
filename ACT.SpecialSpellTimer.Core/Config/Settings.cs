@@ -627,7 +627,7 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.TextBlurRate), 1.2d },
             { nameof(Settings.TextOutlineThicknessRate), 1.0d },
             { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
-            { nameof(Settings.RenderCPUOnly), false },
+            { nameof(Settings.RenderCPUOnly), true },
             { nameof(Settings.SingleTaskLogMatching), false },
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
