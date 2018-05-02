@@ -173,11 +173,15 @@ namespace ACT.SpecialSpellTimer.Config.Views
             switch (e.Key)
             {
                 case Key.F2:
+                    this.inEditNameMode = true;
                     item.RenameCommand.Execute(item);
                     break;
 
                 case Key.Delete:
-                    item.DeleteCommand.Execute(item);
+                    if (!this.inEditNameMode)
+                    {
+                        item.DeleteCommand.Execute(item);
+                    }
                     break;
             }
         }
@@ -214,6 +218,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         #region 名前の編集
 
+        private bool inEditNameMode = false;
+
         private void RenameTextBoxOnLostFocus(
             object sender,
             RoutedEventArgs e)
@@ -222,6 +228,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
             {
                 if (t.Tag is Tag tag)
                 {
+                    this.inEditNameMode = false;
                     tag.IsInEditMode = false;
                     tag.Name = t.Text;
                 }
@@ -238,6 +245,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 if (sender is TextBox t &&
                     t.Tag is Tag tag)
                 {
+                    this.inEditNameMode = false;
                     tag.IsInEditMode = false;
 
                     if (e.Key == Key.Enter)
