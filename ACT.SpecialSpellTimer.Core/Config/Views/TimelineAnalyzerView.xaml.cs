@@ -59,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
         public ICollectionView CombatLogs => this.combatLogSource.View;
 
-        public string Zone => this.CombatLogs.Cast<CombatLog>().FirstOrDefault()?.Zone;
+        public string Zone => this.CombatLogs?.Cast<CombatLog>().FirstOrDefault()?.Zone;
 
         private void AutoCombatLogAnalyze_Checked(
             object sender,

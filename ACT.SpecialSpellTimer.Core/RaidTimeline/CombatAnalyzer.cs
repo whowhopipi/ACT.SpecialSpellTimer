@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
@@ -520,6 +520,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #endregion Keywords
 
+        public CombatAnalyzer()
+        {
+            this.CurrentCombatLogList = new ObservableCollection<CombatLog>();
+            BindingOperations.EnableCollectionSynchronization(this.CurrentCombatLogList, new object());
+        }
+
         /// <summary>
         /// ログ一時バッファ
         /// </summary>
@@ -533,12 +539,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// <summary>
         /// ログ格納スレッド
         /// </summary>
-        private DispatcherTimer storeLogWorker;
-
-        /// <summary>
-        /// ログ格納中？
-        /// </summary>
-        private volatile bool isStoreLogAnalyzing;
+        private ThreadWorker storeLogWorker;
 
         /// <summary>
         /// 戦闘ログのリスト
@@ -547,7 +548,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get;
             private set;
-        } = new ObservableCollection<CombatLog>();
+        }
 
         /// <summary>
         /// アクターのHP率
@@ -592,47 +593,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private void StartPoller()
         {
             this.ClearLogInfoQueue();
+            this.inCombat = false;
 
-            if (this.storeLogWorker != null &&
-                this.storeLogWorker.IsEnabled)
+            lock (this)
             {
-                return;
-            }
-
-            this.storeLogWorker = new DispatcherTimer(DispatcherPriority.Background);
-            this.storeLogWorker.Interval = TimeSpan.FromSeconds(3);
-            this.storeLogWorker.Tick += (s, e) =>
-            {
-                if (this.isStoreLogAnalyzing)
+                if (this.storeLogWorker != null)
                 {
                     return;
                 }
 
-                lock (this)
-                {
-                    this.isStoreLogAnalyzing = true;
+                this.storeLogWorker = new ThreadWorker(
+                    () => this.StoreLogPoller(),
+                    3 * 1000,
+                    "CombatLog Analyer");
 
-                    try
-                    {
-                        this.StoreLogPoller();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Write(
-                            "catch exception at StoreLog.",
-                            ex);
-                    }
-                    finally
-                    {
-                        this.isStoreLogAnalyzing = false;
-                    }
-                }
-            };
-
-            this.isStoreLogAnalyzing = false;
-            this.storeLogWorker.Start();
-
-            this.inCombat = false;
+                this.storeLogWorker.Run();
+            }
         }
 
         /// <summary>
@@ -642,9 +618,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             lock (this)
             {
-                this.storeLogWorker?.Stop();
+                this.storeLogWorker?.Abort();
                 this.storeLogWorker = null;
-                this.isStoreLogAnalyzing = false;
             }
 
             this.ClearLogInfoQueue();

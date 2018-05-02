@@ -110,7 +110,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         /// </summary>
         public string HPRateText =>
             this.HPRate != 0 ?
-            this.HPRate.ToString("P1") :
+            $"{this.HPRate:N0}%" :
             string.Empty;
 
         /// <summary>
