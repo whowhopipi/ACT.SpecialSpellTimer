@@ -105,7 +105,8 @@
           BorderThickness="0"
           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
           ScrollViewer.VerticalScrollBarVisibility="Auto"
-          ItemsSource="{Binding Path=TimelineModels, Mode=OneWay}">
+          ItemsSource="{Binding Path=TimelineModels, Mode=OneWay}"
+          Focusable="False">
 
           <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
@@ -218,7 +219,8 @@
               Margin="10 10 0 0"
               Padding="0 0 40 0"
               VerticalScrollBarVisibility="Auto"
-              HorizontalScrollBarVisibility="Disabled">
+              HorizontalScrollBarVisibility="Disabled"
+              Focusable="False">
 
               <StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -433,12 +435,14 @@
               Margin="10 10 0 0"
               Padding="0 0 40 0"
               VerticalScrollBarVisibility="Auto"
-              HorizontalScrollBarVisibility="Disabled">
+              HorizontalScrollBarVisibility="Disabled"
+              Focusable="False">
 
               <StackPanel>
                 <Label Content="{DynamicResource Timeline_IgnoreLogs}" FontWeight="Bold" />
 
                 <ItemsControl
+                  Focusable="False"
                   Margin="10 10 0 0"
                   BorderThickness="0"
                   ItemsSource="{Binding Path=TimelineConfig.IgnoreLogTypes, Mode=OneWay}">
