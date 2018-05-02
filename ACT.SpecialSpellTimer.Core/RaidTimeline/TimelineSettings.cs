@@ -132,6 +132,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.noticeHeight, Math.Round(value));
         }
 
+        private bool isMute = false;
+
+        public bool IsMute
+        {
+            get => this.isMute;
+            set => this.SetProperty(ref this.isMute, value);
+        }
+
         private bool clickthrough = false;
 
         public bool Clickthrough

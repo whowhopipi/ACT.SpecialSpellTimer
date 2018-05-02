@@ -1751,6 +1751,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            if (TimelineSettings.Instance.IsMute)
+            {
+                return;
+            }
+
             lock (NoticeLocker)
             {
                 if (lastNotice == notice)
