@@ -336,7 +336,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(MarkerRegex),
-                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$")
+                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:....:(?<type>....):0000:0000:0000:$")
             },
             {
                 nameof(MarkingRegex),
@@ -423,7 +423,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(MarkerRegex),
-                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$")
+                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:....:(?<type>....):0000:0000:0000:$")
             },
             {
                 nameof(MarkingRegex),
@@ -508,7 +508,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(MarkerRegex),
-                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:0000:(?<type>....):0000:0000:0000:$")
+                CreateRegex(@"1B:(?<id>.{8}):(?<target>.+?):0000:....:(?<type>....):0000:0000:0000:$")
             },
             {
                 nameof(MarkingRegex),
@@ -1601,6 +1601,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     File.Delete(file);
                 }
 
+                FileHelper.CreateDirectory(file);
+
                 using (var fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write))
                 {
                     book.Write(fs);
@@ -1767,6 +1769,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     startIndex = combatLogs.IndexOf(startCombat);
                 }
             }
+
+            FileHelper.CreateDirectory(file);
 
             var sb = new StringBuilder(5012);
 
