@@ -91,7 +91,11 @@ namespace ACT.SpecialSpellTimer.Views
             title = title.Replace(",", Environment.NewLine);
             title = title.Replace("\\n", Environment.NewLine);
 
-            if (tb.Text != title) tb.Text = title;
+            tb.Text = title;
+
+            tb.Visibility = this.Spell.HideSpellName ?
+                Visibility.Collapsed :
+                Visibility.Visible;
 
             // 点滅を判定する
             if (!this.StartBlink())
@@ -209,7 +213,7 @@ namespace ACT.SpecialSpellTimer.Views
             }
             else
             {
-                this.SpellIconImage.Source = null;
+                image.Source = null;
                 this.SpellIconPanel.Background = Brushes.Transparent;
             }
 
@@ -240,7 +244,9 @@ namespace ACT.SpecialSpellTimer.Views
             {
                 if (this.Spell.OverlapRecastTime)
                 {
-                    this.RecastTimePanelOnIcon.Visibility = Visibility.Visible;
+                    this.RecastTimePanelOnIcon.Visibility = image.Source != null ?
+                        Visibility.Visible :
+                        Visibility.Collapsed;
                     this.RecastTimePanel.Visibility = Visibility.Collapsed;
                 }
                 else

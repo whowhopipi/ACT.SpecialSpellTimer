@@ -234,8 +234,10 @@
 
               <!-- Warning -->
               <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
-                <xctk:DoubleUpDown Value="{Binding FirstSpell.WarningTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
-                <Label Content="{DynamicResource Spell_WarningTime}" VerticalAlignment="Center" Margin="5 0 0 0" />
+                <xctk:DoubleUpDown Value="{Binding FirstSpell.WarningTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" VerticalAlignment="Center" />
+                <Label VerticalAlignment="Center" Margin="5 0 0 0" MaxWidth="300">
+                  <TextBlock TextWrapping="WrapWithOverflow" Text="{DynamicResource Spell_WarningTime}" />
+                </Label>
               </StackPanel>
               <CheckBox Margin="0 5 0 0" Content="{DynamicResource Spell_WarningTimeChangeFontColor}" IsChecked="{Binding FirstSpell.ChangeFontColorsWhenWarning}" />
             </StackPanel>
