@@ -100,9 +100,9 @@
       Grid.Row="0"
       Panel.ZIndex="-1"
       Background="Black">
-      <Image
+      <ctrl:FantImage
         x:Name="SpellIconImage"
-        RenderOptions.BitmapScalingMode="HighQuality"
+        RenderOptions.BitmapScalingMode="Fant"
         RenderOptions.ClearTypeHint="Enabled"
         RenderOptions.EdgeMode="Unspecified" />
     </DockPanel>

@@ -23,6 +23,8 @@
   TextOptions.TextHintingMode="Animated"
   TextOptions.TextRenderingMode="ClearType"
   mc:Ignorable="d"
+  Opacity="0"
+  Topmost="True"
   ResizeMode="NoResize"
   ShowInTaskbar="False"
   WindowStyle="None"
@@ -89,8 +91,34 @@
         Background="{Binding Path=Panel.BackgroundBrush, Mode=OneWay}">
       </Border>
 
-      <Canvas x:Name="SpellsCanvas">
-      </Canvas>
+      <ItemsControl
+        x:Name="SpellsControl"
+        BorderThickness="0"
+        ItemsSource="{Binding ActiveSpellView, Mode=OneWay}">
+
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <local:SpellControl
+              DataContext="{Binding}"
+              Visibility="{Binding Visibility, Mode=OneWay}"
+              Opacity="0"
+              Loaded="SpellControl_Loaded" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+        <ItemsControl.ItemContainerStyle>
+          <Style>
+            <Setter Property="Canvas.Top" Value="{Binding Path=Top, Mode=OneWay}" />
+            <Setter Property="Canvas.Left" Value="{Binding Path=Left, Mode=OneWay}" />
+            <Setter Property="Panel.ZIndex" Value="{Binding Path=DisplayNo, Mode=OneWay}" />
+          </Style>
+        </ItemsControl.ItemContainerStyle>
+      </ItemsControl>
     </Grid>
     <!-- スペル配置グリッド end -->
   </Grid>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Serialization;
@@ -113,6 +114,59 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             get => this.Order?.ToString();
             set => this.Order = int.TryParse(value, out var v) ? v : (int?)null;
         }
+
+        #region sync-to-hide
+
+        private string syncToHideKeyword = null;
+
+        [XmlAttribute(AttributeName = "sync-to-hide")]
+        public string SyncToHideKeyword
+        {
+            get => this.syncToHideKeyword;
+            set
+            {
+                if (this.SetProperty(ref this.syncToHideKeyword, value))
+                {
+                    this.syncToHideKeywordReplaced = null;
+                }
+            }
+        }
+
+        private string syncToHideKeywordReplaced = null;
+
+        [XmlIgnore]
+        public string SyncToHideKeywordReplaced
+        {
+            get => this.syncToHideKeywordReplaced;
+            set
+            {
+                if (this.SetProperty(ref this.syncToHideKeywordReplaced, value))
+                {
+                    if (string.IsNullOrEmpty(this.syncToHideKeywordReplaced))
+                    {
+                        this.syncToHideRegex = null;
+                    }
+                    else
+                    {
+                        this.syncToHideRegex = new Regex(
+                            this.syncToHideKeywordReplaced,
+                            RegexOptions.Compiled |
+                            RegexOptions.IgnoreCase);
+                    }
+                }
+            }
+        }
+
+        private Regex syncToHideRegex = null;
+
+        [XmlIgnore]
+        public Regex SynqToHideRegex
+        {
+            get => this.syncToHideRegex;
+            private set => this.SetProperty(ref this.syncToHideRegex, value);
+        }
+
+        #endregion sync-to-hide
 
         private bool isVisible = false;
 

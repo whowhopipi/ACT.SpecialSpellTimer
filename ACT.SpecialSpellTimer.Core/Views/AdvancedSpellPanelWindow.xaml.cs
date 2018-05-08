@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using ACT.SpecialSpellTimer.Config;
@@ -89,7 +87,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             this.Closed += (x, y) =>
             {
-                this.ActiveSpells.Clear();
+                this.activeSpells.Clear();
 
                 if (this.Panel != null)
                 {
@@ -98,10 +96,13 @@ namespace ACT.SpecialSpellTimer.Views
                 }
             };
 
-            this.ActiveSpells.CollectionChanged += this.ActiveSpells_CollectionChanged;
+            this.ActiveSpellViewSource = new CollectionViewSource()
+            {
+                Source = this.activeSpells,
+                IsLiveSortingRequested = true,
+            };
 
-            this.Opacity = 0;
-            this.Topmost = false;
+            this.RaisePropertyChanged(nameof(this.ActiveSpellView));
         }
 
         private bool overlayVisible;
@@ -151,21 +152,23 @@ namespace ACT.SpecialSpellTimer.Views
             set => this.SetProperty(ref this.spells, value);
         }
 
-        public ObservableCollection<Spell> ActiveSpells
-        {
-            get;
-            private set;
-        } = new ObservableCollection<Spell>();
+        private ObservableCollection<Spell> activeSpells = new ObservableCollection<Spell>();
+
+        public CollectionViewSource ActiveSpellViewSource;
+        public ICollectionView ActiveSpellView => this.ActiveSpellViewSource?.View;
 
         private List<SpellControl> spellControls = new List<SpellControl>();
 
         public void Refresh()
         {
+            var now = DateTime.Now;
+
             // 表示するものがなければ何もしない
             if (this.Spells == null)
             {
                 this.HideOverlay();
-                this.ActiveSpells.Clear();
+                this.activeSpells.Clear();
+                this.ClearSpellControls();
                 return;
             }
 
@@ -177,88 +180,91 @@ namespace ACT.SpecialSpellTimer.Views
                 select
                 x;
 
-            // タイムアップしたものを除外する
-            if (Settings.Default.TimeOfHideSpell > 0.0d)
+            // タイムアップしたものを非表示にする
+            foreach (var spell in spells)
             {
-                spells =
-                    from x in spells
-                    where
-                    x.DontHide ||
-                    x.IsDesignMode ||
-                    (DateTime.Now - x.CompleteScheduledTime).TotalSeconds <= Settings.Default.TimeOfHideSpell
-                    select
-                    x;
+                var toHide = false;
+
+                if (Settings.Default.TimeOfHideSpell > 0.0d)
+                {
+                    if (!spell.DontHide &&
+                        !spell.IsDesignMode &&
+                        (now - spell.CompleteScheduledTime).TotalSeconds > Settings.Default.TimeOfHideSpell)
+                    {
+                        toHide = true;
+                    }
+                }
+
+                spell.Visibility = !toHide ?
+                    Visibility.Visible :
+                    Visibility.Hidden;
             }
 
-            if (!spells.Any())
+            if (!spells.Any(x => x.Visibility == Visibility.Visible))
             {
                 this.HideOverlay();
-                this.ActiveSpells.Clear();
+                this.activeSpells.Clear();
+                this.ClearSpellControls();
                 return;
             }
 
             // 有効なスペルリストを入れ替える
-            var toAdd = spells.Where(x => !this.ActiveSpells.Any(y => y.Guid == x.Guid));
-            var toRemove = this.ActiveSpells.Where(x => !spells.Any(y => y.Guid == x.Guid)).ToList();
+            var toAdd = spells.Where(x => !this.activeSpells.Any(y => y.Guid == x.Guid));
+            var toRemove = this.activeSpells.Where(x => !spells.Any(y => y.Guid == x.Guid)).ToArray();
 
-            this.ActiveSpells.AddRange(toAdd);
+            this.activeSpells.AddRange(toAdd);
             foreach (var spell in toRemove)
             {
-                this.ActiveSpells.Remove(spell);
+                this.activeSpells.Remove(spell);
             }
 
             // 表示を更新する
             this.RefreshRender();
 
-            if (this.ActiveSpells.Any())
+            if (this.activeSpells.Any())
             {
                 this.ShowOverlay();
             }
         }
 
-        private void ActiveSpells_CollectionChanged(
+        private void SpellControl_Loaded(
             object sender,
-            NotifyCollectionChangedEventArgs e)
+            RoutedEventArgs e)
         {
-            if (e.NewItems != null)
+            var control = sender as SpellControl;
+
+            lock (this.spellControls)
             {
-                foreach (Spell spell in e.NewItems)
+                if (!this.spellControls.Any(x =>
+                    x.Spell.Guid == control.Spell.Guid))
                 {
-                    var control = new SpellControl()
-                    {
-                        Spell = spell
-                    };
-
-                    control.SetBinding(Canvas.LeftProperty, new Binding(nameof(Spell.Left)));
-                    control.SetBinding(Canvas.TopProperty, new Binding(nameof(Spell.Top)));
-                    control.SetBinding(Canvas.ZIndexProperty, new Binding(nameof(Spell.DisplayNo)));
-
-                    spell.UpdateDone = false;
-
-                    this.SpellsCanvas.Children.Add(control);
+                    control.Spell.UpdateDone = false;
                     this.spellControls.Add(control);
                 }
             }
+        }
 
-            if (e.OldItems != null)
+        private void ClearSpellControls()
+        {
+            lock (this.spellControls)
             {
-                foreach (Spell spell in e.OldItems)
-                {
-                    var control = this.spellControls.FirstOrDefault(x =>
-                        (x.DataContext as Spell).Guid == spell.Guid);
-
-                    if (control != null)
-                    {
-                        this.SpellsCanvas.Children.Remove(control);
-                        this.spellControls.Remove(control);
-                    }
-                }
+                this.spellControls.Clear();
             }
         }
 
         public void RefreshRender()
         {
-            foreach (var control in this.spellControls)
+            var controls = default(SpellControl[]);
+
+            lock (this.spellControls)
+            {
+                this.spellControls.RemoveAll(x =>
+                    !this.activeSpells.Any(y => y.Guid == x.Spell.Guid));
+
+                controls = this.spellControls.ToArray();
+            }
+
+            foreach (var control in controls)
             {
                 var spell = control.Spell;
 
@@ -312,10 +318,15 @@ namespace ACT.SpecialSpellTimer.Views
                 }
 
                 control.Refresh();
+
+                // 最初は非表示（Opacity=0）にしているので表示する
+                control.Opacity = 1.0;
             }
         }
 
         #region Drag & Drop
+
+#if false
 
         private bool isDrag;
         private Point dragOffset;
@@ -357,6 +368,7 @@ namespace ACT.SpecialSpellTimer.Views
                 Canvas.SetTop(el, pt.Y - this.dragOffset.Y);
             }
         }
+#endif
 
         #endregion Drag & Drop
 

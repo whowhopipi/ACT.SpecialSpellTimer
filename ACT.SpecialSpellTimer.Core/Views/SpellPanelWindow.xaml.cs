@@ -37,7 +37,7 @@ namespace ACT.SpecialSpellTimer.Views
             this.Panel = panel;
             this.Panel.PanelWindow = this;
 
-            _originalPoint = new Point(panel.Left, panel.Top);
+            this._originalPoint = new Point(panel.Left, panel.Top);
 
             this.InitializeComponent();
 
@@ -297,7 +297,7 @@ namespace ACT.SpecialSpellTimer.Views
 
             // 有効なスペルリストを入れ替える
             var toAdd = spells.Where(x => !this.activeSpells.Any(y => y.Guid == x.Guid));
-            var toRemove = this.activeSpells.Where(x => !spells.Any(y => y.Guid == x.Guid)).ToList();
+            var toRemove = this.activeSpells.Where(x => !spells.Any(y => y.Guid == x.Guid)).ToArray();
 
             this.activeSpells.AddRange(toAdd);
             foreach (var spell in toRemove)
