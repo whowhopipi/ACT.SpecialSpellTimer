@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -128,11 +130,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     if (string.IsNullOrEmpty(this.syncKeywordReplaced))
                     {
-                        this.SynqRegex = null;
+                        this.SyncRegex = null;
                     }
                     else
                     {
-                        this.SynqRegex = new Regex(
+                        this.SyncRegex = new Regex(
                             this.syncKeywordReplaced,
                             RegexOptions.Compiled |
                             RegexOptions.IgnoreCase);
@@ -144,10 +146,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private Regex syncRegex = null;
 
         [XmlIgnore]
-        public Regex SynqRegex
+        public Regex SyncRegex
         {
             get => this.syncRegex;
             private set => this.SetProperty(ref this.syncRegex, value);
+        }
+
+        private Match syncMatch = null;
+
+        [XmlIgnore]
+        public Match SyncMatch
+
+        {
+            get => this.syncMatch;
+            set => this.SetProperty(ref this.syncMatch, value);
         }
 
         private int? syncCount = null;
@@ -251,6 +263,42 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimelineTriggerModel Clone()
         {
             var clone = this.MemberwiseClone() as TimelineTriggerModel;
+
+            if (this.SyncMatch != null)
+            {
+                var b = new BinaryFormatter();
+
+                using (var ms = new MemoryStream())
+                {
+                    b.Serialize(ms, this.SyncMatch);
+                    ms.Position = 0;
+                    clone.SyncMatch = b.Deserialize(ms) as Match;
+                }
+            }
+
+            clone.statements = new List<TimelineBase>();
+
+            var statements = new List<TimelineBase>();
+            foreach (var stat in this.statements)
+            {
+                var child = stat;
+
+                switch (stat)
+                {
+                    case TimelineVisualNoticeModel v:
+                        child = v.Clone();
+                        break;
+
+                    case TimelineImageNoticeModel i:
+                        child = i.Clone();
+                        break;
+                }
+
+                statements.Add(child);
+            }
+
+            clone.AddRange(statements);
+
             return clone;
         }
     }

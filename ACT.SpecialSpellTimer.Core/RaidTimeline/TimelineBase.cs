@@ -133,7 +133,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         string SyncKeywordReplaced { get; set; }
 
-        Regex SynqRegex { get; }
+        Regex SyncRegex { get; }
+
+        Match SyncMatch { get; set; }
 
         string Text { get; set; }
 
@@ -142,6 +144,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         string Notice { get; set; }
 
         string NoticeReplaced { get; set; }
+    }
+
+    public static class ISynchronizableEx
+    {
+        public static Match TryMatch(
+            this ISynchronizable sync,
+            string logLine)
+        {
+            sync.SyncMatch = sync.SyncRegex?.Match(logLine);
+            return sync.SyncMatch;
+        }
     }
 
     public interface IStylable

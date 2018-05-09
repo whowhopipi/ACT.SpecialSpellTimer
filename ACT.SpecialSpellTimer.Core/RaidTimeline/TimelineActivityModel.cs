@@ -73,7 +73,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #endregion Children
 
-
         private TimeSpan time = TimeSpan.Zero;
 
         [XmlIgnore]
@@ -143,11 +142,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 {
                     if (string.IsNullOrEmpty(this.syncKeywordReplaced))
                     {
-                        this.SynqRegex = null;
+                        this.SyncRegex = null;
                     }
                     else
                     {
-                        this.SynqRegex = new Regex(
+                        this.SyncRegex = new Regex(
                             this.syncKeywordReplaced,
                             RegexOptions.Compiled |
                             RegexOptions.IgnoreCase);
@@ -159,10 +158,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private Regex syncRegex = null;
 
         [XmlIgnore]
-        public Regex SynqRegex
+        public Regex SyncRegex
         {
             get => this.syncRegex;
             private set => this.SetProperty(ref this.syncRegex, value);
+        }
+
+        private Match syncMatch = null;
+
+        [XmlIgnore]
+        public Match SyncMatch
+
+        {
+            get => this.syncMatch;
+            set => this.SetProperty(ref this.syncMatch, value);
         }
 
         private double? syncOffsetStart = null;

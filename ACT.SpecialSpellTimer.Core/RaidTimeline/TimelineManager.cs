@@ -47,7 +47,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 .Where(x =>
                     x.Trigger.Enabled.GetValueOrDefault() &&
                     !string.IsNullOrEmpty(x.Trigger.SyncKeyword) &&
-                    x.Trigger.SynqRegex != null)
+                    x.Trigger.SyncRegex != null)
                 .Select(x => x.Trigger)
                 .ToArray();
 
@@ -308,6 +308,41 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             IList<TimelineBase> elements)
             => this.InitElements(null, elements);
 
+        public PlaceholderContainer[] GetPlaceholders()
+            => TableCompiler.Instance.PlaceholderList
+                .Select(x =>
+                    new PlaceholderContainer(
+                        x.Placeholder
+                            .Replace("<", "[")
+                            .Replace(">", "]"),
+                        x.ReplaceString,
+                        x.Type))
+                .ToArray();
+
+        public string ReplacePlaceholder(
+            string keyword,
+            PlaceholderContainer[] placeholders = null)
+        {
+            var replacedKeyword = keyword;
+
+            if (!string.IsNullOrEmpty(replacedKeyword))
+            {
+                if (placeholders == null)
+                {
+                    placeholders = this.GetPlaceholders();
+                }
+
+                foreach (var ph in placeholders)
+                {
+                    replacedKeyword = replacedKeyword.Replace(
+                        ph.Placeholder,
+                        ph.ReplaceString);
+                }
+            }
+
+            return replacedKeyword;
+        }
+
         /// <summary>
         /// Elementを初期化する
         /// </summary>
@@ -319,15 +354,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var defaultNoticeStyle = TimelineSettings.Instance.DefaultNoticeStyle;
 
             // <HOGE>を[HOGE]に置き換えたプレースホルダリストを生成する
-            var placeholders = TableCompiler.Instance.PlaceholderList
-                .Select(x =>
-                    new PlaceholderContainer(
-                        x.Placeholder
-                            .Replace("<", "[")
-                            .Replace(">", "]"),
-                        x.ReplaceString,
-                        x.Type))
-                .ToArray();
+            var placeholders = this.GetPlaceholders();
 
             // 初期化する
             if (timeline != null)

@@ -365,6 +365,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             // 一括して登録する
             this.AddRangeActivity(acts);
 
+            // toHideリストを初期化する
+            TimelineVisualNoticeModel.ClearSyncToHideList();
+            TimelineImageNoticeModel.ClearSyncToHideList();
+
             // 表示設定を更新しておく
             this.RefreshActivityLineVisibility();
         }
@@ -856,6 +860,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         prelogIndex = 0;
                     }
 
+                    // [TL]キーワードが含まれていればスキップする
+                    if (logLine.Contains(TLSymbol))
+                    {
+                        continue;
+                    }
+
                     // 無効キーワードが含まれていればスキップする
                     if (ignores.Any(x => logLine.Contains(x.Keyword)))
                     {
@@ -903,6 +913,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 // グローバルトリガを登録する
                 detectors.AddRange(TimelineManager.Instance.GlobalTriggers);
 
+                // ToHideトリガを登録する
+                detectors.AddRange(TimelineVisualNoticeModel.GetSyncToHideList());
+                detectors.AddRange(TimelineImageNoticeModel.GetSyncToHideList());
+
                 if (!this.Model.IsGlobalZone)
                 {
                     // タイムラインスコープのトリガを登録する
@@ -911,7 +925,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         where
                         x.Enabled.GetValueOrDefault() &&
                         !string.IsNullOrEmpty(x.SyncKeyword) &&
-                        x.SynqRegex != null
+                        x.SyncRegex != null
                         select
                         x);
 
@@ -921,7 +935,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         where
                         x.Enabled.GetValueOrDefault() &&
                         !string.IsNullOrEmpty(x.SyncKeyword) &&
-                        x.SynqRegex != null &&
+                        x.SyncRegex != null &&
                         this.CurrentTime >= x.Time + TimeSpan.FromSeconds(x.SyncOffsetStart.Value) &&
                         this.CurrentTime <= x.Time + TimeSpan.FromSeconds(x.SyncOffsetEnd.Value) &&
                         !x.IsSynced
@@ -941,7 +955,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                                 where
                                 x.Enabled.GetValueOrDefault() &&
                                 !string.IsNullOrEmpty(x.SyncKeyword) &&
-                                x.SynqRegex != null
+                                x.SyncRegex != null
                                 select
                                 x;
 
@@ -956,8 +970,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 x.Category == KewordTypes.TimelineStart ||
                 x.Category == KewordTypes.End);
 
-            // [TL] キーワードを含まないログに対して判定する
-            logs.AsParallel().Where(x => !x.Log.Contains(TLSymbol)).ForAll(xivlog =>
+            // ログに対して判定する
+            logs.AsParallel().ForAll(xivlog =>
             {
                 // 開始・終了を判定する
                 var key = (
@@ -1013,6 +1027,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         case TimelineTriggerModel tri:
                             detectTrigger(xivlog, tri);
                             break;
+
+                        case TimelineVisualNoticeModel vnotice:
+                            lock (vnotice)
+                            {
+                                vnotice.TryHide(xivlog.Log);
+                            }
+                            break;
+
+                        case TimelineImageNoticeModel inotice:
+                            lock (inotice)
+                            {
+                                inotice.TryHide(xivlog.Log);
+                            }
+                            break;
                     }
                 });
             });
@@ -1030,8 +1058,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         return false;
                     }
 
-                    match = act.SynqRegex.Match(xivlog.Log);
-                    if (!match.Success)
+                    match = act.TryMatch(xivlog.Log);
+                    if (match == null ||
+                        !match.Success)
                     {
                         return false;
                     }
@@ -1083,8 +1112,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 lock (tri)
                 {
-                    var match = tri.SynqRegex.Match(xivlog.Log);
-                    if (!match.Success)
+                    var match = tri.TryMatch(xivlog.Log);
+                    if (match == null ||
+                        !match.Success)
                     {
                         return false;
                     }
@@ -1585,11 +1615,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return;
             }
 
+            var placeholders = TimelineManager.Instance.GetPlaceholders();
+
             foreach (var v in vnotices)
             {
                 // ソート用にログ番号を格納する
                 // 優先順位は最後尾とする
                 v.LogSeq = long.MaxValue;
+                v.Timestamp = DateTime.Now;
 
                 switch (v.Text)
                 {
@@ -1617,11 +1650,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     Settings.Default.PCNameInitialOnDisplayStyle);
 
                 TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+
+                v.SetSyncToHide(placeholders);
+                v.AddSyncToHide();
             }
 
             foreach (var i in inotices)
             {
                 i.StartNotice();
+                i.SetSyncToHide(placeholders);
+                i.AddSyncToHide();
             }
         }
 
@@ -1657,8 +1695,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             NotifySound(notice, tri.NoticeDevice.GetValueOrDefault());
 
             var vnotices = tri.VisualNoticeStatements
-                .Where(x => x.Enabled.GetValueOrDefault())
-                .Select(x => x.Clone());
+                .Where(x => x.Enabled.GetValueOrDefault());
 
             var inotices = tri.ImageNoticeStatements
                 .Where(x => x.Enabled.GetValueOrDefault());
@@ -1668,6 +1705,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 return;
             }
+
+            var placeholders = TimelineManager.Instance.GetPlaceholders();
 
             foreach (var v in vnotices)
             {
@@ -1701,11 +1740,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     Settings.Default.PCNameInitialOnDisplayStyle);
 
                 TimelineNoticeOverlay.NoticeView?.AddNotice(v);
+
+                v.SetSyncToHide(placeholders);
+                v.AddSyncToHide();
             }
 
             foreach (var i in inotices)
             {
                 i.StartNotice();
+                i.SetSyncToHide(placeholders);
+                i.AddSyncToHide();
             }
         }
 

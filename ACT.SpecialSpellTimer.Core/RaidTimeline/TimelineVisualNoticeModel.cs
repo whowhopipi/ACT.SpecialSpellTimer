@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 using FFXIV.Framework.Common;
+using static ACT.SpecialSpellTimer.Models.TableCompiler;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -117,6 +118,105 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region sync-to-hide
 
+        private static readonly List<TimelineVisualNoticeModel> syncToHideList = new List<TimelineVisualNoticeModel>();
+
+        public static TimelineVisualNoticeModel[] GetSyncToHideList()
+        {
+            lock (syncToHideList)
+            {
+                return syncToHideList.ToArray();
+            }
+        }
+
+        public static void ClearSyncToHideList()
+        {
+            lock (syncToHideList)
+            {
+                syncToHideList.Clear();
+            }
+        }
+
+        public void SetSyncToHide(
+            PlaceholderContainer[] placeholders = null)
+        {
+            if (string.IsNullOrEmpty(this.SyncToHideKeyword))
+            {
+                this.SyncToHideKeywordReplaced = null;
+                this.SynqToHideRegex = null;
+
+                lock (syncToHideList)
+                {
+                    syncToHideList.Remove(this);
+                }
+
+                return;
+            }
+
+            if (this.Parent is ISynchronizable syn &&
+                syn.SyncMatch != null &&
+                syn.SyncMatch.Success)
+            {
+                var replaced = this.SyncToHideKeyword;
+                replaced = TimelineManager.Instance.ReplacePlaceholder(replaced, placeholders);
+                replaced = syn.SyncMatch.Result(replaced);
+
+                if (this.SynqToHideRegex == null ||
+                    this.SyncToHideKeywordReplaced != replaced)
+                {
+                    this.SyncToHideKeywordReplaced = replaced;
+                    this.SynqToHideRegex = new Regex(
+                        replaced,
+                        RegexOptions.Compiled |
+                        RegexOptions.IgnoreCase);
+                }
+            }
+        }
+
+        public void AddSyncToHide()
+        {
+            lock (syncToHideList)
+            {
+                syncToHideList.Remove(this);
+
+                if (this.SynqToHideRegex != null)
+                {
+                    syncToHideList.Add(this);
+                }
+            }
+        }
+
+        public void RemoveSyncToHide()
+        {
+            lock (syncToHideList)
+            {
+                syncToHideList.Remove(this);
+            }
+        }
+
+        public void ClearToHide()
+        {
+            this.SyncToHideKeywordReplaced = null;
+            this.SynqToHideRegex = null;
+        }
+
+        public bool TryHide(
+            string logLine)
+        {
+            if (this.SynqToHideRegex == null)
+            {
+                return false;
+            }
+
+            var match = this.SynqToHideRegex.Match(logLine);
+            if (!match.Success)
+            {
+                return false;
+            }
+
+            this.toHide = true;
+            return true;
+        }
+
         private string syncToHideKeyword = null;
 
         [XmlAttribute(AttributeName = "sync-to-hide")]
@@ -128,6 +228,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (this.SetProperty(ref this.syncToHideKeyword, value))
                 {
                     this.syncToHideKeywordReplaced = null;
+                    this.syncToHideRegex = null;
                 }
             }
         }
@@ -138,23 +239,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public string SyncToHideKeywordReplaced
         {
             get => this.syncToHideKeywordReplaced;
-            set
-            {
-                if (this.SetProperty(ref this.syncToHideKeywordReplaced, value))
-                {
-                    if (string.IsNullOrEmpty(this.syncToHideKeywordReplaced))
-                    {
-                        this.syncToHideRegex = null;
-                    }
-                    else
-                    {
-                        this.syncToHideRegex = new Regex(
-                            this.syncToHideKeywordReplaced,
-                            RegexOptions.Compiled |
-                            RegexOptions.IgnoreCase);
-                    }
-                }
-            }
+            private set => this.SetProperty(ref this.syncToHideKeywordReplaced, value);
         }
 
         private Regex syncToHideRegex = null;
@@ -200,6 +285,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             => this.Timestamp.AddSeconds(this.Duration.GetValueOrDefault());
 
         private DispatcherTimer timer;
+        private volatile bool toHide = false;
 
         public void StartNotice(
             Action<TimelineVisualNoticeModel> removeAction,
@@ -220,12 +306,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                     lock (this)
                     {
-                        if (DateTime.Now >= this.TimeToHide.AddSeconds(1.0d))
+                        if (DateTime.Now >= this.TimeToHide.AddSeconds(1.0d) ||
+                            this.toHide)
                         {
                             if (!dummyMode)
                             {
+                                this.toHide = false;
                                 this.IsVisible = false;
                                 removeAction?.Invoke(this);
+                                this.RemoveSyncToHide();
                             }
 
                             (x as DispatcherTimer)?.Stop();
@@ -297,6 +386,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 clone.timer.Stop();
                 clone.timer = null;
             }
+
+            clone.ClearToHide();
 
             return clone;
         }
