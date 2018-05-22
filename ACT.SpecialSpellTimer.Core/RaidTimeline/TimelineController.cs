@@ -994,7 +994,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             break;
 
                         case KewordTypes.End:
-                            WPFHelper.BeginInvoke(() => this.EndActivityLine());
+                            WPFHelper.BeginInvoke(this.EndActivityLine);
                             break;
                     }
                 }
@@ -1007,7 +1007,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         var match = this.Model.StartTriggerRegex.Match(xivlog.Log);
                         if (match.Success)
                         {
-                            WPFHelper.BeginInvoke(() => this.StartActivityLine());
+                            WPFHelper.BeginInvoke(this.StartActivityLine);
                         }
                     }
                 }
@@ -1482,7 +1482,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (this.notifyWorker == null)
                 {
                     this.notifyWorker = new ThreadWorker(
-                        () => this.DoNotify(),
+                        this.DoNotify,
                         NotifyInterval,
                         "TimelineNotifyWorker",
                         ThreadPriority.BelowNormal);
