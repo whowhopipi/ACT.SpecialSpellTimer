@@ -1489,41 +1489,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         Interval = TimeSpan.FromMilliseconds(50)
                     };
 
-                    this.notifyTimer.Tick += (sender, args) =>
-                    {
-                        if (this.notifyQueue.IsEmpty)
-                        {
-                            return;
-                        }
-
-                        try
-                        {
-                            if (this.isNotifyExcuting)
-                            {
-                                return;
-                            }
-
-                            this.isNotifyExcuting = true;
-
-                            while (this.notifyQueue.TryDequeue(out TimelineBase element))
-                            {
-                                switch (element)
-                                {
-                                    case TimelineActivityModel act:
-                                        this.NotifyActivity(act);
-                                        break;
-
-                                    case TimelineTriggerModel tri:
-                                        this.NotifyTrigger(tri);
-                                        break;
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            this.isNotifyExcuting = false;
-                        }
-                    };
+                    this.notifyTimer.Tick += (sender, args) => this.DoNotify();
                 }
             }
 
@@ -1540,6 +1506,42 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     while (this.notifyQueue.TryDequeue(out TimelineBase q)) ;
                     this.notifyTimer = null;
                 }
+            }
+        }
+
+        private void DoNotify()
+        {
+            if (this.notifyQueue.IsEmpty)
+            {
+                return;
+            }
+
+            try
+            {
+                if (this.isNotifyExcuting)
+                {
+                    return;
+                }
+
+                this.isNotifyExcuting = true;
+
+                while (this.notifyQueue.TryDequeue(out TimelineBase element))
+                {
+                    switch (element)
+                    {
+                        case TimelineActivityModel act:
+                            this.NotifyActivity(act);
+                            break;
+
+                        case TimelineTriggerModel tri:
+                            this.NotifyTrigger(tri);
+                            break;
+                    }
+                }
+            }
+            finally
+            {
+                this.isNotifyExcuting = false;
             }
         }
 
