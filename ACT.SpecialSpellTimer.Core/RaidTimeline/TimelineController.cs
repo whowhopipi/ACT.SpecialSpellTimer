@@ -1507,6 +1507,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         private void DoNotify()
         {
+            this.notifyWorker.Interval = NotifyInterval;
+
             if (this.NotifyQueue.IsEmpty)
             {
                 return;
@@ -1534,6 +1536,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             break;
                     }
                 }
+
+                this.notifyWorker.Interval = 0;
             }
             finally
             {
