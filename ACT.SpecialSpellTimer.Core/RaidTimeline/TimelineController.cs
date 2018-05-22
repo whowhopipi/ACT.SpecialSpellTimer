@@ -1484,7 +1484,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 if (this.notifyTimer == null)
                 {
-                    this.notifyTimer = new DispatcherTimer(DispatcherPriority.Background)
+                    this.notifyTimer = new DispatcherTimer(DispatcherPriority.Normal)
                     {
                         Interval = TimeSpan.FromMilliseconds(50)
                     };
@@ -1505,28 +1505,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                             this.isNotifyExcuting = true;
 
-                            lock (this.notifyTimer)
+                            while (this.notifyQueue.TryDequeue(out TimelineBase element))
                             {
-                                var toNotices = new List<TimelineBase>(this.notifyQueue.Count);
-                                while (this.notifyQueue.TryDequeue(out TimelineBase element))
+                                switch (element)
                                 {
-                                    toNotices.Add(element);
-                                }
+                                    case TimelineActivityModel act:
+                                        this.NotifyActivity(act);
+                                        break;
 
-                                foreach (var element in toNotices)
-                                {
-                                    switch (element)
-                                    {
-                                        case TimelineActivityModel act:
-                                            this.NotifyActivity(act);
-                                            break;
-
-                                        case TimelineTriggerModel tri:
-                                            this.NotifyTrigger(tri);
-                                            break;
-                                    }
-
-                                    Thread.Yield();
+                                    case TimelineTriggerModel tri:
+                                        this.NotifyTrigger(tri);
+                                        break;
                                 }
                             }
                         }

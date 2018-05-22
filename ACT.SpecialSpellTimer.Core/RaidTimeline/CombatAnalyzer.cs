@@ -605,7 +605,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.storeLogWorker = new ThreadWorker(
                     () => this.StoreLogPoller(),
                     3 * 1000,
-                    "CombatLog Analyer");
+                    "CombatLog Analyer",
+                    ThreadPriority.BelowNormal);
 
                 this.storeLogWorker.Run();
             }
