@@ -313,7 +313,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public PlaceholderContainer[] GetPlaceholders()
         {
-            var placeholders = new List<PlaceholderContainer>(TableCompiler.Instance.PlaceholderList);
+            var placeholders = TableCompiler.Instance.PlaceholderList;
 
             if (!this.InSimulation)
             {
@@ -327,11 +327,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     .ToArray();
             }
 
+            var list = new List<PlaceholderContainer>(placeholders);
 #if DEBUG
-            placeholders.Clear();
+            list.Clear();
 #endif
 
-            if (placeholders.Any())
+            if (list.Any())
             {
                 return placeholders.Select(x =>
                     new PlaceholderContainer(
@@ -346,16 +347,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var jobs = Enum.GetNames(typeof(JobIDs));
             var jobsPlacement = string.Join("|", jobs.Select(x => $@"\[{x}\]"));
 
-            placeholders.Add(new PlaceholderContainer("[mex]", @"(?<_mex>\[mex\])", PlaceholderTypes.Me));
-            placeholders.Add(new PlaceholderContainer("[nex]", $@"(?<_nex>{jobsPlacement})", PlaceholderTypes.Party));
-            placeholders.Add(new PlaceholderContainer("[pc]", $@"(?<_pc>{jobsPlacement}|\[pc\])", PlaceholderTypes.Party));
+            list.Add(new PlaceholderContainer("[mex]", @"(?<_mex>\[mex\])", PlaceholderTypes.Me));
+            list.Add(new PlaceholderContainer("[nex]", $@"(?<_nex>{jobsPlacement})", PlaceholderTypes.Party));
+            list.Add(new PlaceholderContainer("[pc]", $@"(?<_pc>{jobsPlacement}|\[pc\])", PlaceholderTypes.Party));
 
             foreach (var job in jobs)
             {
-                placeholders.Add(new PlaceholderContainer($"[{job}]", $"[{job}]", PlaceholderTypes.Party));
+                list.Add(new PlaceholderContainer($"[{job}]", $"[{job}]", PlaceholderTypes.Party));
             }
 
-            return placeholders.ToArray();
+            return list.ToArray();
         }
 
         public string ReplacePlaceholder(
