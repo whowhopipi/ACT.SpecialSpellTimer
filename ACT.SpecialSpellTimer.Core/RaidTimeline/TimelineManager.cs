@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using ACT.SpecialSpellTimer.Models;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 using static ACT.SpecialSpellTimer.Models.TableCompiler;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
@@ -308,16 +309,54 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             IList<TimelineBase> elements)
             => this.InitElements(null, elements);
 
+        public bool InSimulation { get; set; } = false;
+
         public PlaceholderContainer[] GetPlaceholders()
-            => TableCompiler.Instance.PlaceholderList
-                .Select(x =>
+        {
+            var placeholders = new List<PlaceholderContainer>(TableCompiler.Instance.PlaceholderList);
+
+            if (!this.InSimulation)
+            {
+                return placeholders.Select(x =>
                     new PlaceholderContainer(
                         x.Placeholder
                             .Replace("<", "[")
                             .Replace(">", "]"),
                         x.ReplaceString,
                         x.Type))
-                .ToArray();
+                    .ToArray();
+            }
+
+#if DEBUG
+            placeholders.Clear();
+#endif
+
+            if (placeholders.Any())
+            {
+                return placeholders.Select(x =>
+                    new PlaceholderContainer(
+                        x.Placeholder
+                            .Replace("<", "[")
+                            .Replace(">", "]"),
+                        x.ReplaceString,
+                        x.Type))
+                    .ToArray();
+            }
+
+            var jobs = Enum.GetNames(typeof(JobIDs));
+            var jobsPlacement = string.Join("|", jobs.Select(x => $@"\[{x}\]"));
+
+            placeholders.Add(new PlaceholderContainer("[mex]", @"(?<_mex>\[mex\])", PlaceholderTypes.Me));
+            placeholders.Add(new PlaceholderContainer("[nex]", $@"(?<_nex>{jobsPlacement})", PlaceholderTypes.Party));
+            placeholders.Add(new PlaceholderContainer("[pc]", $@"(?<_pc>{jobsPlacement}|\[pc\])", PlaceholderTypes.Party));
+
+            foreach (var job in jobs)
+            {
+                placeholders.Add(new PlaceholderContainer($"[{job}]", $"[{job}]", PlaceholderTypes.Party));
+            }
+
+            return placeholders.ToArray();
+        }
 
         public string ReplacePlaceholder(
             string keyword,

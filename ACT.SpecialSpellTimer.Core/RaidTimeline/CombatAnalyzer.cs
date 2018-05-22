@@ -696,14 +696,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 if (this.combatants == null)
                 {
                     // プレイヤ情報とパーティリストを取得する
-                    var player = FFXIVPlugin.Instance.GetPlayer();
                     var ptlist = FFXIVPlugin.Instance.GetPartyList();
 
-                    var list = new List<Combatant>();
-                    list.Add(player);
-                    list.AddRange(ptlist);
-
-                    this.combatants = list.Where(x => x != null).ToList();
+                    this.combatants = ptlist.Where(x => x != null).ToList();
                 }
             }
 
@@ -789,7 +784,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (com != null)
             {
-                jobName = $"[{com.JobID.ToString()}]";
+                jobName = com.IsPlayer ?
+                    $"[mex]" :
+                    $"[{com.JobID.ToString()}]";
             }
 
             return jobName;

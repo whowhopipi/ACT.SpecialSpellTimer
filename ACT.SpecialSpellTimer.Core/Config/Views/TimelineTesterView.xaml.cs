@@ -40,10 +40,21 @@ namespace ACT.SpecialSpellTimer.Config.Views
             this.Topmost = true;
 #endif
 
+            // Simulationモードにする
+            TimelineManager.Instance.InSimulation = true;
+
             // ウィンドウのスタート位置を決める
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             this.MouseLeftButtonDown += (x, y) => this.DragMove();
+
+            this.Closed += async (x, y) =>
+            {
+                // Simulationモードを解除する
+                TimelineManager.Instance.InSimulation = false;
+
+                await Dispatcher.InvokeAsync(() => TimelineController.CurrentController?.Load());
+            };
 
             this.CloseButton.Click += (x, y) =>
             {
@@ -56,6 +67,8 @@ namespace ACT.SpecialSpellTimer.Config.Views
 
             this.RunButton.Click += async (x, y) =>
             {
+                await Dispatcher.InvokeAsync(() => TimelineController.CurrentController?.Load());
+
                 await Task.Run(() =>
                 {
                     lock (this)
