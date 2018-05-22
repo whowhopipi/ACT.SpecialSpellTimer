@@ -6,7 +6,6 @@ using System.Linq;
 using System.Media;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
@@ -474,7 +473,7 @@ namespace ACT.SpecialSpellTimer
             // ログファイルに出力する
             if (Settings.Default.SaveLogEnabled)
             {
-                Task.Run(() => ChatLogWorker.Instance.AppendLines(list));
+                ChatLogWorker.Instance.AppendLinesAsync(list);
             }
 
 #if DEBUG

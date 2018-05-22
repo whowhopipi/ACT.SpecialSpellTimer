@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 
 namespace ACT.SpecialSpellTimer
@@ -34,6 +35,10 @@ namespace ACT.SpecialSpellTimer
                 this.OutputDirectory,
                 $@"CombatLog.{DateTime.Now.ToString("yyyy-MM-dd")}.log") :
             string.Empty;
+
+        public Task AppendLinesAsync(
+            List<XIVLog> logList)
+            => Task.Run(() => this.AppendLines(logList));
 
         public void AppendLines(
             List<XIVLog> logList)
@@ -85,13 +90,13 @@ namespace ACT.SpecialSpellTimer
         {
             try
             {
+                if (this.LogBuffer.Length <= 0)
+                {
+                    return;
+                }
+
                 lock (this.LogBuffer)
                 {
-                    if (this.LogBuffer.Length <= 0)
-                    {
-                        return;
-                    }
-
                     if (!string.IsNullOrEmpty(this.OutputDirectory))
                     {
                         if (!Directory.Exists(this.OutputDirectory))
