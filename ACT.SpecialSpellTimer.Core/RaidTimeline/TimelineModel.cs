@@ -546,6 +546,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             NewDefault(TimelineElementTypes.VisualNotice, "Text", TimelineVisualNoticeModel.ParentTextPlaceholder),
             NewDefault(TimelineElementTypes.VisualNotice, "Duration", 3d),
             NewDefault(TimelineElementTypes.VisualNotice, "DurationVisible", true),
+            NewDefault(TimelineElementTypes.VisualNotice, "StackVisible", false),
             NewDefault(TimelineElementTypes.VisualNotice, "Order", 0),
 
             // ImageNotice

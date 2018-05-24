@@ -189,6 +189,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                     lock (same)
                     {
                         same.Timestamp = notice.Timestamp;
+                        same.Stack++;
                     }
 
                     return;
@@ -199,12 +200,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                     {
                         lock (this)
                         {
+                            toRemove.Stack = 0;
                             this.noticeList.Remove(toRemove);
                             this.OverlayVisible = this.noticeList.Any(x => x.IsVisible);
                         }
                     },
                     dummyMode);
 
+                notice.Stack++;
                 this.noticeList.Add(notice);
                 this.EnsureTopMost();
 

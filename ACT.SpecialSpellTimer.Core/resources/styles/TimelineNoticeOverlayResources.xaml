@@ -102,6 +102,26 @@
     <Setter Property="TextWrapping" Value="Wrap" />
   </Style>
 
+  <!-- スタック数テキスト -->
+  <Style x:Key="StackText" TargetType="controls:LightOutlineTextBlock">
+    <Setter Property="DockPanel.Dock" Value="Left" />
+    <Setter Property="Margin" Value="10 0 5 0" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+    <Setter Property="Text" Value="{Binding Path=Stack, Mode=OneWay}" />
+    <Setter Property="FontFamily" Value="{Binding Path=StyleModel.Font.FontFamily, Mode=OneWay}" />
+    <Setter Property="FontWeight" Value="{Binding Path=StyleModel.Font.Weight, Mode=OneWay}" />
+    <Setter Property="FontStyle" Value="{Binding Path=StyleModel.Font.Style, Mode=OneWay}" />
+    <Setter Property="FontStretch" Value="{Binding Path=StyleModel.Font.Stretch, Mode=OneWay}" />
+    <Setter Property="FontSize" Value="{Binding Path=StyleModel.Font.Size, Mode=OneWay}" />
+    <Setter Property="Fill" Value="{Binding Path=StyleModel.ColorBrush, Mode=OneWay}" />
+    <Setter Property="Stroke" Value="{Binding Path=StyleModel.OutlineColorBrush, Mode=OneWay}" />
+    <Setter Property="StrokeThickness" Value="{Binding Path=StyleModel.Font.OutlineThickness, Mode=OneWay}" />
+    <Setter Property="BlurRadius" Value="{Binding Path=StyleModel.Font.BlurRadius, Mode=OneWay}" />
+    <Setter Property="BlurOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="StrokeOpacity" Value="{Binding Path=StyleModel.OutlineColor.ScA, Mode=OneWay}" />
+    <Setter Property="Visibility" Value="{Binding Path=StackVisible, Mode=OneWay, Converter={StaticResource VisibilityConverter}}" />
+  </Style>
+
   <!-- カウンタテキスト -->
   <Style x:Key="DurationText" TargetType="controls:LightOutlineTextBlock">
     <Setter Property="DockPanel.Dock" Value="Right" />

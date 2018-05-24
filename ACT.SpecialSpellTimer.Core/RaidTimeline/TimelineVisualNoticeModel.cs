@@ -100,6 +100,31 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.DurationVisible = bool.TryParse(value, out var v) ? v : (bool?)null;
         }
 
+        private int stack = 0;
+
+        [XmlIgnore]
+        public int Stack
+        {
+            get => this.stack;
+            set => this.SetProperty(ref this.stack, value);
+        }
+
+        private bool? stackVisible = null;
+
+        [XmlIgnore]
+        public bool? StackVisible
+        {
+            get => this.stackVisible;
+            set => this.SetProperty(ref this.stackVisible, value);
+        }
+
+        [XmlAttribute(AttributeName = "stack-visible")]
+        public string StackVisibleXML
+        {
+            get => this.StackVisible?.ToString();
+            set => this.StackVisible = bool.TryParse(value, out var v) ? v : (bool?)null;
+        }
+
         private int? order = null;
 
         [XmlIgnore]
@@ -437,8 +462,22 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 IsVisible = true,
             };
 
+            var notice3 = new TimelineVisualNoticeModel()
+            {
+                Enabled = true,
+                TextToDisplay = "デバフ",
+                Duration = 10,
+                DurationVisible = false,
+                StyleModel = testStyle,
+                Stack = 3,
+                StackVisible = true,
+                Icon = "ファイア系.png",
+                IsVisible = true,
+            };
+
             notices.Add(notice1);
             notices.Add(notice2);
+            notices.Add(notice3);
 
             return notices;
         }
