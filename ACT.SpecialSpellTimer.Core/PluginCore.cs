@@ -374,11 +374,6 @@ namespace ACT.SpecialSpellTimer
         #endregion SpeSpeButton
 
         /// <summary>
-        /// 最終リリースのURL
-        /// </summary>
-        public const string LastestReleaseUrl = @"https://github.com/anoyetta/ACT.SpecialSpellTimer/releases/latest";
-
-        /// <summary>
         /// アップデートを行う
         /// </summary>
         private void Update()
@@ -388,7 +383,6 @@ namespace ACT.SpecialSpellTimer
             {
                 var message = UpdateChecker.Update(
                     "ACT.SpecialSpellTimer",
-                    LastestReleaseUrl,
                     Assembly.GetExecutingAssembly());
                 if (!string.IsNullOrWhiteSpace(message))
                 {
