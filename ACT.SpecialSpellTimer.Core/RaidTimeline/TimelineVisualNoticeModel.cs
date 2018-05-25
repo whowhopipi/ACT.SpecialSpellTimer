@@ -112,13 +112,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public void IncrementStack()
         {
             this.Stack++;
-            TimelineController.RaiseLog($"increments stacks of {this.Text} to {this.Stack}.");
+            TimelineController.RaiseLog($"increments stacks of {this.TextToDisplay} to {this.Stack}.");
         }
 
         public void ClearStack()
         {
             this.Stack = 0;
-            TimelineController.RaiseLog($"clear stacks of {this.Text}.");
+            TimelineController.RaiseLog($"clear stacks of {this.TextToDisplay}.");
         }
 
         private bool? stackVisible = null;
