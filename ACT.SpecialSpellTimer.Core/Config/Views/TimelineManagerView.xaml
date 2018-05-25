@@ -133,7 +133,7 @@
                   Focusable="False"
                   ToolTip="{Binding Description, Mode=OneWay}">
 
-                  <StackPanel Margin="5 0 0 0">
+                  <StackPanel Margin="5 0 0 0" MaxWidth="300">
                     <StackPanel Orientation="Horizontal">
                       <TextBlock Text="{Binding Path=Name, Mode=OneWay}" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" MaxWidth="330" TextWrapping="WrapWithOverflow" />
                       <TextBlock Margin="15 0 0 0" Text="{Binding Path=Revision, Mode=OneWay}" FontSize="14" VerticalAlignment="Center" />
