@@ -106,7 +106,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public int Stack
         {
             get => this.stack;
-            set => this.SetProperty(ref this.stack, value);
+            private set => this.SetProperty(ref this.stack, value);
+        }
+
+        public void IncrementStack()
+        {
+            this.Stack++;
+            TimelineController.RaiseLog($"increments stacks of {this.Text} to {this.Stack}.");
+        }
+
+        public void ClearStack()
+        {
+            this.Stack = 0;
+            TimelineController.RaiseLog($"clear stacks of {this.Text}.");
         }
 
         private bool? stackVisible = null;

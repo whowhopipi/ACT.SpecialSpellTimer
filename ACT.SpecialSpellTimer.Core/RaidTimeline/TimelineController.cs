@@ -1753,7 +1753,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         private static string lastRaisedLog = string.Empty;
         private static DateTime lastRaisedLogTimestamp = DateTime.MinValue;
 
-        private static void RaiseLog(
+        public static void RaiseLog(
             string log)
         {
             if (string.IsNullOrEmpty(log))
