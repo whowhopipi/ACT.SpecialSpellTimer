@@ -196,11 +196,15 @@ namespace ACT.SpecialSpellTimer
 
                             // 効果時間を決定する
                             // グループ "duration" をキャプチャーしていた場合は効果時間を置換する
+                            // 最大値9999を超えていた場合は無視する
+                            var duration = targetSpell.RecastTime;
+
+                            var d = 0d;
                             var durationAsText = match.Groups["duration"].Value;
-                            double duration;
-                            if (!double.TryParse(durationAsText, out duration))
+                            if (double.TryParse(durationAsText, out d) &&
+                                d < 9999)
                             {
-                                duration = targetSpell.RecastTime;
+                                duration = d;
                             }
 
                             targetSpell.CompleteScheduledTime = now.AddSeconds(duration);
