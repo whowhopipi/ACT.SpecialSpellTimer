@@ -686,6 +686,12 @@
     <Content Include="resources\timeline\sample\Sigmascape_V4.0_Savage.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\timeline\sample\The_Jade_Stoa_Extreme.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\timeline\sample\Tsukuyomi_Extreme.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="resources\timeline\wallpaper\biolike.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
