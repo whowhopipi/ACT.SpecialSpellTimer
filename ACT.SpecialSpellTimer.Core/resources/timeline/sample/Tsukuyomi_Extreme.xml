@@ -142,12 +142,12 @@
     <a time="@(232 - origin)" sync="彼岸花、闇の現に、咲き示す……。" />
 
     <a time="@(242 - origin)" text="極の月読 " sync="ツクヨミは「極の月読 」の構え。" notice="@(notice_tukuyomi)" />
-    <a time="@(249 - origin)" text="百月光" sync="玉月光は「百月光」の構え。" />
+    <a time="@(249 - origin)" text="百月光" />
     <a time="@(266 - origin)" text="月の欠片" sync="ツクヨミの「月の欠片」" />
     <a time="@(267 - origin)" text="宵の早替え" sync="ツクヨミは「宵の早替え」の構え。" notice="@(notice_kigae)" />
     <a time="@(279 - origin)" text="隕石マーカ" notice="@(notice_inseki)" icon="Marker.png" />
     <a time="@(290 - origin)" text="月時雨" sync="ツクヨミは「月時雨」の構え。" />
-    <a time="@(295 - origin)" text="百月光" sync="玉月光は「百月光」の構え。" />
+    <a time="@(295 - origin)" text="百月光" />
     <a time="@(307 - origin)" text="残月" sync="ツクヨミの「残月」" />
     <a time="@(315 - origin)" text="月下美人/月天心" sync="ツクヨミは「(月下美人|月天心)」の構え。" notice="@(notice_zentai)" />
 
@@ -157,12 +157,12 @@
     <a time="@(372 - origin)" text="なぶり殺し" sync="ツクヨミは「なぶり殺し」の構え。" notice="@(notice_naburi)" icon="HardAttack.png" />
 
     <a time="@(385 - origin)" text="極の月読 " sync="ツクヨミは「極の月読 」の構え。" notice="@(notice_tukuyomi)" />
-    <a time="@(392 - origin)" text="百月光" sync="玉月光は「百月光」の構え。" />
+    <a time="@(392 - origin)" text="百月光" />
     <a time="@(409 - origin)" text="月の欠片" sync="ツクヨミの「月の欠片」" />
     <a time="@(410 - origin)" text="宵の早替え" sync="ツクヨミは「宵の早替え」の構え。" notice="@(notice_kigae)" />
     <a time="@(422 - origin)" text="隕石マーカ" notice="@(notice_inseki)" icon="Marker.png" />
     <a time="@(433 - origin)" text="月時雨" sync="ツクヨミは「月時雨」の構え。" />
-    <a time="@(446 - origin)" text="百月光" sync="玉月光は「百月光」の構え。" />
+    <a time="@(446 - origin)" text="百月光" />
     <a time="@(450 - origin)" text="残月" sync="ツクヨミの「残月」" />
     <a time="@(458 - origin)" text="月下美人/月天心" sync="ツクヨミは「(月下美人|月天心)」の構え。" notice="@(notice_zentai)" goto="FINAL" />
   </s>
