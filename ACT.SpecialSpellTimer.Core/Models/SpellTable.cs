@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Threading;
 using System.Xml.Serialization;
-using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
 
 namespace ACT.SpecialSpellTimer.Models
@@ -197,6 +194,16 @@ namespace ACT.SpecialSpellTimer.Models
                                 if (item.PanelID == Guid.Empty)
                                 {
                                     item.PanelID = SpellPanel.GeneralPanel.ID;
+                                }
+                            }
+                            else
+                            {
+                                if (!SpellPanelTable.Instance.Table.Any(x =>
+                                    x.ID == item.PanelID))
+                                {
+                                    item.PanelID = SpellPanelTable.Instance.Table.FirstOrDefault(x =>
+                                        x.PanelName == item.PanelName)?
+                                        .ID ?? SpellPanel.GeneralPanel.ID;
                                 }
                             }
 
