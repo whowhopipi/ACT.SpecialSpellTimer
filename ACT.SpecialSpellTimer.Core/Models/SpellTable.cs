@@ -201,8 +201,8 @@ namespace ACT.SpecialSpellTimer.Models
                                 if (!SpellPanelTable.Instance.Table.Any(x =>
                                     x.ID == item.PanelID))
                                 {
-                                    item.PanelID = SpellPanelTable.Instance.Table.FirstOrDefault(x =>
-                                        x.PanelName == item.PanelName)?
+                                    item.PanelID = SpellPanelTable.Instance.Table
+                                        .FirstOrDefault(x => x.PanelName == item.PanelName)?
                                         .ID ?? SpellPanel.GeneralPanel.ID;
                                 }
                             }
