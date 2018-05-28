@@ -97,19 +97,19 @@
   @* 極のときのみアクティビティを展開する *@
   @if (Model.InZone("The Minstrel's Ballad: Tsukuyomi's Pain")) {
 
-    var notice_sekkan = "次は、せっかん。";
-    var notice_sekkan2 = "次は、せっかん2回。";
-    var notice_kigae = "次は、きがえ。";
-    var notice_zentai = "次は、全体攻撃。";
-    var notice_tukuyomi = "次は、つくよみ。";
-    var notice_inseki = "次は、隕石マーカー。";
-    var notice_zashiki = "次は、座敷あそび。";
-    var notice_getto = "次は、げっとう。";
-    var notice_ryoran = "次は、げっかりょうらん。";
-    var notice_hagetsu = "次は、はげつ。";
-    var notice_naburi = "次は、なぶり殺し。";
+  var notice_sekkan = "次は、せっかん。";
+  var notice_sekkan2 = "次は、せっかん2回。";
+  var notice_kigae = "次は、きがえ。";
+  var notice_zentai = "次は、全体攻撃。";
+  var notice_tukuyomi = "次は、つくよみ。";
+  var notice_inseki = "次は、隕石マーカー。";
+  var notice_zashiki = "次は、座敷あそび。";
+  var notice_getto = "次は、げっとう。";
+  var notice_ryoran = "次は、げっかりょうらん。";
+  var notice_hagetsu = "次は、はげつ。";
+  var notice_naburi = "次は、なぶり殺し。";
 
-    var origin = 0;
+  var origin = 0;
 
   <s name="ENTRY">
     @* このフェーズの基点秒数 0 *@
@@ -183,7 +183,7 @@
     <a time="@(520 - origin)" name="LOOP" />
 
     <a time="@(522 - origin)" text="座敷遊び" sync="03:Added new combatant 舞扇" sync-e="0" notice="@(notice_zashiki)" />
-    <a time="@(527 - origin)" text="月下繚乱" sync="ツクヨミは「月下繚乱」の構え。" notice="@(notice_ryoran)" icon="DamageShare.png" />
+    <a time="@(527 - origin)" text="月下繚乱" sync="ツクヨミは「月下繚乱」の構え。" notice="@(notice_ryoran)" icon="TargetAOE.png" />
     <a time="@(540 - origin)" text="月刀" sync="ツクヨミは「月刀(右近|左近)」の構え。" notice="@(notice_getto)" icon="Avoid.png" />
     <a time="@(550 - origin)" text="なぶり殺し" sync="ツクヨミは「なぶり殺し」の構え。" notice="@(notice_naburi)" icon="HardAttack.png" />
 
