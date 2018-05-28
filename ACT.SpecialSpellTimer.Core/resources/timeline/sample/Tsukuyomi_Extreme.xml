@@ -182,12 +182,12 @@
 
     <a time="@(520 - origin)" name="LOOP" />
 
-    <a time="@(523 - origin)" text="座敷遊び" sync="ツクヨミは「座敷遊び」の構え。" notice="@(notice_zashiki)" />
+    <a time="@(522 - origin)" text="座敷遊び" sync="03:Added new combatant 舞扇" sync-e="0" notice="@(notice_zashiki)" />
     <a time="@(527 - origin)" text="月下繚乱" sync="ツクヨミは「月下繚乱」の構え。" notice="@(notice_ryoran)" icon="DamageShare.png" />
     <a time="@(540 - origin)" text="月刀" sync="ツクヨミは「月刀(右近|左近)」の構え。" notice="@(notice_getto)" icon="Avoid.png" />
     <a time="@(550 - origin)" text="なぶり殺し" sync="ツクヨミは「なぶり殺し」の構え。" notice="@(notice_naburi)" icon="HardAttack.png" />
 
-    <a time="@(555 - origin)" text="座敷遊び" sync="ツクヨミは「座敷遊び」の構え。" notice="@(notice_zashiki)" />
+    <a time="@(560 - origin)" text="座敷遊び" sync="03:Added new combatant 舞扇" sync-e="0" notice="@(notice_zashiki)" />
     <a time="@(563 - origin)" text="破月" notice="@(notice_hagetsu)" icon="Marker.png" />
     <a time="@(573 - origin)" text="月刀" sync="ツクヨミは「月刀(右近|左近)」の構え。" notice="@(notice_getto)" icon="Avoid.png" />
     <a time="@(583 - origin)" text="折檻 x2" notice="@(notice_sekkan2)" icon="AllRangeAttack.png" />
