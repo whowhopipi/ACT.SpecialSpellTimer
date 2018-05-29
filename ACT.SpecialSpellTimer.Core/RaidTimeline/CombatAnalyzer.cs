@@ -280,6 +280,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "「マーキング」", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
+            new AnalyzeKeyword() { Keyword = "00:0839:", Category = KewordTypes.Dialogue },
             new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "/spespetime -a start", Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:戦闘開始", Category = KewordTypes.Start },
@@ -320,7 +321,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(DialogRegex),
-                CreateRegex(@"00:0044:(?<dialog>.+?)$")
+                CreateRegex(@"00:(0044|0839):(?<dialog>.+?)$")
             },
             {
                 nameof(CombatStartRegex),
@@ -368,6 +369,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "suffers the effect of Prey.", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
+            new AnalyzeKeyword() { Keyword = "00:0839:", Category = KewordTypes.Dialogue },
             new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "/spespetime -a start", Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:Engage!", Category = KewordTypes.Start },
@@ -407,7 +409,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(DialogRegex),
-                CreateRegex(@"00:0044:(?<dialog>.+?)$")
+                CreateRegex(@"00:(0044|0839):(?<dialog>.+?)$")
             },
             {
                 nameof(CombatStartRegex),
@@ -453,6 +455,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "「マーキング」", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
             new AnalyzeKeyword() { Keyword = "00:0044:", Category = KewordTypes.Dialogue },
+            new AnalyzeKeyword() { Keyword = "00:0839:", Category = KewordTypes.Dialogue },
             new AnalyzeKeyword() { Keyword = ImportLog, Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "/spespetime -a start", Category = KewordTypes.Start },
             new AnalyzeKeyword() { Keyword = "00:0039:전투 시작!", Category = KewordTypes.Start },
@@ -492,7 +495,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(DialogRegex),
-                CreateRegex(@"00:0044:(?<dialog>.+?)$")
+                CreateRegex(@"00:(0044|0839):(?<dialog>.+?)$")
             },
             {
                 nameof(CombatStartRegex),
@@ -1102,7 +1105,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var match = CastRegex.Match(logInfo.logLine);
             if (!match.Success)
             {
-                match = StartsUsingUnknownRegex.Match(logInfo.logLine);
+                match = StartsUsingRegex.Match(logInfo.logLine);
                 if (!match.Success)
                 {
                     return;
@@ -1307,12 +1310,14 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var dialog = match.Groups["dialog"].ToString();
 
+            var isSystem = logInfo.logLine.Contains(":0839");
+
             var log = new CombatLog()
             {
                 TimeStamp = logInfo.detectedTime,
                 Raw = logInfo.logLine,
                 Actor = string.Empty,
-                Activity = "Dialog",
+                Activity = isSystem ? "System" : "Dialog",
                 LogType = LogTypes.Dialog
             };
 

@@ -486,6 +486,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             razorModel = model;
         }
 
+        private static readonly Regex TimelineTagRegex = new Regex(
+            "<timeline.*>",
+            RegexOptions.Compiled);
+
         public void Save(
             string file)
         {
@@ -507,9 +511,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 sb.Replace("True", "true");
                 sb.Replace("False", "false");
 
+                var text = sb.ToString();
+                text = TimelineTagRegex.Replace(text, "<timeline>");
+
                 File.WriteAllText(
                     file,
-                    sb.ToString() + Environment.NewLine,
+                    text + Environment.NewLine,
                     new UTF8Encoding(false));
             }
         }
