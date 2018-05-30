@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.RaidTimeline.Views;
 using ACT.SpecialSpellTimer.Sound;
@@ -1228,11 +1227,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region 時間進行関係のスレッド
 
-        private DispatcherTimer TimelineTimer
-        {
-            get;
-            set;
-        } = null;
+        private const double TimelineWorkerInterval = 20;
+        private ThreadWorker timelineWorker;
 
         private volatile bool isRunning = false;
 
@@ -1242,6 +1238,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get;
             private set;
+        }
+
+        private void SetupTimelineWorker()
+        {
+            if (this.timelineWorker == null)
+            {
+                this.timelineWorker = new ThreadWorker(
+                    this.TickTimeline,
+                    TimelineWorkerInterval,
+                    "TimelineWorker",
+                    ThreadPriority.BelowNormal);
+            }
+        }
+
+        private void StopTimelineWorker()
+        {
+            if (this.timelineWorker != null)
+            {
+                this.timelineWorker.Abort();
+                this.timelineWorker = null;
+            }
         }
 
         public void StartActivityLine()
@@ -1260,18 +1277,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.CurrentTime = TimeSpan.Zero;
 
-                if (this.TimelineTimer == null)
-                {
-                    this.TimelineTimer = new DispatcherTimer()
-                    {
-                        Interval = TimeSpan.FromSeconds(0.02),
-                    };
-
-                    this.TimelineTimer.Tick += this.TimelineTimer_Tick;
-                }
+                this.SetupTimelineWorker();
 
                 this.PreviouseDetectTime = DateTime.Now;
-                this.TimelineTimer.Start();
+                this.timelineWorker.Run();
 
                 this.isRunning = true;
                 this.Status = TimelineStatus.Runnning;
@@ -1288,7 +1297,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return;
                 }
 
-                this.TimelineTimer.Stop();
+                this.StopTimelineWorker();
+
                 this.LoadActivityLine();
 
                 TimelineNoticeOverlay.NoticeView?.ClearNotice();
@@ -1299,22 +1309,25 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
-        private void TimelineTimer_Tick(
-            object sender,
-            EventArgs e)
+        private void TickTimeline()
         {
             try
             {
                 if (!TimelineSettings.Instance.Enabled)
                 {
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
                     return;
                 }
 
                 lock (this)
                 {
                     var now = DateTime.Now;
-                    this.CurrentTime += now - this.PreviouseDetectTime;
-                    this.PreviouseDetectTime = now;
+
+                    this.BeginInvokeActivityDispatcher(() =>
+                    {
+                        this.CurrentTime += now - this.PreviouseDetectTime;
+                        this.PreviouseDetectTime = now;
+                    });
 
                     this.RefreshActivityLine();
                 }
@@ -1335,7 +1348,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
 
             // 現在の時間を更新する
-            TimelineActivityModel.CurrentTime = this.CurrentTime;
+            this.BeginInvokeActivityDispatcher(() =>
+            {
+                TimelineActivityModel.CurrentTime = this.CurrentTime;
+            });
 
             // 通知を判定する
             var toNotify =
@@ -1401,15 +1417,18 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (active != null)
             {
-                // アクティブなアクティビティを設定する
-                this.ActiveActivity = active;
-                active.IsActive = true;
-
-                // jumpを判定する
-                if (!this.CallActivity(active))
+                this.BeginInvokeActivityDispatcher(() =>
                 {
-                    this.GoToActivity(active);
-                }
+                    // アクティブなアクティビティを設定する
+                    this.ActiveActivity = active;
+                    active.IsActive = true;
+
+                    // jumpを判定する
+                    if (!this.CallActivity(active))
+                    {
+                        this.GoToActivity(active);
+                    }
+                });
             }
 
             // 表示を更新する
@@ -1431,37 +1450,54 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 select
                 x;
 
-            var count = 0;
-            foreach (var x in toShow)
+            this.BeginInvokeActivityDispatcher(() =>
             {
-                if (count < TimelineSettings.Instance.ShowActivitiesCount &&
-                    !x.IsDone &&
-                    x.Time <= maxTime)
+                var count = 0;
+                foreach (var x in toShow)
                 {
-                    if (count == 0)
+                    if (count < TimelineSettings.Instance.ShowActivitiesCount &&
+                        !x.IsDone &&
+                        x.Time <= maxTime)
                     {
-                        this.Model.SubName = (x.Parent as TimelineSubroutineModel)?.Name ?? string.Empty;
+                        if (count == 0)
+                        {
+                            this.Model.SubName = (x.Parent as TimelineSubroutineModel)?.Name ?? string.Empty;
 
-                        x.IsTop = true;
-                        x.Opacity = 1.0d;
-                        x.Scale = TimelineSettings.Instance.NearestActivityScale;
+                            x.IsTop = true;
+                            x.Opacity = 1.0d;
+                            x.Scale = TimelineSettings.Instance.NearestActivityScale;
+                        }
+                        else
+                        {
+                            x.IsTop = false;
+                            x.Opacity = TimelineSettings.Instance.NextActivityBrightness;
+                            x.Scale = 1.0d;
+                        }
+
+                        x.IsVisible = true;
+                        x.RefreshProgress();
+                        count++;
                     }
                     else
                     {
-                        x.IsTop = false;
-                        x.Opacity = TimelineSettings.Instance.NextActivityBrightness;
-                        x.Scale = 1.0d;
+                        x.IsVisible = false;
                     }
+                }
+            });
+        }
 
-                    x.IsVisible = true;
-                    x.RefreshProgress();
-                    count++;
-                }
-                else
+        private static readonly object ActivityLocker = new object();
+
+        private void BeginInvokeActivityDispatcher(
+            Action action)
+        {
+            WPFHelper.BeginInvoke(() =>
+            {
+                lock (ActivityLocker)
                 {
-                    x.IsVisible = false;
+                    action.Invoke();
                 }
-            }
+            });
         }
 
         #endregion 時間進行関係のスレッド
