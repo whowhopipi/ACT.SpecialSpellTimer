@@ -1275,6 +1275,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     return;
                 }
 
+                // 有効なActivityが存在しない？
+                if (!this.Model.ExistsActivities())
+                {
+                    return;
+                }
+
                 this.CurrentTime = TimeSpan.Zero;
 
                 this.SetupTimelineWorker();

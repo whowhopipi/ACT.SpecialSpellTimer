@@ -264,6 +264,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         #region Methods
 
+        public bool ExistsActivities() =>
+            this.Activities.Any(x => x.Enabled.GetValueOrDefault()) ||
+            this.Subroutines.Any(x => x.Enabled.GetValueOrDefault());
+
         public void Add(TimelineBase timeline)
         {
             timeline.Parent = this;

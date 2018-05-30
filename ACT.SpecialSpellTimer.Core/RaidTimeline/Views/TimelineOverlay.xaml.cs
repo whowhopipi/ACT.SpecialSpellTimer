@@ -103,8 +103,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             }
 
             // 有効な表示データが含まれていない？
-            if (!timelineModel.Activities.Any(x => x.Enabled.GetValueOrDefault()) &&
-                !timelineModel.Subroutines.Any(x => x.Enabled.GetValueOrDefault()))
+            if (!timelineModel.ExistsActivities())
             {
                 return;
             }
