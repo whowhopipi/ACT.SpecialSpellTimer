@@ -1315,8 +1315,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             }
         }
 
+        private volatile bool isTickingTimeline = false;
+
         private void TickTimeline()
         {
+            if (this.isTickingTimeline)
+            {
+                return;
+            }
+
+            this.isTickingTimeline = true;
+
             try
             {
                 if (!TimelineSettings.Instance.Enabled)
@@ -1343,6 +1352,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 this.AppLogger.Error(
                     ex,
                     $"[TL] Error Timeline ticker. name={this.Model.TimelineName}, zone={this.Model.Zone}, file={this.Model.SourceFile}");
+            }
+            finally
+            {
+                this.isTickingTimeline = false;
             }
         }
 
