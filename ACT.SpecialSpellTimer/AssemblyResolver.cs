@@ -69,6 +69,7 @@ namespace ACT.SpecialSpellTimer
                 if (!this.Directories.Any(x => x == pluginDirectory))
                 {
                     this.Directories.Add(pluginDirectory);
+                    this.Directories.Add(Path.Combine(pluginDirectory, "references"));
                 }
             }
 
