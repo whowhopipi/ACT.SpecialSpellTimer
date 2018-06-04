@@ -80,6 +80,7 @@ namespace ACT.SpecialSpellTimer
         {
             var regex = spell.Regex;
             var notifyNeeded = false;
+            var matched = false;
 
             if (!spell.IsInstance)
             {
@@ -102,6 +103,7 @@ namespace ACT.SpecialSpellTimer
                         // キーワードが含まれるか？
                         if (logLine.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                         {
+                            matched = true;
                             var targetSpell = spell;
 
                             // ヒットしたログを格納する
@@ -155,6 +157,7 @@ namespace ACT.SpecialSpellTimer
                         var match = regex.Match(logLine);
                         if (match.Success)
                         {
+                            matched = true;
 #if DEBUG
                             if (logLine.Contains("MARK"))
                             {
@@ -274,22 +277,22 @@ namespace ACT.SpecialSpellTimer
                     var timeToExtend = timeToExtends[i];
 
                     // マッチングする
-                    var matched = false;
+                    var exntended = false;
 
                     if (!spell.RegexEnabled ||
                         regexToExtend == null)
                     {
                         if (!string.IsNullOrWhiteSpace(keywordToExtend))
                         {
-                            matched = logLine.Contains(keywordToExtend, StringComparison.OrdinalIgnoreCase);
+                            exntended = logLine.Contains(keywordToExtend, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                     else
                     {
                         var match = regexToExtend.Match(logLine);
-                        matched = match.Success;
+                        exntended = match.Success;
 
-                        if (matched)
+                        if (exntended)
                         {
                             // targetをキャプチャーしている？
                             if (!string.IsNullOrWhiteSpace(spell.TargetName))
@@ -300,14 +303,14 @@ namespace ACT.SpecialSpellTimer
                                     // targetが当初のマッチングと一致するか確認する
                                     if (spell.TargetName != targetName)
                                     {
-                                        matched = false;
+                                        exntended = false;
                                     }
                                 }
                             }
                         }
                     }
 
-                    if (!matched)
+                    if (!exntended)
                     {
                         continue;
                     }
@@ -353,6 +356,37 @@ namespace ACT.SpecialSpellTimer
                 }
             }
             // end if 延長マッチング
+
+            // ホットバー情報を更新する
+            if (!matched)
+            {
+                var now = DateTime.Now;
+
+                if (spell.CompleteScheduledTime > now)
+                {
+                    double d;
+                    if (this.TryGetHotbarRecast(spell, out d))
+                    {
+                        // ホットバー情報と0.6秒以上乖離したら補正する
+                        var newSchedule = now.AddSeconds(d);
+
+                        if (Math.Abs((newSchedule - spell.CompleteScheduledTime).TotalSeconds)
+                            >= 0.6d)
+                        {
+                            spell.MatchDateTime = now;
+                            spell.CompleteScheduledTime = newSchedule;
+                            spell.BeforeDone = false;
+                            spell.UpdateDone = false;
+
+                            notifyNeeded = true;
+
+                            spell.StartOverSoundTimer();
+                            spell.StartBeforeSoundTimer();
+                            spell.StartTimeupSoundTimer();
+                        }
+                    }
+                }
+            }
 
             // ACT標準のSpellTimerに変更を通知する
             if (notifyNeeded)
