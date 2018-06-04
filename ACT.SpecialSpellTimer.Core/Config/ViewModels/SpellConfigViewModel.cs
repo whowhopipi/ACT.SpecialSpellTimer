@@ -134,10 +134,15 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             Settings.Default.VisibleDesignGrid = showGrid;
         }
 
+        /// <summary>
+        /// FFXIVメモリリーダへの参照
+        /// </summary>
+        public FFXIVReader FFXIVReader => FFXIVReader.Instance;
+
         #region Job filter
 
         public bool IsJobFiltered => !string.IsNullOrEmpty(this.Model?.JobFilter);
-      
+
         private static List<JobSelector> jobSelectors;
 
         public List<JobSelector> JobSelectors => jobSelectors;
@@ -215,11 +220,10 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 }
             }));
 
-       
-
         #endregion Job filter
 
         #region Party Job Filter
+
         public bool IsPartyJobFiltered => !string.IsNullOrEmpty(this.Model?.PartyJobFilter);
 
         private static List<JobSelector> partyJobSelectors;
@@ -301,8 +305,7 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
                 }
             }));
 
-
-        #endregion
+        #endregion Party Job Filter
 
         #region Zone filter
 

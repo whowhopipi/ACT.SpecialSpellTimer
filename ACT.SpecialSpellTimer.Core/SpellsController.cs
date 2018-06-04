@@ -129,8 +129,7 @@ namespace ACT.SpecialSpellTimer
                             {
                                 d = targetSpell.RecastTime;
                             }
-                            
-                            
+
                             targetSpell.CompleteScheduledTime = now.AddSeconds(d);
 
                             targetSpell.MatchDateTime = now;
@@ -479,22 +478,23 @@ namespace ACT.SpecialSpellTimer
         }
 
         private bool TryGetHotbarRecast(
-        	Spell spell, 
-        	out double recastTime)
+            Spell spell,
+            out double recastTime)
         {
             var result = false;
             recastTime = 0;
 
             if (FFXIVReader.Instance.IsAvailable &&
-                spell.UseHotbarRecastTime && !string.IsNullOrEmpty(spell.HotbarName))
+                spell.UseHotbarRecastTime &&
+                !string.IsNullOrEmpty(spell.HotbarName))
             {
-                var hotbarRecastListV1 = FFXIVReader.Instance.GetHotbarRecastV1();
-                if (hotbarRecastListV1 != null)
+                var hotbarList = FFXIVReader.Instance.GetHotbarRecastV1();
+                if (hotbarList != null)
                 {
-                    foreach (var hotbar in hotbarRecastListV1)
+                    foreach (var hotbar in hotbarList)
                     {
-                        if (hotbar != null && 
-                            hotbar.Name == spell.HotbarName && 
+                        if (hotbar != null &&
+                            hotbar.Name.Equals(spell.HotbarName, StringComparison.OrdinalIgnoreCase) &&
                             hotbar.CoolDownPercent > 0)
                         {
                             recastTime = hotbar.RemainingOrCost;
