@@ -122,7 +122,17 @@ namespace ACT.SpecialSpellTimer
                             targetSpell.TimeupDone = false;
 
                             var now = DateTime.Now;
-                            targetSpell.CompleteScheduledTime = now.AddSeconds(targetSpell.RecastTime);
+
+                            // ホットバーからリキャスト時間の読込みを試みる
+                            double d = 0d;
+                            if (!this.TryGetHotbarRecast(targetSpell, out d))
+                            {
+                                d = targetSpell.RecastTime;
+                            }
+                            
+                            
+                            targetSpell.CompleteScheduledTime = now.AddSeconds(d);
+
                             targetSpell.MatchDateTime = now;
 
                             // マッチング計測終了
@@ -205,6 +215,14 @@ namespace ACT.SpecialSpellTimer
                                 d < 9999)
                             {
                                 duration = d;
+                            }
+                            else
+                            {
+                                // ホットバーからリキャスト時間の読込を試みる
+                                if (this.TryGetHotbarRecast(targetSpell, out d))
+                                {
+                                    duration = d;
+                                }
                             }
 
                             targetSpell.CompleteScheduledTime = now.AddSeconds(duration);
@@ -458,6 +476,36 @@ namespace ACT.SpecialSpellTimer
             {
                 TableCompiler.Instance.CompileSpells();
             }
+        }
+
+        private bool TryGetHotbarRecast(
+        	Spell spell, 
+        	out double recastTime)
+        {
+            var result = false;
+            recastTime = 0;
+
+            if (FFXIVReader.Instance.IsAvailable &&
+                spell.UseHotbarRecastTime && !string.IsNullOrEmpty(spell.HotbarName))
+            {
+                var hotbarRecastListV1 = FFXIVReader.Instance.GetHotbarRecastV1();
+                if (hotbarRecastListV1 != null)
+                {
+                    foreach (var hotbar in hotbarRecastListV1)
+                    {
+                        if (hotbar != null && 
+                            hotbar.Name == spell.HotbarName && 
+                            hotbar.CoolDownPercent > 0)
+                        {
+                            recastTime = hotbar.RemainingOrCost;
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         #region Panel controller

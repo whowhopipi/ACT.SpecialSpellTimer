@@ -164,6 +164,9 @@
               <Label Content="{DynamicResource Spell_RecastTime}" VerticalAlignment="Center" Margin="0 0 10 0" />
               <xctk:DoubleUpDown Value="{Binding Model.RecastTime, Mode=TwoWay}" FormatString="F2" MinWidth="90" Increment="1" />
               <Label Content="{DynamicResource Spell_Secounds}" VerticalAlignment="Center" Margin="5 0 0 0" />
+              <CheckBox Content="{DynamicResource Spell_UseHotbrRecastTime}" IsChecked="{Binding Model.UseHotbarRecastTime, Mode=TwoWay}" Margin="20 0 0 0" />
+              <Label Content="{DynamicResource Spell_HotbarItemName}" VerticalAlignment="Center" Margin="20 0 0 0" />
+              <TextBox Text="{Binding Model.HotbarName, Mode=TwoWay}" MinWidth="200" Margin="5 0 0 0" />
             </StackPanel>
 
             <!-- 延長のマッチングワード -->

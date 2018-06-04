@@ -350,6 +350,22 @@ namespace ACT.SpecialSpellTimer.Models
 
         public double RecastTime { get; set; } = 0;
 
+		private bool useHotbarRecastTime = false;
+
+        public bool UseHotbarRecastTime 
+		{ 
+            get => this.useHotbarRecastTime;
+            set => this.SetProperty(ref this.useHotbarRecastTime, value);
+		}
+
+		private string hotbarName = string.Empty;
+
+        public string HotbarName 
+		{ 
+            get => this.hotbarName;
+            set => this.SetProperty(ref this.hotbarName, value);
+		}
+
         public double RecastTimeExtending1 { get; set; } = 0;
 
         public double RecastTimeExtending2 { get; set; } = 0;
