@@ -323,6 +323,26 @@ namespace ACT.SpecialSpellTimer.Models
             set => this.SetProperty(ref this.hideCounter, value);
         }
 
+        private bool isCounterToCenter = false;
+
+        public bool IsCounterToCenter
+        {
+            get => this.isCounterToCenter;
+            set
+            {
+                if (this.SetProperty(ref this.isCounterToCenter, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.CounterAlignment));
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public HorizontalAlignment CounterAlignment =>
+            this.isCounterToCenter ?
+            HorizontalAlignment.Center :
+            HorizontalAlignment.Right;
+
         /// <summary>インスタンス化されたスペルか？</summary>
         [XmlIgnore]
         public bool IsInstance { get; set; }
@@ -350,21 +370,21 @@ namespace ACT.SpecialSpellTimer.Models
 
         public double RecastTime { get; set; } = 0;
 
-		private bool useHotbarRecastTime = false;
+        private bool useHotbarRecastTime = false;
 
-        public bool UseHotbarRecastTime 
-		{ 
+        public bool UseHotbarRecastTime
+        {
             get => this.useHotbarRecastTime;
             set => this.SetProperty(ref this.useHotbarRecastTime, value);
-		}
+        }
 
-		private string hotbarName = string.Empty;
+        private string hotbarName = string.Empty;
 
-        public string HotbarName 
-		{ 
+        public string HotbarName
+        {
             get => this.hotbarName;
             set => this.SetProperty(ref this.hotbarName, value);
-		}
+        }
 
         public double RecastTimeExtending1 { get; set; } = 0;
 

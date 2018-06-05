@@ -54,6 +54,7 @@
   <system:String x:Key="Common_RecastTimeOverIcon">リキャスト時間をアイコンに重ねる</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">リキャスト中はアイコンを暗くする</system:String>
   <system:String x:Key="Common_HideSpellName">スペル名を表示しない</system:String>
+  <system:String x:Key="Common_IsCounterToCenter">リキャスト時間を中央揃えに配置する</system:String>
   <system:String x:Key="Common_Misc">その他</system:String>
   <system:String x:Key="Common_DontHide">リキャスト完了後も表示し続ける</system:String>
 

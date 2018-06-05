@@ -54,6 +54,7 @@
   <system:String x:Key="Common_RecastTimeOverIcon">리 캐스트 시간을 아이콘으로 거듭</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">재생 중 아이콘을 어둡게</system:String>
   <system:String x:Key="Common_HideSpellName">스펠 이름을 숨긴다</system:String>
+  <system:String x:Key="Common_IsCounterToCenter">리 케어 시간을 중심으로 배치하는</system:String>
   <system:String x:Key="Common_Misc">기타</system:String>
   <system:String x:Key="Common_DontHide">완료 후에도 항상 보이기</system:String>
 

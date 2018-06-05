@@ -54,6 +54,7 @@
   <system:String x:Key="Common_RecastTimeOverIcon">Overlap recast time</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">During the recast time reduce brightness of icon</system:String>
   <system:String x:Key="Common_HideSpellName">Hide spell name</system:String>
+  <system:String x:Key="Common_IsCounterToCenter">Center alignment recast time</system:String>
   <system:String x:Key="Common_Misc">Misc</system:String>
   <system:String x:Key="Common_DontHide">Always show (even when completed)</system:String>
 

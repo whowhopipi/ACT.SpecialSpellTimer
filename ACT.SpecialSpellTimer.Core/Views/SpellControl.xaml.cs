@@ -289,7 +289,8 @@ namespace ACT.SpecialSpellTimer.Views
         /// </summary>
         public void StartBarAnimation()
         {
-            if (this.Spell.BarWidth == 0)
+            if (this.Spell.BarWidth == 0 ||
+                this.Spell.BarHeight == 0)
             {
                 return;
             }
