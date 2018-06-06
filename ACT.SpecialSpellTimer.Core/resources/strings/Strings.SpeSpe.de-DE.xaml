@@ -51,6 +51,7 @@
   <system:String x:Key="Common_Icon">Icon</system:String>
   <system:String x:Key="Common_Size">Size</system:String>
   <system:String x:Key="Common_SelectIcon">Browse icon</system:String>
+  <system:String x:Key="Common_GetIcon">Get icons</system:String>
   <system:String x:Key="Common_RecastTimeOverIcon">Overlap recast time</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">During the recast time reduce brightness of icon</system:String>
   <system:String x:Key="Common_HideSpellName">Hide spell name</system:String>

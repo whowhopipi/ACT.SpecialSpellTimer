@@ -85,7 +85,7 @@ namespace ACT.SpecialSpellTimer.Image
         /// </summary>
         /// <returns>
         /// Iconファイルのコレクション</returns>
-        public IconFile[] EnumlateIcon()
+        public IconFile[] EnumerateIcon()
         {
             lock (this)
             {
@@ -103,7 +103,7 @@ namespace ACT.SpecialSpellTimer.Image
                     {
                         if (Directory.Exists(dir))
                         {
-                            list.AddRange(this.EnumulateIcon(dir));
+                            list.AddRange(this.EnumerateIcon(dir));
                         }
                     }
 
@@ -120,14 +120,27 @@ namespace ACT.SpecialSpellTimer.Image
             return this.iconFiles;
         }
 
-        private IconFile[] EnumulateIcon(
+        /// <summary>
+        /// キャッシュされたアイコン情報を更新する
+        /// </summary>
+        public void RefreshIcon()
+        {
+            lock (this)
+            {
+                this.iconFiles = null;
+            }
+
+            this.EnumerateIcon();
+        }
+
+        private IconFile[] EnumerateIcon(
             string directory)
         {
             var list = new List<IconFile>();
 
             foreach (var dir in Directory.GetDirectories(directory))
             {
-                list.AddRange(this.EnumulateIcon(dir));
+                list.AddRange(this.EnumerateIcon(dir));
             }
 
             foreach (var file in Directory.GetFiles(directory, "*.png"))
@@ -156,7 +169,7 @@ namespace ACT.SpecialSpellTimer.Image
                 name = name.Split('\\').LastOrDefault();
             }
 
-            return this.EnumlateIcon().FirstOrDefault(x => x.Name == name);
+            return this.EnumerateIcon().FirstOrDefault(x => x.Name == name);
         }
 
         /// <summary>

@@ -1,7 +1,11 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using ACT.SpecialSpellTimer.Config.Views;
+using ACT.SpecialSpellTimer.Image;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Dialog;
 using FFXIV.Framework.Extensions;
@@ -156,6 +160,32 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             {
                 var view = new CopyConfigView(this.Model);
                 view.Show();
+            }));
+
+        private ICommand getIconsCommand;
+
+        public ICommand GetIconsCommand =>
+            this.getIconsCommand ?? (this.getIconsCommand = new DelegateCommand(async () =>
+            {
+                var downlaoder = Path.Combine(
+                    PluginCore.Instance.Location,
+                    @"tools\XIVDBDownloader\XIVDBDownloader.exe");
+
+                if (!File.Exists(downlaoder))
+                {
+                    return;
+                }
+
+                await Task.Run(async () =>
+                {
+                    using (var p = Process.Start(downlaoder))
+                    {
+                        p.WaitForExit();
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(0.5));
+                    IconController.Instance.RefreshIcon();
+                });
             }));
     }
 }

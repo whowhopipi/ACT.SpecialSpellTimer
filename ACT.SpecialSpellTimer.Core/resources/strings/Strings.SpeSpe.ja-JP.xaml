@@ -51,6 +51,7 @@
   <system:String x:Key="Common_Icon">アイコン</system:String>
   <system:String x:Key="Common_Size">サイズ</system:String>
   <system:String x:Key="Common_SelectIcon">アイコンを選ぶ</system:String>
+  <system:String x:Key="Common_GetIcon">アイコンを入手する</system:String>
   <system:String x:Key="Common_RecastTimeOverIcon">リキャスト時間をアイコンに重ねる</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">リキャスト中はアイコンを暗くする</system:String>
   <system:String x:Key="Common_HideSpellName">スペル名を表示しない</system:String>

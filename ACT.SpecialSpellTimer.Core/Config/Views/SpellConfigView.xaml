@@ -637,6 +637,12 @@
                 <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_RecastTimeOverIcon}" IsChecked="{Binding Model.OverlapRecastTime, Mode=TwoWay}" />
                 <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_ToDarkBetweenRecast}" IsChecked="{Binding Model.ReduceIconBrightness, Mode=TwoWay}" />
                 <CheckBox Margin="0 5 0 0" Content="{DynamicResource Common_IsCounterToCenter}" IsChecked="{Binding Model.IsCounterToCenter, Mode=TwoWay}" Visibility="{Binding Model.OverlapRecastTime, Mode=OneWay, Converter={StaticResource VisibilityNegativeConverter}}" />
+
+                <TextBlock Margin="0 10 0 0" HorizontalAlignment="Left">
+                  <Hyperlink Command="{Binding GetIconsCommand, Mode=OneWay}">
+                    <TextBlock Text="{DynamicResource Common_GetIcon}" />
+                  </Hyperlink>
+                </TextBlock>
               </StackPanel>
 
               <!-- その他 -->

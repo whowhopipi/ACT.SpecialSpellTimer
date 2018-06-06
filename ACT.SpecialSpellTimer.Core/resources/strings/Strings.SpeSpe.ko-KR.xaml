@@ -51,6 +51,7 @@
   <system:String x:Key="Common_Icon">아이콘</system:String>
   <system:String x:Key="Common_Size">크기</system:String>
   <system:String x:Key="Common_SelectIcon">아이콘 선택</system:String>
+  <system:String x:Key="Common_GetIcon">아이콘 가져 오기</system:String>
   <system:String x:Key="Common_RecastTimeOverIcon">리 캐스트 시간을 아이콘으로 거듭</system:String>
   <system:String x:Key="Common_ToDarkBetweenRecast">재생 중 아이콘을 어둡게</system:String>
   <system:String x:Key="Common_HideSpellName">스펠 이름을 숨긴다</system:String>
