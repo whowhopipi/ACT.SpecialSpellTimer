@@ -137,6 +137,14 @@ namespace ACT.SpecialSpellTimer
                 Logger.Init();
                 Logger.Write("Plugin Start.");
 
+                pluginScreenSpace.Text = "SPESPE";
+
+                // .NET Frameworkのバージョンを確認する
+                if (!UpdateChecker.IsAvalableDotNet())
+                {
+                    return;
+                }
+
                 // 設定ファイルを読み込む
                 Settings.Default.Load();
                 Settings.Default.ApplyRenderMode();
@@ -147,8 +155,6 @@ namespace ACT.SpecialSpellTimer
                     ActGlobals.oFormActMain.WindowState = FormWindowState.Minimized;
                     Application.DoEvents();
                 }
-
-                pluginScreenSpace.Text = "SPESPE";
 
                 // HojoringのSplashを表示する
                 WPFHelper.Start();

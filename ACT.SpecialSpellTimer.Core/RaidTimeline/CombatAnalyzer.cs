@@ -13,6 +13,7 @@ using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
 using FFXIV.Framework.FFXIVHelper;
 using FFXIV.Framework.Globalization;
 using NPOI.SS.UserModel;
@@ -969,7 +970,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 var key = (
                     from x in keywords
                     where
-                    log.Contains(x.Keyword)
+                    log.ContainsIgnoreCase(x.Keyword)
                     select
                     x).FirstOrDefault();
 
