@@ -420,7 +420,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public static void Load() => instance = Load(FileName);
 
-        public static void Save() => instance.Save(FileName);
+        public static void Save() => instance?.Save(FileName);
 
         public static TimelineSettings Load(
             string file)
