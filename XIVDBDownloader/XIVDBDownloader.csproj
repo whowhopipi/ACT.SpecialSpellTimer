@@ -154,8 +154,6 @@ IF EXIST *.config (
 IF EXIST resources\ (
     RMDIR /S /Q .\resources
 )
-
-$(ProjectDir)..\..\tools\libz.exe inject-dll --assembly $(TargetPath) --include $(TargetDir)*.dll --move | findstr Injecting
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
