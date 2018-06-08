@@ -129,7 +129,33 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>IF  "$(ConfigurationName)" == "Debug" (
+ 
+    EXIT /B 
+
+)
+
+
+
+IF EXIST *.xml (
+    DEL /F *.xml
+
+)
+
+IF EXIST *.pdb (
+    DEL /F *.pdb
+
+)
+
+IF EXIST *.config (
+    DEL /F *.config)
+)
+
+IF EXIST resources\ (
+    RMDIR /S /Q .\resources
+)
+
+$(ProjectDir)..\..\tools\libz.exe inject-dll --assembly $(TargetPath) --include $(TargetDir)*.dll --move | findstr Injecting
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
