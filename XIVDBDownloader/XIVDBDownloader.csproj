@@ -147,13 +147,6 @@ IF EXIST *.pdb (
 
 )
 
-IF EXIST *.config (
-    DEL /F *.config)
-)
-
-IF EXIST resources\ (
-    RMDIR /S /Q .\resources
-)
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
