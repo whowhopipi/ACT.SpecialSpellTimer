@@ -48,7 +48,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 if (!File.Exists(file))
                 {
-                    return null;
+                    throw new FileNotFoundException(
+                        $"{file} not found.");
                 }
             }
 

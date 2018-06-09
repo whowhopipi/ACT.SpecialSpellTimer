@@ -288,13 +288,19 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public static string RazorDumpFile
             => Path.Combine(
                 Path.GetTempPath(),
-                "dump.cshtml");
+                "dump.xml");
 
         public static void ShowRazorDumpFile()
         {
-            if (File.Exists(RazorDumpFile))
+            try
             {
-                Process.Start(RazorDumpFile);
+                if (File.Exists(RazorDumpFile))
+                {
+                    Process.Start(RazorDumpFile);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -811,7 +817,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     Path.GetTempPath(),
                     Path.GetFileName(this.SourceFile
                         .Replace(".xml", ".compiled.xml")
-                        .Replace(".cshtml", ".compiled.cshtml")));
+                        .Replace(".cshtml", ".compiled.xml")));
 
                 System.IO.File.WriteAllText(
                     temp,
