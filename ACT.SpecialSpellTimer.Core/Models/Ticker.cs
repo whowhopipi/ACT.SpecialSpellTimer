@@ -209,7 +209,7 @@ namespace ACT.SpecialSpellTimer.Models
         public bool IsSequentialTTS { get; set; } = false;
 
         public void Play(string tts, AdvancedNoticeConfig config)
-            => Spell.PlayCore(tts, this.IsSequentialTTS, config);
+            => Spell.PlayCore(tts, this.IsSequentialTTS, config, this);
 
         #endregion Sequential TTS
 

@@ -1,9 +1,9 @@
-using ACT.SpecialSpellTimer.Config.Models;
-using ACT.SpecialSpellTimer.Sound;
-using Prism.Commands;
 using System;
 using System.Threading;
 using System.Windows.Input;
+using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Sound;
+using Prism.Commands;
 
 namespace ACT.SpecialSpellTimer.Config.ViewModels
 {
@@ -79,6 +79,9 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             this.testSequencialTTSCommand ?? (this.testSequencialTTSCommand = new DelegateCommand(() =>
             {
                 var config = this.Model.MatchAdvancedConfig;
+
+                this.Model.Play("シンクロ再生のテストを開始します。", config);
+                Thread.Sleep(2 * 1000);
 
                 this.Model.Play("おしらせ1番", config);
                 this.Model.Play("おしらせ2番", config);

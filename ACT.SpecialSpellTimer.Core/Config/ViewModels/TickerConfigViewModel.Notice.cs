@@ -56,6 +56,9 @@ namespace ACT.SpecialSpellTimer.Config.ViewModels
             {
                 var config = this.Model.MatchAdvancedConfig;
 
+                this.Model.Play("シンクロ再生のテストを開始します。", config);
+                Thread.Sleep(2 * 1000);
+
                 this.Model.Play("おしらせ1番", config);
                 this.Model.Play("おしらせ2番", config);
                 this.Model.Play("おしらせ3番", config);

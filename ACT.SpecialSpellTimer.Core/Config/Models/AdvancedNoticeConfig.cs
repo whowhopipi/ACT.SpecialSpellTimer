@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Timers;
 using System.Xml.Serialization;
 using ACT.SpecialSpellTimer.Sound;
@@ -20,7 +21,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
     {
         #region Available TTSYukkuri
 
-        private static Timer timer = new Timer(5 * 1000);
+        private static System.Timers.Timer timer = new System.Timers.Timer(5 * 1000);
 
         public static bool AvailableTTSYukkuri { get; private set; } = false;
 
@@ -85,14 +86,15 @@ namespace ACT.SpecialSpellTimer.Config.Models
         private static readonly List<SyncTTS> SyncList = new List<SyncTTS>();
 
         [XmlIgnore]
-        private static Timer syncSpeakTimer;
+        private static System.Timers.Timer syncSpeakTimer;
 
         [XmlIgnore]
         private static AdvancedNoticeConfig lastConfig;
 
         private static void PlayWaveCore(
             string wave,
-            AdvancedNoticeConfig config)
+            AdvancedNoticeConfig config,
+            bool isSync = false)
         {
             if (string.IsNullOrEmpty(wave))
             {
@@ -106,24 +108,33 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
             if (!config.IsEnabled)
             {
-                ActGlobals.oFormActMain.PlaySound(wave);
+                if (PlayBridge.Instance.IsAvailable)
+                {
+                    PlayBridge.Instance.Play(wave, isSync);
+                }
+                else
+                {
+                    ActGlobals.oFormActMain.TTS(wave);
+                }
+
                 return;
             }
 
             if (config.ToMainDevice)
             {
-                PlayBridge.Instance.PlayMain(wave);
+                PlayBridge.Instance.PlayMain(wave, isSync);
             }
 
             if (config.ToSubDevice)
             {
-                PlayBridge.Instance.PlaySub(wave);
+                PlayBridge.Instance.PlaySub(wave, isSync);
             }
         }
 
         private static void SpeakCore(
             string tts,
-            AdvancedNoticeConfig config)
+            AdvancedNoticeConfig config,
+            bool isSync = false)
         {
             if (string.IsNullOrEmpty(tts))
             {
@@ -134,18 +145,26 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
             if (!config.IsEnabled)
             {
-                ActGlobals.oFormActMain.TTS(tts);
+                if (PlayBridge.Instance.IsAvailable)
+                {
+                    PlayBridge.Instance.Play(tts, isSync);
+                }
+                else
+                {
+                    ActGlobals.oFormActMain.TTS(tts);
+                }
+
                 return;
             }
 
             if (config.ToMainDevice)
             {
-                PlayBridge.Instance.PlayMain(tts);
+                PlayBridge.Instance.PlayMain(tts, isSync);
             }
 
             if (config.ToSubDevice)
             {
-                PlayBridge.Instance.PlaySub(tts);
+                PlayBridge.Instance.PlaySub(tts, isSync);
             }
 
             if (config.ToDicordTextChat)
@@ -204,12 +223,16 @@ namespace ACT.SpecialSpellTimer.Config.Models
             {
                 if (syncSpeakTimer == null)
                 {
-                    syncSpeakTimer = new Timer(50);
+                    syncSpeakTimer = new System.Timers.Timer(50)
+                    {
+                        AutoReset = false
+                    };
+
                     syncSpeakTimer.Elapsed += SyncSpeakTimerOnElapsed;
                 }
 
                 syncSpeakTimer.Stop();
-                SyncList.Add(new SyncTTS(priority, speakText));
+                SyncList.Add(new SyncTTS(SyncList.Count, priority, speakText));
                 lastConfig = config;
                 syncSpeakTimer.Start();
             }
@@ -221,28 +244,43 @@ namespace ACT.SpecialSpellTimer.Config.Models
         {
             lock (SyncList)
             {
-                var text = string.Empty;
-
-                var texts =
-                    from x in SyncList
-                    where
-                    !string.IsNullOrEmpty(x.Text)
-                    orderby
-                    x.Priority
-                    select
-                    x.Text;
-
-                text = string.Join(Environment.NewLine, texts);
-
-                SyncList.Clear();
-
-                var config = lastConfig;
-                if (config == null)
+                try
                 {
-                    return;
-                }
+                    var texts =
+                        from x in SyncList
+                        where
+                        !string.IsNullOrEmpty(x.Text)
+                        orderby
+                        x.Priority,
+                        x.Seq
+                        select
+                        x.Text;
 
-                SpeakCore(text, config);
+                    var config = lastConfig;
+                    if (config == null)
+                    {
+                        return;
+                    }
+
+                    if (!PlayBridge.Instance.IsSyncAvalable)
+                    {
+                        var text = string.Join(Environment.NewLine, texts);
+                        SpeakCore(text, config);
+                    }
+                    else
+                    {
+                        foreach (var text in texts)
+                        {
+                            SpeakCore(text, config, true);
+                            Thread.Sleep(1);
+                        }
+                    }
+                }
+                finally
+                {
+                    SyncList.Clear();
+                    (sender as System.Timers.Timer)?.Stop();
+                }
             }
         }
 
@@ -255,12 +293,16 @@ namespace ACT.SpecialSpellTimer.Config.Models
             }
 
             public SyncTTS(
+                int seq,
                 double priority,
                 string text)
             {
+                this.Seq = seq;
                 this.Priority = priority;
                 this.Text = text;
             }
+
+            public int Seq { get; set; }
 
             public double Priority { get; set; }
 

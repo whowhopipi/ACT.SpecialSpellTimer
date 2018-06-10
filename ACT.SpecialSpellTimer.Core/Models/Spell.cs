@@ -474,12 +474,13 @@ namespace ACT.SpecialSpellTimer.Models
         public bool IsSequentialTTS { get; set; } = false;
 
         public void Play(string tts, AdvancedNoticeConfig config)
-            => Spell.PlayCore(tts, this.IsSequentialTTS, config);
+            => Spell.PlayCore(tts, this.IsSequentialTTS, config, this);
 
         public static void PlayCore(
             string tts,
             bool isSync,
-            AdvancedNoticeConfig noticeConfig)
+            AdvancedNoticeConfig noticeConfig,
+            ITrigger trigger)
         {
             if (string.IsNullOrEmpty(tts))
             {
@@ -533,7 +534,13 @@ namespace ACT.SpecialSpellTimer.Models
             {
                 if (!tts.Contains(AdvancedNoticeConfig.SyncKeyword))
                 {
-                    tts = $"{AdvancedNoticeConfig.SyncKeyword} 9999 {tts}";
+                    var priority = 9999L;
+                    if (trigger is Spell spell)
+                    {
+                        priority = spell.DisplayNo;
+                    }
+
+                    tts = $"{AdvancedNoticeConfig.SyncKeyword} {priority} {tts}";
                 }
             }
 
