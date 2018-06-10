@@ -1852,11 +1852,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     break;
 
                 case NoticeDevices.Main:
-                    PlayBridge.Instance.PlayMainDeviceDelegate?.Invoke(notice);
+                    PlayBridge.Instance.PlayMain(notice);
                     break;
 
                 case NoticeDevices.Sub:
-                    PlayBridge.Instance.PlaySubDeviceDelegate?.Invoke(notice);
+                    PlayBridge.Instance.PlaySub(notice);
                     break;
             }
 

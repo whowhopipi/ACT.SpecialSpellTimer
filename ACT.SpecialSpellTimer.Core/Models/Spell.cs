@@ -519,7 +519,7 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // ゆっくりがいないならシンクロ再生はしない
-            if (PlayBridge.Instance.PlayMainDeviceDelegate == null)
+            if (!PlayBridge.Instance.IsAvailable)
             {
                 play(tts);
                 return;

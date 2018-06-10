@@ -27,11 +27,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
         static AdvancedNoticeConfig()
         {
             timer.Elapsed += (x, y) =>
-            {
-                AvailableTTSYukkuri =
-                    PlayBridge.Instance.PlayMainDeviceDelegate != null ||
-                    PlayBridge.Instance.PlaySubDeviceDelegate != null;
-            };
+                AvailableTTSYukkuri = PlayBridge.Instance.IsAvailable;
 
             timer.Start();
         }
@@ -116,12 +112,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
             if (config.ToMainDevice)
             {
-                PlayBridge.Instance.PlayMainDeviceDelegate?.Invoke(wave);
+                PlayBridge.Instance.PlayMain(wave);
             }
 
             if (config.ToSubDevice)
             {
-                PlayBridge.Instance.PlaySubDeviceDelegate?.Invoke(wave);
+                PlayBridge.Instance.PlaySub(wave);
             }
         }
 
@@ -144,12 +140,12 @@ namespace ACT.SpecialSpellTimer.Config.Models
 
             if (config.ToMainDevice)
             {
-                PlayBridge.Instance.PlayMainDeviceDelegate?.Invoke(tts);
+                PlayBridge.Instance.PlayMain(tts);
             }
 
             if (config.ToSubDevice)
             {
-                PlayBridge.Instance.PlaySubDeviceDelegate?.Invoke(tts);
+                PlayBridge.Instance.PlaySub(tts);
             }
 
             if (config.ToDicordTextChat)
