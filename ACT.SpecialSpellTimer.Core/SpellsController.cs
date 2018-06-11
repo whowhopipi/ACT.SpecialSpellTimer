@@ -373,7 +373,6 @@ namespace ACT.SpecialSpellTimer
                         if (Math.Abs((newSchedule - spell.CompleteScheduledTime).TotalSeconds)
                             >= 0.6d)
                         {
-                            spell.MatchDateTime = now;
                             spell.CompleteScheduledTime = newSchedule;
                             spell.BeforeDone = false;
                             spell.UpdateDone = false;

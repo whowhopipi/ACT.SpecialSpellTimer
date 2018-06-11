@@ -858,6 +858,11 @@ namespace ACT.SpecialSpellTimer.Models
                 timer.Interval = duration;
                 timer.Start();
             }
+            else
+            {
+                // 過ぎているなら即座に通知する
+                this.TimeupSoundTimer_Elapsed(null, null);
+            }
         }
 
         private void BeforeSoundTimer_Elapsed(object sender, ElapsedEventArgs e)
