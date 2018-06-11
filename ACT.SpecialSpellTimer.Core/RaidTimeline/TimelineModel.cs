@@ -582,7 +582,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             NewDefault(TimelineElementTypes.Combatant, "X", TimelineCombatantModel.InvalidPosition),
             NewDefault(TimelineElementTypes.Combatant, "Y", TimelineCombatantModel.InvalidPosition),
             NewDefault(TimelineElementTypes.Combatant, "Z", TimelineCombatantModel.InvalidPosition),
-            NewDefault(TimelineElementTypes.Combatant, "Tolerance", 0.1f),
+            NewDefault(TimelineElementTypes.Combatant, "Tolerance", 0.01f),
         };
 
         private void SetDefaultValues()
