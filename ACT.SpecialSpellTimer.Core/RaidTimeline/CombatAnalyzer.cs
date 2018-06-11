@@ -276,7 +276,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "starts using", Category = KewordTypes.CastStartsUsing },
             */
             new AnalyzeKeyword() { Keyword = "HP at", Category = KewordTypes.HPRate },
-            new AnalyzeKeyword() { Keyword = "Added new combatant", Category = KewordTypes.Added },
+            new AnalyzeKeyword() { Keyword = "[EX] Added new combantant", Category = KewordTypes.Added },
             new AnalyzeKeyword() { Keyword = "] 1B:", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "「マーキング」", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
@@ -302,7 +302,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(AddedRegex),
-                CreateRegex(@"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ")
+                CreateRegex(@":[EX] Added new combantant. name=(?<actor>.+) X=")
             },
             {
                 nameof(CastRegex),
@@ -365,7 +365,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "readies", Category = KewordTypes.Cast },
             new AnalyzeKeyword() { Keyword = "starts using", Category = KewordTypes.Cast },
             new AnalyzeKeyword() { Keyword = "HP at", Category = KewordTypes.HPRate },
-            new AnalyzeKeyword() { Keyword = "Added new combatant", Category = KewordTypes.Added },
+            new AnalyzeKeyword() { Keyword = "[EX] Added new combantant", Category = KewordTypes.Added },
             new AnalyzeKeyword() { Keyword = "] 1B:", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "suffers the effect of Prey.", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
@@ -390,7 +390,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(AddedRegex),
-                CreateRegex(@"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ")
+                CreateRegex(@":[EX] Added new combantant. name=(?<actor>.+) X=")
             },
             {
                 nameof(CastRegex),
@@ -451,7 +451,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             new AnalyzeKeyword() { Keyword = "시전합니다.", Category = KewordTypes.Cast },
             new AnalyzeKeyword() { Keyword = "starts using", Category = KewordTypes.Cast },
             new AnalyzeKeyword() { Keyword = "HP at", Category = KewordTypes.HPRate },
-            new AnalyzeKeyword() { Keyword = "Added new combatant", Category = KewordTypes.Added },
+            new AnalyzeKeyword() { Keyword = "[EX] Added new combantant", Category = KewordTypes.Added },
             new AnalyzeKeyword() { Keyword = "] 1B:", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "「マーキング」", Category = KewordTypes.Marker },
             new AnalyzeKeyword() { Keyword = "] 1A:", Category = KewordTypes.Effect },
@@ -476,7 +476,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             },
             {
                 nameof(AddedRegex),
-                CreateRegex(@"\[.+?\] 03:Added new combatant (?<actor>.+)\.  ")
+                CreateRegex(@":[EX] Added new combantant. name=(?<actor>.+) X=")
             },
             {
                 nameof(CastRegex),
