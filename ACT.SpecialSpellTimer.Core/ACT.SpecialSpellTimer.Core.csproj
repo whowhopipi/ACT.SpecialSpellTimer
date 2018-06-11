@@ -187,6 +187,7 @@
     <Compile Include="RaidTimeline\TimelineLoadModel.cs" />
     <Compile Include="RaidTimeline\TimelineManager.cs" />
     <Compile Include="RaidTimeline\TimelineModel.cs" />
+    <Compile Include="RaidTimeline\TimelinePositionSyncModel.cs" />
     <Compile Include="RaidTimeline\TimelineRazorModel.cs" />
     <Compile Include="RaidTimeline\TimelineSettings.cs" />
     <Compile Include="RaidTimeline\TimelineStyle.cs" />

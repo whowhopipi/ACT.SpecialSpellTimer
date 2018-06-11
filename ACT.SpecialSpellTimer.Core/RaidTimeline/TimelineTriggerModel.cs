@@ -58,11 +58,27 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.AddRange(value);
         }
 
+        [XmlElement(ElementName = "p-sync")]
+        public TimelineImageNoticeModel[] PositionSyncStatements
+        {
+            get => this.Statements
+                .Where(x => x.TimelineType == TimelineElementTypes.PositionSync)
+                .Cast<TimelineImageNoticeModel>()
+                .ToArray();
+
+            set => this.AddRange(value);
+        }
+
+        [XmlIgnore]
+        public bool IsPositionSyncAvalable =>
+            this.PositionSyncStatements.Any(x => x.Enabled.GetValueOrDefault());
+
         public void Add(TimelineBase timeline)
         {
             if (timeline.TimelineType == TimelineElementTypes.Load ||
                 timeline.TimelineType == TimelineElementTypes.VisualNotice ||
-                timeline.TimelineType == TimelineElementTypes.ImageNotice)
+                timeline.TimelineType == TimelineElementTypes.ImageNotice ||
+                timeline.TimelineType == TimelineElementTypes.PositionSync)
             {
                 timeline.Parent = this;
                 this.statements.Add(timeline);

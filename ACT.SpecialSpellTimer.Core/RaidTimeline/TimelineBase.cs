@@ -23,6 +23,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         Trigger,
         Subroutine,
         Load,
+        PositionSync,
+        Combatant,
         VisualNotice,
         ImageNotice,
     }
