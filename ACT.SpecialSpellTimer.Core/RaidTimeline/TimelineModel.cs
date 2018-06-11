@@ -572,6 +572,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             NewDefault(TimelineElementTypes.ImageNotice, "Scale", 1.0d),
             NewDefault(TimelineElementTypes.ImageNotice, "Left", -1d),
             NewDefault(TimelineElementTypes.ImageNotice, "Top", -1d),
+
+            // P-Sync
+            NewDefault(TimelineElementTypes.PositionSync, "Enabled", true),
+
+            // P-Sync - Combatant
+            NewDefault(TimelineElementTypes.Combatant, "Enabled", true),
+            NewDefault(TimelineElementTypes.Combatant, "X", TimelineCombatantModel.InvalidPosition),
+            NewDefault(TimelineElementTypes.Combatant, "Y", TimelineCombatantModel.InvalidPosition),
+            NewDefault(TimelineElementTypes.Combatant, "Z", TimelineCombatantModel.InvalidPosition),
+            NewDefault(TimelineElementTypes.Combatant, "Tolerance", 0.1f),
         };
 
         private void SetDefaultValues()

@@ -77,6 +77,10 @@ namespace ACT.SpecialSpellTimer
             ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
+            // Added Combantantsイベントを登録する
+            FFXIVPlugin.Instance.AddedCombatants -= this.OnAddedCombatants;
+            FFXIVPlugin.Instance.AddedCombatants += this.OnAddedCombatants;
+
             // 生ログの書き出しバッファを開始する
             ChatLogWorker.Instance.Begin();
         }
@@ -101,6 +105,7 @@ namespace ACT.SpecialSpellTimer
 
             ActGlobals.oFormActMain.BeforeLogLineRead -= this.OnBeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
+            FFXIVPlugin.Instance.AddedCombatants -= this.OnAddedCombatants;
 
             // 生ログの書き出しバッファを停止する
             ChatLogWorker.Instance.End();
@@ -319,6 +324,32 @@ namespace ACT.SpecialSpellTimer
             }
 
             this.firstLogArrived = true;
+        }
+
+        /// <summary>
+        /// OnAddedCombatants
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAddedCombatants(
+            object sender,
+            FFXIVPlugin.AddedCombatantsEventArgs e)
+        {
+            lock (this)
+            {
+                var now = DateTime.Now;
+
+                if (e != null &&
+                    e.NewCombatants != null &&
+                    e.NewCombatants.Any())
+                {
+                    foreach (var combatant in e.NewCombatants)
+                    {
+                        var log = $"[EX] Added new combantant. name={combatant.Name} X={combatant.PosXMap:N2} Y={combatant.PosYMap:N2} Z={combatant.PosZMap:N2} hp={combatant.CurrentHP}";
+                        LogParser.RaiseLog(now, log);
+                    }
+                }
+            }
         }
 
         #endregion ACT event hander
