@@ -1042,6 +1042,30 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 });
             });
 
+            // P-Syncトリガに対して判定する
+            var psyncs = detectors
+                .Where(x =>
+                    x.TimelineType == TimelineElementTypes.Trigger &&
+                    (x as TimelineTriggerModel).IsPositionSyncAvalable)
+                .Select(x => x as TimelineTriggerModel)
+                .ToArray();
+
+            if (!psyncs.Any())
+            {
+                return;
+            }
+
+            // Combatantsを取得する
+            var combatants = FFXIVPlugin.Instance.GetCombatantList();
+
+            if (!combatants.Any())
+            {
+                return;
+            }
+
+            psyncs.AsParallel().ForAll(tri => detectPSync(tri));
+
+            // アクティビティに対して判定する
             bool detectActivity(
                 XIVLog xivlog,
                 TimelineActivityModel act)
@@ -1103,10 +1127,17 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return true;
             }
 
+            // トリガに対して判定する
             bool detectTrigger(
                 XIVLog xivlog,
                 TimelineTriggerModel tri)
             {
+                // P-Syncならば対象外なので抜ける
+                if (!tri.IsPositionSyncAvalable)
+                {
+                    return false;
+                }
+
                 lock (tri)
                 {
                     var match = tri.TryMatch(xivlog.Log);
@@ -1194,6 +1225,154 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 return true;
             }
 
+            // P-Syncトリガに対して判定する
+            void detectPSync(
+                TimelineTriggerModel tri)
+            {
+                lock (tri)
+                {
+                    var conditions = tri.PositionSyncStatements
+                        .FirstOrDefault(x => x.Enabled.GetValueOrDefault())?
+                        .Combatants?
+                        .Where(x =>
+                            x.Enabled.GetValueOrDefault() &&
+                            !string.IsNullOrEmpty(x.Name));
+
+                    if (!conditions.Any())
+                    {
+                        return;
+                    }
+
+                    foreach (var con in conditions)
+                    {
+                        var target = combatants.FirstOrDefault(x =>
+                        {
+                            var r = false;
+
+                            if (con.Name.Equals(x.Name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (con.X == TimelineCombatantModel.InvalidPosition ||
+                                    (con.X - con.Tolerance) <= x.PosXMap && x.PosXMap <= (con.X + con.Tolerance))
+                                {
+                                    if (con.Y == TimelineCombatantModel.InvalidPosition ||
+                                        (con.Y - con.Tolerance) <= x.PosYMap && x.PosYMap <= (con.Y + con.Tolerance))
+                                    {
+                                        if (con.Z == TimelineCombatantModel.InvalidPosition ||
+                                            (con.Z - con.Tolerance) <= x.PosZMap && x.PosZMap <= (con.Z + con.Tolerance))
+                                        {
+                                            r = true;
+                                        }
+                                    }
+                                }
+                            }
+
+                            return r;
+                        });
+
+                        con.ActualCombatant = target;
+                    }
+
+                    if (conditions.Count(x => x.ActualCombatant != null) >=
+                        conditions.Count())
+                    {
+                        return;
+                    }
+
+                    tri.TextReplaced = tri.Text ?? string.Empty;
+                    tri.NoticeReplaced = tri.Notice ?? string.Empty;
+
+                    var i = 1;
+                    foreach (var con in conditions)
+                    {
+                        string replace(string text)
+                        {
+                            text = text.Replace("{name" + i + "}", con.ActualCombatant.Name);
+                            text = text.Replace("{X" + i + "}", con.ActualCombatant.PosXMap.ToString("N1"));
+                            text = text.Replace("{Y" + i + "}", con.ActualCombatant.PosYMap.ToString("N1"));
+                            text = text.Replace("{Z" + i + "}", con.ActualCombatant.PosZMap.ToString("N1"));
+
+                            return text;
+                        }
+
+                        tri.TextReplaced = replace(tri.TextReplaced);
+                        tri.NoticeReplaced = replace(tri.NoticeReplaced);
+
+                        i++;
+                    }
+
+                    tri.MatchedCounter++;
+
+                    if (tri.SyncCount.Value != 0)
+                    {
+                        if (tri.SyncCount.Value != tri.MatchedCounter)
+                        {
+                            return;
+                        }
+                    }
+
+                    var toNotice = tri.Clone();
+
+                    var vnotices = toNotice.VisualNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+                    if (vnotices.Any())
+                    {
+                        foreach (var vnotice in vnotices)
+                        {
+                            vnotice.Timestamp = detectTime;
+                        }
+                    }
+
+                    var inotices = toNotice.ImageNoticeStatements.Where(x => x.Enabled.GetValueOrDefault());
+                    if (inotices.Any())
+                    {
+                        foreach (var inotice in inotices)
+                        {
+                            inotice.Timestamp = detectTime;
+                        }
+                    }
+
+                    this.NotifyQueue.Enqueue(toNotice);
+                }
+
+                WPFHelper.BeginInvoke(() =>
+                {
+                    lock (this)
+                    {
+                        var active = (
+                            from x in this.ActivityLine
+                            where
+                            x.IsActive &&
+                            !x.IsDone &&
+                            x.Time <= this.CurrentTime
+                            orderby
+                            x.Seq descending
+                            select
+                            x).FirstOrDefault();
+
+                        try
+                        {
+                            this.Model.StopLive();
+
+                            // jumpを判定する
+                            if (!this.CallActivity(active, tri.CallTarget))
+                            {
+                                if (!this.GoToActivity(active, tri.GoToDestination))
+                                {
+                                    this.LoadSubs(tri);
+                                }
+                            }
+
+                            // ログを発生させる
+                            raiseLog(tri);
+                        }
+                        finally
+                        {
+                            this.Model.ResumeLive();
+                        }
+                    }
+                });
+            }
+
+            // ログを発生させる
             void raiseLog(
                 TimelineBase element)
             {

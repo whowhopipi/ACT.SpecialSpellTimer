@@ -59,11 +59,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         [XmlElement(ElementName = "p-sync")]
-        public TimelineImageNoticeModel[] PositionSyncStatements
+        public TimelinePositionSyncModel[] PositionSyncStatements
         {
             get => this.Statements
                 .Where(x => x.TimelineType == TimelineElementTypes.PositionSync)
-                .Cast<TimelineImageNoticeModel>()
+                .Cast<TimelinePositionSyncModel>()
                 .ToArray();
 
             set => this.AddRange(value);

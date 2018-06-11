@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer.RaidTimeline
 {
@@ -23,11 +24,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public IReadOnlyList<TimelineBase> Statements => this.statements;
 
         [XmlElement(ElementName = "combatant")]
-        public TimelineLoadModel[] LoadStatements
+        public TimelineCombatantModel[] Combatants
         {
             get => this.Statements
                 .Where(x => x.TimelineType == TimelineElementTypes.Combatant)
-                .Cast<TimelineLoadModel>()
+                .Cast<TimelineCombatantModel>()
                 .ToArray();
 
             set => this.AddRange(value);
@@ -133,6 +134,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         {
             get => this.Tolerance?.ToString();
             set => this.Tolerance = float.TryParse(value, out var v) ? v : (float?)null;
+        }
+
+        private Combatant actualCombatant;
+
+        [XmlIgnore]
+        public Combatant ActualCombatant
+        {
+            get => this.actualCombatant;
+            set => this.SetProperty(ref this.actualCombatant, value);
         }
     }
 }
