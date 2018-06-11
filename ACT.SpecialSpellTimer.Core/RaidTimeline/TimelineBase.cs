@@ -41,6 +41,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 "trigger",
                 "subroutine",
                 "load",
+                "positionsync",
+                "combatant",
                 "visualnotice",
                 "imagenotice",
             }[(int)t];

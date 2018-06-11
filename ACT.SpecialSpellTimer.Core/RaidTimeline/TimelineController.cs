@@ -465,7 +465,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 foreach (var tri in targetSub.Triggers.Where(x =>
                     x.Enabled.GetValueOrDefault()))
                 {
-                    tri.MatchedCounter = 0;
+                    tri.Init();
                 }
 
                 // サブルーチン配下のActivityを取得する
@@ -579,7 +579,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 foreach (var tri in targetSub.Triggers.Where(x =>
                     x.Enabled.GetValueOrDefault()))
                 {
-                    tri.MatchedCounter = 0;
+                    tri.Init();
                 }
 
                 // サブルーチン配下のActivityを取得する
@@ -660,7 +660,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             foreach (var tri in sub.Triggers.Where(x =>
                 x.Enabled.GetValueOrDefault()))
             {
-                tri.MatchedCounter = 0;
+                tri.Init();
             }
 
             var acts = sub.Activities
@@ -781,6 +781,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 try
                 {
+                    if (!TimelineSettings.Instance.Enabled)
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(5));
+                        continue;
+                    }
+
+                    // P-Syncを判定する
+                    this.DetectPSyncTriggers();
+
+                    // 以後ログに対して判定する
                     if (this.logInfoQueue == null ||
                         this.logInfoQueue.IsEmpty)
                     {
@@ -790,12 +800,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     var logs = this.GetLogs();
                     if (!logs.Any())
                     {
-                        continue;
-                    }
-
-                    if (!TimelineSettings.Instance.Enabled)
-                    {
-                        Thread.Sleep(TimeSpan.FromSeconds(5));
                         continue;
                     }
 
@@ -899,6 +903,10 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             return list;
         }
 
+        /// <summary>
+        /// ログに対して判定する
+        /// </summary>
+        /// <param name="logs">ログ</param>
         private void DetectLogs(
             IReadOnlyList<XIVLog> logs)
         {
@@ -1042,29 +1050,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 });
             });
 
-            // P-Syncトリガに対して判定する
-            var psyncs = detectors
-                .Where(x =>
-                    x.TimelineType == TimelineElementTypes.Trigger &&
-                    (x as TimelineTriggerModel).IsPositionSyncAvalable)
-                .Select(x => x as TimelineTriggerModel)
-                .ToArray();
-
-            if (!psyncs.Any())
-            {
-                return;
-            }
-
-            // Combatantsを取得する
-            var combatants = FFXIVPlugin.Instance.GetCombatantList();
-
-            if (!combatants.Any())
-            {
-                return;
-            }
-
-            psyncs.AsParallel().ForAll(tri => detectPSync(tri));
-
             // アクティビティに対して判定する
             bool detectActivity(
                 XIVLog xivlog,
@@ -1120,7 +1105,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         this.CurrentTime = act.Time;
 
                         // ログを発生させる
-                        raiseLog(act);
+                        RaiseLog(act);
                     }
                 });
 
@@ -1213,7 +1198,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             }
 
                             // ログを発生させる
-                            raiseLog(tri);
+                            RaiseLog(tri);
                         }
                         finally
                         {
@@ -1224,6 +1209,71 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 return true;
             }
+        }
+
+        /// <summary>
+        /// P-Syncトリガを判定する
+        /// </summary>
+        private void DetectPSyncTriggers()
+        {
+            var detectTime = DateTime.Now;
+            var detectors = new List<TimelineTriggerModel>(64);
+
+            lock (this)
+            {
+                // グローバルトリガを登録する
+                detectors.AddRange(TimelineManager.Instance.GlobalTriggers);
+
+                if (!this.Model.IsGlobalZone)
+                {
+                    // タイムラインスコープのトリガを登録する
+                    detectors.AddRange(
+                        from x in this.Model.Triggers
+                        where
+                        x.IsAvalable() &&
+                        x.IsPositionSyncAvalable
+                        select
+                        x);
+
+                    // カレントサブルーチンのトリガを登録する
+                    if (this.ActiveActivity != null)
+                    {
+                        var sub = this.ActiveActivity.Parent as TimelineSubroutineModel;
+                        if (sub != null)
+                        {
+                            var triggers =
+                                from x in sub.Triggers
+                                where
+                                x.IsAvalable() &&
+                                x.IsPositionSyncAvalable
+                                select
+                                x;
+
+                            detectors.AddRange(triggers);
+                        }
+                    }
+                }
+            }
+
+            // P-Syncトリガに対して判定する
+            var psyncs = detectors
+                .Where(x => x.IsPositionSyncAvalable)
+                .ToArray();
+
+            if (!psyncs.Any())
+            {
+                return;
+            }
+
+            // Combatantsを取得する
+            var combatants = FFXIVPlugin.Instance.GetCombatantList();
+
+            if (!combatants.Any())
+            {
+                return;
+            }
+
+            psyncs.AsParallel().ForAll(tri => detectPSync(tri));
 
             // P-Syncトリガに対して判定する
             void detectPSync(
@@ -1231,9 +1281,20 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             {
                 lock (tri)
                 {
-                    var conditions = tri.PositionSyncStatements
-                        .FirstOrDefault(x => x.Enabled.GetValueOrDefault())?
-                        .Combatants?
+                    var psync = tri.PositionSyncStatements
+                        .FirstOrDefault(x => x.Enabled.GetValueOrDefault());
+
+                    if (psync == null)
+                    {
+                        return;
+                    }
+
+                    if ((DateTime.Now - psync.LastSyncTimestamp).TotalSeconds <= psync.Interval)
+                    {
+                        return;
+                    }
+
+                    var conditions = psync.Combatants
                         .Where(x =>
                             x.Enabled.GetValueOrDefault() &&
                             !string.IsNullOrEmpty(x.Name));
@@ -1272,7 +1333,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                         con.ActualCombatant = target;
                     }
 
-                    if (conditions.Count(x => x.ActualCombatant != null) >=
+                    if (conditions.Count(x => x.ActualCombatant != null) <
                         conditions.Count())
                     {
                         return;
@@ -1309,6 +1370,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             return;
                         }
                     }
+
+                    psync.LastSyncTimestamp = DateTime.Now;
 
                     var toNotice = tri.Clone();
 
@@ -1362,7 +1425,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             }
 
                             // ログを発生させる
-                            raiseLog(tri);
+                            RaiseLog(tri);
                         }
                         finally
                         {
@@ -1371,36 +1434,39 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     }
                 });
             }
+        }
 
-            // ログを発生させる
-            void raiseLog(
-                TimelineBase element)
+        /// <summary>
+        /// ログを発生させる
+        /// </summary>
+        /// <param name="element"></param>
+        private static void RaiseLog(
+            TimelineBase element)
+        {
+            var now = DateTime.Now;
+            var log = string.Empty;
+
+            var sub = element.Parent as TimelineSubroutineModel;
+
+            switch (element)
             {
-                var now = DateTime.Now;
-                var log = string.Empty;
+                case TimelineActivityModel act:
+                    log =
+                        $"{TLSymbol} Synced to activity. " +
+                        $"name={act.Name}, sub={sub?.Name}";
+                    break;
 
-                var sub = element.Parent as TimelineSubroutineModel;
+                case TimelineTriggerModel tri:
+                    log =
+                        $"{TLSymbol} Synced to trigger. " +
+                        $"name={tri.Name}, sync-count={tri.MatchedCounter}, sub={sub?.Name}";
+                    break;
 
-                switch (element)
-                {
-                    case TimelineActivityModel act:
-                        log =
-                            $"{TLSymbol} Synced to activity. " +
-                            $"name={act.Name}, sub={sub?.Name}";
-                        break;
-
-                    case TimelineTriggerModel tri:
-                        log =
-                            $"{TLSymbol} Synced to trigger. " +
-                            $"name={tri.Name}, sync-count={tri.MatchedCounter}, sub={sub?.Name}";
-                        break;
-
-                    default:
-                        return;
-                }
-
-                RaiseLog(log);
+                default:
+                    return;
             }
+
+            TimelineController.RaiseLog(log);
         }
 
         #endregion Log 関係のスレッド
@@ -1868,7 +1934,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var now = DateTime.Now;
             var log =
                 $"{TLSymbol} Notice from TL. " +
-                $"name={tri.Name}, text={tri.Text}, notice={tri.Notice}";
+                $"name={tri.Name}, text={tri.TextReplaced}, notice={tri.NoticeReplaced}";
 
             var notice = tri.Notice;
             if (string.Equals(notice, "auto", StringComparison.OrdinalIgnoreCase))

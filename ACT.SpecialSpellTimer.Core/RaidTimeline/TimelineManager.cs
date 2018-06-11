@@ -45,10 +45,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public TimelineTriggerModel[] GlobalTriggers
             => this.globalTriggers
-                .Where(x =>
-                    x.Trigger.Enabled.GetValueOrDefault() &&
-                    !string.IsNullOrEmpty(x.Trigger.SyncKeyword) &&
-                    x.Trigger.SyncRegex != null)
+                .Where(x => x.Trigger.IsAvalable())
                 .Select(x => x.Trigger)
                 .ToArray();
 
@@ -418,7 +415,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 // トリガのマッチカウンタを初期化する
                 if (element is TimelineTriggerModel tri)
                 {
-                    tri.MatchedCounter = 0;
+                    tri.Init();
                 }
 
                 // ImageNoticeを準備する

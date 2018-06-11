@@ -55,6 +55,31 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         #endregion Children
+
+        private double? interval = null;
+
+        [XmlIgnore]
+        public double? Interval
+        {
+            get => this.interval;
+            set => this.SetProperty(ref this.interval, value);
+        }
+
+        [XmlAttribute(AttributeName = "interval")]
+        public string IntervalXML
+        {
+            get => this.Interval?.ToString();
+            set => this.Interval = float.TryParse(value, out var v) ? v : (double?)null;
+        }
+
+        private DateTime lastSyncTimestamp;
+
+        [XmlIgnore]
+        public DateTime LastSyncTimestamp
+        {
+            get => this.lastSyncTimestamp;
+            set => this.SetProperty(ref this.lastSyncTimestamp, value);
+        }
     }
 
     [Serializable]

@@ -575,6 +575,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             // P-Sync
             NewDefault(TimelineElementTypes.PositionSync, "Enabled", true),
+            NewDefault(TimelineElementTypes.PositionSync, "Interval", 30d),
 
             // P-Sync - Combatant
             NewDefault(TimelineElementTypes.Combatant, "Enabled", true),

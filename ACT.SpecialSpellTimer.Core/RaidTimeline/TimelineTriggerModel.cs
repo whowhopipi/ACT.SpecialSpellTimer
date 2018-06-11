@@ -276,6 +276,46 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.logSeq, value);
         }
 
+        public bool IsAvalable()
+        {
+            if (this.Enabled.GetValueOrDefault())
+            {
+                if (this.IsPositionSyncAvalable)
+                {
+                    return true;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(this.SyncKeyword) &&
+                        this.SyncRegex != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public void Init()
+        {
+            lock (this)
+            {
+                this.MatchedCounter = 0;
+
+                if (this.PositionSyncStatements != null)
+                {
+                    foreach (var psync in this.PositionSyncStatements)
+                    {
+                        if (psync != null)
+                        {
+                            psync.LastSyncTimestamp = DateTime.MinValue;
+                        }
+                    }
+                }
+            }
+        }
+
         public TimelineTriggerModel Clone()
         {
             var clone = this.MemberwiseClone() as TimelineTriggerModel;

@@ -146,7 +146,7 @@
     ファイルの識別用にリビジョンと詳細説明を記述できる。
     それぞれ設定画面で参照できる。
   -->
-  <rev>rev14</rev>
+  <rev>rev15</rev>
   <description>
     スペスペたいむの定義ファイルの説明書です。
     これ自体をタイムラインとして使用することは出来ません。
@@ -481,6 +481,86 @@
     このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
   -->
 
+  <!-- トリガ＋p-sync -->
+  <t text="楔がポップ！">
+    <p-sync interval="30">
+      <combatant name="炎の楔" X="21.5" Y="21.5" Z="0" tolerance="0.1" />
+      <combatant name="炎の楔" X="30.0" Y="40.0" Z="0" tolerance="0.1" />
+      <combatant name="炎の楔" X="50.0" Y="60.0" Z="0" tolerance="0.1" />
+      <combatant name="炎の楔" X="70.0" Y="80.0" Z="0" tolerance="0.1" />
+    </p-sync>
+
+    <v-notice
+      duration="5"
+      duration-visible="false"
+      style="NOTICE_NORMAL"
+      icon="Marker.png" />
+
+    <i-notice 
+      image="フォーメーションA.png"
+      duration="5"
+      scale="1.0"
+      left="500"
+      top="100" />
+  </t>
+  <!--
+  <p-sync> タグ
+    トリガの判定を拡張する。
+    子要素で定義する combatant の座標をすべて満たしたときにトリガを起動する。
+    もっぱらオブジェクトや敵の配置に対して決まった移動やフォーメーションを通知するために使用する。
+
+    p-sync に合致したとき通知用の text 属性を動的に置換する代名詞を使用できる。
+    {nameN} : N番目の combatant の実際の名前で置換する。
+    {XN}    : N番目の combatant の実際のX座標で置換する。
+    {YN}    : N番目の combatant の実際のY座標で置換する。
+    {ZN}    : N番目の combatant の実際のZ座標で置換する。
+
+    例)
+    <t text="{name1}\nX{X1}\nY{Y1}\nZ{Z1}">
+      <p-sync>
+        <combatant name="Me Taro" X="21.5" Y="21.5" />
+        <combatant name="Warrior Jiro" X="30.5" Y="40.5" />
+      </p-sync>
+
+    この場合、text は
+
+    Me Taro
+    X21.5
+    Y21.5
+    Z[実際の値]
+
+    となる。
+    * ZはMe Taroが実際にいた場所のZ座標が表示される
+
+  interval :
+    double, 任意項目, 既定値30
+    最後に合致してから再度判定を行うまでの間隔。
+
+  enabled :
+    bool, 任意項目, 既定値true
+    このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
+
+  <combatant> タグ
+    p-syncの条件となる combatant の座標を定義する。
+  
+  name :
+    string, 必須項目
+    対象とする combatant の名前。完全一致で判定する。
+
+  X, Y, Z :
+    float, 任意項目
+    combatant の座標。省略した場合は該当の座標軸を判定対象としない。
+
+  tolerance :
+    float, 任意項目, 既定値0.1
+    座標の判定誤差。座標は完全一致ではなく多少を誤差を許容して判定する。
+    その判定誤差を指定する。
+
+  enabled :
+    bool, 任意項目, 既定値true
+    このエレメントが有効か無効か。無効な場合はコメントと同じ扱いになる。
+  -->
+
   <!-- サブルーチン -->
   <s name="メインフェーズ">
     <a time="00:29" text="乾坤一擲" notice="次は、乾坤一擲。" />
@@ -519,8 +599,15 @@
   target-element :
     enum
     規定値を設定する要素を指定する
-    Activity : a タグ（アクティビティ）に対して適用する
-    Trigger  : t タグ（トリガ）に対して適用する
+    
+    Activity      : a タグ（アクティビティ）に対して適用する
+    Trigger       : t タグ（トリガ）に対して適用する
+    Subroutine    : s タグ（サブルーチン）に対して適用する
+    Load          : load タグ（ロード）に対して適用する
+    VisualNotice  : v-notice タグ（視覚通知）に対して適用する
+    ImageNotice   : i-notice タグ（画像通知）に対して適用する
+    PositionSync  : p-sync タグ（座標トリガ）に対して適用する
+    Combatant     : combatant タグ（座標定義）に対して適用する
 
   target-attr :
     string
@@ -544,6 +631,10 @@
 
 <!--
 変更履歴
+
+2018-06-11 rev15
+  * t タグの配下に Combatants の座標情報とマッチングする p-sync タグを追加した
+  * default タグが対象とするエレメントの説明を追加した
 
 2018-05-24 rev14
   * v-notice タグにスタック数（重複ヒット数）を表示する stack-visible 属性を追加した
