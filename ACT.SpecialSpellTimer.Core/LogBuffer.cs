@@ -77,7 +77,7 @@ namespace ACT.SpecialSpellTimer
             ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
-            // Added Combantantsイベントを登録する
+            // Added Combatantsイベントを登録する
             FFXIVPlugin.Instance.AddedCombatants -= this.OnAddedCombatants;
             FFXIVPlugin.Instance.AddedCombatants += this.OnAddedCombatants;
 
@@ -343,7 +343,7 @@ namespace ACT.SpecialSpellTimer
                 {
                     foreach (var combatant in e.NewCombatants)
                     {
-                        var log = $"[EX] Added new combantant. name={combatant.Name} X={combatant.PosXMap:N2} Y={combatant.PosYMap:N2} Z={combatant.PosZMap:N2} hp={combatant.CurrentHP}";
+                        var log = $"[EX] Added new combatant. name={combatant.Name} X={combatant.PosXMap:N2} Y={combatant.PosYMap:N2} Z={combatant.PosZMap:N2} hp={combatant.CurrentHP}";
                         LogParser.RaiseLog(now, log);
                     }
                 }
