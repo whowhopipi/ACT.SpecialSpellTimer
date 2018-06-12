@@ -484,10 +484,10 @@
   <!-- トリガ＋p-sync -->
   <t text="楔がポップ！">
     <p-sync interval="30">
-      <combatant name="炎の楔" X="21.5" Y="21.5" Z="0" tolerance="0.1" />
-      <combatant name="炎の楔" X="30.0" Y="40.0" Z="0" tolerance="0.1" />
-      <combatant name="炎の楔" X="50.0" Y="60.0" Z="0" tolerance="0.1" />
-      <combatant name="炎の楔" X="70.0" Y="80.0" Z="0" tolerance="0.1" />
+      <combatant name="炎の楔" X="21.5" Y="21.5" Z="0" tolerance="0.01" />
+      <combatant name="炎の楔" X="30.0" Y="40.0" Z="0" tolerance="0.01" />
+      <combatant name="炎の楔" X="50.0" Y="60.0" Z="0" tolerance="0.01" />
+      <combatant name="炎の楔" X="70.0" Y="80.0" Z="0" tolerance="0.01" />
     </p-sync>
 
     <v-notice
@@ -552,7 +552,7 @@
     combatant の座標。省略した場合は該当の座標軸を判定対象としない。
 
   tolerance :
-    float, 任意項目, 既定値0.1
+    float, 任意項目, 既定値0.01
     座標の判定誤差。座標は完全一致ではなく多少を誤差を許容して判定する。
     その判定誤差を指定する。
 

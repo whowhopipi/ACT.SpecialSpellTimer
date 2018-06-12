@@ -1118,7 +1118,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 TimelineTriggerModel tri)
             {
                 // P-Syncならば対象外なので抜ける
-                if (!tri.IsPositionSyncAvalable)
+                if (tri.IsPositionSyncAvalable)
                 {
                     return false;
                 }
