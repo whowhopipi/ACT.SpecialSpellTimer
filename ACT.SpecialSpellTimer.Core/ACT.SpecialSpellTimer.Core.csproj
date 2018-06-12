@@ -224,6 +224,9 @@
     <Compile Include="Views\BarBackgroundConverter.cs" />
     <Compile Include="Views\BrushAnimation.cs" />
     <Compile Include="Views\BrightnessConverter.cs" />
+    <Compile Include="Views\POSView.xaml.cs">
+      <DependentUpon>POSView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LPSView.xaml.cs">
       <DependentUpon>LPSView.xaml</DependentUpon>
     </Compile>
@@ -845,6 +848,10 @@
     <Page Include="Views\AdvancedSpellPanelWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\POSView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LPSView.xaml">
       <SubType>Designer</SubType>

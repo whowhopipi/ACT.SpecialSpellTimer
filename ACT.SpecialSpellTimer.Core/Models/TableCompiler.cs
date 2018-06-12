@@ -68,6 +68,8 @@ namespace ACT.SpecialSpellTimer.Models
 
         public event EventHandler CompileConditionChanged;
 
+        private DateTime lastDumpPositionTimestamp = DateTime.MinValue;
+
         private void DoWork()
         {
             try
@@ -113,6 +115,20 @@ namespace ACT.SpecialSpellTimer.Models
                         var zone = ActGlobals.oFormActMain.CurrentZone;
                         Logger.Write($"zone changed. zone={zone}");
                         this.ZoneChanged?.Invoke(this, new EventArgs());
+
+                        // 自分の座標をダンプする
+                        Task.Run(() =>
+                        {
+                            Thread.Sleep(TimeSpan.FromSeconds(5));
+                            LogBuffer.DumpPosition(true);
+                        });
+                    }
+
+                    // 定期的に自分の座標をダンプする
+                    if ((DateTime.Now - this.lastDumpPositionTimestamp).TotalSeconds >= 60.0)
+                    {
+                        LogBuffer.DumpPosition(true);
+                        this.lastDumpPositionTimestamp = DateTime.Now;
                     }
                 }
             }

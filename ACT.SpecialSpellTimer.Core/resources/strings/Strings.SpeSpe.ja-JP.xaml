@@ -162,6 +162,11 @@
   <system:String x:Key="Options_AnimationMaxFPS">アニメーションの最大FPS</system:String>
   <system:String x:Key="Options_RenderOnlyCPU">レンダリングをCPUに限定する</system:String>
 
+  <system:String x:Key="Options_POSOverlay">POSオーバーレイ</system:String>
+  <system:String x:Key="Options_VisiblePOS">自キャラの座標を表示する</system:String>
+  <system:String x:Key="Options_POSOverlayScale">POSオーバーレイのスケール</system:String>
+  <system:String x:Key="Options_POSOverlayLocation">POSオーバーレイの位置</system:String>
+
   <system:String x:Key="Options_PCNameDisplayStyle">PC名の表示スタイル</system:String>
   <system:String x:Key="Options_TextStrokeThickenessGain">テキストのアウトライン増幅率</system:String>
   <system:String x:Key="Options_TextBlurGain">テキストのブラー増幅率</system:String>

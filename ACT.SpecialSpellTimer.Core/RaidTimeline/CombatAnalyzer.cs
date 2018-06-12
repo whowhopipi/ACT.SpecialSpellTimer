@@ -938,6 +938,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             }
 
                             Logger.Write("Start Combat");
+
+                            // 自分の座標をダンプする
+                            LogBuffer.DumpPosition(true);
                         }
 
                         this.inCombat = true;

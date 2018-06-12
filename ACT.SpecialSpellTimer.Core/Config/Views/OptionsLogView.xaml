@@ -14,7 +14,7 @@
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
   xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-  d:DataContext="{d:DesignInstance Type=local:OptionsLogView, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:OptionsLogView}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   d:DesignWidth="1000"
   Background="White"
@@ -73,15 +73,15 @@
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_VisibleLPS}" IsChecked="{Binding Config.LPSViewVisible, Mode=TwoWay}" />
 
     <Label Margin="0 15 0 3" Content="{DynamicResource Options_LPSOverlayScale}" />
-    <xctk:DoubleUpDown Value="{Binding Config.LPSViewScale, Mode=TwoWay}" MinWidth="80" FormatString="F2" />
+    <xctk:DoubleUpDown Value="{Binding Config.LPSViewScale, Mode=TwoWay}" MinWidth="80" FormatString="F2" Increment="0.01" />
 
     <!-- Location -->
     <Label Margin="0 15 0 3" Content="{DynamicResource Options_LPSOverlayLocation}" />
     <StackPanel Orientation="Horizontal">
       <Label Margin="0 0 5 0" Content="X" VerticalAlignment="Center" />
-      <TextBox TextAlignment="Right" Text="{Binding Config.LPSViewX, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+      <xctk:DoubleUpDown Value="{Binding Config.LPSViewX, Mode=TwoWay}" FormatString="F0" MinWidth="75" Increment="1" />
       <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
-      <TextBox TextAlignment="Right" Text="{Binding Config.LPSViewY, Mode=TwoWay}" Width="60" HorizontalAlignment="Left" />
+      <xctk:DoubleUpDown Value="{Binding Config.LPSViewY, Mode=TwoWay}" FormatString="F0" MinWidth="75" Increment="1" />
     </StackPanel>
 
     <CheckBox Margin="0 25 0 0" Content="{DynamicResource Options_EnabledLog}" IsChecked="{Binding Config.SaveLogEnabled, Mode=TwoWay}" />

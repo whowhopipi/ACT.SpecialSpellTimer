@@ -14,7 +14,7 @@
   xmlns:vm="clr-namespace:ACT.SpecialSpellTimer.Config.ViewModels"
   xmlns:fa="http://schemas.fontawesome.io/icons/"
   xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-  d:DataContext="{d:DesignInstance Type=local:OptionsMiscView, IsDesignTimeCreatable=True}"
+  d:DataContext="{d:DesignInstance Type=local:OptionsMiscView}"
   DataContext="{Binding RelativeSource={RelativeSource Self}}"
   d:DesignWidth="1000"
   Background="White"

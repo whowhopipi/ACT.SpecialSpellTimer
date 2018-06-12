@@ -160,6 +160,11 @@
   <system:String x:Key="Options_AnimationMaxFPS">애니메이션의 최대 FPS</system:String>
   <system:String x:Key="Options_RenderOnlyCPU">렌더링을 CPU로 제한</system:String>
 
+  <system:String x:Key="Options_POSOverlay">POS 오버레이</system:String>
+  <system:String x:Key="Options_VisiblePOS">POS 오버레이 표시</system:String>
+  <system:String x:Key="Options_POSOverlayScale">POS 오버레이 스케일</system:String>
+  <system:String x:Key="Options_POSOverlayLocation">POS 오버레이 위치</system:String>
+
   <system:String x:Key="Options_PCNameDisplayStyle">PC 이름의 표시 스타일</system:String>
   <system:String x:Key="Options_TextStrokeThickenessGain">글자 외곽선 증가율</system:String>
   <system:String x:Key="Options_TextBlurGain">글자 흐림 증가율</system:String>

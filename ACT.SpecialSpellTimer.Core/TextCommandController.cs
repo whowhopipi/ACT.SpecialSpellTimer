@@ -19,7 +19,7 @@ namespace ACT.SpecialSpellTimer
         /// コマンド解析用の正規表現
         /// </summary>
         private readonly static Regex regexCommand = new Regex(
-            @".*/spespe (?<command>refresh|changeenabled|set|clear|on|off) ?(?<target>spells|telops|me|pt|pet|placeholder|$) ?(?<windowname>"".*""|all)? ?(?<value>.*)",
+            @".*/spespe (?<command>refresh|changeenabled|set|clear|on|off|pos) ?(?<target>spells|telops|me|pt|pet|placeholder|$) ?(?<windowname>"".*""|all)? ?(?<value>.*)",
             RegexOptions.Compiled |
             RegexOptions.IgnoreCase);
 
@@ -210,6 +210,11 @@ namespace ACT.SpecialSpellTimer
 
                 case "off":
                     PluginCore.Instance.ChangeSwitchVisibleButton(false);
+                    r = true;
+                    break;
+
+                case "pos":
+                    LogBuffer.DumpPosition();
                     r = true;
                     break;
             }

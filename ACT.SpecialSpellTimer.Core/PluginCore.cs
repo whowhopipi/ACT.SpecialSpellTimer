@@ -78,8 +78,9 @@ namespace ACT.SpecialSpellTimer
         {
             try
             {
-                // LPSViewを閉じる
+                // 付加情報オーバーレイを閉じる
                 LPSView.CloseLPS();
+                POSView.ClosePOS();
 
                 PluginMainWorker.Instance.End();
                 PluginMainWorker.Free();
@@ -201,8 +202,9 @@ namespace ACT.SpecialSpellTimer
                 PluginMainWorker.Instance.Begin();
                 TimelineController.Init();
 
-                // LPSViewを表示する
+                // 付加情報オーバーレイを表示する
                 LPSView.ShowLPS();
+                POSView.ShowPOS();
 
                 this.SetSwitchVisibleButton();
                 this.PluginStatusLabel.Text = "Plugin Started";

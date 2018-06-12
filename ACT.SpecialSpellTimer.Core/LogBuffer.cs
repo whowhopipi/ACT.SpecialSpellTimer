@@ -109,8 +109,6 @@ namespace ACT.SpecialSpellTimer
 
             // 生ログの書き出しバッファを停止する
             ChatLogWorker.Instance.End();
-
-            GC.SuppressFinalize(this);
         }
 
         #endregion コンストラクター/デストラクター/Dispose
@@ -551,6 +549,35 @@ namespace ACT.SpecialSpellTimer
         }
 
         #endregion ログ処理
+
+        #region その他のメソッド
+
+        /// <summary>
+        /// 自分の座標をダンプする
+        /// </summary>
+        /// <param name="isAuto">
+        /// 自動出力？</param>
+        public static void DumpPosition(
+            bool isAuto = false)
+        {
+            var player = FFXIVPlugin.Instance.GetPlayer();
+            if (player == null)
+            {
+                return;
+            }
+
+            var zone = ActGlobals.oFormActMain?.CurrentZone;
+            if (string.IsNullOrEmpty(zone))
+            {
+                zone = "Unknown Zone";
+            }
+
+            LogParser.RaiseLog(
+                DateTime.Now,
+                $"[EX] {(isAuto ? "Beacon" : "POS")} X={player.PosXMap:N2} Y={player.PosYMap:N2} Z={player.PosZMap:N2} zone={zone}");
+        }
+
+        #endregion その他のメソッド
     }
 
     public class XIVLog

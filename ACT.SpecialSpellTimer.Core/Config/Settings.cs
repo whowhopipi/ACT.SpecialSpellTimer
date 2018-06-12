@@ -317,6 +317,8 @@ namespace ACT.SpecialSpellTimer.Config
 
         public bool WipeoutNotifyToACT { get; set; }
 
+        #region LPS View
+
         private bool lpsViewVisible = false;
         private double lpsViewX;
         private double lpsViewY;
@@ -354,6 +356,50 @@ namespace ACT.SpecialSpellTimer.Config
             get => this.lpsViewScale;
             set => this.SetProperty(ref this.lpsViewScale, value);
         }
+
+        #endregion LPS View
+
+        #region POS View
+
+        private bool posViewVisible = false;
+        private double posViewX;
+        private double posViewY;
+        private double posViewScale = 1.0;
+
+        public bool POSViewVisible
+        {
+            get => this.posViewVisible;
+            set
+            {
+                if (this.SetProperty(ref this.posViewVisible, value))
+                {
+                    if (POSView.Instance != null)
+                    {
+                        POSView.Instance.OverlayVisible = value;
+                    }
+                }
+            }
+        }
+
+        public double POSViewX
+        {
+            get => this.posViewX;
+            set => this.SetProperty(ref this.posViewX, Math.Floor(value));
+        }
+
+        public double POSViewY
+        {
+            get => this.posViewY;
+            set => this.SetProperty(ref this.posViewY, Math.Floor(value));
+        }
+
+        public double POSViewScale
+        {
+            get => this.posViewScale;
+            set => this.SetProperty(ref this.posViewScale, value);
+        }
+
+        #endregion POS View
 
         private bool saveLogEnabled;
         private string saveLogDirectory;
