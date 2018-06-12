@@ -24,7 +24,6 @@ namespace ACT.SpecialSpellTimer.Views
             instance = new POSView()
             {
                 OverlayVisible = Settings.Default.POSViewVisible,
-                ClickTransparent = Settings.Default.ClickThroughEnabled,
             };
 
             instance.Show();
@@ -49,7 +48,6 @@ namespace ACT.SpecialSpellTimer.Views
 
             this.Opacity = 0;
             this.ToNonActive();
-            this.ToNotTransparent();
 
             this.MouseLeftButtonDown += (x, y) => this.DragMove();
 
@@ -66,7 +64,7 @@ namespace ACT.SpecialSpellTimer.Views
         public POSViewModel ViewModel => this.DataContext as POSViewModel;
 
         private bool overlayVisible;
-        private bool clickTranceparent;
+        private bool? clickTranceparent;
 
         public bool OverlayVisible
         {
@@ -76,14 +74,14 @@ namespace ACT.SpecialSpellTimer.Views
 
         public bool ClickTransparent
         {
-            get => this.clickTranceparent;
+            get => this.clickTranceparent ?? false;
             set
             {
                 if (this.clickTranceparent != value)
                 {
                     this.clickTranceparent = value;
 
-                    if (this.clickTranceparent)
+                    if (this.clickTranceparent.Value)
                     {
                         this.ToTransparent();
                     }

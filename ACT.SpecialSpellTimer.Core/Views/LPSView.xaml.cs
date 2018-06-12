@@ -23,7 +23,6 @@ namespace ACT.SpecialSpellTimer.Views
             instance = new LPSView();
 
             instance.OverlayVisible = Settings.Default.LPSViewVisible;
-            instance.ClickTransparent = Settings.Default.ClickThroughEnabled;
 
             instance.Show();
         }
@@ -47,7 +46,6 @@ namespace ACT.SpecialSpellTimer.Views
 
             this.Opacity = 0;
             this.ToNonActive();
-            this.ToNotTransparent();
 
             this.MouseLeftButtonDown += (x, y) => this.DragMove();
 
@@ -61,7 +59,7 @@ namespace ACT.SpecialSpellTimer.Views
         public LPSViewModel ViewModel => this.DataContext as LPSViewModel;
 
         private bool overlayVisible;
-        private bool clickTranceparent;
+        private bool? clickTranceparent;
 
         public bool OverlayVisible
         {
@@ -71,14 +69,14 @@ namespace ACT.SpecialSpellTimer.Views
 
         public bool ClickTransparent
         {
-            get => this.clickTranceparent;
+            get => this.clickTranceparent ?? false;
             set
             {
                 if (this.clickTranceparent != value)
                 {
                     this.clickTranceparent = value;
 
-                    if (this.clickTranceparent)
+                    if (this.clickTranceparent.Value)
                     {
                         this.ToTransparent();
                     }
