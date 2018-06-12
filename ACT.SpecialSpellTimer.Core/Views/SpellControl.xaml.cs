@@ -196,10 +196,10 @@ namespace ACT.SpecialSpellTimer.Views
             if (iconFile != null &&
                 File.Exists(iconFile.FullPath))
             {
-                if (image.Source == null ||
+                if (image.Source == IconController.BlankBitmap ||
                     image.Height != this.Spell.SpellIconSize ||
                     image.Width != this.Spell.SpellIconSize ||
-                    (image.Source as BitmapImage).UriSource.LocalPath != iconFile.FullPath)
+                    (image.Source as BitmapImage)?.UriSource?.LocalPath != iconFile.FullPath)
                 {
                     var bitmap = iconFile.CreateBitmapImage();
                     image.Source = bitmap;
@@ -213,7 +213,7 @@ namespace ACT.SpecialSpellTimer.Views
             }
             else
             {
-                image.Source = null;
+                image.Source = IconController.BlankBitmap;
                 this.SpellIconPanel.Background = Brushes.Transparent;
             }
 

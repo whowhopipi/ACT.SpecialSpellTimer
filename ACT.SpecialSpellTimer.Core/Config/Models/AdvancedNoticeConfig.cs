@@ -19,6 +19,16 @@ namespace ACT.SpecialSpellTimer.Config.Models
         BindableBase,
         ICloneable
     {
+        /// <summary>
+        /// シンクロTTSの受付時間 (ミリ秒)
+        /// </summary>
+        public const double SyncTTSWaitingTime = 60;
+
+        /// <summary>
+        /// シンクロTTSの発声間隔 (ミリ秒)
+        /// </summary>
+        public const double SyncTTSInterval = 10;
+
         #region Available TTSYukkuri
 
         private static System.Timers.Timer timer = new System.Timers.Timer(5 * 1000);
@@ -223,7 +233,8 @@ namespace ACT.SpecialSpellTimer.Config.Models
             {
                 if (syncSpeakTimer == null)
                 {
-                    syncSpeakTimer = new System.Timers.Timer(50)
+                    // シンクロTTSの受付タイマを生成する
+                    syncSpeakTimer = new System.Timers.Timer(SyncTTSWaitingTime)
                     {
                         AutoReset = false
                     };
@@ -272,7 +283,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         foreach (var text in texts)
                         {
                             SpeakCore(text, config, true);
-                            Thread.Sleep(1);
+                            Thread.Sleep(TimeSpan.FromMilliseconds(SyncTTSInterval));
                         }
                     }
                 }

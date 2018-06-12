@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Prism.Mvvm;
 
@@ -18,6 +19,19 @@ namespace ACT.SpecialSpellTimer.Image
         public static IconController Instance => instance;
 
         #endregion Singleton
+
+        /// <summary>
+        /// Blankビットマップ
+        /// </summary>
+        public static readonly BitmapSource BlankBitmap = BitmapImage.Create(
+            2,
+            2,
+            96,
+            96,
+            PixelFormats.Indexed1,
+            new BitmapPalette(new List<Color> { Colors.Transparent }),
+            new byte[] { 0, 0, 0, 0 },
+            1);
 
         private string[] iconDirectories;
 
