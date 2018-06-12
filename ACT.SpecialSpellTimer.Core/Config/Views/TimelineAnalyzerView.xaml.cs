@@ -14,6 +14,7 @@ using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.resources;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
 using FFXIV.Framework.Globalization;
 using Prism.Commands;
 
@@ -44,6 +45,16 @@ namespace ACT.SpecialSpellTimer.Config.Views
                 var currentCell = y.ClipboardRowContent[grid.CurrentCell.Column.DisplayIndex];
                 y.ClipboardRowContent.Clear();
                 y.ClipboardRowContent.Add(currentCell);
+            };
+
+            this.combatLogSource.LiveFilteringProperties.Add(nameof(CombatLog.LogType));
+            this.combatLogSource.Filter += (x, y) =>
+            {
+                y.Accepted = false;
+                if (y.Item is CombatLog log)
+                {
+                    y.Accepted = log.LogType != LogTypes.Unknown;
+                }
             };
         }
 
@@ -225,13 +236,24 @@ namespace ACT.SpecialSpellTimer.Config.Views
                     return;
                 }
 
+                var file = this.openFileDialog.FileName;
+
+                // NETWORK.log？
+                if (file.ContainsIgnoreCase("NETWORK"))
+                {
+                    ModernMessageBox.ShowDialog(
+                        $"Invalid Log Format.\n\"NETWORK.log\" can not be analyzed.",
+                        "Timeline Analyzer",
+                        MessageBoxButton.OK);
+
+                    return;
+                }
+
                 try
                 {
-                    await WPFHelper.BeginInvoke(() =>
+                    await Task.Run(() =>
                     {
-                        var file = this.openFileDialog.FileName;
                         var lines = File.ReadAllLines(file, new UTF8Encoding(false));
-
                         CombatAnalyzer.Instance.ImportLogLines(lines.ToList());
                     });
 

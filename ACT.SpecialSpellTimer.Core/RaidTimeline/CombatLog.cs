@@ -75,10 +75,16 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             this.TimeStampElapted.ToSecondString() :
             this.TimeStampElapted.ToTLString();
 
+        private LogTypes logType = LogTypes.Unknown;
+
         /// <summary>
         /// ログの種類
         /// </summary>
-        public LogTypes LogType { get; set; } = LogTypes.Unknown;
+        public LogTypes LogType
+        {
+            get => this.logType;
+            set => this.SetProperty(ref this.logType, value);
+        }
 
         /// <summary>
         /// ログの種類

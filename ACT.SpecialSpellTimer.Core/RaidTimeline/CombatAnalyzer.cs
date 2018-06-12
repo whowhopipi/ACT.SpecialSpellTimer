@@ -28,6 +28,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
     public enum KewordTypes
     {
         Unknown = 0,
+        Record,
         Me,
         PartyMember,
         Pet,
@@ -263,6 +264,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public static readonly IList<AnalyzeKeyword> KeywordsJA = new[]
         {
+            new AnalyzeKeyword() { Keyword = "[EX] Added", Category = KewordTypes.Record },
+            new AnalyzeKeyword() { Keyword = "[EX] POS", Category = KewordTypes.Record },
+            new AnalyzeKeyword() { Keyword = "[EX] Beacon", Category = KewordTypes.Record },
             new AnalyzeKeyword() { Keyword = "・エギ", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "フェアリー・", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "カーバンクル・", Category = KewordTypes.Pet },
@@ -354,6 +358,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public static readonly IList<AnalyzeKeyword> KeywordsEN = new[]
         {
+            new AnalyzeKeyword() { Keyword = "[EX] Added", Category = KewordTypes.Record },
+            new AnalyzeKeyword() { Keyword = "[EX] POS", Category = KewordTypes.Record },
+            new AnalyzeKeyword() { Keyword = "[EX] Beacon", Category = KewordTypes.Record },
             new AnalyzeKeyword() { Keyword = "-Egi", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "Eos", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "Selene", Category = KewordTypes.Pet },
@@ -442,6 +449,9 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public static readonly IList<AnalyzeKeyword> KeywordsKO = new[]
         {
+            new AnalyzeKeyword() { Keyword = "[EX] Added", Category = KewordTypes.Record },
+            new AnalyzeKeyword() { Keyword = "[EX] POS", Category = KewordTypes.Record },
+            new AnalyzeKeyword() { Keyword = "[EX] Beacon", Category = KewordTypes.Record },
             new AnalyzeKeyword() { Keyword = "에기", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "요정", Category = KewordTypes.Pet },
             new AnalyzeKeyword() { Keyword = "카벙클" , Category = KewordTypes.Pet },
@@ -861,6 +871,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             var category = analyzeLogLine(logLine.logLine, Keywords);
             switch (category)
             {
+                case KewordTypes.Record:
+                    if (this.inCombat)
+                    {
+                        this.StoreRecordLog(logLine);
+                    }
+                    break;
+
                 case KewordTypes.Pet:
                     break;
 
@@ -1034,6 +1051,23 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
                 this.CurrentCombatLogList.Add(log);
             }
+        }
+
+        /// <summary>
+        /// 記録用ログを格納する
+        /// </summary>
+        /// <param name="logInfo">ログ情報</param>
+        private void StoreRecordLog(
+            LogLineEventArgs logInfo)
+        {
+            var log = new CombatLog()
+            {
+                TimeStamp = logInfo.detectedTime,
+                Raw = logInfo.logLine,
+                LogType = LogTypes.Unknown
+            };
+
+            this.StoreLog(log);
         }
 
         /// <summary>
