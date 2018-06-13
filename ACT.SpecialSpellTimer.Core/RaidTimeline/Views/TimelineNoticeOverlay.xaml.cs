@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Interop;
-using System.Windows.Threading;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.WPF.Views;
 
@@ -151,7 +148,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
             this.Loaded += (x, y) =>
             {
                 this.IsClickthrough = this.Config.Clickthrough;
-                this.StartZOrderCorrector();
+                this.SubscribeZOrderCorrector();
 
                 // 描画用に最初の通知を装填する
                 // ダミーのときは見えてしまうためフォントサイズを小さくしておく
@@ -159,11 +156,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
                 style.Font.Size /= 2;
                 this.FirstNotice.StyleModel = style;
                 this.AddNotice(this.FirstNotice, false, true);
-            };
-
-            this.Closed += (x, y) =>
-            {
-                this.StopZOrderCorrector();
             };
 
             this.SetupNoticesSource();
@@ -321,116 +313,6 @@ namespace ACT.SpecialSpellTimer.RaidTimeline.Views
         }
 
         #endregion IOverlay
-
-        #region ZOrder Corrector
-
-        private DispatcherTimer zorderCorrector;
-
-        private void StartZOrderCorrector()
-        {
-            this.zorderCorrector = new DispatcherTimer(DispatcherPriority.Background)
-            {
-                Interval = TimeSpan.FromSeconds(1),
-            };
-
-            this.zorderCorrector.Tick += (x, y) =>
-            {
-                if (this.Visibility == Visibility.Visible)
-                {
-                    if (!this.IsOverlaysGameWindow())
-                    {
-                        this.EnsureTopMost();
-                    }
-                }
-            };
-
-            this.zorderCorrector.Start();
-        }
-
-        private void StopZOrderCorrector()
-        {
-            if (this.zorderCorrector != null)
-            {
-                this.zorderCorrector.Stop();
-                this.zorderCorrector = null;
-            }
-        }
-
-        private IntPtr? handle = null;
-
-        public IntPtr Handle =>
-            this.handle ?? (this.handle = new WindowInteropHelper(this).Handle).Value;
-
-        private bool IsOverlaysGameWindow()
-        {
-            var xivHandle = GetGameWindowHandle();
-            var handle = this.Handle;
-
-            while (handle != IntPtr.Zero)
-            {
-                // Overlayウィンドウよりも前面側にFF14のウィンドウがあった
-                if (handle == xivHandle)
-                {
-                    return false;
-                }
-
-                handle = NativeMethods.GetWindow(handle, NativeMethods.GW_HWNDPREV);
-            }
-
-            // 前面側にOverlayが存在する、もしくはFF14が起動していない
-            return true;
-        }
-
-        private void EnsureTopMost()
-        {
-            NativeMethods.SetWindowPos(
-                this.Handle,
-                NativeMethods.HWND_TOPMOST,
-                0, 0, 0, 0,
-                NativeMethods.SWP_NOSIZE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOACTIVATE);
-        }
-
-        private static object xivProcLocker = new object();
-        private static Process xivProc;
-        private static DateTime lastTry;
-        private static TimeSpan tryInterval = new TimeSpan(0, 0, 15);
-
-        private static IntPtr GetGameWindowHandle()
-        {
-            lock (xivProcLocker)
-            {
-                try
-                {
-                    // プロセスがすでに終了してるならプロセス情報をクリア
-                    if (xivProc != null && xivProc.HasExited)
-                    {
-                        xivProc = null;
-                    }
-
-                    // プロセス情報がなく、tryIntervalよりも時間が経っているときは新たに取得を試みる
-                    if (xivProc == null && DateTime.Now - lastTry > tryInterval)
-                    {
-                        xivProc = Process.GetProcessesByName("ffxiv").FirstOrDefault();
-                        if (xivProc == null)
-                        {
-                            xivProc = Process.GetProcessesByName("ffxiv_dx11").FirstOrDefault();
-                        }
-
-                        lastTry = DateTime.Now;
-                    }
-
-                    if (xivProc != null)
-                    {
-                        return xivProc.MainWindowHandle;
-                    }
-                }
-                catch (System.ComponentModel.Win32Exception) { }
-
-                return IntPtr.Zero;
-            }
-        }
-
-        #endregion ZOrder Corrector
 
         #region INotifyPropertyChanged
 

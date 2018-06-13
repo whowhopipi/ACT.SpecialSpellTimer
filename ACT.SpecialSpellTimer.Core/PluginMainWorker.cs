@@ -527,7 +527,7 @@ namespace ACT.SpecialSpellTimer
         }
 
         /// <summary>
-        /// FFXIVまたはACTがアクティブか？
+        /// FFXIVまたはACTがアクティブウィンドウか？
         /// </summary>
         /// <returns>
         /// FFXIVまたはACTがアクティブか？</returns>
