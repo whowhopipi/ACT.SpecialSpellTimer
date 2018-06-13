@@ -191,6 +191,9 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.clickThroughEnabled, value);
         }
 
+        /// <summary>
+        /// !注意! OpacityToView を使用すること！
+        /// </summary>
         public int Opacity { get; set; }
 
         [XmlIgnore]

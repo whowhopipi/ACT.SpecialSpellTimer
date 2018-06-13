@@ -73,7 +73,7 @@ namespace ACT.SpecialSpellTimer.Views
         public bool OverlayVisible
         {
             get => this.overlayVisible;
-            set => this.SetOverlayVisible(ref this.overlayVisible, value, Settings.Default.Opacity);
+            set => this.SetOverlayVisible(ref this.overlayVisible, value, Settings.Default.OpacityToView);
         }
 
         public bool ClickTransparent
