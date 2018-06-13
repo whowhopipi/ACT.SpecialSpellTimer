@@ -119,9 +119,16 @@ namespace ACT.SpecialSpellTimer.Views
             this.ClickTransparent = Settings.Default.ClickThroughEnabled;
 
             // アクティブによる表示切り替えは内側のグリッドで切り替える
-            this.BaseGrid.Visibility = PluginMainWorker.Instance.IsFFXIVActive ?
-                Visibility.Visible :
-                Visibility.Collapsed;
+            if (Settings.Default.HideWhenNotActive)
+            {
+                this.BaseGrid.Visibility = PluginMainWorker.Instance.IsFFXIVActive ?
+                    Visibility.Visible :
+                    Visibility.Collapsed;
+            }
+            else
+            {
+                this.BaseGrid.Visibility = Visibility.Visible;
+            }
         }
 
         #region ZOrder Corrector
