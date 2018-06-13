@@ -8,7 +8,7 @@
   xmlns:cnv="clr-namespace:FFXIV.Framework.WPF.Converters;assembly=FFXIV.Framework"
   xmlns:ctrl="clr-namespace:FFXIV.Framework.WPF.Controls;assembly=FFXIV.Framework"
   mc:Ignorable="d"
-  Title="LPS"
+  Title="POS"
   WindowStyle="None"
   AllowsTransparency="True"
   Background="Transparent"
