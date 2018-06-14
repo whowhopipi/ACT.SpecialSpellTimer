@@ -1,9 +1,6 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -56,9 +53,8 @@ namespace ACT.SpecialSpellTimer
         #endregion Thread
 
         private volatile bool existFFXIVProcess;
-        private volatile bool isFFXIVActive;
 
-        public bool IsFFXIVActive => this.isFFXIVActive;
+        public bool IsFFXIVActive => FFXIVPlugin.Instance.IsFFXIVActive;
 
         /// <summary>
         /// 最後にテロップテーブルを保存した日時
@@ -235,9 +231,6 @@ namespace ACT.SpecialSpellTimer
             // FFXIVプロセスの有無を取得する
             this.existFFXIVProcess = FFXIVPlugin.Instance.Process != null;
 
-            // FFXIV及びACTがアクティブか取得する
-            this.isFFXIVActive = this.IsActive();
-
             if ((DateTime.Now - this.lastSaveTickerTableDateTime).TotalMinutes >= 1)
             {
                 this.lastSaveTickerTableDateTime = DateTime.Now;
@@ -369,7 +362,7 @@ namespace ACT.SpecialSpellTimer
 
             var isHideOverlay =
                 !Settings.Default.OverlayVisible ||
-                (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
+                (Settings.Default.HideWhenNotActive && !this.IsFFXIVActive);
 
             // FFXIVが実行されていない？
             if (!this.InSimulation)
@@ -433,7 +426,7 @@ namespace ACT.SpecialSpellTimer
 
             var isHideOverlay =
                 !Settings.Default.OverlayVisible ||
-                (Settings.Default.HideWhenNotActive && !this.isFFXIVActive);
+                (Settings.Default.HideWhenNotActive && !this.IsFFXIVActive);
 
             // FFXIVが実行されていない？
             if (!this.InSimulation)
@@ -526,83 +519,6 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-        /// <summary>
-        /// FFXIVまたはACTがアクティブウィンドウか？
-        /// </summary>
-        /// <returns>
-        /// FFXIVまたはACTがアクティブか？</returns>
-        private bool IsActive()
-        {
-            var r = true;
-
-            try
-            {
-                // フォアグラウンドWindowのハンドルを取得する
-                var hWnd = GetForegroundWindow();
-
-                // プロセスIDに変換する
-                int pid;
-                GetWindowThreadProcessId(hWnd, out pid);
-
-                // メインモジュールのファイル名を取得する
-                var p = Process.GetProcessById(pid);
-                if (p != null)
-                {
-                    var fileName = Path.GetFileName(
-                        p.MainModule.FileName);
-
-                    var actFileName = Path.GetFileName(
-                        Process.GetCurrentProcess().MainModule.FileName);
-
-                    if (fileName.ToLower() == "ffxiv.exe" ||
-                        fileName.ToLower() == "ffxiv_dx11.exe" ||
-                        fileName.ToLower() == "dqx.exe" ||
-                        fileName.ToLower() == actFileName.ToLower())
-                    {
-                        r = true;
-                    }
-                    else
-                    {
-                        r = false;
-                    }
-                }
-            }
-            catch (Win32Exception)
-            {
-                // ignore
-            }
-            catch (Exception ex)
-            {
-                Logger.Write(Translate.Get("WatchActiveError"), ex);
-            }
-
-            return r;
-        }
-
         #endregion Misc
-
-        #region NativeMethods
-
-        /// <summary>
-        /// フォアグラウンドWindowのハンドルを取得する
-        /// </summary>
-        /// <returns>
-        /// フォアグラウンドWindowのハンドル</returns>
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
-
-        /// <summary>
-        /// WindowハンドルからそのプロセスIDを取得する
-        /// </summary>
-        /// <param name="hWnd">
-        /// プロセスIDを取得するWindowハンドル</param>
-        /// <param name="lpdwProcessId">
-        /// プロセスID</param>
-        /// <returns>
-        /// Windowを作成したスレッドのID</returns>
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-
-        #endregion NativeMethods
     }
 }

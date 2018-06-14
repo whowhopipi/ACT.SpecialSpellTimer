@@ -85,7 +85,10 @@
     <CheckBox Margin="0 15 0 0" Content="{DynamicResource Options_VisibleOverlayWithoutFFXIV}" IsChecked="{Binding Config.VisibleOverlayWithoutFFXIV, Mode=TwoWay}" />
 
     <Label Margin="0 15 0 0" Content="{DynamicResource Options_Transparency}" />
-    <xctk:IntegerUpDown Value="{Binding Config.Opacity, Mode=TwoWay}" MinWidth="80" />
+    <StackPanel Orientation="Horizontal">
+      <xctk:IntegerUpDown Value="{Binding Config.Opacity, Mode=TwoWay}" MinWidth="80" Minimum="0" Maximum="100" HorizontalAlignment="Left" />
+      <Label Margin="8 0 0 0" Content="%" />
+    </StackPanel>
 
     <Label Margin="0 15 0 0" Content="{DynamicResource Options_LogPollingRate}" />
     <xctk:LongUpDown Value="{Binding Config.LogPollSleepInterval, Mode=TwoWay}" MinWidth="80" />

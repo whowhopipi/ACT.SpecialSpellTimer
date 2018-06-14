@@ -191,10 +191,34 @@ namespace ACT.SpecialSpellTimer.Config
             set => this.SetProperty(ref this.clickThroughEnabled, value);
         }
 
+        private int opacity;
+
         /// <summary>
         /// !注意! OpacityToView を使用すること！
         /// </summary>
-        public int Opacity { get; set; }
+        public int Opacity
+        {
+            get => this.opacity;
+            set
+            {
+                if (this.SetProperty(ref this.opacity, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.OpacityToView));
+
+                    if (LPSView.Instance != null &&
+                        LPSView.Instance.OverlayVisible)
+                    {
+                        LPSView.Instance.Opacity = this.OpacityToView;
+                    }
+
+                    if (POSView.Instance != null &&
+                        POSView.Instance.OverlayVisible)
+                    {
+                        POSView.Instance.Opacity = this.OpacityToView;
+                    }
+                }
+            }
+        }
 
         [XmlIgnore]
         public double OpacityToView => (100d - this.Opacity) / 100d;
