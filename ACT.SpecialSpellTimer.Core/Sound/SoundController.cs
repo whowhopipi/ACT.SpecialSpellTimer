@@ -6,6 +6,7 @@ using System.Reflection;
 
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Bridge;
 
 namespace ACT.SpecialSpellTimer.Sound
 {
@@ -91,7 +92,11 @@ namespace ACT.SpecialSpellTimer.Sound
 
             if (Directory.Exists(this.WaveDirectory))
             {
-                foreach (var wave in Directory.GetFiles(this.WaveDirectory, "*.wav")
+                var files = new List<string>();
+                files.AddRange(Directory.GetFiles(this.WaveDirectory, "*.wav"));
+                files.AddRange(Directory.GetFiles(this.WaveDirectory, "*.mp3"));
+
+                foreach (var wave in files
                     .OrderBy(x => x)
                     .ToArray())
                 {
@@ -121,18 +126,35 @@ namespace ACT.SpecialSpellTimer.Sound
                 }
 
                 // wav？
-                if (source.EndsWith(".wav"))
+                if (source.EndsWith(".wav") ||
+                    source.EndsWith(".wave") ||
+                    source.EndsWith(".mp3"))
                 {
                     // ファイルが存在する？
                     if (File.Exists(source))
                     {
-                        ActGlobals.oFormActMain.PlaySound(source);
+                        if (PlayBridge.Instance.IsAvailable)
+                        {
+                            PlayBridge.Instance.Play(source);
+                        }
+                        else
+                        {
+                            ActGlobals.oFormActMain.PlaySound(source);
+                        }
                     }
                 }
                 else
                 {
                     source = TTSDictionary.Instance.ReplaceWordsTTS(source);
-                    ActGlobals.oFormActMain.TTS(source);
+
+                    if (PlayBridge.Instance.IsAvailable)
+                    {
+                        PlayBridge.Instance.Play(source);
+                    }
+                    else
+                    {
+                        ActGlobals.oFormActMain.TTS(source);
+                    }
                 }
             }
             catch (Exception ex)

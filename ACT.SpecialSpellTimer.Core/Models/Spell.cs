@@ -495,7 +495,8 @@ namespace ACT.SpecialSpellTimer.Models
 
             var isWave = false;
             if (tts.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
-                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase))
+                tts.EndsWith(".wave", StringComparison.OrdinalIgnoreCase) ||
+                tts.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))
             {
                 isWave = true;
             }

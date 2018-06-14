@@ -124,7 +124,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                 }
                 else
                 {
-                    ActGlobals.oFormActMain.TTS(wave);
+                    ActGlobals.oFormActMain.PlaySound(wave);
                 }
 
                 return;
