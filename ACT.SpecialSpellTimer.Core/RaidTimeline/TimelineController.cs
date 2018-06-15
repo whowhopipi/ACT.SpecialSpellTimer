@@ -2082,9 +2082,12 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             if (isWave)
             {
-                notice = Path.Combine(
-                    SoundController.Instance.WaveDirectory,
-                    notice);
+                if (!File.Exists(notice))
+                {
+                    notice = Path.Combine(
+                        SoundController.Instance.WaveDirectory,
+                        notice);
+                }
             }
             else
             {
