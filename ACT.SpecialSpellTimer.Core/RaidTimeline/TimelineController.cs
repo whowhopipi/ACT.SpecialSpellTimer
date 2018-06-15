@@ -1936,7 +1936,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 $"{TLSymbol} Notice from TL. " +
                 $"name={tri.Name}, text={tri.TextReplaced}, notice={tri.NoticeReplaced}";
 
-            var notice = tri.Notice;
+            var notice = tri.NoticeReplaced;
             if (string.Equals(notice, "auto", StringComparison.OrdinalIgnoreCase))
             {
                 notice = !string.IsNullOrEmpty(tri.Text) ?
@@ -2077,7 +2077,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             var isWave =
                 notice.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
-                notice.EndsWith(".wave", StringComparison.OrdinalIgnoreCase);
+                notice.EndsWith(".wave", StringComparison.OrdinalIgnoreCase) ||
+                notice.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase);
 
             if (isWave)
             {
