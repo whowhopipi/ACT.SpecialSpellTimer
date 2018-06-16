@@ -141,7 +141,7 @@ namespace ACT.SpecialSpellTimer
                 pluginScreenSpace.Text = "SPESPE";
 
                 // .NET Frameworkのバージョンを確認する
-                if (!UpdateChecker.IsAvalableDotNet())
+                if (!UpdateChecker.IsAvailableDotNet())
                 {
                     return;
                 }

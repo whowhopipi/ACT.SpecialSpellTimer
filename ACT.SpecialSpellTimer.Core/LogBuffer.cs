@@ -248,13 +248,13 @@ namespace ACT.SpecialSpellTimer
         {
             get
             {
-                var avalableLPSs = this.lpss.Where(x => x > 0);
-                if (!avalableLPSs.Any())
+                var availableLPSs = this.lpss.Where(x => x > 0);
+                if (!availableLPSs.Any())
                 {
                     return 0;
                 }
 
-                return avalableLPSs.Sum() / avalableLPSs.Count();
+                return availableLPSs.Sum() / availableLPSs.Count();
             }
         }
 

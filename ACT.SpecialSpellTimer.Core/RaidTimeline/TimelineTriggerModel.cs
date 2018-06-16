@@ -70,7 +70,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         }
 
         [XmlIgnore]
-        public bool IsPositionSyncAvalable =>
+        public bool IsPositionSyncAvailable =>
             this.PositionSyncStatements.Any(x => x.Enabled.GetValueOrDefault());
 
         public void Add(TimelineBase timeline)
@@ -276,11 +276,11 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
             set => this.SetProperty(ref this.logSeq, value);
         }
 
-        public bool IsAvalable()
+        public bool IsAvailable()
         {
             if (this.Enabled.GetValueOrDefault())
             {
-                if (this.IsPositionSyncAvalable)
+                if (this.IsPositionSyncAvailable)
                 {
                     return true;
                 }

@@ -45,7 +45,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
         public TimelineTriggerModel[] GlobalTriggers
             => this.globalTriggers
-                .Where(x => x.Trigger.IsAvalable())
+                .Where(x => x.Trigger.IsAvailable())
                 .Select(x => x.Trigger)
                 .ToArray();
 

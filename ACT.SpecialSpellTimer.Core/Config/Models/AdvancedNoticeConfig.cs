@@ -273,7 +273,7 @@ namespace ACT.SpecialSpellTimer.Config.Models
                         return;
                     }
 
-                    if (!PlayBridge.Instance.IsSyncAvalable)
+                    if (!PlayBridge.Instance.IsSyncAvailable)
                     {
                         var text = string.Join(Environment.NewLine, texts);
                         SpeakCore(text, config);

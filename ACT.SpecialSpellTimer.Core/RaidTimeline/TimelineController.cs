@@ -1118,7 +1118,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                 TimelineTriggerModel tri)
             {
                 // P-Syncならば対象外なので抜ける
-                if (tri.IsPositionSyncAvalable)
+                if (tri.IsPositionSyncAvailable)
                 {
                     return false;
                 }
@@ -1230,8 +1230,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     detectors.AddRange(
                         from x in this.Model.Triggers
                         where
-                        x.IsAvalable() &&
-                        x.IsPositionSyncAvalable
+                        x.IsAvailable() &&
+                        x.IsPositionSyncAvailable
                         select
                         x);
 
@@ -1244,8 +1244,8 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                             var triggers =
                                 from x in sub.Triggers
                                 where
-                                x.IsAvalable() &&
-                                x.IsPositionSyncAvalable
+                                x.IsAvailable() &&
+                                x.IsPositionSyncAvailable
                                 select
                                 x;
 
@@ -1257,7 +1257,7 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
 
             // P-Syncトリガに対して判定する
             var psyncs = detectors
-                .Where(x => x.IsPositionSyncAvalable)
+                .Where(x => x.IsPositionSyncAvailable)
                 .ToArray();
 
             if (!psyncs.Any())
