@@ -46,7 +46,7 @@
   <system:String x:Key="Common_WarningFillColor">警告時の塗りつぶし(内側)のカラー</system:String>
   <system:String x:Key="Common_WarningStrokeColor">警告時のアウトラインのカラー</system:String>
   <system:String x:Key="Common_ProgressBar">プログレスバー</system:String>
-  <system:String x:Key="Common_IsReverseProgressBar">進行方向を逆にする</system:String>
+  <system:String x:Key="Common_IsReverseProgressBar">進行方向を逆にする（アイコンの明暗も反転する）</system:String>
   <system:String x:Key="Common_Background">背景</system:String>
   <system:String x:Key="Common_Icon">アイコン</system:String>
   <system:String x:Key="Common_Size">サイズ</system:String>
