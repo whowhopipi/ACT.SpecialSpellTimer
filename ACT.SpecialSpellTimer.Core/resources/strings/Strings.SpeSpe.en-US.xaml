@@ -166,6 +166,7 @@
   <system:String x:Key="Options_VisiblePOS">Show POS Overlay</system:String>
   <system:String x:Key="Options_POSOverlayScale">POS Overlay scale</system:String>
   <system:String x:Key="Options_POSOverlayLocation">POS Overlay location</system:String>
+  <system:String x:Key="Options_VisiblePOSDebugInfo">Show Debug Info on POS Overlay</system:String>
 
   <system:String x:Key="Options_PCNameDisplayStyle">PC name display style</system:String>
   <system:String x:Key="Options_TextStrokeThickenessGain">Text blur rates</system:String>

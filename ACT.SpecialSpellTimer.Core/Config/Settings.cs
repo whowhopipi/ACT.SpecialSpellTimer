@@ -392,6 +392,7 @@ namespace ACT.SpecialSpellTimer.Config
         private double posViewX;
         private double posViewY;
         private double posViewScale = 1.0;
+        private bool posViewVisibleDebugInfo = false;
 
         public bool POSViewVisible
         {
@@ -424,6 +425,12 @@ namespace ACT.SpecialSpellTimer.Config
         {
             get => this.posViewScale;
             set => this.SetProperty(ref this.posViewScale, value);
+        }
+
+        public bool POSViewVisibleDebugInfo
+        {
+            get => this.posViewVisibleDebugInfo;
+            set => this.SetProperty(ref this.posViewVisibleDebugInfo, value);
         }
 
         #endregion POS View

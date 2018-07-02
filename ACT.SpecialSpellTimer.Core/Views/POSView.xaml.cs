@@ -128,6 +128,25 @@ namespace ACT.SpecialSpellTimer.Views
                     this.YText.Text = player.PosYMap.ToString("N2");
                     this.ZText.Text = player.PosZMap.ToString("N2");
 
+                    this.XRaw.Text = player.PosX.ToString("N2");
+                    this.YRaw.Text = player.PosY.ToString("N2");
+                    this.ZRaw.Text = player.PosZ.ToString("N2");
+                    this.Head.Text = player.Heading.ToString("N2");
+
+                    CameraInfo.Instance.Refresh();
+                    if (CameraInfo.Instance.IsAvailable)
+                    {
+                        this.CameraMode.Text = CameraInfo.Instance.Mode.ToString();
+                        this.CameraHead.Text = CameraInfo.Instance.Heading.ToString("N2");
+                        this.CameraAlt.Text = CameraInfo.Instance.Elevation.ToString("N2");
+                    }
+                    else
+                    {
+                        this.CameraMode.Text = string.Empty;
+                        this.CameraHead.Text = string.Empty;
+                        this.CameraAlt.Text = string.Empty;
+                    }
+
                     this.BaseGrid.Visibility = Visibility.Visible;
                 }
             }

@@ -116,6 +116,8 @@
         <Label Margin="10 0 5 0" Content="Y" VerticalAlignment="Center" />
         <xctk:DoubleUpDown Value="{Binding Config.POSViewY, Mode=TwoWay}" FormatString="F0" MinWidth="75" Increment="1" />
       </StackPanel>
+
+      <CheckBox Margin="10 15 0 0" Content="{DynamicResource Options_VisiblePOSDebugInfo}" IsChecked="{Binding Config.POSViewVisibleDebugInfo, Mode=TwoWay}" />
     </StackPanel>
   </StackPanel>
 </UserControl>
