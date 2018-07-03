@@ -133,17 +133,24 @@ namespace ACT.SpecialSpellTimer.Views
                     this.ZRaw.Text = player.PosZ.ToString("N2");
                     this.Head.Text = player.Heading.ToString("N2");
 
+                    this.HeadDegree.Text = player.HeadingDegree.ToString("N0");
+                    this.ViewModel.HeadDegree = player.HeadingDegree;
+
                     CameraInfo.Instance.Refresh();
                     if (CameraInfo.Instance.IsAvailable)
                     {
                         this.CameraMode.Text = CameraInfo.Instance.Mode.ToString();
                         this.CameraHead.Text = CameraInfo.Instance.Heading.ToString("N2");
+                        this.CameraHeadDegree.Text = CameraInfo.Instance.HeadingDegree.ToString("N0");
+                        this.ViewModel.CameraDegree = CameraInfo.Instance.HeadingDegree;
                         this.CameraAlt.Text = CameraInfo.Instance.Elevation.ToString("N2");
                     }
                     else
                     {
                         this.CameraMode.Text = string.Empty;
                         this.CameraHead.Text = string.Empty;
+                        this.CameraHeadDegree.Text = string.Empty;
+                        this.ViewModel.CameraDegree = 0;
                         this.CameraAlt.Text = string.Empty;
                     }
 
@@ -160,5 +167,20 @@ namespace ACT.SpecialSpellTimer.Views
         BindableBase
     {
         public Settings Config => Settings.Default;
+
+        private double headDegree = 0;
+        private double cameraDegree = 0;
+
+        public double HeadDegree
+        {
+            get => this.headDegree;
+            set => this.SetProperty(ref this.headDegree, value);
+        }
+
+        public double CameraDegree
+        {
+            get => this.cameraDegree;
+            set => this.SetProperty(ref this.cameraDegree, value);
+        }
     }
 }

@@ -392,7 +392,7 @@ namespace ACT.SpecialSpellTimer.Config
         private double posViewX;
         private double posViewY;
         private double posViewScale = 1.0;
-        private bool posViewVisibleDebugInfo = false;
+        private bool posViewVisibleDebugInfo = WPFHelper.IsDesignMode ? true : false;
 
         public bool POSViewVisible
         {

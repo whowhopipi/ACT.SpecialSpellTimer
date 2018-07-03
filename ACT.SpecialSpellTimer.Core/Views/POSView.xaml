@@ -195,8 +195,37 @@
             FontSize="10" />
         </DockPanel>
 
+        <DockPanel Margin="3 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="65">
+          <ctrl:LightOutlineTextBlock
+            VerticalAlignment="Center"
+            Style="{StaticResource DebugInfo}"
+            Text="head(d)"
+            FontSize="6" />
+          <ctrl:LightOutlineTextBlock
+            x:Name="HeadDegree"
+            VerticalAlignment="Center"
+            Style="{StaticResource DebugInfo}"
+            HorizontalAlignment="Right"
+            Text="999.99"
+            FontSize="10" />
+        </DockPanel>
+
+        <DockPanel Margin="3 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="65">
+          <ctrl:LightOutlineTextBlock
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Style="{StaticResource DebugInfo}"
+            Text="⬆"
+            FontSize="15"
+            RenderTransformOrigin="0.5 0.5">
+            <ctrl:LightOutlineTextBlock.RenderTransform>
+              <RotateTransform Angle="{Binding HeadDegree, Mode=OneWay}" />
+            </ctrl:LightOutlineTextBlock.RenderTransform>
+          </ctrl:LightOutlineTextBlock>
+        </DockPanel>
+
         <ctrl:LightOutlineTextBlock
-          Margin="0 5 0 0"
+          Margin="0 8 0 0"
           Style="{StaticResource DebugInfo}"
           Text="Camera"
           FontSize="7" />
@@ -229,6 +258,35 @@
             HorizontalAlignment="Right"
             Text="0"
             FontSize="10" />
+        </DockPanel>
+
+        <DockPanel Margin="3 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="65">
+          <ctrl:LightOutlineTextBlock
+            VerticalAlignment="Center"
+            Style="{StaticResource DebugInfo}"
+            Text="head(d)"
+            FontSize="6" />
+          <ctrl:LightOutlineTextBlock
+            x:Name="CameraHeadDegree"
+            VerticalAlignment="Center"
+            Style="{StaticResource DebugInfo}"
+            HorizontalAlignment="Right"
+            Text="0"
+            FontSize="10" />
+        </DockPanel>
+
+        <DockPanel Margin="3 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="65">
+          <ctrl:LightOutlineTextBlock
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Style="{StaticResource DebugInfo}"
+            Text="⬆"
+            FontSize="15"
+            RenderTransformOrigin="0.5 0.5">
+            <ctrl:LightOutlineTextBlock.RenderTransform>
+              <RotateTransform Angle="{Binding CameraDegree, Mode=OneWay}" />
+            </ctrl:LightOutlineTextBlock.RenderTransform>
+          </ctrl:LightOutlineTextBlock>
         </DockPanel>
 
         <DockPanel Margin="3 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="65">
