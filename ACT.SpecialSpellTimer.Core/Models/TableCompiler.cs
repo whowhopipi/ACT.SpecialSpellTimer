@@ -113,7 +113,8 @@ namespace ACT.SpecialSpellTimer.Models
                         SpellTable.Instance.RemoveInstanceSpellsAll();
 
                         var zone = ActGlobals.oFormActMain.CurrentZone;
-                        Logger.Write($"zone changed. zone={zone}");
+                        var zoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                        Logger.Write($"zone changed. zone={zone}, zone_id={zoneID}");
                         this.ZoneChanged?.Invoke(this, new EventArgs());
 
                         // 自分の座標をダンプする
