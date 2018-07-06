@@ -24,8 +24,15 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
         public TimelineRazorPlayer[] Party { get; set; }
 
         public bool InZone(
-            string zone)
-            => this.Zone.ContainsIgnoreCase(zone);
+            params string[] zones)
+        {
+            if (zones == null)
+            {
+                return false;
+            }
+
+            return zones.Any(x => this.Zone.ContainsIgnoreCase(x));
+        }
 
         public dynamic ParseJsonString(
             string hjson)
