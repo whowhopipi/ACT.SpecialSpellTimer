@@ -102,19 +102,16 @@ namespace ACT.SpecialSpellTimer
                 // サウンドコントローラを開始する
                 await Task.Delay(CommonHelper.GetRandomTimeSpan());
                 SoundController.Instance.Begin();
-
-                // Overlayの更新スレッドを開始する
-                await Task.Delay(CommonHelper.GetRandomTimeSpan());
-                this.BeginOverlaysThread();
             });
 
+            // Overlayの更新スレッドを開始する
+            this.BeginOverlaysThread();
+
             // ログ監視タイマを開始する
-            this.detectLogsWorker = new ThreadWorker(() =>
-            {
-                this.DetectLogsCore();
-            },
-            0,
-            nameof(this.detectLogsWorker));
+            this.detectLogsWorker = new ThreadWorker(
+                () => this.DetectLogsCore(),
+                0,
+                nameof(this.detectLogsWorker));
 
             // Backgroudスレッドを開始する
             this.backgroudWorker = new System.Timers.Timer();
@@ -125,14 +122,11 @@ namespace ACT.SpecialSpellTimer
                 this.BackgroundCore();
             };
 
-            await Task.Run(async () =>
-            {
-                await Task.Delay(CommonHelper.GetRandomTimeSpan());
-                this.detectLogsWorker.Run();
+            await Task.Delay(CommonHelper.GetRandomTimeSpan());
+            this.detectLogsWorker.Run();
 
-                await Task.Delay(CommonHelper.GetRandomTimeSpan());
-                this.backgroudWorker.Start();
-            });
+            await Task.Delay(CommonHelper.GetRandomTimeSpan());
+            this.backgroudWorker.Start();
         }
 
         public void BeginOverlaysThread()
