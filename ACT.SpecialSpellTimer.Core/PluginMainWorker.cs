@@ -81,7 +81,7 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// 開始する
         /// </summary>
-        public void Begin()
+        public async void Begin()
         {
             this.isOver = false;
 
@@ -93,14 +93,20 @@ namespace ACT.SpecialSpellTimer
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
 
-            // テーブルコンパイラを開始する
-            TableCompiler.Instance.Begin();
+            await Task.Run(async () =>
+            {
+                // テーブルコンパイラを開始する
+                await Task.Delay(CommonHelper.GetRandomTimeSpan());
+                TableCompiler.Instance.Begin();
 
-            // サウンドコントローラを開始する
-            SoundController.Instance.Begin();
+                // サウンドコントローラを開始する
+                await Task.Delay(CommonHelper.GetRandomTimeSpan());
+                SoundController.Instance.Begin();
 
-            // Overlayの更新スレッドを開始する
-            this.BeginOverlaysThread();
+                // Overlayの更新スレッドを開始する
+                await Task.Delay(CommonHelper.GetRandomTimeSpan());
+                this.BeginOverlaysThread();
+            });
 
             // ログ監視タイマを開始する
             this.detectLogsWorker = new ThreadWorker(() =>
@@ -119,8 +125,14 @@ namespace ACT.SpecialSpellTimer
                 this.BackgroundCore();
             };
 
-            this.detectLogsWorker.Run();
-            this.backgroudWorker.Start();
+            await Task.Run(async () =>
+            {
+                await Task.Delay(CommonHelper.GetRandomTimeSpan());
+                this.detectLogsWorker.Run();
+
+                await Task.Delay(CommonHelper.GetRandomTimeSpan());
+                this.backgroudWorker.Start();
+            });
         }
 
         public void BeginOverlaysThread()
