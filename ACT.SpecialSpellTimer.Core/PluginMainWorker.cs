@@ -93,14 +93,12 @@ namespace ACT.SpecialSpellTimer
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
 
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 // テーブルコンパイラを開始する
-                await Task.Delay(CommonHelper.GetRandomTimeSpan());
                 TableCompiler.Instance.Begin();
 
                 // サウンドコントローラを開始する
-                await Task.Delay(CommonHelper.GetRandomTimeSpan());
                 SoundController.Instance.Begin();
             });
 
@@ -122,10 +120,7 @@ namespace ACT.SpecialSpellTimer
                 this.BackgroundCore();
             };
 
-            await Task.Delay(CommonHelper.GetRandomTimeSpan());
             this.detectLogsWorker.Run();
-
-            await Task.Delay(CommonHelper.GetRandomTimeSpan());
             this.backgroudWorker.Start();
         }
 
