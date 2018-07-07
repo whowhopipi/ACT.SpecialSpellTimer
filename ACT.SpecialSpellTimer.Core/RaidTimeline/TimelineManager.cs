@@ -136,11 +136,13 @@ namespace ACT.SpecialSpellTimer.RaidTimeline
                     if (!newTimeline.IsGlobalZone)
                     {
                         newTimeline.Reload();
+                        Thread.Yield();
                     }
 
                     // コントローラをロードする
                     newTimeline.Controller.Load();
                     newTimeline.IsActive = true;
+                    Thread.Yield();
 
                     this.AppLogger.Trace($"[TL] Timeline auto loaded. active_timeline={newTimeline.TimelineName}.");
                 }

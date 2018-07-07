@@ -355,8 +355,11 @@ namespace ACT.SpecialSpellTimer.Models
             this.spellList.AsParallel().ForAll(spell =>
             {
                 var ex1 = spell.CompileRegex();
+                Thread.Yield();
                 var ex2 = spell.CompileRegexExtend1();
+                Thread.Yield();
                 var ex3 = spell.CompileRegexExtend2();
+                Thread.Yield();
 
                 var ex = ex1 ?? ex2 ?? ex3 ?? null;
                 if (ex != null)
@@ -365,6 +368,8 @@ namespace ACT.SpecialSpellTimer.Models
                         $"Regex compile error! spell={spell.SpellTitle}",
                         ex);
                 }
+
+                Thread.Sleep(1);
             });
 
             this.RaiseTableChenged();
@@ -457,7 +462,9 @@ namespace ACT.SpecialSpellTimer.Models
             this.tickerList.AsParallel().ForAll(spell =>
             {
                 var ex1 = spell.CompileRegex();
+                Thread.Yield();
                 var ex2 = spell.CompileRegexToHide();
+                Thread.Yield();
 
                 var ex = ex1 ?? ex2 ?? null;
                 if (ex != null)
@@ -466,6 +473,8 @@ namespace ACT.SpecialSpellTimer.Models
                         $"Regex compile error! ticker={spell.Title}",
                         ex);
                 }
+
+                Thread.Sleep(1);
             });
 
             this.RaiseTableChenged();
