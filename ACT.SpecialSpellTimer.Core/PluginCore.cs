@@ -192,12 +192,15 @@ namespace ACT.SpecialSpellTimer
                 DispatcherPriority.Background);
 
                 // 設定Panelを追加する
-                var baseView = new BaseView(pluginScreenSpace.Font);
-                pluginScreenSpace.Controls.Add(new ElementHost()
+                await WPFHelper.InvokeAsync(() =>
                 {
-                    Child = baseView,
-                    Dock = DockStyle.Fill,
-                    Font = pluginScreenSpace.Font,
+                    var baseView = new BaseView(pluginScreenSpace.Font);
+                    pluginScreenSpace.Controls.Add(new ElementHost()
+                    {
+                        Child = baseView,
+                        Dock = DockStyle.Fill,
+                        Font = pluginScreenSpace.Font,
+                    });
                 });
 
                 // 本体を開始する
