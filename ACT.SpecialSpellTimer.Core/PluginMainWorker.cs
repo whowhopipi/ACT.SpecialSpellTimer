@@ -86,9 +86,10 @@ namespace ACT.SpecialSpellTimer
             this.isOver = false;
 
             // FFXIVのスキャンを開始する
-            FFXIVPlugin.Instance.Start(
+            // FFXIVプラグインへのアクセスを開始する
+            await Task.Run(() => FFXIVPlugin.Instance.Start(
                 Settings.Default.LogPollSleepInterval,
-                Settings.Default.FFXIVLocale);
+                Settings.Default.FFXIVLocale));
 
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();

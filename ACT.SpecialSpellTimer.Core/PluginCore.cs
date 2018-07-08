@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
-using System.Windows.Threading;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Config.Views;
 using ACT.SpecialSpellTimer.Models;
@@ -126,74 +125,72 @@ namespace ACT.SpecialSpellTimer
         /// <param name="pluginScreenSpace">Pluginタブ</param>
         /// <param name="pluginStatusText">Pluginステータスラベル</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public async void InitPluginCore(
+        public void InitPluginCore(
             TabPage pluginScreenSpace,
             Label pluginStatusText)
         {
-            // FFXIV_MemoryReaderを先にロードさせる
-            await FFXIVReader.Instance.WaitForReaderToStartedAsync();
+            // タイトルをセットする
+            pluginScreenSpace.Text = "SPESPE";
 
-            this.PluginStatusLabel = pluginStatusText;
-
-            AppLog.LoadConfiguration(AppLog.HojoringConfig);
-            this.AppLogger.Trace(Assembly.GetExecutingAssembly().GetName().ToString() + " start.");
-
-            try
+            WPFHelper.Start();
+            WPFHelper.BeginInvoke(async () =>
             {
-                Logger.Init();
-                Logger.Write("Plugin Start.");
+                // FFXIV_MemoryReaderを先にロードさせる
+                await FFXIVReader.Instance.WaitForReaderToStartedAsync();
 
-                pluginScreenSpace.Text = "SPESPE";
+                this.PluginStatusLabel = pluginStatusText;
 
-                // .NET Frameworkのバージョンを確認する
-                if (!UpdateChecker.IsAvailableDotNet())
+                AppLog.LoadConfiguration(AppLog.HojoringConfig);
+                this.AppLogger.Trace(Assembly.GetExecutingAssembly().GetName().ToString() + " start.");
+
+                try
                 {
-                    return;
-                }
+                    Logger.Init();
+                    Logger.Write("Plugin Start.");
 
-                // メイン設定ファイルを読み込む
-                Settings.Default.Load();
-                Settings.Default.ApplyRenderMode();
+                    // .NET Frameworkのバージョンを確認する
+                    if (!UpdateChecker.IsAvailableDotNet())
+                    {
+                        return;
+                    }
 
-                // 最小化する？
-                if (Settings.Default.IsMinimizeOnStart)
-                {
-                    ActGlobals.oFormActMain.WindowState = FormWindowState.Minimized;
-                    await Task.Delay(1);
-                }
+                    // メイン設定ファイルを読み込む
+                    Settings.Default.Load();
+                    Settings.Default.ApplyRenderMode();
 
-                // HojoringのSplashを表示する
-                WPFHelper.Start();
-                UpdateChecker.ShowSplash();
-                await Task.Delay(1);
+                    // 最小化する？
+                    if (Settings.Default.IsMinimizeOnStart)
+                    {
+                        ActGlobals.oFormActMain.WindowState = FormWindowState.Minimized;
+                    }
 
-                // 自身の場所を格納しておく
-                var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this.PluginRoot);
-                if (plugin != null)
-                {
-                    this.Location = plugin.pluginFile.DirectoryName;
-                }
+                    // HojoringのSplashを表示する
+                    UpdateChecker.ShowSplash();
 
-                // 設定ファイルを読み込む
-                await WPFHelper.InvokeAsync(() =>
-                {
+                    // 自身の場所を格納しておく
+                    var plugin = ActGlobals.oFormActMain.PluginGetSelfData(this.PluginRoot);
+                    if (plugin != null)
+                    {
+                        this.Location = plugin.pluginFile.DirectoryName;
+                    }
+
+                    // 設定ファイルを読み込む
                     SpellPanelTable.Instance.Load();
                     SpellTable.Instance.Load();
                     TickerTable.Instance.Load();
                     TagTable.Instance.Load();
 
-                    SpellPanelTable.Instance.Backup();
-                    SpellTable.Instance.Backup();
-                    TickerTable.Instance.Backup();
-                    TagTable.Instance.Backup();
+                    await Task.Run(() =>
+                    {
+                        SpellPanelTable.Instance.Backup();
+                        SpellTable.Instance.Backup();
+                        TickerTable.Instance.Backup();
+                        TagTable.Instance.Backup();
+                    });
 
                     TTSDictionary.Instance.Load();
-                },
-                DispatcherPriority.Background);
 
-                // 設定Panelを追加する
-                await WPFHelper.InvokeAsync(() =>
-                {
+                    // 設定Panelを追加する
                     var baseView = new BaseView(pluginScreenSpace.Font);
                     pluginScreenSpace.Controls.Add(new ElementHost()
                     {
@@ -201,45 +198,43 @@ namespace ACT.SpecialSpellTimer
                         Dock = DockStyle.Fill,
                         Font = pluginScreenSpace.Font,
                     });
-                });
 
-                // 本体を開始する
-                PluginMainWorker.Instance.Begin();
-                TimelineController.Init();
-                await Task.Delay(CommonHelper.GetRandomTimeSpan(0.05));
+                    // 本体を開始する
+                    PluginMainWorker.Instance.Begin();
+                    TimelineController.Init();
 
-                // 付加情報オーバーレイを表示する
-                LPSView.ShowLPS();
-                POSView.ShowPOS();
-                await Task.Delay(CommonHelper.GetRandomTimeSpan(0.05));
+                    // 付加情報オーバーレイを表示する
+                    LPSView.ShowLPS();
+                    POSView.ShowPOS();
 
-                this.SetSwitchVisibleButton();
-                this.PluginStatusLabel.Text = "Plugin Started";
+                    this.SetSwitchVisibleButton();
+                    this.PluginStatusLabel.Text = "Plugin Started";
 
-                Logger.Write("Plugin Started.");
+                    Logger.Write("Plugin Started.");
 
-                // アップデートを確認する
-                await Task.Run(() => this.Update());
-            }
-            catch (Exception ex)
-            {
-                ActGlobals.oFormActMain.WriteExceptionLog(
-                    ex,
-                    "Plugin init error.");
-
-                Logger.Write("Plugin init error.", ex);
-
-                if (this.PluginStatusLabel != null)
-                {
-                    this.PluginStatusLabel.Text = "Plugin Initialize Error";
+                    // アップデートを確認する
+                    await Task.Run(() => this.Update());
                 }
+                catch (Exception ex)
+                {
+                    ActGlobals.oFormActMain.WriteExceptionLog(
+                        ex,
+                        "Plugin init error.");
 
-                ModernMessageBox.ShowDialog(
-                    "Plugin init error !",
-                    "ACT.SpecialSpellTimer",
-                    System.Windows.MessageBoxButton.OK,
-                    ex);
-            }
+                    Logger.Write("Plugin init error.", ex);
+
+                    if (this.PluginStatusLabel != null)
+                    {
+                        this.PluginStatusLabel.Text = "Plugin Initialize Error";
+                    }
+
+                    ModernMessageBox.ShowDialog(
+                        "Plugin init error !",
+                        "ACT.SpecialSpellTimer",
+                        System.Windows.MessageBoxButton.OK,
+                        ex);
+                }
+            });
         }
 
         #region SpeSpeButton
