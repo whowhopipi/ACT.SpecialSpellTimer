@@ -44,9 +44,12 @@
 
       <Style TargetType="CheckBox">
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
       </Style>
 
       <Style TargetType="TextBox">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Height" Value="30" />
         <EventSetter Event="MouseDoubleClick" Handler="TextBoxOnGotFocus" />
         <EventSetter Event="GotKeyboardFocus" Handler="TextBoxOnGotFocus" />
         <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TextBoxSelect" />
@@ -55,6 +58,32 @@
             <Setter Property="Foreground" Value="Silver" />
           </Trigger>
         </Style.Triggers>
+      </Style>
+
+      <Style TargetType="RichTextBox">
+        <EventSetter Event="MouseDoubleClick" Handler="TextBoxOnGotFocus" />
+        <EventSetter Event="GotKeyboardFocus" Handler="TextBoxOnGotFocus" />
+        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TextBoxSelect" />
+        <Style.Triggers>
+          <Trigger Property="IsReadOnly" Value="True">
+            <Setter Property="Foreground" Value="Silver" />
+          </Trigger>
+        </Style.Triggers>
+      </Style>
+
+      <Style TargetType="ComboBox">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Height" Value="30" />
+      </Style>
+
+      <Style TargetType="xctk:DoubleUpDown">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinHeight" Value="27" />
+      </Style>
+
+      <Style TargetType="xctk:IntegerUpDown">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinHeight" Value="27" />
       </Style>
 
       <FontFamily x:Key="FontAwesome">pack://application:,,,/FontAwesome.WPF;component/#FontAwesome</FontFamily>
