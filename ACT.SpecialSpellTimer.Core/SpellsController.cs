@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
-using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
+using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -25,18 +25,12 @@ namespace ACT.SpecialSpellTimer
         #endregion Singleton
 
         /// <summary>
-        /// SpellTimerのPanelリスト
-        /// </summary>
-        private volatile List<SpellTimerListWindow> spellTimerPanels =
-            new List<SpellTimerListWindow>();
-
-        /// <summary>
         /// Spellをマッチングする
         /// </summary>
         /// <param name="spells">Spell</param>
         /// <param name="logLines">ログ</param>
         public void Match(
-            IReadOnlyList<Models.SpellTimer> spells,
+            IReadOnlyList<Models.Spell> spells,
             IReadOnlyList<string> logLines)
         {
             if (spells.Count < 1 ||
@@ -81,11 +75,12 @@ namespace ACT.SpecialSpellTimer
         /// <param name="spell">スペル</param>
         /// <param name="logLine">ログ</param>
         public void MatchCore(
-            Models.SpellTimer spell,
+            Models.Spell spell,
             string logLine)
         {
             var regex = spell.Regex;
             var notifyNeeded = false;
+            var matched = false;
 
             if (!spell.IsInstance)
             {
@@ -108,6 +103,7 @@ namespace ACT.SpecialSpellTimer
                         // キーワードが含まれるか？
                         if (logLine.Contains(keyword, StringComparison.OrdinalIgnoreCase))
                         {
+                            matched = true;
                             var targetSpell = spell;
 
                             // ヒットしたログを格納する
@@ -117,7 +113,9 @@ namespace ACT.SpecialSpellTimer
                             var replacedTitle = ConditionUtility.GetReplacedTitle(targetSpell);
 
                             // PC名を置換する
-                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
+                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                                replacedTitle,
+                                Settings.Default.PCNameInitialOnDisplayStyle);
 
                             targetSpell.SpellTitleReplaced = replacedTitle;
                             targetSpell.UpdateDone = false;
@@ -126,15 +124,24 @@ namespace ACT.SpecialSpellTimer
                             targetSpell.TimeupDone = false;
 
                             var now = DateTime.Now;
-                            targetSpell.CompleteScheduledTime = now.AddSeconds(targetSpell.RecastTime);
+
+                            // ホットバーからリキャスト時間の読込みを試みる
+                            double d = 0d;
+                            if (!this.TryGetHotbarRecast(targetSpell, out d))
+                            {
+                                d = targetSpell.RecastTime;
+                            }
+
+                            targetSpell.CompleteScheduledTime = now.AddSeconds(d);
+
                             targetSpell.MatchDateTime = now;
 
                             // マッチング計測終了
                             spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
-                            this.Play(targetSpell.MatchSound);
-                            this.Play(targetSpell.MatchTextToSpeak);
+                            targetSpell.Play(targetSpell.MatchSound, targetSpell.MatchAdvancedConfig);
+                            targetSpell.Play(targetSpell.MatchTextToSpeak, targetSpell.MatchAdvancedConfig);
 
                             notifyNeeded = true;
 
@@ -150,31 +157,48 @@ namespace ACT.SpecialSpellTimer
                         var match = regex.Match(logLine);
                         if (match.Success)
                         {
-                            var targetSpell = spell;
-
-                            // ヒットしたログを格納する
-                            targetSpell.MatchedLog = logLine;
-
-                            // スペル名（表示テキスト）を置換する
-                            var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
-
-                            // PC名を置換する
-                            replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(replacedTitle);
-
-                            // インスタンス化する？
-                            if (spell.ToInstance)
+                            matched = true;
+#if DEBUG
+                            if (logLine.Contains("MARK"))
                             {
-                                // 同じタイトルのインスタンススペルを探す
-                                // 存在すればそれを使用して、なければ新しいインスタンスを生成する
-                                targetSpell = SpellTimerTable.Instance.GetOrAddInstance(
-                                    replacedTitle,
-                                    spell);
+                                Debug.WriteLine("MARK");
+                            }
+#endif
+                            var targetSpell = default(Spell);
 
-                                // インスタンスのガーベージタイマをスタートする
-                                targetSpell.StartGarbageInstanceTimer();
+                            void setTitle()
+                            {
+                                targetSpell = spell;
+
+                                // ヒットしたログを格納する
+                                targetSpell.MatchedLog = logLine;
+
+                                // スペル名（表示テキスト）を置換する
+                                var replacedTitle = match.Result(ConditionUtility.GetReplacedTitle(targetSpell));
+
+                                // PC名を置換する
+                                replacedTitle = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                                    replacedTitle,
+                                    Settings.Default.PCNameInitialOnDisplayStyle);
+
+                                // インスタンス化する？
+                                if (targetSpell.ToInstance)
+                                {
+                                    // 同じタイトルのインスタンススペルを探す
+                                    // 存在すればそれを使用して、なければ新しいインスタンスを生成する
+                                    targetSpell = SpellTable.Instance.GetOrAddInstance(
+                                        replacedTitle,
+                                        targetSpell);
+                                }
+                                else
+                                {
+                                    targetSpell.SpellTitleReplaced = replacedTitle;
+                                }
                             }
 
-                            targetSpell.SpellTitleReplaced = replacedTitle;
+                            // スペルタイトルを編集する
+                            setTitle();
+
                             targetSpell.UpdateDone = false;
                             targetSpell.OverDone = false;
                             targetSpell.BeforeDone = false;
@@ -184,11 +208,23 @@ namespace ACT.SpecialSpellTimer
 
                             // 効果時間を決定する
                             // グループ "duration" をキャプチャーしていた場合は効果時間を置換する
+                            // 最大値9999を超えていた場合は無視する
+                            var duration = targetSpell.RecastTime;
+
+                            var d = 0d;
                             var durationAsText = match.Groups["duration"].Value;
-                            double duration;
-                            if (!double.TryParse(durationAsText, out duration))
+                            if (double.TryParse(durationAsText, out d) &&
+                                d < 9999)
                             {
-                                duration = targetSpell.RecastTime;
+                                duration = d;
+                            }
+                            else
+                            {
+                                // ホットバーからリキャスト時間の読込を試みる
+                                if (this.TryGetHotbarRecast(targetSpell, out d))
+                                {
+                                    duration = d;
+                                }
                             }
 
                             targetSpell.CompleteScheduledTime = now.AddSeconds(duration);
@@ -208,12 +244,12 @@ namespace ACT.SpecialSpellTimer
                             spell.EndMatching();
 
                             // マッチ時点のサウンドを再生する
-                            this.Play(targetSpell.MatchSound);
+                            targetSpell.Play(targetSpell.MatchSound, targetSpell.MatchAdvancedConfig);
 
                             if (!string.IsNullOrWhiteSpace(targetSpell.MatchTextToSpeak))
                             {
                                 var tts = match.Result(targetSpell.MatchTextToSpeak);
-                                this.Play(tts);
+                                targetSpell.Play(tts, targetSpell.MatchAdvancedConfig);
                             }
 
                             notifyNeeded = true;
@@ -241,22 +277,22 @@ namespace ACT.SpecialSpellTimer
                     var timeToExtend = timeToExtends[i];
 
                     // マッチングする
-                    var matched = false;
+                    var exntended = false;
 
                     if (!spell.RegexEnabled ||
                         regexToExtend == null)
                     {
                         if (!string.IsNullOrWhiteSpace(keywordToExtend))
                         {
-                            matched = logLine.Contains(keywordToExtend, StringComparison.OrdinalIgnoreCase);
+                            exntended = logLine.Contains(keywordToExtend, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                     else
                     {
                         var match = regexToExtend.Match(logLine);
-                        matched = match.Success;
+                        exntended = match.Success;
 
-                        if (matched)
+                        if (exntended)
                         {
                             // targetをキャプチャーしている？
                             if (!string.IsNullOrWhiteSpace(spell.TargetName))
@@ -267,14 +303,14 @@ namespace ACT.SpecialSpellTimer
                                     // targetが当初のマッチングと一致するか確認する
                                     if (spell.TargetName != targetName)
                                     {
-                                        matched = false;
+                                        exntended = false;
                                     }
                                 }
                             }
                         }
                     }
 
-                    if (!matched)
+                    if (!exntended)
                     {
                         continue;
                     }
@@ -321,6 +357,36 @@ namespace ACT.SpecialSpellTimer
             }
             // end if 延長マッチング
 
+            // ホットバー情報を更新する
+            if (!matched)
+            {
+                var now = DateTime.Now;
+
+                if (spell.CompleteScheduledTime > now)
+                {
+                    double d;
+                    if (this.TryGetHotbarRecast(spell, out d))
+                    {
+                        // ホットバー情報と0.6秒以上乖離したら補正する
+                        var newSchedule = now.AddSeconds(d);
+
+                        if (Math.Abs((newSchedule - spell.CompleteScheduledTime).TotalSeconds)
+                            >= 0.6d)
+                        {
+                            spell.CompleteScheduledTime = newSchedule;
+                            spell.BeforeDone = false;
+                            spell.UpdateDone = false;
+
+                            notifyNeeded = true;
+
+                            spell.StartOverSoundTimer();
+                            spell.StartBeforeSoundTimer();
+                            spell.StartTimeupSoundTimer();
+                        }
+                    }
+                }
+            }
+
             // ACT標準のSpellTimerに変更を通知する
             if (notifyNeeded)
             {
@@ -330,72 +396,163 @@ namespace ACT.SpecialSpellTimer
         }
 
         /// <summary>
+        /// SpellTimerのPanelリスト
+        /// </summary>
+        private volatile List<ISpellPanelWindow> spellPanelWindows =
+            new List<ISpellPanelWindow>();
+
+        /// <summary>
         /// スペルパネルWindowを更新する
         /// </summary>
         /// <param name="spells">
         /// 対象のスペル</param>
         public void RefreshSpellOverlays(
-            IReadOnlyList<Models.SpellTimer> spells)
+            IReadOnlyList<Models.Spell> spells)
         {
-            var spellsGroupByPanel =
+            var doneTest = false;
+
+            var query =
                 from s in spells
                 where
-                !s.ToInstance ||
-                s.IsTemporaryDisplay
-                group s by s.Panel.Trim();
+                s.Panel != null &&
+                (
+                    !s.ToInstance ||
+                    s.IsDesignMode
+                )
+                group s by s.Panel.PanelName.Trim();
 
-            foreach (var panel in spellsGroupByPanel)
+            var panelWindow = default(ISpellPanelWindow);
+            foreach (var spellsByPanel in query)
             {
-                var f = panel.First();
+                var panel = spellsByPanel.First().Panel;
+                panelWindow = panel.PanelWindow;
 
-                var w = this.FindPanelByName(f.Panel);
-                if (w == null)
+                // 違うタイプのウィンドウならば閉じる
+                if (panel.EnabledAdvancedLayout)
                 {
-                    w = new SpellTimerListWindow()
+                    if (panelWindow is SpellPanelWindow window)
                     {
-                        Title = "SpecialSpellTimer - " + f.Panel,
-                        PanelName = f.Panel,
-                    };
+                        window.Close();
+                        lock (this.spellPanelWindows)
+                        {
+                            this.spellPanelWindows.Remove(window);
+                        }
 
-                    lock (this.spellTimerPanels)
-                    {
-                        this.spellTimerPanels.Add(w);
+                        panelWindow = null;
                     }
-
-                    // クリックスルー？
-                    if (Settings.Default.ClickThroughEnabled)
+                }
+                else
+                {
+                    if (panelWindow is AdvancedSpellPanelWindow window)
                     {
-                        w.ToTransparentWindow();
+                        window.Close();
+                        lock (this.spellPanelWindows)
+                        {
+                            this.spellPanelWindows.Remove(window);
+                        }
+
+                        panelWindow = null;
+                    }
+                }
+
+                if (panelWindow == null)
+                {
+                    panelWindow = AdvancedSpellPanelWindow.GetWindow(panel);
+                    panelWindow.ToWindow().Title = "Spell Panel - " + panel.PanelName;
+
+                    lock (this.spellPanelWindows)
+                    {
+                        this.spellPanelWindows.Add(panelWindow);
                     }
 
                     /// このパネルに属するスペルを再描画させる
-                    foreach (var spell in panel)
+                    foreach (var spell in spellsByPanel)
                     {
                         spell.UpdateDone = false;
                     }
 
-                    w.Show();
+                    panelWindow.ToWindow().Show();
                 }
 
-                w.SpellTimers = panel.ToArray();
-                w.RefreshSpellTimer();
+                // クリックスルーを反映する
+                panelWindow.IsClickthrough = Settings.Default.ClickThroughEnabled;
+
+                panelWindow.Spells = spellsByPanel.ToArray();
+                panelWindow.Refresh();
+
+                // テストモードの終了を判定する
+                foreach (var test in spellsByPanel.Where(x => x.IsTest))
+                {
+                    if (DateTime.Now >
+                        test.CompleteScheduledTime.AddSeconds(Settings.Default.TimeOfHideSpell))
+                    {
+                        test.IsTest = false;
+                        doneTest = true;
+                    }
+                }
+            }
+
+            // 不要なWindow（デザインモードの残骸など）を閉じる
+            lock (this.spellPanelWindows)
+            {
+                var toHide = this.spellPanelWindows
+                    .Where(x => !query.Any(y => y.Key == x.Panel.PanelName));
+                foreach (var window in toHide)
+                {
+                    window.HideOverlay();
+                }
+            }
+
+            // TESTモードが終わったならフィルタし直す
+            if (doneTest)
+            {
+                TableCompiler.Instance.CompileSpells();
             }
         }
 
-        #region Panel controller
+        private bool TryGetHotbarRecast(
+            Spell spell,
+            out double recastTime)
+        {
+            var result = false;
+            recastTime = 0;
 
-        #region Close & Hide
+            if (FFXIVReader.Instance.IsAvailable &&
+                spell.UseHotbarRecastTime &&
+                !string.IsNullOrEmpty(spell.HotbarName))
+            {
+                var hotbarList = FFXIVReader.Instance.GetHotbarRecastV1();
+                if (hotbarList != null)
+                {
+                    foreach (var hotbar in hotbarList)
+                    {
+                        if (hotbar != null &&
+                            hotbar.Name.Equals(spell.HotbarName, StringComparison.OrdinalIgnoreCase) &&
+                            hotbar.CoolDownPercent > 0)
+                        {
+                            recastTime = hotbar.RemainingOrCost;
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        #region Panel controller
 
         /// <summary>
         /// Panelを閉じる
         /// </summary>
         public void ClosePanels()
         {
-            lock (this.spellTimerPanels)
+            lock (this.spellPanelWindows)
             {
-                foreach (var setting in PanelTable.Instance.SettingsTable)
+                foreach (var panel in SpellPanelTable.Instance.Table)
                 {
-                    setting.ToClose = true;
+                    panel.ToClose = true;
                 }
             }
         }
@@ -404,29 +561,25 @@ namespace ACT.SpecialSpellTimer
         {
             var closed = false;
 
-            lock (this.spellTimerPanels)
+            lock (this.spellPanelWindows)
             {
-                var targets = PanelTable.Instance.SettingsTable
+                var targets = SpellPanelTable.Instance.Table
                     .Where(x => x.ToClose).ToList();
 
-                foreach (var setting in targets)
+                foreach (var panel in targets)
                 {
-                    var panel = setting.PanelWindow;
-                    if (panel == null)
+                    var window = panel.PanelWindow;
+                    if (window == null)
                     {
                         continue;
                     }
 
-                    if (setting.ToClose)
+                    if (panel.ToClose)
                     {
-                        setting.ToClose = false;
+                        panel.ToClose = false;
 
-                        setting.PanelName = panel.PanelName;
-                        setting.Left = panel.Left;
-                        setting.Top = panel.Top;
-
-                        panel.Close();
-                        this.spellTimerPanels.Remove(panel);
+                        window.ToWindow().Close();
+                        this.spellPanelWindows.Remove(window);
 
                         closed = true;
                     }
@@ -435,7 +588,7 @@ namespace ACT.SpecialSpellTimer
 
             if (closed)
             {
-                PanelTable.Instance.Save();
+                SpellPanelTable.Instance.Save();
             }
         }
 
@@ -444,17 +597,16 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spells">Spell</param>
         public void GarbageSpellPanelWindows(
-            IReadOnlyList<Models.SpellTimer> spells)
+            IReadOnlyList<Models.Spell> spells)
         {
-            lock (this.spellTimerPanels)
+            lock (this.spellPanelWindows)
             {
-                foreach (var setting in PanelTable.Instance.SettingsTable)
+                foreach (var panel in SpellPanelTable.Instance.Table)
                 {
                     // スペルリストに存在しないパネルを閉じる
-                    if (!spells.Any(x =>
-                        x.Panel == setting.PanelName))
+                    if (!spells.Any(x => x.PanelID == panel.ID))
                     {
-                        setting.ToClose = true;
+                        panel.ToClose = true;
                     }
                 }
             }
@@ -465,172 +617,13 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void HidePanels()
         {
-            lock (this.spellTimerPanels)
+            lock (this.spellPanelWindows)
             {
-                foreach (var setting in PanelTable.Instance.SettingsTable)
+                foreach (var panel in SpellPanelTable.Instance.Table)
                 {
-                    setting.PanelWindow?.HideOverlay();
+                    panel.PanelWindow?.HideOverlay();
                 }
             }
-        }
-
-        #endregion Close & Hide
-
-        public PanelSettings GetPanelSettings(
-            string panelName)
-        {
-            double normalize(double value)
-            {
-                var result = value;
-
-                if (double.IsNaN(result))
-                {
-                    result = 0;
-                }
-
-                if (value > 65535)
-                {
-                    result = 65535;
-                }
-
-                if (value < -65535)
-                {
-                    result = -65535;
-                }
-
-                return result;
-            }
-
-            var settings = new PanelSettings()
-            {
-                PanelName = panelName,
-                Top = 10,
-                Left = 10,
-                Margin = 5,
-                Horizontal = false,
-                FixedPositionSpell = false,
-            };
-
-            lock (this.spellTimerPanels)
-            {
-                var panel = this.FindPanelByName(panelName);
-                if (panel != null)
-                {
-                    settings.Top = panel.Top;
-                    settings.Left = panel.Left;
-                    settings.Margin = panel.SpellMargin;
-                    settings.Horizontal = panel.IsHorizontal;
-                    settings.FixedPositionSpell = panel.SpellPositionFixed;
-                }
-                else
-                {
-                    var s = this.FindPanelSettingByName(panelName);
-                    if (s != null)
-                    {
-                        settings = s;
-                    }
-                }
-            }
-
-            // 変な値が入っていたら補正する
-            settings.Top = normalize(settings.Top);
-            settings.Left = normalize(settings.Left);
-            settings.Margin = normalize(settings.Margin);
-
-            return settings;
-        }
-
-        /// <summary>
-        /// Panelの位置を設定する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        /// <param name="left">Left</param>
-        /// <param name="top">Top</param>
-        public void SetPanelSettings(
-            string panelName,
-            double left,
-            double top,
-            double margin,
-            bool horizontal,
-            bool fixedPositionSpell)
-        {
-            lock (this.spellTimerPanels)
-            {
-                var panel = this.spellTimerPanels
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-
-                if (panel != null)
-                {
-                    panel.Left = left;
-                    panel.Top = top;
-                    panel.SpellMargin = margin;
-                    panel.IsHorizontal = horizontal;
-                    panel.SpellPositionFixed = fixedPositionSpell;
-                }
-
-                var panelSettings = PanelTable.Instance.SettingsTable
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-
-                if (panelSettings != null)
-                {
-                    panelSettings.Left = left;
-                    panelSettings.Top = top;
-                    panelSettings.Margin = margin;
-                    panelSettings.Horizontal = horizontal;
-                    panelSettings.FixedPositionSpell = fixedPositionSpell;
-                }
-            }
-        }
-
-        /// <summary>
-        /// SpellTimerListWindowを取得する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        private SpellTimerListWindow FindPanelByName(string panelName)
-        {
-            lock (this.spellTimerPanels)
-            {
-                return this.spellTimerPanels
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-            }
-        }
-
-        /// <summary>
-        /// PanelSettingsRowを取得する
-        /// </summary>
-        /// <param name="panelName">パネルの名前</param>
-        public PanelSettings FindPanelSettingByName(string panelName)
-        {
-            var settings = new PanelSettings()
-            {
-                PanelName = panelName,
-                Top = 10,
-                Left = 10,
-                Margin = 5,
-                Horizontal = false,
-                FixedPositionSpell = false,
-            };
-
-            lock (this.spellTimerPanels)
-            {
-                var s = PanelTable.Instance.SettingsTable
-                    .Where(x => x.PanelName == panelName)
-                    .FirstOrDefault();
-
-                if (s != null)
-                {
-                    settings = s;
-                }
-                else
-                {
-                    PanelTable.Instance.SettingsTable.Add(settings);
-                }
-            }
-
-            return settings;
         }
 
         #endregion Panel controller
@@ -651,13 +644,13 @@ namespace ACT.SpecialSpellTimer
             // 設定を一旦すべて削除する
             ClearNormalSpellTimer();
 
-            var spells = SpellTimerTable.Instance.Table.Where(x => x.Enabled);
+            var spells = SpellTable.Instance.Table.Where(x => x.Enabled);
             foreach (var spell in spells)
             {
                 UpdateNormalSpellTimer(spell, true);
             }
 
-            var telops = OnePointTelopTable.Instance.Table.Where(x => x.Enabled);
+            var telops = TickerTable.Instance.Table.Where(x => x.Enabled);
             foreach (var telop in telops)
             {
                 UpdateNormalSpellTimerForTelop(telop, false);
@@ -694,7 +687,7 @@ namespace ACT.SpecialSpellTimer
         /// ACT標準のスペルタイマーに通知する
         /// </summary>
         /// <param name="spellTimer">通知先に対応するスペルタイマー</param>
-        public void NotifyNormalSpellTimer(Models.SpellTimer spellTimer)
+        public void NotifyNormalSpellTimer(Models.Spell spellTimer)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -727,7 +720,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spellTimer">元になるスペルタイマー</param>
         /// <param name="useRecastTime">リキャスト時間にRecastの値を使うか。falseの場合はCompleteScheduledTimeから計算される</param>
-        public void UpdateNormalSpellTimer(Models.SpellTimer spellTimer, bool useRecastTime)
+        public void UpdateNormalSpellTimer(Models.Spell spellTimer, bool useRecastTime)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -736,7 +729,7 @@ namespace ACT.SpecialSpellTimer
 
             var prefix = Settings.Default.NotifyNormalSpellTimerPrefix;
             var spellName = prefix + "spell_" + spellTimer.SpellTitle;
-            var categoryName = prefix + spellTimer.Panel;
+            var categoryName = prefix + spellTimer.Panel.PanelName;
             var recastTime = useRecastTime ? spellTimer.RecastTime : (spellTimer.CompleteScheduledTime - DateTime.Now).TotalSeconds;
 
             var timerData = new TimerData(spellName, categoryName);
@@ -765,7 +758,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="spellTimer">元になるテロップ</param>
         /// <param name="forceHide">強制非表示か？</param>
-        public void UpdateNormalSpellTimerForTelop(OnePointTelop telop, bool forceHide)
+        public void UpdateNormalSpellTimerForTelop(Ticker telop, bool forceHide)
         {
             if (!Settings.Default.EnabledNotifyNormalSpellTimer)
             {
@@ -798,15 +791,5 @@ namespace ACT.SpecialSpellTimer
         }
 
         #endregion To Normal SpellTimer
-
-        /// <summary>
-        /// 再生する
-        /// </summary>
-        /// <param name="source">再生するSource</param>
-        private void Play(
-            string source)
-        {
-            SoundController.Instance.Play(source);
-        }
     }
 }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using XIVDBDownloader.Constants;
+using FFXIV.Framework.Globalization;
 
 namespace XIVDBDownloader.Models
 {
@@ -34,7 +34,7 @@ namespace XIVDBDownloader.Models
 
         public void SaveToCSV(
             string file,
-            Language language)
+            Locales language)
         {
             if (this.ResultList == null ||
                 this.ResultList.Count < 1)
@@ -67,15 +67,15 @@ namespace XIVDBDownloader.Models
 
                     switch (language)
                     {
-                        case Language.JA:
+                        case Locales.JA:
                             name = data.NameJa;
                             break;
 
-                        case Language.FR:
+                        case Locales.FR:
                             name = data.NameFr;
                             break;
 
-                        case Language.DE:
+                        case Locales.DE:
                             name = data.NameDe;
                             break;
                     }

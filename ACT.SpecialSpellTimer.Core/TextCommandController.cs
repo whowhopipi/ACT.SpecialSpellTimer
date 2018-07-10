@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text.RegularExpressions;
-
+using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
-using ACT.SpecialSpellTimer.Utility;
+using ACT.SpecialSpellTimer.Sound;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -17,7 +19,31 @@ namespace ACT.SpecialSpellTimer
         /// コマンド解析用の正規表現
         /// </summary>
         private readonly static Regex regexCommand = new Regex(
-            @".*/spespe (?<command>refresh|changeenabled|analyze|set|clear|on|off) ?(?<target>spells|telops|me|pt|pet|on|off|placeholder|$) ?(?<windowname>"".*""|all)? ?(?<value>.*)",
+            @".*/spespe (?<command>refresh|changeenabled|set|clear|on|off|pos) ?(?<target>spells|telops|me|pt|pet|placeholder|$) ?(?<windowname>"".*""|all)? ?(?<value>.*)",
+            RegexOptions.Compiled |
+            RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// TTS読み仮名コマンド
+        /// </summary>
+        private readonly static Regex phoneticsCommand = new Regex(
+            @".*/spespe phonetic ""(?<pcname>.+?)"" ""(?<phonetic>.+?)""",
+            RegexOptions.Compiled |
+            RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// Logコマンド
+        /// </summary>
+        private readonly static Regex logCommand = new Regex(
+            @".*/spespe log (?<switch>on|off|open)",
+            RegexOptions.Compiled |
+            RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// TTSコマンド
+        /// </summary>
+        private readonly static Regex ttsCommand = new Regex(
+            @".*/tts (?<text>.*)",
             RegexOptions.Compiled |
             RegexOptions.IgnoreCase);
 
@@ -33,11 +59,30 @@ namespace ACT.SpecialSpellTimer
             var r = false;
 
             // 正規表現の前にキーワードがなければ抜けてしまう
-            if (!logLine.ToLower().Contains("/spespe"))
+            if (!logLine.ToLower().Contains("/spespe") &&
+                !logLine.ToLower().Contains("/tts"))
             {
                 return r;
             }
 
+            // 読み仮名コマンドとマッチングする
+            var isPhonetic = MatchPhoneticCommand(logLine);
+            if (isPhonetic)
+            {
+                return isPhonetic;
+            }
+
+            // ログコマンドとマッチングする
+            var isLog = MatchLogCommand(logLine);
+            if (isLog)
+            {
+                return isLog;
+            }
+
+            // TTSコマンドとマッチングする
+            MatchTTSCommand(logLine);
+
+            // その他の通常コマンドとマッチングする
             var match = regexCommand.Match(logLine);
             if (!match.Success)
             {
@@ -56,22 +101,6 @@ namespace ACT.SpecialSpellTimer
 
             switch (command)
             {
-                case "analyze":
-                    switch (target)
-                    {
-                        case "on":
-                            PluginCore.Instance.ConfigPanel.CombatAnalyzerEnabled = true;
-                            r = true;
-                            break;
-
-                        case "off":
-                            PluginCore.Instance.ConfigPanel.CombatAnalyzerEnabled = false;
-                            r = true;
-                            break;
-                    }
-
-                    break;
-
                 case "refresh":
                     switch (target)
                     {
@@ -104,52 +133,29 @@ namespace ACT.SpecialSpellTimer
                     break;
 
                 case "changeenabled":
-                    var changed = false;
                     switch (target)
                     {
                         case "spells":
-                            foreach (var spell in SpellTimerTable.Instance.Table)
+                            foreach (var spell in SpellTable.Instance.Table)
                             {
-                                if (spell.Panel.Trim().ToLower() == windowname.Trim().ToLower() ||
+                                if (spell.Panel.PanelName.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     spell.SpellTitle.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     windowname.Trim().ToLower() == "all")
                                 {
-                                    changed = true;
                                     spell.Enabled = value;
                                 }
-                            }
-
-                            if (changed)
-                            {
-                                ActInvoker.Invoke(() =>
-                                {
-                                    PluginCore.Instance.ConfigPanel.LoadSpellTimerTable();
-                                });
-
-                                r = true;
                             }
 
                             break;
 
                         case "telops":
-                            foreach (var telop in OnePointTelopTable.Instance.Table)
+                            foreach (var telop in TickerTable.Instance.Table)
                             {
                                 if (telop.Title.Trim().ToLower() == windowname.Trim().ToLower() ||
                                     windowname.Trim().ToLower() == "all")
                                 {
-                                    changed = true;
                                     telop.Enabled = value;
                                 }
-                            }
-
-                            if (changed)
-                            {
-                                ActInvoker.Invoke(() =>
-                                {
-                                    PluginCore.Instance.ConfigPanel.LoadTelopTable();
-                                });
-
-                                r = true;
                             }
 
                             break;
@@ -206,9 +212,107 @@ namespace ACT.SpecialSpellTimer
                     PluginCore.Instance.ChangeSwitchVisibleButton(false);
                     r = true;
                     break;
+
+                case "pos":
+                    LogBuffer.DumpPosition();
+                    r = true;
+                    break;
             }
 
             return r;
+        }
+
+        /// <summary>
+        /// 読み仮名設定コマンドとマッチングする
+        /// </summary>
+        /// <param name="logLine">ログ1行</param>
+        /// <returns>
+        /// マッチした？</returns>
+        public static bool MatchPhoneticCommand(
+            string logLine)
+        {
+            var r = false;
+
+            var match = phoneticsCommand.Match(logLine);
+            if (!match.Success)
+            {
+                return r;
+            }
+
+            var pcName = match.Groups["pcname"].ToString().ToLower();
+            var phonetic = match.Groups["phonetic"].ToString().ToLower();
+
+            if (!string.IsNullOrEmpty(pcName) &&
+                !string.IsNullOrEmpty(phonetic))
+            {
+                r = true;
+
+                var p = TTSDictionary.Instance.Phonetics.FirstOrDefault(x => x.Name == pcName);
+                if (p != null)
+                {
+                    p.Phonetic = phonetic;
+                }
+                else
+                {
+                    TTSDictionary.Instance.Dictionary[pcName] = phonetic;
+                }
+            }
+
+            return r;
+        }
+
+        public static bool MatchLogCommand(
+            string logLine)
+        {
+            var r = false;
+
+            var match = logCommand.Match(logLine);
+            if (!match.Success)
+            {
+                return r;
+            }
+
+            var switchValue = match.Groups["switch"].ToString().ToLower();
+
+            if (switchValue == "on")
+            {
+                r = true;
+                Settings.Default.SaveLogEnabled = true;
+            }
+
+            if (switchValue == "off")
+            {
+                r = true;
+                Settings.Default.SaveLogEnabled = false;
+            }
+
+            if (switchValue == "open")
+            {
+                r = true;
+                var file = ChatLogWorker.Instance.OutputFile;
+                if (File.Exists(file))
+                {
+                    Process.Start(file);
+                }
+            }
+
+            return r;
+        }
+
+        public static void MatchTTSCommand(
+            string logLine)
+        {
+            var match = ttsCommand.Match(logLine);
+            if (!match.Success)
+            {
+                return;
+            }
+
+            var text = match.Groups["text"].ToString().ToLower();
+            if (!string.IsNullOrEmpty(text))
+            {
+                SoundController.Instance.Play(text);
+            }
         }
 
         /// <summary>

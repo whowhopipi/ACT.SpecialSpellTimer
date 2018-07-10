@@ -1,7 +1,7 @@
 using System.Windows;
-
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.WPF.Controls;
 
 namespace ACT.SpecialSpellTimer.Views
 {

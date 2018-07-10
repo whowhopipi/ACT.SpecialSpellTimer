@@ -1,25 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
+using Advanced_Combat_Tracker;
+using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
+using Prism.Mvvm;
+using TamanegiMage.FFXIV_MemoryReader.Model;
+using static ACT.SpecialSpellTimer.Sound.TTSDictionary;
 
 namespace ACT.SpecialSpellTimer.Models
 {
-    public class TableCompiler
+    public class TableCompiler :
+        BindableBase
     {
         #region Singleton
 
         private static TableCompiler instance;
 
-        public static TableCompiler Instance => instance;
-
-        public static void Initialize() => instance = new TableCompiler();
+        public static TableCompiler Instance => instance ?? (instance = new TableCompiler());
 
         public static void Free() => instance = null;
 
@@ -57,44 +64,72 @@ namespace ACT.SpecialSpellTimer.Models
 
         #endregion Begin / End
 
+        public event EventHandler ZoneChanged;
+
+        public event EventHandler CompileConditionChanged;
+
+        private DateTime lastDumpPositionTimestamp = DateTime.MinValue;
+
         private void DoWork()
         {
             try
             {
-                this.RefreshCombatants();
-
-                var isPlayerChanged = this.IsPlayerChanged();
-                var isPartyChanged = this.IsPartyChanged();
-                var isZoneChanged = this.IsZoneChanged();
-
-                if (isZoneChanged)
+                lock (this)
                 {
-                    this.RefreshPetPlaceholder();
-                }
+                    this.RefreshCombatants();
 
-                if (isPlayerChanged)
-                {
-                    this.RefreshPlayerPlacceholder();
-                }
+                    var isPlayerChanged = this.IsPlayerChanged();
+                    var isPartyChanged = this.IsPartyChanged();
+                    var isZoneChanged = this.IsZoneChanged();
 
-                if (isPartyChanged)
-                {
-                    this.RefreshPartyPlaceholders();
-                    this.RefreshPetPlaceholder();
-                }
-
-                if (isPlayerChanged ||
-                    isPartyChanged ||
-                    isZoneChanged)
-                {
-                    this.RecompileSpells();
-                    this.RecompileTickers();
-
-                    // 不要なWindowを閉じる
-                    if (!Settings.Default.OverlayForceVisible)
+                    if (isPlayerChanged)
                     {
+                        this.RefreshPlayerPlacceholder();
+                    }
+
+                    if (isZoneChanged ||
+                        isPartyChanged)
+                    {
+                        this.RefreshPartyPlaceholders();
+                        this.RefreshPetPlaceholder();
+                    }
+
+                    if (isPlayerChanged ||
+                        isPartyChanged ||
+                        isZoneChanged)
+                    {
+                        this.RecompileSpells();
+                        this.RecompileTickers();
+
                         TickersController.Instance.GarbageWindows(this.TickerList);
                         SpellsController.Instance.GarbageSpellPanelWindows(this.SpellList);
+
+                        this.CompileConditionChanged?.Invoke(this, new EventArgs());
+                    }
+
+                    if (isZoneChanged)
+                    {
+                        // インスタンススペルを消去する
+                        SpellTable.Instance.RemoveInstanceSpellsAll();
+
+                        var zone = ActGlobals.oFormActMain.CurrentZone;
+                        var zoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                        Logger.Write($"zone changed. zone={zone}, zone_id={zoneID}");
+                        this.ZoneChanged?.Invoke(this, new EventArgs());
+
+                        // 自分の座標をダンプする
+                        Task.Run(() =>
+                        {
+                            Thread.Sleep(TimeSpan.FromSeconds(5));
+                            LogBuffer.DumpPosition(true);
+                        });
+                    }
+
+                    // 定期的に自分の座標をダンプする
+                    if ((DateTime.Now - this.lastDumpPositionTimestamp).TotalSeconds >= 60.0)
+                    {
+                        LogBuffer.DumpPosition(true);
+                        this.lastDumpPositionTimestamp = DateTime.Now;
                     }
                 }
             }
@@ -106,80 +141,136 @@ namespace ACT.SpecialSpellTimer.Models
 
         #region Compilers
 
-        private volatile List<Combatant> partyList = new List<Combatant>();
+        public Combatant Player => this.player;
 
-        private volatile Combatant player = new Combatant();
+        public IList<Combatant> SortedPartyList => this.partyList;
 
-        private volatile List<SpellTimer> spellList = new List<SpellTimer>();
+        private List<Combatant> partyList = new List<Combatant>();
+
+        private Combatant player = new Combatant();
+
+        private List<Spell> spellList = new List<Spell>();
 
         private object spellListLocker = new object();
 
-        private volatile List<OnePointTelop> tickerList = new List<OnePointTelop>();
+        private List<Ticker> tickerList = new List<Ticker>();
 
         private object tickerListLocker = new object();
 
-        private List<object> triggerList = new List<object>(128);
+        private readonly List<ITrigger> triggerList = new List<ITrigger>(128);
 
         public event EventHandler OnTableChanged;
 
-        public List<SpellTimer> SpellList
+        public List<Spell> SpellList
         {
             get
             {
                 lock (this.spellListLocker)
                 {
-                    return new List<SpellTimer>(this.spellList);
+                    return new List<Spell>(this.spellList);
                 }
             }
         }
 
-        public List<OnePointTelop> TickerList
+        public List<Ticker> TickerList
         {
             get
             {
                 lock (this.tickerListLocker)
                 {
-                    return new List<OnePointTelop>(this.tickerList);
+                    return new List<Ticker>(this.tickerList);
                 }
             }
         }
 
-        public IReadOnlyList<object> TriggerList
+        public IReadOnlyList<ITrigger> TriggerList
         {
             get
             {
-                this.triggerList.Clear();
-
-                lock (this.spellListLocker)
+                lock (this.triggerList)
                 {
-                    this.triggerList.AddRange(this.spellList);
+                    return this.triggerList.ToList();
                 }
-
-                lock (this.tickerListLocker)
-                {
-                    this.triggerList.AddRange(this.tickerList);
-                }
-
-                return this.triggerList;
             }
         }
 
-        public void AddInstanceSpell(
-            SpellTimer instancedSpell)
+        public void AddTestTrigger(
+            ITrigger testTrigger)
+        {
+            lock (this.triggerList)
+            {
+                if (!this.triggerList.Any(x =>
+                    x.GetID() == testTrigger.GetID()))
+                {
+                    this.triggerList.Add(testTrigger);
+                }
+            }
+        }
+
+        public void AddSpell(
+            Spell instancedSpell)
         {
             lock (this.spellListLocker)
             {
                 this.spellList.Add(instancedSpell);
             }
+
+            lock (this.triggerList)
+            {
+                this.triggerList.Add(instancedSpell);
+            }
+        }
+
+        public void RemoveSpell(
+            Spell instancedSpell)
+        {
+            lock (this.spellListLocker)
+            {
+                this.spellList.Remove(instancedSpell);
+            }
+
+            lock (this.triggerList)
+            {
+                this.triggerList.Remove(instancedSpell);
+            }
+        }
+
+        public void RemoveInstanceSpells()
+        {
+            lock (this.spellListLocker)
+            {
+                this.spellList.RemoveAll(x => x.IsInstance);
+            }
+
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x =>
+                    (x is Spell spell) &&
+                    spell.IsInstance);
+            }
         }
 
         public void CompileSpells()
         {
-            var currentZoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
+            var currentZoneID = default(int?);
 
-            bool filter(SpellTimer spell)
+            lock (this.SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationZoneID != 0)
+                {
+                    currentZoneID = this.SimulationZoneID;
+                }
+                else
+                {
+                    currentZoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                }
+            }
+
+            bool filter(Spell spell)
             {
                 var enabledByJob = false;
+                var enabledByPartyJob = false;
                 var enabledByZone = false;
 
                 // ジョブフィルタをかける
@@ -198,6 +289,22 @@ namespace ACT.SpecialSpellTimer.Models
                     }
                 }
 
+                // filter by specific jobs in party
+                if (this.player == null ||
+                    this.player.ID == 0 ||
+                    string.IsNullOrEmpty(spell.PartyJobFilter))
+                {
+                    enabledByPartyJob = true;
+                }
+                else
+                {
+                    var jobs = spell.PartyJobFilter.Split(',');
+                    if (jobs.Any(x => this.partyList.Where(c => !c.IsPlayer).Any(c => c.Job.ToString() == x)))
+                    {
+                        enabledByPartyJob = true;
+                    }
+                }
+
                 // ゾーンフィルタをかける
                 if (currentZoneID == 0 ||
                     string.IsNullOrEmpty(spell.ZoneFilter))
@@ -213,71 +320,79 @@ namespace ACT.SpecialSpellTimer.Models
                     }
                 }
 
-                return enabledByJob && enabledByZone;
+                return enabledByJob && enabledByZone && enabledByPartyJob;
             }
 
-            // 元のリストの複製を得る
-            var sourceList = new List<SpellTimer>(SpellTimerTable.Instance.Table);
-
             var query =
-                from x in sourceList
+                from x in SpellTable.Instance.Table
                 where
-                x.IsTemporaryDisplay ||
+                x.IsDesignMode ||
                 (
                     x.Enabled &&
                     filter(x)
                 )
                 orderby
-                x.Panel,
+                x.Panel?.PanelName,
                 x.DisplayNo,
                 x.ID
                 select
                 x;
 
-            // コンパイル済みの正規表現をセットする
-            foreach (var spell in query)
-            {
-                spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
-                spell.KeywordForExtendReplaced1 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced1, spell.KeywordForExtend1);
-                spell.KeywordForExtendReplaced2 = this.GetMatchingKeyword(spell.KeywordForExtendReplaced2, spell.KeywordForExtend2);
-
-                if (!spell.RegexEnabled)
-                {
-                    spell.RegexPattern = string.Empty;
-                    spell.Regex = null;
-                    spell.RegexForExtendPattern1 = string.Empty;
-                    spell.RegexForExtend1 = null;
-                    spell.RegexForExtendPattern2 = string.Empty;
-                    spell.RegexForExtend2 = null;
-                }
-                else
-                {
-                    var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
-                    var r2 = this.GetRegex(spell.RegexForExtend1, spell.RegexForExtendPattern1, spell.KeywordForExtendReplaced1);
-                    var r3 = this.GetRegex(spell.RegexForExtend2, spell.RegexForExtendPattern2, spell.KeywordForExtendReplaced2);
-
-                    spell.Regex = r1.Regex;
-                    spell.RegexPattern = r1.RegexPattern;
-                    spell.RegexForExtend1 = r2.Regex;
-                    spell.RegexForExtendPattern1 = r2.RegexPattern;
-                    spell.RegexForExtend2 = r3.Regex;
-                    spell.KeywordForExtendReplaced2 = r3.RegexPattern;
-                }
-            }
-
             lock (this.spellListLocker)
             {
-                this.spellList = new List<SpellTimer>(query);
+                this.spellList.Clear();
+                this.spellList.AddRange(query);
             }
+
+            // 統合トリガリストに登録する
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x => x.ItemType == ItemTypes.Spell);
+                this.triggerList.AddRange(this.spellList);
+            }
+
+            // コンパイルする
+            this.spellList.AsParallel().ForAll(spell =>
+            {
+                var ex1 = spell.CompileRegex();
+                Thread.Yield();
+                var ex2 = spell.CompileRegexExtend1();
+                Thread.Yield();
+                var ex3 = spell.CompileRegexExtend2();
+                Thread.Yield();
+
+                var ex = ex1 ?? ex2 ?? ex3 ?? null;
+                if (ex != null)
+                {
+                    Logger.Write(
+                        $"Regex compile error! spell={spell.SpellTitle}",
+                        ex);
+                }
+
+                Thread.Sleep(1);
+            });
 
             this.RaiseTableChenged();
         }
 
         public void CompileTickers()
         {
-            var currentZoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
+            var currentZoneID = default(int?);
 
-            bool filter(OnePointTelop spell)
+            lock (this.SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationZoneID != 0)
+                {
+                    currentZoneID = this.SimulationZoneID;
+                }
+                else
+                {
+                    currentZoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                }
+            }
+
+            bool filter(Ticker spell)
             {
                 var enabledByJob = false;
                 var enabledByZone = false;
@@ -316,13 +431,10 @@ namespace ACT.SpecialSpellTimer.Models
                 return enabledByJob && enabledByZone;
             }
 
-            // 元のリストの複製を得る
-            var sourceList = new List<OnePointTelop>(OnePointTelopTable.Instance.Table);
-
             var query =
-                from x in sourceList
+                from x in TickerTable.Instance.Table
                 where
-                x.IsTemporaryDisplay ||
+                x.IsDesignMode ||
                 (
                     x.Enabled &&
                     filter(x)
@@ -333,35 +445,37 @@ namespace ACT.SpecialSpellTimer.Models
                 select
                 x;
 
-            // コンパイル済みの正規表現をセットする
-            foreach (var spell in query)
-            {
-                spell.KeywordReplaced = this.GetMatchingKeyword(spell.KeywordReplaced, spell.Keyword);
-                spell.KeywordToHideReplaced = this.GetMatchingKeyword(spell.KeywordToHideReplaced, spell.KeywordToHide);
-
-                if (!spell.RegexEnabled)
-                {
-                    spell.RegexPattern = string.Empty;
-                    spell.Regex = null;
-                    spell.RegexPatternToHide = string.Empty;
-                    spell.RegexToHide = null;
-                }
-                else
-                {
-                    var r1 = this.GetRegex(spell.Regex, spell.RegexPattern, spell.KeywordReplaced);
-                    var r2 = this.GetRegex(spell.RegexToHide, spell.RegexPatternToHide, spell.KeywordToHideReplaced);
-
-                    spell.Regex = r1.Regex;
-                    spell.RegexPattern = r1.RegexPattern;
-                    spell.RegexToHide = r2.Regex;
-                    spell.RegexPatternToHide = r2.RegexPattern;
-                }
-            }
-
             lock (this.tickerListLocker)
             {
-                this.tickerList = new List<OnePointTelop>(query);
+                this.tickerList.Clear();
+                this.tickerList.AddRange(query);
             }
+
+            // 統合トリガリストに登録する
+            lock (this.triggerList)
+            {
+                this.triggerList.RemoveAll(x => x.ItemType == ItemTypes.Ticker);
+                this.triggerList.AddRange(this.tickerList);
+            }
+
+            // コンパイルする
+            this.tickerList.AsParallel().ForAll(spell =>
+            {
+                var ex1 = spell.CompileRegex();
+                Thread.Yield();
+                var ex2 = spell.CompileRegexToHide();
+                Thread.Yield();
+
+                var ex = ex1 ?? ex2 ?? null;
+                if (ex != null)
+                {
+                    Logger.Write(
+                        $"Regex compile error! ticker={spell.Title}",
+                        ex);
+                }
+
+                Thread.Sleep(1);
+            });
 
             this.RaiseTableChenged();
         }
@@ -375,8 +489,8 @@ namespace ACT.SpecialSpellTimer.Models
         {
             lock (this)
             {
-                var rawTable = new List<SpellTimer>(SpellTimerTable.Instance.Table);
-                foreach (var spell in rawTable.AsParallel())
+                var rawTable = new List<Spell>(SpellTable.Instance.Table);
+                rawTable.AsParallel().ForAll(spell =>
                 {
                     spell.KeywordReplaced = string.Empty;
                     spell.KeywordForExtendReplaced1 = string.Empty;
@@ -387,12 +501,12 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexForExtendPattern1 = string.Empty;
                     spell.RegexForExtend2 = null;
                     spell.RegexForExtendPattern2 = string.Empty;
-                }
+                });
 
                 this.CompileSpells();
 
                 // スペルタイマの描画済みフラグを落とす
-                SpellTimerTable.Instance.ClearUpdateFlags();
+                SpellTable.Instance.ClearUpdateFlags();
             }
         }
 
@@ -400,8 +514,8 @@ namespace ACT.SpecialSpellTimer.Models
         {
             lock (this)
             {
-                var rawTable = new List<OnePointTelop>(OnePointTelopTable.Instance.Table);
-                foreach (var spell in rawTable.AsParallel())
+                var rawTable = new List<Ticker>(TickerTable.Instance.Table);
+                rawTable.AsParallel().ForAll(spell =>
                 {
                     spell.KeywordReplaced = string.Empty;
                     spell.KeywordToHideReplaced = string.Empty;
@@ -409,16 +523,15 @@ namespace ACT.SpecialSpellTimer.Models
                     spell.RegexPattern = string.Empty;
                     spell.RegexToHide = null;
                     spell.RegexPatternToHide = string.Empty;
-                }
+                });
 
                 this.CompileTickers();
             }
         }
 
-        private string GetMatchingKeyword(
+        public string GetMatchingKeyword(
             string destinationKeyword,
-            string sourceKeyword,
-            bool forceUpdate = false)
+            string sourceKeyword)
         {
             if (string.IsNullOrEmpty(sourceKeyword))
             {
@@ -445,12 +558,10 @@ namespace ACT.SpecialSpellTimer.Models
                 return r;
             }
 
-            if (forceUpdate ||
-                string.IsNullOrEmpty(destinationKeyword))
+            if (string.IsNullOrEmpty(destinationKeyword))
             {
                 var newKeyword = sourceKeyword;
                 newKeyword = replace(newKeyword);
-                newKeyword = DQXUtility.MakeKeyword(newKeyword);
 
                 return newKeyword;
             }
@@ -490,12 +601,38 @@ namespace ACT.SpecialSpellTimer.Models
         private volatile Combatant previousPlayer = new Combatant();
         private volatile int previousZoneID = 0;
 
+        public readonly object SimulationLocker = new object();
+
+        public bool InSimulation
+        {
+            get;
+            set;
+        } = false;
+
+        public Combatant SimulationPlayer
+        {
+            get;
+            set;
+        }
+
+        public List<Combatant> SimulationParty
+        {
+            get;
+            private set;
+        } = new List<Combatant>();
+
+        public int SimulationZoneID
+        {
+            get;
+            set;
+        }
+
         public bool IsPartyChanged()
         {
             var r = false;
 
             var party = this.partyList
-                .Where(x => x.MobType == MobType.Player)
+                .Where(x => x.type == ObjectType.PC)
                 .ToList();
 
             if (this.previousParty.Count !=
@@ -543,37 +680,98 @@ namespace ACT.SpecialSpellTimer.Models
         {
             var r = false;
 
-            var zoneID = FFXIVPlugin.Instance.GetCurrentZoneID();
-            if (this.previousZoneID != zoneID)
+            var zoneID = default(int?);
+
+            lock (this.SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationZoneID != 0)
+                {
+                    zoneID = this.SimulationZoneID;
+                }
+                else
+                {
+                    zoneID = FFXIVPlugin.Instance?.GetCurrentZoneID();
+                }
+            }
+
+            if (zoneID != null &&
+                this.previousZoneID != zoneID)
             {
                 r = true;
             }
 
-            this.previousZoneID = zoneID;
+            this.previousZoneID = zoneID ?? 0;
 
             return r;
         }
 
         private void RefreshCombatants()
         {
-            var player = FFXIVPlugin.Instance.GetPlayer();
+            var player = default(Combatant);
+            var party = default(IReadOnlyList<Combatant>);
+
+            lock (SimulationLocker)
+            {
+                if (this.InSimulation &&
+                    this.SimulationPlayer != null &&
+                    this.SimulationParty.Any())
+                {
+                    player = this.SimulationPlayer;
+                    party = this.SimulationParty;
+                }
+                else
+                {
+                    player = FFXIVPlugin.Instance?.GetPlayer();
+                    party = FFXIVPlugin.Instance?.GetPartyList();
+                }
+            }
+
             if (player != null)
             {
                 this.player = player;
             }
 
-            var party = FFXIVPlugin.Instance.GetPartyList();
             if (party != null)
             {
                 var newList = new List<Combatant>(party);
 
                 if (newList.Count < 1 &&
-                    !string.IsNullOrEmpty(this.player.Name))
+                    !string.IsNullOrEmpty(this.player?.Name))
                 {
                     newList.Add(this.player);
                 }
 
-                this.partyList = newList;
+                // パーティリストを入れ替える
+                this.partyList.Clear();
+                this.partyList.AddRange(newList);
+
+                // 読み仮名リストをメンテナンスする
+                var newPhonetics =
+                    from x in newList
+                    select new PCPhonetic()
+                    {
+                        ID = x.ID,
+                        NameFI = x.NameFI,
+                        NameIF = x.NameIF,
+                        NameII = x.NameII,
+                        Name = x.Name,
+                        JobID = x.JobID,
+                    };
+
+                WPFHelper.BeginInvoke(() =>
+                {
+                    var phonetics = TTSDictionary.Instance.Phonetics;
+
+                    var toAdd = newPhonetics.Where(x => !phonetics.Any(y => y.Name == x.Name));
+                    phonetics.AddRange(toAdd);
+
+                    var toRemove = phonetics.Where(x => !newPhonetics.Any(y => y.Name == x.Name)).ToArray();
+                    foreach (var item in toRemove)
+                    {
+                        phonetics.Remove(item);
+                    }
+                });
             }
         }
 
@@ -602,6 +800,12 @@ namespace ACT.SpecialSpellTimer.Models
 
         public void RefreshPartyPlaceholders()
         {
+            // PC名辞書を更新する
+            foreach (var pc in this.partyList)
+            {
+                PCNameDictionary.Instance.Add(pc.Name);
+            }
+
             if (!Settings.Default.EnabledPartyMemberPlaceholder)
             {
                 return;
@@ -610,19 +814,31 @@ namespace ACT.SpecialSpellTimer.Models
             var newList =
                 new List<PlaceholderContainer>();
 
+            // パーティメンバのいずれを示す <pc> を登録する
+            var names = string.Join("|", this.partyList.Select(x => x.NamesRegex).ToArray());
+            var oldValue = $"<pc>";
+            var newValue = $"(?<_pc>{names})";
+            newList.Add(new PlaceholderContainer(
+                oldValue,
+                newValue,
+                PlaceholderTypes.Party));
+
             // FF14内部のPTメンバ自動ソート順で並び替える
             var partyListSorted =
-                from x in this.partyList
-                join y in Job.Instance.JobList on
-                    x.Job equals y.JobId
+                from x in this.SortedPartyList
                 where
                 x.ID != this.player.ID
-                orderby
-                y.Role,
-                x.Job,
-                x.ID descending
                 select
                 x;
+
+            // 自分以外のPTメンバを示す <nex> を登録する
+            names = string.Join("|", partyListSorted.Select(x => x.NamesRegex).ToArray());
+            oldValue = $"<nex>";
+            newValue = $"(?<_nex>{names})";
+            newList.Add(new PlaceholderContainer(
+                oldValue,
+                newValue,
+                PlaceholderTypes.Party));
 
             // 通常のPTメンバ代名詞 <2>～<8> を登録する
             var index = 2;
@@ -642,13 +858,13 @@ namespace ACT.SpecialSpellTimer.Models
             }
 
             // ジョブ名によるプレースホルダを登録する
-            foreach (var job in Job.Instance.JobList)
+            foreach (var job in Jobs.List)
             {
                 // このジョブに該当するパーティメンバを抽出する
                 var combatantsByJob = (
                     from x in this.partyList
                     where
-                    x.Job == job.JobId
+                    x.Job == (int)job.ID
                     orderby
                     x.ID == this.player.ID ? 0 : 1,
                     x.ID descending
@@ -660,23 +876,23 @@ namespace ACT.SpecialSpellTimer.Models
                     continue;
                 }
 
-                // <JOBn>形式を置換する
+                // <JOBn>形式を登録する
                 // ex. <PLD1> → Taro Paladin
                 // ex. <PLD2> → Jiro Paladin
                 for (int i = 0; i < combatantsByJob.Length; i++)
                 {
                     newList.Add(new PlaceholderContainer(
-                        $"<{job.JobName.ToUpper()}{i + 1}>",
-                        $"(?<_{job.JobName.ToUpper()}{i + 1}>{ combatantsByJob[i].NamesRegex})",
+                        $"<{job.ID.ToString().ToUpper()}{i + 1}>",
+                        $"(?<_{job.ID.ToString().ToUpper()}{i + 1}>{ combatantsByJob[i].NamesRegex})",
                         PlaceholderTypes.Party));
                 }
 
-                // <JOB>形式を置換する ただし、この場合は正規表現のグループ形式とする
+                // <JOB>形式を登録する ただし、この場合は正規表現のグループ形式とする
                 // また、グループ名にはジョブの略称を設定する
                 // ex. <PLD> → (?<PLDs>Taro Paladin|Jiro Paladin)
-                var names = string.Join("|", combatantsByJob.Select(x => x.NamesRegex).ToArray());
-                var oldValue = $"<{job.JobName.ToUpper()}>";
-                var newValue = $"(?<_{job.JobName.ToUpper()}>{names})";
+                names = string.Join("|", combatantsByJob.Select(x => x.NamesRegex).ToArray());
+                oldValue = $"<{job.ID.ToString().ToUpper()}>";
+                newValue = $"(?<_{job.ID.ToString().ToUpper()}>{names})";
 
                 newList.Add(new PlaceholderContainer(
                     oldValue.ToUpper(),
@@ -694,9 +910,9 @@ namespace ACT.SpecialSpellTimer.Models
             var partyListByRole = FFXIVPlugin.Instance.GetPatryListByRole();
             foreach (var role in partyListByRole)
             {
-                var names = string.Join("|", role.Combatants.Select(x => x.NamesRegex).ToArray());
-                var oldValue = $"<{role.RoleLabel}>";
-                var newValue = $"(?<_{role.RoleLabel}>{names})";
+                names = string.Join("|", role.Combatants.Select(x => x.NamesRegex).ToArray());
+                oldValue = $"<{role.RoleLabel}>";
+                newValue = $"(?<_{role.RoleLabel}>{names})";
 
                 newList.Add(new PlaceholderContainer(
                     oldValue.ToUpper(),
@@ -704,6 +920,23 @@ namespace ACT.SpecialSpellTimer.Models
                     PlaceholderTypes.Party));
             }
 
+            // <RoleN>形式のプレースホルダを登録する
+            foreach (var role in partyListByRole)
+            {
+                for (int i = 0; i < role.Combatants.Count; i++)
+                {
+                    var label = $"{role.RoleLabel}{i + 1}";
+                    var o = $"<{label}>";
+                    var n = $"(?<_{label}>{role.Combatants[i].NamesRegex})";
+
+                    newList.Add(new PlaceholderContainer(
+                        o.ToUpper(),
+                        n,
+                        PlaceholderTypes.Party));
+                }
+            }
+
+            // 新しく生成したプレースホルダを登録する
             lock (this.PlaceholderListSyncRoot)
             {
                 this.placeholderList.RemoveAll(x => x.Type == PlaceholderTypes.Party);

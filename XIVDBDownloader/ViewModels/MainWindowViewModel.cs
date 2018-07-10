@@ -1,6 +1,7 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 using System.Windows.Input;
+using FFXIV.Framework.Globalization;
 using Prism.Mvvm;
 using XIVDBDownloader.Constants;
 
@@ -19,7 +20,7 @@ namespace XIVDBDownloader.ViewModels
 
         private DataModels dataModel = DataModels.Action;
         private bool isEnabledDownload = true;
-        private Language language = Language.JA;
+        private Locales language = Locales.JA;
         private StringBuilder messages = new StringBuilder();
 #if DEBUG
         private string saveDirectory = Path.GetFullPath(@".\resources\xivdb");
@@ -39,7 +40,7 @@ namespace XIVDBDownloader.ViewModels
             set => this.SetProperty(ref this.isEnabledDownload, value);
         }
 
-        public Language Language
+        public Locales Language
         {
             get => this.language;
             set => this.SetProperty(ref this.language, value);

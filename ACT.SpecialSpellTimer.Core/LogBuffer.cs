@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Media;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -20,27 +21,36 @@ namespace ACT.SpecialSpellTimer
     public class LogBuffer :
         IDisposable
     {
+        #region Constants
+
         /// <summary>
         /// 空のログリスト
         /// </summary>
-        private static readonly List<string> EmptyLogLineList = new List<string>();
+        public static readonly List<XIVLog> EmptyLogLineList = new List<XIVLog>();
 
         /// <summary>
         /// ツールチップのサフィックス
         /// </summary>
         /// <remarks>
         /// ツールチップは計4charsで構成されるが先頭1文字目が可変で残り3文字が固定となっている</remarks>
-        private const string TooltipSuffix = "\u0001\u0001\uFFFD";
+        public const string TooltipSuffix = "\u0001\u0001\uFFFD";
 
         /// <summary>
         /// ツールチップで残るリプレースメントキャラ
         /// </summary>
-        private const string TooltipReplacementChar = "\uFFFD";
+        public const string TooltipReplacementChar = "\uFFFD";
+
+        #endregion Constants
 
         /// <summary>
         /// 内部バッファ
         /// </summary>
         private readonly ConcurrentQueue<LogLineEventArgs> logInfoQueue = new ConcurrentQueue<LogLineEventArgs>();
+
+        /// <summary>
+        /// 内部バッファ
+        /// </summary>
+        public ConcurrentQueue<LogLineEventArgs> LogInfoQueue => this.logInfoQueue;
 
         /// <summary>
         /// 最初のログが到着したか？
@@ -67,6 +77,10 @@ namespace ACT.SpecialSpellTimer
             ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead += this.OnLogLineRead;
 
+            // Added Combatantsイベントを登録する
+            FFXIVPlugin.Instance.AddedCombatants -= this.OnAddedCombatants;
+            FFXIVPlugin.Instance.AddedCombatants += this.OnAddedCombatants;
+
             // 生ログの書き出しバッファを開始する
             ChatLogWorker.Instance.Begin();
         }
@@ -76,7 +90,7 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         ~LogBuffer()
         {
-            Dispose();
+            this.Dispose();
         }
 
         /// <summary>
@@ -91,11 +105,10 @@ namespace ACT.SpecialSpellTimer
 
             ActGlobals.oFormActMain.BeforeLogLineRead -= this.OnBeforeLogLineRead;
             ActGlobals.oFormActMain.OnLogLineRead -= this.OnLogLineRead;
+            FFXIVPlugin.Instance.AddedCombatants -= this.OnAddedCombatants;
 
             // 生ログの書き出しバッファを停止する
             ChatLogWorker.Instance.End();
-
-            GC.SuppressFinalize(this);
         }
 
         #endregion コンストラクター/デストラクター/Dispose
@@ -184,6 +197,9 @@ namespace ACT.SpecialSpellTimer
 
             try
             {
+                /*
+                Debug.WriteLine(logInfo.logLine);
+                */
                 var data = logInfo.logLine.Split('|');
 
                 if (data.Length >= 2)
@@ -220,10 +236,63 @@ namespace ACT.SpecialSpellTimer
             }
         }
 
-#if false
-        private string[] previousLogLines = new string[8];
-        private int previousLogLinesIndex = 0;
-#endif
+        private double[] lpss = new double[60];
+        private int currentLpsIndex;
+        private long currentLineCount;
+        private Stopwatch lineCountTimer = new Stopwatch();
+
+        /// <summary>
+        /// LPS lines/s
+        /// </summary>
+        public double LPS
+        {
+            get
+            {
+                var availableLPSs = this.lpss.Where(x => x > 0);
+                if (!availableLPSs.Any())
+                {
+                    return 0;
+                }
+
+                return availableLPSs.Sum() / availableLPSs.Count();
+            }
+        }
+
+        /// <summary>
+        /// LPSを計測する
+        /// </summary>
+        private void CountLPS()
+        {
+            this.currentLineCount++;
+
+            if (!this.lineCountTimer.IsRunning)
+            {
+                this.lineCountTimer.Restart();
+            }
+
+            if (this.lineCountTimer.Elapsed >= TimeSpan.FromSeconds(1))
+            {
+                this.lineCountTimer.Stop();
+
+                var secounds = this.lineCountTimer.Elapsed.TotalSeconds;
+                if (secounds > 0)
+                {
+                    var lps = this.currentLineCount / secounds;
+                    if (lps > 0)
+                    {
+                        if (this.currentLpsIndex > this.lpss.GetUpperBound(0))
+                        {
+                            this.currentLpsIndex = 0;
+                        }
+
+                        this.lpss[this.currentLpsIndex] = lps;
+                        this.currentLpsIndex++;
+                    }
+                }
+
+                this.currentLineCount = 0;
+            }
+        }
 
         /// <summary>
         /// OnLogLineRead
@@ -239,25 +308,12 @@ namespace ACT.SpecialSpellTimer
             {
                 return;
             }
-#if false
-            // 直近8行程度における同一のログを捨てる
-            lock (this.previousLogLines)
-            {
-                if (this.previousLogLines.Contains(logInfo.logLine))
-                {
-                    return;
-                }
 
-                if (this.previousLogLinesIndex >= this.previousLogLines.Length)
-                {
-                    this.previousLogLinesIndex = 0;
-                }
-
-                this.previousLogLines[this.previousLogLinesIndex] = logInfo.logLine;
-                this.previousLogLinesIndex++;
-            }
-#endif
+            // ログをキューに格納する
             this.logInfoQueue.Enqueue(logInfo);
+
+            // LPSを計測する
+            this.CountLPS();
 
             // 最初のログならば動作ログに出力する
             if (!this.firstLogArrived)
@@ -268,17 +324,76 @@ namespace ACT.SpecialSpellTimer
             this.firstLogArrived = true;
         }
 
+        /// <summary>
+        /// OnAddedCombatants
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAddedCombatants(
+            object sender,
+            FFXIVPlugin.AddedCombatantsEventArgs e)
+        {
+            lock (this)
+            {
+                var now = DateTime.Now;
+
+                if (e != null &&
+                    e.NewCombatants != null &&
+                    e.NewCombatants.Any())
+                {
+                    foreach (var combatant in e.NewCombatants)
+                    {
+                        var log = $"[EX] Added new combatant. name={combatant.Name} X={combatant.PosXMap:N2} Y={combatant.PosYMap:N2} Z={combatant.PosZMap:N2} hp={combatant.CurrentHP}";
+                        LogParser.RaiseLog(now, log);
+                    }
+                }
+            }
+        }
+
         #endregion ACT event hander
 
         #region ログ処理
 
+        /// <summary>
+        /// 設定によらず必ずカットするログのキーワード
+        /// </summary>
+        public static readonly string[] IgnoreLogKeywords = new[]
+        {
+            MessageType.NetworkDoT.ToKeyword()
+        };
+
+        /// <summary>
+        /// 設定によってカットする場合があるログのキーワード
+        /// </summary>
+        public static readonly string[] IgnoreDetailLogKeywords = new[]
+        {
+            MessageType.NetworkAbility.ToKeyword(),
+            MessageType.NetworkAOEAbility.ToKeyword()
+        };
+
         public bool IsEmpty => this.logInfoQueue.IsEmpty;
+
+        /// <summary>
+        /// パーティメンバについてのHPログか？
+        /// </summary>
+        /// <param name="log"></param>
+        /// <returns></returns>
+        public static bool IsHPLogByPartyMember(
+            string log)
+        {
+            if (!log.Contains(MessageType.CombatantHP.ToKeyword()))
+            {
+                return false;
+            }
+
+            return TableCompiler.Instance?.SortedPartyList?.Any(x => log.Contains(x.Name)) ?? false;
+        }
 
         /// <summary>
         /// ログ行を返す
         /// </summary>
         /// <returns>ログ行の配列</returns>
-        public IReadOnlyList<string> GetLogLines()
+        public IReadOnlyList<XIVLog> GetLogLines()
         {
             if (this.logInfoQueue.IsEmpty)
             {
@@ -299,10 +414,14 @@ namespace ACT.SpecialSpellTimer
                 }
             }
 
-            var list = new List<string>(logInfoQueue.Count);
-            var partyChangedAtDQX = false;
-            var summoned = false;
+            // マッチング用のログリスト
+            var list = new List<XIVLog>(logInfoQueue.Count);
 
+            var summoned = false;
+            var doneCommand = false;
+
+            var preLog = new string[3];
+            var preLogIndex = 0;
 #if DEBUG
             var sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
@@ -311,43 +430,63 @@ namespace ACT.SpecialSpellTimer
             {
                 var logLine = logInfo.logLine;
 
-                // エフェクトに付与されるツールチップ文字を除去する
-                if (Settings.Default.RemoveTooltipSymbols)
+                // 直前とまったく同じ行はカットする
+                if (preLog[0] == logLine ||
+                    preLog[1] == logLine ||
+                    preLog[2] == logLine)
                 {
-                    if (logLine.Length > 17)
-                    {
-                        // 4文字分のツールチップ文字を除去する
-                        int index;
-                        if ((index = logLine.IndexOf(
-                            TooltipSuffix,
-                            17,
-                            StringComparison.Ordinal)) > -1)
-                        {
-                            logLine = logLine.Remove(index - 1, 4);
-                        }
+                    continue;
+                }
 
-                        // 残ったReplacementCharを除去する
-                        logLine = logLine.Replace(TooltipReplacementChar, string.Empty);
+                preLog[preLogIndex++] = logLine;
+                if (preLogIndex >= 3)
+                {
+                    preLogIndex = 0;
+                }
+
+                // 無効なログ行をカットする
+                if (IgnoreLogKeywords.Any(x => logLine.Contains(x)))
+                {
+                    continue;
+                }
+
+                if (Settings.Default.IgnoreDetailLogs)
+                {
+                    // 詳細なログをカットする
+                    if (IgnoreDetailLogKeywords.Any(x => logLine.Contains(x)))
+                    {
+                        continue;
                     }
                 }
 
-                // FFXIVでの使用？
-                if (!Settings.Default.UseOtherThanFFXIV &&
-                    !summoned &&
+                // エフェクトに付与されるツールチップ文字を除去する
+                if (Settings.Default.RemoveTooltipSymbols)
+                {
+                    // 4文字分のツールチップ文字を除去する
+                    int index;
+                    if ((index = logLine.IndexOf(
+                        TooltipSuffix,
+                        0,
+                        StringComparison.Ordinal)) > -1)
+                    {
+                        logLine = logLine.Remove(index - 1, 4);
+                    }
+
+                    // 残ったReplacementCharを除去する
+                    logLine = logLine.Replace(TooltipReplacementChar, string.Empty);
+                }
+
+                // ペットジョブで召喚をしたか？
+                if (!summoned &&
                     palyerIsSummoner)
                 {
                     summoned = isSummoned(logLine);
                 }
 
-                // パーティに変化があるか？（対DQX）
-                if (!partyChangedAtDQX)
-                {
-                    partyChangedAtDQX = DQXUtility.IsPartyChanged(logLine);
-                }
+                // コマンドとマッチングする
+                doneCommand |= TextCommandController.MatchCommandCore(logLine);
 
-                list.Add(logLine);
-
-                Thread.Yield();
+                list.Add(new XIVLog(logLine));
             }
 
             if (summoned)
@@ -355,29 +494,22 @@ namespace ACT.SpecialSpellTimer
                 TableCompiler.Instance.RefreshPetPlaceholder();
             }
 
-            if (partyChangedAtDQX)
+            if (doneCommand)
             {
-                Task.Run(() =>
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
-                    DQXUtility.RefeshKeywords();
-                });
+                SystemSounds.Asterisk.Play();
             }
 
             // ログファイルに出力する
             if (Settings.Default.SaveLogEnabled)
             {
-                Task.Run(() =>
-                {
-                    ChatLogWorker.Instance.AppendLines(list);
-                });
+                ChatLogWorker.Instance.AppendLinesAsync(list);
             }
 
 #if DEBUG
             sw.Stop();
             System.Diagnostics.Debug.WriteLine($"★GetLogLines {sw.Elapsed.TotalMilliseconds:N1} ms");
 #endif
-            // リストを返す
+            // 冒頭のタイムスタンプを除去して返す
             return list;
 
             // 召喚したか？
@@ -417,5 +549,60 @@ namespace ACT.SpecialSpellTimer
         }
 
         #endregion ログ処理
+
+        #region その他のメソッド
+
+        /// <summary>
+        /// 自分の座標をダンプする
+        /// </summary>
+        /// <param name="isAuto">
+        /// 自動出力？</param>
+        public static void DumpPosition(
+            bool isAuto = false)
+        {
+            var player = FFXIVPlugin.Instance.GetPlayer();
+            if (player == null)
+            {
+                return;
+            }
+
+            var zone = ActGlobals.oFormActMain?.CurrentZone;
+            if (string.IsNullOrEmpty(zone))
+            {
+                zone = "Unknown Zone";
+            }
+
+            LogParser.RaiseLog(
+                DateTime.Now,
+                $"[EX] {(isAuto ? "Beacon" : "POS")} X={player.PosXMap:N2} Y={player.PosYMap:N2} Z={player.PosZMap:N2} zone={zone}");
+        }
+
+        #endregion その他のメソッド
+    }
+
+    public class XIVLog
+    {
+        public XIVLog(
+            string logLine)
+        {
+            this.Timestamp = logLine.Substring(0, 15).TrimEnd();
+            this.Log = logLine.Remove(0, 15);
+        }
+
+        public XIVLog(
+            string timestamp,
+            string log)
+        {
+            this.Timestamp = timestamp;
+            this.Log = log;
+        }
+
+        public long No { get; set; } = 0;
+
+        public string Timestamp { get; set; } = string.Empty;
+
+        public string Log { get; set; } = string.Empty;
+
+        public string LogLine => $"{this.Timestamp} {this.Log}";
     }
 }

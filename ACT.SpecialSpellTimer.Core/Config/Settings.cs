@@ -4,19 +4,24 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Xml;
 using System.Xml.Serialization;
-using ACT.SpecialSpellTimer.FFXIVHelper;
-using ACT.SpecialSpellTimer.Utility;
+using ACT.SpecialSpellTimer.Config.Models;
+using ACT.SpecialSpellTimer.Config.Views;
+using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Common;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
+using FFXIV.Framework.Globalization;
+using FFXIV.Framework.WPF.Views;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Config
 {
     [Serializable]
-    public class Settings
+    public class Settings :
+        BindableBase
     {
         #region Singleton
 
@@ -63,79 +68,200 @@ namespace ACT.SpecialSpellTimer.Config
 
         #endregion Constants
 
-        #region Data - Colors
+        #region Data
 
         [XmlIgnore]
-        public Color BackgroundColor { get; set; }
+        public string Language => this.UILocale == Locales.JA ? "JP" : "EN";
 
-        [XmlElement(ElementName = "BackgroundColor")]
-        public string BackgroundColorText
+        private Locales uiLocale = Locales.JA;
+
+        public Locales UILocale
         {
-            get => this.BackgroundColor.ToHTML();
-            set => this.BackgroundColor = ColorTranslator.FromHtml(value);
+            get => this.uiLocale;
+            set
+            {
+                if (this.SetProperty(ref this.uiLocale, value))
+                {
+                    EorzeaTime.DefaultLocale = this.uiLocale == Locales.JA ?
+                        EorzeaCalendarLocale.JA :
+                        EorzeaCalendarLocale.EN;
+                }
+            }
+        }
+
+        private Locales ffxivLocale = Locales.JA;
+
+        public Locales FFXIVLocale
+        {
+            get => this.ffxivLocale;
+            set => this.SetProperty(ref this.ffxivLocale, value);
+        }
+
+        private bool overlayVisible;
+
+        public bool OverlayVisible
+        {
+            get => this.overlayVisible;
+            set
+            {
+                if (this.SetProperty(ref this.overlayVisible, value))
+                {
+                    var button = PluginCore.Instance.SwitchVisibleButton;
+                    if (button != null)
+                    {
+                        if (this.overlayVisible)
+                        {
+                            button.BackColor = Color.SandyBrown;
+                            button.ForeColor = Color.WhiteSmoke;
+                        }
+                        else
+                        {
+                            button.BackColor = SystemColors.Control;
+                            button.ForeColor = Color.Black;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static DesignGridView[] gridViews;
+        private bool visibleDesignGrid;
+
+        [XmlIgnore]
+        public bool VisibleDesignGrid
+        {
+            get => this.visibleDesignGrid;
+            set
+            {
+                if (this.SetProperty(ref this.visibleDesignGrid, value))
+                {
+                    if (this.visibleDesignGrid)
+                    {
+                        lock (this)
+                        {
+                            if (gridViews == null)
+                            {
+                                var views = new List<DesignGridView>();
+
+                                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                                {
+                                    var view = new DesignGridView()
+                                    {
+                                        WindowStartupLocation = System.Windows.WindowStartupLocation.Manual,
+                                        Left = screen.Bounds.X,
+                                        Top = screen.Bounds.Y,
+                                        Width = screen.Bounds.Width,
+                                        Height = screen.Bounds.Height,
+                                    };
+
+                                    view.ToTransparent();
+                                    views.Add(view);
+                                }
+
+                                gridViews = views.ToArray();
+                            }
+                        }
+
+                        foreach (var view in gridViews)
+                        {
+                            view.Show();
+                            view.ShowOverlay();
+                        }
+                    }
+                    else
+                    {
+                        if (gridViews != null)
+                        {
+                            foreach (var view in gridViews)
+                            {
+                                view?.HideOverlay();
+                                view?.Hide();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool clickThroughEnabled;
+
+        public bool ClickThroughEnabled
+        {
+            get => this.clickThroughEnabled;
+            set => this.SetProperty(ref this.clickThroughEnabled, value);
+        }
+
+        private int opacity;
+
+        /// <summary>
+        /// !注意! OpacityToView を使用すること！
+        /// </summary>
+        public int Opacity
+        {
+            get => this.opacity;
+            set
+            {
+                if (this.SetProperty(ref this.opacity, value))
+                {
+                    this.RaisePropertyChanged(nameof(this.OpacityToView));
+
+                    if (LPSView.Instance != null &&
+                        LPSView.Instance.OverlayVisible)
+                    {
+                        LPSView.Instance.Opacity = this.OpacityToView;
+                    }
+
+                    if (POSView.Instance != null &&
+                        POSView.Instance.OverlayVisible)
+                    {
+                        POSView.Instance.Opacity = this.OpacityToView;
+                    }
+                }
+            }
         }
 
         [XmlIgnore]
-        public Color FontColor { get; set; }
+        public double OpacityToView => (100d - this.Opacity) / 100d;
 
-        [XmlElement(ElementName = "FontColor")]
-        public string FontColorText
+        public bool HideWhenNotActive { get; set; }
+
+        /// <summary>
+        /// FFXIVのプロセスが存在しなくてもオーバーレイを表示する
+        /// </summary>
+        public bool VisibleOverlayWithoutFFXIV { get; set; } = false;
+
+        public long LogPollSleepInterval { get; set; }
+
+        public long RefreshInterval { get; set; }
+
+        public int MaxFPS { get; set; }
+        public bool RenderCPUOnly { get; set; } = false;
+
+        private NameStyles pcNameInitialOnDisplayStyle = NameStyles.FullName;
+
+        public NameStyles PCNameInitialOnDisplayStyle
         {
-            get => this.FontColor.ToHTML();
-            set => this.FontColor = ColorTranslator.FromHtml(value);
+            get => this.pcNameInitialOnDisplayStyle;
+            set => this.SetProperty(ref pcNameInitialOnDisplayStyle, value);
         }
 
-        [XmlIgnore]
-        public Color FontOutlineColor { get; set; }
-
-        [XmlElement(ElementName = "FontOutlineColor")]
-        public string FontOutlineColorText
+        public double TextBlurRate
         {
-            get => this.FontOutlineColor.ToHTML();
-            set => this.FontOutlineColor = ColorTranslator.FromHtml(value);
+            get => FontInfo.BlurRadiusRate;
+            set => FontInfo.BlurRadiusRate = value;
         }
 
-        [XmlIgnore]
-        public Color ProgressBarColor { get; set; }
-
-        [XmlElement(ElementName = "ProgressBarColor")]
-        public string ProgressBarColorText
+        public double TextOutlineThicknessRate
         {
-            get => this.ProgressBarColor.ToHTML();
-            set => this.ProgressBarColor = ColorTranslator.FromHtml(value);
+            get => FontInfo.OutlineThicknessRate;
+            set => FontInfo.OutlineThicknessRate = value;
         }
 
-        [XmlIgnore]
-        public Color ProgressBarOutlineColor { get; set; }
+        public int ReduceIconBrightness { get; set; }
 
-        [XmlElement(ElementName = "ProgressBarOutlineColor")]
-        public string ProgressBarOutlineColorText
-        {
-            get => this.ProgressBarOutlineColor.ToHTML();
-            set => this.ProgressBarOutlineColor = ColorTranslator.FromHtml(value);
-        }
+        public string ReadyText { get; set; }
 
-        [XmlIgnore]
-        public Color WarningFontColor { get; set; }
-
-        [XmlElement(ElementName = "WarningFontColor")]
-        public string WarningFontColorText
-        {
-            get => this.WarningFontColor.ToHTML();
-            set => this.WarningFontColor = ColorTranslator.FromHtml(value);
-        }
-
-        [XmlIgnore]
-        public Color WarningFontOutlineColor { get; set; }
-
-        [XmlElement(ElementName = "WarningFontOutlineColor")]
-        public string WarningFontOutlineColorText
-        {
-            get => this.WarningFontOutlineColor.ToHTML();
-            set => this.WarningFontOutlineColor = ColorTranslator.FromHtml(value);
-        }
-
-        #endregion Data - Colors
+        public string OverText { get; set; }
 
         #region Data - ProgressBar Background
 
@@ -150,7 +276,7 @@ namespace ACT.SpecialSpellTimer.Config
         public bool BarBackgroundFixed
         {
             get => this.barBackgroundFixed;
-            set => this.barBackgroundFixed = value;
+            set => this.SetProperty(ref this.barBackgroundFixed, value);
         }
 
         /// <summary>
@@ -184,76 +310,215 @@ namespace ACT.SpecialSpellTimer.Config
 
         #endregion Data - ProgressBar Background
 
-        #region Data - Sizes
+        public double TimeOfHideSpell { get; set; }
 
-        [XmlIgnore]
-        public Size ProgressBarSize { get; set; }
+        public bool EnabledPartyMemberPlaceholder { get; set; }
 
-        [XmlElement(ElementName = "ProgressBarSize")]
-        public SerializableSize ProgressBarSizeText
+        public bool EnabledSpellTimerNoDecimal { get; set; }
+
+        public bool EnabledNotifyNormalSpellTimer { get; set; }
+
+        public string NotifyNormalSpellTimerPrefix { get; set; }
+
+        public bool SimpleRegex { get; set; }
+
+        public bool RemoveTooltipSymbols { get; set; }
+
+        private bool ignoreDetailLogs = false;
+
+        public bool IgnoreDetailLogs
         {
-            get => new SerializableSize() { Height = this.ProgressBarSize.Height, Width = this.ProgressBarSize.Width };
-            set => this.ProgressBarSize = new Size(value.Width, value.Height);
+            get => this.ignoreDetailLogs;
+            set => this.SetProperty(ref this.ignoreDetailLogs, value);
         }
 
-        #endregion Data - Sizes
+        public bool DetectPacketDump { get; set; }
 
-        #region Data - Fonts
+        private bool resetOnWipeOut;
 
-        [XmlIgnore]
-        public Font Font { get; set; }
-
-        [XmlElement(ElementName = "Font")]
-        public string FontText
-
+        public bool ResetOnWipeOut
         {
-            get => FontSerializationHelper.ToString(this.Font);
-            set => this.Font = FontSerializationHelper.FromString(value);
+            get => this.resetOnWipeOut;
+            set => this.SetProperty(ref this.resetOnWipeOut, value);
         }
 
-        #endregion Data - Fonts
+        public bool WipeoutNotifyToACT { get; set; }
 
-        #region Data
+        #region LPS View
+
+        private bool lpsViewVisible = false;
+        private double lpsViewX;
+        private double lpsViewY;
+        private double lpsViewScale = 1.0;
+
+        public bool LPSViewVisible
+        {
+            get => this.lpsViewVisible;
+            set
+            {
+                if (this.SetProperty(ref this.lpsViewVisible, value))
+                {
+                    if (LPSView.Instance != null)
+                    {
+                        LPSView.Instance.OverlayVisible = value;
+                    }
+                }
+            }
+        }
+
+        public double LPSViewX
+        {
+            get => this.lpsViewX;
+            set => this.SetProperty(ref this.lpsViewX, Math.Floor(value));
+        }
+
+        public double LPSViewY
+        {
+            get => this.lpsViewY;
+            set => this.SetProperty(ref this.lpsViewY, Math.Floor(value));
+        }
+
+        public double LPSViewScale
+        {
+            get => this.lpsViewScale;
+            set => this.SetProperty(ref this.lpsViewScale, value);
+        }
+
+        #endregion LPS View
+
+        #region POS View
+
+        private bool posViewVisible = false;
+        private double posViewX;
+        private double posViewY;
+        private double posViewScale = 1.0;
+        private bool posViewVisibleDebugInfo = WPFHelper.IsDesignMode ? true : false;
+
+        public bool POSViewVisible
+        {
+            get => this.posViewVisible;
+            set
+            {
+                if (this.SetProperty(ref this.posViewVisible, value))
+                {
+                    if (POSView.Instance != null)
+                    {
+                        POSView.Instance.OverlayVisible = value;
+                    }
+                }
+            }
+        }
+
+        public double POSViewX
+        {
+            get => this.posViewX;
+            set => this.SetProperty(ref this.posViewX, Math.Floor(value));
+        }
+
+        public double POSViewY
+        {
+            get => this.posViewY;
+            set => this.SetProperty(ref this.posViewY, Math.Floor(value));
+        }
+
+        public double POSViewScale
+        {
+            get => this.posViewScale;
+            set => this.SetProperty(ref this.posViewScale, value);
+        }
+
+        public bool POSViewVisibleDebugInfo
+        {
+            get => this.posViewVisibleDebugInfo;
+            set => this.SetProperty(ref this.posViewVisibleDebugInfo, value);
+        }
+
+        #endregion POS View
+
+        private bool saveLogEnabled;
+        private string saveLogDirectory;
+
+        public bool SaveLogEnabled
+        {
+            get => this.saveLogEnabled;
+            set
+
+            {
+                if (this.SetProperty(ref this.saveLogEnabled, value))
+                {
+                    if (!this.saveLogEnabled)
+                    {
+                        ChatLogWorker.Instance.Flush();
+                    }
+                }
+            }
+        }
+
+        public string SaveLogDirectory
+        {
+            get => this.saveLogDirectory;
+            set => this.SetProperty(ref this.saveLogDirectory, value);
+        }
+
+        private string timelineDirectory = string.Empty;
+
+        public string TimelineDirectory
+        {
+            get => this.timelineDirectory;
+            set => this.SetProperty(ref this.timelineDirectory, value);
+        }
+
+        private bool isMinimizeOnStart = false;
+
+        public bool IsMinimizeOnStart
+        {
+            get => this.isMinimizeOnStart;
+            set => this.SetProperty(ref this.isMinimizeOnStart, value);
+        }
+
+        #region Data - Timeline
+
+        private bool timelineTotalSecoundsFormat = false;
+
+        public bool TimelineTotalSecoundsFormat
+        {
+            get => this.timelineTotalSecoundsFormat;
+            set => this.SetProperty(ref this.timelineTotalSecoundsFormat, value);
+        }
+
+        private bool autoCombatLogAnalyze;
+
+        public bool AutoCombatLogAnalyze
+        {
+            get => this.autoCombatLogAnalyze;
+            set => this.SetProperty(ref this.autoCombatLogAnalyze, value);
+        }
+
+        private bool autoCombatLogSave;
+
+        public bool AutoCombatLogSave
+        {
+            get => this.autoCombatLogSave;
+            set => this.SetProperty(ref this.autoCombatLogSave, value);
+        }
+
+        private string combatLogSaveDirectory = string.Empty;
+
+        public string CombatLogSaveDirectory
+        {
+            get => this.combatLogSaveDirectory;
+            set => this.SetProperty(ref this.combatLogSaveDirectory, value);
+        }
+
+        #endregion Data - Timeline
+
+        #endregion Data
+
+        #region Data - Hidden
 
         public bool AutoSortEnabled { get; set; }
+
         public bool AutoSortReverse { get; set; }
-        public bool ClickThroughEnabled { get; set; }
-        public long CombatLogBufferSize { get; set; }
-        public bool CombatLogEnabled { get; set; }
-        public bool DetectPacketDump { get; set; }
-        public string DQXPlayerName { get; set; }
-        public bool DQXUtilityEnabled { get; set; }
-        public bool EnabledNotifyNormalSpellTimer { get; set; }
-        public bool EnabledPartyMemberPlaceholder { get; set; }
-        public bool EnabledSpellTimerNoDecimal { get; set; }
-        public bool HideWhenNotActive { get; set; }
-        public string Language { get; set; }
-        public long LogPollSleepInterval { get; set; }
-        public string NotifyNormalSpellTimerPrefix { get; set; }
-        public int Opacity { get; set; }
-        public bool OverlayForceVisible { get; set; }
-        public bool OverlayVisible { get; set; }
-        public string OverText { get; set; }
-        public NameStyles PCNameInitialOnDisplayStyle { get; set; } = NameStyles.FullName;
-        public NameStyles PCNameInitialOnLogStyle { get; set; } = NameStyles.FullName;
-        public double PlayerInfoRefreshInterval { get; set; }
-        public string ReadyText { get; set; }
-        public int ReduceIconBrightness { get; set; }
-        public long RefreshInterval { get; set; }
-        public bool RemoveTooltipSymbols { get; set; }
-        public bool RenderCPUOnly { get; set; } = true;
-        public bool ResetOnWipeOut { get; set; }
-        public string SaveLogDirectory { get; set; }
-        public bool SaveLogEnabled { get; set; }
-        public string SaveLogFile { get; set; }
-        public bool SimpleRegex { get; set; }
-        public bool TelopAlwaysVisible { get; set; }
-        public double TextBlurRate { get; set; }
-        public double TextOutlineThicknessRate { get; set; }
-        public double TimeOfHideSpell { get; set; }
-        public bool ToComplementUnknownSkill { get; set; } = true;
-        public bool UseOtherThanFFXIV { get; set; }
-        public bool WipeoutNotifyToACT { get; set; }
 
         public bool SingleTaskLogMatching { get; set; }
 
@@ -261,11 +526,23 @@ namespace ACT.SpecialSpellTimer.Config
 
         public bool EnableMultiLineMaching { get; set; }
 
-        public AutoScaleMode UIAutoScaleMode { get; set; }
+        /// <summary>点滅の輝度倍率 暗</summary>
+        public double BlinkBrightnessDark { get; set; }
 
-        #endregion Data
+        /// <summary>点滅の輝度倍率 明</summary>
+        public double BlinkBrightnessLight { get; set; }
 
-        #region Data - Hidden
+        /// <summary>点滅のピッチ(秒)</summary>
+        public double BlinkPitch { get; set; }
+
+        /// <summary>点滅のピーク状態でのホールド時間(秒)</summary>
+        public double BlinkPeekHold { get; set; }
+
+        public List<ExpandedContainer> ExpandedList
+        {
+            get;
+            set;
+        } = new List<ExpandedContainer>();
 
         private DateTime lastUpdateDateTime;
 
@@ -316,39 +593,11 @@ namespace ACT.SpecialSpellTimer.Config
             }
         }
 
-        public int MaxFPS { get; set; }
-
-        /// <summary>点滅の輝度倍率 暗</summary>
-        public double BlinkBrightnessDark { get; set; }
-
-        /// <summary>点滅の輝度倍率 明</summary>
-        public double BlinkBrightnessLight { get; set; }
-
-        /// <summary>点滅のピッチ(秒)</summary>
-        public double BlinkPitch { get; set; }
-
-        /// <summary>点滅のピーク状態でのホールド時間(秒)</summary>
-        public double BlinkPeekHold { get; set; }
-
         #endregion Data - Hidden
 
         #region Load & Save
 
         private readonly object locker = new object();
-
-        /// <summary>
-        /// シリアライザ
-        /// </summary>
-        private readonly XmlSerializer Serializer = new XmlSerializer(typeof(Settings));
-
-        /// <summary>
-        /// XMLライターSettings
-        /// </summary>
-        private readonly XmlWriterSettings XmlWriterSettings = new XmlWriterSettings()
-        {
-            Encoding = new UTF8Encoding(false),
-            Indent = true,
-        };
 
         public void Load()
         {
@@ -369,12 +618,16 @@ namespace ACT.SpecialSpellTimer.Config
                     return;
                 }
 
-                using (var xr = XmlReader.Create(this.FileName))
+                using (var sr = new StreamReader(this.FileName, new UTF8Encoding(false)))
                 {
-                    var data = this.Serializer.Deserialize(xr) as Settings;
-                    if (data != null)
+                    if (sr.BaseStream.Length > 0)
                     {
-                        instance = data;
+                        var xs = new XmlSerializer(this.GetType());
+                        var data = xs.Deserialize(sr) as Settings;
+                        if (data != null)
+                        {
+                            instance = data;
+                        }
                     }
                 }
             }
@@ -391,12 +644,19 @@ namespace ACT.SpecialSpellTimer.Config
                     Directory.CreateDirectory(directoryName);
                 }
 
-                using (var xw = XmlWriter.Create(
-                    this.FileName,
-                    this.XmlWriterSettings))
+                var sb = new StringBuilder();
+                using (var sw = new StringWriter(sb))
                 {
-                    this.Serializer.Serialize(xw, this);
+                    var xs = new XmlSerializer(this.GetType());
+                    xs.Serialize(sw, this);
                 }
+
+                sb.Replace("utf-16", "utf-8");
+
+                File.WriteAllText(
+                    this.FileName,
+                    sb.ToString(),
+                    new UTF8Encoding(false));
             }
         }
 
@@ -420,43 +680,25 @@ namespace ACT.SpecialSpellTimer.Config
 
         public static readonly Dictionary<string, object> DefaultValues = new Dictionary<string, object>()
         {
-            { nameof(Settings.Language), "EN" },
-            { nameof(Settings.ProgressBarSize), new Size(190, 8) },
-            { nameof(Settings.ProgressBarColor), Color.White },
-            { nameof(Settings.ProgressBarOutlineColor), Color.FromArgb(22, 120, 157) },
-            { nameof(Settings.FontColor), Color.AliceBlue },
-            { nameof(Settings.FontOutlineColor), Color.FromArgb(22, 120, 157) },
-            { nameof(Settings.WarningFontColor), Color.OrangeRed },
-            { nameof(Settings.WarningFontOutlineColor), Color.DarkRed },
-            { nameof(Settings.BackgroundColor), Color.Transparent },
             { nameof(Settings.NotifyNormalSpellTimerPrefix), "spespe_" },
             { nameof(Settings.ReadyText), "Ready" },
             { nameof(Settings.OverText), "Over" },
             { nameof(Settings.TimeOfHideSpell), 1.0d },
-            { nameof(Settings.PlayerInfoRefreshInterval), 3.0d },
             { nameof(Settings.LogPollSleepInterval), 10 },
             { nameof(Settings.RefreshInterval), 60 },
-            { nameof(Settings.CombatLogBufferSize), 30000 },
             { nameof(Settings.ReduceIconBrightness), 55 },
             { nameof(Settings.Opacity), 10 },
-            { nameof(Settings.Font), FontInfo.DefaultFont.ToFontForWindowsForm() },
             { nameof(Settings.OverlayVisible), true },
             { nameof(Settings.AutoSortEnabled), true },
             { nameof(Settings.ClickThroughEnabled), false },
             { nameof(Settings.AutoSortReverse), false },
-            { nameof(Settings.TelopAlwaysVisible), false },
             { nameof(Settings.EnabledPartyMemberPlaceholder), true },
-            { nameof(Settings.CombatLogEnabled), false },
-            { nameof(Settings.OverlayForceVisible), false },
+            { nameof(Settings.AutoCombatLogAnalyze), false },
             { nameof(Settings.EnabledSpellTimerNoDecimal), true },
             { nameof(Settings.EnabledNotifyNormalSpellTimer), false },
             { nameof(Settings.SaveLogEnabled), false },
-            { nameof(Settings.SaveLogFile), string.Empty },
             { nameof(Settings.SaveLogDirectory), string.Empty },
             { nameof(Settings.HideWhenNotActive), false },
-            { nameof(Settings.UseOtherThanFFXIV), false },
-            { nameof(Settings.DQXUtilityEnabled), false },
-            { nameof(Settings.DQXPlayerName), "トンヌラ" },
             { nameof(Settings.ResetOnWipeOut), true },
             { nameof(Settings.WipeoutNotifyToACT), true },
             { nameof(Settings.RemoveTooltipSymbols), true },
@@ -464,15 +706,17 @@ namespace ACT.SpecialSpellTimer.Config
             { nameof(Settings.DetectPacketDump), false },
             { nameof(Settings.TextBlurRate), 1.2d },
             { nameof(Settings.TextOutlineThicknessRate), 1.0d },
-            { nameof(Settings.PCNameInitialOnLogStyle), NameStyles.FullName },
             { nameof(Settings.PCNameInitialOnDisplayStyle), NameStyles.FullName },
             { nameof(Settings.RenderCPUOnly), true },
-            { nameof(Settings.ToComplementUnknownSkill), true },
             { nameof(Settings.SingleTaskLogMatching), false },
             { nameof(Settings.DisableStartCondition), false },
             { nameof(Settings.EnableMultiLineMaching), false },
-            { nameof(Settings.UIAutoScaleMode), AutoScaleMode.Inherit },
             { nameof(Settings.MaxFPS), 30 },
+
+            { nameof(Settings.LPSViewVisible), false },
+            { nameof(Settings.LPSViewX), 0 },
+            { nameof(Settings.LPSViewY), 0 },
+            { nameof(Settings.LPSViewScale), 1.0 },
 
             { nameof(Settings.BarBackgroundFixed), false },
             { nameof(Settings.BarBackgroundBrightness), 0.3 },

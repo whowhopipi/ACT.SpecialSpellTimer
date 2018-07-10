@@ -1,21 +1,18 @@
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Media;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
+using ACT.SpecialSpellTimer.Config.Models;
 using ACT.SpecialSpellTimer.Models;
+using ACT.SpecialSpellTimer.RaidTimeline;
 using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -56,7 +53,8 @@ namespace ACT.SpecialSpellTimer
         #endregion Thread
 
         private volatile bool existFFXIVProcess;
-        private volatile bool isFFXIVActive;
+
+        public bool IsFFXIVActive => FFXIVPlugin.Instance.IsFFXIVActive;
 
         /// <summary>
         /// 最後にテロップテーブルを保存した日時
@@ -71,44 +69,48 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// ログバッファ
         /// </summary>
-        private volatile LogBuffer LogBuffer;
+        public LogBuffer LogBuffer { get; private set; }
+
+        /// <summary>
+        /// Simulation中か？
+        /// </summary>
+        public bool InSimulation { get; set; }
 
         #region Begin / End
 
         /// <summary>
         /// 開始する
         /// </summary>
-        public void Begin()
+        public async void Begin()
         {
             this.isOver = false;
 
             // FFXIVのスキャンを開始する
-            FFXIVPlugin.Initialize();
-            FFXIVPlugin.Instance.Start();
+            // FFXIVプラグインへのアクセスを開始する
+            await Task.Run(() => FFXIVPlugin.Instance.Start(
+                Settings.Default.LogPollSleepInterval,
+                Settings.Default.FFXIVLocale));
 
             // ログバッファを生成する
             this.LogBuffer = new LogBuffer();
 
-            // テーブルコンパイラを開始する
-            TableCompiler.Initialize();
-            TableCompiler.Instance.Begin();
+            await Task.Run(() =>
+            {
+                // テーブルコンパイラを開始する
+                TableCompiler.Instance.Begin();
 
-            // 戦闘分析を初期化する
-            CombatAnalyzer.Default.Initialize();
-
-            // サウンドコントローラを開始する
-            SoundController.Instance.Begin();
+                // サウンドコントローラを開始する
+                SoundController.Instance.Begin();
+            });
 
             // Overlayの更新スレッドを開始する
             this.BeginOverlaysThread();
 
             // ログ監視タイマを開始する
-            this.detectLogsWorker = new ThreadWorker(() =>
-            {
-                this.DetectLogsCore();
-            },
-            0,
-            nameof(this.detectLogsWorker));
+            this.detectLogsWorker = new ThreadWorker(
+                () => this.DetectLogsCore(),
+                0,
+                nameof(this.detectLogsWorker));
 
             // Backgroudスレッドを開始する
             this.backgroudWorker = new System.Timers.Timer();
@@ -173,9 +175,6 @@ namespace ACT.SpecialSpellTimer
         {
             this.isOver = true;
 
-            // 戦闘分析を開放する
-            CombatAnalyzer.Default.Denitialize();
-
             // Workerを開放する
             this.refreshSpellOverlaysWorker?.Stop();
             this.refreshTickerOverlaysWorker?.Stop();
@@ -204,8 +203,10 @@ namespace ACT.SpecialSpellTimer
 
             // 設定を保存する
             Settings.Default.Save();
-            SpellTimerTable.Instance.Save();
-            OnePointTelopTable.Instance.Save();
+            SpellPanelTable.Instance.Save();
+            SpellTable.Instance.Save();
+            TickerTable.Instance.Save();
+            TagTable.Instance.Save();
 
             // サウンドコントローラを停止する
             SoundController.Instance.End();
@@ -217,30 +218,40 @@ namespace ACT.SpecialSpellTimer
             // FFXIVのスキャンを停止する
             FFXIVPlugin.Instance.End();
             FFXIVPlugin.Free();
+            FFXIVReader.Free();
         }
 
         #endregion Begin / End
 
         #region Core
 
+        private double lastLPS;
+        private int lastActiveTriggerCount;
+
         private void BackgroundCore()
         {
             // FFXIVプロセスの有無を取得する
             this.existFFXIVProcess = FFXIVPlugin.Instance.Process != null;
 
-            // FFXIV及びACTがアクティブか取得する
-            this.isFFXIVActive = this.IsActive();
-
-            // テロップの位置を保存するためテロップテーブルを保存する
             if ((DateTime.Now - this.lastSaveTickerTableDateTime).TotalMinutes >= 1)
             {
                 this.lastSaveTickerTableDateTime = DateTime.Now;
 
-                Task.Run(() =>
+                // ついでにLPSを出力する
+                var lps = this.LogBuffer.LPS;
+                if (lps > 0 &&
+                    this.lastLPS != lps)
                 {
-                    OnePointTelopTable.Instance.Save();
-                    Debug.WriteLine("●Save telop table.");
-                });
+                    Logger.Write($"LPS={lps.ToString("N1")}");
+                    this.lastLPS = lps;
+                }
+
+                // ついでにアクティブなトリガ数を出力する
+                var count = this.lastActiveTriggerCount;
+                if (count > 0)
+                {
+                    Logger.Write($"ActiveTriggers={count.ToString("N0")}");
+                }
             }
         }
 
@@ -251,27 +262,38 @@ namespace ACT.SpecialSpellTimer
         {
             var existsLog = false;
 
-            // FFXIVがいない？
-            if (!FFXIVPlugin.Instance.IsAvalable)
+            if (!this.InSimulation)
             {
-#if !DEBUG
-                // importログの解析用にログを取り出しておく
-                if (!this.LogBuffer.IsEmpty)
+                if (!Settings.Default.VisibleOverlayWithoutFFXIV)
                 {
-                    this.LogBuffer.GetLogLines();
-                }
-                Thread.Sleep(TimeSpan.FromSeconds(3));
-                return;
+                    // FFXIVがいない？
+                    if (!this.existFFXIVProcess)
+                    {
+#if !DEBUG
+                    // importログの解析用にログを取り出しておく
+                    if (!this.LogBuffer.IsEmpty)
+                    {
+                        this.LogBuffer.GetLogLines();
+                    }
+
+                    Thread.Sleep(TimeSpan.FromSeconds(3));
+                    return;
 #endif
+                    }
+                }
             }
 
             // 全滅によるリセットを判定する
-            var resetTask = Task.Run(() => this.ResetCountAtRestart());
+            var resetTask = default(Task);
+            if (this.existFFXIVProcess)
+            {
+                resetTask = Task.Run(() => this.ResetCountAtRestart());
+            }
 
             // ログがないなら抜ける
             if (this.LogBuffer.IsEmpty)
             {
-                resetTask.Wait();
+                resetTask?.Wait();
                 Thread.Sleep(TimeSpan.FromMilliseconds(Settings.Default.LogPollSleepInterval));
                 return;
             }
@@ -280,68 +302,27 @@ namespace ACT.SpecialSpellTimer
             var sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
             // ログを取り出す
+            // 0D: 残HP率 のログは判定から除外する
             var logsTask = Task.Run(() => this.LogBuffer.GetLogLines());
 
             // 有効なスペルとテロップのリストを取得する
             var triggers = TableCompiler.Instance.TriggerList;
+            this.lastActiveTriggerCount = triggers.Count;
 
             var logs = logsTask.Result;
             if (logs.Count > 0)
             {
-                var doneCommand = false;
-                logs.AsParallel().AsOrdered().ForAll((logLine) =>
+                triggers.AsParallel().ForAll((trigger) =>
                 {
-                    // 冒頭のタイムスタンプを除去する
-                    logLine = logLine.Remove(0, 15);
-
-                    triggers.AsParallel().ForAll((trigger) =>
+                    foreach (var log in logs)
                     {
-                        switch (trigger)
-                        {
-                            case OnePointTelop telop:
-                                TickersController.Instance.MatchCore(
-                                    telop,
-                                    logLine);
-                                break;
-
-                            case Models.SpellTimer spell:
-                                SpellsController.Instance.MatchCore(
-                                    spell,
-                                    logLine);
-                                break;
-                        }
-                    });
-
-                    // コマンドとマッチングする
-                    doneCommand |= TextCommandController.MatchCommandCore(logLine);
-
-                    Thread.Yield();
+                        trigger.MatchTrigger(log.Log);
+                    }
                 });
-
-                if (doneCommand)
-                {
-                    SystemSounds.Asterisk.Play();
-                }
-#if false
-                // テロップとマッチングする
-                var t1 = Task.Run(() => TickersController.Instance.Match(
-                    telops,
-                    logs));
-
-                // スペルリストとマッチングする
-                var t2 = Task.Run(() => SpellsController.Instance.Match(
-                    spells,
-                    logs));
-
-                // コマンドとマッチングする
-                var t3 = Task.Run(() => TextCommandController.MatchCommand(
-                    logs));
-
-                Task.WaitAll(t1, t2, t3);
-#endif
 
                 existsLog = true;
             }
+
 #if DEBUG
             sw.Stop();
             if (logs.Count != 0)
@@ -352,11 +333,11 @@ namespace ACT.SpecialSpellTimer
             }
 #endif
 
-            resetTask.Wait();
+            resetTask?.Wait();
 
             if (existsLog)
             {
-                Thread.Sleep(0);
+                Thread.Yield();
             }
             else
             {
@@ -375,31 +356,44 @@ namespace ACT.SpecialSpellTimer
             }
 
             // 有効なスペルを取得する
-            var spells = TableCompiler.Instance.SpellList;
+            var spells = TableCompiler.Instance.TriggerList
+                .Where(x => x.ItemType == ItemTypes.Spell)
+                .Select(x => x as Spell)
+                .Concat(SpellTable.Instance.GetInstanceSpells())
+                .ToList();
 
-            // FFXIVでの使用？
-            if (!Settings.Default.UseOtherThanFFXIV &&
-                !this.existFFXIVProcess &&
-                !Settings.Default.OverlayForceVisible)
+            var isHideOverlay =
+                !Settings.Default.OverlayVisible ||
+                (Settings.Default.HideWhenNotActive && !this.IsFFXIVActive);
+
+            // FFXIVが実行されていない？
+            if (!this.InSimulation)
             {
-                // 一時表示スペルがない？
-                if (!spells.Any(x => x.IsTemporaryDisplay))
+                if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
+                    !this.existFFXIVProcess)
                 {
-                    SpellsController.Instance.ClosePanels();
-                    return;
+                    // 一時表示スペルがない？
+                    if (!spells.Any(x =>
+                        x.IsDesignMode ||
+                        x.IsTest))
+                    {
+                        SpellsController.Instance.ClosePanels();
+                        return;
+                    }
+
+                    if (!isHideOverlay)
+                    {
+                        // 一時表示スペルだけ表示する
+                        SpellsController.Instance.RefreshSpellOverlays(
+                            spells.Where(x =>
+                                x.IsDesignMode ||
+                                x.IsTest).ToList());
+                        return;
+                    }
                 }
             }
 
-            // オーバーレイが非表示？
-            if (!Settings.Default.OverlayVisible)
-            {
-                SpellsController.Instance.HidePanels();
-                return;
-            }
-
-            // 非アクティブのとき非表示にする？
-            if (Settings.Default.HideWhenNotActive &&
-                !this.isFFXIVActive)
+            if (isHideOverlay)
             {
                 SpellsController.Instance.HidePanels();
                 return;
@@ -420,31 +414,50 @@ namespace ACT.SpecialSpellTimer
             }
 
             // 有効なテロップを取得する
-            var telops = TableCompiler.Instance.TickerList;
+            var telops = TableCompiler.Instance.TriggerList
+                .Where(x => x.ItemType == ItemTypes.Ticker)
+                .Select(x => x as Ticker)
+                .ToList();
 
-            // FFXIVでの使用？
-            if (!Settings.Default.UseOtherThanFFXIV &&
-                !this.existFFXIVProcess &&
-                !Settings.Default.OverlayForceVisible)
+#if DEBUG
+            if (telops.Any(x => x.Title.Contains("TEST")))
             {
-                // 一時表示テロップがない？
-                if (!telops.Any(x => x.IsTemporaryDisplay))
+                ;
+            }
+#endif
+
+            var isHideOverlay =
+                !Settings.Default.OverlayVisible ||
+                (Settings.Default.HideWhenNotActive && !this.IsFFXIVActive);
+
+            // FFXIVが実行されていない？
+            if (!this.InSimulation)
+            {
+                if (!Settings.Default.VisibleOverlayWithoutFFXIV &&
+                    !this.existFFXIVProcess)
                 {
-                    TickersController.Instance.CloseTelops();
-                    return;
+                    // デザインモードのテロップがない？
+                    // テストモードのテロップがない？
+                    if (!telops.Any(x =>
+                        x.IsDesignMode ||
+                        x.IsTest))
+                    {
+                        TickersController.Instance.CloseTelops();
+                        return;
+                    }
+
+                    if (!isHideOverlay)
+                    {
+                        TickersController.Instance.RefreshTelopOverlays(
+                            telops.Where(x =>
+                                x.IsDesignMode ||
+                                x.IsTest).ToList());
+                        return;
+                    }
                 }
             }
 
-            // オーバーレイが非表示？
-            if (!Settings.Default.OverlayVisible)
-            {
-                TickersController.Instance.HideTelops();
-                return;
-            }
-
-            // 非アクティブのとき非表示にする？
-            if (Settings.Default.HideWhenNotActive &&
-                !this.isFFXIVActive)
+            if (isHideOverlay)
             {
                 TickersController.Instance.HideTelops();
                 return;
@@ -456,17 +469,13 @@ namespace ACT.SpecialSpellTimer
 
         #endregion Core
 
+        #region Misc
+
         /// <summary>
         /// リスタートのときスペルのカウントをリセットする
         /// </summary>
         private void ResetCountAtRestart()
         {
-            // FFXIV以外での使用ならば何もしない
-            if (Settings.Default.UseOtherThanFFXIV)
-            {
-                return;
-            }
-
             // 無効？
             if (!Settings.Default.ResetOnWipeOut)
             {
@@ -489,102 +498,29 @@ namespace ACT.SpecialSpellTimer
                 // 暗転中もずっとリセットし続けてしまうので
                 if ((DateTime.Now - this.lastWipeOutDateTime).TotalSeconds >= 15.0)
                 {
-                    SpellTimerTable.ResetCount();
-                    OnePointTelopTable.Instance.ResetCount();
+                    // インスタンススペルを消去する
+                    SpellTable.Instance.RemoveInstanceSpellsAll();
 
-                    // ACT本体に戦闘終了を通知する
-                    if (Settings.Default.WipeoutNotifyToACT)
-                    {
-                        ActInvoker.Invoke(() =>
-                        {
-                            ActGlobals.oFormActMain.ActCommands("end");
-                        });
-                    }
+                    SpellTable.ResetCount();
+                    TickerTable.Instance.ResetCount();
 
                     this.lastWipeOutDateTime = DateTime.Now;
+
+                    // wipeoutログを発生させる
+                    LogParser.RaiseLog(DateTime.Now, CombatAnalyzer.Wipeout);
+
+                    ActInvoker.Invoke(() =>
+                    {
+                        // ACT本体に戦闘終了を通知する
+                        if (Settings.Default.WipeoutNotifyToACT)
+                        {
+                            ActGlobals.oFormActMain.ActCommands("end");
+                        }
+                    });
                 }
             }
-        }
-
-        #region Misc
-
-        /// <summary>
-        /// FFXIVまたはACTがアクティブか？
-        /// </summary>
-        /// <returns>
-        /// FFXIVまたはACTがアクティブか？</returns>
-        private bool IsActive()
-        {
-            var r = true;
-
-            try
-            {
-                // フォアグラウンドWindowのハンドルを取得する
-                var hWnd = GetForegroundWindow();
-
-                // プロセスIDに変換する
-                int pid;
-                GetWindowThreadProcessId(hWnd, out pid);
-
-                // メインモジュールのファイル名を取得する
-                var p = Process.GetProcessById(pid);
-                if (p != null)
-                {
-                    var fileName = Path.GetFileName(
-                        p.MainModule.FileName);
-
-                    var actFileName = Path.GetFileName(
-                        Process.GetCurrentProcess().MainModule.FileName);
-
-                    if (fileName.ToLower() == "ffxiv.exe" ||
-                        fileName.ToLower() == "ffxiv_dx11.exe" ||
-                        fileName.ToLower() == "dqx.exe" ||
-                        fileName.ToLower() == actFileName.ToLower())
-                    {
-                        r = true;
-                    }
-                    else
-                    {
-                        r = false;
-                    }
-                }
-            }
-            catch (Win32Exception)
-            {
-                // ignore
-            }
-            catch (Exception ex)
-            {
-                Logger.Write(Translate.Get("WatchActiveError"), ex);
-            }
-
-            return r;
         }
 
         #endregion Misc
-
-        #region NativeMethods
-
-        /// <summary>
-        /// フォアグラウンドWindowのハンドルを取得する
-        /// </summary>
-        /// <returns>
-        /// フォアグラウンドWindowのハンドル</returns>
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
-
-        /// <summary>
-        /// WindowハンドルからそのプロセスIDを取得する
-        /// </summary>
-        /// <param name="hWnd">
-        /// プロセスIDを取得するWindowハンドル</param>
-        /// <param name="lpdwProcessId">
-        /// プロセスID</param>
-        /// <returns>
-        /// Windowを作成したスレッドのID</returns>
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-
-        #endregion NativeMethods
     }
 }

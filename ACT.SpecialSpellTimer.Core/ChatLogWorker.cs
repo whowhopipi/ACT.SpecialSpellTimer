@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using ACT.SpecialSpellTimer.Config;
 
 namespace ACT.SpecialSpellTimer
@@ -18,8 +19,7 @@ namespace ACT.SpecialSpellTimer
 
         private readonly double FlushInterval = 10000;
         private readonly Encoding UTF8Encoding = new UTF8Encoding(false);
-
-        private volatile StringBuilder logBuffer = new StringBuilder();
+        private readonly StringBuilder LogBuffer = new StringBuilder(128 * 5120);
 
         private System.Timers.Timer worker;
 
@@ -29,35 +29,19 @@ namespace ACT.SpecialSpellTimer
             Settings.Default.SaveLogEnabled &&
             !string.IsNullOrEmpty(this.OutputFile);
 
-        private string OutputFile =>
+        public string OutputFile =>
             !string.IsNullOrEmpty(OutputDirectory) ?
             Path.Combine(
                 this.OutputDirectory,
-                $@"ACT.SpecialSpellTimer.Chatlog.{DateTime.Now.ToString("yyyy-MM-dd")}.log") :
+                $@"CombatLog.{DateTime.Now.ToString("yyyy-MM-dd")}.log") :
             string.Empty;
 
-        public void AppendLine(
-            string text)
-        {
-            try
-            {
-                if (!this.OutputEnabled)
-                {
-                    return;
-                }
-
-                lock (this.logBuffer)
-                {
-                    this.logBuffer.AppendLine(text);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
+        public Task AppendLinesAsync(
+            List<XIVLog> logList)
+            => Task.Run(() => this.AppendLines(logList));
 
         public void AppendLines(
-            List<string> logLineList)
+            List<XIVLog> logList)
         {
             try
             {
@@ -66,11 +50,12 @@ namespace ACT.SpecialSpellTimer
                     return;
                 }
 
-                lock (this.logBuffer)
+                lock (this.LogBuffer)
                 {
-                    this.logBuffer.AppendLine(string.Join(
-                        Environment.NewLine,
-                        logLineList.ToArray()));
+                    foreach (var log in logList)
+                    {
+                        this.LogBuffer.AppendLine(log.LogLine);
+                    }
                 }
             }
             catch (Exception)
@@ -80,9 +65,9 @@ namespace ACT.SpecialSpellTimer
 
         public void Begin()
         {
-            lock (this.logBuffer)
+            lock (this.LogBuffer)
             {
-                this.logBuffer.Clear();
+                this.LogBuffer.Clear();
             }
 
             this.worker = new System.Timers.Timer();
@@ -105,32 +90,27 @@ namespace ACT.SpecialSpellTimer
         {
             try
             {
-                if (!this.OutputEnabled)
+                if (this.LogBuffer.Length <= 0)
                 {
                     return;
                 }
 
-                if (!string.IsNullOrEmpty(this.OutputDirectory))
+                lock (this.LogBuffer)
                 {
-                    if (!Directory.Exists(this.OutputDirectory))
+                    if (!string.IsNullOrEmpty(this.OutputDirectory))
                     {
-                        Directory.CreateDirectory(this.OutputDirectory);
-                    }
-                }
-
-                lock (this.logBuffer)
-                {
-                    if (this.logBuffer.Length <= 0)
-                    {
-                        return;
+                        if (!Directory.Exists(this.OutputDirectory))
+                        {
+                            Directory.CreateDirectory(this.OutputDirectory);
+                        }
                     }
 
                     File.AppendAllText(
                         this.OutputFile,
-                        this.logBuffer.ToString(),
+                        this.LogBuffer.ToString(),
                         this.UTF8Encoding);
 
-                    this.logBuffer.Clear();
+                    this.LogBuffer.Clear();
                 }
             }
             catch (Exception)

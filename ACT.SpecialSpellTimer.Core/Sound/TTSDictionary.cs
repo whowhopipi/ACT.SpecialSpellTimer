@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,7 +8,10 @@ using System.Text.RegularExpressions;
 using ACT.SpecialSpellTimer.Config;
 using ACT.SpecialSpellTimer.Models;
 using ACT.SpecialSpellTimer.Utility;
+using FFXIV.Framework.FFXIVHelper;
+using FFXIV.Framework.Globalization;
 using Microsoft.VisualBasic.FileIO;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Sound
 {
@@ -23,54 +27,86 @@ namespace ACT.SpecialSpellTimer.Sound
 
         #endregion Singleton
 
-        private string SourceFile => Path.Combine(
+        public string SourceFile => Path.Combine(
             this.ResourcesDirectory,
-            string.Format(SourceFileName, Settings.Default.Language.ToLocale()));
+            string.Format(SourceFileName, Settings.Default.UILocale.ToText()));
 
         private readonly object locker = new object();
         private readonly Dictionary<string, string> ttsDictionary = new Dictionary<string, string>();
         private readonly Dictionary<string, Regex> placeholderRegexDictionary = new Dictionary<string, Regex>();
 
+        public ObservableCollection<PCPhonetic> Phonetics { get; private set; } = new ObservableCollection<PCPhonetic>();
+        public Dictionary<string, string> Dictionary => this.ttsDictionary;
+
+        private string resourcesDirectory;
+
         public string ResourcesDirectory
         {
             get
             {
-                // ACTÇÃÉpÉXÇéÊìæÇ∑ÇÈ
-                var asm = Assembly.GetEntryAssembly();
-                if (asm != null)
+                if (string.IsNullOrEmpty(this.resourcesDirectory))
                 {
-                    var actDirectory = Path.GetDirectoryName(asm.Location);
-                    var resourcesUnderAct = Path.Combine(actDirectory, @"resources");
-
-                    if (Directory.Exists(resourcesUnderAct))
+                    do
                     {
-                        return resourcesUnderAct;
-                    }
+                        // ACT„ÅÆ„Éë„Çπ„ÇíÂèñÂæó„Åô„Çã
+                        var asm = Assembly.GetEntryAssembly();
+                        if (asm != null)
+                        {
+                            var actDirectory = Path.GetDirectoryName(asm.Location);
+                            var resourcesUnderAct = Path.Combine(actDirectory, @"resources");
+
+                            if (Directory.Exists(resourcesUnderAct))
+                            {
+                                this.resourcesDirectory = resourcesUnderAct;
+                                break;
+                            }
+                        }
+
+                        // Ëá™Ë∫´„ÅÆÂ†¥ÊâÄ„ÇíÂèñÂæó„Åô„Çã
+                        var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
+                        var resourcesUnderThis = Path.Combine(selfDirectory, @"resources");
+
+                        if (Directory.Exists(resourcesUnderThis))
+                        {
+                            this.resourcesDirectory = resourcesUnderThis;
+                            break;
+                        }
+                    } while (false);
                 }
 
-                // é©êgÇÃèÍèäÇéÊìæÇ∑ÇÈ
-                var selfDirectory = PluginCore.Instance.Location ?? string.Empty;
-                var resourcesUnderThis = Path.Combine(selfDirectory, @"resources");
-
-                if (Directory.Exists(resourcesUnderThis))
-                {
-                    return resourcesUnderThis;
-                }
-
-                return string.Empty;
+                return this.resourcesDirectory;
             }
         }
 
         public string ReplaceWordsTTS(
             string textToSpeak)
         {
+            if (string.IsNullOrEmpty(textToSpeak))
+            {
+                return textToSpeak;
+            }
+
             lock (this.locker)
             {
                 var placeholderList = TableCompiler.Instance.PlaceholderList;
 
-                foreach (var item in this.ttsDictionary)
+                var q =
+                    from x in this.ttsDictionary
+                    orderby
+                    !x.Key.Contains("<") && !x.Key.Contains(">") ?
+                    0 :
+                    1
+                    select
+                    x;
+
+                foreach (var item in q)
                 {
-                    // í èÌÇÃíuä∑
+                    if (string.IsNullOrEmpty(item.Key))
+                    {
+                        continue;
+                    }
+
+                    // ÈÄöÂ∏∏„ÅÆÁΩÆÊèõ
                     if (!item.Key.Contains("<") &&
                         !item.Key.Contains(">"))
                     {
@@ -78,7 +114,7 @@ namespace ACT.SpecialSpellTimer.Sound
                         continue;
                     }
 
-                    // ÉvÉåÅ[ÉXÉzÉãÉ_Ç…ÇÊÇÈíuä∑
+                    // „Éó„É¨„Éº„Çπ„Éõ„É´„ÉÄ„Å´„Çà„ÇãÁΩÆÊèõ
                     var placeholder = placeholderList
                         .FirstOrDefault(x => x.Placeholder == item.Key);
                     if (placeholder == null)
@@ -97,7 +133,7 @@ namespace ACT.SpecialSpellTimer.Sound
                         this.placeholderRegexDictionary[placeholder.ReplaceString] = beforeRegex;
                     }
 
-                    // ÉvÉåÅ[ÉXÉzÉãÉ_ÇÃíuä∑å„ÇÃílÇ©ÇÁì«Ç›âºñºÇ…íuä∑Ç∑ÇÈ
+                    // „Éó„É¨„Éº„Çπ„Éõ„É´„ÉÄ„ÅÆÁΩÆÊèõÂæå„ÅÆÂÄ§„Åã„ÇâË™≠„Åø‰ªÆÂêç„Å´ÁΩÆÊèõ„Åô„Çã
                     textToSpeak = beforeRegex.Replace(textToSpeak, item.Value);
                 }
             }
@@ -105,7 +141,7 @@ namespace ACT.SpecialSpellTimer.Sound
             return textToSpeak;
         }
 
-        public string ReplaceTTS(
+        private string ReplaceTTS(
             string textToSpeak)
         {
             lock (this.locker)
@@ -163,9 +199,111 @@ namespace ACT.SpecialSpellTimer.Sound
                         }
                     }
                 }
+
+                lock (this.locker)
+                {
+                    foreach (var item in this.Phonetics)
+                    {
+                        this.ttsDictionary[item.Name] = item.Phonetic;
+                        this.ttsDictionary[item.NameFI] = item.Phonetic;
+                        this.ttsDictionary[item.NameIF] = item.Phonetic;
+                        this.ttsDictionary[item.NameII] = item.Phonetic;
+                    }
+                }
             }
 
             Logger.Write($"TTSDictionary loaded. {this.SourceFile}");
+        }
+
+        public class PCPhonetic :
+            BindableBase
+        {
+            private uint id;
+            private string name;
+            private string nameFI;
+            private string nameIF;
+            private string nameII;
+            private string phonetic;
+            private JobIDs jobID;
+
+            public uint ID
+            {
+                get => this.id;
+                set => this.SetProperty(ref this.id, value);
+            }
+
+            public string Name
+            {
+                get => this.name;
+                set
+                {
+                    if (this.SetProperty(ref this.name, value))
+                    {
+                        if (TTSDictionary.Instance.ttsDictionary.ContainsKey(this.name))
+                        {
+                            this.Phonetic = TTSDictionary.Instance.ttsDictionary[this.name];
+                        }
+                    }
+                }
+            }
+
+            public string NameFI
+            {
+                get => this.nameFI;
+                set => this.SetProperty(ref this.nameFI, value);
+            }
+
+            public string NameIF
+            {
+                get => this.nameIF;
+                set => this.SetProperty(ref this.nameIF, value);
+            }
+
+            public string NameII
+            {
+                get => this.nameII;
+                set => this.SetProperty(ref this.nameII, value);
+            }
+
+            public string Phonetic
+            {
+                get => this.phonetic;
+                set
+                {
+                    if (this.SetProperty(ref this.phonetic, value))
+                    {
+                        TTSDictionary.Instance.ttsDictionary[this.Name] = value;
+                        TTSDictionary.Instance.ttsDictionary[this.NameFI] = value;
+                        TTSDictionary.Instance.ttsDictionary[this.NameIF] = value;
+                        TTSDictionary.Instance.ttsDictionary[this.NameII] = value;
+                    }
+                }
+            }
+
+            public JobIDs JobID
+            {
+                get => this.jobID;
+                set => this.SetProperty(ref this.jobID, value);
+            }
+
+            public int SortOrder
+            {
+                get
+                {
+                    if ((TableCompiler.Instance?.Player?.ID ?? 0) == this.ID)
+                    {
+                        return 0;
+                    }
+
+                    var job = Jobs.Find(this.JobID);
+                    if (job == null)
+                    {
+                        return (int)this.JobID;
+                    }
+
+                    return ((int)job.Role * 100) + (int)this.JobID;
+                }
+            }
         }
     }
 }

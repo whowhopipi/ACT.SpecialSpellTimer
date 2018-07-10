@@ -1,15 +1,14 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using ACT.SpecialSpellTimer.Config;
-using ACT.SpecialSpellTimer.FFXIVHelper;
 using ACT.SpecialSpellTimer.Models;
-using ACT.SpecialSpellTimer.Sound;
 using ACT.SpecialSpellTimer.Utility;
 using ACT.SpecialSpellTimer.Views;
 using FFXIV.Framework.Extensions;
+using FFXIV.Framework.FFXIVHelper;
+using FFXIV.Framework.WPF.Views;
 
 namespace ACT.SpecialSpellTimer
 {
@@ -29,8 +28,8 @@ namespace ACT.SpecialSpellTimer
         /// <summary>
         /// テロップWindowのリスト
         /// </summary>
-        private ConcurrentDictionary<long, TickerWindow> telopWindowList =
-            new ConcurrentDictionary<long, TickerWindow>();
+        private Dictionary<long, TickerWindow> telopWindowList =
+            new Dictionary<long, TickerWindow>();
 
         /// <summary>
         /// ログとマッチングする
@@ -38,7 +37,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="telops">Telops</param>
         /// <param name="logLines">ログ行</param>
         public void Match(
-            IReadOnlyList<OnePointTelop> telops,
+            IReadOnlyList<Ticker> telops,
             IReadOnlyList<string> logLines)
         {
             if (telops.Count < 1 ||
@@ -75,7 +74,7 @@ namespace ACT.SpecialSpellTimer
         /// <param name="telop">テロップ</param>
         /// <param name="log">ログ</param>
         public void MatchCore(
-            OnePointTelop telop,
+            Ticker telop,
             string log)
         {
             var matched = false;
@@ -100,7 +99,9 @@ namespace ACT.SpecialSpellTimer
                             var messageReplaced = ConditionUtility.GetReplacedMessage(telop);
 
                             // PC名を置換する
-                            messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
+                            messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                                messageReplaced,
+                                Settings.Default.PCNameInitialOnDisplayStyle);
 
                             if (!telop.AddMessageEnabled)
                             {
@@ -121,8 +122,8 @@ namespace ACT.SpecialSpellTimer
                             // マッチング計測終了
                             telop.EndMatching();
 
-                            SoundController.Instance.Play(telop.MatchSound);
-                            SoundController.Instance.Play(telop.MatchTextToSpeak);
+                            telop.Play(telop.MatchSound, telop.MatchAdvancedConfig);
+                            telop.Play(telop.MatchTextToSpeak, telop.MatchAdvancedConfig);
 
                             matched = true;
                         }
@@ -139,7 +140,9 @@ namespace ACT.SpecialSpellTimer
                         messageReplaced = match.Result(messageReplaced);
 
                         // PC名を置換する
-                        messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(messageReplaced);
+                        messageReplaced = FFXIVPlugin.Instance.ReplacePartyMemberName(
+                            messageReplaced,
+                            Settings.Default.PCNameInitialOnDisplayStyle);
 
                         if (!telop.AddMessageEnabled)
                         {
@@ -160,11 +163,11 @@ namespace ACT.SpecialSpellTimer
                         // マッチング計測終了
                         telop.EndMatching();
 
-                        SoundController.Instance.Play(telop.MatchSound);
+                        telop.Play(telop.MatchSound, telop.MatchAdvancedConfig);
                         if (!string.IsNullOrWhiteSpace(telop.MatchTextToSpeak))
                         {
                             var tts = match.Result(telop.MatchTextToSpeak);
-                            SoundController.Instance.Play(tts);
+                            telop.Play(tts, telop.MatchAdvancedConfig);
                         }
 
                         matched = true;
@@ -219,33 +222,44 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="telop">テロップ</param>
         public void RefreshTelopOverlays(
-            IReadOnlyList<OnePointTelop> telops)
+            IReadOnlyList<Ticker> telops)
         {
+            var doneTest = false;
+
             void refreshTelop(
-                OnePointTelop telop)
+                Ticker telop)
             {
-                if (!this.telopWindowList.TryGetValue(telop.ID, out TickerWindow w))
+                var w = default(TickerWindow);
+                lock (this.telopWindowList)
                 {
-                    w = new TickerWindow()
-                    {
-                        Title = "OnePointTelop - " + telop.Title,
-                        DataSource = telop,
-                        Opacity = 0,
-                        Topmost = false,
-                    };
+                    var exists = this.telopWindowList.ContainsKey(telop.ID);
+                    w = exists ?
+                        this.telopWindowList[telop.ID] :
+                        new TickerWindow(telop)
+                        {
+                            Title = "Ticker - " + telop.Title,
+                        };
 
-                    this.telopWindowList.TryAdd(telop.ID, w);
-
-                    if (Settings.Default.ClickThroughEnabled)
+                    if (!exists)
                     {
-                        w.ToTransparentWindow();
+                        this.telopWindowList.Add(telop.ID, w);
+                        w.Show();
                     }
-
-                    w.Show();
                 }
 
-                if (telop.IsTemporaryDisplay ||
-                    (Settings.Default.OverlayVisible && Settings.Default.TelopAlwaysVisible))
+#if DEBUG
+                if (telop.Title.Contains("TEST"))
+                {
+                    // ブレイクポイント用
+                    ;
+                }
+#endif
+
+                // クリックスルーを適用する
+                w.IsClickthrough = Settings.Default.ClickThroughEnabled;
+
+                if (telop.IsDesignMode &&
+                    telop.MatchDateTime <= DateTime.MinValue)
                 {
                     w.Refresh();
                     if (w.ShowOverlay())
@@ -255,10 +269,6 @@ namespace ACT.SpecialSpellTimer
 
                     return;
                 }
-
-                // 実際のテロップの位置を取得しておく
-                telop.Left = w.Left;
-                telop.Top = w.Top;
 
                 if (telop.MatchDateTime > DateTime.MinValue)
                 {
@@ -294,6 +304,13 @@ namespace ACT.SpecialSpellTimer
                     w.HideOverlay();
                     telop.MessageReplaced = string.Empty;
                 }
+
+                if (telop.MatchDateTime <= DateTime.MinValue &&
+                    telop.IsTest)
+                {
+                    telop.IsTest = false;
+                    doneTest = true;
+                }
             }
 
             foreach (var telop in telops)
@@ -304,16 +321,32 @@ namespace ACT.SpecialSpellTimer
                 refreshTelop(telop);
 #if DEBUG
                 sw.Stop();
-                if (telop.IsTemporaryDisplay &&
+                if (telop.IsDesignMode &&
                     sw.Elapsed.TotalMilliseconds >= 1.0)
                 {
                     Debug.WriteLine($"●refreshTelop {telop.Title} {sw.Elapsed.TotalMilliseconds:N0}ms");
                 }
 #endif
             }
-        }
 
-        #region Overlays Controller
+            // 不要なWindow（デザインモードの残骸など）を閉じる
+            lock (this.telopWindowList)
+            {
+                var toHide = this.telopWindowList
+                    .Where(x => !telops.Any(y => y.GetID() == x.Value.Ticker.GetID()))
+                    .Select(x => x.Value);
+                foreach (var window in toHide)
+                {
+                    window.HideOverlay();
+                }
+            }
+
+            // TESTモードが終わったならばフィルタし直す
+            if (doneTest)
+            {
+                TableCompiler.Instance.CompileTickers();
+            }
+        }
 
         #region Hide & Close
 
@@ -322,9 +355,12 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void CloseTelops()
         {
-            foreach (var window in this.telopWindowList.Values)
+            lock (this.telopWindowList)
             {
-                window.DataSource.ToClose = true;
+                foreach (var window in this.telopWindowList.Values)
+                {
+                    window.Ticker.ToClose = true;
+                }
             }
         }
 
@@ -332,35 +368,32 @@ namespace ACT.SpecialSpellTimer
         {
             var closed = false;
 
-            var targets = this.telopWindowList
-                .Where(x => x.Value.DataSource.ToClose).ToList();
-
-            foreach (var entry in targets)
+            lock (this.telopWindowList)
             {
-                var window = entry.Value;
-                if (window == null)
+                var targets = this.telopWindowList
+                    .Where(x => x.Value.Ticker.ToClose).ToList();
+
+                foreach (var entry in targets)
                 {
-                    continue;
-                }
+                    var window = entry.Value;
+                    if (window == null)
+                    {
+                        continue;
+                    }
 
-                if (window.DataSource.ToClose)
-                {
-                    window.DataSource.ToClose = false;
-
-                    window.DataSource.Left = window.Left;
-                    window.DataSource.Top = window.Top;
-
-                    window.Close();
-
-                    telopWindowList.TryRemove(entry.Key, out TickerWindow w);
-
-                    closed = true;
+                    if (window.Ticker.ToClose)
+                    {
+                        window.Ticker.ToClose = false;
+                        window.Close();
+                        telopWindowList.Remove(entry.Key);
+                        closed = true;
+                    }
                 }
             }
 
             if (closed)
             {
-                OnePointTelopTable.Instance.Save();
+                TickerTable.Instance.Save();
             }
         }
 
@@ -369,14 +402,16 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         /// <param name="telops">Telops</param>
         public void GarbageWindows(
-            IReadOnlyList<OnePointTelop> telops)
+            IReadOnlyList<Ticker> telops)
         {
-            // 不要になったWindowを閉じる
-            foreach (var window in this.telopWindowList.Values)
+            lock (this.telopWindowList)
             {
-                if (!telops.Any(x => x.ID == window.DataSource.ID))
+                foreach (var window in this.telopWindowList.Values)
                 {
-                    window.DataSource.ToClose = true;
+                    if (!telops.Any(x => x.ID == window.Ticker.ID))
+                    {
+                        window.Ticker.ToClose = true;
+                    }
                 }
             }
         }
@@ -386,83 +421,15 @@ namespace ACT.SpecialSpellTimer
         /// </summary>
         public void HideTelops()
         {
-            foreach (var telop in this.telopWindowList.Values)
+            lock (this.telopWindowList)
             {
-                telop.HideOverlay();
+                foreach (var telop in this.telopWindowList.Values)
+                {
+                    telop.HideOverlay();
+                }
             }
         }
 
         #endregion Hide & Close
-
-        /// <summary>
-        /// 位置を取得する
-        /// </summary>
-        /// <param name="telopID">設定するテロップのID</param>
-        /// <param name="left">Left</param>
-        /// <param name="top">Top</param>
-        public void GettLocation(
-            long telopID,
-            out double left,
-            out double top)
-        {
-            left = 0;
-            top = 0;
-
-            var telop = this.telopWindowList.ContainsKey(telopID) ?
-                this.telopWindowList[telopID] :
-                null;
-
-            if (telop != null)
-            {
-                left = telop.Left;
-                top = telop.Top;
-
-                return;
-            }
-
-            var telopSettings = OnePointTelopTable.Instance.Table
-                .FirstOrDefault(x => x.ID == telopID);
-
-            if (telopSettings != null)
-            {
-                left = telopSettings.Left;
-                top = telopSettings.Top;
-            }
-        }
-
-        /// <summary>
-        /// 位置を設定する
-        /// </summary>
-        /// <param name="telopID">設定するテロップのID</param>
-        /// <param name="left">Left</param>
-        /// <param name="top">Top</param>
-        public void SetLocation(
-            long telopID,
-            double left,
-            double top)
-        {
-            var telop = this.telopWindowList.ContainsKey(telopID) ?
-                this.telopWindowList[telopID] :
-                null;
-
-            if (telop != null)
-            {
-                telop.Left = left;
-                telop.Top = top;
-
-                return;
-            }
-
-            var telopSettings = OnePointTelopTable.Instance.Table
-                .FirstOrDefault(x => x.ID == telopID);
-
-            if (telopSettings != null)
-            {
-                telopSettings.Left = left;
-                telopSettings.Top = top;
-            }
-        }
-
-        #endregion Overlays Controller
     }
 }

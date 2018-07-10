@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 using ACT.SpecialSpellTimer.Utility;
 using Advanced_Combat_Tracker;
+using FFXIV.Framework.Bridge;
 
 namespace ACT.SpecialSpellTimer.Sound
 {
@@ -23,75 +23,55 @@ namespace ACT.SpecialSpellTimer.Sound
 
         #endregion Singleton
 
-        private readonly double existYukkuriWorkerInterval = 10000;
-
-        /// <summary>
-        /// ゆっくりが有効かどうか？
-        /// </summary>
-        private volatile bool enabledYukkuri = false;
-
-        private System.Timers.Timer existYukkuriWorker;
-
         #region Begin / End
 
         public void Begin()
         {
-            this.existYukkuriWorker = new System.Timers.Timer();
-            this.existYukkuriWorker.AutoReset = true;
-            this.existYukkuriWorker.Interval = existYukkuriWorkerInterval;
-            this.existYukkuriWorker.Elapsed += (s, e) =>
-            {
-                if (ActGlobals.oFormActMain != null &&
-                    ActGlobals.oFormActMain.Visible &&
-                    ActGlobals.oFormActMain.ActPlugins != null)
-                {
-                    this.enabledYukkuri = ActGlobals.oFormActMain.ActPlugins
-                        .Where(x =>
-                            x.pluginFile.Name.ToUpper().Contains("ACT.TTSYukkuri".ToUpper()) &&
-                            x.lblPluginStatus.Text.ToUpper() == "Plugin Started".ToUpper())
-                        .Any();
-                }
-            };
-
-            this.existYukkuriWorker.Start();
         }
 
         public void End()
         {
-            this.existYukkuriWorker?.Stop();
-            this.existYukkuriWorker?.Dispose();
-            this.existYukkuriWorker = null;
         }
 
         #endregion Begin / End
+
+        private string waveDirectory;
 
         public string WaveDirectory
         {
             get
             {
-                // ACTのパスを取得する
-                var asm = Assembly.GetEntryAssembly();
-                if (asm != null)
+                if (string.IsNullOrEmpty(this.waveDirectory))
                 {
-                    var actDirectory = Path.GetDirectoryName(asm.Location);
-                    var resourcesUnderAct = Path.Combine(actDirectory, @"resources\wav");
-
-                    if (Directory.Exists(resourcesUnderAct))
+                    do
                     {
-                        return resourcesUnderAct;
-                    }
+                        // ACTのパスを取得する
+                        var asm = Assembly.GetEntryAssembly();
+                        if (asm != null)
+                        {
+                            var actDirectory = Path.GetDirectoryName(asm.Location);
+                            var resourcesUnderAct = Path.Combine(actDirectory, @"resources\wav");
+
+                            if (Directory.Exists(resourcesUnderAct))
+                            {
+                                this.waveDirectory = resourcesUnderAct;
+                                break;
+                            }
+                        }
+
+                        // 自身の場所を取得する
+                        var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
+                        var resourcesUnderThis = Path.Combine(selfDirectory, @"resources\wav");
+
+                        if (Directory.Exists(resourcesUnderThis))
+                        {
+                            this.waveDirectory = resourcesUnderThis;
+                            break;
+                        }
+                    } while (false);
                 }
 
-                // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
-                var resourcesUnderThis = Path.Combine(selfDirectory, @"resources\wav");
-
-                if (Directory.Exists(resourcesUnderThis))
-                {
-                    return resourcesUnderThis;
-                }
-
-                return string.Empty;
+                return this.waveDirectory;
             }
         }
 
@@ -112,7 +92,11 @@ namespace ACT.SpecialSpellTimer.Sound
 
             if (Directory.Exists(this.WaveDirectory))
             {
-                foreach (var wave in Directory.GetFiles(this.WaveDirectory, "*.wav")
+                var files = new List<string>();
+                files.AddRange(Directory.GetFiles(this.WaveDirectory, "*.wav"));
+                files.AddRange(Directory.GetFiles(this.WaveDirectory, "*.mp3"));
+
+                foreach (var wave in files
                     .OrderBy(x => x)
                     .ToArray())
                 {
@@ -141,39 +125,36 @@ namespace ACT.SpecialSpellTimer.Sound
                     return;
                 }
 
-                var isWave = source.EndsWith(".wav");
-
-                if (this.enabledYukkuri)
+                // wav？
+                if (source.EndsWith(".wav") ||
+                    source.EndsWith(".wave") ||
+                    source.EndsWith(".mp3"))
                 {
-                    Task.Run(() =>
+                    // ファイルが存在する？
+                    if (File.Exists(source))
                     {
-                        if (!isWave)
+                        if (PlayBridge.Instance.IsAvailable)
                         {
-                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
-                        }
-
-                        ActGlobals.oFormActMain.TTS(source);
-                    });
-                }
-                else
-                {
-                    Task.Run(() =>
-                    {
-                        // wav？
-                        if (isWave)
-                        {
-                            // ファイルが存在する？
-                            if (File.Exists(source))
-                            {
-                                ActGlobals.oFormActMain.PlaySound(source);
-                            }
+                            PlayBridge.Instance.Play(source);
                         }
                         else
                         {
-                            source = TTSDictionary.Instance.ReplaceWordsTTS(source);
-                            ActGlobals.oFormActMain.TTS(source);
+                            ActGlobals.oFormActMain.PlaySound(source);
                         }
-                    });
+                    }
+                }
+                else
+                {
+                    source = TTSDictionary.Instance.ReplaceWordsTTS(source);
+
+                    if (PlayBridge.Instance.IsAvailable)
+                    {
+                        PlayBridge.Instance.Play(source);
+                    }
+                    else
+                    {
+                        ActGlobals.oFormActMain.TTS(source);
+                    }
                 }
             }
             catch (Exception ex)
@@ -204,10 +185,7 @@ namespace ACT.SpecialSpellTimer.Sound
             /// ToString()
             /// </summary>
             /// <returns>一般化された文字列</returns>
-            public override string ToString()
-            {
-                return this.Name;
-            }
+            public override string ToString() => this.Name;
         }
     }
 }

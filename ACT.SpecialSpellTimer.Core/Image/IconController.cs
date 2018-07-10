@@ -1,8 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Prism.Mvvm;
 
 namespace ACT.SpecialSpellTimer.Image
 {
@@ -16,190 +20,277 @@ namespace ACT.SpecialSpellTimer.Image
 
         #endregion Singleton
 
+        /// <summary>
+        /// Blankビットマップ
+        /// </summary>
+        public static readonly BitmapSource BlankBitmap = BitmapImage.Create(
+            2,
+            2,
+            96,
+            96,
+            PixelFormats.Indexed1,
+            new BitmapPalette(new List<Color> { Colors.Transparent }),
+            new byte[] { 0, 0, 0, 0 },
+            1);
+
+        private string[] iconDirectories;
+
         public string[] IconDirectories
         {
             get
             {
-                var dirs = new List<string>();
-
-                var actDirectory = string.Empty;
-
-                // ACTのパスを取得する
-                var asm = Assembly.GetEntryAssembly();
-                if (asm != null)
+                lock (this)
                 {
-                    actDirectory = Path.GetDirectoryName(asm.Location);
-
-                    var dir1 = Path.Combine(actDirectory, @"resources\icon");
-                    if (Directory.Exists(dir1))
+                    if (this.iconDirectories == null)
                     {
-                        dirs.Add(dir1);
-                    }
+                        var dirs = new List<string>();
 
-                    var dir2 = Path.Combine(actDirectory, @"resources\xivdb\Action icons");
-                    if (Directory.Exists(dir2))
-                    {
-                        dirs.Add(dir2);
+                        var actDirectory = string.Empty;
+
+                        // ACTのパスを取得する
+                        var asm = Assembly.GetEntryAssembly();
+                        if (asm != null)
+                        {
+                            actDirectory = Path.GetDirectoryName(asm.Location);
+
+                            var dir1 = Path.Combine(actDirectory, @"resources\icon");
+                            if (Directory.Exists(dir1))
+                            {
+                                dirs.Add(dir1);
+                            }
+
+                            var dir2 = Path.Combine(actDirectory, @"resources\xivdb\Action icons");
+                            if (Directory.Exists(dir2))
+                            {
+                                dirs.Add(dir2);
+                            }
+                        }
+
+                        // 自身の場所を取得する
+                        var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
+                        if (Path.GetFullPath(selfDirectory).ToLower() !=
+                            Path.GetFullPath(actDirectory).ToLower())
+                        {
+                            var dir3 = Path.Combine(selfDirectory, @"resources\icon");
+                            if (Directory.Exists(dir3))
+                            {
+                                dirs.Add(dir3);
+                            }
+
+                            var dir4 = Path.Combine(selfDirectory, @"resources\xivdb\Action icons");
+                            if (Directory.Exists(dir4))
+                            {
+                                dirs.Add(dir4);
+                            }
+                        }
+
+                        this.iconDirectories = dirs.ToArray();
                     }
                 }
 
-                // 自身の場所を取得する
-                var selfDirectory = PluginCore.Instance?.Location ?? string.Empty;
-                if (Path.GetFullPath(selfDirectory).ToLower() !=
-                    Path.GetFullPath(actDirectory).ToLower())
-                {
-                    var dir3 = Path.Combine(selfDirectory, @"resources\icon");
-                    if (Directory.Exists(dir3))
-                    {
-                        dirs.Add(dir3);
-                    }
-
-                    var dir4 = Path.Combine(selfDirectory, @"resources\xivdb\Action icons");
-                    if (Directory.Exists(dir4))
-                    {
-                        dirs.Add(dir4);
-                    }
-                }
-
-                return dirs.ToArray();
+                return this.iconDirectories;
             }
         }
+
+        private IconFile[] iconFiles;
 
         /// <summary>
         /// Iconファイルを列挙する
         /// </summary>
         /// <returns>
         /// Iconファイルのコレクション</returns>
-        public IconFile[] EnumlateIcon()
+        public IconFile[] EnumerateIcon()
+        {
+            lock (this)
+            {
+                if (this.iconFiles == null)
+                {
+                    var list = new List<IconFile>();
+
+                    // 未選択用のダミーをセットしておく
+                    list.Add(new IconFile()
+                    {
+                        FullPath = string.Empty,
+                    });
+
+                    foreach (var dir in this.IconDirectories)
+                    {
+                        if (Directory.Exists(dir))
+                        {
+                            list.AddRange(this.EnumerateIcon(dir));
+                        }
+                    }
+
+                    this.iconFiles = (
+                        from x in list
+                        orderby
+                        x.DirectoryName,
+                        x.Name
+                        select
+                        x).Distinct().ToArray();
+                }
+            }
+
+            return this.iconFiles;
+        }
+
+        /// <summary>
+        /// キャッシュされたアイコン情報を更新する
+        /// </summary>
+        public void RefreshIcon()
+        {
+            lock (this)
+            {
+                this.iconFiles = null;
+            }
+
+            this.EnumerateIcon();
+        }
+
+        private IconFile[] EnumerateIcon(
+            string directory)
         {
             var list = new List<IconFile>();
 
-            // 未選択用のダミーをセットしておく
-            list.Add(new IconFile()
+            foreach (var dir in Directory.GetDirectories(directory))
             {
-                FullPath = string.Empty,
-                RelativePath = string.Empty
-            });
+                list.AddRange(this.EnumerateIcon(dir));
+            }
 
-            foreach (var dir in this.IconDirectories)
+            foreach (var file in Directory.GetFiles(directory, "*.png"))
             {
-                if (Directory.Exists(dir))
+                var icon = new IconFile()
                 {
-                    list.AddRange(this.EnumulateIcon(dir, string.Empty));
-                }
+                    FullPath = file,
+                };
+
+                list.Add(icon);
             }
 
             return list.ToArray();
         }
 
-        public IconFile GetIconFile(String relativePath)
+        public IconFile GetIconFile(
+            string name)
         {
-            if (string.IsNullOrEmpty(relativePath))
+            if (string.IsNullOrEmpty(name))
             {
                 return null;
             }
 
-            foreach (var dir in this.IconDirectories)
+            if (name.Contains("\\"))
             {
-                var iconPath = Path.Combine(dir, relativePath);
-                if (File.Exists(iconPath))
-                {
-                    return new IconFile()
-                    {
-                        FullPath = iconPath.ToString(),
-                        RelativePath = relativePath
-                    };
-                }
+                name = name.Split('\\').LastOrDefault();
             }
 
-            return null;
-        }
-
-        private IconFile[] EnumulateIcon(String target, String prefix)
-        {
-            var list = new List<IconFile>();
-
-            foreach (var dir in Directory.GetDirectories(target))
-            {
-                list.AddRange(this.EnumulateIcon(dir, prefix + Path.GetFileName(dir) + Path.DirectorySeparatorChar));
-            }
-
-            foreach (var file in Directory.GetFiles(target, "*.png"))
-            {
-                list.Add(new IconFile()
-                {
-                    FullPath = file,
-                    RelativePath = prefix + Path.GetFileName(file)
-                });
-            }
-
-            return list.ToArray();
+            return this.EnumerateIcon().FirstOrDefault(x => x.Name == name);
         }
 
         /// <summary>
         /// Iconファイル
         /// </summary>
-        public class IconFile
+        public class IconFile :
+            BindableBase,
+            IEquatable<IconFile>
         {
             private static readonly Regex SkillNameRegex = new Regex(
                 @"\d\d\d\d_(?<skillName>.+?)\.png",
                 RegexOptions.Compiled);
 
-            public string Directory => 
-                !string.IsNullOrEmpty(this.FullPath) ? 
+            private string fullPath;
+
+            public string FullPath
+            {
+                get => this.fullPath;
+                set
+                {
+                    if (this.SetProperty(ref this.fullPath, value))
+                    {
+                        if (string.IsNullOrEmpty(this.Name))
+                        {
+                            return;
+                        }
+
+                        var match = SkillNameRegex.Match(this.Name);
+                        if (match.Success)
+                        {
+                            this.SkillName = match.Groups["skillName"].Value;
+                        }
+                        else
+                        {
+                            this.SkillName = this.Name;
+                        }
+                    }
+                }
+            }
+
+            public string Directory =>
+                !string.IsNullOrEmpty(this.FullPath) ?
                 Path.GetDirectoryName(this.FullPath) :
                 string.Empty;
 
             /// <summary>
-            /// フルパス
+            /// 直上のディレクトリ名
             /// </summary>
-            public string FullPath { get; set; }
+            public string DirectoryName =>
+                this.Directory.Split('\\').LastOrDefault() ?? string.Empty;
 
-            /// <summary>
-            /// ファイル名
-            /// </summary>
-            public string Name
+            public string Name =>
+                !string.IsNullOrWhiteSpace(this.FullPath) ?
+                    Path.GetFileName(this.FullPath) :
+                    string.Empty;
+
+            public string SkillName { get; private set; } = string.Empty;
+
+            public override string ToString() => this.Name;
+
+            public BitmapImage BitmapImage => this.CreateBitmapImage();
+
+            public BitmapImage CreateBitmapImage()
             {
-                get
+                if (!File.Exists(this.FullPath))
                 {
-                    return !string.IsNullOrWhiteSpace(this.FullPath) ?
-                        Path.GetFileName(this.FullPath) :
-                        string.Empty;
+                    return null;
                 }
-            }
 
-            public string SkillName
-            {
-                get
+                var img = default(BitmapImage);
+                var path = this.FullPath.ToLower();
+
+                lock (iconDictionary)
                 {
-                    if (string.IsNullOrEmpty(this.Name))
+                    if (iconDictionary.ContainsKey(path))
                     {
-                        return this.Name;
+                        img = iconDictionary[path];
                     }
-
-                    var match = SkillNameRegex.Match(this.Name);
-                    if (match.Success)
+                    else
                     {
-                        return match.Groups["skillName"].Value;
-                    }
+                        img = new BitmapImage();
+                        img.BeginInit();
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.CreateOptions = BitmapCreateOptions.None;
+                        img.UriSource = new Uri(path);
+                        img.EndInit();
+                        img.Freeze();
 
-                    return this.Name;
+                        iconDictionary[path] = img;
+                    }
                 }
+
+                return img;
             }
 
-            /// <summary>
-            /// フルパス
-            /// </summary>
-            public string RelativePath { get; set; }
-
-            /// <summary>
-            /// ToString()
-            /// </summary>
-            /// <returns>一般化された文字列</returns>
-            public override string ToString()
+            public bool Equals(
+                IconFile other)
             {
-                return this.Name;
+                if (other == null)
+                {
+                    return false;
+                }
+
+                return string.Equals(this.FullPath, other.FullPath, StringComparison.OrdinalIgnoreCase);
             }
+
+            private static Dictionary<string, BitmapImage> iconDictionary = new Dictionary<string, BitmapImage>();
         }
     }
 }

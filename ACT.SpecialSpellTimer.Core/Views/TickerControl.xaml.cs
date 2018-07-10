@@ -3,9 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using ACT.SpecialSpellTimer.Config;
 using FFXIV.Framework.Common;
+using FFXIV.Framework.Extensions;
+using FFXIV.Framework.WPF.Controls;
 
 namespace ACT.SpecialSpellTimer.Views
 {
@@ -20,7 +21,7 @@ namespace ACT.SpecialSpellTimer.Views
 #if DEBUG
             if (WPFHelper.IsDesignMode)
             {
-                this.Message = "サンプルテロップ";
+                this.Message = "戦士サンプルテロップ";
                 this.Font = new FontInfo(
                     "メイリオ",
                     30.0,
@@ -28,6 +29,7 @@ namespace ACT.SpecialSpellTimer.Views
                     "Bold",
                     "Normal");
 
+                this.BarHeight = 11;
                 this.FontBrush = new SolidColorBrush(Colors.Red);
                 this.FontOutlineBrush = new SolidColorBrush(Colors.White);
                 this.BarVisible = true;
@@ -63,7 +65,8 @@ namespace ACT.SpecialSpellTimer.Views
             {
                 if (this.MessageTextBlock.SetFontInfo(value))
                 {
-                    this.MessageTextBlock.SetAutoStrokeThickness();
+                    this.MessageTextBlock.StrokeThickness = value.OutlineThickness;
+                    this.MessageTextBlock.BlurRadius = value.BlurRadius;
                 }
             }
         }
@@ -96,50 +99,44 @@ namespace ACT.SpecialSpellTimer.Views
 
         public double BarHeight
         {
-            get => this.BarRectangle.Height;
+            get => this.Bar.Height;
             set
             {
-                if (this.BarRectangle.Height != value)
+                if (this.Bar.Height != value)
                 {
-                    this.BarRectangle.Height = value;
+                    this.Bar.Height = value;
                 }
             }
         }
 
         public bool BarVisible
         {
-            get => this.ProgressBarCanvas.Visibility == Visibility.Visible;
+            get => this.Bar.Visibility == Visibility.Visible;
             set
             {
                 var visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                if (this.ProgressBarCanvas.Visibility != visibility)
+                if (this.Bar.Visibility != visibility)
                 {
-                    this.ProgressBarCanvas.Visibility = visibility;
+                    this.Bar.Visibility = visibility;
                 }
             }
         }
 
         #region Animation
 
-        private DoubleAnimationUsingKeyFrames animation = new DoubleAnimationUsingKeyFrames()
+        private DoubleAnimation animation = new DoubleAnimation()
         {
-            AutoReverse = false,
-            KeyFrames = new DoubleKeyFrameCollection()
-            {
-                new LinearDoubleKeyFrame(0)
-            }
+            From = 1.0,
+            To = 0,
         };
-
-        private LinearDoubleKeyFrame KeyFrame => (LinearDoubleKeyFrame)this.animation.KeyFrames[0];
-
-        public void ResetProgressBar()
-        {
-            this.BarRectangle.Width = this.BarBackRectangle.Width;
-        }
 
         public void StartProgressBar(
             double timeToCount)
         {
+            this.Bar.BeginAnimation(
+                RichProgressBar.ProgressProperty,
+                null);
+
             if (!this.BarVisible)
             {
                 return;
@@ -147,16 +144,12 @@ namespace ACT.SpecialSpellTimer.Views
 
             if (timeToCount >= 0)
             {
-                this.BarRectangle.BeginAnimation(
-                    Rectangle.WidthProperty,
-                    null);
-
-                this.KeyFrame.KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(timeToCount));
+                this.animation.Duration = TimeSpan.FromMilliseconds(timeToCount);
 
                 Timeline.SetDesiredFrameRate(this.animation, Settings.Default.MaxFPS);
 
-                this.BarRectangle.BeginAnimation(
-                    Rectangle.WidthProperty,
+                this.Bar.BeginAnimation(
+                    RichProgressBar.ProgressProperty,
                     this.animation);
             }
         }

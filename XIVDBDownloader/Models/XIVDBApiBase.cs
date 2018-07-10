@@ -1,6 +1,6 @@
-﻿using System.Net;
+using System.Net;
 using System.Runtime.Serialization.Json;
-using XIVDBDownloader.Constants;
+using FFXIV.Framework.Globalization;
 
 namespace XIVDBDownloader.Models
 {
@@ -10,8 +10,15 @@ namespace XIVDBDownloader.Models
         public abstract string Uri { get; }
 
         public T GET(
-            Language language)
+            Locales language)
         {
+            // SSL/TLSを有効にする
+            ServicePointManager.SecurityProtocol =
+                SecurityProtocolType.Ssl3 |
+                SecurityProtocolType.Tls |
+                SecurityProtocolType.Tls11 |
+                SecurityProtocolType.Tls12;
+
             var resultList = default(T);
 
             if (string.IsNullOrEmpty(this.Uri))

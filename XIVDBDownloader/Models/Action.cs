@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
-using XIVDBDownloader.Constants;
+using FFXIV.Framework.FFXIVHelper;
 
 namespace XIVDBDownloader.Models
 {

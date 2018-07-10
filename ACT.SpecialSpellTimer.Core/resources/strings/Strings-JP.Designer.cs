@@ -169,6 +169,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   完了時も通知する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string AlsoCompletionCheckBox {
+            get {
+                return ResourceManager.GetString("AlsoCompletionCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   テロップを常に表示する に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string AlwaysDisplayTelop {
@@ -1015,6 +1024,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   TTSをシーケンシャルに再生する（同時再生をしない） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string IsSequentialTTSCheckBox {
+            get {
+                return ResourceManager.GetString("IsSequentialTTSCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   停止中 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string IsStopping {
@@ -1159,7 +1177,7 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
-        ///   Log に類似しているローカライズされた文字列を検索します。
+        ///   Info に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string LogTabPage {
             get {
@@ -1488,6 +1506,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string NotifyToACTCheckBox {
             get {
                 return ResourceManager.GetString("NotifyToACTCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   DISCORDに通知する に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string NotifyToDiscordCheckBox {
+            get {
+                return ResourceManager.GetString("NotifyToDiscordCheckBox", resourceCulture);
             }
         }
         
@@ -2050,6 +2077,15 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         }
         
         /// <summary>
+        ///   ※対象とするゾーンを限定したい場合はチェックをONにしてください に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SelectZoneSubtitle {
+            get {
+                return ResourceManager.GetString("SelectZoneSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   対象のゾーンを選択して下さい に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string SelectZoneTitle {
@@ -2235,6 +2271,51 @@ namespace ACT.SpecialSpellTimer.resources.strings {
         internal static string SpellNameLabel {
             get {
                 return ResourceManager.GetString("SpellNameLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   固定配置（マッチしていないスペルを詰めない） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderFixedRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderFixedRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   マッチ順でソートする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortMatchTimeRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortMatchTimeRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   表示順でソートする に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortPriorityRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortPriorityRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   リキャストの残り時間でソートする（昇順） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortRecastTimeASCRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortRecastTimeASCRadioButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   リキャストの残り時間でソートする（降順） に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string SpellOrderSortRecastTimeDESCRadioButton {
+            get {
+                return ResourceManager.GetString("SpellOrderSortRecastTimeDESCRadioButton", resourceCulture);
             }
         }
         
